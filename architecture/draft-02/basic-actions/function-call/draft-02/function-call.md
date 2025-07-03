@@ -1,6 +1,18 @@
 # TODO Need to clean up + write rationale
 
 ```ts
+functionCall({
+  name: 'ft_transfer',
+  jsonArgs: {
+    account_id: 'bob.near',
+  },
+  gasLimit: { teraGas: '20' },
+  attachedDeposit: { yoctoNear: 1n },
+})
+```
+
+
+```ts
 class Token {
     yoctoNear: bigint;
 
