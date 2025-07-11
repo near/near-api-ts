@@ -1,20 +1,17 @@
 {
   "name": "near-api-ts",
-  "private": true,
+  "private": false,
   "version": "0.0.1",
-  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "pnpm -r build",
+    "playgroung-run": "pnpm tsx playground/index.ts"
   },
   "devDependencies": {
-    "prettier": "^3.5.3",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5"
-  },
-  "dependencies": {
-    "@zorsh/zorsh": "^0.3.3",
-    "borsher": "^4.0.0"
+    "@biomejs/biome": "2.1.1",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
   }
 }

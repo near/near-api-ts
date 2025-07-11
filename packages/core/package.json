@@ -1,0 +1,14 @@
+{
+  "name": "@near-api-ts/core",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist && tsc"
+  },
+  "dependencies": {
+    "@near-api-ts/types": "workspace:*",
+    "@zorsh/zorsh": "^0.3.3"
+  }
+}
