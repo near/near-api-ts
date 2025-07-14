@@ -1,12 +1,21 @@
-import type { Foo } from '../packages/types/src';
-import { logFoo } from '../packages/core/src';
+import { createClient } from '../packages/core/src/client/createClient';
 
-const a: Foo = {
-  id: '',
-  value: 0,
-  x: 0,
-  // y: 0
-};
-console.log(a);
+const client = createClient({
+  network: {
+    rpcs: {
+      regular: [
+        { url: 'https://rpc.testnet.near.org' },
+        { url: 'https://test.rpc.fastnear.com' },
+      ],
+      archival: [],
+    },
+  },
+});
 
-logFoo(a);
+const res = await Promise.all([
+  client.getAccount(),
+  client.getAccessKey(),
+  client.getAccount(),
+  client.getAccount(),
+  client.getAccessKey(),
+]);

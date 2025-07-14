@@ -2,6 +2,7 @@
   "name": "near-api-ts",
   "private": false,
   "version": "0.0.1",
+  "type": "module",
   "workspaces": [
     "packages/*"
   ],
