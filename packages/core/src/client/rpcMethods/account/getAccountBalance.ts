@@ -1,12 +1,13 @@
-import type { SendRequest } from '../../createSendRequest.js';
 import { createGetAccount } from './getAccount.js';
 import { createGetProtocolConfig } from '../protocol/getProtocolConfig.js';
+import type { BlockId, Finality } from '@near-api-ts/types';
+import type { SendRequest } from '../../createSendRequest.js';
 
 type GetAccountBalanceArgs = {
   accountId: string;
   options?: {
-    finality?: string; // TODO improve type - can't pass finality and blockId in the same time
-    blockId?: string;
+    finality?: Finality;
+    blockId?: BlockId;
   };
 };
 

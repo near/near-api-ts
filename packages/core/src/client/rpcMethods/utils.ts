@@ -1,4 +1,9 @@
-import type { BlockId } from '@near-api-ts/types';
+import type { BlockId, Finality } from '@near-api-ts/types';
+
+type GetBlockTargetArgs = {
+  finality?: Finality;
+  blockId?: BlockId;
+};
 
 /*
   User can pass BlockHeight as a string e.i '123455789'
@@ -6,16 +11,21 @@ import type { BlockId } from '@near-api-ts/types';
  */
 const parseBlockId = (blockId: BlockId) => {
   const isInteger = /^[0-9]+$/.test(String(blockId));
-  return isInteger ? Number(blockId) : blockId;
+  return isInteger ? Number(blockId) : blockId; // TODO validate block hash
 };
 
-type getBlockTargetArgs = {
-  // finality?: 'optimistic' | 'near-final' | 'final';
-  finality?: string;
-  blockId?: BlockId;
+const finalityMap = {
+  OPTIMISTIC: 'optimistic',
+  NEAR_FINAL: 'near-final',
+  FINAL: 'final',
 };
 
-export const getBlockTarget = ({ finality, blockId }: getBlockTargetArgs = {}) => {
+export const getBlockTarget = ({
+  finality,
+  blockId,
+}: GetBlockTargetArgs = {}) => {
   if (blockId) return { block_id: parseBlockId(blockId) };
-  return finality ? { finality } : { finality: 'near-final' };
+  return finality
+    ? { finality: finalityMap[finality] }
+    : { finality: finalityMap.NEAR_FINAL };
 };

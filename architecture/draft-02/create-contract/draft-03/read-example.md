@@ -5,7 +5,7 @@
 ```ts
 const client = createClient({ network: mainnet });
 
-await client.readFunctionCall({
+await client.callContractReadFunction({
   contractAccountId: 'ft.near',
   fnName: 'get_ft_balance',
   fnArgsJson: { account_id: 'alice.near' },
@@ -34,5 +34,5 @@ const request = ftContractInterface.readFns.getFtBalance({
   },
 });
 
-await client.readFunctionCall(request);
+await client.callContractReadFunction(request);
 ```

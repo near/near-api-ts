@@ -1,4 +1,5 @@
 import { getBlockTarget } from '../utils.js';
+import type { BlockId, Finality } from '@near-api-ts/types';
 import type { SendRequest } from '../../createSendRequest.js';
 
 // https://docs.near.org/api/rpc/contracts#view-account
@@ -6,8 +7,8 @@ import type { SendRequest } from '../../createSendRequest.js';
 type GetAccountArgs = {
   accountId: string;
   options?: {
-    finality?: string; // TODO improve type - can't pass finality and blockId in the same time
-    blockId?: string;
+    finality?: Finality;
+    blockId?: BlockId;
   };
 };
 
