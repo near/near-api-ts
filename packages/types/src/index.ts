@@ -1,10 +1,7 @@
-export type Foo = {
-  id: string;
-  value: number;
-  x: number;
-};
+// Example: 'GkBD5hUvXN8Xf4ujYusZLpLoNn3zfkhZoq67bjWaRVaX'
+export type BlockHash = string;
 
-export type Bar = {
-  name: string;
-  active: boolean;
-};
+// Example: 178317729
+export type BlockHeight = number;
+
+export type BlockId = BlockHash | BlockHeight;

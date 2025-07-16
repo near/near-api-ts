@@ -20,12 +20,13 @@ importers:
 
   packages/core:
     dependencies:
-      '@near-api-ts/types':
-        specifier: workspace:*
-        version: link:../types
       '@zorsh/zorsh':
         specifier: ^0.3.3
         version: 0.3.3
+    devDependencies:
+      '@near-api-ts/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/types: {}
 

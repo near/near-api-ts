@@ -12,10 +12,20 @@ const client = createClient({
   },
 });
 
-const res = await Promise.all([
-  client.getAccount(),
-  client.getAccessKey(),
-  client.getAccount(),
-  client.getAccount(),
-  client.getAccessKey(),
-]);
+try {
+  const res = await client.getAccountKey({
+    accountId: 'lantstool.testnet',
+    publicKey: 'ed25519:Es8FtufJD3QrbRhNbSqM5vHEozHHtrmKKDD5qGKjRp3p',
+  });
+  console.log(res);
+
+  const res2 = await client.getAccount({
+    accountId: 'lantstool.testnet',
+  });
+  console.log(res2);
+
+  const res3 = await client.getProtocolConfig();
+  console.log(res3);
+} catch (e) {
+  console.log(e);
+}

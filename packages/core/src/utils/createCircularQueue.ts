@@ -1,17 +1,23 @@
-export const createCircularQueue = <T>(arr: T[]) => {
+export type CircularQueue<V> = {
+  next: () => V;
+  remove: (value: V) => boolean;
+  getAll: () => V[];
+  size: () => number;
+};
+
+export const createCircularQueue = <V>(arr: V[]): CircularQueue<V> => {
   const state = {
     items: [...arr],
     current: 0,
   };
 
-  const next = (): T | undefined => {
-    if (state.items.length === 0) return undefined;
+  const next = () => {
     const value = state.items[state.current];
     state.current = (state.current + 1) % state.items.length;
     return value;
   };
 
-  const remove = (value: T) => {
+  const remove = (value: V) => {
     const idx = state.items.indexOf(value);
     if (idx === -1) return false;
 
@@ -29,7 +35,7 @@ export const createCircularQueue = <T>(arr: T[]) => {
     return true;
   };
 
-  const getAll = (): T[] => [...state.items];
+  const getAll = () => [...state.items];
 
   return {
     next,
