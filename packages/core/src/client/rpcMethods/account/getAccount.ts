@@ -1,15 +1,12 @@
 import { getBlockTarget } from '../utils.js';
-import type { BlockId, Finality } from '@near-api-ts/types';
+import type { BlockTarget } from '@near-api-ts/types';
 import type { SendRequest } from '../../createSendRequest.js';
 
 // https://docs.near.org/api/rpc/contracts#view-account
 
 type GetAccountArgs = {
   accountId: string;
-  options?: {
-    finality?: Finality;
-    blockId?: BlockId;
-  };
+  options?: BlockTarget
 };
 
 // TODO use generated type

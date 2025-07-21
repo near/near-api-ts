@@ -1,9 +1,4 @@
-import type { BlockId, Finality } from '@near-api-ts/types';
-
-type GetBlockTargetArgs = {
-  finality?: Finality;
-  blockId?: BlockId;
-};
+import type { BlockTarget, BlockId } from '@near-api-ts/types';
 
 /*
   User can pass BlockHeight as a string e.i '123455789'
@@ -23,7 +18,7 @@ const finalityMap = {
 export const getBlockTarget = ({
   finality,
   blockId,
-}: GetBlockTargetArgs = {}) => {
+}: BlockTarget = {}) => {
   if (blockId) return { block_id: parseBlockId(blockId) };
   return finality
     ? { finality: finalityMap[finality] }

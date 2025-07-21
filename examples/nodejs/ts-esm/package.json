@@ -1,0 +1,12 @@
+{
+  "name": "example-nodejs-ts",
+  "version": "0.1.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "run": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@near-api-ts/core": "workspace:*"
+  }
+}

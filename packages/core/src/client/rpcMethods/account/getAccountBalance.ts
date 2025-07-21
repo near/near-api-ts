@@ -1,14 +1,11 @@
 import { createGetAccount } from './getAccount.js';
 import { createGetProtocolConfig } from '../protocol/getProtocolConfig.js';
-import type { BlockId, Finality } from '@near-api-ts/types';
+import type { BlockTarget } from '@near-api-ts/types';
 import type { SendRequest } from '../../createSendRequest.js';
 
 type GetAccountBalanceArgs = {
   accountId: string;
-  options?: {
-    finality?: Finality;
-    blockId?: BlockId;
-  };
+  options?: BlockTarget;
 };
 
 type GetAccountBalanceResult = object;

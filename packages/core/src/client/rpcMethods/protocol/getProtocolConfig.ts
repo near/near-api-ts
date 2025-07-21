@@ -1,14 +1,11 @@
 import { getBlockTarget } from '../utils.js';
-import type { BlockId, Finality } from '@near-api-ts/types';
+import type { BlockTarget } from '@near-api-ts/types';
 import type { SendRequest } from '../../createSendRequest.js';
 
 // https://docs.near.org/api/rpc/protocol#protocol-config
 
 type GetProtocolConfigArgs = {
-  options?: {
-    finality?: Finality;
-    blockId?: BlockId;
-  };
+  options?: BlockTarget;
 };
 
 // TODO use generated type

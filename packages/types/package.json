@@ -1,10 +1,20 @@
 {
   "name": "@near-api-ts/types",
   "version": "0.1.0",
+  "description": "",
   "type": "module",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": {
+        "import": "./dist/index.d.ts",
+        "require": "./dist/index.d.cts"
+      },
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "scripts": {
-    "build": "rm -rf dist && tsc"
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
   }
 }

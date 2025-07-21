@@ -1,17 +1,16 @@
 {
   "name": "near-api-ts",
-  "private": false,
-  "version": "0.0.1",
-  "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
+  "version": "0.1.0",
+  "description": "",
   "scripts": {
     "build": "pnpm -r build",
-    "playgroung-run": "pnpm tsx playground/index.ts"
+    "typecheck": "pnpm -r typecheck"
   },
+  "packageManager": "pnpm@10.11.0",
   "devDependencies": {
-    "@biomejs/biome": "2.1.1",
+    "@biomejs/biome": "^2.1.2",
+    "@types/node": "^24.0.15",
+    "tsup": "^8.5.0",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
