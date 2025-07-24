@@ -1,6 +1,6 @@
 import { getBlockTarget } from '../utils.js';
 import type { BlockTarget } from '@near-api-ts/types';
-import type { SendRequest } from '../../createSendRequest.js';
+import type { ClientMethodContext } from '../../createClient';
 
 // https://docs.near.org/api/rpc/access-keys#view-access-key
 
@@ -18,10 +18,12 @@ type GetAccountKeyResult = {
   permission: string;
 };
 
-type GetAccountKey = (args: GetAccountKeyArgs) => Promise<GetAccountKeyResult>;
+export type GetAccountKey = (
+  args: GetAccountKeyArgs,
+) => Promise<GetAccountKeyResult>;
 
-export const createGetAccountKey =
-  (sendRequest: SendRequest): GetAccountKey =>
+export const getAccountKey =
+  ({ sendRequest }: ClientMethodContext): GetAccountKey =>
   ({ accountId, publicKey, options }) =>
     sendRequest({
       body: {

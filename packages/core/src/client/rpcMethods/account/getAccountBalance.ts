@@ -1,7 +1,7 @@
-import { createGetAccount } from './getAccount.js';
-import { createGetProtocolConfig } from '../protocol/getProtocolConfig.js';
+import { getAccount } from './getAccount.js';
+import { getProtocolConfig } from '../protocol/getProtocolConfig.js';
 import type { BlockTarget } from '@near-api-ts/types';
-import type { SendRequest } from '../../createSendRequest.js';
+import type { ClientMethodContext } from '../../createClient';
 
 type GetAccountBalanceArgs = {
   accountId: string;
@@ -10,16 +10,16 @@ type GetAccountBalanceArgs = {
 
 type GetAccountBalanceResult = object;
 
-type GetAccountBalance = (
+export type GetAccountBalance = (
   args: GetAccountBalanceArgs,
 ) => Promise<GetAccountBalanceResult>;
 
-export const createGetAccountBalance =
-  (sendRequest: SendRequest): GetAccountBalance =>
+export const getAccountBalance =
+  (context: ClientMethodContext): GetAccountBalance =>
   async (args) => {
     const [config, account] = await Promise.all([
-      createGetProtocolConfig(sendRequest)(args),
-      createGetAccount(sendRequest)(args),
+      getProtocolConfig(context)(args),
+      getAccount(context)(args),
     ]);
 
     // @ts-ignore

@@ -15,10 +15,12 @@
   },
   "scripts": {
     "build": "tsup",
+    "dev": "tsup --watch",
     "run": "tsx src/index.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@near-api-ts/types": "workspace:*"
+    "@near-api-ts/types": "workspace:*",
+    "zod": "^4.0.5"
   }
 }

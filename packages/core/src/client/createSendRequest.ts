@@ -1,13 +1,9 @@
 import { snakeToCamelCase } from '../utils/snakeToCamelCase.js';
-import type { CreateClientContext } from './createClient.js';
+import type { ClientState } from './createClient.js';
 
 export type SendRequest = <Body, Result>(args: {
   body: Body;
 }) => Promise<Result>;
-
-type CreateSendRequest = (args: {
-  context: CreateClientContext;
-}) => SendRequest;
 
 const rpcError = (error: any) => {
   const e = new Error();
@@ -15,10 +11,10 @@ const rpcError = (error: any) => {
   return e;
 };
 
-export const createSendRequest: CreateSendRequest =
-  ({ context }) =>
+export const createSendRequest =
+  (clientState: ClientState): SendRequest =>
   async ({ body }) => {
-    const { url, headers } = context.regularRpcQueue.next();
+    const { url, headers } = clientState.regularRpcQueue.next();
 
     const rawResponse = await fetch(url, {
       method: 'POST',

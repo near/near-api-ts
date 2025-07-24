@@ -1,12 +1,12 @@
 import { getBlockTarget } from '../utils.js';
 import type { BlockTarget } from '@near-api-ts/types';
-import type { SendRequest } from '../../createSendRequest.js';
+import type { ClientMethodContext } from '../../createClient';
 
 // https://docs.near.org/api/rpc/contracts#view-account
 
 type GetAccountArgs = {
   accountId: string;
-  options?: BlockTarget
+  options?: BlockTarget;
 };
 
 // TODO use generated type
@@ -20,10 +20,10 @@ type GetAccountResult = {
   storageUsage: number;
 };
 
-type GetAccount = (args: GetAccountArgs) => Promise<GetAccountResult>;
+export type GetAccount = (args: GetAccountArgs) => Promise<GetAccountResult>;
 
-export const createGetAccount =
-  (sendRequest: SendRequest): GetAccount =>
+export const getAccount =
+  ({ sendRequest }: ClientMethodContext): GetAccount =>
   ({ accountId, options }) =>
     sendRequest({
       body: {

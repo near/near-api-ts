@@ -1,6 +1,10 @@
 {
   "type": "module",
   "scripts": {
-    "run": "node src/index.js"
+    "run": "node src/index.js",
+    "build-rollup": "rollup -c"
+  },
+  "dependencies": {
+    "@near-api-ts/core": "workspace:*"
   }
 }

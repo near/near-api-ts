@@ -4,9 +4,10 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "run": "tsx src/index.ts"
+    "run": "tsx src/index.ts",
+    "build": "tsup"
   },
   "dependencies": {
-    "@near-api-ts/core": "workspace:*"
+    "@near-api-ts/core": "link:../../../packages/core"
   }
 }

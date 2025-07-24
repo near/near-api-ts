@@ -1,3 +1,2 @@
-import { createClient } from './client/createClient.js';
-
-export { createClient };
+export { createClient } from './client/createClient.js';
+export { testnet } from './presets/networks';

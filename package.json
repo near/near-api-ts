@@ -4,12 +4,17 @@
   "description": "",
   "scripts": {
     "build": "pnpm -r build",
+    "dev": "pnpm -r --parallel dev",
     "typecheck": "pnpm -r typecheck"
   },
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.13.1",
   "devDependencies": {
     "@biomejs/biome": "^2.1.2",
+    "@rollup/plugin-node-resolve": "^16.0.1",
     "@types/node": "^24.0.15",
+    "rollup": "^4.45.1",
+    "rollup-plugin-visualizer": "^6.0.3",
+    "terser": "^5.43.1",
     "tsup": "^8.5.0",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
