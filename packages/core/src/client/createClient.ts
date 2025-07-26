@@ -34,6 +34,7 @@ type CreateClient = (args: createClientArgs) => {
   getAccountBalance: factoryRpcMethods.GetAccountBalance;
   getAccountKey: factoryRpcMethods.GetAccountKey;
   getProtocolConfig: factoryRpcMethods.GetProtocolConfig;
+  sendSignedTransaction: factoryRpcMethods.SendSignedTransaction;
 };
 
 export const createClient: CreateClient = ({ network }) => {
@@ -53,5 +54,6 @@ export const createClient: CreateClient = ({ network }) => {
     getAccountBalance: factoryRpcMethods.getAccountBalance(context),
     getAccountKey: factoryRpcMethods.getAccountKey(context),
     getProtocolConfig: factoryRpcMethods.getProtocolConfig(context),
+    sendSignedTransaction: factoryRpcMethods.sendSignedTransaction(context),
   };
 };

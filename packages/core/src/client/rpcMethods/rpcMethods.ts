@@ -14,3 +14,8 @@ export {
   getProtocolConfig,
   type GetProtocolConfig,
 } from './protocol/getProtocolConfig.js';
+// Transaction
+export {
+  sendSignedTransaction,
+  type SendSignedTransaction,
+} from './transaction/sendSignedTransaction';

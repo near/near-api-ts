@@ -4,10 +4,11 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "run": "tsx src/index.ts",
+    "basicTransaction": "tsx src/basicTransaction.ts",
+    "readCalls": "tsx src/readCalls.ts",
     "build": "tsup"
   },
   "dependencies": {
-    "@near-api-ts/core": "link:../../../packages/core"
+    "@near-api-ts/core": "workspace:*"
   }
 }
