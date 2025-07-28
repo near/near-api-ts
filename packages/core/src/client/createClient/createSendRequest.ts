@@ -1,5 +1,5 @@
-import { snakeToCamelCase } from '../utils/snakeToCamelCase.js';
-import type { ClientState } from './createClient.js';
+import { snakeToCamelCase } from '../../common/utils/snakeToCamelCase';
+import type { ClientState } from './createClient';
 
 export type SendRequest = <Body, Result>(args: {
   body: Body;
@@ -16,7 +16,7 @@ export const createSendRequest =
   async ({ body }) => {
     const { url, headers } = clientState.regularRpcQueue.next();
 
-    const rawResponse = await fetch(url, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
@@ -28,7 +28,7 @@ export const createSendRequest =
         ...body,
       }),
     });
-    const { result, error } = await rawResponse.json();
+    const { result, error } = await response.json();
 
     // TODO create error handling strategy
     if (error) throw rpcError(error);

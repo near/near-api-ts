@@ -1,5 +1,5 @@
-import { getAccount } from './getAccount.js';
-import { getProtocolConfig } from '../protocol/getProtocolConfig.js';
+import { getAccount } from './getAccount';
+import { getProtocolConfig } from '../protocol/getProtocolConfig';
 import type { BlockTarget } from '@near-api-ts/types';
 import type { ClientMethodContext } from '../../createClient';
 

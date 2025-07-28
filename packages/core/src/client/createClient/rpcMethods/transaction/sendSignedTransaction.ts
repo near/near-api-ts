@@ -1,7 +1,7 @@
 import { base64 } from '@scure/base';
-import { toBorshedSignedTransaction } from '../../../keyServices/memoryKeyService/toBorshedSignedTransaction';
+import { toBorshedSignedTransaction } from '../../../../common/transaction/toBorshedSignedTransaction';
 import type { ClientMethodContext } from '../../createClient';
-import type { InnerSignedTransaction } from '../../../keyServices/memoryKeyService/toBorshedSignedTransaction';
+import type { InnerSignedTransaction } from '../../../../common/transaction/toBorshedSignedTransaction';
 
 // https://docs.near.org/api/rpc/contracts#view-account
 

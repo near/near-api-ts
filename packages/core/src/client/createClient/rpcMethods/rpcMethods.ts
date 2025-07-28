@@ -1,19 +1,19 @@
 // Account
-export { getAccount, type GetAccount } from './account/getAccount.js';
+export { getAccount, type GetAccount } from './account/getAccount';
 export {
   getAccountBalance,
   type GetAccountBalance,
-} from './account/getAccountBalance.js';
+} from './account/getAccountBalance';
 // Account Keys
 export {
   getAccountKey,
   type GetAccountKey,
-} from './accountKeys/getAccountKey.js';
+} from './accountKeys/getAccountKey';
 // Protocol
 export {
   getProtocolConfig,
   type GetProtocolConfig,
-} from './protocol/getProtocolConfig.js';
+} from './protocol/getProtocolConfig';
 // Transaction
 export {
   sendSignedTransaction,

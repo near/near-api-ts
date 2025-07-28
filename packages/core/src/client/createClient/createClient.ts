@@ -1,8 +1,8 @@
-import { createCircularQueue } from '../utils/createCircularQueue.js';
-import { createSendRequest } from './createSendRequest.js';
-import * as factoryRpcMethods from './rpcMethods/rpcMethods.js';
-import type { CircularQueue } from '../utils/createCircularQueue.js';
-import type { SendRequest } from './createSendRequest.js';
+import { createCircularQueue } from '../../common/utils/createCircularQueue';
+import { createSendRequest } from './createSendRequest';
+import * as factoryRpcMethods from './rpcMethods/rpcMethods';
+import type { CircularQueue } from '../../common/utils/createCircularQueue';
+import type { SendRequest } from './createSendRequest';
 
 type Rpc = {
   url: string;

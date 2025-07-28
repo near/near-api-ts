@@ -1,4 +1,4 @@
-import type { Network } from '../client/createClient';
+import type { Network } from '../createClient/createClient';
 
 export const testnet: Network = {
   rpcs: {

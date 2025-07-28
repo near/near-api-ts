@@ -1,38 +1,37 @@
-import type { Transaction, Action } from '../../schemas/zorshSchema';
 import { base58 } from '@scure/base';
 import { serialize } from 'borsh';
-import { SCHEMA } from '../../schemas/najSchema';
+import { SCHEMA } from '../borshSchemas/najSchema';
 
 type InnerTransaction = {
   signerAccountId: string;
   signerPublicKey: string;
-  action: Action;
-  actions?: Action[];
+  action: any;
+  actions?: any[];
   receiverAccountId: string;
   nonce: bigint | number;
   blockHash: string;
 };
 
-const getPublicKey = (publicKeyString: string) => {
-  const [_, base58PublicKey] = publicKeyString.split(':');
-  return Array.from(base58.decode(base58PublicKey));
+const extractData = (data: string) => {
+  const [_, payload] = data.split(':');
+  return base58.decode(payload);
 };
 
 export const toBorshedTransaction = (transaction: InnerTransaction) => {
   console.log('toBorshedTransaction');
   console.log(transaction);
 
-  const obj: Transaction = {
+  const obj = {
     signerId: transaction.signerAccountId,
     publicKey: {
       ed25519Key: {
-        data: getPublicKey(transaction.signerPublicKey),
+        data: extractData(transaction.signerPublicKey),
       },
     },
     actions: [transaction.action],
     receiverId: transaction.receiverAccountId,
     nonce: BigInt(transaction.nonce),
-    blockHash: Array.from(base58.decode(transaction.blockHash)),
+    blockHash: base58.decode(transaction.blockHash),
   };
 
   // return TransactionSchema.serialize(obj);

@@ -1,4 +1,4 @@
-import { getBlockTarget } from '../utils.js';
+import { getBlockTarget } from '../utils';
 import type { BlockTarget } from '@near-api-ts/types';
 import type { ClientMethodContext } from '../../createClient';
 

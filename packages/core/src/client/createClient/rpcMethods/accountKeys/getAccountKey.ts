@@ -1,6 +1,8 @@
-import { getBlockTarget } from '../utils.js';
+import { getBlockTarget } from '../utils';
 import type { BlockTarget } from '@near-api-ts/types';
 import type { ClientMethodContext } from '../../createClient';
+
+// TODO Rename to access key
 
 // https://docs.near.org/api/rpc/access-keys#view-access-key
 
