@@ -56,5 +56,5 @@ const signedTransaction = await keyService.signTransaction({
 
 console.log(signedTransaction);
 
-// const result = await client.sendSignedTransaction({ signedTransaction });
-// console.log(result);
+const result = await client.sendSignedTransaction({ signedTransaction });
+console.log(result);

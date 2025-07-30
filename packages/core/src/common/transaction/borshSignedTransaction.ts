@@ -1,5 +1,5 @@
 import { serialize } from 'borsh';
-import { SCHEMA } from '../borshSchemas/najSchema';
+import { signedTransactionBorshSchema } from '../borshSchemas/signedTransaction';
 import { toBorshTransaction, type Transaction } from './borshTransaction';
 import type { Signature } from '@near-api-ts/types';
 import { fromCurveString } from '../crypto/curveString';
@@ -25,5 +25,5 @@ export const serializeSignedTransactionToBorsh = (
   signedTransaction: SignedTransaction,
 ) => {
   const borshSignedTransaction = toBorshSignedTransaction(signedTransaction);
-  return serialize(SCHEMA.SignedTransaction, borshSignedTransaction);
+  return serialize(signedTransactionBorshSchema, borshSignedTransaction);
 };

@@ -40,6 +40,7 @@ const signBySecp256k1Key = (message: Uint8Array, u8PrivateKey: Uint8Array) => {
   };
 };
 
+// TODO maybe use Hex instead of Uint8Array for message
 export const sign = ({ message, privateKey }: SignArgs) => {
   PrivateKeySchema.parse(privateKey);
   const { curve, u8Data: u8PrivateKey } = fromCurveString(privateKey);
