@@ -1,33 +1,40 @@
-import { base58 } from '@scure/base';
 import { signTransaction } from './signTransaction';
+import { getPublicKey } from '../../common/crypto/getPublicKey';
+import type { PrivateKey, PublicKey } from '@near-api-ts/types';
 
-export const toEd25519String = (key: Uint8Array) =>
-  `ed25519:${base58.encode(key)}`;
+type KeySource = { privateKey: PrivateKey };
 
-const parseKeySource = (keySource: any) => {
-  if (keySource.privateKey) {
-    // TODO validate private key?
-    // ed25519 private key - //ed25519: + 32 byte seed + 32 byte public key
-    const [curve, privateKey] = keySource.privateKey.split(':');
-
-    return {
-      publicKey: toEd25519String(base58.decode(privateKey).slice(32, 64)),
-      u8SecretKey: base58.decode(privateKey).slice(0, 32),
-      privateKey: keySource.privateKey,
-    };
-  }
+type ParseKeySourceResult = {
+  publicKey: PublicKey;
+  privateKey: PrivateKey;
 };
 
-const parseKeySources = (keySources: any) =>
-  keySources.reduce((acc: any, keySource: any) => {
-    const data = parseKeySource(keySource);
-    data?.publicKey && (acc[data.publicKey] = data);
-    return acc;
-  }, {});
+const parseKeySource = (keySource: KeySource): ParseKeySourceResult => {
+  // if (keySource.privateKey) {
+  return {
+    publicKey: getPublicKey(keySource.privateKey),
+    privateKey: keySource.privateKey,
+  };
+  // }
+};
 
+const parseKeySources = (keySources: KeySource[]) =>
+  keySources.reduce(
+    (acc: Record<PublicKey, ParseKeySourceResult>, keySource) => {
+      const data = parseKeySource(keySource);
+      acc[data.publicKey] = data;
+      return acc;
+    },
+    {},
+  );
 
+type CreateMemoryKeyServiceArgs = {
+  keySources: KeySource[];
+};
 
-export const createMemoryKeyService = async ({ keySources }: any) => {
+export const createMemoryKeyService = async ({
+  keySources,
+}: CreateMemoryKeyServiceArgs) => {
   const state = {
     keys: parseKeySources(keySources),
   };

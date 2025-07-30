@@ -17,5 +17,9 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@scure/base": "^1.2.6",
+    "zod": "^4.0.11"
   }
 }

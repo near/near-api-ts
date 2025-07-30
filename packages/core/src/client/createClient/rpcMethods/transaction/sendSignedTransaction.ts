@@ -1,12 +1,12 @@
 import { base64 } from '@scure/base';
-import { toBorshedSignedTransaction } from '../../../../common/transaction/toBorshedSignedTransaction';
+import { serializeSignedTransactionToBorsh } from '../../../../common/transaction/borshSignedTransaction';
 import type { ClientMethodContext } from '../../createClient';
-import type { InnerSignedTransaction } from '../../../../common/transaction/toBorshedSignedTransaction';
+import type { SignedTransaction } from '../../../../common/transaction/borshSignedTransaction';
 
 // https://docs.near.org/api/rpc/contracts#view-account
 
 type SendSignedTransactionArgs = {
-  signedTransaction: InnerSignedTransaction;
+  signedTransaction: SignedTransaction;
   options?: {
     waitUntil?: string;
   };
@@ -28,7 +28,7 @@ export const sendSignedTransaction =
         method: 'send_tx',
         params: {
           signed_tx_base64: base64.encode(
-            toBorshedSignedTransaction(signedTransaction),
+            serializeSignedTransactionToBorsh(signedTransaction),
           ),
           wait_until: waitUntil,
         },

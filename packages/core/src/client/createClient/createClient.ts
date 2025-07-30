@@ -1,7 +1,7 @@
-import { createCircularQueue } from '../../common/utils/createCircularQueue';
+import { createCircularQueue } from '../../utils/createCircularQueue';
 import { createSendRequest } from './createSendRequest';
 import * as factoryRpcMethods from './rpcMethods/rpcMethods';
-import type { CircularQueue } from '../../common/utils/createCircularQueue';
+import type { CircularQueue } from '../../utils/createCircularQueue';
 import type { SendRequest } from './createSendRequest';
 
 type Rpc = {

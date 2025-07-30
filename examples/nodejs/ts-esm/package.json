@@ -4,7 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "basicTransaction": "tsx src/basicTransaction.ts",
+    "playground": "tsx src/playground.ts",
     "readCalls": "tsx src/readCalls.ts",
     "build": "tsup"
   },

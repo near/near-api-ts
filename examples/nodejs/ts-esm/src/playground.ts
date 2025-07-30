@@ -19,6 +19,7 @@ const keyService = await createMemoryKeyService({
   keySources: [
     { privateKey: signerPrivateKey },
     { privateKey: signerPrivateKey2 },
+    // { privateKey: 'secp256k1:5yH12pq5HsTpE8GDrvwePNHdafdh123dsd2Dada12' },
   ],
 });
 
@@ -40,11 +41,10 @@ const signedTransaction = await keyService.signTransaction({
 //   accountId: signerAccountId,
 //   publicKey: signerPublicKey,
 // });
-
-
+//
 // const signedTransaction = await keyService.signTransaction({
 //   signerAccountId,
-//   signerPublicKey,
+//   signerPublicKey: signerPublicKey2,
 //   action: addSecp256k1FullAccessKey({
 //     publicKey:
 //       'secp256k1:2tz1AWNq8Sxr7HYHrcai3JEacZLtQLyAd8MNgbYwCpvWc2RSFqhUYWdg1mugV4ZxKcs9tae6T461PSw5oA1ZqTyf',
@@ -56,5 +56,5 @@ const signedTransaction = await keyService.signTransaction({
 
 console.log(signedTransaction);
 
-const result = await client.sendSignedTransaction({ signedTransaction });
-console.log(result);
+// const result = await client.sendSignedTransaction({ signedTransaction });
+// console.log(result);

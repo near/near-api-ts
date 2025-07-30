@@ -1,20 +1,22 @@
 import { sha256 } from '@noble/hashes/sha2';
-import { ed25519 } from '@noble/curves/ed25519';
 import { base58 } from '@scure/base';
-import { toBorshedTransaction } from '../../common/transaction/toBorshedTransaction';
+import { serializeTransactionToBorsh } from '../../common/transaction/borshTransaction';
+import { type Transaction } from '../../common/transaction/borshTransaction';
+import { sign } from '../../common/crypto/sign';
 
-export const signTransaction = (state: any) => async (transaction: any) => {
-  const borshedTransaction = toBorshedTransaction(transaction);
-  const u8TransactionHash = sha256(borshedTransaction);
+export const signTransaction =
+  (state: any) => async (transaction: Transaction) => {
+    const serializedTransaction = serializeTransactionToBorsh(transaction);
+    const u8TransactionHash = sha256(serializedTransaction);
 
-  const u8Signature = ed25519.sign(
-    u8TransactionHash,
-    state.keys[transaction.signerPublicKey].u8SecretKey,
-  );
+    const signature = sign({
+      message: u8TransactionHash,
+      privateKey: state.keys[transaction.signerPublicKey].privateKey,
+    });
 
-  return {
-    ...transaction,
-    transactionHash: base58.encode(u8TransactionHash),
-    signature: `ed25519:${base58.encode(u8Signature)}`,
+    return {
+      transaction,
+      transactionHash: base58.encode(u8TransactionHash),
+      signature,
+    };
   };
-};
