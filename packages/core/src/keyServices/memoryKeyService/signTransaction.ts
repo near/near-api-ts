@@ -9,7 +9,7 @@ export const signTransaction =
     const serializedTransaction = serializeTransactionToBorsh(transaction);
     const u8TransactionHash = sha256(serializedTransaction);
 
-    const signature = sign({
+    const { signature } = sign({
       message: u8TransactionHash,
       privateKey: state.keys[transaction.signerPublicKey].privateKey,
     });
