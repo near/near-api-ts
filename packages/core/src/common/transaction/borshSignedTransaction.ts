@@ -1,7 +1,7 @@
 import { serialize } from 'borsh';
-import { signedTransactionBorshSchema } from '../borshSchemas/signedTransaction';
+import { signedTransactionBorshSchema } from '@schemas/borsh';
 import { toBorshTransaction, type Transaction } from './borshTransaction';
-import type { Signature } from '@near-api-ts/types';
+import type { Signature } from '@types';
 import { fromCurveString } from '../crypto/curveString';
 
 export type SignedTransaction = {

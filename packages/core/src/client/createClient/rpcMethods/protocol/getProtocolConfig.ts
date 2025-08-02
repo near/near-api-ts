@@ -1,5 +1,5 @@
 import { getBlockTarget } from '../utils';
-import type { BlockTarget } from '@near-api-ts/types';
+import type { BlockTarget } from '@types';
 import type { ClientMethodContext } from '../../createClient';
 
 // https://docs.near.org/api/rpc/protocol#protocol-config

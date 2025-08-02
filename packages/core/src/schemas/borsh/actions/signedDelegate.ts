@@ -1,5 +1,5 @@
 import type { Schema } from 'borsh';
-import { delegateActionBorshSchema } from '../delegateAction';
+import { delegateActionBorshSchema } from '@schemas/borsh';
 import { signatureBorshSchema } from '../signature';
 
 export const signedDelegateActionBorshSchema: Schema = {

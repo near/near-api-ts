@@ -1,11 +1,8 @@
-import {
-  type PrivateKey,
-  PrivateKeySchema,
-  CryptoKeyLengths,
-} from '@near-api-ts/types';
+import type { PrivateKey } from '@types';
 import { ed25519 } from '@noble/curves/ed25519';
 import { secp256k1 } from '@noble/curves/secp256k1';
 import { fromCurveString, toCurveString } from './curveString';
+import { BinaryCryptoKeyLengths } from '../../configs/constants';
 
 type SignArgs = {
   message: Uint8Array;
@@ -13,7 +10,7 @@ type SignArgs = {
 };
 
 const signByEd25519Key = (message: Uint8Array, u8PrivateKey: Uint8Array) => {
-  const u8SecretKey = u8PrivateKey.slice(0, CryptoKeyLengths.Ed25519.SecretKey);
+  const u8SecretKey = u8PrivateKey.slice(0, BinaryCryptoKeyLengths.Ed25519.SecretKey);
   const u8Signature = ed25519.sign(message, u8SecretKey);
 
   return {
@@ -23,9 +20,10 @@ const signByEd25519Key = (message: Uint8Array, u8PrivateKey: Uint8Array) => {
 };
 
 const signBySecp256k1Key = (message: Uint8Array, u8PrivateKey: Uint8Array) => {
+  // Create getSecretKey
   const u8SecretKey = u8PrivateKey.slice(
     0,
-    CryptoKeyLengths.Secp256k1.SecretKey,
+    BinaryCryptoKeyLengths.Secp256k1.SecretKey,
   );
   const signatureObj = secp256k1.sign(message, u8SecretKey);
 
@@ -42,7 +40,7 @@ const signBySecp256k1Key = (message: Uint8Array, u8PrivateKey: Uint8Array) => {
 
 // TODO maybe use Hex instead of Uint8Array for message
 export const sign = ({ message, privateKey }: SignArgs) => {
-  PrivateKeySchema.parse(privateKey);
+  // PrivateKeySchema.parse(privateKey);
   const { curve, u8Data: u8PrivateKey } = fromCurveString(privateKey);
   if (curve === 'secp256k1') return signBySecp256k1Key(message, u8PrivateKey);
   return signByEd25519Key(message, u8PrivateKey);

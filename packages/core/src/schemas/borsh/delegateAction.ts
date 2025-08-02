@@ -4,16 +4,14 @@ import { createAccountActionBorshSchema } from './actions/createAccount';
 import { transferActionBorshSchema } from './actions/transfer';
 import { addKeyActionBorshSchema } from './actions/addKey';
 import { deployContractActionBorshSchema } from './actions/deployContract';
-import { deployGlobalContractActionBorshSchema } from './actions/deployGlobalContract';
-import { useGlobalContractActionBorshSchema } from './actions/useGlobalContract';
 import { functionCallActionBorshSchema } from './actions/functionCall';
 import { stakeActionBorshSchema } from './actions/stake';
 import { deleteKeyActionBorshSchema } from './actions/deleteKey';
 import { deleteAccountActionBorshSchema } from './actions/deleteAccount';
-import { signedDelegateActionBorshSchema } from './actions/signedDelegate';
+import { deployGlobalContractActionBorshSchema } from './actions/deployGlobalContract';
+import { useGlobalContractActionBorshSchema } from './actions/useGlobalContract';
 
-// Actions order in this enum is important and must match nearcore
-const actionBorshSchema: Schema = {
+const allowedActionBorshSchema: Schema = {
   enum: [
     { struct: { createAccount: createAccountActionBorshSchema } },
     { struct: { deployContract: deployContractActionBorshSchema } },
@@ -23,19 +21,21 @@ const actionBorshSchema: Schema = {
     { struct: { addKey: addKeyActionBorshSchema } },
     { struct: { deleteKey: deleteKeyActionBorshSchema } },
     { struct: { deleteAccount: deleteAccountActionBorshSchema } },
-    { struct: { signedDelegate: signedDelegateActionBorshSchema } },
+    { struct: { signedDelegate: 'string' } }, // TODO is it possible to rid this placeholder and keep enum order?
     { struct: { deployGlobalContract: deployGlobalContractActionBorshSchema } },
     { struct: { useGlobalContract: useGlobalContractActionBorshSchema } },
   ],
 };
 
-export const transactionBorshSchema: Schema = {
+export const delegateActionBorshSchema: Schema = {
   struct: {
-    signerId: 'string',
+    senderId: 'string',
     publicKey: publicKeyBorshSchema,
-    nonce: 'u64',
+    actions: { array: { type: allowedActionBorshSchema } },
     receiverId: 'string',
-    blockHash: { array: { type: 'u8', len: 32 } },
-    actions: { array: { type: actionBorshSchema } },
+    nonce: 'u64',
+    maxBlockHeight: 'u64',
   },
 };
+
+// TODO add DelegateActionPrefix

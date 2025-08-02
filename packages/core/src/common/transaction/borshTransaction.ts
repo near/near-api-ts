@@ -1,8 +1,8 @@
 import { base58 } from '@scure/base';
 import { serialize } from 'borsh';
-import { transactionBorshSchema } from '../borshSchemas/transaction';
+import { transactionBorshSchema } from '@schemas/borsh';
 import { fromCurveString } from '../crypto/curveString';
-import type { PublicKey } from '@near-api-ts/types';
+import type { PublicKey } from '@types';
 
 export type Transaction = {
   signerAccountId: string;

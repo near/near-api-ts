@@ -19,7 +19,7 @@ const keyService = await createMemoryKeyService({
   keySources: [
     { privateKey: signerPrivateKey },
     { privateKey: signerPrivateKey2 },
-    // { privateKey: 'secp256k1:5yH12pq5HsTpE8GDrvwePNHdafdh123dsd2Dada12' },
+    { privateKey: 'secp256k1:5="№,?yH12pq5HsTpE8GDrvwePNHdafdh123dsd2Dada12' },
   ],
 });
 

@@ -1,6 +1,6 @@
 import { signTransaction } from './signTransaction';
 import { getPublicKey } from '../../common/crypto/getPublicKey';
-import type { PrivateKey, PublicKey } from '@near-api-ts/types';
+import type { PrivateKey, PublicKey } from '@types';
 
 type KeySource = { privateKey: PrivateKey };
 

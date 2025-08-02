@@ -4,8 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "playground": "tsx src/playground.ts",
-    "readCalls": "tsx src/readCalls.ts",
+    "run-example": "tsx src/index.ts",
     "build": "tsup"
   },
   "dependencies": {

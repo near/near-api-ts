@@ -6,7 +6,7 @@ import { sign } from '../../common/crypto/sign';
 
 export const signTransaction =
   (state: any) => async (transaction: Transaction) => {
-  // TODO Add validation
+  // TODO Add validation for transaction
     const serializedTransaction = serializeTransactionToBorsh(transaction);
     const u8TransactionHash = sha256(serializedTransaction);
 
