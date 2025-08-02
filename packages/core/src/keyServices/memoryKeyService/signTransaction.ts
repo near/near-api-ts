@@ -1,18 +1,22 @@
 import { sha256 } from '@noble/hashes/sha2';
 import { base58 } from '@scure/base';
 import { serializeTransactionToBorsh } from '../../common/transaction/borshTransaction';
-import { type Transaction } from '../../common/transaction/borshTransaction';
 import { sign } from '../../common/crypto/sign';
+import type {
+  Context,
+  SignTransaction,
+} from 'nat-types/keyServices/memoryKeyService';
 
-export const signTransaction =
-  (state: any) => async (transaction: Transaction) => {
-  // TODO Add validation for transaction
+export const createSignTransaction =
+  (context: Context): SignTransaction =>
+  async (transaction) => {
+    // TODO Add validation for transaction
     const serializedTransaction = serializeTransactionToBorsh(transaction);
     const u8TransactionHash = sha256(serializedTransaction);
 
     const { signature } = sign({
       message: u8TransactionHash,
-      privateKey: state.keys[transaction.signerPublicKey].privateKey,
+      privateKey: context.keyPairs[transaction.signerPublicKey].privateKey,
     });
 
     return {
