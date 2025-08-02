@@ -1,8 +1,8 @@
 import { base58 } from '@scure/base';
 import { serialize } from 'borsh';
-import { transactionBorshSchema } from '@schemas/borsh';
+import { transactionBorshSchema } from 'nat-schemas/borsh';
 import { fromCurveString } from '../crypto/curveString';
-import type { PublicKey } from '@types';
+import type { PublicKey } from 'nat-types';
 
 export type Transaction = {
   signerAccountId: string;

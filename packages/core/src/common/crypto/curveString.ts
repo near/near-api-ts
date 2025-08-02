@@ -1,7 +1,7 @@
 import { base58 } from '@scure/base';
 import * as v from 'valibot';
-import { curveSchema, curveStringSchema } from '@schemas/valibot';
-import type { Curve, CurveString } from '@types';
+import { curveSchema, curveStringSchema } from 'nat-schemas/valibot';
+import type { Curve, CurveString } from 'nat-types/crypto';
 
 export const toCurveString = (curve: Curve, u8Data: Uint8Array): CurveString =>
   `${v.parse(curveSchema, curve)}:${base58.encode(u8Data)}`;

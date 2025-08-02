@@ -1,5 +1,5 @@
 import { getBlockTarget } from '../utils';
-import type { BlockTarget } from '@types';
+import type { BlockTarget } from 'nat-types';
 import type { ClientMethodContext } from '../../createClient';
 
 // TODO Rename to access key

@@ -1,4 +1,4 @@
-import type { BlockTarget, BlockId } from '@types';
+import type { BlockTarget, BlockId } from 'nat-types';
 
 /*
   User can pass BlockHeight as a string e.i '123455789'

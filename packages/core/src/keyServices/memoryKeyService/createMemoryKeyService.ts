@@ -1,6 +1,7 @@
 import { signTransaction } from './signTransaction';
 import { getPublicKey } from '../../common/crypto/getPublicKey';
-import type { PrivateKey, PublicKey } from '@types';
+import type { PrivateKey, PublicKey } from 'nat-types/crypto';
+import type { KeyPair } from 'nat-types/keyServices/memoryKeyService';
 
 type KeySource = { privateKey: PrivateKey };
 
@@ -19,26 +20,31 @@ const parseKeySource = (keySource: KeySource): ParseKeySourceResult => {
 };
 
 const parseKeySources = (keySources: KeySource[]) =>
-  keySources.reduce(
-    (acc: Record<PublicKey, ParseKeySourceResult>, keySource) => {
-      const data = parseKeySource(keySource);
-      acc[data.publicKey] = data;
-      return acc;
-    },
-    {},
+  Object.fromEntries(
+    keySources.map((keySource) => {
+      const keyPair = parseKeySource(keySource);
+      return [keyPair.publicKey, keyPair];
+    }),
   );
 
-type CreateMemoryKeyServiceArgs = {
+// keySources.reduce(
+//   (acc: Record<PublicKey, ParseKeySourceResult>, keySource) => {
+//     const data = parseKeySource(keySource);
+//     acc[data.publicKey] = data;
+//     return acc;
+//   },
+//   {},
+// );
+
+type InputArgs = {
   keySources: KeySource[];
 };
 
-export const createMemoryKeyService = async ({
-  keySources,
-}: CreateMemoryKeyServiceArgs) => {
-  const state = {
+export const createMemoryKeyService = async ({ keySources }: InputArgs) => {
+  const context = {
     keys: parseKeySources(keySources),
   };
   return {
-    signTransaction: signTransaction(state),
+    signTransaction: signTransaction(context),
   };
 };

@@ -1,12 +1,12 @@
 import * as v from 'valibot';
-import type { PrivateKey, Hex } from '@types';
+import type { PrivateKey, Hex } from 'nat-types';
 import { ed25519 } from '@noble/curves/ed25519';
 import { secp256k1 } from '@noble/curves/secp256k1';
 import { fromCurveString, toCurveString } from './curveString';
 import {
   binarySecp256k1PrivateKeySchema,
   binaryEd25519PrivateKeySchema,
-} from '@schemas/valibot';
+} from 'nat-schemas/valibot';
 
 const signByEd25519Key = (message: Hex, u8PrivateKey: Uint8Array) => {
   const { u8SecretKey } = v.parse(binaryEd25519PrivateKeySchema, u8PrivateKey);

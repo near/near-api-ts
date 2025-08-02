@@ -5,8 +5,9 @@
     "rootDir": "./src",
     "baseUrl": ".",
     "paths": {
-      "@schemas/*": ["src/schemas/*"],
-      "@types": ["src/types/index.ts"]
+      "nat-schemas/*": ["src/schemas/*"],
+      "nat-types": ["src/types/index.ts"],
+      "nat-types/*": ["src/types/*"]
     }
   },
   "include": ["src/**/*"]

@@ -3,8 +3,6 @@ import {
   createMemoryKeyService,
   testnet,
   transfer,
-  addEd25519FullAccessKey,
-  addSecp256k1FullAccessKey,
 } from '@near-api-ts/core';
 
 const client = createClient({ network: testnet });
@@ -19,23 +17,27 @@ const keyService = await createMemoryKeyService({
   keySources: [
     { privateKey: signerPrivateKey },
     { privateKey: signerPrivateKey2 },
-    { privateKey: 'secp256k1:5="№,?yH12pq5HsTpE8GDrvwePNHdafdh123dsd2Dada12' },
+    // { privateKey: 'secp256k1:5="№,?yH12pq5HsTpE8GDrvwePNHdafdh123dsd2Dada12' },
   ],
 });
 
 const { nonce, blockHash } = await client.getAccountKey({
   accountId: signerAccountId,
-  publicKey: signerPublicKey2,
+  publicKey: signerPublicKey,
 });
 
 const signedTransaction = await keyService.signTransaction({
   signerAccountId,
-  signerPublicKey: signerPublicKey2,
+  signerPublicKey: signerPublicKey,
   action: transfer({ amount: { yoctoNear: '2' } }),
   receiverAccountId: 'eclipseer.testnet',
   nonce: nonce + 1,
   blockHash,
 });
+
+console.log(signedTransaction);
+const result = await client.sendSignedTransaction({ signedTransaction });
+console.log(result);
 
 // const { nonce, blockHash } = await client.getAccountKey({
 //   accountId: signerAccountId,
@@ -53,8 +55,3 @@ const signedTransaction = await keyService.signTransaction({
 //   nonce: nonce + 1,
 //   blockHash,
 // });
-
-console.log(signedTransaction);
-
-const result = await client.sendSignedTransaction({ signedTransaction });
-console.log(result);

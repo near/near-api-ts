@@ -1,10 +1,10 @@
 import * as v from 'valibot';
-import type { PublicKey, PrivateKey } from '@types';
+import type { PublicKey, PrivateKey } from 'nat-types/crypto';
 import { toCurveString, fromCurveString } from './curveString';
 import {
   binarySecp256k1PrivateKeySchema,
   binaryEd25519PrivateKeySchema,
-} from '@schemas/valibot';
+} from 'nat-schemas/valibot';
 
 const getEd25519PublicKey = (u8PrivateKey: Uint8Array) => {
   const { u8PublicKey } = v.parse(binaryEd25519PrivateKeySchema, u8PrivateKey);
