@@ -1,20 +1,10 @@
 import { base58 } from '@scure/base';
 import { serialize } from 'borsh';
-import { transactionBorshSchema } from 'nat-schemas/borsh';
-import { fromCurveString } from '../crypto/curveString';
+import { transactionBorshSchema } from '../schemas/borsh';
+import { fromCurveString } from './curveString';
 import type { PublicKey } from 'nat-types';
+import type { Transaction } from 'nat-types/common/transaction';
 
-export type Transaction = {
-  signerAccountId: string;
-  signerPublicKey: PublicKey;
-  action?: any;
-  actions?: any[]; // TODO Fix
-  receiverAccountId: string;
-  nonce: bigint | number;
-  blockHash: string;
-};
-
-// TODO Add return type
 const toBorshPublicKey = (publicKey: PublicKey) => {
   const { curve, u8Data } = fromCurveString(publicKey);
   return { [`${curve}Key`]: { data: u8Data } };

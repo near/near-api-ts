@@ -1,16 +1,11 @@
 import { serialize } from 'borsh';
-import { signedTransactionBorshSchema } from 'nat-schemas/borsh';
-import { toBorshTransaction, type Transaction } from './borshTransaction';
+import { signedTransactionBorshSchema } from '../schemas/borsh';
+import { toBorshTransaction } from './borshTransaction';
 import type { Signature } from 'nat-types';
-import { fromCurveString } from '../crypto/curveString';
+import type { SignedTransaction } from 'nat-types/common/transaction';
+import { fromCurveString } from './curveString';
 
-export type SignedTransaction = {
-  transaction: Transaction;
-  transactionHash: string;
-  signature: Signature;
-};
 
-// TODO Add return type
 const toBorshSignature = (signature: Signature) => {
   const { curve, u8Data } = fromCurveString(signature);
   return { [`${curve}Signature`]: { data: u8Data } };

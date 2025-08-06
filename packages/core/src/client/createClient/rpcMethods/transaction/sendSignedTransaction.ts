@@ -1,7 +1,7 @@
 import { base64 } from '@scure/base';
-import { serializeSignedTransactionToBorsh } from '../../../../common/transaction/borshSignedTransaction';
+import { serializeSignedTransactionToBorsh } from '../../../../common/transformers/borshSignedTransaction';
 import type { ClientMethodContext } from '../../createClient';
-import type { SignedTransaction } from '../../../../common/transaction/borshSignedTransaction';
+import type { SignedTransaction } from 'nat-types/common/transaction';
 
 // https://docs.near.org/api/rpc/contracts#view-account
 

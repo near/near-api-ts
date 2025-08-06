@@ -14,3 +14,7 @@ export type BlockTarget = ByFinality | ByBlockId;
  * Can be either a raw byte array (Uint8Array) or a hexadecimal string (e.g., "deadbeef" or "0xdeadbeef").
  */
 export type Hex = Uint8Array | string;
+export type Base58String = string;
+
+export type AccessKeyNonce = number;
+export type AccountId = string;

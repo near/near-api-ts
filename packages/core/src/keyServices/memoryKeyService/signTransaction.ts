@@ -1,6 +1,6 @@
 import { sha256 } from '@noble/hashes/sha2';
 import { base58 } from '@scure/base';
-import { serializeTransactionToBorsh } from '../../common/transaction/borshTransaction';
+import { serializeTransactionToBorsh } from '../../common/transformers/borshTransaction';
 import { sign } from '../../common/crypto/sign';
 import type {
   Context,

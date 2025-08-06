@@ -1,4 +1,8 @@
-import type { PrivateKey, PublicKey, Signature } from 'nat-types/crypto';
+import type { PrivateKey, PublicKey } from 'nat-types/common/crypto';
+import type {
+  Transaction,
+  SignedTransaction,
+} from 'nat-types/common/transaction';
 
 export type KeySource = { privateKey: PrivateKey } | { seedPhrase: string };
 
@@ -11,23 +15,9 @@ export type Context = {
   keyPairs: Record<PublicKey, KeyPair>;
 };
 
-export type Transaction = {
-  signerAccountId: string;
-  signerPublicKey: PublicKey;
-  action?: any;
-  actions?: any[]; // TODO Fix
-  receiverAccountId: string;
-  nonce: bigint | number;
-  blockHash: string;
-};
-
-export type SignedTransaction = {
-  transaction: Transaction;
-  transactionHash: string;
-  signature: Signature;
-};
-
-export type SignTransaction = (transaction: Transaction) => Promise<SignedTransaction>;
+export type SignTransaction = (
+  transaction: Transaction,
+) => Promise<SignedTransaction>;
 
 export type MemoryKeyService = {
   signTransaction: SignTransaction;

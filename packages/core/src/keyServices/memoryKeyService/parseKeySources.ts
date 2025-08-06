@@ -13,6 +13,7 @@ const parseKeySource = (keySource: KeySource): KeyPair => {
     };
   }
 
+  // TODO implement
   if ('seedPhrase' in keySource) {
     return {
       publicKey: 'ed25519:213',
