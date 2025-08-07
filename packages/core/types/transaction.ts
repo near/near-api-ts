@@ -1,17 +1,31 @@
 import type {
-  PublicKey,
-  Signature,
   AccountId,
   BlockHash,
   AccessKeyNonce,
   Base58String,
-} from 'nat-types';
+} from './common';
+import type { PublicKey, Signature } from './crypto';
+
+export type CreateAccountAction = {
+  type: 'CreateAccount';
+};
+
+export type TransferAction = {
+  type: 'Transfer';
+  params: {
+    amount: {
+      yoctoNear: bigint;
+    };
+  };
+};
+
+export type Action = CreateAccountAction | TransferAction;
 
 export type Transaction = {
   signerAccountId: AccountId;
   signerPublicKey: PublicKey;
-  action?: any;
-  actions?: any[]; // TODO Fix
+  action?: Action;
+  actions?: Action[];
   receiverAccountId: AccountId;
   nonce: AccessKeyNonce;
   blockHash: BlockHash;

@@ -1,36 +1,5 @@
-import * as v from 'valibot';
 import { BinaryCryptoKeyLengths } from '../../configs/constants';
-import type { Curve, CurveString } from 'nat-types';
-import { base58 } from '@scure/base';
-
-export const Base58StringSchema = v.pipe(
-  v.string(),
-  v.regex(
-    /^[1-9A-HJ-NP-Za-km-z]+$/,
-    `Base58 string contains invalid characters. Allowed characters:\
-     123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz`,
-  ),
-);
-
-export const CurveStringSchema = v.pipe(
-  v.string(),
-  v.regex(
-    /^(ed25519|secp256k1):[1-9A-HJ-NP-Za-km-z]+$/,
-    'Invalid elliptic curve string format, expected <curve>:<base58>',
-  ),
-  v.transform((value) => value as CurveString),
-);
-
-export const CurveStringTransformSchema = v.pipe(
-  CurveStringSchema,
-  v.transform((value) => {
-    const [curve, base58String] = value.split(':');
-    return {
-      curve: curve as Curve,
-      u8Data: base58.decode(base58String),
-    };
-  }),
-);
+import * as v from 'valibot';
 
 const { Ed25519, Secp256k1 } = BinaryCryptoKeyLengths;
 

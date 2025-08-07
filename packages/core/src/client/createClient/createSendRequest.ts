@@ -1,4 +1,4 @@
-import { snakeToCamelCase } from '../../utils/snakeToCamelCase';
+import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import type { ClientState } from './createClient';
 
 export type SendRequest = <Body, Result>(args: {

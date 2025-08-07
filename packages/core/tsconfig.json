@@ -2,13 +2,12 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./",
     "baseUrl": ".",
     "paths": {
-      "nat-schemas/*": ["src/schemas/*"],
-      "nat-types": ["src/types/index.ts"],
-      "nat-types/*": ["src/types/*"]
+      "@common/*": ["./src/_common/*"],
+      "nat-types/*": ["./types/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "types/**/*"]
 }

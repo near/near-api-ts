@@ -1,6 +1,6 @@
 import { getAccount } from './getAccount';
 import { getProtocolConfig } from '../protocol/getProtocolConfig';
-import type { BlockTarget } from 'nat-types';
+import type { BlockTarget } from 'nat-types/common';
 import type { ClientMethodContext } from '../../createClient';
 
 type GetAccountBalanceArgs = {

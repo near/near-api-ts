@@ -1,5 +1,5 @@
 import * as v from 'valibot';
-import type { Ed25519PublicKey, Secp256k1PublicKey } from 'nat-types';
+import type { Ed25519PublicKey, Secp256k1PublicKey } from 'nat-types/crypto';
 
 const Ed25519PublicKeySchema = v.pipe(
   v.string(),

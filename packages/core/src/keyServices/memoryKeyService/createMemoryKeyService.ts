@@ -5,7 +5,7 @@ import type {
   MemoryKeyService,
 } from 'nat-types/keyServices/memoryKeyService';
 import { parseKeySources } from './parseKeySources';
-import type { PublicKey } from 'nat-types';
+import type { PublicKey } from 'nat-types/crypto';
 
 const createFindPrivateKey =
   (keyPairs: Context['keyPairs']) => (publicKey: PublicKey) => {
@@ -16,13 +16,13 @@ const createFindPrivateKey =
     );
   };
 
-type InputArgs = {
+type Input = {
   keySources: KeySource[];
 };
 
 export const createMemoryKeyService = async ({
   keySources,
-}: InputArgs): Promise<MemoryKeyService> => {
+}: Input): Promise<MemoryKeyService> => {
   const keyPairs = parseKeySources(keySources);
   const findPrivateKey = createFindPrivateKey(keyPairs);
 

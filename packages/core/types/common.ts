@@ -1,4 +1,7 @@
-export type BlockHash = string;
+// Binary length: 32 bytes
+export type Base58CryptoHash = string;
+
+export type BlockHash = Base58CryptoHash;
 export type BlockHeight = number;
 export type BlockId = BlockHash | BlockHeight;
 

@@ -1,17 +1,18 @@
 import * as v from 'valibot';
-import type {PrivateKey, Hex, Signature} from 'nat-types';
+import type { PrivateKey, Signature } from 'nat-types/crypto';
+import type { Hex } from 'nat-types/common';
 import { ed25519 } from '@noble/curves/ed25519';
 import { secp256k1 } from '@noble/curves/secp256k1';
 import {
   fromCurveString,
   toEd25519CurveString,
   toSecp256k1CurveString,
-} from '../transformers/curveString';
+} from '@common/transformers/curveString';
 import {
   BinarySecp256k1PrivateKeySchema,
   BinaryEd25519PrivateKeySchema,
-} from '../schemas/valibot';
-import { BinaryCryptoKeyLengths } from '../configs/constants';
+} from '@common/schemas/valibot/privateKey';
+import { BinaryCryptoKeyLengths } from '@common/configs/constants';
 
 const { Ed25519, Secp256k1 } = BinaryCryptoKeyLengths;
 
@@ -56,9 +57,9 @@ type SignInput = {
 };
 
 type SignOutput = {
-  signature: Signature,
-  u8Signature: Uint8Array
-}
+  signature: Signature;
+  u8Signature: Uint8Array;
+};
 
 export const sign = ({ message, privateKey }: SignInput): SignOutput => {
   const { curve, u8Data: u8PrivateKey } = fromCurveString(privateKey);

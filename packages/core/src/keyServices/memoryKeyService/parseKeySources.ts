@@ -3,7 +3,7 @@ import type {
   KeySource,
   Context,
 } from 'nat-types/keyServices/memoryKeyService';
-import { getPublicKey } from '../../common/crypto/getPublicKey';
+import { getPublicKey } from '../../helpers/crypto/getPublicKey';
 
 const parseKeySource = (keySource: KeySource): KeyPair => {
   if ('privateKey' in keySource) {
