@@ -1,6 +1,6 @@
 import { serialize } from 'borsh';
 import { signedTransactionBorshSchema } from '../schemas/borsh';
-import { toBorshTransaction } from './borshTransaction';
+import { toTransactionBorshObject } from './transaction';
 import type { Signature } from 'nat-types';
 import type { SignedTransaction } from 'nat-types/common/transaction';
 import { fromCurveString } from './curveString';
@@ -12,7 +12,7 @@ const toBorshSignature = (signature: Signature) => {
 };
 
 const toBorshSignedTransaction = (signedTransaction: SignedTransaction) => ({
-  transaction: toBorshTransaction(signedTransaction.transaction),
+  transaction: toTransactionBorshObject(signedTransaction.transaction),
   signature: toBorshSignature(signedTransaction.signature),
 });
 

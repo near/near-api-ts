@@ -8,6 +8,10 @@ export type Ed25519CurveString = `${Ed25519Curve}:${Base58String}`;
 export type Secp256k1CurveString = `${Secp256k1Curve}:${Base58String}`;
 export type CurveString = Ed25519CurveString | Secp256k1CurveString;
 
+
+export type Ed25519PublicKey = Ed25519CurveString;
+export type Secp256k1PublicKey = Secp256k1CurveString;
+export type PublicKey = Ed25519PublicKey | Secp256k1PublicKey;
+
 export type PrivateKey = CurveString;
-export type PublicKey = CurveString;
 export type Signature = CurveString;

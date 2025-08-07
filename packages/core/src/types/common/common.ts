@@ -18,3 +18,4 @@ export type Base58String = string;
 
 export type AccessKeyNonce = number;
 export type AccountId = string;
+export type BorshBytes = Uint8Array

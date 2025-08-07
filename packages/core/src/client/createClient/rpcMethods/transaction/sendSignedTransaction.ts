@@ -1,5 +1,5 @@
 import { base64 } from '@scure/base';
-import { serializeSignedTransactionToBorsh } from '../../../../common/transformers/borshSignedTransaction';
+import { serializeSignedTransactionToBorsh } from '../../../../common/transformers/signedTransaction';
 import type { ClientMethodContext } from '../../createClient';
 import type { SignedTransaction } from 'nat-types/common/transaction';
 

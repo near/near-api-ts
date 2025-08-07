@@ -1,6 +1,6 @@
 import { base58 } from '@scure/base';
 import * as v from 'valibot';
-import { CurveSchema, CurveStringSchema } from '../schemas/valibot';
+import { CurveStringTransformSchema } from '../schemas/valibot';
 import type {
   Curve,
   CurveString,
@@ -20,10 +20,4 @@ export const fromCurveString = (
 ): {
   curve: Curve;
   u8Data: Uint8Array;
-} => {
-  const [curve, base58String] = v.parse(CurveStringSchema, value).split(':');
-  return {
-    curve: v.parse(CurveSchema, curve),
-    u8Data: base58.decode(base58String),
-  };
-};
+} => v.parse(CurveStringTransformSchema, value);

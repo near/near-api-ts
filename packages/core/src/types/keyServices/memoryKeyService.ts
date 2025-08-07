@@ -12,6 +12,7 @@ export type KeyPair = {
 };
 
 export type Context = {
+  findPrivateKey: (publicKey: PublicKey) => PrivateKey;
   keyPairs: Record<PublicKey, KeyPair>;
 };
 

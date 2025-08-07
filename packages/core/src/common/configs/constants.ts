@@ -12,3 +12,5 @@ export const BinaryCryptoKeyLengths = {
     PublicKey: 64,
   },
 } as const;
+
+export const BinaryCryptoHashLength = 32;

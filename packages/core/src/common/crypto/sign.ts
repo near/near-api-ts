@@ -1,5 +1,5 @@
 import * as v from 'valibot';
-import type { PrivateKey, Hex } from 'nat-types';
+import type {PrivateKey, Hex, Signature} from 'nat-types';
 import { ed25519 } from '@noble/curves/ed25519';
 import { secp256k1 } from '@noble/curves/secp256k1';
 import {
@@ -50,12 +50,17 @@ const signBySecp256k1Key = (message: Hex, u8PrivateKey: Uint8Array) => {
   };
 };
 
-type SignArgs = {
+type SignInput = {
   message: Hex;
   privateKey: PrivateKey;
 };
 
-export const sign = ({ message, privateKey }: SignArgs) => {
+type SignOutput = {
+  signature: Signature,
+  u8Signature: Uint8Array
+}
+
+export const sign = ({ message, privateKey }: SignInput): SignOutput => {
   const { curve, u8Data: u8PrivateKey } = fromCurveString(privateKey);
   return curve === 'ed25519'
     ? signByEd25519Key(message, u8PrivateKey)

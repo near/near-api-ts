@@ -1,27 +1,26 @@
-import { sha256 } from '@noble/hashes/sha2';
-import { base58 } from '@scure/base';
-import { serializeTransactionToBorsh } from '../../common/transformers/borshTransaction';
+import * as v from 'valibot';
+import { getTransactionHash } from '../../common/crypto/getTransactionHash';
 import { sign } from '../../common/crypto/sign';
 import type {
   Context,
   SignTransaction,
 } from 'nat-types/keyServices/memoryKeyService';
+import { TransactionSchema } from '../../common/schemas/valibot/transaction';
 
 export const createSignTransaction =
   (context: Context): SignTransaction =>
   async (transaction) => {
-    // TODO Add validation for transaction
-    const serializedTransaction = serializeTransactionToBorsh(transaction);
-    const u8TransactionHash = sha256(serializedTransaction);
+    const validTransaction = v.parse(TransactionSchema, transaction);
+    const privateKey = context.findPrivateKey(validTransaction.signerPublicKey);
 
-    const { signature } = sign({
-      message: u8TransactionHash,
-      privateKey: context.keyPairs[transaction.signerPublicKey].privateKey,
-    });
+    const { transactionHash, u8TransactionHash } =
+      getTransactionHash(validTransaction);
+
+    const { signature } = sign({ message: u8TransactionHash, privateKey });
 
     return {
       transaction,
-      transactionHash: base58.encode(u8TransactionHash),
+      transactionHash,
       signature,
     };
   };
