@@ -1,9 +1,12 @@
-import type { Schema } from 'borsh';
 import { publicKeyBorshSchema } from '../publicKey';
 
-export const stakeActionBorshSchema: Schema = {
+export const stakeActionBorshSchema = {
   struct: {
-    stake: 'u128',
-    publicKey: publicKeyBorshSchema,
+    stake: {
+      struct: {
+        stake: 'u128',
+        publicKey: publicKeyBorshSchema,
+      },
+    },
   },
 };

@@ -1,15 +1,24 @@
-import type { Schema } from 'borsh';
-
-const globalContractDeployModeBorshSchema: Schema = {
-  enum: [
-    { struct: { CodeHash: { struct: {} } } },
-    { struct: { AccountId: { struct: {} } } },
-  ],
+const codeHashModeBorshSchema = {
+  struct: {
+    CodeHash: { struct: {} },
+  },
 };
 
-export const deployGlobalContractActionBorshSchema: Schema = {
+const accountIdModeBorshSchema = {
   struct: {
-    code: { array: { type: 'u8' } },
-    deployMode: globalContractDeployModeBorshSchema,
+    AccountId: { struct: {} },
+  },
+};
+
+export const deployGlobalContractActionBorshSchema = {
+  struct: {
+    deployGlobalContract: {
+      struct: {
+        code: { array: { type: 'u8' } },
+        deployMode: {
+          enum: [codeHashModeBorshSchema, accountIdModeBorshSchema],
+        },
+      },
+    },
   },
 };

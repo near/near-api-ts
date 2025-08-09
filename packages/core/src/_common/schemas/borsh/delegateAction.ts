@@ -13,17 +13,17 @@ import { useGlobalContractActionBorshSchema } from './actions/useGlobalContract'
 
 const allowedActionBorshSchema: Schema = {
   enum: [
-    { struct: { createAccount: createAccountActionBorshSchema } },
-    { struct: { deployContract: deployContractActionBorshSchema } },
-    { struct: { functionCall: functionCallActionBorshSchema } },
-    { struct: { transfer: transferActionBorshSchema } },
-    { struct: { stake: stakeActionBorshSchema } },
-    { struct: { addKey: addKeyActionBorshSchema } },
-    { struct: { deleteKey: deleteKeyActionBorshSchema } },
-    { struct: { deleteAccount: deleteAccountActionBorshSchema } },
+    createAccountActionBorshSchema,
+    deployContractActionBorshSchema,
+    functionCallActionBorshSchema,
+    transferActionBorshSchema,
+    stakeActionBorshSchema,
+    addKeyActionBorshSchema,
+    deleteKeyActionBorshSchema,
+    deleteAccountActionBorshSchema,
     { struct: { signedDelegate: 'string' } }, // TODO is it possible to rid this placeholder and keep enum order?
-    { struct: { deployGlobalContract: deployGlobalContractActionBorshSchema } },
-    { struct: { useGlobalContract: useGlobalContractActionBorshSchema } },
+    deployGlobalContractActionBorshSchema,
+    useGlobalContractActionBorshSchema,
   ],
 };
 

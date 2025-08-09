@@ -1,7 +1,9 @@
-import type { Schema } from 'borsh';
-
-export const deployContractActionBorshSchema: Schema = {
+export const deployContractActionBorshSchema = {
   struct: {
-    code: { array: { type: 'u8' } },
+    deployContract: {
+      struct: {
+        code: { array: { type: 'u8' } },
+      },
+    },
   },
 };

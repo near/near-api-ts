@@ -1,8 +1,11 @@
-import type { Schema } from 'borsh';
 import { publicKeyBorshSchema } from '../publicKey';
 
-export const deleteKeyActionBorshSchema: Schema = {
+export const deleteKeyActionBorshSchema = {
   struct: {
-    publicKey: publicKeyBorshSchema,
+    deleteKey: {
+      struct: {
+        publicKey: publicKeyBorshSchema,
+      },
+    },
   },
 };

@@ -1,10 +1,13 @@
-import type { Schema } from 'borsh';
 import { delegateActionBorshSchema } from '../delegateAction';
 import { signatureBorshSchema } from '../signature';
 
-export const signedDelegateActionBorshSchema: Schema = {
+export const signedDelegateActionBorshSchema = {
   struct: {
-    delegateAction: delegateActionBorshSchema,
-    signature: signatureBorshSchema,
+    signedDelegate: {
+      struct: {
+        delegateAction: delegateActionBorshSchema,
+        signature: signatureBorshSchema,
+      },
+    },
   },
 };

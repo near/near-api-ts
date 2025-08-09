@@ -1,10 +1,12 @@
-import type { Schema } from 'borsh';
-
-export const functionCallActionBorshSchema: Schema = {
+export const functionCallActionBorshSchema = {
   struct: {
-    methodName: 'string',
-    args: { array: { type: 'u8' } },
-    gas: 'u64',
-    deposit: 'u128',
+    functionCall: {
+      struct: {
+        methodName: 'string',
+        args: { array: { type: 'u8' } },
+        gas: 'u64',
+        deposit: 'u128',
+      },
+    },
   },
 };

@@ -16,16 +16,16 @@ import { signedDelegateActionBorshSchema } from './actions/signedDelegate';
 const actionBorshSchema: Schema = {
   enum: [
     createAccountActionBorshSchema,
-    { struct: { deployContract: deployContractActionBorshSchema } },
-    { struct: { functionCall: functionCallActionBorshSchema } },
+    deployContractActionBorshSchema,
+    functionCallActionBorshSchema,
     transferActionBorshSchema,
-    { struct: { stake: stakeActionBorshSchema } },
-    { struct: { addKey: addKeyActionBorshSchema } },
-    { struct: { deleteKey: deleteKeyActionBorshSchema } },
-    { struct: { deleteAccount: deleteAccountActionBorshSchema } },
-    { struct: { signedDelegate: signedDelegateActionBorshSchema } },
-    { struct: { deployGlobalContract: deployGlobalContractActionBorshSchema } },
-    { struct: { useGlobalContract: useGlobalContractActionBorshSchema } },
+    stakeActionBorshSchema,
+    addKeyActionBorshSchema,
+    deleteKeyActionBorshSchema,
+    deleteAccountActionBorshSchema,
+    signedDelegateActionBorshSchema,
+    deployGlobalContractActionBorshSchema,
+    useGlobalContractActionBorshSchema,
   ],
 };
 

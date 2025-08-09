@@ -1,14 +1,23 @@
-import type { Schema } from 'borsh';
-
-const globalContractIdentifierBorshSchema: Schema = {
-  enum: [
-    { struct: { CodeHash: { array: { type: 'u8', len: 32 } } } },
-    { struct: { AccountId: 'string' } },
-  ],
+const codeHashIdentifierBorshSchema = {
+  struct: {
+    CodeHash: { array: { type: 'u8', len: 32 } },
+  },
 };
 
-export const useGlobalContractActionBorshSchema: Schema = {
+const accountIdIdentifierBorshSchema = {
   struct: {
-    contractIdentifier: globalContractIdentifierBorshSchema,
+    AccountId: 'string',
+  },
+};
+
+export const useGlobalContractActionBorshSchema = {
+  struct: {
+    useGlobalContract: {
+      struct: {
+        contractIdentifier: {
+          enum: [codeHashIdentifierBorshSchema, accountIdIdentifierBorshSchema],
+        },
+      },
+    },
   },
 };

@@ -1,7 +1,9 @@
-import type { Schema } from 'borsh';
-
-export const deleteAccountActionBorshSchema: Schema = {
+export const deleteAccountActionBorshSchema = {
   struct: {
-    beneficiaryId: 'string',
+    deleteAccount: {
+      struct: {
+        beneficiaryId: 'string',
+      },
+    },
   },
 };

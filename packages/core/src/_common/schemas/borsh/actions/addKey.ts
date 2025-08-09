@@ -1,35 +1,44 @@
-import type { Schema } from 'borsh';
 import { publicKeyBorshSchema } from '../publicKey';
 
-const fullAccessPermissionBorshSchema: Schema = {
-  struct: {},
-};
-
-const functionCallPermissionBorshSchema: Schema = {
+const fullAccessPermissionBorshSchema = {
   struct: {
-    receiverId: 'string',
-    allowance: { option: 'u128' },
-    methodNames: { array: { type: 'string' } },
+    fullAccess: {
+      struct: {},
+    },
   },
 };
 
-const accessKeyPermissionBorshSchema: Schema = {
-  enum: [
-    { struct: { fullAccess: fullAccessPermissionBorshSchema } },
-    { struct: { functionCall: functionCallPermissionBorshSchema } },
-  ],
+const functionCallPermissionBorshSchema = {
+  struct: {
+    functionCall: {
+      struct: {
+        receiverId: 'string',
+        allowance: { option: 'u128' },
+        methodNames: { array: { type: 'string' } },
+      },
+    },
+  },
 };
 
-const accessKeyBorshSchema: Schema = {
+const accessKeyBorshSchema = {
   struct: {
     nonce: 'u64',
-    permission: accessKeyPermissionBorshSchema,
+    permission: {
+      enum: [
+        fullAccessPermissionBorshSchema,
+        functionCallPermissionBorshSchema,
+      ],
+    },
   },
 };
 
-export const addKeyActionBorshSchema: Schema = {
+export const addKeyActionBorshSchema = {
   struct: {
-    publicKey: publicKeyBorshSchema,
-    accessKey: accessKeyBorshSchema,
+    addKey: {
+      struct: {
+        publicKey: publicKeyBorshSchema,
+        accessKey: accessKeyBorshSchema,
+      },
+    },
   },
 };
