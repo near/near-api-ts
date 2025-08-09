@@ -51,6 +51,7 @@ const getSecp256k1PublicKey = (
 };
 
 export const getPublicKey = (privateKey: PrivateKey): PublicKey => {
+  // TODO validate private key
   const { curve, u8Data: u8PrivateKey } = fromCurveString(privateKey);
   return curve === 'ed25519'
     ? getEd25519PublicKey(u8PrivateKey)

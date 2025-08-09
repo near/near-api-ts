@@ -1,26 +1,13 @@
-import type { TransferAction } from 'nat-types/transaction';
+import type { TransferAction } from 'nat-types/actions/transfer';
+import type { NearAmount } from 'nat-types/common';
 
 type TransferInput = {
-  amount:
-    | {
-        yoctoNear: bigint | string;
-      }
-    | {
-        near: bigint | string;
-      };
+  amount: NearAmount;
 };
 
-export const transfer = ({ amount }: TransferInput): TransferAction => {
-  // TODO do real parsing
-  const yoctoNear =
-    'yoctoNear' in amount ? BigInt(amount.yoctoNear) : BigInt(amount.near);
-
-  return {
-    type: 'Transfer',
-    params: {
-      amount: {
-        yoctoNear,
-      },
-    },
-  };
-};
+export const transfer = ({ amount }: TransferInput): TransferAction => ({
+  type: 'Transfer',
+  params: {
+    amount,
+  },
+});

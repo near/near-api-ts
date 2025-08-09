@@ -1,3 +1,7 @@
-import type { Schema } from 'borsh';
-
-export const createAccountActionBorshSchema: Schema = { struct: {} };
+export const createAccountActionBorshSchema = {
+  struct: {
+    createAccount: {
+      struct: {},
+    },
+  },
+};

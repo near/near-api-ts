@@ -1,7 +1,9 @@
-import type { Schema } from 'borsh';
-
-export const transferActionBorshSchema: Schema = {
+export const transferActionBorshSchema = {
   struct: {
-    deposit: 'u128',
+    transfer: {
+      struct: {
+        deposit: 'u128',
+      },
+    },
   },
 };

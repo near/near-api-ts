@@ -27,7 +27,7 @@ export const TransactionSchema = v.object({
   signerAccountId: AccountIdSchema,
   signerPublicKey: PublicKeySchema,
   receiverAccountId: AccountIdSchema,
-  action: v.optional(ActionSchema),
+  // action: v.optional(ActionSchema),
   nonce: NonceSchema,
   blockHash: Base58CryptoHashSchema,
 });

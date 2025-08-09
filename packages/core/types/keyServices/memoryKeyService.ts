@@ -1,8 +1,6 @@
 import type { PrivateKey, PublicKey } from '../crypto';
-import type {
-  Transaction,
-  SignedTransaction,
-} from '../transaction';
+import type { Transaction } from '../transaction';
+import type { SignedTransaction } from '../signedTransaction';
 
 export type KeySource = { privateKey: PrivateKey } | { seedPhrase: string };
 
@@ -12,8 +10,8 @@ export type KeyPair = {
 };
 
 export type Context = {
-  findPrivateKey: (publicKey: PublicKey) => PrivateKey;
   keyPairs: Record<PublicKey, KeyPair>;
+  findPrivateKey: (publicKey: PublicKey) => PrivateKey;
 };
 
 export type SignTransaction = (

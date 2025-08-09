@@ -14,3 +14,4 @@ export const BinaryCryptoKeyLengths = {
 } as const;
 
 export const BinaryCryptoHashLength = 32;
+export const NearDecimals = 24;

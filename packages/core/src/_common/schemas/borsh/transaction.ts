@@ -15,10 +15,10 @@ import { signedDelegateActionBorshSchema } from './actions/signedDelegate';
 // Actions order in this enum is important and must match nearcore
 const actionBorshSchema: Schema = {
   enum: [
-    { struct: { createAccount: createAccountActionBorshSchema } },
+    createAccountActionBorshSchema,
     { struct: { deployContract: deployContractActionBorshSchema } },
     { struct: { functionCall: functionCallActionBorshSchema } },
-    { struct: { transfer: transferActionBorshSchema } },
+    transferActionBorshSchema,
     { struct: { stake: stakeActionBorshSchema } },
     { struct: { addKey: addKeyActionBorshSchema } },
     { struct: { deleteKey: deleteKeyActionBorshSchema } },

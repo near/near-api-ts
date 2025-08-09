@@ -3,6 +3,11 @@ import {
   createMemoryKeyService,
   testnet,
   transfer,
+  createAccount,
+  addFullAccessKey,
+  addFunctionCallKey,
+  near,
+  yoctoNear,
 } from '@near-api-ts/core';
 
 const client = createClient({ network: testnet });
@@ -29,15 +34,15 @@ const { nonce, blockHash } = await client.getAccountKey({
 const signedTransaction = await keyService.signTransaction({
   signerAccountId,
   signerPublicKey: signerPublicKey,
-  action: transfer({ amount: { yoctoNear: '2' } }),
+  actions: [createAccount(), transfer({ amount: { near: '0.01' } })],
   receiverAccountId: 'eclipseer.testnet',
   nonce: nonce + 1,
   blockHash,
 });
 
 console.log(signedTransaction);
-const result = await client.sendSignedTransaction({ signedTransaction });
-console.log(result);
+// const result = await client.sendSignedTransaction({ signedTransaction });
+// console.log(result);
 
 // const { nonce, blockHash } = await client.getAccountKey({
 //   accountId: signerAccountId,

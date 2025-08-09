@@ -14,3 +14,13 @@ export type PublicKey = Ed25519PublicKey | Secp256k1PublicKey;
 
 export type PrivateKey = CurveString;
 export type Signature = CurveString;
+
+type NativeEd25519PublicKey = {
+  ed25519Key: { data: Uint8Array };
+};
+
+type NativeSecp256k1PublicKey = {
+  secp256k1Key: { data: Uint8Array };
+};
+
+export type NativePublicKey = NativeEd25519PublicKey | NativeSecp256k1PublicKey;

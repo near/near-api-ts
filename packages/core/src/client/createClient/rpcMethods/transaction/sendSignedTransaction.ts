@@ -1,7 +1,7 @@
 import { base64 } from '@scure/base';
-import { serializeSignedTransactionToBorsh } from '@common/transformers/signedTransaction';
+import { toBorshSignedTransaction } from '@common/transformers/borsh/toBorshSignedTransaction';
 import type { ClientMethodContext } from '../../createClient';
-import type { SignedTransaction } from 'nat-types/transaction';
+import type { SignedTransaction } from 'nat-types/signedTransaction';
 
 // https://docs.near.org/api/rpc/contracts#view-account
 
@@ -28,7 +28,7 @@ export const sendSignedTransaction =
         method: 'send_tx',
         params: {
           signed_tx_base64: base64.encode(
-            serializeSignedTransactionToBorsh(signedTransaction),
+            toBorshSignedTransaction(signedTransaction),
           ),
           wait_until: waitUntil,
         },
