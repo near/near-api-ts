@@ -1,6 +1,6 @@
 import { serialize } from 'borsh';
 import { signedTransactionBorshSchema } from '@common/schemas/borsh';
-import { toNativeTransaction } from './transactionToBorshBytes';
+import { toNativeTransaction } from './transactionToBorsh';
 import type { Signature } from 'nat-types/crypto';
 import type { SignedTransaction } from 'nat-types/signedTransaction';
 import { fromCurveString } from '../curveString';

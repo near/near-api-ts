@@ -1,17 +1,7 @@
 import type { Action, NativeAction, Transaction } from 'nat-types/transaction';
-import { transfer } from './transfer';
-import { addKey } from './addKey';
-import { createAccount } from './createAccount';
-// import type {
-//   TransferAction,
-//   CreateAccountAction,
-// } from 'nat-types/actions';
-//
-// const getBorshTransferAction = (action: TransferAction) => ({
-//   transfer: {
-//     deposit: action.params.amount.yoctoNear,
-//   },
-// });
+import { transfer } from '@common/transformers/borsh/nativeActions/transfer';
+import { addKey } from '@common/transformers/borsh/nativeActions/addKey';
+import { createAccount } from '@common/transformers/borsh/nativeActions/createAccount';
 
 const toBorshAction = (action: Action): NativeAction => {
   if (action.type === 'Transfer') return transfer(action);

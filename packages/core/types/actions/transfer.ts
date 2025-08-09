@@ -7,4 +7,8 @@ export type TransferAction = {
   };
 };
 
-export type NativeTransferAction = {}
+export type NativeTransferAction = {
+  transfer: {
+    deposit: bigint;
+  };
+};

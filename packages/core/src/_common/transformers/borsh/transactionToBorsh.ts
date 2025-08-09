@@ -4,9 +4,11 @@ import { transactionBorshSchema } from '../../schemas/borsh';
 import { toBorshPublicKey } from '@common/transformers/borsh/toBorshPublicKey';
 import type { BorshBytes } from 'nat-types/common';
 import type { Transaction, NativeTransaction } from 'nat-types/transaction';
-import { toNativeActions } from '@common/transformers/borsh/toNativeActions/toNativeActions';
+import { toNativeActions } from '@common/transformers/borsh/toNativeActions';
 
-export const toNativeTransaction = (transaction: Transaction): NativeTransaction => ({
+export const toNativeTransaction = (
+  transaction: Transaction,
+): NativeTransaction => ({
   signerId: transaction.signerAccountId,
   publicKey: toBorshPublicKey(transaction.signerPublicKey),
   actions: toNativeActions(transaction),
@@ -15,9 +17,9 @@ export const toNativeTransaction = (transaction: Transaction): NativeTransaction
   blockHash: base58.decode(transaction.blockHash),
 });
 
-export const borshSerializeNativeTransaction = (
+export const nativeTransactionToBorsh = (
   nativeTransaction: NativeTransaction,
-) => serialize(transactionBorshSchema, nativeTransaction);
+): BorshBytes => serialize(transactionBorshSchema, nativeTransaction);
 
-export const transactionToBorshBytes = (transaction: Transaction): BorshBytes =>
-  borshSerializeNativeTransaction(toNativeTransaction(transaction));
+export const transactionToBorsh = (transaction: Transaction): BorshBytes =>
+  nativeTransactionToBorsh(toNativeTransaction(transaction));
