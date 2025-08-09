@@ -34,15 +34,15 @@ const { nonce, blockHash } = await client.getAccountKey({
 const signedTransaction = await keyService.signTransaction({
   signerAccountId,
   signerPublicKey: signerPublicKey,
-  actions: [createAccount(), transfer({ amount: { near: '0.01' } })],
+  action: transfer({ amount: { near: '0.00001' } }),
   receiverAccountId: 'eclipseer.testnet',
   nonce: nonce + 1,
   blockHash,
 });
 
 console.log(signedTransaction);
-// const result = await client.sendSignedTransaction({ signedTransaction });
-// console.log(result);
+const result = await client.sendSignedTransaction({ signedTransaction });
+console.log(result);
 
 // const { nonce, blockHash } = await client.getAccountKey({
 //   accountId: signerAccountId,

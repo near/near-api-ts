@@ -8,12 +8,12 @@ import type {
   TransferAction,
   NativeTransferAction,
 } from 'nat-types/actions/transfer';
-// import type {
-//   AddKeyAction,
-//   NativeAddKeyAction,
-// } from 'nat-types/actions/addKey';
+import type {
+  AddKeyAction,
+  NativeAddKeyAction,
+} from 'nat-types/actions/addKey';
 
-export type Action = CreateAccountAction | TransferAction // | AddKeyAction;
+export type Action = CreateAccountAction | TransferAction | AddKeyAction;
 
 export type Transaction = {
   signerAccountId: AccountId;
@@ -28,7 +28,7 @@ export type Transaction = {
 export type NativeAction =
   | NativeCreateAccountAction
   | NativeTransferAction
-  // | NativeAddKeyAction;
+  | NativeAddKeyAction;
 
 export type NativeTransaction = {
   signerId: AccountId;

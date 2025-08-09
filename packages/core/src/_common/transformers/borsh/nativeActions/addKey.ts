@@ -1,43 +1,33 @@
-import type { AddKeyAction, NativeAddKeyAction } from 'nat-types/actions/addKey';
+import type {
+  AddKeyAction,
+  NativeAddKeyAction,
+} from 'nat-types/actions/addKey';
+import { toNativePublicKey } from '@common/transformers/borsh/toNativePublicKey';
+import { nearAmount } from '../../../../helpers/tokens/near';
 
-export const addKey = (action: AddKeyAction): NativeAddKeyAction => {
+const getPermission = (
+  params: AddKeyAction['params'],
+): NativeAddKeyAction['addKey']['accessKey']['permission'] => {
+  if (params.permission === 'FullAccess') return { fullAccess: {} };
+
+  const { contractAccountId, gasBudget, allowedFunctions } =
+    params.restrictions;
+
   return {
+    functionCall: {
+      receiverId: contractAccountId,
+      allowance: gasBudget && nearAmount(gasBudget).yoctoNear,
+      methodNames: allowedFunctions ?? [],
+    },
+  };
+};
 
-  }
-}
-
-// export const addEd25519FullAccessKey = ({ publicKey }: any) => {
-//   return {
-//     addKey: {
-//       publicKey: {
-//         ed25519Key: {
-//           // data: extractData(publicKey),
-//         },
-//       },
-//       accessKey: {
-//         nonce: 0n, // deprecated field, only for compatibility
-//         permission: {
-//           fullAccess: {},
-//         },
-//       },
-//     },
-//   };
-// };
-//
-// export const addSecp256k1FullAccessKey = ({ publicKey }: any) => {
-//   return {
-//     addKey: {
-//       publicKey: {
-//         secp256k1Key: {
-//           // data: extractData(publicKey),
-//         },
-//       },
-//       accessKey: {
-//         nonce: 0n, // deprecated field, only for compatibility
-//         permission: {
-//           fullAccess: {},
-//         },
-//       },
-//     },
-//   };
-// };
+export const addKey = (action: AddKeyAction): NativeAddKeyAction => ({
+  addKey: {
+    publicKey: toNativePublicKey(action.params.publicKey),
+    accessKey: {
+      nonce: 0n, // Placeholder; It's not usable anymore
+      permission: getPermission(action.params),
+    },
+  },
+});

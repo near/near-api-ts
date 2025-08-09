@@ -12,8 +12,8 @@ const functionCallPermissionBorshSchema = {
   struct: {
     functionCall: {
       struct: {
-        receiverId: 'string',
         allowance: { option: 'u128' },
+        receiverId: 'string',
         methodNames: { array: { type: 'string' } },
       },
     },
@@ -25,8 +25,8 @@ const accessKeyBorshSchema = {
     nonce: 'u64',
     permission: {
       enum: [
-        fullAccessPermissionBorshSchema,
         functionCallPermissionBorshSchema,
+        fullAccessPermissionBorshSchema,
       ],
     },
   },

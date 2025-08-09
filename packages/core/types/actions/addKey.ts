@@ -1,5 +1,9 @@
-import type { PublicKey } from 'nat-types/crypto';
-import type { AccountId, ContractFunctionName, NearAmount } from 'nat-types/common';
+import type { NativePublicKey, PublicKey } from 'nat-types/crypto';
+import type {
+  AccountId,
+  ContractFunctionName,
+  NearAmount,
+} from 'nat-types/common';
 
 type FullAccessKeyParams = {
   publicKey: PublicKey;
@@ -21,4 +25,26 @@ export type AddKeyAction = {
   params: FullAccessKeyParams | FunctionCallKeyParams;
 };
 
-export type NativeAddKeyAction = {}
+// ****** NATIVE ********
+
+type NativeFullAccessPermission = {
+  fullAccess: {};
+};
+
+type NativeFunctionCallPermission = {
+  functionCall: {
+    receiverId: AccountId;
+    allowance?: bigint;
+    methodNames?: ContractFunctionName[];
+  };
+};
+
+export type NativeAddKeyAction = {
+  addKey: {
+    publicKey: NativePublicKey;
+    accessKey: {
+      nonce: bigint;
+      permission: NativeFullAccessPermission | NativeFunctionCallPermission;
+    };
+  };
+};
