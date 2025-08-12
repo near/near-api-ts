@@ -2,7 +2,7 @@ import type { NativePublicKey, PublicKey } from 'nat-types/crypto';
 import type {
   AccountId,
   ContractFunctionName,
-  NearAmount,
+  NearOption,
 } from 'nat-types/common';
 
 type FullAccessKeyParams = {
@@ -15,7 +15,7 @@ type FunctionCallKeyParams = {
   permission: 'FunctionCall';
   restrictions: {
     contractAccountId: AccountId;
-    gasBudget?: NearAmount;
+    gasBudget?: NearOption;
     allowedFunctions?: ContractFunctionName[];
   };
 };

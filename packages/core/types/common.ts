@@ -37,5 +37,15 @@ export type NearToken = {
   yoctoNear: bigint;
   near: string;
 };
+export type NearOption = { near: Tokens } | { yoctoNear: Units };
 
-export type NearAmount = { near: Tokens } | { yoctoNear: Units };
+export type Gas = bigint;
+export type TeraGas = bigint;
+/**
+ * Maximum gas limit is 300 TeraGas
+ */
+export type GasLimit = {
+  gas: Gas,
+  teraGas: TeraGas,
+}
+export type GasOption = { gas: Gas } | { teraGas: TeraGas };

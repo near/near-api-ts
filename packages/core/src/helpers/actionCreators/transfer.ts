@@ -1,8 +1,8 @@
 import type { TransferAction } from 'nat-types/actions/transfer';
-import type { NearAmount } from 'nat-types/common';
+import type { NearOption } from 'nat-types/common';
 
 type TransferInput = {
-  amount: NearAmount;
+  amount: NearOption;
 };
 
 export const transfer = ({ amount }: TransferInput): TransferAction => ({

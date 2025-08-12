@@ -2,11 +2,13 @@ import type { Action, NativeAction, Transaction } from 'nat-types/transaction';
 import { transfer } from '@common/transformers/borsh/nativeActions/transfer';
 import { addKey } from '@common/transformers/borsh/nativeActions/addKey';
 import { createAccount } from '@common/transformers/borsh/nativeActions/createAccount';
+import { functionCall } from '@common/transformers/borsh/nativeActions/functionCall';
 
 const toNativeAction = (action: Action): NativeAction => {
   if (action.type === 'Transfer') return transfer(action);
   if (action.type === 'CreateAccount') return createAccount();
   if (action.type === 'AddKey') return addKey(action);
+  if (action.type === 'FunctionCall') return functionCall(action);
   throw new Error('Invalid action type');
 };
 

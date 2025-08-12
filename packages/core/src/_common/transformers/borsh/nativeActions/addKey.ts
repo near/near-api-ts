@@ -3,7 +3,7 @@ import type {
   NativeAddKeyAction,
 } from 'nat-types/actions/addKey';
 import { toNativePublicKey } from '@common/transformers/borsh/toNativePublicKey';
-import { nearAmount } from '../../../../helpers/tokens/near';
+import { fromNearOption } from '../../../../helpers/near';
 
 const getPermission = (
   params: AddKeyAction['params'],
@@ -16,7 +16,7 @@ const getPermission = (
   return {
     functionCall: {
       receiverId: contractAccountId,
-      allowance: gasBudget && nearAmount(gasBudget).yoctoNear,
+      allowance: gasBudget && fromNearOption(gasBudget).yoctoNear,
       methodNames: allowedFunctions ?? [],
     },
   };

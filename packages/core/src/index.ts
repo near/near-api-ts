@@ -8,5 +8,6 @@ export {
   addFullAccessKey,
   addFunctionCallKey,
 } from './helpers/actionCreators/addKey';
+export { functionCall } from './helpers/actionCreators/functionCall';
 
-export { near, yoctoNear } from './helpers/tokens/near';
+export { near, yoctoNear } from './helpers/near';

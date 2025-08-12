@@ -12,8 +12,19 @@ import type {
   AddKeyAction,
   NativeAddKeyAction,
 } from 'nat-types/actions/addKey';
+import type {
+  FunctionCallAction,
+  NativeFunctionCallAction,
+} from 'nat-types/actions/functionCall';
 
-export type Action = CreateAccountAction | TransferAction | AddKeyAction;
+export type Action =
+  | CreateAccountAction
+  | TransferAction
+  | AddKeyAction
+  | FunctionCallAction<object>;
+
+type SingleAction = { action: Action; actions?: never };
+type MultiActions = { action?: never; actions: Action[] };
 
 type TransactionBase = {
   signerAccountId: AccountId;
@@ -23,15 +34,13 @@ type TransactionBase = {
   blockHash: BlockHash;
 };
 
-type SingleAction = { action: Action; actions?: never };
-type MultiActions = { action?: never; actions: Action[] };
-
 export type Transaction = TransactionBase & (SingleAction | MultiActions);
 
 export type NativeAction =
   | NativeCreateAccountAction
   | NativeTransferAction
-  | NativeAddKeyAction;
+  | NativeAddKeyAction
+  | NativeFunctionCallAction;
 
 export type NativeTransaction = {
   signerId: AccountId;

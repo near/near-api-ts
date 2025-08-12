@@ -3,7 +3,7 @@ import type { PublicKey } from 'nat-types/crypto';
 import type {
   AccountId,
   ContractFunctionName,
-  NearAmount,
+  NearOption,
 } from 'nat-types/common';
 
 type AddFullAccessKeyInput = {
@@ -23,7 +23,7 @@ export const addFullAccessKey = ({
 type AddFunctionCallInput = {
   publicKey: PublicKey;
   contractAccountId: AccountId;
-  gasBudget?: NearAmount;
+  gasBudget?: NearOption;
   allowedFunctions?: ContractFunctionName[];
 };
 
