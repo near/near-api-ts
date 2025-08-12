@@ -20,13 +20,18 @@ import type {
   DeleteKeyAction,
   NativeDeleteKeyAction,
 } from 'nat-types/actions/deleteKey';
+import type {
+  DeleteAccountAction,
+  NativeDeleteAccountAction,
+} from 'nat-types/actions/deleteAccount';
 
 export type Action =
   | CreateAccountAction
   | TransferAction
   | AddKeyAction
   | FunctionCallAction<object>
-  | DeleteKeyAction;
+  | DeleteKeyAction
+  | DeleteAccountAction;
 
 type SingleAction = { action: Action; actions?: never };
 type MultiActions = { action?: never; actions: Action[] };
@@ -46,7 +51,8 @@ export type NativeAction =
   | NativeTransferAction
   | NativeAddKeyAction
   | NativeFunctionCallAction
-  | NativeDeleteKeyAction;
+  | NativeDeleteKeyAction
+  | NativeDeleteAccountAction;
 
 export type NativeTransaction = {
   signerId: AccountId;

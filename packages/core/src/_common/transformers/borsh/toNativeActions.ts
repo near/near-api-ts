@@ -4,6 +4,7 @@ import { addKey } from '@common/transformers/borsh/nativeActions/addKey';
 import { createAccount } from '@common/transformers/borsh/nativeActions/createAccount';
 import { functionCall } from '@common/transformers/borsh/nativeActions/functionCall';
 import { deleteKey } from '@common/transformers/borsh/nativeActions/deleteKey';
+import { deleteAccount } from '@common/transformers/borsh/nativeActions/deleteAccount';
 
 const toNativeAction = (action: Action): NativeAction => {
   if (action.type === 'Transfer') return transfer(action);
@@ -11,6 +12,7 @@ const toNativeAction = (action: Action): NativeAction => {
   if (action.type === 'AddKey') return addKey(action);
   if (action.type === 'FunctionCall') return functionCall(action);
   if (action.type === 'DeleteKey') return deleteKey(action);
+  if (action.type === 'DeleteAccount') return deleteAccount(action);
   throw new Error('Invalid action type');
 };
 

@@ -10,6 +10,7 @@ export {
 } from './helpers/actionCreators/addKey';
 export { functionCall } from './helpers/actionCreators/functionCall';
 export { deleteKey } from './helpers/actionCreators/deleteKey';
+export { deleteAccount } from './helpers/actionCreators/deleteAccount';
 
 export { near, yoctoNear } from './helpers/near';
 export { gas, teraGas } from './helpers/gas';
