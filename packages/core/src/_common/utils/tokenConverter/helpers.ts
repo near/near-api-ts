@@ -21,6 +21,6 @@ export const pow10 = (decimals: number): bigint => {
 /** Validates that decimals is an integer within 1..100. */
 export const assertValidDecimals = (decimals: number): void => {
   if (!Number.isInteger(decimals) || decimals < 1 || decimals > 100) {
-    throw new Error('decimals must be an integer in the range 1..100');
+    throw new Error('Decimals must be an integer in the range 1..100');
   }
 };

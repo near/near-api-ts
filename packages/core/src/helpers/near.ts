@@ -14,7 +14,7 @@ export const yoctoNear = (units: Units): NearToken => {
 export const near = (tokens: Tokens): NearToken => {
   // TODO validate tokens
   return {
-    yoctoNear: BigInt(convertTokensToUnits(tokens, NearDecimals)),
+    yoctoNear: convertTokensToUnits(tokens, NearDecimals),
     near: tokens,
   };
 };

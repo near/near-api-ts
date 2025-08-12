@@ -43,7 +43,7 @@ const assertValidTokens = (tokens: string, decimals: number) => {
 export const convertTokensToUnits = (
   tokens: string,
   decimals: number,
-): string => {
+): bigint => {
   assertValidDecimals(decimals);
   assertValidTokens(tokens, decimals);
 
@@ -60,5 +60,5 @@ export const convertTokensToUnits = (
     : 0n;
 
   // Sum and return as an integer string (BigInt.toString() never yields leading zeros)
-  return (integerUnits + fractionalUnits).toString();
+  return integerUnits + fractionalUnits;
 };
