@@ -15,15 +15,18 @@ import type {
 
 export type Action = CreateAccountAction | TransferAction | AddKeyAction;
 
-export type Transaction = {
+type TransactionBase = {
   signerAccountId: AccountId;
   signerPublicKey: PublicKey;
-  action?: Action;
-  actions?: Action[];
   receiverAccountId: AccountId;
   nonce: Nonce;
   blockHash: BlockHash;
 };
+
+type SingleAction = { action: Action; actions?: never };
+type MultiActions = { action?: never; actions: Action[] };
+
+export type Transaction = TransactionBase & (SingleAction | MultiActions);
 
 export type NativeAction =
   | NativeCreateAccountAction
