@@ -11,14 +11,14 @@ const parseBlockId = (blockId: BlockId) => {
 };
 
 const finalityMap = {
-  OPTIMISTIC: 'optimistic',
-  NEAR_FINAL: 'near-final',
-  FINAL: 'final',
-};
+  Optimistic: 'optimistic',
+  NearFinal: 'near-final',
+  Final: 'final',
+} as const;
 
 export const getBlockTarget = ({ finality, blockId }: BlockTarget = {}) => {
   if (blockId) return { block_id: parseBlockId(blockId) };
   return {
-    finality: finality ? finalityMap[finality] : finalityMap.NEAR_FINAL,
+    finality: finality ? finalityMap[finality] : finalityMap.NearFinal,
   };
 };

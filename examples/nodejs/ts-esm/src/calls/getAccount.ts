@@ -7,7 +7,7 @@ const client = createClient({ network: testnet });
 const accountResult = await client.getAccount({
   accountId,
   options: {
-    finality: 'OPTIMISTIC',
+    finality: 'Optimistic',
   },
 });
 console.log(accountResult);
