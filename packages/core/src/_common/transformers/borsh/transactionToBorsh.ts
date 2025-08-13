@@ -13,7 +13,7 @@ export const toNativeTransaction = (
   publicKey: toNativePublicKey(transaction.signerPublicKey),
   actions: toNativeActions(transaction),
   receiverId: transaction.receiverAccountId,
-  nonce: BigInt(transaction.nonce),
+  nonce: transaction.nonce,
   blockHash: base58.decode(transaction.blockHash),
 });
 

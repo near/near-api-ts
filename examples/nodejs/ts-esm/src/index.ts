@@ -4,4 +4,5 @@
 // import './transactions/addFunctionCallKey';
 // import './transactions/functionCall';
 // import './transactions/deleteKey';
+ import './transactions/deployContract';
 // import './calls/getAccount';

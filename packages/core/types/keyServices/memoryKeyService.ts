@@ -21,3 +21,8 @@ export type SignTransaction = (
 export type MemoryKeyService = {
   signTransaction: SignTransaction;
 };
+
+type SingleKeySource = { keySource: KeySource; keySources?: never };
+type MultiKeySources = { keySource?: never; keySources: KeySource[] };
+
+export type CreateMemoryKeyServiceInput = SingleKeySource | MultiKeySources;

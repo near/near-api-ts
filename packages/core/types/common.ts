@@ -20,6 +20,7 @@ export type BlockTarget = ByFinality | ByBlockId;
  */
 export type Hex = Uint8Array | string;
 export type Base58String = string;
+export type Base64String = string;
 
 export type Nonce = number;
 export type AccountId = string;

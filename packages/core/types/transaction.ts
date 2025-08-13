@@ -24,11 +24,16 @@ import type {
   DeleteAccountAction,
   NativeDeleteAccountAction,
 } from 'nat-types/actions/deleteAccount';
+import type {
+  DeployContractAction,
+  NativeDeployContractAction,
+} from 'nat-types/actions/deployContract';
 
 export type Action =
   | CreateAccountAction
   | TransferAction
   | AddKeyAction
+  | DeployContractAction
   | FunctionCallAction<object>
   | DeleteKeyAction
   | DeleteAccountAction;
@@ -50,6 +55,7 @@ export type NativeAction =
   | NativeCreateAccountAction
   | NativeTransferAction
   | NativeAddKeyAction
+  | NativeDeployContractAction
   | NativeFunctionCallAction
   | NativeDeleteKeyAction
   | NativeDeleteAccountAction;

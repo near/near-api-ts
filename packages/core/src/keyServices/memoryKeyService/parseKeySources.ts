@@ -2,6 +2,7 @@ import type {
   KeyPair,
   KeySource,
   Context,
+  CreateMemoryKeyServiceInput,
 } from 'nat-types/keyServices/memoryKeyService';
 import { getPublicKey } from '../../helpers/crypto/getPublicKey';
 
@@ -21,13 +22,26 @@ const parseKeySource = (keySource: KeySource): KeyPair => {
     };
   }
 
-  throw new Error('Unknown key source key source');
+  throw new Error('Unknown keySource');
 };
 
-export const parseKeySources = (keySources: KeySource[]): Context['keyPairs'] =>
-  Object.fromEntries(
-    keySources.map((keySource) => {
-      const keyPair = parseKeySource(keySource);
-      return [keyPair.publicKey, keyPair];
-    }),
+export const parseKeySources = (
+  params: CreateMemoryKeyServiceInput,
+): Context['keyPairs'] => {
+  if (params.keySource) {
+    const keyPair = parseKeySource(params.keySource);
+    return { [keyPair.publicKey]: keyPair };
+  }
+
+  if (params.keySources)
+    return Object.fromEntries(
+      params.keySources.map((keySource) => {
+        const keyPair = parseKeySource(keySource);
+        return [keyPair.publicKey, keyPair];
+      }),
+    );
+
+  throw new Error(
+    'Cannot create MemoryKeyService - no private keys were found',
   );
+};

@@ -1,8 +1,8 @@
 import { createSignTransaction } from './signTransaction';
 import type {
-  KeySource,
   Context,
   MemoryKeyService,
+  CreateMemoryKeyServiceInput,
 } from 'nat-types/keyServices/memoryKeyService';
 import { parseKeySources } from './parseKeySources';
 import type { PublicKey } from 'nat-types/crypto';
@@ -16,14 +16,10 @@ const createFindPrivateKey =
     );
   };
 
-type Input = {
-  keySources: KeySource[];
-};
-
-export const createMemoryKeyService = async ({
-  keySources,
-}: Input): Promise<MemoryKeyService> => {
-  const keyPairs = parseKeySources(keySources);
+export const createMemoryKeyService = async (
+  params: CreateMemoryKeyServiceInput,
+): Promise<MemoryKeyService> => {
+  const keyPairs = parseKeySources(params);
   const findPrivateKey = createFindPrivateKey(keyPairs);
 
   const context: Context = {
