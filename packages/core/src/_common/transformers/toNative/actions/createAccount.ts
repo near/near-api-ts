@@ -1,5 +1,5 @@
 import type { NativeCreateAccountAction } from 'nat-types/actions/createAccount';
 
-export const createAccount = (): NativeCreateAccountAction => ({
+export const toNativeCreateAccountAction = (): NativeCreateAccountAction => ({
   createAccount: {},
 });

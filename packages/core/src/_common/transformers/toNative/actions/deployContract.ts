@@ -4,7 +4,7 @@ import type {
   NativeDeployContractAction,
 } from 'nat-types/actions/deployContract';
 
-export const deployContract = (
+export const toNativeDeployContractAction = (
   action: DeployContractAction,
 ): NativeDeployContractAction => {
   const code = action.params.wasmBytes

@@ -4,7 +4,9 @@ import type {
 } from 'nat-types/actions/transfer';
 import { fromNearOption } from '../../../../helpers/near';
 
-export const transfer = (action: TransferAction): NativeTransferAction => ({
+export const toNativeTransferAction = (
+  action: TransferAction,
+): NativeTransferAction => ({
   transfer: {
     deposit: fromNearOption(action.params.amount).yoctoNear,
   },

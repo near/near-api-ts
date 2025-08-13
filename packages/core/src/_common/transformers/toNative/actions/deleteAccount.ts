@@ -3,7 +3,7 @@ import type {
   NativeDeleteAccountAction,
 } from 'nat-types/actions/deleteAccount';
 
-export const deleteAccount = (
+export const toNativeDeleteAccountAction = (
   action: DeleteAccountAction,
 ): NativeDeleteAccountAction => ({
   deleteAccount: {

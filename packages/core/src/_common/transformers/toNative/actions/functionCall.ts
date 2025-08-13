@@ -15,7 +15,7 @@ const getArgs = (params: FunctionCallParams<object>): Uint8Array => {
   return new Uint8Array();
 };
 
-export const functionCall = (
+export const toNativeFunctionCallAction = (
   action: FunctionCallAction<object>,
 ): NativeFunctionCallAction => {
   const { fnName, attachedDeposit, gasLimit } = action.params;

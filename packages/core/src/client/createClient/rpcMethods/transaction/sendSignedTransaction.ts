@@ -1,5 +1,5 @@
 import { base64 } from '@scure/base';
-import { toBorshSignedTransaction } from '@common/transformers/borsh/toBorshSignedTransaction';
+import { serializeSignedTransaction } from '@common/transformers/toBorshBytes/signedTransaction';
 import type { ClientMethodContext } from '../../createClient';
 import type { SignedTransaction } from 'nat-types/signedTransaction';
 
@@ -28,7 +28,7 @@ export const sendSignedTransaction =
         method: 'send_tx',
         params: {
           signed_tx_base64: base64.encode(
-            toBorshSignedTransaction(signedTransaction),
+            serializeSignedTransaction(signedTransaction),
           ),
           wait_until: waitUntil,
         },

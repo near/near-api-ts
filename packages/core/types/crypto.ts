@@ -24,3 +24,13 @@ type NativeSecp256k1PublicKey = {
 };
 
 export type NativePublicKey = NativeEd25519PublicKey | NativeSecp256k1PublicKey;
+
+type NativeEd25519Signature = {
+  ed25519Signature: { data: Uint8Array };
+};
+
+type NativeSecp256k1Signature = {
+  secp256k1Signature: { data: Uint8Array };
+};
+
+export type NativeSignature = NativeEd25519Signature | NativeSecp256k1Signature;

@@ -2,7 +2,7 @@ import type {
   AddKeyAction,
   NativeAddKeyAction,
 } from 'nat-types/actions/addKey';
-import { toNativePublicKey } from '@common/transformers/borsh/toNativePublicKey';
+import { toNativePublicKey } from '@common/transformers/toNative/publicKey';
 import { fromNearOption } from '../../../../helpers/near';
 
 const getPermission = (
@@ -22,7 +22,9 @@ const getPermission = (
   };
 };
 
-export const addKey = (action: AddKeyAction): NativeAddKeyAction => ({
+export const toNativeAddKeyAction = (
+  action: AddKeyAction,
+): NativeAddKeyAction => ({
   addKey: {
     publicKey: toNativePublicKey(action.params.publicKey),
     accessKey: {
