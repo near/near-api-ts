@@ -4,8 +4,8 @@ import type {
   GasOption,
 } from 'nat-types/common';
 
-type FnArgsJson<ArgsJson> = { fnArgsJson: ArgsJson; fnArgsBinary?: never };
-type FnArgsBinary = { fnArgsJson?: never; fnArgsBinary?: Uint8Array };
+type FnArgsJson<ArgsJson> = { fnArgsJson: ArgsJson; fnArgsBytes?: never };
+type FnArgsBytes = { fnArgsJson?: never; fnArgsBytes?: Uint8Array };
 
 type FunctionCallBase = {
   fnName: ContractFunctionName;
@@ -14,7 +14,7 @@ type FunctionCallBase = {
 };
 
 export type FunctionCallParams<ArgsJson extends object> = FunctionCallBase &
-  (FnArgsBinary | FnArgsJson<ArgsJson>);
+  (FnArgsBytes | FnArgsJson<ArgsJson>);
 
 export type FunctionCallAction<ArgsJson extends object> = {
   type: 'FunctionCall';
