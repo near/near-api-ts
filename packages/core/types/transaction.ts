@@ -51,6 +51,10 @@ type TransactionBase = {
 
 export type Transaction = TransactionBase & (SingleAction | MultiActions);
 
+export type TransactionIntent = {
+  receiverAccountId: AccountId;
+} & (SingleAction | MultiActions);
+
 export type NativeAction =
   | NativeCreateAccountAction
   | NativeTransferAction

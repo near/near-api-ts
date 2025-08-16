@@ -9,9 +9,9 @@ export const snakeToCamelCase = (obj: any): any => {
 
   return Object.keys(obj).reduce((acc: any, key) => {
     const value = obj[key];
-    const camelKey = key
-      .replace(/(_\w)/g, (match) => match.charAt(1).toUpperCase())
-      .replace(/^(.)/, (letter) => letter.toLowerCase());
+    const camelKey = key.replace(/(_\w)/g, (match) =>
+      match.charAt(1).toUpperCase(),
+    );
 
     if (value !== null && typeof value === 'object') {
       acc[camelKey] = snakeToCamelCase(value);

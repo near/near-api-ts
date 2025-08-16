@@ -6,20 +6,6 @@ import type {
   NearOption,
 } from 'nat-types/common';
 
-type AddFullAccessKeyInput = {
-  publicKey: PublicKey;
-};
-
-export const addFullAccessKey = ({
-  publicKey,
-}: AddFullAccessKeyInput): AddKeyAction => ({
-  type: 'AddKey',
-  params: {
-    publicKey,
-    permission: 'FullAccess',
-  },
-});
-
 type AddFunctionCallInput = {
   publicKey: PublicKey;
   contractAccountId: AccountId;

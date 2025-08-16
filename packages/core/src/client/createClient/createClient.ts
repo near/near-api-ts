@@ -23,7 +23,7 @@ export type ClientState = {
 
 export type ClientMethodContext = {
   sendRequest: SendRequest;
-}
+};
 
 type createClientArgs = {
   network: Network;
@@ -33,6 +33,7 @@ type CreateClient = (args: createClientArgs) => {
   getAccount: factoryRpcMethods.GetAccount;
   getAccountBalance: factoryRpcMethods.GetAccountBalance;
   getAccountKey: factoryRpcMethods.GetAccountKey;
+  getAccountKeys: factoryRpcMethods.GetAccountKeys;
   getProtocolConfig: factoryRpcMethods.GetProtocolConfig;
   sendSignedTransaction: factoryRpcMethods.SendSignedTransaction;
 };
@@ -53,7 +54,11 @@ export const createClient: CreateClient = ({ network }) => {
     getAccount: factoryRpcMethods.getAccount(context),
     getAccountBalance: factoryRpcMethods.getAccountBalance(context),
     getAccountKey: factoryRpcMethods.getAccountKey(context),
+    getAccountKeys: factoryRpcMethods.getAccountKeys(context),
     getProtocolConfig: factoryRpcMethods.getProtocolConfig(context),
     sendSignedTransaction: factoryRpcMethods.sendSignedTransaction(context),
   };
 };
+
+// TODO move to types
+export type Client = ReturnType<CreateClient>;
