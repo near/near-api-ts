@@ -21,7 +21,6 @@ const createExecuteMultipleTransaction =
 const createSignTransaction =
   (context: any) => async (transactionIntent: TransactionIntent) => {
     const taskId = context.taskQueue.addSignTransactionTask(transactionIntent);
-    console.log(taskId);
     return await context.resolver.waitForTask(taskId);
   };
 

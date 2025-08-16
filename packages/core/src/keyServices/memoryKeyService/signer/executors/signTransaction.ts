@@ -1,7 +1,7 @@
 import { getTransactionHash } from '../../../../helpers/crypto/getTransactionHash';
 import { sign } from '../../../../helpers/crypto/sign';
 
-export const signTransactionExecutor = async (
+export const signTransaction = async (
   signerContext: any,
   task: any,
   key: any,
@@ -38,7 +38,4 @@ export const signTransactionExecutor = async (
   signerContext.resolver.completeTask(task.taskId, {
     result: signedTransaction,
   });
-
-  key.incrementNonce();
-  key.unlock();
 };
