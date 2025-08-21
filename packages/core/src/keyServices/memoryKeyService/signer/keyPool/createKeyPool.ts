@@ -3,10 +3,12 @@ import { createFindKeyForTask } from './createFindKeyForTask';
 
 const createLock = (key: any) => () => {
   key.isLocked = true;
+  console.log('Key locked', key.publicKey);
 };
 
 const createUnlock = (key: any, signerContext: any) => () => {
   key.isLocked = false;
+  console.log('Key unlocked', key.publicKey);
   signerContext.matcher.handleKeyUnlock(key);
 };
 
@@ -14,7 +16,11 @@ const createIncrementNonce = (key: any) => () => {
   key.nonce = key.nonce + 1;
 };
 
-const getFullAccessKeyList = (accountKeys: any, keyPairs: any, signerContext: any) =>
+const getFullAccessKeyList = (
+  accountKeys: any,
+  keyPairs: any,
+  signerContext: any,
+) =>
   accountKeys
     .filter(
       ({ publicKey, accessKey }: any) =>

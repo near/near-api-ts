@@ -12,7 +12,7 @@ const accountResult = await client.getAccount({
 });
 console.log(accountResult);
 
-const res2 = await client.getAccountBalance({ accountId });
+const res2 = await client.getBlock();
 console.log(res2);
 
 // const res3 = await client.getProtocolConfig();

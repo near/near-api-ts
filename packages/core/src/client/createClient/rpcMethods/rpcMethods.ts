@@ -28,3 +28,9 @@ export {
   sendSignedTransaction,
   type SendSignedTransaction,
 } from './transaction/sendSignedTransaction';
+
+// Block
+export {
+  getBlock,
+  type GetBlock,
+} from './block/getBlock';

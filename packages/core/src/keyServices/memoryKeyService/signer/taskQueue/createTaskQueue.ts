@@ -1,22 +1,5 @@
-import { getKeyPriority } from './getKeyPriority';
 import { createFindTaskForKey } from './createFindTaskForKey';
-import type { TransactionIntent } from 'nat-types/transaction';
-
-const createAddSignTransactionTask =
-  (signerContext: any, state: any) =>
-  (transactionIntent: TransactionIntent) => {
-    const task = {
-      type: 'SignTransaction',
-      taskId: crypto.randomUUID(),
-      keyPriority: getKeyPriority(transactionIntent),
-      transactionIntent,
-    };
-
-    state.queue.push(task);
-    signerContext.matcher.handleAddTask(task);
-
-    return task.taskId;
-  };
+import { createAddSignTransactionTask } from './createAddSignTransactionTask';
 
 export const createTaskQueue = (signerContext: any) => {
   const state = {

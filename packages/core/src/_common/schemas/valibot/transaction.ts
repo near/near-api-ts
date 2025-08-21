@@ -2,7 +2,11 @@ import * as v from 'valibot';
 import { PublicKeySchema } from './publicKey';
 import { Base58CryptoHashSchema } from './cryptoHash';
 
-const AccountIdSchema = v.pipe(v.string());
+// Near Account
+const AccountIdSchema = v.pipe(v.string(), v.brand('AccountId'));
+
+type AccountId = v.InferOutput<typeof AccountIdSchema>;
+
 const NonceSchema = v.number('uint64');
 
 const TransferActionSchema = v.object({
@@ -31,3 +35,8 @@ export const TransactionSchema = v.object({
   nonce: NonceSchema,
   blockHash: Base58CryptoHashSchema,
 });
+
+
+type Transaction = v.InferOutput<typeof TransactionSchema>;
+
+// const a: Transaction = {}

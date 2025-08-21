@@ -2,8 +2,6 @@ import { getBlockTarget } from '../utils';
 import type { BlockTarget } from 'nat-types/common';
 import type { ClientMethodContext } from '../../createClient';
 
-// TODO Rename to access key
-
 // https://docs.near.org/api/rpc/access-keys#view-access-key
 
 type GetAccountKeyArgs = {

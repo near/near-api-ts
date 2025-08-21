@@ -2,6 +2,7 @@ import { createKeyPool } from './keyPool/createKeyPool';
 import { createTaskQueue } from './taskQueue/createTaskQueue';
 import { createMatcher } from './matcher/createMatcher';
 import { createResolver } from './resolver/createResolver';
+import { createBlockHashManager } from './blockHashManager/createBlockHashManager';
 import type { Context as KeyServiceContext } from 'nat-types/keyServices/memoryKeyService';
 import type { CreateSigner } from 'nat-types/keyServices/signer';
 import type { TransactionIntent } from 'nat-types/transaction';
@@ -21,7 +22,11 @@ const createExecuteMultipleTransaction =
 const createSignTransaction =
   (context: any) => async (transactionIntent: TransactionIntent) => {
     const taskId = context.taskQueue.addSignTransactionTask(transactionIntent);
-    return await context.resolver.waitForTask(taskId);
+    console.log('SignTX Task created', taskId);
+    const res = await context.resolver.waitForTask(taskId);
+    console.log('^^^^^^^^^^^');
+    console.log('SignTX Result received', res);
+    return res;
   };
 
 export const createCreateSigner =
@@ -33,10 +38,16 @@ export const createCreateSigner =
       client: params.client,
     };
 
-    context.keyPool = await createKeyPool(context, keyServiceContext);
+    const [keyPool, blockHashManager] = await Promise.all([
+      createKeyPool(context, keyServiceContext),
+      createBlockHashManager(context),
+    ]);
+
+    context.keyPool = keyPool;
+    context.blockHashManager = blockHashManager;
     context.taskQueue = createTaskQueue(context);
     context.matcher = createMatcher(context);
-    context.resolver = createResolver(context);
+    context.resolver = createResolver();
 
     return {
       // executeTransaction: createExecuteTransaction(context),

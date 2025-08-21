@@ -1,23 +1,21 @@
 import { getTransactionHash } from '../../../../helpers/crypto/getTransactionHash';
 import { sign } from '../../../../helpers/crypto/sign';
 
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 export const signTransaction = async (
   signerContext: any,
   task: any,
   key: any,
 ) => {
-  // TODO Figure out how to cache blockHash and avoid requests;
-  const { blockHash } = await signerContext.client.getAccountKey({
-    accountId: signerContext.signerAccountId,
-    publicKey: key.publicKey,
-  });
+  await delay(500);
 
   const transaction = {
     ...task.transactionIntent,
     signerAccountId: signerContext.signerAccountId,
     signerPublicKey: key.publicKey,
     nonce: key.nonce + 1,
-    blockHash,
+    blockHash: signerContext.blockHashManager.getBlockHash(),
   };
 
   const { transactionHash, u8TransactionHash } =
@@ -34,7 +32,10 @@ export const signTransaction = async (
     signature,
   };
 
+  console.log('-----------------');
+  console.log('Finish sign TX', task.taskId);
   // if success - call resolver
+
   signerContext.resolver.completeTask(task.taskId, {
     result: signedTransaction,
   });
