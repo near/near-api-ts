@@ -15,3 +15,6 @@ export const BinaryCryptoKeyLengths = {
 
 export const BinaryCryptoHashLength = 32;
 export const NearDecimals = 24;
+
+// Fetch block every 1000 blocks * 600ms best block time = >10 minutes
+export const RefetchBlockHashInterval = 600000;
