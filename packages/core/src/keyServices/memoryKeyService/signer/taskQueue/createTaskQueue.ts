@@ -1,5 +1,6 @@
 import { createFindTaskForKey } from './createFindTaskForKey';
-import { createAddSignTransactionTask } from './createAddSignTransactionTask';
+import { signTransaction } from './addTask/signTransaction';
+import { executeTransaction } from './addTask/executeTransaction';
 
 export const createTaskQueue = (signerContext: any) => {
   const state = {
@@ -11,7 +12,10 @@ export const createTaskQueue = (signerContext: any) => {
   };
 
   return {
-    addSignTransactionTask: createAddSignTransactionTask(signerContext, state),
+    addTask: {
+      signTransaction: signTransaction(signerContext, state),
+      executeTransaction: executeTransaction(signerContext, state),
+    },
     findTaskForKey: createFindTaskForKey(signerContext, state),
     removeTask,
   };

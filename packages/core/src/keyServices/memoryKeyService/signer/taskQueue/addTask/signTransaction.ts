@@ -1,7 +1,7 @@
 import type { TransactionIntent } from 'nat-types/transaction';
-import { getKeyPriority } from './getKeyPriority';
+import { getKeyPriority } from '../getKeyPriority';
 
-export const createAddSignTransactionTask =
+export const signTransaction =
   (signerContext: any, state: any) =>
   (transactionIntent: TransactionIntent) => {
     const task = {

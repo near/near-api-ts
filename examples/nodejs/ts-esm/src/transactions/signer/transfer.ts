@@ -29,34 +29,19 @@ const signer: any = await keyService.createSigner({
   client,
 });
 
+const res = await Promise.all([
+  signer.executeTransaction({
+    action: transfer({ amount: { yoctoNear: '1' } }),
+    receiverAccountId: 'eclipseer.testnet',
+  }),
+  signer.executeTransaction({
+    action: transfer({ amount: { yoctoNear: '2' } }),
+    receiverAccountId: 'eclipseer.testnet',
+  }),
+  signer.executeTransaction({
+    action: transfer({ amount: { yoctoNear: '3' } }),
+    receiverAccountId: 'eclipseer.testnet',
+  }),
+]);
 
-signer.signTransaction({
-  action: transfer({ amount: { near: '1' } }),
-  receiverAccountId: 'eclipseer.testnet',
-});
-signer.signTransaction({
-  action: transfer({ amount: { near: '2' } }),
-  receiverAccountId: 'testnet',
-});
-signer.signTransaction({
-  action: transfer({ amount: { near: '3' } }),
-  receiverAccountId: 'eclipseer',
-});
-
-
-// console.log(res);
-
-// const res = await Promise.all([
-//   signer.signTransaction({
-//     action: transfer({ amount: { near: '1' } }),
-//     receiverAccountId: 'eclipseer.testnet',
-//   }),
-//   signer.signTransaction({
-//     action: transfer({ amount: { near: '2' } }),
-//     receiverAccountId: 'testnet',
-//   }),
-//   signer.signTransaction({
-//     action: transfer({ amount: { near: '3' } }),
-//     receiverAccountId: 'eclipseer',
-//   }),
-// ]);
+console.log(res);
