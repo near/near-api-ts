@@ -20,12 +20,12 @@ const createSignTransaction =
     return await context.resolver.waitForTask(taskId);
   };
 
-const createExecuteMultipleTransaction =
-  (context: any) =>
-    async ({ transactionIntents }: any) => {
-      // const taskId = context.taskQueue.addExecuteTransactionTask(transactionIntent);
-      // return await context.resolver.waitForTask(taskId);
-    };
+// const createExecuteMultipleTransaction =
+//   (context: any) =>
+//     async ({ transactionIntents }: any) => {
+//       // const taskId = context.taskQueue.addExecuteTransactionTask(transactionIntent);
+//       // return await context.resolver.waitForTask(taskId);
+//     };
 
 export const createCreateSigner =
   (keyServiceContext: KeyServiceContext): CreateSigner =>

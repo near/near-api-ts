@@ -3,9 +3,7 @@ export const createResolver = () => {
 
   const waitForTask = (taskId: any) =>
     new Promise((resolve, reject) => {
-      console.log('waitForTask', taskId);
       activeTasks[taskId] = ({ result, error }: any) => {
-        console.log('completeTask', taskId);
         result ? resolve(result) : reject(error);
         delete activeTasks[taskId];
       };
