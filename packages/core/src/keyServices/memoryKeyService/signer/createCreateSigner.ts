@@ -2,7 +2,7 @@ import { createKeyPool } from './keyPool/createKeyPool';
 import { createTaskQueue } from './taskQueue/createTaskQueue';
 import { createMatcher } from './matcher/createMatcher';
 import { createResolver } from './resolver/createResolver';
-import { createBlockHashManager } from './blockHashManager/createBlockHashManager';
+import { createState } from './state/createState';
 import type { Context as KeyServiceContext } from 'nat-types/keyServices/memoryKeyService';
 import type { CreateSigner } from 'nat-types/keyServices/signer';
 
@@ -17,13 +17,13 @@ export const createCreateSigner =
       client: params.client,
     };
 
-    const [keyPool, blockHashManager] = await Promise.all([
+    const [keyPool, state] = await Promise.all([
       createKeyPool(context, keyServiceContext),
-      createBlockHashManager(context),
+      createState(context),
     ]);
 
     context.keyPool = keyPool;
-    context.blockHashManager = blockHashManager;
+    context.state = state;
     context.taskQueue = createTaskQueue(context);
     context.matcher = createMatcher(context);
     context.resolver = createResolver();

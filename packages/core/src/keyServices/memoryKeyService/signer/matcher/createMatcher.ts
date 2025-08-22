@@ -19,7 +19,7 @@ const executeTask = async (signerContext: any, task: any, key: any) => {
 
 export const createMatcher = (signerContext: any) => {
   const handleAddTask = async (task: any) => {
-    const key = signerContext.keyPool.findKeyForTask(task.keyPriority);
+    const key = signerContext.keyPool.findKeyForTask(task);
     if (!key) return;
     await executeTask(signerContext, task, key);
   };

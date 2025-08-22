@@ -1,5 +1,5 @@
 import type { TransactionIntent } from 'nat-types/transaction';
-import { getKeyPriority } from '../getKeyPriority';
+import { getSigningKeyPriority } from './helpers/getSigningKeyPriority';
 
 export const signTransaction =
   (signerContext: any, state: any) =>
@@ -7,7 +7,10 @@ export const signTransaction =
     const task = {
       type: 'SignTransaction',
       taskId: crypto.randomUUID(),
-      keyPriority: getKeyPriority(transactionIntent),
+      signingKeyPriority: getSigningKeyPriority(
+        transactionIntent,
+        signerContext,
+      ),
       transactionIntent,
     };
 

@@ -1,4 +1,4 @@
-import { getKeyPriority } from '../getKeyPriority';
+import { getSigningKeyPriority } from './helpers/getSigningKeyPriority';
 
 export const executeTransaction =
   (signerContext: any, state: any) => async (params: any) => {
@@ -11,7 +11,10 @@ export const executeTransaction =
     const task = {
       type: 'ExecuteTransaction',
       taskId: crypto.randomUUID(),
-      keyPriority: getKeyPriority(transactionIntent),
+      signingKeyPriority: getSigningKeyPriority(
+        transactionIntent,
+        signerContext,
+      ),
       transactionIntent,
     };
 

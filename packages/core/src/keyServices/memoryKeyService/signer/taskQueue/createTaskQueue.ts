@@ -16,7 +16,7 @@ export const createTaskQueue = (signerContext: any) => {
       signTransaction: signTransaction(signerContext, state),
       executeTransaction: executeTransaction(signerContext, state),
     },
-    findTaskForKey: createFindTaskForKey(signerContext, state),
+    findTaskForKey: createFindTaskForKey(state),
     removeTask,
   };
 };

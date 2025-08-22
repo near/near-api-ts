@@ -23,6 +23,11 @@ export {
   type GetProtocolConfig,
 } from './protocol/getProtocolConfig';
 
+export {
+  getGasPrice,
+  type GetGasPrice,
+} from './protocol/getGasPrice';
+
 // Transaction
 export {
   sendSignedTransaction,

@@ -1,4 +1,8 @@
-import { createIncrementNonce, createLock, createUnlock } from './keyUtils';
+import {
+  createIncrementNonce,
+  createLock,
+  createUnlock,
+} from './helpers/keyUtils';
 
 const transformKey = (
   publicKey: any,
@@ -12,16 +16,21 @@ const transformKey = (
     privateKey: keyPairs[publicKey].privateKey,
     isLocked: false,
     nonce: accessKey.nonce,
+
     // TODO Consider rename the RPC response
     contractAccountId: accessKey.permission.FunctionCall.receiverId,
+
     gasBudget: accessKey.permission.FunctionCall.allowance
-      ? accessKey.permission.FunctionCall.allowance
+      ? { yoctoNear: BigInt(accessKey.permission.FunctionCall.allowance) }
       : undefined,
+
     allowedFunctions:
       accessKey.permission.FunctionCall.methodNames.length > 0
         ? accessKey.permission.FunctionCall.methodNames
         : undefined,
   };
+
+  console.log(key);
 
   key.lock = createLock(key);
   key.unlock = createUnlock(key, signerContext);

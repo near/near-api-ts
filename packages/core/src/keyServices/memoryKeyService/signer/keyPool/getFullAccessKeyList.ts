@@ -1,4 +1,4 @@
-import { createUnlock, createLock, createIncrementNonce } from './keyUtils';
+import { createUnlock, createLock, createIncrementNonce } from './helpers/keyUtils';
 
 const transformKey = (
   publicKey: any,

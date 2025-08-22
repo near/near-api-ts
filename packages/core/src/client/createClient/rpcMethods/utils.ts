@@ -5,7 +5,7 @@ import type { BlockTarget, BlockId } from 'nat-types/common';
   This format is invalid and RPC will throw an error if we will don't convert it
  */
 // TODO replace with valibot schema
-const parseBlockId = (blockId: BlockId) => {
+export const parseBlockId = (blockId: BlockId) => {
   const isInteger = /^[0-9]+$/.test(String(blockId));
   return isInteger ? Number(blockId) : blockId; // TODO validate block hash
 };

@@ -12,7 +12,7 @@ export const getSignedTransaction = (
     signerAccountId: signerContext.signerAccountId,
     signerPublicKey: key.publicKey,
     nonce: key.nonce + 1,
-    blockHash: signerContext.blockHashManager.getBlockHash(),
+    blockHash: signerContext.state.getBlockHash(),
   };
 
   const { transactionHash, u8TransactionHash } =
