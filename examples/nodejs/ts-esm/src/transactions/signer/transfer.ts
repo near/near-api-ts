@@ -34,11 +34,11 @@ const res = await Promise.all([
     action: transfer({ amount: { yoctoNear: '1' } }),
     receiverAccountId: 'eclipseer.testnet',
   }),
-  signer.executeTransaction({
+  signer.signTransaction({
     action: transfer({ amount: { yoctoNear: '2' } }),
     receiverAccountId: 'eclipseer.testnet',
   }),
-  signer.executeTransaction({
+  signer.signTransaction({
     action: transfer({ amount: { yoctoNear: '3' } }),
     receiverAccountId: 'eclipseer.testnet',
   }),

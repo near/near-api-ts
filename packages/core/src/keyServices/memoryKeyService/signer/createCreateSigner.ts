@@ -5,27 +5,8 @@ import { createResolver } from './resolver/createResolver';
 import { createBlockHashManager } from './blockHashManager/createBlockHashManager';
 import type { Context as KeyServiceContext } from 'nat-types/keyServices/memoryKeyService';
 import type { CreateSigner } from 'nat-types/keyServices/signer';
-import type { TransactionIntent } from 'nat-types/transaction';
 
 // TODO Add check if it's not possible to sign the tx at all - throw error immediately, don't wait forever
-
-const createExecuteTransaction = (context: any) => async (params: any) => {
-  const taskId = context.taskQueue.addTask.executeTransaction(params);
-  return await context.resolver.waitForTask(taskId);
-};
-
-const createSignTransaction =
-  (context: any) => async (transactionIntent: TransactionIntent) => {
-    const taskId = context.taskQueue.addTask.signTransaction(transactionIntent);
-    return await context.resolver.waitForTask(taskId);
-  };
-
-// const createExecuteMultipleTransaction =
-//   (context: any) =>
-//     async ({ transactionIntents }: any) => {
-//       // const taskId = context.taskQueue.addExecuteTransactionTask(transactionIntent);
-//       // return await context.resolver.waitForTask(taskId);
-//     };
 
 export const createCreateSigner =
   (keyServiceContext: KeyServiceContext): CreateSigner =>
@@ -48,7 +29,7 @@ export const createCreateSigner =
     context.resolver = createResolver();
 
     return {
-      executeTransaction: createExecuteTransaction(context),
-      signTransaction: createSignTransaction(context),
+      executeTransaction: context.taskQueue.addTask.executeTransaction,
+      signTransaction: context.taskQueue.addTask.signTransaction,
     };
   };

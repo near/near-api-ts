@@ -3,7 +3,7 @@ import { getKeyPriority } from '../getKeyPriority';
 
 export const signTransaction =
   (signerContext: any, state: any) =>
-  (transactionIntent: TransactionIntent) => {
+  async (transactionIntent: TransactionIntent) => {
     const task = {
       type: 'SignTransaction',
       taskId: crypto.randomUUID(),
@@ -17,5 +17,5 @@ export const signTransaction =
       signerContext.matcher.handleAddTask(task);
     });
 
-    return task.taskId;
+    return signerContext.resolver.waitForTask(task.taskId);
   };

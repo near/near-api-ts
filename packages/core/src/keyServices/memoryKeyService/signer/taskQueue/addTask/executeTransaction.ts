@@ -1,7 +1,7 @@
 import { getKeyPriority } from '../getKeyPriority';
 
 export const executeTransaction =
-  (signerContext: any, state: any) => (params: any) => {
+  (signerContext: any, state: any) => async (params: any) => {
     const transactionIntent = {
       receiverAccountId: params.receiverAccountId,
       action: params.action,
@@ -21,5 +21,5 @@ export const executeTransaction =
       signerContext.matcher.handleAddTask(task);
     });
 
-    return task.taskId;
+    return signerContext.resolver.waitForTask(task.taskId);
   };
