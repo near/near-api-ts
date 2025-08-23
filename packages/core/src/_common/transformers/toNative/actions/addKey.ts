@@ -9,8 +9,7 @@ const getPermission = (
 ): NativeAddKeyAction['addKey']['accessKey']['permission'] => {
   if (params.type === 'FullAccess') return { fullAccess: {} };
 
-  const { contractAccountId, gasBudget, allowedFunctions } =
-    params.restrictions;
+  const { contractAccountId, gasBudget, allowedFunctions } = params;
 
   return {
     functionCall: {
@@ -27,7 +26,7 @@ export const toNativeAddKeyAction = (
   addKey: {
     publicKey: toNativePublicKey(action.params.publicKey),
     accessKey: {
-      nonce: 0n, // Placeholder; It's not usable anymore
+      nonce: 0n, // Placeholder; It's not usable anymore: https://gov.near.org/t/issue-with-access-key-nonce/749
       permission: getPermission(action.params),
     },
   },

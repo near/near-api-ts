@@ -2,7 +2,8 @@ import type { PublicKey } from 'nat-types/crypto';
 import type {
   AccountId,
   ContractFunctionName,
-  Nonce, YoctoNearAmount,
+  Nonce,
+  YoctoNearAmount,
 } from 'nat-types/common';
 
 export type FullAccessKey = {
@@ -15,11 +16,9 @@ export type FunctionCallKey = {
   type: 'FunctionCall';
   publicKey: PublicKey;
   nonce: Nonce;
-  restrictions: {
-    contractAccountId: AccountId;
-    gasBudget?: YoctoNearAmount;
-    allowedFunctions?: ContractFunctionName[];
-  };
+  contractAccountId: AccountId;
+  gasBudget?: YoctoNearAmount;
+  allowedFunctions?: ContractFunctionName[];
 };
 
 export type AccountKey = FullAccessKey | FunctionCallKey;

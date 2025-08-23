@@ -27,19 +27,17 @@ const transformKey = (key: AccessKeyInfoView): AccountKey => {
     type: 'FunctionCall',
     publicKey,
     nonce,
-    restrictions: {
-      contractAccountId: receiverId,
-    },
+    contractAccountId: receiverId,
   } as FunctionCallKey;
 
   if (typeof allowance === 'string') {
-    functionCallKey.restrictions.gasBudget = {
+    functionCallKey.gasBudget = {
       yoctoNear: BigInt(allowance),
     };
   }
 
   if (methodNames.length > 0) {
-    functionCallKey.restrictions.allowedFunctions = methodNames;
+    functionCallKey.allowedFunctions = methodNames;
   }
 
   return functionCallKey;
