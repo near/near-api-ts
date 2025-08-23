@@ -1,28 +1,10 @@
-import type { NativePublicKey, PublicKey } from 'nat-types/crypto';
-import type {
-  AccountId,
-  ContractFunctionName,
-  NearOption,
-} from 'nat-types/common';
-
-type FullAccessKeyParams = {
-  publicKey: PublicKey;
-  permission: 'FullAccess';
-};
-
-type FunctionCallKeyParams = {
-  publicKey: PublicKey;
-  permission: 'FunctionCall';
-  restrictions: {
-    contractAccountId: AccountId;
-    gasBudget?: NearOption;
-    allowedFunctions?: ContractFunctionName[];
-  };
-};
+import type { NativePublicKey } from 'nat-types/crypto';
+import type { AccountId, ContractFunctionName } from 'nat-types/common';
+import type { FullAccessKey, FunctionCallKey } from 'nat-types/accountKey';
 
 export type AddKeyAction = {
   type: 'AddKey';
-  params: FullAccessKeyParams | FunctionCallKeyParams;
+  params: Omit<FullAccessKey, 'nonce'> | Omit<FunctionCallKey, 'nonce'>;
 };
 
 // ****** NATIVE ********

@@ -1,26 +1,9 @@
 import { base64 } from '@scure/base';
 import { serializeSignedTransaction } from '@common/transformers/toBorshBytes/signedTransaction';
-import type { ClientMethodContext } from '../../createClient';
-import type { SignedTransaction } from 'nat-types/signedTransaction';
+import type { CreateSendSignedTransaction } from 'nat-types/client/rpcMethods/transaction/sendSignedTransaction';
 
-// https://docs.near.org/api/rpc/contracts#view-account
-
-type SendSignedTransactionArgs = {
-  signedTransaction: SignedTransaction;
-  options?: {
-    waitUntil?: string;
-  };
-};
-
-// TODO use generated type
-type SendTransactionSignedResult = object;
-
-export type SendSignedTransaction = (
-  args: SendSignedTransactionArgs,
-) => Promise<SendTransactionSignedResult>;
-
-export const sendSignedTransaction =
-  ({ sendRequest }: ClientMethodContext): SendSignedTransaction =>
+export const createSendSignedTransaction: CreateSendSignedTransaction =
+  ({ sendRequest }) =>
   ({ signedTransaction, options = {} }) => {
     const { waitUntil = 'EXECUTED_OPTIMISTIC' } = options;
     return sendRequest({
@@ -30,7 +13,7 @@ export const sendSignedTransaction =
           signed_tx_base64: base64.encode(
             serializeSignedTransaction(signedTransaction),
           ),
-          wait_until: waitUntil,
+          wait_until: waitUntil, // TODO get from enum
         },
       },
     });

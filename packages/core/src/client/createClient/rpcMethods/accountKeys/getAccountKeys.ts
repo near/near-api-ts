@@ -1,28 +1,63 @@
 import { getBlockTarget } from '../utils';
-import type { BlockTarget } from 'nat-types/common';
-import type { ClientMethodContext } from '../../createClient';
+import { AccessKeyListSchema } from '@near-js/jsonrpc-types';
+import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
+import type {
+  CreateGetAccountKeys,
+  Output,
+} from 'nat-types/client/rpcMethods/accountKeys/getAccountKeys';
+import type { AccountKey, FunctionCallKey } from 'nat-types/accountKey';
+import type { PublicKey } from 'nat-types/crypto';
+import type { AccessKeyInfoView } from '@near-js/jsonrpc-types';
 
-// https://docs.near.org/api/rpc/access-keys#view-access-keys
+const transformKey = (key: AccessKeyInfoView): AccountKey => {
+  const publicKey = key.publicKey as PublicKey;
+  const nonce = BigInt(key.accessKey.nonce);
 
-type GetAccountKeysInput = {
-  accountId: string;
-  options?: BlockTarget;
+  if (key.accessKey.permission === 'FullAccess')
+    return {
+      type: 'FullAccess',
+      publicKey,
+      nonce,
+    };
+
+  const { receiverId, methodNames, allowance } =
+    key.accessKey.permission.FunctionCall;
+
+  const functionCallKey = {
+    type: 'FunctionCall',
+    publicKey,
+    nonce,
+    restrictions: {
+      contractAccountId: receiverId,
+    },
+  } as FunctionCallKey;
+
+  if (typeof allowance === 'string') {
+    functionCallKey.restrictions.gasBudget = {
+      yoctoNear: BigInt(allowance),
+    };
+  }
+
+  if (methodNames.length > 0) {
+    functionCallKey.restrictions.allowedFunctions = methodNames;
+  }
+
+  return functionCallKey;
 };
 
-// TODO use generated type
-type GetAccountKeysOutput = {
-  blockHash: string;
-  blockHeight: number;
-  nonce: number;
-  permission: string;
+const responseTransformer = (result: unknown): Output => {
+  const camelCased = snakeToCamelCase(result);
+  const parsed = AccessKeyListSchema().parse(camelCased);
+
+  return {
+    blockHash: camelCased.blockHash,
+    blockHeight: camelCased.blockHeight,
+    accountKeys: parsed.keys.map(transformKey),
+  };
 };
 
-export type GetAccountKeys = (
-  args: GetAccountKeysInput,
-) => Promise<GetAccountKeysOutput>;
-
-export const getAccountKeys =
-  ({ sendRequest }: ClientMethodContext): GetAccountKeys =>
+export const createGetAccountKeys: CreateGetAccountKeys =
+  ({ sendRequest }) =>
   ({ accountId, options }) =>
     sendRequest({
       body: {
@@ -33,4 +68,5 @@ export const getAccountKeys =
           ...getBlockTarget(options),
         },
       },
+      responseTransformer,
     });

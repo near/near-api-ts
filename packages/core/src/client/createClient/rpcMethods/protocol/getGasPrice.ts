@@ -1,20 +1,8 @@
 import { parseBlockId } from '../utils';
-import type { BlockId } from 'nat-types/common';
-import type { ClientMethodContext } from '../../createClient';
-import type { RpcGasPriceResponse } from '@psalomo/jsonrpc-types';
+import type { CreateGetGasPrice } from 'nat-types/client/rpcMethods/protocol/getGasPrice';
 
-type GetGasPriceInput = {
-  options?: {
-    blockId?: BlockId;
-  };
-};
-
-export type GetGasPrice = (
-  args?: GetGasPriceInput,
-) => Promise<RpcGasPriceResponse>;
-
-export const getGasPrice =
-  ({ sendRequest }: ClientMethodContext): GetGasPrice =>
+export const createGetGasPrice: CreateGetGasPrice =
+  ({ sendRequest }) =>
   ({ options } = {}) =>
     sendRequest({
       body: {

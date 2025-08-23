@@ -1,4 +1,4 @@
-import type { Network } from '../createClient/createClient';
+import type { Network } from 'nat-types/client/client';
 
 export const testnet: Network = {
   rpcs: {

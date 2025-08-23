@@ -2,7 +2,7 @@ import {
   createClient,
   createMemoryKeyService,
   testnet,
-  transfer,
+  functionCall,
   teraGas
 } from '@near-api-ts/core';
 
@@ -19,8 +19,8 @@ const signerPrivateKey3 =
 
 const keyService = await createMemoryKeyService({
   keySources: [
-    { privateKey: signerPrivateKey },
-    { privateKey: signerPrivateKey2 },
+    // { privateKey: signerPrivateKey },
+    // { privateKey: signerPrivateKey2 },
     { privateKey: signerPrivateKey3 },
   ],
 });
@@ -31,17 +31,16 @@ const signer: any = await keyService.createSigner({
 });
 
 const res = await Promise.all([
-  signer.executeTransaction({
-    action: transfer({ amount: { yoctoNear: '1' } }),
-    receiverAccountId: 'eclipseer.testnet',
-  }),
+  // signer.executeTransaction({
+  //   action: transfer({ amount: { yoctoNear: '1' } }),
+  //   receiverAccountId: 'eclipseer.testnet',
+  // }),
   signer.signTransaction({
-    action: transfer({ amount: { yoctoNear: '2' } }),
-    receiverAccountId: 'eclipseer.testnet',
-  }),
-  signer.signTransaction({
-    action: transfer({ amount: { yoctoNear: '3' } }),
-    receiverAccountId: 'eclipseer.testnet',
+    action: functionCall({
+      fnName: 'claim',
+      gasLimit: { teraGas: 100n } ,
+    }),
+    receiverAccountId: 'testnet',
   }),
 ]);
 

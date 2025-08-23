@@ -6,6 +6,7 @@
 // import './transactions/deleteKey';
 // import './transactions/deployContract';
 
-// import './calls/getAccount';
+import './calls/getAccount';
 
-import './transactions/signer/transfer';
+// import './transactions/signer/transfer';
+// import './transactions/signer/functionCall';

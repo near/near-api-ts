@@ -1,68 +1,32 @@
 import { createCircularQueue } from '@common/utils/createCircularQueue';
 import { createSendRequest } from './createSendRequest';
-import * as factoryRpcMethods from './rpcMethods/rpcMethods';
-import type { CircularQueue } from '@common/utils/createCircularQueue';
-import type { SendRequest } from './createSendRequest';
+import { createGetAccount } from './rpcMethods/account/getAccount';
+import { createGetAccountBalance } from './rpcMethods/account/getAccountBalance';
+import { createGetAccountKey } from './rpcMethods/accountKeys/getAccountKey';
+import { createGetAccountKeys } from './rpcMethods/accountKeys/getAccountKeys';
+import { createGetBlock } from './rpcMethods/block/getBlock';
+import { createGetGasPrice } from './rpcMethods/protocol/getGasPrice';
+import { createGetProtocolConfig } from './rpcMethods/protocol/getProtocolConfig';
+import { createSendSignedTransaction } from './rpcMethods/transaction/sendSignedTransaction';
+import type { CreateClient, ClientContext } from 'nat-types/client/client';
 
-type Rpc = {
-  url: string;
-  headers?: Record<string, string>;
-};
-
-export type Network = {
-  rpcs: {
-    regular: Rpc[];
-    archival: Rpc[];
-  };
-};
-
-export type ClientState = {
-  regularRpcQueue: CircularQueue<Rpc>;
-  archivalRpcQueue: CircularQueue<Rpc>;
-};
-
-export type ClientMethodContext = {
-  sendRequest: SendRequest;
-};
-
-type createClientArgs = {
-  network: Network;
-};
-
-type CreateClient = (args: createClientArgs) => {
-  getAccount: factoryRpcMethods.GetAccount;
-  getAccountBalance: factoryRpcMethods.GetAccountBalance;
-  getAccountKey: factoryRpcMethods.GetAccountKey;
-  getAccountKeys: factoryRpcMethods.GetAccountKeys;
-  getProtocolConfig: factoryRpcMethods.GetProtocolConfig;
-  getGasPrice: factoryRpcMethods.GetGasPrice;
-  getBlock: factoryRpcMethods.GetBlock;
-  sendSignedTransaction: factoryRpcMethods.SendSignedTransaction;
-};
-
+// TODO Validate network,  get preferred RPC type
 export const createClient: CreateClient = ({ network }) => {
-  // TODO Validate network
-  const state = {
+  const context = {
     regularRpcQueue: createCircularQueue(network.rpcs.regular),
     archivalRpcQueue: createCircularQueue(network.rpcs.archival),
-  };
+  } as ClientContext;
 
-  // TODO get preferred RPC type
-  const context = {
-    sendRequest: createSendRequest(state),
-  };
+  context.sendRequest = createSendRequest(context);
 
   return {
-    getAccount: factoryRpcMethods.getAccount(context),
-    getAccountBalance: factoryRpcMethods.getAccountBalance(context),
-    getAccountKey: factoryRpcMethods.getAccountKey(context),
-    getAccountKeys: factoryRpcMethods.getAccountKeys(context),
-    getProtocolConfig: factoryRpcMethods.getProtocolConfig(context),
-    getGasPrice: factoryRpcMethods.getGasPrice(context),
-    getBlock: factoryRpcMethods.getBlock(context),
-    sendSignedTransaction: factoryRpcMethods.sendSignedTransaction(context),
+    getAccount: createGetAccount(context),
+    getAccountBalance: createGetAccountBalance(context),
+    getAccountKey: createGetAccountKey(context),
+    getAccountKeys: createGetAccountKeys(context),
+    getBlock: createGetBlock(context),
+    getGasPrice: createGetGasPrice(context),
+    getProtocolConfig: createGetProtocolConfig(context),
+    sendSignedTransaction: createSendSignedTransaction(context),
   };
 };
-
-// TODO move to types
-export type Client = ReturnType<CreateClient>;

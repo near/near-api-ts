@@ -1,18 +1,8 @@
 import { getBlockTarget } from '../utils';
-import type { BlockTarget } from 'nat-types/common';
-import type { ClientMethodContext } from '../../createClient';
-import type { RpcBlockResponse } from '@psalomo/jsonrpc-types';
+import type { CreateGetBlock } from 'nat-types/client/rpcMethods/block/getBlock';
 
-type GetBlockInput = {
-  accountId: string;
-  publicKey: string;
-  options?: BlockTarget;
-};
-
-export type GetBlock = (params?: GetBlockInput) => Promise<RpcBlockResponse>;
-
-export const getBlock =
-  ({ sendRequest }: ClientMethodContext): GetBlock =>
+export const createGetBlock: CreateGetBlock =
+  ({ sendRequest }) =>
   (params) =>
     sendRequest({
       body: {

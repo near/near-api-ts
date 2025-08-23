@@ -1,3 +1,5 @@
+// TODO do not rename keys which starts with _ or __
+
 export const snakeToCamelCase = (obj: any): any => {
   if (obj === null || typeof obj !== 'object') {
     return obj;

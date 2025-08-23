@@ -1,29 +1,8 @@
 import { getBlockTarget } from '../utils';
-import type { BlockTarget } from 'nat-types/common';
-import type { ClientMethodContext } from '../../createClient';
+import type { CreateGetAccountKey } from 'nat-types/client/rpcMethods/accountKeys/getAccountKey';
 
-// https://docs.near.org/api/rpc/access-keys#view-access-key
-
-type GetAccountKeyArgs = {
-  accountId: string;
-  publicKey: string;
-  options?: BlockTarget;
-};
-
-// TODO use generated type
-type GetAccountKeyResult = {
-  blockHash: string;
-  blockHeight: number;
-  nonce: number;
-  permission: string;
-};
-
-export type GetAccountKey = (
-  args: GetAccountKeyArgs,
-) => Promise<GetAccountKeyResult>;
-
-export const getAccountKey =
-  ({ sendRequest }: ClientMethodContext): GetAccountKey =>
+export const createGetAccountKey: CreateGetAccountKey =
+  ({ sendRequest }) =>
   ({ accountId, publicKey, options }) =>
     sendRequest({
       body: {

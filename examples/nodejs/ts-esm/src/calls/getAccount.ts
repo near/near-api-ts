@@ -4,16 +4,13 @@ const accountId = 'nat-t1.lantstool.testnet';
 
 const client = createClient({ network: testnet });
 
-const accountResult = await client.getAccount({
+const result = await client.getAccountKeys({
   accountId,
-  options: {
-    finality: 'Optimistic',
-  },
 });
-console.log(accountResult);
+console.dir(result, { depth: null, colors: true });
 
-const res2 = await client.getBlock();
-console.log(res2);
+// const res2 = await client.getBlock();
+// console.log(res2);
 
 // const res3 = await client.getProtocolConfig();
 // console.log(res3);

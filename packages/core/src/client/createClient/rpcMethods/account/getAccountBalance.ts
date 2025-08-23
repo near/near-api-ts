@@ -1,28 +1,15 @@
-import { getAccount } from './getAccount';
-import { getProtocolConfig } from '../protocol/getProtocolConfig';
-import type { BlockTarget } from 'nat-types/common';
-import type { ClientMethodContext } from '../../createClient';
+import { createGetAccount } from './getAccount';
+import { createGetProtocolConfig } from '../protocol/getProtocolConfig';
+import type { CreateGetAccountBalance } from 'nat-types/client/rpcMethods/account/getAccountBalance';
 
-type GetAccountBalanceArgs = {
-  accountId: string;
-  options?: BlockTarget;
-};
-
-type GetAccountBalanceResult = object;
-
-export type GetAccountBalance = (
-  args: GetAccountBalanceArgs,
-) => Promise<GetAccountBalanceResult>;
-
-export const getAccountBalance =
-  (context: ClientMethodContext): GetAccountBalance =>
-  async (args) => {
+export const createGetAccountBalance: CreateGetAccountBalance =
+  (clientContext) => async (args) => {
     const [config, account] = await Promise.all([
-      getProtocolConfig(context)(args),
-      getAccount(context)(args),
+      createGetProtocolConfig(clientContext)(args),
+      createGetAccount(clientContext)(args),
     ]);
 
-    // @ts-ignore
+    // TODO Rework
     const costPerByte = BigInt(config.runtimeConfig.storageAmountPerByte);
     const stateStaked = BigInt(account.storageUsage) * costPerByte;
     const staked = BigInt(account.locked);

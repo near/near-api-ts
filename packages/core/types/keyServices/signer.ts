@@ -1,6 +1,6 @@
 import type { AccountId } from 'nat-types/common';
 import type { PublicKey } from 'nat-types/crypto';
-import type { Client } from '../../src/client/createClient/createClient';
+import type { Client } from 'nat-types/client/client';
 
 export type MemorySigner = {};
 

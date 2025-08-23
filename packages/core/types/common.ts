@@ -22,7 +22,8 @@ export type Hex = Uint8Array | string;
 export type Base58String = string;
 export type Base64String = string;
 
-export type Nonce = number;
+// Rust type: u64
+export type Nonce = bigint;
 export type AccountId = string;
 export type BorshBytes = Uint8Array;
 
@@ -34,9 +35,14 @@ export type ContractFunctionName = string;
 export type Units = bigint | string;
 export type Tokens = string;
 
+export type YoctoNearAmount = {
+  yoctoNear: bigint;
+}
+
 export type NearToken = {
   yoctoNear: bigint;
   near: string;
+  // TODO add methods
 };
 export type NearOption = { near: Tokens } | { yoctoNear: Units };
 

@@ -1,22 +1,8 @@
 import { getBlockTarget } from '../utils';
-import type { BlockTarget } from 'nat-types/common';
-import type { ClientMethodContext } from '../../createClient';
+import type { CreateGetProtocolConfig } from 'nat-types/client/rpcMethods/protocol/getProtocolConfig';
 
-// https://docs.near.org/api/rpc/protocol#protocol-config
-
-type GetProtocolConfigArgs = {
-  options?: BlockTarget;
-};
-
-// TODO use generated type
-type GetProtocolConfigResult = object;
-
-export type GetProtocolConfig = (
-  args?: GetProtocolConfigArgs,
-) => Promise<GetProtocolConfigResult>;
-
-export const getProtocolConfig =
-  ({ sendRequest }: ClientMethodContext): GetProtocolConfig =>
+export const createGetProtocolConfig: CreateGetProtocolConfig =
+  ({ sendRequest }) =>
   ({ options } = {}) =>
     sendRequest({
       body: {

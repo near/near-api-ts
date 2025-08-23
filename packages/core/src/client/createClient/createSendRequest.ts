@@ -1,9 +1,5 @@
 import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
-import type { ClientState } from './createClient';
-
-export type SendRequest = <Body, Result>(args: {
-  body: Body;
-}) => Promise<Result>;
+import type { CreateSendRequest } from 'nat-types/client/client';
 
 const rpcError = (error: any) => {
   const e = new Error();
@@ -11,10 +7,10 @@ const rpcError = (error: any) => {
   return e;
 };
 
-export const createSendRequest =
-  (clientState: ClientState): SendRequest =>
-  async ({ body }) => {
-    const { url, headers } = clientState.regularRpcQueue.next();
+export const createSendRequest: CreateSendRequest =
+  (clientContext) =>
+  async ({ body, responseTransformer }) => {
+    const { url, headers } = clientContext.regularRpcQueue.next();
 
     const response = await fetch(url, {
       method: 'POST',
@@ -28,11 +24,13 @@ export const createSendRequest =
         ...body,
       }),
     });
+
     const { result, error } = await response.json();
 
     // TODO create error handling strategy
     if (error) throw rpcError(error);
     if (result.error) throw rpcError(result.error);
 
+    if (responseTransformer) return responseTransformer(result);
     return snakeToCamelCase(result);
   };

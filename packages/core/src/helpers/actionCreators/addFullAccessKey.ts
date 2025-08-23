@@ -10,7 +10,7 @@ export const addFullAccessKey = ({
 }: AddFullAccessKeyInput): AddKeyAction => ({
   type: 'AddKey',
   params: {
+    type: 'FullAccess',
     publicKey,
-    permission: 'FullAccess',
   },
 });

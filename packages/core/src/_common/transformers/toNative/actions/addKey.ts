@@ -3,12 +3,11 @@ import type {
   NativeAddKeyAction,
 } from 'nat-types/actions/addKey';
 import { toNativePublicKey } from '@common/transformers/toNative/publicKey';
-import { fromNearOption } from '../../../../helpers/near';
 
 const getPermission = (
   params: AddKeyAction['params'],
 ): NativeAddKeyAction['addKey']['accessKey']['permission'] => {
-  if (params.permission === 'FullAccess') return { fullAccess: {} };
+  if (params.type === 'FullAccess') return { fullAccess: {} };
 
   const { contractAccountId, gasBudget, allowedFunctions } =
     params.restrictions;
@@ -16,7 +15,7 @@ const getPermission = (
   return {
     functionCall: {
       receiverId: contractAccountId,
-      allowance: gasBudget && fromNearOption(gasBudget).yoctoNear,
+      allowance: gasBudget?.yoctoNear,
       methodNames: allowedFunctions ?? [],
     },
   };

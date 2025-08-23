@@ -20,13 +20,9 @@ const transformKey = (
     // TODO Consider rename the RPC response
     contractAccountId: accessKey.permission.FunctionCall.receiverId,
 
-    gasBudget: accessKey.permission.FunctionCall.allowance
-      ? { yoctoNear: BigInt(accessKey.permission.FunctionCall.allowance) }
-      : undefined,
-
-    allowedFunctions:
+    allowedFunctions: // Make Set
       accessKey.permission.FunctionCall.methodNames.length > 0
-        ? accessKey.permission.FunctionCall.methodNames
+        ? new Set(accessKey.permission.FunctionCall.methodNames)
         : undefined,
   };
 
