@@ -1,4 +1,4 @@
-import type { BlockId } from 'nat-types/common';
+import type {BlockId, YoctoNearAmount} from 'nat-types/common';
 import type { ClientContext } from 'nat-types/client/client';
 
 type Input = {
@@ -8,7 +8,7 @@ type Input = {
 };
 
 export type Output = {
-  gasPrice: bigint; // TODO Fix!
+  gasPrice: YoctoNearAmount;
 };
 
 export type GetGasPrice = (input: Input) => Promise<Output>;
