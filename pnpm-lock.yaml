@@ -42,21 +42,6 @@ importers:
         specifier: ^5.9.2
         version: 5.9.2
 
-  examples/nodejs/js-esm:
-    dependencies:
-      '@near-api-ts/core':
-        specifier: workspace:*
-        version: link:../../../packages/core
-      valibot:
-        specifier: ^1.1.0
-        version: 1.1.0(typescript@5.8.3)
-
-  examples/nodejs/ts-esm:
-    dependencies:
-      '@near-api-ts/core':
-        specifier: workspace:*
-        version: link:../../../packages/core
-
   packages/core:
     dependencies:
       '@noble/curves':
@@ -79,8 +64,8 @@ importers:
         version: 4.0.11
     devDependencies:
       '@near-js/jsonrpc-types':
-        specifier: ^1.3.3
-        version: 1.3.3
+        specifier: ^1.3.4
+        version: 1.3.4
 
   packages/types:
     dependencies:
@@ -322,8 +307,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.29':
     resolution: {integrity: sha512-uw6guiW/gcAGPDhLmd77/6lW8QLeiV5RUTsAX46Db6oLhGaVj4lhnPwb184s1bkc8kdVg/+h988dro8GRDpmYQ==}
 
-  '@near-js/jsonrpc-types@1.3.3':
-    resolution: {integrity: sha512-uE/aT1JAMKPQTYkDxZbwqkQz+PNmz+4vnj+sZG6uy9aKcxY+ZhEPk76Ha1lCPVW/pzYTfGF/qMauNZ6XpdyDog==}
+  '@near-js/jsonrpc-types@1.3.4':
+    resolution: {integrity: sha512-2BO9+tJZUdBXeTsssB1lqkxogKt5YllYv9PLRgvK/0pox54PcKPSyDZwQPr361NDQQ3tY+4zK/3C8p+dF90Ctg==}
 
   '@noble/curves@1.9.4':
     resolution: {integrity: sha512-2bKONnuM53lINoDrSmK8qP8W271ms7pygDhZt4SiLOoLwBtoHqeCFi6RG42V8zd3mLHuJFhU/Bmaqo4nX0/kBw==}
@@ -921,11 +906,6 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  typescript@5.8.3:
-    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
   typescript@5.9.2:
     resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
     engines: {node: '>=14.17'}
@@ -1122,7 +1102,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.4
 
-  '@near-js/jsonrpc-types@1.3.3':
+  '@near-js/jsonrpc-types@1.3.4':
     dependencies:
       zod: 4.0.11
 
@@ -1660,18 +1640,11 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  typescript@5.8.3:
-    optional: true
-
   typescript@5.9.2: {}
 
   ufo@1.6.1: {}
 
   undici-types@7.8.0: {}
-
-  valibot@1.1.0(typescript@5.8.3):
-    optionalDependencies:
-      typescript: 5.8.3
 
   valibot@1.1.0(typescript@5.9.2):
     optionalDependencies:

@@ -16,14 +16,7 @@ const findSigningKey = (keyPriority: any, keyList: any) => {
       (Array.isArray(key.allowedFunctions) &&
         key.allowedFunctions.includes(keyPriority.calledFnName));
 
-    // No gasBudget means unlimited gasBudget
-    const hasEnoughGasBudget =
-      key.gasBudget === undefined ||
-      key.gasBudget.yoctoNear > keyPriority.requiredGasBudget.yoctoNear;
-
-    return (
-      isUnlocked && isContractIdMatch && isFnCallAllowed && hasEnoughGasBudget
-    );
+    return isUnlocked && isContractIdMatch && isFnCallAllowed;
   });
 };
 

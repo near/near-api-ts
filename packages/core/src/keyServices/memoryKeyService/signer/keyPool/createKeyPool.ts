@@ -1,24 +1,25 @@
-import type { Context as KeyServiceContext } from 'nat-types/keyServices/memoryKeyService';
 import { createFindKeyForTask } from './createFindKeyForTask';
 import { getFullAccessKeyList } from './getFullAccessKeyList';
 import { getFunctionCallKeyList } from './getFunctionCallKeyList';
+import type { Context as KeyServiceContext } from 'nat-types/keyServices/memoryKeyService';
+import type { SignerContext } from 'nat-types/keyServices/signer';
 
 export const createKeyPool = async (
-  signerContext: any,
+  signerContext: SignerContext,
   keyServiceContext: KeyServiceContext,
 ) => {
-  const { keys } = await signerContext.client.getAccountKeys({
+  const { accountKeys } = await signerContext.client.getAccountKeys({
     accountId: signerContext.signerAccountId,
   });
 
   const keyList = {
     fullAccess: getFullAccessKeyList(
-      keys,
+      accountKeys,
       keyServiceContext.keyPairs,
       signerContext,
     ),
     functionCall: getFunctionCallKeyList(
-      keys,
+      accountKeys,
       keyServiceContext.keyPairs,
       signerContext,
     ),

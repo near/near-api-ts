@@ -10,5 +10,5 @@ export const createUnlock = (key: any, signerContext: any) => () => {
 };
 
 export const createIncrementNonce = (key: any) => () => {
-  key.nonce = key.nonce + 1;
+  key.nonce = key.nonce + 1n;
 };

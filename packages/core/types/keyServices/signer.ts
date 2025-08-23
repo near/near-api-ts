@@ -4,10 +4,16 @@ import type { Client } from 'nat-types/client/client';
 
 export type MemorySigner = {};
 
-type CreateSignerInput = {
+type Input = {
   signerAccountId: AccountId;
   signerPublicKey?: PublicKey;
   client: Client;
 };
 
-export type CreateSigner = (params: CreateSignerInput) => Promise<MemorySigner>;
+export type SignerContext = {
+  signerAccountId: AccountId;
+  signerPublicKey?: PublicKey;
+  client: Client;
+}
+
+export type CreateSigner = (input: Input) => Promise<MemorySigner>;

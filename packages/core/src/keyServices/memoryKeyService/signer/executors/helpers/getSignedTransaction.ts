@@ -11,7 +11,7 @@ export const getSignedTransaction = (
     ...task.transactionIntent,
     signerAccountId: signerContext.signerAccountId,
     signerPublicKey: key.publicKey,
-    nonce: key.nonce + 1,
+    nonce: key.nonce + 1n,
     blockHash: signerContext.state.getBlockHash(),
   };
 

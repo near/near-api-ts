@@ -3,27 +3,24 @@ import {
   createLock,
   createUnlock,
 } from './helpers/keyUtils';
+import type { AccountKey, FunctionCallKey } from 'nat-types/accountKey';
 
 const transformKey = (
-  publicKey: any,
-  accessKey: any,
+  functionCallKey: FunctionCallKey,
   keyPairs: any,
   signerContext: any,
 ) => {
+  const { publicKey, nonce, contractAccountId, allowedFunctions } =
+    functionCallKey;
+
   const key: any = {
     permission: 'FunctionCall',
     publicKey,
     privateKey: keyPairs[publicKey].privateKey,
     isLocked: false,
-    nonce: accessKey.nonce,
-
-    // TODO Consider rename the RPC response
-    contractAccountId: accessKey.permission.FunctionCall.receiverId,
-
-    allowedFunctions: // Make Set
-      accessKey.permission.FunctionCall.methodNames.length > 0
-        ? new Set(accessKey.permission.FunctionCall.methodNames)
-        : undefined,
+    nonce,
+    contractAccountId,
+    allowedFunctions,
   };
 
   console.log(key);
@@ -36,16 +33,15 @@ const transformKey = (
 };
 
 export const getFunctionCallKeyList = (
-  accountKeys: any,
+  accountKeys: AccountKey[],
   keyPairs: any,
   signerContext: any,
 ) =>
   accountKeys
     .filter(
-      ({ publicKey, accessKey }: any) =>
-        Object.hasOwn(keyPairs, publicKey) &&
-        Object.hasOwn(accessKey.permission, 'FunctionCall'),
+      ({ publicKey, type }) =>
+        Object.hasOwn(keyPairs, publicKey) && type === 'FunctionCall',
     )
-    .map(({ publicKey, accessKey }: any) =>
-      transformKey(publicKey, accessKey, keyPairs, signerContext),
+    .map((key) =>
+      transformKey(key as FunctionCallKey, keyPairs, signerContext),
     );

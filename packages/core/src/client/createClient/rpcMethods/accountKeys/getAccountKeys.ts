@@ -1,5 +1,5 @@
 import { getBlockTarget } from '../utils';
-import { AccessKeyListSchema } from '@near-js/jsonrpc-types';
+import { RpcQueryResponseSchema } from '@near-js/jsonrpc-types';
 import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import type {
   CreateGetAccountKeys,
@@ -45,11 +45,13 @@ const transformKey = (key: AccessKeyInfoView): AccountKey => {
 
 const responseTransformer = (result: unknown): Output => {
   const camelCased = snakeToCamelCase(result);
-  const parsed = AccessKeyListSchema().parse(camelCased);
+  const parsed = RpcQueryResponseSchema().parse(camelCased);
+  // TODO Remove this check once @near-js/jsonrpc-types will support a proper type
+  if (!('keys' in parsed)) throw new Error('Invalid query response');
 
   return {
-    blockHash: camelCased.blockHash,
-    blockHeight: camelCased.blockHeight,
+    blockHash: parsed.blockHash,
+    blockHeight: parsed.blockHeight,
     accountKeys: parsed.keys.map(transformKey),
   };
 };

@@ -18,6 +18,3 @@ export const NearDecimals = 24;
 
 // Fetch block every 1000 blocks * 600ms best block time = >10 minutes
 export const RefetchBlockHashInterval = 600 * 1000;
-
-// Fetch gas price every 1 hour
-export const RefetchGasPriceInterval = 60 * 60 * 1000;

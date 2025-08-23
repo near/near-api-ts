@@ -7,10 +7,7 @@ export const signTransaction =
     const task = {
       type: 'SignTransaction',
       taskId: crypto.randomUUID(),
-      signingKeyPriority: getSigningKeyPriority(
-        transactionIntent,
-        signerContext,
-      ),
+      signingKeyPriority: getSigningKeyPriority(transactionIntent),
       transactionIntent,
     };
 

@@ -1,17 +1,23 @@
-import { createUnlock, createLock, createIncrementNonce } from './helpers/keyUtils';
+import {
+  createUnlock,
+  createLock,
+  createIncrementNonce,
+} from './helpers/keyUtils';
+import type { AccountKey, FullAccessKey } from 'nat-types/accountKey';
 
 const transformKey = (
-  publicKey: any,
-  accessKey: any,
+  fullAccessKey: FullAccessKey,
   keyPairs: any,
   signerContext: any,
 ) => {
+  const { publicKey, nonce } = fullAccessKey;
+
   const key: any = {
     permission: 'FullAccess',
     publicKey,
     privateKey: keyPairs[publicKey].privateKey,
     isLocked: false,
-    nonce: accessKey.nonce,
+    nonce,
   };
   key.lock = createLock(key);
   key.unlock = createUnlock(key, signerContext);
@@ -21,16 +27,13 @@ const transformKey = (
 };
 
 export const getFullAccessKeyList = (
-  accountKeys: any,
+  accountKeys: AccountKey[],
   keyPairs: any,
   signerContext: any,
 ) =>
   accountKeys
     .filter(
-      ({ publicKey, accessKey }: any) =>
-        Object.hasOwn(keyPairs, publicKey) &&
-        accessKey.permission === 'FullAccess',
+      ({ publicKey, type }) =>
+        Object.hasOwn(keyPairs, publicKey) && type === 'FullAccess',
     )
-    .map(({ publicKey, accessKey }: any) =>
-      transformKey(publicKey, accessKey, keyPairs, signerContext),
-    );
+    .map((key) => transformKey(key as FullAccessKey, keyPairs, signerContext));
