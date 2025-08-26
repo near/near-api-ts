@@ -14,7 +14,7 @@ const transformKey = (
     functionCallKey;
 
   const key: any = {
-    permission: 'FunctionCall',
+    type: 'FunctionCall',
     publicKey,
     privateKey: keyPairs[publicKey].privateKey,
     isLocked: false,

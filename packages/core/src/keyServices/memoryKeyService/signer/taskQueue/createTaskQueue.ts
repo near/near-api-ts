@@ -1,22 +1,41 @@
 import { createFindTaskForKey } from './createFindTaskForKey';
-import { signTransaction } from './addTask/signTransaction';
-import { executeTransaction } from './addTask/executeTransaction';
+import { createSignTransaction } from './addTask/signTransaction';
+import { createExecuteTransaction } from './addTask/executeTransaction';
+import type { SignerContext } from 'nat-types/keyServices/signer';
 
-export const createTaskQueue = (signerContext: any) => {
-  const state = {
+export const createTaskQueue = (signerContext: SignerContext) => {
+  const context: any = {
     queue: [],
+    cleaners: {},
+    signerContext,
   };
 
+  context.addTask = (task: any) => {
+    context.queue.push(task);
+    // Cancel the task if it wasn't started during queueTimeout time
+    context.cleaners[task.taskId] = setTimeout(() => {
+      context.queue = context.queue.filter(
+        ({ taskId }: any) => taskId !== task.taskId,
+      );
+      delete context.cleaners[task.taskId];
+
+      context.signerContext.resolver.completeTask(task.taskId, {
+        error: 'Task execution was rejected after timeout',
+      });
+    }, context.signerContext.queueTimeout);
+  };
+
+  // We remove the task from the queue when the task execution starts
   const removeTask = (taskId: any) => {
-    state.queue = state.queue.filter((task: any) => task.taskId !== taskId);
+    context.queue = context.queue.filter((task: any) => task.taskId !== taskId);
+    clearTimeout(context.cleaners[taskId]);
+    delete context.cleaners[taskId];
   };
 
   return {
-    addTask: {
-      signTransaction: signTransaction(signerContext, state),
-      executeTransaction: executeTransaction(signerContext, state),
-    },
-    findTaskForKey: createFindTaskForKey(state),
+    signTransaction: createSignTransaction(context),
+    executeTransaction: createExecuteTransaction(context),
+    findTaskForKey: createFindTaskForKey(context),
     removeTask,
   };
 };

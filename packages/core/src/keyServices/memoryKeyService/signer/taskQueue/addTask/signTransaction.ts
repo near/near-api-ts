@@ -1,9 +1,11 @@
 import type { TransactionIntent } from 'nat-types/transaction';
 import { getSigningKeyPriority } from './helpers/getSigningKeyPriority';
 
-export const signTransaction =
-  (signerContext: any, state: any) =>
+export const createSignTransaction =
+  (context: any) =>
   async (transactionIntent: TransactionIntent) => {
+    const { matcher, resolver } = context.signerContext;
+
     const task = {
       type: 'SignTransaction',
       taskId: crypto.randomUUID(),
@@ -11,12 +13,12 @@ export const signTransaction =
       transactionIntent,
     };
 
-    signerContext.matcher.canHandleTaskInFuture(task);
-    state.queue.push(task);
+    matcher.canHandleTaskInFuture(task);
+    context.addTask(task);
 
     queueMicrotask(() => {
-      signerContext.matcher.handleAddTask(task);
+      matcher.handleAddTask(task);
     });
 
-    return signerContext.resolver.waitForTask(task.taskId);
+    return resolver.waitForTask(task.taskId);
   };

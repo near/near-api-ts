@@ -24,16 +24,19 @@ const signerPrivateKey4 =
 
 const keyService = await createMemoryKeyService({
   keySources: [
-    // { privateKey: signerPrivateKey },
+    { privateKey: signerPrivateKey },
     // { privateKey: signerPrivateKey2 },
-    { privateKey: signerPrivateKey3 },
-    { privateKey: signerPrivateKey4 },
+    // { privateKey: signerPrivateKey3 },
+    // { privateKey: signerPrivateKey4 },
   ],
 });
 
 const signer: any = await keyService.createSigner({
   signerAccountId: 'nat-t1.lantstool.testnet',
   client,
+  options: {
+    queueTimeout: 10000,
+  },
 });
 
 const result = await Promise.allSettled([
@@ -43,17 +46,17 @@ const result = await Promise.allSettled([
   // }),
   signer.signTransaction({
     action: functionCall({
-      fnName: 'add_record',
-      gasLimit: { teraGas: 100n },
-    }),
-    receiverAccountId: 'lantstool.testnet',
-  }),
-  signer.signTransaction({
-    action: functionCall({
       fnName: 'claim',
       gasLimit: { teraGas: 100n },
     }),
     receiverAccountId: 'testnet',
+  }),
+  signer.signTransaction({
+    action: functionCall({
+      fnName: 'add_record',
+      gasLimit: { teraGas: 100n },
+    }),
+    receiverAccountId: 'lantstool.testnet',
   }),
 ]);
 

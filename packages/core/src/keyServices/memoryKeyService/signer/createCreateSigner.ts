@@ -3,18 +3,18 @@ import { createTaskQueue } from './taskQueue/createTaskQueue';
 import { createMatcher } from './matcher/createMatcher';
 import { createResolver } from './resolver/createResolver';
 import { createState } from './state/createState';
+import { SignerTaskQueueTimeout } from '@common/configs/constants';
 import type { Context as KeyServiceContext } from 'nat-types/keyServices/memoryKeyService';
 import type { CreateSigner } from 'nat-types/keyServices/signer';
-
-// TODO Add check if it's not possible to sign the tx at all - throw error immediately, don't wait forever
 
 export const createCreateSigner =
   (keyServiceContext: KeyServiceContext): CreateSigner =>
   async (params) => {
     const context: any = {
       signerAccountId: params.signerAccountId,
-      signerPublicKey: params.signerPublicKey, // TODO handle case when only 1 key is allowed
       client: params.client,
+      signerPublicKey: params?.options?.signerPublicKey, // TODO handle case when only 1 key is allowed
+      queueTimeout: params?.options?.queueTimeout ?? SignerTaskQueueTimeout,
     };
 
     const [keyPool, state] = await Promise.all([
@@ -29,7 +29,7 @@ export const createCreateSigner =
     context.resolver = createResolver();
 
     return {
-      executeTransaction: context.taskQueue.addTask.executeTransaction,
-      signTransaction: context.taskQueue.addTask.signTransaction,
+      executeTransaction: context.taskQueue.executeTransaction,
+      signTransaction: context.taskQueue.signTransaction,
     };
   };

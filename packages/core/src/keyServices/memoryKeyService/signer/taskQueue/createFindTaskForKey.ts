@@ -14,8 +14,8 @@ const checkIfKeyMatchRequirements = (keyPriority: any, key: any) => {
   return isContractIdMatch && isFnCallAllowed;
 };
 
-export const createFindTaskForKey = (state: any) => (key: any) =>
-  state.queue.find((task: any) =>
+export const createFindTaskForKey = (context: any) => (key: any) =>
+  context.queue.find((task: any) =>
     task.signingKeyPriority.some((keyPriority: any) =>
       checkIfKeyMatchRequirements(keyPriority, key),
     ),

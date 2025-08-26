@@ -1,7 +1,9 @@
 import { getSigningKeyPriority } from './helpers/getSigningKeyPriority';
 
-export const executeTransaction =
-  (signerContext: any, state: any) => async (params: any) => {
+export const createExecuteTransaction =
+  (context: any) => async (params: any) => {
+    const { matcher, resolver } = context.signerContext;
+
     const transactionIntent = {
       receiverAccountId: params.receiverAccountId,
       action: params.action,
@@ -15,12 +17,12 @@ export const executeTransaction =
       transactionIntent,
     };
 
-    signerContext.matcher.canHandleTaskInFuture(task);
-    state.queue.push(task);
+    matcher.canHandleTaskInFuture(task);
+    context.addTask(task);
 
     queueMicrotask(() => {
-      signerContext.matcher.handleAddTask(task);
+      matcher.handleAddTask(task);
     });
 
-    return signerContext.resolver.waitForTask(task.taskId);
+    return resolver.waitForTask(task.taskId);
   };

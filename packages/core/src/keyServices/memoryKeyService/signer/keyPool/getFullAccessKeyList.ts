@@ -13,7 +13,7 @@ const transformKey = (
   const { publicKey, nonce } = fullAccessKey;
 
   const key: any = {
-    permission: 'FullAccess',
+    type: 'FullAccess',
     publicKey,
     privateKey: keyPairs[publicKey].privateKey,
     isLocked: false,

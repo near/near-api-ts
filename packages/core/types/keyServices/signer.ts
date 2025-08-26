@@ -6,14 +6,18 @@ export type MemorySigner = {};
 
 type Input = {
   signerAccountId: AccountId;
-  signerPublicKey?: PublicKey;
   client: Client;
+  options?: {
+    signerPublicKey?: PublicKey;
+    queueTimeout?: number;
+  };
 };
 
 export type SignerContext = {
   signerAccountId: AccountId;
-  signerPublicKey?: PublicKey;
   client: Client;
-}
+  signerPublicKey?: PublicKey;
+  queueTimeout?: number;
+};
 
 export type CreateSigner = (input: Input) => Promise<MemorySigner>;
