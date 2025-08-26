@@ -23,8 +23,6 @@ const transformKey = (
     allowedFunctions,
   };
 
-  console.log(key);
-
   key.lock = createLock(key);
   key.unlock = createUnlock(key, signerContext);
   key.incrementNonce = createIncrementNonce(key);

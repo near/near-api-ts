@@ -1,4 +1,5 @@
 import { createFindKeyForTask } from './createFindKeyForTask';
+import { createIsKeyForTaskExist } from './createIsKeyForTaskExist';
 import { getFullAccessKeyList } from './getFullAccessKeyList';
 import { getFunctionCallKeyList } from './getFunctionCallKeyList';
 import type { Context as KeyServiceContext } from 'nat-types/keyServices/memoryKeyService';
@@ -27,5 +28,6 @@ export const createKeyPool = async (
 
   return {
     findKeyForTask: createFindKeyForTask(keyList),
+    isKeyForTaskExist: createIsKeyForTaskExist(keyList),
   };
 };

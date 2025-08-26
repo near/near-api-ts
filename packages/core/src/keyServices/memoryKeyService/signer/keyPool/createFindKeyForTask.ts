@@ -13,8 +13,7 @@ const findSigningKey = (keyPriority: any, keyList: any) => {
     // No allowedFunctions means that the key can call every contract function
     const isFnCallAllowed =
       key.allowedFunctions === undefined ||
-      (Array.isArray(key.allowedFunctions) &&
-        key.allowedFunctions.includes(keyPriority.calledFnName));
+      key.allowedFunctions.includes(keyPriority.calledFnName);
 
     return isUnlocked && isContractIdMatch && isFnCallAllowed;
   });

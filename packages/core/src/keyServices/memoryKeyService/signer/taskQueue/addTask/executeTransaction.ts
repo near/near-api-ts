@@ -15,6 +15,7 @@ export const executeTransaction =
       transactionIntent,
     };
 
+    signerContext.matcher.canHandleTaskInFuture(task);
     state.queue.push(task);
 
     queueMicrotask(() => {

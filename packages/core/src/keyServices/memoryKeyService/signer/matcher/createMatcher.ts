@@ -30,8 +30,15 @@ export const createMatcher = (signerContext: any) => {
     await executeTask(signerContext, task, key);
   };
 
+  const canHandleTaskInFuture = (task: any) => {
+    const canHandle = signerContext.keyPool.isKeyForTaskExist(task);
+    if (canHandle) return true;
+    throw new Error(`There is no key, which can sigh the task`);
+  };
+
   return {
     handleAddTask,
     handleKeyUnlock,
+    canHandleTaskInFuture,
   };
 };
