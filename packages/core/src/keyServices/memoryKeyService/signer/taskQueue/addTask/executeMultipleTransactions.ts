@@ -6,6 +6,8 @@ export const createExecuteMultipleTransactions =
     const output = [];
     let failed = false;
 
+    // TODO check if all txns could be executed in the future (if keyPool has all needed keys)
+
     for (const intent of transactionIntents) {
       if (failed) {
         output.push({ status: 'Canceled' });
@@ -21,6 +23,7 @@ export const createExecuteMultipleTransactions =
         failed = true;
       }
     }
+    // TODO consider trowing error with output
 
     return output;
   };

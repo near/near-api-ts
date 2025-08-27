@@ -13,13 +13,23 @@ export const createKeyPool = async (
     accountId: signerContext.signerAccountId,
   });
 
+  // If the user want to handle all tasks only by a specific key - remove others
+  const filteredKeys = accountKeys.filter((key) =>
+    signerContext.signerPublicKey
+      ? signerContext.signerPublicKey === key.publicKey
+      : true,
+  );
+
   const keyList = {
-    fullAccess: getFullAccessKeyList(accountKeys, keyServiceContext.keyPairs),
+    fullAccess: getFullAccessKeyList(filteredKeys, keyServiceContext.keyPairs),
     functionCall: getFunctionCallKeyList(
-      accountKeys,
+      filteredKeys,
       keyServiceContext.keyPairs,
     ),
   };
+
+  if (keyList.fullAccess.length === 0 && keyList.functionCall.length === 0)
+    throw new Error('Cannot create a signer with no account keys');
 
   return {
     findKeyForTask: createFindKeyForTask(keyList),

@@ -13,7 +13,7 @@ export const createCreateSigner =
     const context: any = {
       signerAccountId: params.signerAccountId,
       client: params.client,
-      signerPublicKey: params?.options?.signerPublicKey, // TODO handle case when only 1 key is allowed
+      signerPublicKey: params?.options?.signerPublicKey,
       queueTimeout: params?.options?.queueTimeout ?? SignerTaskQueueTimeout,
     };
 

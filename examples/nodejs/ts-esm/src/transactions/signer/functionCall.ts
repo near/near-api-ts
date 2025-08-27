@@ -26,7 +26,7 @@ const keyService = await createMemoryKeyService({
   keySources: [
     { privateKey: signerPrivateKey },
     { privateKey: signerPrivateKey2 },
-    // { privateKey: signerPrivateKey3 },
+    { privateKey: signerPrivateKey3 },
     { privateKey: signerPrivateKey4 },
   ],
 });
@@ -35,13 +35,12 @@ const signer: any = await keyService.createSigner({
   signerAccountId: 'nat-t1.lantstool.testnet',
   client,
   options: {
-    queueTimeout: 10000,
+    signerPublicKey: 'ed25519:9x4hUmLKYzQhi5BR3d4faoifAt8beyUqLTBk99p16dj9',
+    queueTimeout: 60000,
   },
 });
 
-
-
-// const result = await signer.signMultipleTransactions({
+// const result = await signer.executeMultipleTransactions({
 //   transactionIntents: [
 //     {
 //       action: functionCall({
@@ -49,6 +48,13 @@ const signer: any = await keyService.createSigner({
 //         gasLimit: { teraGas: 10n },
 //       }),
 //       receiverAccountId: 'lantstool.testnet',
+//     },
+//     {
+//       action: functionCall({
+//         fnName: 'claim',
+//         gasLimit: { teraGas: 10n },
+//       }),
+//       receiverAccountId: 'testnet',
 //     },
 //     {
 //       action: transfer({ amount: { yoctoNear: '1' } }),
