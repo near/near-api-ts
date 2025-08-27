@@ -2,8 +2,7 @@ import type { TransactionIntent } from 'nat-types/transaction';
 import { getSigningKeyPriority } from './helpers/getSigningKeyPriority';
 
 export const createSignTransaction =
-  (context: any) =>
-  async (transactionIntent: TransactionIntent) => {
+  (context: any) => async (transactionIntent: TransactionIntent) => {
     const { matcher, resolver } = context.signerContext;
 
     const task = {

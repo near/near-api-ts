@@ -1,21 +1,26 @@
-// import type { TransactionIntent } from 'nat-types/transaction';
-// import { getSignKeyPriority } from './helpers/getSignKeyPriority';
-//
-// export const signMultipleTransactions =
-//   (signerContext: any, state: any) =>
-//   async (transactionIntent: TransactionIntent) => {
-//     const task = {
-//       type: 'SignTransaction',
-//       taskId: crypto.randomUUID(),
-//       keyPriority: getSignKeyPriority(transactionIntent),
-//       transactionIntent,
-//     };
-//
-//     state.queue.push(task);
-//
-//     queueMicrotask(() => {
-//       signerContext.matcher.handleAddTask(task);
-//     });
-//
-//     return signerContext.resolver.waitForTask(task.taskId);
-//   };
+export const createSignMultipleTransactions =
+  (context: any) => async (params: any) => {
+    const { transactionIntents } = params;
+    const { signTransaction } = context.signerContext.taskQueue;
+
+    const output = [];
+    let failed = false;
+
+    for (const intent of transactionIntents) {
+      if (failed) {
+        output.push({ status: 'Canceled' });
+        continue;
+      }
+      try {
+        output.push({
+          status: 'Success',
+          result: await signTransaction(intent),
+        });
+      } catch (error) {
+        output.push({ status: 'Error', error });
+        failed = true;
+      }
+    }
+
+    return output;
+  };

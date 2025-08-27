@@ -1,6 +1,8 @@
 import { createFindTaskForKey } from './createFindTaskForKey';
 import { createSignTransaction } from './addTask/signTransaction';
 import { createExecuteTransaction } from './addTask/executeTransaction';
+import { createSignMultipleTransactions } from './addTask/signMultipleTransactions';
+import { createExecuteMultipleTransactions } from './addTask/executeMultipleTransactions';
 import type { SignerContext } from 'nat-types/keyServices/signer';
 
 export const createTaskQueue = (signerContext: SignerContext) => {
@@ -34,7 +36,9 @@ export const createTaskQueue = (signerContext: SignerContext) => {
 
   return {
     signTransaction: createSignTransaction(context),
+    signMultipleTransactions: createSignMultipleTransactions(context),
     executeTransaction: createExecuteTransaction(context),
+    executeeMultipleTransactions: createExecuteMultipleTransactions(context),
     findTaskForKey: createFindTaskForKey(context),
     removeTask,
   };

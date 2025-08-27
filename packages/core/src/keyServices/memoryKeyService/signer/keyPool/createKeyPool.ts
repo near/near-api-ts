@@ -14,15 +14,10 @@ export const createKeyPool = async (
   });
 
   const keyList = {
-    fullAccess: getFullAccessKeyList(
-      accountKeys,
-      keyServiceContext.keyPairs,
-      signerContext,
-    ),
+    fullAccess: getFullAccessKeyList(accountKeys, keyServiceContext.keyPairs),
     functionCall: getFunctionCallKeyList(
       accountKeys,
       keyServiceContext.keyPairs,
-      signerContext,
     ),
   };
 

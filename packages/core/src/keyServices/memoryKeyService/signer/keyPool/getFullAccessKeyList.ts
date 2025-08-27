@@ -5,11 +5,7 @@ import {
 } from './helpers/keyUtils';
 import type { AccountKey, FullAccessKey } from 'nat-types/accountKey';
 
-const transformKey = (
-  fullAccessKey: FullAccessKey,
-  keyPairs: any,
-  signerContext: any,
-) => {
+const transformKey = (fullAccessKey: FullAccessKey, keyPairs: any) => {
   const { publicKey, nonce } = fullAccessKey;
 
   const key: any = {
@@ -20,7 +16,7 @@ const transformKey = (
     nonce,
   };
   key.lock = createLock(key);
-  key.unlock = createUnlock(key, signerContext);
+  key.unlock = createUnlock(key);
   key.incrementNonce = createIncrementNonce(key);
 
   return key;
@@ -29,11 +25,10 @@ const transformKey = (
 export const getFullAccessKeyList = (
   accountKeys: AccountKey[],
   keyPairs: any,
-  signerContext: any,
 ) =>
   accountKeys
     .filter(
       ({ publicKey, type }) =>
         Object.hasOwn(keyPairs, publicKey) && type === 'FullAccess',
     )
-    .map((key) => transformKey(key as FullAccessKey, keyPairs, signerContext));
+    .map((key) => transformKey(key as FullAccessKey, keyPairs));

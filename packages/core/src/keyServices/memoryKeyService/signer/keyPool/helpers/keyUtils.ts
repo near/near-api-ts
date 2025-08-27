@@ -3,10 +3,9 @@ export const createLock = (key: any) => () => {
   console.log('Key locked', key.publicKey);
 };
 
-export const createUnlock = (key: any, signerContext: any) => () => {
+export const createUnlock = (key: any) => () => {
   key.isLocked = false;
   console.log('Key unlocked', key.publicKey);
-  signerContext.matcher.handleKeyUnlock(key);
 };
 
 export const createIncrementNonce = (key: any) => () => {

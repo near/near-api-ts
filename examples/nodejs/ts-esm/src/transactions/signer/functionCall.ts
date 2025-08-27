@@ -25,9 +25,9 @@ const signerPrivateKey4 =
 const keyService = await createMemoryKeyService({
   keySources: [
     { privateKey: signerPrivateKey },
-    // { privateKey: signerPrivateKey2 },
+    { privateKey: signerPrivateKey2 },
     // { privateKey: signerPrivateKey3 },
-    // { privateKey: signerPrivateKey4 },
+    { privateKey: signerPrivateKey4 },
   ],
 });
 
@@ -39,12 +39,34 @@ const signer: any = await keyService.createSigner({
   },
 });
 
+
+
+// const result = await signer.signMultipleTransactions({
+//   transactionIntents: [
+//     {
+//       action: functionCall({
+//         fnName: 'add_record',
+//         gasLimit: { teraGas: 10n },
+//       }),
+//       receiverAccountId: 'lantstool.testnet',
+//     },
+//     {
+//       action: transfer({ amount: { yoctoNear: '1' } }),
+//       receiverAccountId: 'eclipseer.testnet',
+//     },
+//     {
+//       action: transfer({ amount: { yoctoNear: '1' } }),
+//       receiverAccountId: 'lantstool.testnet',
+//     },
+//   ],
+// });
+
 const result = await Promise.allSettled([
-  // signer.executeTransaction({
-  //   action: transfer({ amount: { yoctoNear: '1' } }),
-  //   receiverAccountId: 'eclipseer.testnet',
-  // }),
   signer.signTransaction({
+    action: transfer({ amount: { yoctoNear: '1' } }),
+    receiverAccountId: 'eclipseer.testnet',
+  }),
+  signer.executeTransaction({
     action: functionCall({
       fnName: 'claim',
       gasLimit: { teraGas: 100n },
@@ -60,4 +82,5 @@ const result = await Promise.allSettled([
   }),
 ]);
 
-console.dir(result, { depth: null, colors: true });
+console.log(result);
+// console.dir(result2, { depth: null, colors: true });

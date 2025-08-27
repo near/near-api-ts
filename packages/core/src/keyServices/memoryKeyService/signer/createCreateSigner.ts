@@ -30,6 +30,9 @@ export const createCreateSigner =
 
     return {
       executeTransaction: context.taskQueue.executeTransaction,
+      executeMultipleTransactions:
+        context.taskQueue.executeeMultipleTransactions,
       signTransaction: context.taskQueue.signTransaction,
+      signMultipleTransactions: context.taskQueue.signMultipleTransactions,
     };
   };

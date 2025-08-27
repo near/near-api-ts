@@ -7,12 +7,7 @@ export const executeTransaction = async (
 ) => {
   const signedTransaction = getSignedTransaction(signerContext, task, key);
 
-  const result = await signerContext.client.sendSignedTransaction({
+  return await signerContext.client.sendSignedTransaction({
     signedTransaction,
-  });
-
-  // if success - call resolver
-  signerContext.resolver.completeTask(task.taskId, {
-    result,
   });
 };

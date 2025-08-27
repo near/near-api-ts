@@ -1,6 +1,7 @@
 export const createResolver = () => {
   const activeTasks: any = {};
 
+  // Return Promise which will be resolved by callback, stored in the state
   const waitForTask = (taskId: any) =>
     new Promise((resolve, reject) => {
       activeTasks[taskId] = ({ result, error }: any) => {

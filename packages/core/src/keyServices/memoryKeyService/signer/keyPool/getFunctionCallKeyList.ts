@@ -5,11 +5,7 @@ import {
 } from './helpers/keyUtils';
 import type { AccountKey, FunctionCallKey } from 'nat-types/accountKey';
 
-const transformKey = (
-  functionCallKey: FunctionCallKey,
-  keyPairs: any,
-  signerContext: any,
-) => {
+const transformKey = (functionCallKey: FunctionCallKey, keyPairs: any) => {
   const { publicKey, nonce, contractAccountId, allowedFunctions } =
     functionCallKey;
 
@@ -24,7 +20,7 @@ const transformKey = (
   };
 
   key.lock = createLock(key);
-  key.unlock = createUnlock(key, signerContext);
+  key.unlock = createUnlock(key);
   key.incrementNonce = createIncrementNonce(key);
 
   return key;
@@ -33,13 +29,10 @@ const transformKey = (
 export const getFunctionCallKeyList = (
   accountKeys: AccountKey[],
   keyPairs: any,
-  signerContext: any,
 ) =>
   accountKeys
     .filter(
       ({ publicKey, type }) =>
         Object.hasOwn(keyPairs, publicKey) && type === 'FunctionCall',
     )
-    .map((key) =>
-      transformKey(key as FunctionCallKey, keyPairs, signerContext),
-    );
+    .map((key) => transformKey(key as FunctionCallKey, keyPairs));
