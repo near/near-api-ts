@@ -2,30 +2,29 @@ import { createFindKeyForTask } from './createFindKeyForTask';
 import { createIsKeyForTaskExist } from './createIsKeyForTaskExist';
 import { getFullAccessKeyList } from './getFullAccessKeyList';
 import { getFunctionCallKeyList } from './getFunctionCallKeyList';
-import type { Context as KeyServiceContext } from 'nat-types/keyServices/memoryKeyService';
-import type { SignerContext } from 'nat-types/keyServices/signer';
+import type { SignerContext } from 'nat-types/signers/memorySigner';
+import type { AccountKey } from 'nat-types/accountKey';
 
-export const createKeyPool = async (
+const getAllowedSigningKeys = (
   signerContext: SignerContext,
-  keyServiceContext: KeyServiceContext,
+  accountKeys: AccountKey[],
 ) => {
+  if (!signerContext.signingKeys) return accountKeys;
+  const set = new Set(signerContext.signingKeys);
+  return accountKeys.filter((key) => set.has(key.publicKey));
+};
+
+export const createKeyPool = async (signerContext: SignerContext) => {
   const { accountKeys } = await signerContext.client.getAccountKeys({
     accountId: signerContext.signerAccountId,
   });
 
   // If the user want to handle all tasks only by a specific key - remove others
-  const filteredKeys = accountKeys.filter((key) =>
-    signerContext.signerPublicKey
-      ? signerContext.signerPublicKey === key.publicKey
-      : true,
-  );
+  const filteredKeys = getAllowedSigningKeys(signerContext, accountKeys);
 
   const keyList = {
-    fullAccess: getFullAccessKeyList(filteredKeys, keyServiceContext.keyPairs),
-    functionCall: getFunctionCallKeyList(
-      filteredKeys,
-      keyServiceContext.keyPairs,
-    ),
+    fullAccess: getFullAccessKeyList(filteredKeys, signerContext),
+    functionCall: getFunctionCallKeyList(filteredKeys, signerContext),
   };
 
   if (keyList.fullAccess.length === 0 && keyList.functionCall.length === 0)

@@ -3,6 +3,8 @@ export { createClient } from './client/createClient/createClient';
 export { testnet } from './client/presets/networks';
 // Key Services
 export { createMemoryKeyService } from './keyServices/memoryKeyService/createMemoryKeyService';
+// Signers
+export { createMemorySigner } from './signers/memorySigner/createMemorySigner';
 // Action Creators
 export { transfer } from './helpers/actionCreators/transfer';
 export { createAccount } from './helpers/actionCreators/createAccount';

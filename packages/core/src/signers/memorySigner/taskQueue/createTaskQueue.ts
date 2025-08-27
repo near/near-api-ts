@@ -3,7 +3,7 @@ import { createSignTransaction } from './addTask/signTransaction';
 import { createExecuteTransaction } from './addTask/executeTransaction';
 import { createSignMultipleTransactions } from './addTask/signMultipleTransactions';
 import { createExecuteMultipleTransactions } from './addTask/executeMultipleTransactions';
-import type { SignerContext } from 'nat-types/keyServices/signer';
+import type { SignerContext } from 'nat-types/signers/memorySigner';
 
 export const createTaskQueue = (signerContext: SignerContext) => {
   const context: any = {
@@ -24,7 +24,7 @@ export const createTaskQueue = (signerContext: SignerContext) => {
       context.signerContext.resolver.completeTask(task.taskId, {
         error: 'Task execution was rejected after timeout',
       });
-    }, context.signerContext.queueTimeout);
+    }, context.signerContext.taskTtlMs);
   };
 
   // We remove the task from the queue when the task execution starts

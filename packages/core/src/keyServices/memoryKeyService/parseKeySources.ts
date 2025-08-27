@@ -1,12 +1,14 @@
+import { getPublicKey } from '../../helpers/crypto/getPublicKey';
 import type {
-  KeyPair,
+  KeyPairs,
   KeySource,
-  Context,
   CreateMemoryKeyServiceInput,
 } from 'nat-types/keyServices/memoryKeyService';
-import { getPublicKey } from '../../helpers/crypto/getPublicKey';
+import type { PrivateKey, PublicKey } from 'nat-types/crypto';
 
-const parseKeySource = (keySource: KeySource): KeyPair => {
+const parseKeySource = (
+  keySource: KeySource,
+): { publicKey: PublicKey; privateKey: PrivateKey } => {
   if ('privateKey' in keySource) {
     return {
       publicKey: getPublicKey(keySource.privateKey),
@@ -27,17 +29,17 @@ const parseKeySource = (keySource: KeySource): KeyPair => {
 
 export const parseKeySources = (
   params: CreateMemoryKeyServiceInput,
-): Context['keyPairs'] => {
+): KeyPairs => {
   if (params.keySource) {
-    const keyPair = parseKeySource(params.keySource);
-    return { [keyPair.publicKey]: keyPair };
+    const { publicKey, privateKey } = parseKeySource(params.keySource);
+    return { [publicKey]: privateKey };
   }
 
   if (params.keySources)
     return Object.fromEntries(
       params.keySources.map((keySource) => {
-        const keyPair = parseKeySource(keySource);
-        return [keyPair.publicKey, keyPair];
+        const { publicKey, privateKey } = parseKeySource(keySource);
+        return [publicKey, privateKey];
       }),
     );
 

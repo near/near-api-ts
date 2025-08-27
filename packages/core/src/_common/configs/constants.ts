@@ -17,7 +17,7 @@ export const BinaryCryptoHashLength = 32;
 export const NearDecimals = 24;
 
 // Fetch block every 1000 blocks * 600ms best block time = >10 minutes
-export const RefetchBlockHashInterval = 600 * 1000;
+export const RefetchBlockHashInterval = 600_000;
 
 // 1 minute
-export const SignerTaskQueueTimeout = 60000 as const
+export const SignerTaskTtlMs = 60_000 as const

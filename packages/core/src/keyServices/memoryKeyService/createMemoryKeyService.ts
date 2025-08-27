@@ -1,7 +1,6 @@
 import { createSignTransaction } from './createSignTransaction';
 import { parseKeySources } from './parseKeySources';
 import { createFindPrivateKey } from './createFindPrivateKey';
-import { createCreateSigner } from './signer/createCreateSigner';
 import type {
   Context,
   MemoryKeyService,
@@ -18,7 +17,7 @@ export const createMemoryKeyService = async (
   context.findPrivateKey = createFindPrivateKey(context.keyPairs);
 
   return {
-    createSigner: createCreateSigner(context),
     signTransaction: createSignTransaction(context),
+    getKeyPairs: () => context.keyPairs,
   };
 };

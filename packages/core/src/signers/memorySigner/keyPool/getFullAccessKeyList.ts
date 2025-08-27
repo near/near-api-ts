@@ -4,14 +4,16 @@ import {
   createIncrementNonce,
 } from './helpers/keyUtils';
 import type { AccountKey, FullAccessKey } from 'nat-types/accountKey';
+import type { SignerContext } from 'nat-types/signers/memorySigner';
+import type { KeyPairs } from 'nat-types/keyServices/memoryKeyService';
 
-const transformKey = (fullAccessKey: FullAccessKey, keyPairs: any) => {
+const transformKey = (fullAccessKey: FullAccessKey, keyPairs: KeyPairs) => {
   const { publicKey, nonce } = fullAccessKey;
 
   const key: any = {
     type: 'FullAccess',
     publicKey,
-    privateKey: keyPairs[publicKey].privateKey,
+    privateKey: keyPairs[publicKey],
     isLocked: false,
     nonce,
   };
@@ -24,11 +26,14 @@ const transformKey = (fullAccessKey: FullAccessKey, keyPairs: any) => {
 
 export const getFullAccessKeyList = (
   accountKeys: AccountKey[],
-  keyPairs: any,
-) =>
-  accountKeys
+  signerContext: SignerContext,
+) => {
+  const keyPairs = signerContext.keyService.getKeyPairs();
+
+  return accountKeys
     .filter(
       ({ publicKey, type }) =>
         Object.hasOwn(keyPairs, publicKey) && type === 'FullAccess',
     )
     .map((key) => transformKey(key as FullAccessKey, keyPairs));
+};

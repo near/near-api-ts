@@ -1,9 +1,9 @@
 import {
   createClient,
   createMemoryKeyService,
+  createMemorySigner,
   testnet,
   functionCall,
-  teraGas,
   transfer,
 } from '@near-api-ts/core';
 
@@ -31,16 +31,22 @@ const keyService = await createMemoryKeyService({
   ],
 });
 
-const signer: any = await keyService.createSigner({
+const signer: any = await createMemorySigner({
   signerAccountId: 'nat-t1.lantstool.testnet',
   client,
-  options: {
-    signerPublicKey: 'ed25519:9x4hUmLKYzQhi5BR3d4faoifAt8beyUqLTBk99p16dj9',
-    queueTimeout: 60000,
+  keyService,
+  keyPool: {
+    signingKeys: [
+      'ed25519:9x4hUmLKYzQhi5BR3d4faoifAt8beyUqLTBk99p16dj9',
+      'ed25519:76ajHU6SdLPEz7YwWR1Ejm3iq96RAhL3MGAkbqXyCZTv',
+    ],
+  },
+  queue: {
+    taskTtlMs: 100_000,
   },
 });
 
-// const result = await signer.executeMultipleTransactions({
+// const result = await signer.signMultipleTransactions({
 //   transactionIntents: [
 //     {
 //       action: functionCall({
@@ -72,7 +78,7 @@ const result = await Promise.allSettled([
     action: transfer({ amount: { yoctoNear: '1' } }),
     receiverAccountId: 'eclipseer.testnet',
   }),
-  signer.executeTransaction({
+  signer.signTransaction({
     action: functionCall({
       fnName: 'claim',
       gasLimit: { teraGas: 100n },
@@ -85,6 +91,10 @@ const result = await Promise.allSettled([
       gasLimit: { teraGas: 100n },
     }),
     receiverAccountId: 'lantstool.testnet',
+  }),
+  signer.signTransaction({
+    action: transfer({ amount: { yoctoNear: '1' } }),
+    receiverAccountId: 'eclipseer.testnet',
   }),
 ]);
 

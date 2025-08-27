@@ -1,5 +1,5 @@
-import { getTransactionHash } from '../../../../../helpers/crypto/getTransactionHash';
-import { sign } from '../../../../../helpers/crypto/sign';
+import { getTransactionHash } from '../../../../helpers/crypto/getTransactionHash';
+import { sign } from '../../../../helpers/crypto/sign';
 import type { SignedTransaction } from 'nat-types/signedTransaction';
 
 export const getSignedTransaction = (

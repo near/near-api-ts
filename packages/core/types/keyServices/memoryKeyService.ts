@@ -1,7 +1,6 @@
 import type { PrivateKey, PublicKey } from '../crypto';
 import type { Transaction } from '../transaction';
 import type { SignedTransaction } from '../signedTransaction';
-import type { CreateSigner } from 'nat-types/keyServices/signer';
 
 export type KeySource = { privateKey: PrivateKey } | { seedPhrase: string };
 
@@ -10,13 +9,10 @@ type MultiKeySources = { keySource?: never; keySources: KeySource[] };
 
 export type CreateMemoryKeyServiceInput = SingleKeySource | MultiKeySources;
 
-export type KeyPair = {
-  publicKey: PublicKey;
-  privateKey: PrivateKey;
-};
+export type KeyPairs = Record<PublicKey, PrivateKey>;
 
 export type Context = {
-  keyPairs: Record<PublicKey, KeyPair>;
+  keyPairs: KeyPairs;
   findPrivateKey: (publicKey: PublicKey) => PrivateKey;
 };
 
@@ -25,6 +21,6 @@ export type SignTransaction = (
 ) => Promise<SignedTransaction>;
 
 export type MemoryKeyService = {
-  createSigner: CreateSigner;
   signTransaction: SignTransaction;
+  getKeyPairs: () => KeyPairs;
 };

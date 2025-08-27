@@ -4,7 +4,7 @@ import { executeTransaction } from '../executors/executeTransaction';
 const getExecutor = (task: any) => {
   if (task.type === 'SignTransaction') return signTransaction;
   if (task.type === 'ExecuteTransaction') return executeTransaction;
-  throw new Error('Unsupported task.type');
+  throw new Error('Unsupported task type');
 };
 
 const executeTask = async (signerContext: any, task: any, key: any) => {
