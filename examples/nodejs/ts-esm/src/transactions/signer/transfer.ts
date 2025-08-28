@@ -25,24 +25,24 @@ const keyService = await createMemoryKeyService({
   ],
 });
 
-const signer: any = await keyService.createSigner({
-  signerAccountId: 'nat-t1.lantstool.testnet',
-  client,
-});
-
-const res = await Promise.all([
-  signer.executeTransaction({
-    action: transfer({ amount: { yoctoNear: '1' } }),
-    receiverAccountId: 'eclipseer.testnet',
-  }),
-  signer.signTransaction({
-    action: transfer({ amount: { yoctoNear: '2' } }),
-    receiverAccountId: 'eclipseer.testnet',
-  }),
-  signer.signTransaction({
-    action: transfer({ amount: { yoctoNear: '3' } }),
-    receiverAccountId: 'eclipseer.testnet',
-  }),
-]);
-
-console.log(res);
+// const signer: any = await keyService.createSigner({
+//   signerAccountId: 'nat-t1.lantstool.testnet',
+//   client,
+// });
+//
+// const res = await Promise.all([
+//   signer.executeTransaction({
+//     action: transfer({ amount: { yoctoNear: '1' } }),
+//     receiverAccountId: 'eclipseer.testnet',
+//   }),
+//   signer.signTransaction({
+//     action: transfer({ amount: { yoctoNear: '2' } }),
+//     receiverAccountId: 'eclipseer.testnet',
+//   }),
+//   signer.signTransaction({
+//     action: transfer({ amount: { yoctoNear: '3' } }),
+//     receiverAccountId: 'eclipseer.testnet',
+//   }),
+// ]);
+//
+// console.log(res);

@@ -4,8 +4,8 @@ import type { CreateSendSignedTransaction } from 'nat-types/client/rpcMethods/tr
 
 export const createSendSignedTransaction: CreateSendSignedTransaction =
   ({ sendRequest }) =>
-  ({ signedTransaction, options = {} }) => {
-    const { waitUntil = 'EXECUTED_OPTIMISTIC' } = options;
+  ({ signedTransaction, execution = {} }) => {
+    const { waitUntil = 'EXECUTED_OPTIMISTIC' } = execution;
     return sendRequest({
       body: {
         method: 'send_tx',

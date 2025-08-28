@@ -46,6 +46,20 @@ const signer: any = await createMemorySigner({
   },
 });
 
+const res = await signer.executeTransaction({
+  action: transfer({ amount: { yoctoNear: '1' } }),
+  receiverAccountId: 'eclipseer.testnet',
+});
+
+// await client.getTransaction({
+//   transactionHash: '76ajHU6SdLPEz7YwWR1Ejm3iq96RAhL3MGAkbqXyCZTv',
+//   execution: {
+//     waitUntil: 'INCLUDED',
+//   }
+// });
+
+console.dir(res, { depth: null, colors: true });
+
 // const result = await signer.signMultipleTransactions({
 //   transactionIntents: [
 //     {
@@ -73,30 +87,30 @@ const signer: any = await createMemorySigner({
 //   ],
 // });
 
-const result = await Promise.allSettled([
-  signer.signTransaction({
-    action: transfer({ amount: { yoctoNear: '1' } }),
-    receiverAccountId: 'eclipseer.testnet',
-  }),
-  signer.signTransaction({
-    action: functionCall({
-      fnName: 'claim',
-      gasLimit: { teraGas: 100n },
-    }),
-    receiverAccountId: 'testnet',
-  }),
-  signer.signTransaction({
-    action: functionCall({
-      fnName: 'add_record',
-      gasLimit: { teraGas: 100n },
-    }),
-    receiverAccountId: 'lantstool.testnet',
-  }),
-  signer.signTransaction({
-    action: transfer({ amount: { yoctoNear: '1' } }),
-    receiverAccountId: 'eclipseer.testnet',
-  }),
-]);
+// const result = await Promise.allSettled([
+//   signer.signTransaction({
+//     action: transfer({ amount: { yoctoNear: '1' } }),
+//     receiverAccountId: 'eclipseer.testnet',
+//   }),
+//   signer.signTransaction({
+//     action: functionCall({
+//       fnName: 'claim',
+//       gasLimit: { teraGas: 100n },
+//     }),
+//     receiverAccountId: 'testnet',
+//   }),
+//   signer.signTransaction({
+//     action: functionCall({
+//       fnName: 'add_record',
+//       gasLimit: { teraGas: 100n },
+//     }),
+//     receiverAccountId: 'lantstool.testnet',
+//   }),
+//   signer.signTransaction({
+//     action: transfer({ amount: { yoctoNear: '1' } }),
+//     receiverAccountId: 'eclipseer.testnet',
+//   }),
+// ]);
 
-console.log(result);
+// console.log(result);
 // console.dir(result2, { depth: null, colors: true });

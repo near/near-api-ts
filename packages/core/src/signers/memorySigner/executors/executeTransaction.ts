@@ -1,7 +1,8 @@
 import { getSignedTransaction } from './helpers/getSignedTransaction';
+import type { SignerContext } from 'nat-types/signers/memorySigner';
 
 export const executeTransaction = async (
-  signerContext: any,
+  signerContext: SignerContext,
   task: any,
   key: any,
 ) => {

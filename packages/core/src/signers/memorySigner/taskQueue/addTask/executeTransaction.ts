@@ -1,13 +1,13 @@
 import { getSigningKeyPriority } from './helpers/getSigningKeyPriority';
 
 export const createExecuteTransaction =
-  (context: any) => async (params: any) => {
+  (context: any) => async (args: any) => {
     const { matcher, resolver } = context.signerContext;
 
     const transactionIntent = {
-      receiverAccountId: params.receiverAccountId,
-      action: params.action,
-      actions: params.actions,
+      receiverAccountId: args.receiverAccountId,
+      action: args.action,
+      actions: args.actions,
     };
 
     const task = {

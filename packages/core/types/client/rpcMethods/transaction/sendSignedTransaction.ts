@@ -3,7 +3,7 @@ import type { ClientContext } from 'nat-types/client/client';
 
 type Input = {
   signedTransaction: SignedTransaction;
-  options?: {
+  execution?: {
     waitUntil?: string; // TODO Fix!
   };
 };
