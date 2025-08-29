@@ -1,13 +1,11 @@
-import type { AddKeyAction } from 'nat-types/actions/addKey';
-import type { PublicKey } from 'nat-types/crypto';
-
-type AddFullAccessKeyInput = {
-  publicKey: PublicKey;
-};
+import type {
+  AddKeyAction,
+  FunctionCallKeyParams,
+} from 'nat-types/actions/addKey';
 
 export const addFullAccessKey = ({
   publicKey,
-}: AddFullAccessKeyInput): AddKeyAction => ({
+}: Omit<FunctionCallKeyParams, 'accessType'>): AddKeyAction => ({
   actionType: 'AddKey',
   params: {
     accessType: 'FullAccess',

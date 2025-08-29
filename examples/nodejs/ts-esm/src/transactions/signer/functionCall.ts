@@ -81,13 +81,10 @@ const signer: any = await createMemorySigner({
 // });
 
 const result = await Promise.allSettled([
-  // signer.signTransaction({
-  //   action: {
-  //     actionType: 'Transfer',
-  //     amount: { yoctoNear: '1' },
-  //   },
-  //   receiverAccountId: 'eclipseer.testnet',
-  // }),
+  signer.signTransaction({
+    action: transfer({ amount: { yoctoNear: '1' } }),
+    receiverAccountId: 'eclipseer.testnet',
+  }),
   signer.signTransaction({
     action: functionCall({
       fnName: 'claim',
