@@ -7,18 +7,20 @@ import type {
 import type { AccountKey } from 'nat-types/accountKey';
 import type { ClientContext } from 'nat-types/client/client';
 
-type Input = {
+type GetAccountKeysArgs = {
   accountId: AccountId;
   options?: BlockTarget;
 };
 
-export type Output = {
+export type GetAccountKeysResult = {
   blockHash: BlockHash;
   blockHeight: BlockHeight;
   accountKeys: AccountKey[];
 };
 
-export type GetAccountKeys = (input: Input) => Promise<Output>;
+export type GetAccountKeys = (
+  args: GetAccountKeysArgs,
+) => Promise<GetAccountKeysResult>;
 
 export type CreateGetAccountKeys = (
   clientContext: ClientContext,

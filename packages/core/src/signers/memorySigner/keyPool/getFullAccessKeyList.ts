@@ -32,8 +32,8 @@ export const getFullAccessKeyList = (
 
   return accountKeys
     .filter(
-      ({ publicKey, type }) =>
-        Object.hasOwn(keyPairs, publicKey) && type === 'FullAccess',
+      ({ publicKey, accessType }) =>
+        Object.hasOwn(keyPairs, publicKey) && accessType === 'FullAccess',
     )
     .map((key) => transformKey(key as FullAccessKey, keyPairs));
 };

@@ -9,6 +9,8 @@ export type DeleteKeyAction = {
   params: DeleteKeyActionParams;
 };
 
+// ****** NATIVE ********
+
 export type NativeDeleteKeyAction = {
   deleteKey: {
     publicKey: NativePublicKey;

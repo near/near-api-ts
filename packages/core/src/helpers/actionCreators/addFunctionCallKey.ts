@@ -5,7 +5,6 @@ import type {
   ContractFunctionName,
   NearOption,
 } from 'nat-types/common';
-import { fromNearOption } from '../near';
 
 type AddFunctionCallInput = {
   publicKey: PublicKey;
@@ -22,10 +21,10 @@ export const addFunctionCallKey = ({
 }: AddFunctionCallInput): AddKeyAction => ({
   type: 'AddKey',
   params: {
-    type: 'FunctionCall',
+    accessType: 'FunctionCall',
     publicKey,
     contractAccountId,
-    gasBudget: gasBudget && fromNearOption(gasBudget),
+    gasBudget,
     allowedFunctions,
   },
 });

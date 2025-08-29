@@ -9,6 +9,8 @@ export type TransferAction = {
   params: TransferActionParams;
 };
 
+// ****** NATIVE ********
+
 export type NativeTransferAction = {
   transfer: {
     deposit: bigint;

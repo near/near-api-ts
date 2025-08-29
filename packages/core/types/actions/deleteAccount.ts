@@ -9,6 +9,8 @@ export type DeleteAccountAction = {
   params: DeleteAccountActionParams;
 };
 
+// ****** NATIVE ********
+
 export type NativeDeleteAccountAction = {
   deleteAccount: {
     beneficiaryId: AccountId;

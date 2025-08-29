@@ -12,7 +12,7 @@ const transformKey = (functionCallKey: FunctionCallKey, keyPairs: KeyPairs) => {
     functionCallKey;
 
   const key: any = {
-    type: 'FunctionCall',
+    type: 'FunctionCall', // TODO Rename to accessType
     publicKey,
     privateKey: keyPairs[publicKey],
     isLocked: false,
@@ -36,8 +36,8 @@ export const getFunctionCallKeyList = (
 
   return accountKeys
     .filter(
-      ({ publicKey, type }) =>
-        Object.hasOwn(keyPairs, publicKey) && type === 'FunctionCall',
+      ({ publicKey, accessType }) =>
+        Object.hasOwn(keyPairs, publicKey) && accessType === 'FunctionCall',
     )
     .map((key) => transformKey(key as FunctionCallKey, keyPairs));
 };

@@ -3,7 +3,7 @@ import { RpcQueryResponseSchema } from '@near-js/jsonrpc-types';
 import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import type {
   CreateGetAccountKeys,
-  Output,
+  GetAccountKeysResult,
 } from 'nat-types/client/rpcMethods/accountKeys/getAccountKeys';
 import type { AccountKey, FunctionCallKey } from 'nat-types/accountKey';
 import type { PublicKey } from 'nat-types/crypto';
@@ -15,7 +15,7 @@ const transformKey = (key: AccessKeyInfoView): AccountKey => {
 
   if (key.accessKey.permission === 'FullAccess')
     return {
-      type: 'FullAccess',
+      accessType: 'FullAccess',
       publicKey,
       nonce,
     };
@@ -24,7 +24,7 @@ const transformKey = (key: AccessKeyInfoView): AccountKey => {
     key.accessKey.permission.FunctionCall;
 
   const functionCallKey = {
-    type: 'FunctionCall',
+    accessType: 'FunctionCall',
     publicKey,
     nonce,
     contractAccountId: receiverId,
@@ -43,7 +43,7 @@ const transformKey = (key: AccessKeyInfoView): AccountKey => {
   return functionCallKey;
 };
 
-const responseTransformer = (result: unknown): Output => {
+const responseTransformer = (result: unknown): GetAccountKeysResult => {
   const camelCased = snakeToCamelCase(result);
   const parsed = RpcQueryResponseSchema().parse(camelCased);
   // TODO Remove this check once @near-js/jsonrpc-types will support a proper type

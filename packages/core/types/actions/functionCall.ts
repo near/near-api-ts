@@ -21,6 +21,8 @@ export type FunctionCallAction<ArgsJson extends object> = {
   params: FunctionCallParams<ArgsJson>;
 };
 
+// ****** NATIVE ********
+
 export type NativeFunctionCallAction = {
   functionCall: {
     methodName: string;

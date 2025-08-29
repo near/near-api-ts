@@ -7,13 +7,13 @@ import type {
 } from 'nat-types/common';
 
 export type FullAccessKey = {
-  type: 'FullAccess';
+  accessType: 'FullAccess';
   publicKey: PublicKey;
   nonce: Nonce;
 };
 
 export type FunctionCallKey = {
-  type: 'FunctionCall';
+  accessType: 'FunctionCall';
   publicKey: PublicKey;
   nonce: Nonce;
   contractAccountId: AccountId;

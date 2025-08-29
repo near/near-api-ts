@@ -10,6 +10,8 @@ export type DeployContractAction = {
   params: DeployContractActionParams;
 };
 
+// ****** NATIVE ********
+
 export type NativeDeployContractAction = {
   deployContract: {
     code: Uint8Array;
