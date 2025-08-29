@@ -5,7 +5,7 @@ export type DeleteAccountActionParams = {
 };
 
 export type DeleteAccountAction = {
-  type: 'DeleteAccount';
+  actionType: 'DeleteAccount';
   params: DeleteAccountActionParams;
 };
 

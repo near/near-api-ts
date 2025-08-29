@@ -17,7 +17,7 @@ export type FunctionCallParams<ArgsJson extends object> = FunctionCallBase &
   (FnArgsBytes | FnArgsJson<ArgsJson>);
 
 export type FunctionCallAction<ArgsJson extends object> = {
-  type: 'FunctionCall';
+  actionType: 'FunctionCall';
   params: FunctionCallParams<ArgsJson>;
 };
 

@@ -5,7 +5,7 @@ export type TransferActionParams = {
 };
 
 export type TransferAction = {
-  type: 'Transfer';
+  actionType: 'Transfer';
   params: TransferActionParams;
 };
 

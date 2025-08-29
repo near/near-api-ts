@@ -15,14 +15,14 @@ import type {
 } from 'nat-types/transaction';
 
 const toNativeAction = (action: Action): NativeAction => {
-  if (action.type === 'Transfer') return toNativeTransferAction(action);
-  if (action.type === 'CreateAccount') return toNativeCreateAccountAction();
-  if (action.type === 'AddKey') return toNativeAddKeyAction(action);
-  if (action.type === 'DeployContract')
+  if (action.actionType === 'Transfer') return toNativeTransferAction(action);
+  if (action.actionType === 'CreateAccount') return toNativeCreateAccountAction();
+  if (action.actionType === 'AddKey') return toNativeAddKeyAction(action);
+  if (action.actionType === 'DeployContract')
     return toNativeDeployContractAction(action);
-  if (action.type === 'FunctionCall') return toNativeFunctionCallAction(action);
-  if (action.type === 'DeleteKey') return toNativeDeleteKeyAction(action);
-  if (action.type === 'DeleteAccount')
+  if (action.actionType === 'FunctionCall') return toNativeFunctionCallAction(action);
+  if (action.actionType === 'DeleteKey') return toNativeDeleteKeyAction(action);
+  if (action.actionType === 'DeleteAccount')
     return toNativeDeleteAccountAction(action);
   throw new Error('Invalid transaction action type');
 };

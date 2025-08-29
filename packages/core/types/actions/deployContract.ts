@@ -6,7 +6,7 @@ type WasmBytes = { wasmBase64?: never; wasmBytes: Uint8Array };
 export type DeployContractActionParams = WasmBase64 | WasmBytes;
 
 export type DeployContractAction = {
-  type: 'DeployContract';
+  actionType: 'DeployContract';
   params: DeployContractActionParams;
 };
 

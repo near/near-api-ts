@@ -19,7 +19,7 @@ export type FunctionCallKeyParams = {
 };
 
 export type AddKeyAction = {
-  type: 'AddKey';
+  actionType: 'AddKey';
   params: FullAccessKeyParams | FunctionCallKeyParams;
 };
 

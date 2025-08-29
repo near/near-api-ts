@@ -19,7 +19,7 @@ export const addFunctionCallKey = ({
   gasBudget,
   allowedFunctions,
 }: AddFunctionCallInput): AddKeyAction => ({
-  type: 'AddKey',
+  actionType: 'AddKey',
   params: {
     accessType: 'FunctionCall',
     publicKey,

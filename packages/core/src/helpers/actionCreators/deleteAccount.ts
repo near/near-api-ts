@@ -6,6 +6,6 @@ import type {
 export const deleteAccount = (
   params: DeleteAccountActionParams,
 ): DeleteAccountAction => ({
-  type: 'DeleteAccount',
+  actionType: 'DeleteAccount',
   params,
 });

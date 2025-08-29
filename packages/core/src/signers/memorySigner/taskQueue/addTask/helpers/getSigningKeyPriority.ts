@@ -28,10 +28,10 @@ export const getSigningKeyPriority = ({
 }: TransactionIntent) => {
   // If a tx has only 1 FC action - it's possible to sign it with FC
   // (if present/ meet requirements)
-  if (action?.type === 'FunctionCall')
+  if (action?.actionType === 'FunctionCall')
     return getPriorityForFunctionCallTransaction(action, receiverAccountId);
 
-  if (actions?.length === 1 && actions[0].type === 'FunctionCall')
+  if (actions?.length === 1 && actions[0].actionType === 'FunctionCall')
     return getPriorityForFunctionCallTransaction(actions[0], receiverAccountId);
 
   // For everything else use FA key only

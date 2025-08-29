@@ -5,7 +5,7 @@ export type DeleteKeyActionParams = {
 };
 
 export type DeleteKeyAction = {
-  type: 'DeleteKey';
+  actionType: 'DeleteKey';
   params: DeleteKeyActionParams;
 };
 

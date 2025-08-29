@@ -1,5 +1,5 @@
 export type CreateAccountAction = {
-  type: 'CreateAccount';
+  actionType: 'CreateAccount';
 };
 
 // ****** NATIVE ********

@@ -8,7 +8,7 @@ type AddFullAccessKeyInput = {
 export const addFullAccessKey = ({
   publicKey,
 }: AddFullAccessKeyInput): AddKeyAction => ({
-  type: 'AddKey',
+  actionType: 'AddKey',
   params: {
     accessType: 'FullAccess',
     publicKey,

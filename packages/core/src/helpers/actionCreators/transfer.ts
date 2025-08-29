@@ -4,6 +4,6 @@ import type {
 } from 'nat-types/actions/transfer';
 
 export const transfer = (params: TransferActionParams): TransferAction => ({
-  type: 'Transfer',
+  actionType: 'Transfer',
   params,
 });

@@ -6,6 +6,6 @@ import type {
 export const functionCall = <ArgsJson extends object>(
   params: FunctionCallParams<ArgsJson>,
 ): FunctionCallAction<ArgsJson> => ({
-  type: 'FunctionCall',
+  actionType: 'FunctionCall',
   params,
 });

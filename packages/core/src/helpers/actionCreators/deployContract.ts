@@ -6,7 +6,7 @@ import type {
 export const deployContract = (
   params: DeployContractActionParams,
 ): DeployContractAction => ({
-  type: 'DeployContract',
+  actionType: 'DeployContract',
   params,
 });
 
