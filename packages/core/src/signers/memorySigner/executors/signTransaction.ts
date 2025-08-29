@@ -5,5 +5,22 @@ export const signTransaction = async (
   task: any,
   key: any,
 ) => {
-  return  getSignedTransaction(signerContext, task, key);
+  try {
+    const nextNonce = key.nonce + 1n;
+
+    const signedTransaction = getSignedTransaction(
+      signerContext,
+      task,
+      key,
+      nextNonce,
+    );
+
+    key.incrementNonce();
+
+    signerContext.resolver.completeTask(task.taskId, {
+      result: signedTransaction,
+    });
+  } catch (e) {
+    signerContext.resolver.completeTask(task.taskId, { error: e });
+  }
 };

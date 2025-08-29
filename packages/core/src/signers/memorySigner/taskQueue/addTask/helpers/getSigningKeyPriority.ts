@@ -6,6 +6,9 @@ import type { AccountId } from 'nat-types/common';
  * We always want to sign txns with FA key when possible and use FC only if all
  * FA keys are busy/non-present
  */
+  // TODO #1: Find all FC keys which can sign the task, not only 1.
+  // TODO #2: Add ability to define the keyType priority by user himself.
+  //   For example ['FunctionCall', 'FullAccess']
 const getPriorityForFunctionCallTransaction = (
   action: FunctionCallAction<object>,
   receiverAccountId: AccountId,

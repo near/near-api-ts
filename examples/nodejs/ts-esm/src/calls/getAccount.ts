@@ -6,9 +6,9 @@ const client = createClient({ network: testnet });
 
 const result = await client.getAccountKeys({
   accountId,
-  options: {
-    finality: 'Final'
-  }
+  // blockReference: {
+  //   finality: '',
+  // },
 });
 console.dir(result, { depth: null, colors: true });
 

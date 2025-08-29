@@ -6,12 +6,13 @@ export const getSignedTransaction = (
   signerContext: any,
   task: any,
   key: any,
+  nextNonce: bigint,
 ): SignedTransaction => {
   const transaction = {
     ...task.transactionIntent,
     signerAccountId: signerContext.signerAccountId,
     signerPublicKey: key.publicKey,
-    nonce: key.nonce + 1n,
+    nonce: nextNonce,
     blockHash: signerContext.state.getBlockHash(),
   };
 

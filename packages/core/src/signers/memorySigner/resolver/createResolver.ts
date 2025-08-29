@@ -5,7 +5,7 @@ export const createResolver = () => {
   const waitForTask = (taskId: any) =>
     new Promise((resolve, reject) => {
       activeTasks[taskId] = ({ result, error }: any) => {
-        result ? resolve(result) : reject(error);
+        typeof error === 'undefined' ? resolve(result) : reject(error);
         delete activeTasks[taskId];
       };
     });

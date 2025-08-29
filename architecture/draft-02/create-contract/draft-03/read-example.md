@@ -9,11 +9,14 @@ await client.callContractReadFunction({
   contractAccountId: 'ft.near',
   fnName: 'get_ft_balance',
   fnArgsJson: { account_id: 'alice.near' },
-  options: {
+  blockReference: {
     finality: 'OPTIMISTIC', // or config.optimistic, optional, default: NEAR_FINAL
     // we need this field as there is no other way to transform the responce inside the client
     // responseTransformer: () => {} // Need better name - maybe fn...
   },
+  rpcResponse: {
+    transformer: () => {}
+  }
 });
 ```
 

@@ -1,7 +1,7 @@
 import { signTransaction } from '../executors/signTransaction';
 import { executeTransaction } from '../executors/executeTransaction';
 
-const getExecutor = (task: any) => {
+const execute = (task: any) => {
   if (task.type === 'SignTransaction') return signTransaction;
   if (task.type === 'ExecuteTransaction') return executeTransaction;
   throw new Error('Unsupported task type');
@@ -11,13 +11,9 @@ const executeTask = async (signerContext: any, task: any, key: any) => {
   key.lock();
   signerContext.taskQueue.removeTask(task.taskId);
 
-  const executor = getExecutor(task);
-  const result = await executor(signerContext, task, key);
+  await execute(task)(signerContext, task, key);
 
-  key.incrementNonce();
   key.unlock();
-
-  signerContext.resolver.completeTask(task.taskId, { result });
   void signerContext.matcher.handleKeyUnlock(key);
 };
 

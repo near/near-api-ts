@@ -35,32 +35,25 @@ const signer: any = await createMemorySigner({
   signerAccountId: 'nat-t1.lantstool.testnet',
   client,
   keyService,
-  keyPool: {
-    signingKeys: [
-      'ed25519:9x4hUmLKYzQhi5BR3d4faoifAt8beyUqLTBk99p16dj9',
-      'ed25519:76ajHU6SdLPEz7YwWR1Ejm3iq96RAhL3MGAkbqXyCZTv',
-    ],
-  },
-  queue: {
-    taskTtlMs: 100_000,
-  },
+  // keyPool: {
+  //   signingKeys: [
+  //     'ed25519:9x4hUmLKYzQhi5BR3d4faoifAt8beyUqLTBk99p16dj9',
+  //     'ed25519:76ajHU6SdLPEz7YwWR1Ejm3iq96RAhL3MGAkbqXyCZTv',
+  //   ],
+  // },
+  // queue: {
+  //   taskTtlMs: 100_000,
+  // },
 });
 
-const res = await signer.executeTransaction({
-  action: transfer({ amount: { yoctoNear: '1' } }),
-  receiverAccountId: 'eclipseer.testnet',
-});
-
-// await client.getTransaction({
-//   transactionHash: '76ajHU6SdLPEz7YwWR1Ejm3iq96RAhL3MGAkbqXyCZTv',
-//   execution: {
-//     waitUntil: 'INCLUDED',
-//   }
+// const res = await signer.executeTransaction({
+//   action: transfer({ amount: { yoctoNear: '1' } }),
+//   receiverAccountId: 'eclipseer.testnet',
 // });
+//
+// console.dir(res, { depth: null, colors: true });
 
-console.dir(res, { depth: null, colors: true });
-
-// const result = await signer.signMultipleTransactions({
+// const result = await signer.executeMultipleTransactions({
 //   transactionIntents: [
 //     {
 //       action: functionCall({
@@ -87,30 +80,30 @@ console.dir(res, { depth: null, colors: true });
 //   ],
 // });
 
-// const result = await Promise.allSettled([
-//   signer.signTransaction({
-//     action: transfer({ amount: { yoctoNear: '1' } }),
-//     receiverAccountId: 'eclipseer.testnet',
-//   }),
-//   signer.signTransaction({
-//     action: functionCall({
-//       fnName: 'claim',
-//       gasLimit: { teraGas: 100n },
-//     }),
-//     receiverAccountId: 'testnet',
-//   }),
-//   signer.signTransaction({
-//     action: functionCall({
-//       fnName: 'add_record',
-//       gasLimit: { teraGas: 100n },
-//     }),
-//     receiverAccountId: 'lantstool.testnet',
-//   }),
-//   signer.signTransaction({
-//     action: transfer({ amount: { yoctoNear: '1' } }),
-//     receiverAccountId: 'eclipseer.testnet',
-//   }),
-// ]);
+const result = await Promise.allSettled([
+  signer.signTransaction({
+    action: transfer({ amount: { yoctoNear: '1' } }),
+    receiverAccountId: 'eclipseer.testnet',
+  }),
+  signer.signTransaction({
+    action: functionCall({
+      fnName: 'claim',
+      gasLimit: { teraGas: 100n },
+    }),
+    receiverAccountId: 'testnet',
+  }),
+  signer.signTransaction({
+    action: functionCall({
+      fnName: 'add_record',
+      gasLimit: { teraGas: 100n },
+    }),
+    receiverAccountId: 'lantstool.testnet',
+  }),
+  signer.signTransaction({
+    action: transfer({ amount: { yoctoNear: '1' } }),
+    receiverAccountId: 'eclipseer.testnet',
+  }),
+]);
 
-// console.log(result);
+console.log(result);
 // console.dir(result2, { depth: null, colors: true });
