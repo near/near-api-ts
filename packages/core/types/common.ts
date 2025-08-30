@@ -47,6 +47,10 @@ export type NearToken = Readonly<{
   yoctoNear: YoctoNear;
   near: Near;
   add: (value: NearToken | YoctoNear) => NearToken;
+  sub: (value: NearToken | YoctoNear) => NearToken;
+  mul: (value: NearToken | YoctoNear) => NearToken;
+  gt: (value: NearToken | YoctoNear) => NearToken;
+  lt: (value: NearToken | YoctoNear) => NearToken;
 }>;
 
 export type NearOption = { near: Tokens } | { yoctoNear: Units };

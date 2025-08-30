@@ -1,4 +1,4 @@
-import { createClient, testnet, mainnet } from '@near-api-ts/core';
+import { createClient, testnet, near, yoctoNear } from '@near-api-ts/core';
 
 const accountId = 'nat-t1.lantstool.testnet';
 
@@ -19,16 +19,18 @@ const client = createClient({ network: testnet });
 //   publicKey: 'ed25519:5JgE5tBqbtd4ghgRqu2SFjxFs1x7GonNuLhXbi4Z2pik'
 // });
 
-const result = await client.getAccountState({
-  accountId: accountId,
-});
+// const result = await client.getAccountState({
+//   accountId: accountId,
+// });
+//
+// console.dir(
+//   result,
+//   { depth: null, customInspect: true },
+// );
 
-console.dir(
-  result,
-  { depth: null, customInspect: true },
-);
+const a = near('1').add(1n).sub(near('0.5')).sub(yoctoNear(1n));
 
-
+console.log(a);
 
 // const res2 = await client.getBlock();
 // console.log(res2);
