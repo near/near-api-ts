@@ -6,7 +6,7 @@ export const gas = (gas: Gas) => {
   // TODO Validate
   return {
     gas,
-    teraGas: gas / TeraCoefficient,
+    teraGas: gas / TeraCoefficient, // We don't keep decimals here
   };
 };
 

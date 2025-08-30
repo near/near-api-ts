@@ -1,9 +1,9 @@
 /**
  * Binary length: 32 bytes
  */
-export type Base58CryptoHash = string;
+export type CryptoHash = string;
 
-export type BlockHash = Base58CryptoHash;
+export type BlockHash = CryptoHash;
 export type BlockHeight = bigint;
 export type BlockId = BlockHash | BlockHeight;
 
@@ -36,15 +36,19 @@ export type ContractFunctionName = string;
 export type Units = bigint | string;
 export type Tokens = string;
 
+export type YoctoNear = bigint;
+export type Near = string;
+
 export type YoctoNearAmount = {
-  yoctoNear: bigint;
+  yoctoNear: YoctoNear;
 };
 
-export type NearToken = {
-  yoctoNear: bigint;
-  near: string;
-  // TODO add methods
-};
+export type NearToken = Readonly<{
+  yoctoNear: YoctoNear;
+  near: Near;
+  add: (value: NearToken | YoctoNear) => NearToken;
+}>;
+
 export type NearOption = { near: Tokens } | { yoctoNear: Units };
 
 export type Gas = bigint;

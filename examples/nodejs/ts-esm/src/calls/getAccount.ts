@@ -14,12 +14,21 @@ const client = createClient({ network: testnet });
 //   accountId,
 // });
 
-const result = await client.getAccountKey({
-  accountId,
-  publicKey: 'ed25519:5JgE5tBqbtd4ghgRqu2SFjxFs1x7GonNuLhXbi4Z2pik'
+// const result = await client.getAccountKey({
+//   accountId,
+//   publicKey: 'ed25519:5JgE5tBqbtd4ghgRqu2SFjxFs1x7GonNuLhXbi4Z2pik'
+// });
+
+const result = await client.getAccountState({
+  accountId: accountId,
 });
 
-console.dir(result, { depth: null, colors: true });
+console.dir(
+  result,
+  { depth: null, customInspect: true },
+);
+
+
 
 // const res2 = await client.getBlock();
 // console.log(res2);

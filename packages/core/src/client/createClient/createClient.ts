@@ -1,6 +1,6 @@
 import { createCircularQueue } from '@common/utils/createCircularQueue';
 import { createSendRequest } from './createSendRequest';
-import { createGetAccount } from './account/getAccount';
+import { createGetAccountState } from './account/getAccountState';
 import { createGetAccountBalance } from './account/getAccountBalance';
 import { createGetAccountKey } from './accountKeys/getAccountKey';
 import { createGetAccountKeys } from './accountKeys/getAccountKeys';
@@ -20,7 +20,7 @@ export const createClient: CreateClient = ({ network }) => {
   context.sendRequest = createSendRequest(context);
 
   return {
-    getAccount: createGetAccount(context),
+    getAccountState: createGetAccountState(context),
     getAccountBalance: createGetAccountBalance(context),
     getAccountKey: createGetAccountKey(context),
     getAccountKeys: createGetAccountKeys(context),
