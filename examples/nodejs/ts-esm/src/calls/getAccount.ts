@@ -8,11 +8,16 @@ const client = createClient({ network: testnet });
 //   blockId: '7dBRLdP15aPD1T41e6MwCn1nPGpYpPL4WxDfFXkGtQoX'
 // });
 
-const result = await client.getProtocolConfig();
+// const result = await client.getProtocolConfig();
 
 // const result = await client.getAccountKeys({
 //   accountId,
 // });
+
+const result = await client.getAccountKey({
+  accountId,
+  publicKey: 'ed25519:5JgE5tBqbtd4ghgRqu2SFjxFs1x7GonNuLhXbi4Z2pik'
+});
 
 console.dir(result, { depth: null, colors: true });
 
