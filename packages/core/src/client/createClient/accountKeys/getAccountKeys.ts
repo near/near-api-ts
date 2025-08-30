@@ -1,10 +1,10 @@
-import { getBlockTarget } from '../utils';
+import { toNativeBlockReference } from '@common/transformers/toNative/blockReference';
 import { RpcQueryResponseSchema } from '@near-js/jsonrpc-types';
 import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import type {
   CreateGetAccountKeys,
   GetAccountKeysResult,
-} from 'nat-types/client/rpcMethods/accountKeys/getAccountKeys';
+} from 'nat-types/client/accountKeys/getAccountKeys';
 import type { AccountKey, FunctionCallKey } from 'nat-types/accountKey';
 import type { PublicKey } from 'nat-types/crypto';
 import type { AccessKeyInfoView } from '@near-js/jsonrpc-types';
@@ -43,30 +43,32 @@ const transformKey = (key: AccessKeyInfoView): AccountKey => {
   return functionCallKey;
 };
 
-const responseTransformer = (result: unknown): GetAccountKeysResult => {
+const transformResult = (result: unknown): GetAccountKeysResult => {
   const camelCased = snakeToCamelCase(result);
   const parsed = RpcQueryResponseSchema().parse(camelCased);
+
   // TODO Remove this check once @near-js/jsonrpc-types will support a proper type
   if (!('keys' in parsed)) throw new Error('Invalid query response');
 
   return {
     blockHash: parsed.blockHash,
-    blockHeight: parsed.blockHeight,
+    blockHeight: BigInt(parsed.blockHeight),
     accountKeys: parsed.keys.map(transformKey),
   };
 };
 
 export const createGetAccountKeys: CreateGetAccountKeys =
   ({ sendRequest }) =>
-  ({ accountId, options }) =>
-    sendRequest({
+  async (args) => {
+    const result = sendRequest({
       body: {
         method: 'query',
         params: {
           request_type: 'view_access_key_list',
-          account_id: accountId,
-          ...getBlockTarget(options),
+          account_id: args.accountId,
+          ...toNativeBlockReference(args.blockReference),
         },
       },
-      responseTransformer,
     });
+    return transformResult(result);
+  };

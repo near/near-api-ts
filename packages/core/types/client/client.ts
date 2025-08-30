@@ -1,12 +1,12 @@
 import type { CircularQueue } from '@common/utils/createCircularQueue';
-import type { GetAccount } from './rpcMethods/account/getAccount';
-import type { GetAccountBalance } from './rpcMethods/account/getAccountBalance';
-import type { GetAccountKey } from './rpcMethods/accountKeys/getAccountKey';
-import type { GetAccountKeys } from './rpcMethods/accountKeys/getAccountKeys';
-import type { GetBlock } from './rpcMethods/block/getBlock';
-import type { GetGasPrice } from './rpcMethods/protocol/getGasPrice';
-import type { GetProtocolConfig } from './rpcMethods/protocol/getProtocolConfig';
-import type { SendSignedTransaction } from './rpcMethods/transaction/sendSignedTransaction';
+import type { GetAccount } from 'nat-types/client/account/getAccount';
+import type { GetAccountBalance } from 'nat-types/client/account/getAccountBalance';
+import type { GetAccountKey } from 'nat-types/client/accountKeys/getAccountKey';
+import type { GetAccountKeys } from 'nat-types/client/accountKeys/getAccountKeys';
+import type { GetBlock } from 'nat-types/client/block/getBlock';
+import type { GetGasPrice } from 'nat-types/client/protocol/getGasPrice';
+import type { GetProtocolConfig } from 'nat-types/client/protocol/getProtocolConfig';
+import type { SendSignedTransaction } from 'nat-types/client/transaction/sendSignedTransaction';
 
 type Rpc = {
   url: string;
@@ -22,7 +22,6 @@ export type Network = {
 
 export type SendRequest = <Body, Result>(args: {
   body: Body;
-  responseTransformer?: any;
 }) => Promise<Result>;
 
 export type CreateSendRequest = (clientContext: ClientContext) => SendRequest;

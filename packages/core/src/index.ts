@@ -1,6 +1,6 @@
 // Client
 export { createClient } from './client/createClient/createClient';
-export { testnet } from './client/presets/networks';
+export { testnet, mainnet } from './client/presets/networks';
 // Key Services
 export { createMemoryKeyService } from './keyServices/memoryKeyService/createMemoryKeyService';
 // Signers

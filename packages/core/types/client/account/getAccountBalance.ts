@@ -1,9 +1,9 @@
-import type { BlockTarget, AccountId } from 'nat-types/common';
+import type { AccountId, BlockReference } from 'nat-types/common';
 import type { ClientContext } from 'nat-types/client/client';
 
 type Input = {
   accountId: AccountId;
-  options?: BlockTarget;
+  blockReference?: BlockReference;
 };
 
 type Output = any;

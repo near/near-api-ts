@@ -1,13 +1,13 @@
 import { createCircularQueue } from '@common/utils/createCircularQueue';
 import { createSendRequest } from './createSendRequest';
-import { createGetAccount } from './rpcMethods/account/getAccount';
-import { createGetAccountBalance } from './rpcMethods/account/getAccountBalance';
-import { createGetAccountKey } from './rpcMethods/accountKeys/getAccountKey';
-import { createGetAccountKeys } from './rpcMethods/accountKeys/getAccountKeys';
-import { createGetBlock } from './rpcMethods/block/getBlock';
-import { createGetGasPrice } from './rpcMethods/protocol/getGasPrice';
-import { createGetProtocolConfig } from './rpcMethods/protocol/getProtocolConfig';
-import { createSendSignedTransaction } from './rpcMethods/transaction/sendSignedTransaction';
+import { createGetAccount } from './account/getAccount';
+import { createGetAccountBalance } from './account/getAccountBalance';
+import { createGetAccountKey } from './accountKeys/getAccountKey';
+import { createGetAccountKeys } from './accountKeys/getAccountKeys';
+import { createGetBlock } from './block/getBlock';
+import { createGetGasPrice } from './protocol/getGasPrice';
+import { createGetProtocolConfig } from './protocol/getProtocolConfig';
+import { createSendSignedTransaction } from './transaction/sendSignedTransaction';
 import type { CreateClient, ClientContext } from 'nat-types/client/client';
 
 // TODO Validate network,  get preferred RPC type

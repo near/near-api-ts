@@ -1,6 +1,6 @@
 import { createGetAccount } from './getAccount';
 import { createGetProtocolConfig } from '../protocol/getProtocolConfig';
-import type { CreateGetAccountBalance } from 'nat-types/client/rpcMethods/account/getAccountBalance';
+import type { CreateGetAccountBalance } from 'nat-types/client/account/getAccountBalance';
 
 export const createGetAccountBalance: CreateGetAccountBalance =
   (clientContext) => async (args) => {
@@ -10,7 +10,8 @@ export const createGetAccountBalance: CreateGetAccountBalance =
     ]);
 
     // TODO Rework
-    const costPerByte = BigInt(config.runtimeConfig.storageAmountPerByte);
+    // @ts-ignore
+    const costPerByte = BigInt(config?.runtimeConfig?.storageAmountPerByte);
     const stateStaked = BigInt(account.storageUsage) * costPerByte;
     const staked = BigInt(account.locked);
     const totalBalance = BigInt(account.amount) + staked;

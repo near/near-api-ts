@@ -1,6 +1,6 @@
 import { base64 } from '@scure/base';
 import { serializeSignedTransaction } from '@common/transformers/toBorshBytes/signedTransaction';
-import type { CreateSendSignedTransaction } from 'nat-types/client/rpcMethods/transaction/sendSignedTransaction';
+import type { CreateSendSignedTransaction } from 'nat-types/client/transaction/sendSignedTransaction';
 
 export const createSendSignedTransaction: CreateSendSignedTransaction =
   ({ sendRequest }) =>

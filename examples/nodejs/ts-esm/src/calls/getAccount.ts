@@ -1,15 +1,19 @@
-import { createClient, testnet } from '@near-api-ts/core';
+import { createClient, testnet, mainnet } from '@near-api-ts/core';
 
 const accountId = 'nat-t1.lantstool.testnet';
 
 const client = createClient({ network: testnet });
 
-const result = await client.getAccountKeys({
-  accountId,
-  // blockReference: {
-  //   finality: '',
-  // },
-});
+// const result = await client.getGasPrice({
+//   blockId: '7dBRLdP15aPD1T41e6MwCn1nPGpYpPL4WxDfFXkGtQoX'
+// });
+
+const result = await client.getProtocolConfig();
+
+// const result = await client.getAccountKeys({
+//   accountId,
+// });
+
 console.dir(result, { depth: null, colors: true });
 
 // const res2 = await client.getBlock();

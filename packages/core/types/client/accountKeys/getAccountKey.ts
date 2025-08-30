@@ -1,11 +1,11 @@
-import type { BlockTarget, AccountId } from 'nat-types/common';
+import type { AccountId, BlockReference } from 'nat-types/common';
 import type { ClientContext } from 'nat-types/client/client';
 import type { PublicKey } from 'nat-types/crypto';
 
 type Input = {
   accountId: AccountId;
   publicKey: PublicKey;
-  options?: BlockTarget;
+  blockReference?: BlockReference;
 };
 
 type Output = any;

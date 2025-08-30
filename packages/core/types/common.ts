@@ -4,15 +4,16 @@
 export type Base58CryptoHash = string;
 
 export type BlockHash = Base58CryptoHash;
-export type BlockHeight = number;
+export type BlockHeight = bigint;
 export type BlockId = BlockHash | BlockHeight;
 
 export type Finality = 'Optimistic' | 'NearFinal' | 'Final';
+export type SyncCheckpoint = 'Genesis' | 'EarliestAvailable';
 
-type ByFinality = { finality?: Finality; blockId?: never };
-type ByBlockId = { finality?: never; blockId?: BlockId };
-
-export type BlockTarget = ByFinality | ByBlockId;
+export type BlockReference =
+  | { finality: Finality }
+  | { blockId: BlockId }
+  | { syncCheckpoint: SyncCheckpoint };
 
 /**
  * Represents data encoded in hexadecimal format.
@@ -37,7 +38,7 @@ export type Tokens = string;
 
 export type YoctoNearAmount = {
   yoctoNear: bigint;
-}
+};
 
 export type NearToken = {
   yoctoNear: bigint;
@@ -52,7 +53,7 @@ export type TeraGas = bigint;
  * Maximum gas limit is 300 TeraGas
  */
 export type GasLimit = {
-  gas: Gas,
-  teraGas: TeraGas,
-}
+  gas: Gas;
+  teraGas: TeraGas;
+};
 export type GasOption = { gas: Gas } | { teraGas: TeraGas };

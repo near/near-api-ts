@@ -1,15 +1,15 @@
 import type {
-  BlockTarget,
   BlockHeight,
   BlockHash,
   AccountId,
+  BlockReference,
 } from 'nat-types/common';
 import type { AccountKey } from 'nat-types/accountKey';
 import type { ClientContext } from 'nat-types/client/client';
 
 type GetAccountKeysArgs = {
   accountId: AccountId;
-  options?: BlockTarget;
+  blockReference?: BlockReference;
 };
 
 export type GetAccountKeysResult = {
