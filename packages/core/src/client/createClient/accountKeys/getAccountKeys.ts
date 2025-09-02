@@ -16,12 +16,12 @@ const RpcQueryAccessKeyListResponseSchema = z.object({
 
 const transformResult = (result: unknown): GetAccountKeysResult => {
   const camelCased = snakeToCamelCase(result);
-  const parsed = RpcQueryAccessKeyListResponseSchema.parse(camelCased);
+  const valid = RpcQueryAccessKeyListResponseSchema.parse(camelCased);
 
   return {
-    blockHash: parsed.blockHash,
-    blockHeight: BigInt(parsed.blockHeight),
-    accountKeys: parsed.keys.map(transformKey),
+    blockHash: valid.blockHash,
+    blockHeight: valid.blockHeight,
+    accountKeys: valid.keys.map(transformKey),
   };
 };
 

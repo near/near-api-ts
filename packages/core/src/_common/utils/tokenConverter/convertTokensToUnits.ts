@@ -1,4 +1,5 @@
 import { pow10, assertValidDecimals } from './helpers';
+import type { Tokens } from 'nat-types/common';
 
 /**
  * Validate a positive decimal string with an optional fractional part
@@ -41,7 +42,7 @@ const assertValidTokens = (tokens: string, decimals: number) => {
  * @returns             Positive integer string in minimal units
  */
 export const convertTokensToUnits = (
-  tokens: string,
+  tokens: Tokens,
   decimals: number,
 ): bigint => {
   assertValidDecimals(decimals);

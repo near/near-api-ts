@@ -9,5 +9,5 @@ export const createUnlock = (key: any) => () => {
 };
 
 export const createIncrementNonce = (key: any) => () => {
-  key.nonce = key.nonce + 1n;
+  key.nonce = key.nonce + 1;
 };

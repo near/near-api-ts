@@ -4,7 +4,7 @@
 export type CryptoHash = string;
 
 export type BlockHash = CryptoHash;
-export type BlockHeight = bigint;
+export type BlockHeight = number;
 export type BlockId = BlockHash | BlockHeight;
 
 export type Finality = 'Optimistic' | 'NearFinal' | 'Final';
@@ -24,7 +24,7 @@ export type Base58String = string;
 export type Base64String = string;
 
 // Rust type: u64
-export type Nonce = bigint;
+export type Nonce = number;
 export type AccountId = string;
 export type BorshBytes = Uint8Array;
 
@@ -32,9 +32,6 @@ export type BorshBytes = Uint8Array;
  * Contract function name has limit - max 256 characters
  */
 export type ContractFunctionName = string;
-
-export type Units = bigint | string;
-export type Tokens = string;
 
 export type YoctoNear = bigint;
 export type Near = string;
@@ -49,15 +46,19 @@ export type NearToken = Readonly<{
   lt: (value: NearOption) => NearToken;
 }>;
 
+export type Units = bigint | string;
+export type Tokens = string;
 export type NearOption = { near: Tokens } | { yoctoNear: Units };
 
-export type Gas = bigint;
-export type TeraGas = bigint;
-/**
- * Maximum gas limit is 300 TeraGas
- */
-export type GasLimit = {
+// TODO rename to better names
+export type GasInput = bigint | number;
+export type TeraGasInput = string;
+export type GasOption = { gas: GasInput } | { teraGas: TeraGasInput };
+
+type Gas = bigint;
+type TeraGas = string;
+
+export type GasLimit = Readonly<{
   gas: Gas;
   teraGas: TeraGas;
-};
-export type GasOption = { gas: Gas } | { teraGas: TeraGas };
+}>;

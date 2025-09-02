@@ -5,7 +5,7 @@ import type { PublicKey } from 'nat-types/crypto';
 
 export const transformKey = (key: AccessKeyInfoView): AccountKey => {
   const publicKey = key.publicKey as PublicKey;
-  const nonce = BigInt(key.accessKey.nonce);
+  const nonce = key.accessKey.nonce;
 
   if (key.accessKey.permission === 'FullAccess')
     return {

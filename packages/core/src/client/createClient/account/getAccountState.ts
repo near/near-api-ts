@@ -20,26 +20,26 @@ const transformResult = (
   args: GetAccountStateArgs,
 ): GetAccountStateResult => {
   const camelCased = snakeToCamelCase(result);
-  const parsed = RpcQueryAccountViewResponseSchema.parse(camelCased);
+  const valid = RpcQueryAccountViewResponseSchema.parse(camelCased);
 
   const final = {
-    blockHash: parsed.blockHash,
-    blockHeight: BigInt(parsed.blockHeight),
+    blockHash: valid.blockHash,
+    blockHeight: valid.blockHeight,
     accountId: args.accountId,
     accountState: {
       balance: {
-        total: yoctoNear(parsed.amount),
-        locked: yoctoNear(parsed.locked),
+        total: yoctoNear(valid.amount),
+        locked: yoctoNear(valid.locked),
       },
-      usedStorageBytes: parsed.storageUsage,
-      contractWasmHash: parsed.codeHash,
+      usedStorageBytes: valid.storageUsage,
+      contractWasmHash: valid.codeHash,
     },
   } as GetAccountStateResult;
 
-  if (parsed.globalContractAccountId)
-    final.accountState.globalContractAccountId = parsed.globalContractAccountId;
-  if (parsed.globalContractHash)
-    final.accountState.globalContractHash = parsed.globalContractHash;
+  if (valid.globalContractAccountId)
+    final.accountState.globalContractAccountId = valid.globalContractAccountId;
+  if (valid.globalContractHash)
+    final.accountState.globalContractHash = valid.globalContractHash;
 
   return final;
 };

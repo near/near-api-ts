@@ -6,7 +6,7 @@ export const signTransaction = async (
   key: any,
 ) => {
   try {
-    const nextNonce = key.nonce + 1n;
+    const nextNonce = key.nonce + 1;
 
     const signedTransaction = getSignedTransaction(
       signerContext,

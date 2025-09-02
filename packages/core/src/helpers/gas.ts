@@ -1,19 +1,19 @@
-import type { GasLimit, GasOption, Gas, TeraGas } from 'nat-types/common';
+import type { GasLimit, GasOption, GasInput, TeraGasInput } from 'nat-types/common';
 
 const TeraCoefficient = 10n ** 12n;
 
-export const gas = (gas: Gas) => {
+export const gas = (gas: GasInput) => {
   // TODO Validate
   return {
-    gas,
-    teraGas: gas / TeraCoefficient, // We don't keep decimals here
+    gas: BigInt(gas),
+    teraGas: String(BigInt(gas) / TeraCoefficient), // We don't keep decimals here
   };
 };
 
-export const teraGas = (teraGas: TeraGas) => {
+export const teraGas = (teraGas: TeraGasInput) => {
   // TODO Validate
   return {
-    gas: teraGas * TeraCoefficient,
+    gas: BigInt(teraGas) * TeraCoefficient,
     teraGas,
   };
 };

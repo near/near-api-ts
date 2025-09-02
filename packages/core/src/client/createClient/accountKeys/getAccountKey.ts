@@ -20,13 +20,13 @@ const transformResult = (
   args: GetAccountKeyArgs,
 ): GetAccountKeyResult => {
   const camelCased = snakeToCamelCase(result);
-  const parsed = RpcQueryAccessKeyViewResponseSchema.parse(camelCased);
+  const valid = RpcQueryAccessKeyViewResponseSchema.parse(camelCased);
 
   return {
-    blockHash: parsed.blockHash,
-    blockHeight: BigInt(parsed.blockHeight),
+    blockHash: valid.blockHash,
+    blockHeight: valid.blockHeight,
     accountKey: transformKey({
-      accessKey: parsed,
+      accessKey: valid,
       publicKey: args.publicKey,
     }),
   };

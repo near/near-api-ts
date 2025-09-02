@@ -4,8 +4,6 @@ import type {
   BlockHash,
   BlockHeight,
   BlockReference,
-  YoctoNear,
-  Near,
   NearToken,
 } from 'nat-types/common';
 import type { ClientContext } from 'nat-types/client/client';
@@ -23,10 +21,7 @@ export type GetAccountStateResult = {
   accountId: AccountId;
   accountState: {
     balance: {
-      total: {
-        yoctoNear: YoctoNear;
-        near: Near;
-      };
+      total: NearToken;
       locked: NearToken;
     };
     usedStorageBytes: number;

@@ -1,4 +1,5 @@
 import { pow10, assertValidDecimals } from './helpers';
+import type { Units } from 'nat-types/common';
 
 // Validate units input: must be positive integer digits only
 const assertValidUnits = (units: bigint | string) => {
@@ -17,7 +18,7 @@ const assertValidUnits = (units: bigint | string) => {
  * @returns            Decimal string with up to `decimals` digits after the dot
  */
 export const convertUnitsToTokens = (
-  units: bigint | string,
+  units: Units,
   decimals: number,
 ): string => {
   assertValidDecimals(decimals);
