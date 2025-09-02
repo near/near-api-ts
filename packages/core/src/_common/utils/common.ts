@@ -9,6 +9,6 @@ export const isNodeJs =
   process.versions != null &&
   process.versions.node != null;
 
-export const nodeInspectSymbol: symbol | undefined = isNodeJs
+export const nodeInspectSymbol = isNodeJs
   ? Symbol.for('nodejs.util.inspect.custom')
   : undefined;

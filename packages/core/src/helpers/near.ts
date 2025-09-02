@@ -17,9 +17,6 @@ const cache = {
   yoctoNear: new WeakMap<NearToken, bigint>(),
 };
 
-const getYocto = (x: NearToken | YoctoNear) =>
-  typeof x === 'bigint' ? x : x.yoctoNear;
-
 /**
  * We use it as a prototype for all new NearToken instances. It allows us to reuse
  * these functions without creating a new fn instances every time we create a new NearToken
@@ -30,7 +27,6 @@ const nearTokenProto: ThisType<NearToken> = {
   get near(): Near {
     const maybeValue = cache.near.get(this);
     if (maybeValue) return maybeValue;
-
     const value = convertUnitsToTokens(this.yoctoNear, NearDecimals);
     cache.near.set(this, value);
 
@@ -47,24 +43,24 @@ const nearTokenProto: ThisType<NearToken> = {
     return value;
   },
 
-  add(x: NearToken | YoctoNear): NearToken {
-    return yoctoNear(this.yoctoNear + getYocto(x));
+  add(x: NearOption): NearToken {
+    return yoctoNear(this.yoctoNear + fromNearOption(x).yoctoNear);
   },
 
-  sub(x: NearToken | YoctoNear): NearToken {
-    return yoctoNear(this.yoctoNear - getYocto(x));
+  sub(x: NearOption): NearToken {
+    return yoctoNear(this.yoctoNear - fromNearOption(x).yoctoNear);
   },
 
-  mul(x: NearToken | YoctoNear): NearToken {
-    return yoctoNear(this.yoctoNear * getYocto(x));
+  mul(x: NearOption): NearToken {
+    return yoctoNear(this.yoctoNear * fromNearOption(x).yoctoNear);
   },
 
-  gt(x: NearToken | YoctoNear): boolean {
-    return this.yoctoNear > getYocto(x);
+  gt(x: NearOption): boolean {
+    return this.yoctoNear > fromNearOption(x).yoctoNear;
   },
 
-  lt(x: NearToken | YoctoNear): boolean {
-    return this.yoctoNear < getYocto(x);
+  lt(x: NearOption): boolean {
+    return this.yoctoNear < fromNearOption(x).yoctoNear;
   },
 
   toString() {
@@ -76,8 +72,6 @@ const nearTokenProto: ThisType<NearToken> = {
 
   // In Node.js, this allows you to see the near/yoctoNear getter values,
   // which are not normally visible unless you access them directly.
-  // You can view them with console.dir(value, { customInspect: true }).
-  //
   // This does not work in the browser — there you can only see a getter’s value
   // by explicitly expanding/clicking on it.
   ...(nodeInspectSymbol && {
