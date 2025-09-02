@@ -1,4 +1,4 @@
-import { createClient, testnet, near, yoctoNear } from '@near-api-ts/core';
+import { createClient, testnet } from '@near-api-ts/core';
 
 const accountId = 'nat-t1.lantstool.testnet';
 
@@ -8,7 +8,7 @@ const client = createClient({ network: testnet });
 //   blockId: '7dBRLdP15aPD1T41e6MwCn1nPGpYpPL4WxDfFXkGtQoX'
 // });
 
-const result = await client.getProtocolConfig();
+// const result = await client.getProtocolConfig();
 
 // const result = await client.getAccountKeys({
 //   accountId,
@@ -27,6 +27,8 @@ const result = await client.getProtocolConfig();
 //   contractAccountId: 'usdl.lantstool.testnet',
 //   includeProofs: true,
 // });
+
+const result = await client.getBlock();
 
 console.log(result);
 
