@@ -34,6 +34,7 @@ export type GetAccountStateResult = {
 export type GetAccountState = (
   args: GetAccountStateArgs,
 ) => Promise<GetAccountStateResult>;
+
 export type CreateGetAccountState = (
   clientContext: ClientContext,
 ) => GetAccountState;

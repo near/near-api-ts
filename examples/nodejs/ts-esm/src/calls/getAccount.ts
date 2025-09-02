@@ -19,10 +19,16 @@ const client = createClient({ network: testnet });
 //   publicKey: 'ed25519:5JgE5tBqbtd4ghgRqu2SFjxFs1x7GonNuLhXbi4Z2pik'
 // });
 
-const result = await client.getAccountState({
-  accountId: 'testnet',
+// const result = await client.getAccountState({
+//   accountId: accountId,
+// });
+
+const result = await client.getContractState({
+  contractAccountId: 'usdl.lantstool.testnet',
+  includeProofs: true,
 });
-console.log(result.accountState.balance);
+
+console.log(result);
 
 //
 // console.dir(
@@ -30,8 +36,6 @@ console.log(result.accountState.balance);
 //   { depth: null, customInspect: true },
 // );
 
-const a = near('1').add({ yoctoNear: 1n }).sub(near('0.5')).sub(yoctoNear(1n));
-console.log(a);
 
 // const res2 = await client.getBlock();
 // console.log(res2);

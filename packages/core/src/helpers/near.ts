@@ -43,6 +43,7 @@ const nearTokenProto: ThisType<NearToken> = {
     return value;
   },
 
+  // TODO add support for NearToken and avoid creating a new instance if x is NearToken
   add(x: NearOption): NearToken {
     return yoctoNear(this.yoctoNear + fromNearOption(x).yoctoNear);
   },

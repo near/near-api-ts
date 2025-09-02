@@ -1,12 +1,13 @@
-import { createCircularQueue } from '@common/utils/createCircularQueue';
 import { createSendRequest } from './createSendRequest';
 import { createGetAccountState } from './account/getAccountState';
 import { createGetAccountKey } from './account/getAccountKey';
 import { createGetAccountKeys } from './account/getAccountKeys';
+import { createGetContractState } from './contract/getContractState';
 import { createGetBlock } from './block/getBlock';
 import { createGetGasPrice } from './protocol/getGasPrice';
 import { createGetProtocolConfig } from './protocol/getProtocolConfig';
 import { createSendSignedTransaction } from './transaction/sendSignedTransaction';
+import { createCircularQueue } from '@common/utils/createCircularQueue';
 import type { CreateClient, ClientContext } from 'nat-types/client/client';
 
 // TODO Validate network,  get preferred RPC type
@@ -22,6 +23,7 @@ export const createClient: CreateClient = ({ network }) => {
     getAccountState: createGetAccountState(context),
     getAccountKey: createGetAccountKey(context),
     getAccountKeys: createGetAccountKeys(context),
+    getContractState: createGetContractState(context),
     getBlock: createGetBlock(context),
     getGasPrice: createGetGasPrice(context),
     getProtocolConfig: createGetProtocolConfig(context),
