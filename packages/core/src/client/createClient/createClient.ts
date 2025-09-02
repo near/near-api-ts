@@ -1,9 +1,8 @@
 import { createCircularQueue } from '@common/utils/createCircularQueue';
 import { createSendRequest } from './createSendRequest';
 import { createGetAccountState } from './account/getAccountState';
-import { createGetAccountBalance } from './account/getAccountBalance';
-import { createGetAccountKey } from './accountKeys/getAccountKey';
-import { createGetAccountKeys } from './accountKeys/getAccountKeys';
+import { createGetAccountKey } from './account/getAccountKey';
+import { createGetAccountKeys } from './account/getAccountKeys';
 import { createGetBlock } from './block/getBlock';
 import { createGetGasPrice } from './protocol/getGasPrice';
 import { createGetProtocolConfig } from './protocol/getProtocolConfig';
@@ -21,7 +20,6 @@ export const createClient: CreateClient = ({ network }) => {
 
   return {
     getAccountState: createGetAccountState(context),
-    getAccountBalance: createGetAccountBalance(context),
     getAccountKey: createGetAccountKey(context),
     getAccountKeys: createGetAccountKeys(context),
     getBlock: createGetBlock(context),

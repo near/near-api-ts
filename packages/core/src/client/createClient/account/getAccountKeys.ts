@@ -6,7 +6,7 @@ import { transformKey } from './helpers/transformKey';
 import type {
   CreateGetAccountKeys,
   GetAccountKeysResult,
-} from 'nat-types/client/accountKeys/getAccountKeys';
+} from 'nat-types/client/account/getAccountKeys';
 
 const RpcQueryAccessKeyListResponseSchema = z.object({
   ...AccessKeyListSchema().shape,

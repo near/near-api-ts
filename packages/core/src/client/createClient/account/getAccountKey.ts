@@ -3,8 +3,8 @@ import { toNativeBlockReference } from '@common/transformers/toNative/blockRefer
 import type {
   CreateGetAccountKey,
   GetAccountKeyArgs,
-} from 'nat-types/client/accountKeys/getAccountKey';
-import type { GetAccountKeyResult } from 'nat-types/client/accountKeys/getAccountKey';
+} from 'nat-types/client/account/getAccountKey';
+import type { GetAccountKeyResult } from 'nat-types/client/account/getAccountKey';
 import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import { AccessKeyViewSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
 import { transformKey } from './helpers/transformKey';

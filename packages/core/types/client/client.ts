@@ -1,8 +1,7 @@
 import type { CircularQueue } from '@common/utils/createCircularQueue';
 import type { GetAccountState } from 'nat-types/client/account/getAccountState';
-import type { GetAccountBalance } from 'nat-types/client/account/getAccountBalance';
-import type { GetAccountKey } from 'nat-types/client/accountKeys/getAccountKey';
-import type { GetAccountKeys } from 'nat-types/client/accountKeys/getAccountKeys';
+import type { GetAccountKey } from 'nat-types/client/account/getAccountKey';
+import type { GetAccountKeys } from 'nat-types/client/account/getAccountKeys';
 import type { GetBlock } from 'nat-types/client/block/getBlock';
 import type { GetGasPrice } from 'nat-types/client/protocol/getGasPrice';
 import type { GetProtocolConfig } from 'nat-types/client/protocol/getProtocolConfig';
@@ -38,7 +37,6 @@ export type Input = {
 
 export type Client = {
   getAccountState: GetAccountState;
-  getAccountBalance: GetAccountBalance;
   getAccountKey: GetAccountKey;
   getAccountKeys: GetAccountKeys;
   getProtocolConfig: GetProtocolConfig;

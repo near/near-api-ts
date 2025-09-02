@@ -44,6 +44,7 @@ const transformResult = (
   return final;
 };
 
+// TODO Add ability to fetch detailed balance with 'available' field
 export const createGetAccountState: CreateGetAccountState =
   ({ sendRequest }) =>
   async (args) => {
