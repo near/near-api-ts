@@ -3,7 +3,7 @@ import type {
   AccountId,
   ContractFunctionName,
   Nonce,
-  YoctoNearAmount,
+  NearToken,
 } from 'nat-types/common';
 
 export type FullAccessKey = {
@@ -17,7 +17,7 @@ export type FunctionCallKey = {
   publicKey: PublicKey;
   nonce: Nonce;
   contractAccountId: AccountId;
-  gasBudget?: YoctoNearAmount;
+  gasBudget?: NearToken;
   allowedFunctions?: ContractFunctionName[];
 };
 

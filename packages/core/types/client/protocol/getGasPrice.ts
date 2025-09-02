@@ -1,4 +1,4 @@
-import type { BlockId, YoctoNearAmount } from 'nat-types/common';
+import type { BlockId, NearToken } from 'nat-types/common';
 import type { ClientContext } from 'nat-types/client/client';
 
 type GetGasPriceArgs = {
@@ -6,7 +6,7 @@ type GetGasPriceArgs = {
 };
 
 export type GetGasPriceResult = {
-  gasPrice: YoctoNearAmount;
+  gasPrice: NearToken;
 };
 
 export type GetGasPrice = (

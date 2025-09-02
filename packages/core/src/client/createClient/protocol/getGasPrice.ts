@@ -2,6 +2,7 @@ import * as z from 'zod/mini';
 import { RpcGasPriceResponseSchema } from '@near-js/jsonrpc-types';
 import { toNativeBlockId } from '@common/transformers/toNative/blockReference';
 import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
+import { yoctoNear } from '../../../helpers/near';
 import type {
   CreateGetGasPrice,
   GetGasPriceResult,
@@ -10,12 +11,10 @@ import { BlockIdSchema } from '@common/schemas/zod/common';
 
 const transformResult = (result: unknown): GetGasPriceResult => {
   const camelCased = snakeToCamelCase(result);
-  const parsed = RpcGasPriceResponseSchema().parse(camelCased);
+  const valid = RpcGasPriceResponseSchema().parse(camelCased);
 
   return {
-    gasPrice: {
-      yoctoNear: BigInt(parsed.gasPrice),
-    },
+    gasPrice: yoctoNear(valid.gasPrice),
   };
 };
 

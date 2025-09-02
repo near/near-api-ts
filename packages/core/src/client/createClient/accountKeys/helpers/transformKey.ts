@@ -1,3 +1,4 @@
+import { yoctoNear } from '../../../../helpers/near';
 import type { AccessKeyInfoView } from '@near-js/jsonrpc-types';
 import type { AccountKey, FunctionCallKey } from 'nat-types/accountKey';
 import type { PublicKey } from 'nat-types/crypto';
@@ -24,9 +25,7 @@ export const transformKey = (key: AccessKeyInfoView): AccountKey => {
   } as FunctionCallKey;
 
   if (typeof allowance === 'string') {
-    functionCallKey.gasBudget = {
-      yoctoNear: BigInt(allowance),
-    };
+    functionCallKey.gasBudget = yoctoNear(allowance);
   }
 
   if (methodNames.length > 0) {

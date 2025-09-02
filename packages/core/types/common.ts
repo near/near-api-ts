@@ -39,10 +39,6 @@ export type Tokens = string;
 export type YoctoNear = bigint;
 export type Near = string;
 
-export type YoctoNearAmount = {
-  yoctoNear: YoctoNear;
-};
-
 export type NearToken = Readonly<{
   yoctoNear: YoctoNear;
   near: Near;
