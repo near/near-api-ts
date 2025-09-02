@@ -32,7 +32,7 @@ const transformResult = (
     contractState: valid.values,
   } as GetContractStateResult;
 
-  if (valid.proof) final.proofs = valid.proof;
+  if (valid.proof) final.proof = valid.proof;
 
   return final;
 };
@@ -51,7 +51,7 @@ export const createGetContractState: CreateGetContractState =
           request_type: 'view_state',
           account_id: args.contractAccountId,
           prefix_base64: base64KeyPrefix,
-          include_proof: args.includeProofs,
+          include_proof: args.includeProof,
           ...toNativeBlockReference(args.blockReference),
         },
       },

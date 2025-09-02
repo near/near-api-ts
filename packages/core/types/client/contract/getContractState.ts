@@ -10,7 +10,7 @@ import type { ClientContext } from 'nat-types/client/client';
 export type GetContractStateArgs = {
   contractAccountId: AccountId;
   keyPrefix?: string;
-  includeProofs?: boolean;
+  includeProof?: boolean;
   blockReference?: BlockReference;
 };
 
@@ -20,7 +20,7 @@ export type GetContractStateResult = {
   blockHash: BlockHash;
   blockHeight: BlockHeight;
   contractAccountId: AccountId;
-  proofs?: Base64String[];
+  proof?: Base64String[];
   contractState: StateRecord[];
 };
 
