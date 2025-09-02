@@ -8,7 +8,7 @@ const client = createClient({ network: testnet });
 //   blockId: '7dBRLdP15aPD1T41e6MwCn1nPGpYpPL4WxDfFXkGtQoX'
 // });
 
-// const result = await client.getProtocolConfig();
+const result = await client.getProtocolConfig();
 
 // const result = await client.getAccountKeys({
 //   accountId,
@@ -23,10 +23,10 @@ const client = createClient({ network: testnet });
 //   accountId: accountId,
 // });
 
-const result = await client.getContractState({
-  contractAccountId: 'usdl.lantstool.testnet',
-  includeProofs: true,
-});
+// const result = await client.getContractState({
+//   contractAccountId: 'usdl.lantstool.testnet',
+//   includeProofs: true,
+// });
 
 console.log(result);
 
