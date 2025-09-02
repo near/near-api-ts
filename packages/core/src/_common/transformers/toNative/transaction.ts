@@ -12,15 +12,18 @@ import type {
   NativeAction,
   NativeTransaction,
   Transaction,
+  TransactionExecutionStatus,
 } from 'nat-types/transaction';
 
 const toNativeAction = (action: Action): NativeAction => {
   if (action.actionType === 'Transfer') return toNativeTransferAction(action);
-  if (action.actionType === 'CreateAccount') return toNativeCreateAccountAction();
+  if (action.actionType === 'CreateAccount')
+    return toNativeCreateAccountAction();
   if (action.actionType === 'AddKey') return toNativeAddKeyAction(action);
   if (action.actionType === 'DeployContract')
     return toNativeDeployContractAction(action);
-  if (action.actionType === 'FunctionCall') return toNativeFunctionCallAction(action);
+  if (action.actionType === 'FunctionCall')
+    return toNativeFunctionCallAction(action);
   if (action.actionType === 'DeleteKey') return toNativeDeleteKeyAction(action);
   if (action.actionType === 'DeleteAccount')
     return toNativeDeleteAccountAction(action);
@@ -46,3 +49,19 @@ export const toNativeTransaction = (
   nonce: BigInt(transaction.nonce),
   blockHash: base58.decode(transaction.blockHash),
 });
+
+const TransactionExecutionStatusMap = {
+  None: 'NONE',
+  Included: 'INCLUDED',
+  ExecutedOptimistic: 'EXECUTED_OPTIMISTIC',
+  IncludedFinal: 'INCLUDED_FINAL',
+  Executed: 'EXECUTED',
+  Final: 'FINAL',
+} as const;
+
+export const toNativeTransactionExecutionStatus = (
+  status?: TransactionExecutionStatus,
+) =>
+  status
+    ? TransactionExecutionStatusMap[status]
+    : TransactionExecutionStatusMap.ExecutedOptimistic;

@@ -22,14 +22,17 @@ const transformResult = (
   const camelCased = snakeToCamelCase(result);
   const valid = RpcQueryAccountViewResponseSchema.parse(camelCased);
 
+  const lockedBalance = yoctoNear(valid.locked);
+  const totalBalance = yoctoNear(valid.amount).add(lockedBalance);
+
   const final = {
     blockHash: valid.blockHash,
     blockHeight: valid.blockHeight,
     accountId: args.accountId,
     accountState: {
       balance: {
-        total: yoctoNear(valid.amount),
-        locked: yoctoNear(valid.locked),
+        total: totalBalance,
+        locked: lockedBalance,
       },
       usedStorageBytes: valid.storageUsage,
       contractWasmHash: valid.codeHash,

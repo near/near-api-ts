@@ -72,3 +72,31 @@ export type NativeTransaction = {
   nonce: bigint;
   blockHash: Uint8Array;
 };
+
+/**
+ *  <h3>Transaction Execution Levels:</h3>
+ *
+ *  **None**: Transaction is waiting to be included into the block
+ *
+ *  **Included**: Transaction is included into the block. The block may be not finalized yet
+ *
+ *  **ExecutedOptimistic**: Transaction is included into the block +
+ *  all non-refund transaction receipts finished their execution.
+ *  The corresponding blocks for tx and each receipt may be not finalized yet
+ *
+ *  **IncludedFinal**: Transaction is included into finalized block
+ *
+ *  **Executed**: Transaction is included into finalized block +
+ *  All non-refund transaction receipts finished their execution.
+ *  The corresponding blocks for each receipt may be not finalized yet
+ *
+ *  **Final**: Transaction is included into finalized block +
+ *  Execution of all transaction receipts is finalized, including refund receipts
+ */
+export type TransactionExecutionStatus =
+  | 'None'
+  | 'Included'
+  | 'ExecutedOptimistic'
+  | 'IncludedFinal'
+  | 'Executed'
+  | 'Final';

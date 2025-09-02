@@ -47,14 +47,15 @@ const signer: any = await createMemorySigner({
 });
 
 const res = await signer.executeTransaction({
-  action: functionCall({
-    fnName: 'add_record',
-    gasLimit: { teraGas: '15' },
-  }),
+  // action: functionCall({
+  //   fnName: 'add_record',
+  //   gasLimit: { teraGas: '15' },
+  // }),
+  action: transfer({ amount: { yoctoNear: '1' } }),
   receiverAccountId: 'eclipseer.testnet',
 });
 
-console.dir(res, { depth: null, colors: true });
+console.dir(res, { depth: null });
 
 // const result = await signer.executeMultipleTransactions({
 //   transactionIntents: [

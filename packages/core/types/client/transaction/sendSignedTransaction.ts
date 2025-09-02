@@ -1,16 +1,18 @@
 import type { SignedTransaction } from 'nat-types/signedTransaction';
 import type { ClientContext } from 'nat-types/client/client';
+import type { TransactionExecutionStatus } from 'nat-types/transaction';
+import type { RpcTransactionResponse } from '@near-js/jsonrpc-types';
 
-type Input = {
+type SendSignedTransactionArgs = {
   signedTransaction: SignedTransaction;
-  execution?: {
-    waitUntil?: string; // TODO Fix!
-  };
+  waitForStatus?: TransactionExecutionStatus;
 };
 
-type Output = any;
+export type SendSignedTransactionResult = RpcTransactionResponse;
 
-export type SendSignedTransaction = (input: Input) => Promise<Output>;
+export type SendSignedTransaction = (
+  args: SendSignedTransactionArgs,
+) => Promise<SendSignedTransactionResult>;
 
 export type CreateSendSignedTransaction = (
   clientContext: ClientContext,

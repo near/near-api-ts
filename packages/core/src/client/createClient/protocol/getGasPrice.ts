@@ -1,6 +1,5 @@
 import * as z from 'zod/mini';
 import { RpcGasPriceResponseSchema } from '@near-js/jsonrpc-types';
-import { toNativeBlockId } from '@common/transformers/toNative/blockReference';
 import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import { yoctoNear } from '../../../helpers/near';
 import type {
@@ -33,12 +32,9 @@ export const createGetGasPrice: CreateGetGasPrice =
       body: {
         method: 'gas_price',
         params: {
-          block_id: args?.blockId
-            ? toNativeBlockId(args.blockId).block_id
-            : null,
+          block_id: args?.blockId ?? null,
         },
       },
     });
-
     return transformResult(result);
   };
