@@ -25,6 +25,7 @@ const transformResult = (
   return {
     blockHash: valid.blockHash,
     blockHeight: valid.blockHeight,
+    accountId: args.accountId,
     accountKey: transformKey({
       accessKey: valid,
       publicKey: args.publicKey,

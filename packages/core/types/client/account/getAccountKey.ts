@@ -17,6 +17,7 @@ export type GetAccountKeyArgs = {
 export type GetAccountKeyResult = {
   blockHash: BlockHash;
   blockHeight: BlockHeight;
+  accountId: AccountId;
   accountKey: AccountKey;
 };
 

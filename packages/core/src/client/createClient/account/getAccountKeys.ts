@@ -5,6 +5,7 @@ import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import { transformKey } from './helpers/transformKey';
 import type {
   CreateGetAccountKeys,
+  GetAccountKeysArgs,
   GetAccountKeysResult,
 } from 'nat-types/client/account/getAccountKeys';
 
@@ -14,13 +15,17 @@ const RpcQueryAccessKeyListResponseSchema = z.object({
   blockHeight: z.number(),
 });
 
-const transformResult = (result: unknown): GetAccountKeysResult => {
+const transformResult = (
+  result: unknown,
+  args: GetAccountKeysArgs,
+): GetAccountKeysResult => {
   const camelCased = snakeToCamelCase(result);
   const valid = RpcQueryAccessKeyListResponseSchema.parse(camelCased);
 
   return {
     blockHash: valid.blockHash,
     blockHeight: valid.blockHeight,
+    accountId: args.accountId,
     accountKeys: valid.keys.map(transformKey),
   };
 };
@@ -38,5 +43,5 @@ export const createGetAccountKeys: CreateGetAccountKeys =
         },
       },
     });
-    return transformResult(result);
+    return transformResult(result, args);
   };
