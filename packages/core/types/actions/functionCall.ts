@@ -3,9 +3,7 @@ import type {
   NearOption,
   GasOption,
 } from 'nat-types/common';
-
-type FnArgsJson<ArgsJson> = { fnArgsJson: ArgsJson; fnArgsBytes?: never };
-type FnArgsBytes = { fnArgsJson?: never; fnArgsBytes?: Uint8Array };
+import type { FnArgs } from 'nat-types/contract';
 
 type FunctionCallBase = {
   fnName: ContractFunctionName;
@@ -13,12 +11,12 @@ type FunctionCallBase = {
   attachedDeposit?: NearOption;
 };
 
-export type FunctionCallParams<ArgsJson extends object> = FunctionCallBase &
-  (FnArgsBytes | FnArgsJson<ArgsJson>);
+export type FunctionCallParams<Args extends object> = FunctionCallBase &
+  FnArgs<Args>;
 
-export type FunctionCallAction<ArgsJson extends object> = {
+export type FunctionCallAction<Args extends object> = {
   actionType: 'FunctionCall';
-  params: FunctionCallParams<ArgsJson>;
+  params: FunctionCallParams<Args>;
 };
 
 // ****** NATIVE ********

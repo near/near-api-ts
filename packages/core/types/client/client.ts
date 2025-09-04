@@ -6,9 +6,8 @@ import type { GetBlock } from 'nat-types/client/block/getBlock';
 import type { GetGasPrice } from 'nat-types/client/protocol/getGasPrice';
 import type { GetProtocolConfig } from 'nat-types/client/protocol/getProtocolConfig';
 import type { SendSignedTransaction } from 'nat-types/client/transaction/sendSignedTransaction';
-import type {
-  GetContractState
-} from 'nat-types/client/contract/getContractState';
+import type { GetContractState } from 'nat-types/client/contract/getContractState';
+import type { CallContractReadFunction } from 'nat-types/client/contract/callContractReadFunction';
 
 type Rpc = {
   url: string;
@@ -43,6 +42,7 @@ export type Client = {
   getAccountKey: GetAccountKey;
   getAccountKeys: GetAccountKeys;
   getContractState: GetContractState;
+  callContractReadFunction: CallContractReadFunction;
   getBlock: GetBlock;
   getProtocolConfig: GetProtocolConfig;
   getGasPrice: GetGasPrice;

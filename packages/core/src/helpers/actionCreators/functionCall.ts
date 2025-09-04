@@ -3,9 +3,9 @@ import type {
   FunctionCallParams,
 } from 'nat-types/actions/functionCall';
 
-export const functionCall = <ArgsJson extends object>(
-  params: FunctionCallParams<ArgsJson>,
-): FunctionCallAction<ArgsJson> => ({
+export const functionCall = <Args extends object>(
+  params: FunctionCallParams<Args>,
+): FunctionCallAction<Args> => ({
   actionType: 'FunctionCall',
   params,
 });

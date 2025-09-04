@@ -23,12 +23,10 @@ const client = createClient({ network: testnet });
 //   accountId: accountId,
 // });
 
-// const result = await client.getContractState({
-//   contractAccountId: 'usdl.lantstool.testnet',
-//   includeProofs: true,
-// });
-
-const result = await client.getBlock();
+const result = await client.getContractState({
+  contractAccountId: 'usdl.lantstool.testnet',
+  includeProof: true,
+});
 
 console.log(result);
 
@@ -37,7 +35,6 @@ console.log(result);
 //   result,
 //   { depth: null, customInspect: true },
 // );
-
 
 // const res2 = await client.getBlock();
 // console.log(res2);

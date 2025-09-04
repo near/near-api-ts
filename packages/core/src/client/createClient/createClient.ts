@@ -3,6 +3,7 @@ import { createGetAccountState } from './account/getAccountState';
 import { createGetAccountKey } from './account/getAccountKey';
 import { createGetAccountKeys } from './account/getAccountKeys';
 import { createGetContractState } from './contract/getContractState';
+import { createCallContractReadFunction } from './contract/callContractReadFunction';
 import { createGetBlock } from './block/getBlock';
 import { createGetGasPrice } from './protocol/getGasPrice';
 import { createGetProtocolConfig } from './protocol/getProtocolConfig';
@@ -24,6 +25,7 @@ export const createClient: CreateClient = ({ network }) => {
     getAccountKey: createGetAccountKey(context),
     getAccountKeys: createGetAccountKeys(context),
     getContractState: createGetContractState(context),
+    callContractReadFunction: createCallContractReadFunction(context),
     getBlock: createGetBlock(context),
     getGasPrice: createGetGasPrice(context),
     getProtocolConfig: createGetProtocolConfig(context),
