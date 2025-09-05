@@ -10,10 +10,10 @@ type FunctionCallBase = {
   gasLimit: GasOption;
   attachedDeposit?: NearOption;
 };
-
+// TODO rework 'extends object'
 export type FunctionCallParams<Args extends object> = FunctionCallBase &
   FnArgs<Args>;
-
+// TODO rework 'extends object'
 export type FunctionCallAction<Args extends object> = {
   actionType: 'FunctionCall';
   params: FunctionCallParams<Args>;

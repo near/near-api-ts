@@ -15,11 +15,28 @@
 type DefaultTransformFn = (v: number[]) => unknown;
 const defaultTransformFn: DefaultTransformFn = (_v) => 'something';
 
+export type FnArgsJson<A> = { fnArgs: A; fnArgsBytes?: never };
+export type FnArgsBytes = { fnArgs?: never; fnArgsBytes?: Uint8Array };
+
+export type FnArgs<A> = [A] extends [undefined] ? FnArgsBytes : FnArgsJson<A>;
+
+// type ProtoArgs<A> = [A] extends [undefined] ? FnArgs<undefined> : FnArgs<A>;
+//
+// type Args<A, F extends DefaultTransformFn | undefined> = [F] extends [
+//   DefaultTransformFn,
+// ]
+//   ? [A] extends [undefined]
+//     ? FnArgs<undefined> & { transformFn: F }
+//     : FnArgs<A> & { transformFn: F }
+//   : [A] extends [undefined]
+//     ? FnArgs<undefined>
+//     : FnArgs<A>;
+
 type Args<A, F extends DefaultTransformFn | undefined> = [F] extends [
   DefaultTransformFn,
 ]
-  ? { fnArgs: A; transformFn: F }
-  : { fnArgs: A };
+  ? FnArgs<A> & { transformFn: F }
+  : FnArgs<A> & { transformFn?: never };
 
 type Result<F extends DefaultTransformFn | undefined> = [F] extends [
   DefaultTransformFn,
@@ -30,14 +47,16 @@ type Result<F extends DefaultTransformFn | undefined> = [F] extends [
 // Overload order matters
 type CallFn = {
   <A, F extends DefaultTransformFn>(args: Args<A, F>): Result<F>;
+  <F extends DefaultTransformFn>(args: Args<undefined, F>): Result<F>;
   <A>(args: Args<A, undefined>): Result<undefined>;
+  (args?: Args<undefined, undefined>): Result<undefined>;
 };
 
-const callFn: CallFn = <A, F extends DefaultTransformFn>(args: {
-  fnArgs: A;
+const callFn: CallFn = <A, F extends DefaultTransformFn>(args?: {
+  fnArgs?: A;
   transformFn?: F;
 }) => {
-  if (args.transformFn) {
+  if (args?.transformFn) {
     return { result: args.transformFn([1]) };
   }
   return { result: defaultTransformFn([1]) };
@@ -47,6 +66,7 @@ const customFn = (_v: number[]) => ({ a: 1 });
 type InputArgs = { a: number };
 
 // OK
+// // WITH ARGS TEST
 //  { result: unknown }
 const r1 = callFn({ fnArgs: {} });
 // { result: { a: number } }
@@ -59,26 +79,43 @@ const r4 = callFn<InputArgs, typeof customFn>({
   transformFn: customFn,
 });
 
-const args5 = {
-  fnArgs: { a: 1 },
-  transformFn: customFn,
-};
-// { result: unknown } // ????? It works well for old objects
-const r5 = callFn<InputArgs>(args5);
-//{ result: { a: number } }
-const r6 = callFn(args5);
 
+const args5 = { fnArgs: { a: 1 } };
+//{ result: { a: number } }
+const r6 = callFn<InputArgs>(args5);
+
+// NO ARGS TEST
+
+//  { result: unknown }
+const r21 = callFn();
+// { result: { a: number } }
+const r22 = callFn({ fnArgsBytes: new Uint8Array(), transformFn: customFn });
+// { result: unknown }
+const r23 = callFn<InputArgs>({
+  fnArgs: { a: 1 },
+});
+//{ result: { a: number } }
+const r24 = callFn<typeof customFn>({
+  fnArgsBytes: new Uint8Array(),
+  transformFn: customFn,
+});
+
+const args25 = { fnArgs: { c: 1 }, transformFn: customFn };
+//{ result: { a: number } }
+const r26 = callFn(args25);
 
 // ERROR
-// const r100 = callFn<InputArgs>({
-//   fnArgs: { a: 1 },
-//   transformFn: customFn,
-// });
-//
-// const r101 = callFn<{ b: number }, (v: number[]) => { a1: number }>({
-//   fnArgs: { b: 1 },
-// });
+const args1025 = { fnArgs: { a: 1 }, transformFn: customFn };
+const r1025 = callFn<InputArgs>(args1025);
 
+const r100 = callFn<InputArgs>({
+  fnArgs: { a: 1 },
+  transformFn: customFn,
+});
+
+const r101 = callFn<{ b: number }, (v: number[]) => { a1: number }>({
+  fnArgs: { b: 1 },
+});
 
 /*
 const request = ftContractInterface.readFns.getFtBalance({
@@ -122,4 +159,4 @@ const getFtBalance = (args: { accountId: string }): GetFtBalanceResult => {
 // { result: { nameFor: string } }
 const r0 = callFn(getFtBalance({ accountId: '1d' }));
 
-const a = r0.result.nameFor
+const a = r0.result.nameFor;

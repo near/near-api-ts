@@ -9,33 +9,47 @@ import type { ClientContext } from 'nat-types/client/client';
 import type { FnArgs } from 'nat-types/contract';
 
 export type RawCallResult = number[];
+export type BaseTransformFn = (raw: RawCallResult) => unknown;
 
-export type CallContractReadFunctionArgs<Args> = {
+type BaseFnCallArgs = {
   contractAccountId: AccountId;
   fnName: ContractFunctionName;
   blockReference?: BlockReference;
-  // The transformer determines the final result type of the call.
-  // If omitted, the result type defaults to `unknown` (output of fromJsonBytes).
-  resultTransformer: (rawResult: RawCallResult) => unknown;
-  // client?: {
-  //   response?: {
-  //     resultTransformer?: (rawResult: RawCallResult) => R;
-  //   };
-  // };
-} & FnArgs<Args>;
+};
 
-export type CallContractReadFunctionResult<R> = {
+export type Args<A, F extends BaseTransformFn | undefined> = [F] extends [
+  BaseTransformFn,
+]
+  ? BaseFnCallArgs & FnArgs<A> & { resultTransformer: F }
+  : BaseFnCallArgs & FnArgs<A> & { resultTransformer?: never };
+
+export type BaseFnCallResult = {
   blockHash: BlockHash;
   blockHeight: BlockHeight;
   logs: string[]; // TODO figure out the proper type
-  result: R;
 };
 
-type ResT<A> = ReturnType<CallContractReadFunctionArgs<A>['resultTransformer']>
+export type Result<F extends BaseTransformFn | undefined> = [F] extends [
+  BaseTransformFn,
+]
+  ? BaseFnCallResult & { result: ReturnType<F> }
+  : BaseFnCallResult & { result: unknown };
 
-export type CallContractReadFunction = <AJ>(
-  args: CallContractReadFunctionArgs<AJ>,
-) => Promise<CallContractReadFunctionResult<ResT<AJ>>>;
+// Overload order matters
+export type CallContractReadFunction = {
+  // #1
+  <A, F extends BaseTransformFn | undefined>(
+    args: Args<A, F>,
+  ): Promise<Result<F>>;
+  // #2
+  <F extends BaseTransformFn>(
+    args: Args<undefined, F>,
+  ): Promise<Result<F>>;
+  // #3
+  <A>(args: Args<A, undefined>): Promise<Result<undefined>>;
+  // #4
+  (args: Args<undefined, undefined>): Promise<Result<undefined>>;
+};
 
 export type CreateCallContractReadFunction = (
   clientContext: ClientContext,

@@ -1,4 +1,6 @@
-export type FnArgsJson<Args> = { fnArgsJson: Args; fnArgsBytes?: never };
+export type FnArgsJson<A> = { fnArgsJson: A; fnArgsBytes?: never };
 export type FnArgsBytes = { fnArgsJson?: never; fnArgsBytes?: Uint8Array };
 
-export type FnArgs<Args> = FnArgsBytes | FnArgsJson<Args>
+export type FnArgs<A = undefined> = [A] extends [undefined]
+  ? FnArgsBytes
+  : FnArgsJson<A>;

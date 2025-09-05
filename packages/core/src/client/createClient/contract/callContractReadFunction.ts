@@ -7,11 +7,11 @@ import { toContractFnArgsBytes } from '@common/transformers/contract';
 import { fromJsonBytes } from '@common/utils/common';
 import type {
   CreateCallContractReadFunction,
-  CallContractReadFunctionArgs,
-  CallContractReadFunctionResult,
+  Args,
   RawCallResult,
+  BaseTransformFn,
+  CallContractReadFunction,
 } from 'nat-types/client/contract/callContractReadFunction';
-// import type { ClientContext } from 'nat-types/client/client';
 
 const RpcCallFunctionResponseSchema = z.object({
   ...CallResultSchema().shape,
@@ -43,11 +43,13 @@ const RpcCallFunctionResponseSchema = z.object({
 //   };
 // };
 
-const defaultTransformer = (v: RawCallResult): unknown => fromJsonBytes(v);
+const defaultTransformer: BaseTransformFn = (v: RawCallResult) =>
+  fromJsonBytes(v);
 
-export const createCallContractReadFunction: CreateCallContractReadFunction =
-  ({ sendRequest }) =>
-  async <AJ>(args: CallContractReadFunctionArgs<AJ>) => {
+export const createCallContractReadFunction: CreateCallContractReadFunction = ({
+  sendRequest,
+}) =>
+  (async <A, F extends BaseTransformFn>(args: Args<A, F>) => {
     const result = await sendRequest({
       body: {
         method: 'query',
@@ -55,23 +57,31 @@ export const createCallContractReadFunction: CreateCallContractReadFunction =
           request_type: 'call_function',
           account_id: args.contractAccountId,
           method_name: args.fnName,
-          args_base64: base64.encode(toContractFnArgsBytes(args)),
+          args_base64: base64.encode(toContractFnArgsBytes<A>(args)),
           ...toNativeBlockReference(args.blockReference),
         },
       },
     });
 
-    const transformer = args?.resultTransformer
-      ? args.resultTransformer
-      : defaultTransformer;
-    // c;
+    if (args?.resultTransformer) {
+      const camelCased = snakeToCamelCase(result);
+      const valid = RpcCallFunctionResponseSchema.parse(camelCased);
+
+      return {
+        blockHash: valid.blockHash,
+        blockHeight: valid.blockHeight,
+        result: args.resultTransformer(valid.result),
+        logs: valid.logs,
+      };
+    }
+
     const camelCased = snakeToCamelCase(result);
     const valid = RpcCallFunctionResponseSchema.parse(camelCased);
 
     return {
       blockHash: valid.blockHash,
       blockHeight: valid.blockHeight,
-      result: transformer(valid.result),
+      result: defaultTransformer(valid.result),
       logs: valid.logs,
     };
-  };
+  }) as CallContractReadFunction;
