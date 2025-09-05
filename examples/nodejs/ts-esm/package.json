@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "run-example": "tsx src/index.ts",
-    "build": "tsup"
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@near-api-ts/core": "workspace:*"
