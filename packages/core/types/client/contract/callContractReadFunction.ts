@@ -10,7 +10,7 @@ import type { ClientContext } from 'nat-types/client/client';
 import type { FnArgs } from 'nat-types/contract';
 
 export type RawCallResult = number[];
-export type RawCallLogs = string[]; // TODO figure out the proper type
+export type RawCallLogs = string[];
 
 export type BaseTransformFn = (raw: RawCallResult) => unknown;
 export type MaybeBaseTransformFn = BaseTransformFn | undefined;

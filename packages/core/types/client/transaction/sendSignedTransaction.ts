@@ -5,7 +5,9 @@ import type { RpcTransactionResponse } from '@near-js/jsonrpc-types';
 
 type SendSignedTransactionArgs = {
   signedTransaction: SignedTransaction;
-  waitForStatus?: TransactionExecutionStatus;
+  request?: {
+    waitForStatus?: TransactionExecutionStatus;
+  };
 };
 
 export type SendSignedTransactionResult = RpcTransactionResponse;
