@@ -43,13 +43,12 @@ const RpcCallFunctionResponseSchema = z.object({
 //   };
 // };
 
-const defaultTransformer: BaseTransformFn = (v: RawCallResult) =>
-  fromJsonBytes(v);
+const defaultTransformer = (v: RawCallResult) => fromJsonBytes(v);
 
 export const createCallContractReadFunction: CreateCallContractReadFunction = ({
   sendRequest,
 }) =>
-  (async <A, F extends BaseTransformFn>(args: Args<A, F>) => {
+  (async (args) => {
     const result = await sendRequest({
       body: {
         method: 'query',
@@ -57,20 +56,20 @@ export const createCallContractReadFunction: CreateCallContractReadFunction = ({
           request_type: 'call_function',
           account_id: args.contractAccountId,
           method_name: args.fnName,
-          args_base64: base64.encode(toContractFnArgsBytes<A>(args)),
+          args_base64: base64.encode(toContractFnArgsBytes(args)),
           ...toNativeBlockReference(args.blockReference),
         },
       },
     });
 
-    if (args?.resultTransformer) {
+    if (args.response?.resultTransformer) {
       const camelCased = snakeToCamelCase(result);
       const valid = RpcCallFunctionResponseSchema.parse(camelCased);
 
       return {
         blockHash: valid.blockHash,
         blockHeight: valid.blockHeight,
-        result: args.resultTransformer(valid.result),
+        result: args.response.resultTransformer(valid.result),
         logs: valid.logs,
       };
     }

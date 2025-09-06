@@ -1,4 +1,9 @@
-import type { AccountId, BlockHash, Nonce } from './common';
+import type {
+  AccountId,
+  BlockHash,
+  MaybeJsonLikeValue,
+  Nonce
+} from './common';
 import type { PublicKey, NativePublicKey } from './crypto';
 import type {
   CreateAccountAction,
@@ -34,7 +39,7 @@ export type Action =
   | TransferAction
   | AddKeyAction
   | DeployContractAction
-  | FunctionCallAction<object>
+  | FunctionCallAction<MaybeJsonLikeValue>
   | DeleteKeyAction
   | DeleteAccountAction;
 

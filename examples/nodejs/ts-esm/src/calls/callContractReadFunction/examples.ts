@@ -25,31 +25,25 @@ const r11 = await client.callContractReadFunction({
   fnName,
 });
 // OK, result: unknown
-const r12 = await client.callContractReadFunction<undefined, undefined>({
+const r12 = await client.callContractReadFunction<undefined>({
   contractAccountId,
   fnName,
 });
-// Error
+// OK, result: unknown
+const r13 = await client.callContractReadFunction<undefined, undefined>({
+  contractAccountId,
+  fnName,
+});
+// Error - need to pass fnArgsJson
 await client.callContractReadFunction<Args>({
-  contractAccountId: 'usdl.lantstool.testnet',
-  fnName: 'ft_metadata',
+  contractAccountId,
+  fnName,
 });
-// Error
+// Error - need to pass fnArgsJson
 await client.callContractReadFunction<Args>({
-  contractAccountId: 'usdl.lantstool.testnet',
-  fnName: 'ft_metadata',
+  contractAccountId,
+  fnName,
   fnArgsBytes,
-});
-// Error
-await client.callContractReadFunction<Args, typeof resultTransformer>({
-  contractAccountId: 'usdl.lantstool.testnet',
-  fnName: 'ft_metadata',
-  fnArgsBytes,
-});
-// Error
-await client.callContractReadFunction<typeof resultTransformer>({
-  contractAccountId: 'usdl.lantstool.testnet',
-  fnName: 'ft_metadata',
 });
 
 /*************************************/
@@ -74,25 +68,18 @@ const r24 = await client.callContractReadFunction<undefined>({
   fnName,
   fnArgsBytes,
 });
-// Error - specify both generics, not only Args
-// TODO Is it possible to take args from generic and infer resultTransformer from usage?
-await client.callContractReadFunction<Args>({
-  contractAccountId,
-  fnName,
-  fnArgsJson: { account_id: 'lantstool.testnet' },
-  resultTransformer,
-});
-// Error
+
+// Error - fnArgsJson not allowed
 await client.callContractReadFunction<undefined>({
   contractAccountId,
   fnName,
+  fnArgsBytes,
   fnArgsJson: { account_id: 'lantstool.testnet' },
 });
-// Error
-await client.callContractReadFunction<Args>({
+// Error - generic type doesn't extend MaybeJsonLikeValue
+await client.callContractReadFunction<BigInt>({
   contractAccountId,
   fnName,
-  fnArgsBytes,
 });
 
 /*************************************/
@@ -102,7 +89,7 @@ await client.callContractReadFunction<Args>({
 const r31 = await client.callContractReadFunction({
   contractAccountId,
   fnName,
-  resultTransformer,
+  response: { resultTransformer },
 });
 // result:{ decimals: number }
 const r32 = await client.callContractReadFunction<
@@ -111,30 +98,33 @@ const r32 = await client.callContractReadFunction<
 >({
   contractAccountId,
   fnName,
-  resultTransformer,
+  fnArgsJson: undefined,
+  response: { resultTransformer },
 });
-// result:{ decimals: number }
+
+// Error - need to specify both generics
 const r33 = await client.callContractReadFunction<typeof resultTransformer>({
   contractAccountId,
   fnName,
-  resultTransformer,
+  response: { resultTransformer },
 });
-// Error - no fnArgsJson
-await client.callContractReadFunction<Args, typeof resultTransformer>({
-  contractAccountId,
-  fnName,
-  resultTransformer,
-});
-// Error - wrong resultTransformer type
+// Error - wrong resultTransformer type - has to extend BaseTransformFn
 await client.callContractReadFunction<typeof client>({
   contractAccountId,
   fnName,
-  resultTransformer,
+  response: { resultTransformer },
 });
-// Error - no resultTransformer
-await client.callContractReadFunction<typeof resultTransformer>({
+// Error - no resultTransformer found
+await client.callContractReadFunction<undefined, typeof resultTransformer>({
   contractAccountId,
   fnName,
+});
+// Error - custom resultTransformer is not allowed without generic type
+// when generic 'args' type is specified
+await client.callContractReadFunction<undefined>({
+  contractAccountId,
+  fnName,
+  response: { resultTransformer },
 });
 
 /*************************************/
@@ -146,7 +136,7 @@ const r41 = await client.callContractReadFunction({
   contractAccountId,
   fnName,
   fnArgsJson: { account_id: 'lantstool.testnet' },
-  resultTransformer,
+  response: { resultTransformer },
 });
 // result:{ decimals: number }
 const r42 = await client.callContractReadFunction<
@@ -156,12 +146,20 @@ const r42 = await client.callContractReadFunction<
   contractAccountId,
   fnName,
   fnArgsJson: { account_id: 'lantstool.testnet' },
-  resultTransformer,
+  response: { resultTransformer },
 });
+
 // Error - no fnArgsJson and resultTransformer
 await client.callContractReadFunction<Args, typeof resultTransformer>({
   contractAccountId,
   fnName,
+});
+// Error - resultTransformer isn't allowed (no generic type)
+await client.callContractReadFunction<Args>({
+  contractAccountId,
+  fnName,
+  fnArgsJson: { account_id: 'lantstool.testnet' },
+  response: { resultTransformer },
 });
 
 /*************************************/
@@ -170,33 +168,29 @@ await client.callContractReadFunction<Args, typeof resultTransformer>({
 
 const DataSchema = z.object({ nameFor: z.string() });
 
-// type DataType = z.output<typeof DataSchema>;
-
 const fnTransformer = (v: number[]) => {
   const obj = JSON.parse(new TextDecoder().decode(new Uint8Array(v)));
   return DataSchema.parse(obj);
 };
-
-// type GetFtBalanceResult = {
-//   fnArgs: { account_id: string };
-//   transformFn: (v: number[]) => DataType;
-// };
 
 const getFtBalance = (args: { accountId: string }) => {
   return {
     contractAccountId,
     fnName,
     fnArgsJson: { account_id: args.accountId },
-    resultTransformer: fnTransformer,
+    response: { resultTransformer: fnTransformer },
   };
 };
 
 // OK: result: { nameFor: string }
-const r51 = await client.callContractReadFunction(getFtBalance({ accountId: '123' }));
+const r51 = await client.callContractReadFunction(
+  getFtBalance({ accountId: '123' }),
+);
 // OK: result: { nameFor: string }
 const r52 = await client.callContractReadFunction<
   { account_id: string },
   typeof fnTransformer
 >(getFtBalance({ accountId: '123' }));
+
 // Error - invalid args
 await client.callContractReadFunction(getFtBalance({ invalid: '123' }));

@@ -2,6 +2,7 @@ import type {
   ContractFunctionName,
   NearOption,
   GasOption,
+  MaybeJsonLikeValue,
 } from 'nat-types/common';
 import type { FnArgs } from 'nat-types/contract';
 
@@ -10,13 +11,13 @@ type FunctionCallBase = {
   gasLimit: GasOption;
   attachedDeposit?: NearOption;
 };
-// TODO rework 'extends object'
-export type FunctionCallParams<Args extends object> = FunctionCallBase &
-  FnArgs<Args>;
-// TODO rework 'extends object'
-export type FunctionCallAction<Args extends object> = {
+
+export type FunctionCallParams<AJ extends MaybeJsonLikeValue> =
+  FunctionCallBase & FnArgs<AJ>;
+
+export type FunctionCallAction<AJ extends MaybeJsonLikeValue> = {
   actionType: 'FunctionCall';
-  params: FunctionCallParams<Args>;
+  params: FunctionCallParams<AJ>;
 };
 
 // ****** NATIVE ********

@@ -1,6 +1,6 @@
 import type { TransactionIntent } from 'nat-types/transaction';
 import type { FunctionCallAction } from 'nat-types/actions/functionCall';
-import type { AccountId } from 'nat-types/common';
+import type {AccountId, MaybeJsonLikeValue} from 'nat-types/common';
 
 /**
  * We always want to sign txns with FA key when possible and use FC only if all
@@ -10,7 +10,7 @@ import type { AccountId } from 'nat-types/common';
   // TODO #2: Add ability to define the keyType priority by user himself.
   //   For example ['FunctionCall', 'FullAccess']
 const getPriorityForFunctionCallTransaction = (
-  action: FunctionCallAction<object>,
+  action: FunctionCallAction<MaybeJsonLikeValue>,
   receiverAccountId: AccountId,
 ) => [
   { type: 'FullAccess' },

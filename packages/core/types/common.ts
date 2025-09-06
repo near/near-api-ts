@@ -62,3 +62,13 @@ export type GasLimit = Readonly<{
   gas: Gas;
   teraGas: TeraGas;
 }>;
+
+export type JsonLikeValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonLikeValue[]
+  | { [key: string]: JsonLikeValue | undefined };
+
+export type MaybeJsonLikeValue = JsonLikeValue | undefined;
