@@ -12,8 +12,13 @@ import type { FnArgs } from 'nat-types/contract';
 export type RawCallResult = number[];
 export type RawCallLogs = string[];
 
-export type BaseTransformFn = (raw: RawCallResult) => unknown;
-export type MaybeBaseTransformFn = BaseTransformFn | undefined;
+export type BaseResultTransformer = ({
+  rawResult,
+}: {
+  rawResult: RawCallResult;
+}) => unknown;
+
+export type MaybeBaseResultTransformer = BaseResultTransformer | undefined;
 
 type BaseFnCallArgs = {
   contractAccountId: AccountId;
@@ -21,7 +26,9 @@ type BaseFnCallArgs = {
   blockReference?: BlockReference;
 };
 
-type Response<F extends MaybeBaseTransformFn> = [F] extends [BaseTransformFn]
+type Response<F extends MaybeBaseResultTransformer> = [F] extends [
+  BaseResultTransformer,
+]
   ? {
       response: {
         resultTransformer: F;
@@ -35,7 +42,7 @@ type Response<F extends MaybeBaseTransformFn> = [F] extends [BaseTransformFn]
 
 export type Args<
   AJ extends MaybeJsonLikeValue,
-  F extends MaybeBaseTransformFn,
+  F extends MaybeBaseResultTransformer,
 > = Response<F> & BaseFnCallArgs & FnArgs<AJ>;
 
 export type BaseFnCallResult = {
@@ -44,15 +51,15 @@ export type BaseFnCallResult = {
   logs: RawCallLogs;
 };
 
-export type Result<F extends MaybeBaseTransformFn> = [F] extends [
-  BaseTransformFn,
+export type Result<F extends MaybeBaseResultTransformer> = [F] extends [
+  BaseResultTransformer,
 ]
   ? BaseFnCallResult & { result: ReturnType<F> }
   : BaseFnCallResult & { result: unknown };
 
 export type CallContractReadFunction = <
   AJ extends MaybeJsonLikeValue = undefined,
-  F extends MaybeBaseTransformFn = undefined,
+  F extends MaybeBaseResultTransformer = undefined,
 >(
   args: Args<AJ, F>,
 ) => Promise<Result<F>>;

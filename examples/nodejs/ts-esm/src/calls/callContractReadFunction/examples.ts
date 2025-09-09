@@ -9,8 +9,8 @@ const fnArgsBytes = new Uint8Array();
 
 const responseZodSchema = z.object({ decimals: z.number() });
 type ReturnResult = z.output<typeof responseZodSchema>;
-const resultTransformer = (raw: number[]): ReturnResult =>
-  responseZodSchema.parse(raw);
+const resultTransformer = (args: { rawResult: number[] }): ReturnResult =>
+  responseZodSchema.parse(args.rawResult);
 
 type Args = { account_id: string };
 // Tests

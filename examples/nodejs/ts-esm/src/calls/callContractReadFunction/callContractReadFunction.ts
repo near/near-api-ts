@@ -13,15 +13,15 @@ const FtMetadataSchema = z.object({
   reference_hash: z.nullish(z.string()),
 });
 
-const resultTransformer = (raw: number[]) => {
-  const obj = JSON.parse(new TextDecoder().decode(new Uint8Array(raw)));
+const resultTransformer = ({ rawResult }: { rawResult: number[] }) => {
+  const obj = JSON.parse(new TextDecoder().decode(new Uint8Array(rawResult)));
   return {
-    parsed: FtMetadataSchema.parse(obj),
-    raw,
+    parsedResult: FtMetadataSchema.parse(obj),
+    rawResult,
   };
 };
 
-const result = await client.callContractReadFunction({
+const response = await client.callContractReadFunction({
   contractAccountId: 'usdl.lantstool.testnet',
   fnName: 'ft_metadata',
   blockReference: {
@@ -32,7 +32,7 @@ const result = await client.callContractReadFunction({
   },
 });
 
-console.log(result.result.parsed);
+console.log(response.result.parsedResult);
 
 // Generated from ABI by a future tool
 const getFtBalance = (args: {
@@ -56,4 +56,4 @@ const result2 = await client.callContractReadFunction(
   }),
 );
 
-console.log(result2.result.parsed);
+console.log(result2.result.parsedResult);

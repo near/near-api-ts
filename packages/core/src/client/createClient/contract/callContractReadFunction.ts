@@ -9,9 +9,13 @@ import type {
   CreateCallContractReadFunction,
   Args,
   CallContractReadFunction,
-  MaybeBaseTransformFn,
+  MaybeBaseResultTransformer,
+  BaseResultTransformer,
 } from 'nat-types/client/contract/callContractReadFunction';
 import type { MaybeJsonLikeValue } from 'nat-types/common';
+
+const baseResultTransformer: BaseResultTransformer = ({ rawResult }) =>
+  fromJsonBytes(rawResult);
 
 const RpcCallFunctionResponseSchema = z.object({
   ...CallResultSchema().shape,
@@ -21,7 +25,7 @@ const RpcCallFunctionResponseSchema = z.object({
 
 const transformResult = <
   AJ extends MaybeJsonLikeValue,
-  F extends MaybeBaseTransformFn,
+  F extends MaybeBaseResultTransformer,
 >(
   result: unknown,
   args: Args<AJ, F>,
@@ -31,12 +35,12 @@ const transformResult = <
 
   const transformer = args.response?.resultTransformer
     ? args.response.resultTransformer
-    : fromJsonBytes;
+    : baseResultTransformer;
 
   return {
     blockHash: valid.blockHash,
     blockHeight: valid.blockHeight,
-    result: transformer(valid.result),
+    result: transformer({ rawResult: valid.result }),
     logs: valid.logs,
   };
 };
@@ -46,7 +50,7 @@ export const createCallContractReadFunction: CreateCallContractReadFunction = ({
 }) =>
   (async <
     AJ extends MaybeJsonLikeValue = undefined,
-    F extends MaybeBaseTransformFn = undefined,
+    F extends MaybeBaseResultTransformer = undefined,
   >(
     args: Args<AJ, F>,
   ) => {
