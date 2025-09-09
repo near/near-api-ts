@@ -17,10 +17,14 @@ const keyService = await createMemoryKeyService({
   keySources: [{ privateKey: signerPrivateKey }],
 });
 
-const { nonce, blockHash } = await client.getAccountKey({
+const {
+  accountKey: { nonce },
+  blockHash,
+} = await client.getAccountKey({
   accountId: signerAccountId,
   publicKey: signerPublicKey,
 });
+
 
 const signedTransaction = await keyService.signTransaction({
   signerAccountId,

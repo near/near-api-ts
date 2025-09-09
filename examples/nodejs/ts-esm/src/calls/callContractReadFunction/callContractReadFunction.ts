@@ -33,3 +33,27 @@ const result = await client.callContractReadFunction({
 });
 
 console.log(result.result.parsed);
+
+// Generated from ABI by a future tool
+const getFtBalance = (args: {
+  contractAccountId: string;
+  args: { accountId: string };
+}) => {
+  return {
+    contractAccountId: args.contractAccountId,
+    fnName: 'ft_metadata',
+    fnArgsJson: {
+      account_id: args.args.accountId,
+    },
+    response: { resultTransformer },
+  };
+};
+
+const result2 = await client.callContractReadFunction(
+  getFtBalance({
+    contractAccountId: 'usdl.lantstool.testnet',
+    args: { accountId: 'lantstool.testnet' },
+  }),
+);
+
+console.log(result2.result.parsed);

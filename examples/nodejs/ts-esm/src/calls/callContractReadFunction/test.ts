@@ -170,12 +170,6 @@ const resultTransformer = (v: number[]): DataType => {
   return DataSchema.parse(obj);
 };
 
-type GetFtBalanceResult = {
-  id: string;
-  fnArgsJson: { account_id: string };
-  // response?: { transformFn: (v: number[]) => DataType; }
-};
-
 const getFtBalance = (args: { accountId: string }) => {
   return {
     id: 'a',
@@ -186,9 +180,8 @@ const getFtBalance = (args: { accountId: string }) => {
   };
 };
 
-const ac = getFtBalance({ accountId: '1d' });
 
 // { result: { nameFor: string } }
-const r0 = callFn(ac);
+const r0 = callFn(getFtBalance({ accountId: '1d' }));
 
 const a23 = r0.result.nameFor;

@@ -2,7 +2,8 @@ import {
   createClient,
   createMemoryKeyService,
   testnet,
-  functionCall,
+  addFullAccessKey,
+  deleteKey,
 } from '@near-api-ts/core';
 
 const client = createClient({ network: testnet });
@@ -15,31 +16,31 @@ const keyService = await createMemoryKeyService({
   keySources: [{ privateKey: signerPrivateKey }],
 });
 
-const { nonce, blockHash } = await client.getAccountKey({
+const {
+  accountKey: { nonce },
+  blockHash,
+} = await client.getAccountKey({
   accountId: signerAccountId,
   publicKey: signerPublicKey,
 });
 
+
 const signedTransaction = await keyService.signTransaction({
   signerAccountId,
   signerPublicKey: signerPublicKey,
-  action: functionCall({
-    fnName: 'fill',
-    fnArgsJson: {
-      list: [
-        {
-          key: 'Hello1',
-          value: 'Near2:)',
-        },
-      ],
-    },
-    gasLimit: { teraGas: 100n },
-  }),
+  actions: [
+    addFullAccessKey({
+      publicKey: 'ed25519:GSPxLjwSZ8TScCWSK181oJkcQbuKBYRcTT5iZoZkQvKu',
+    }),
+    deleteKey({
+      publicKey: 'ed25519:GSPxLjwSZ8TScCWSK181oJkcQbuKBYRcTT5iZoZkQvKu',
+    }),
+  ],
   receiverAccountId: signerAccountId,
   nonce: nonce + 1,
   blockHash,
 });
 
-console.log(signedTransaction, );
+console.log(signedTransaction);
 const result = await client.sendSignedTransaction({ signedTransaction });
 console.log(result);

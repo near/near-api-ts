@@ -1,11 +1,11 @@
 import type {
   AddKeyAction,
-  FunctionCallKeyParams,
+  FullAccessKeyParams,
 } from 'nat-types/actions/addKey';
 
 export const addFullAccessKey = ({
   publicKey,
-}: Omit<FunctionCallKeyParams, 'accessType'>): AddKeyAction => ({
+}: Omit<FullAccessKeyParams, 'accessType'>): AddKeyAction => ({
   actionType: 'AddKey',
   params: {
     accessType: 'FullAccess',

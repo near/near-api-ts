@@ -47,7 +47,7 @@ const signer: any = await createMemorySigner({
 });
 
 const res = await signer.executeTransaction({
-  action: functionCall<{ a: number }>({
+  action: functionCall({
     fnName: 'add_record',
     gasLimit: { teraGas: '15' },
     fnArgsJson: { a: 1 },

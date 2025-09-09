@@ -32,7 +32,10 @@ const keyService = await createMemoryKeyService({
   keySource: { privateKey: signerPrivateKey },
 });
 
-const { nonce, blockHash } = await client.getAccountKey({
+const {
+  accountKey: { nonce },
+  blockHash,
+} = await client.getAccountKey({
   accountId: signerAccountId,
   publicKey: signerPublicKey,
 });
@@ -51,7 +54,7 @@ const signedTransaction = await keyService.signTransaction({
         owner_id: signerAccountId,
         total_supply: '1000',
       },
-      gasLimit: { teraGas: 50n },
+      gasLimit: { teraGas: '50' },
     }),
   ],
   receiverAccountId: newAccountId,
