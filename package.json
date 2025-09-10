@@ -1,7 +1,6 @@
 {
-  "name": "near-api-ts",
-  "version": "0.1.0",
-  "description": "",
+  "private": true,
+  "type": "module",
   "scripts": {
     "build": "pnpm -r build",
     "dev": "pnpm -r --parallel dev",

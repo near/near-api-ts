@@ -6,8 +6,8 @@
 // import './transactions/deleteKey';
 // import './transactions/deployContract';
 
-// import './calls/getAccount';
-import './calls/callContractReadFunction/callContractReadFunction';
+import './calls/getAccount';
+// import './calls/callContractReadFunction/callContractReadFunction';
 
 // import './transactions/signer/transfer';
 // import './transactions/signer/functionCall';

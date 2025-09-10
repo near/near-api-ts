@@ -57,3 +57,22 @@ const result2 = await client.callContractReadFunction(
 );
 
 console.log(result2.result.parsedResult);
+
+// await client.callContractReadFunction({
+//   contractAccountId: 'usdl.lantstool.testnet',
+//   functionName: 'ft_metadata',
+//   functionArgs: {
+//     accountId: 'lantstool.testnet',
+//   },
+//   blockReference: {
+//     finality: 'Optimistic',
+//   },
+//   options: {
+//     serializeArgs,
+//     deserializeResult,
+//   },
+// });
+
+type HowRecent = 'LatestFinal' | 'LatestNearFinal' | string | number;
+
+const a: HowRecent = 'LatestNearFinal';

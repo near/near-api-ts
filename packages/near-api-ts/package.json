@@ -1,0 +1,32 @@
+{
+  "name": "near-api-ts",
+  "version": "0.1.0",
+  "description": "",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": {
+        "import": "./dist/index.d.ts",
+        "require": "./dist/index.d.cts"
+      },
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "run-example": "tsx src/index.ts",
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@near-api-ts/core": "workspace:*"
+  }
+}
