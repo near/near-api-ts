@@ -11,7 +11,7 @@ import type { AccountKey } from 'nat-types/accountKey';
 export type GetAccountKeyArgs = {
   accountId: AccountId;
   publicKey: PublicKey;
-  blockReference?: BlockReference;
+  atMomentOf?: BlockReference;
 };
 
 export type GetAccountKeyResult = {

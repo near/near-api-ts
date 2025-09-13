@@ -8,7 +8,18 @@ const client = createClient({ network: testnet });
 // });
 
 const result = await client.getAccountState({
-  accountId: '1.lantstool№.testnet',
-});
+  accountId: 'testnet',
+  atMomentOf: 'LatestFinalBlock', // or atBlock: LatestFinalBlock
+})
 
-console.dir(result, { depth: null });
+// await client.callContractReadFunction({
+//   contractAccountId: 'usdl.lantstool.testnet',
+//   withStateAt: 'LatestFinalBlock',
+// });
+//
+// await client.getBlock({
+//   blockReference: 'LatestFinalBlock',
+// })
+
+console.dir(result, { depth: null, customInspect: true });
+

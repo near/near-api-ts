@@ -64,15 +64,9 @@ console.log(result2.result.parsedResult);
 //   functionArgs: {
 //     accountId: 'lantstool.testnet',
 //   },
-//   blockReference: {
-//     finality: 'Optimistic',
-//   },
+//   atMomentOf: 'LatestNearFinalBlock',
 //   options: {
 //     serializeArgs,
 //     deserializeResult,
 //   },
 // });
-
-type HowRecent = 'LatestFinal' | 'LatestNearFinal' | string | number;
-
-const a: HowRecent = 'LatestNearFinal';

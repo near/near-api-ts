@@ -5,8 +5,10 @@ import { yoctoNear } from '../../../helpers/near';
 import type {
   CreateGetGasPrice,
   GetGasPriceResult,
+  GetGasPriceArgs,
 } from 'nat-types/client/protocol/getGasPrice';
 import { BlockIdSchema } from '@common/schemas/zod/common';
+import type { BlockHash, BlockHeight } from 'nat-types/common';
 
 const transformResult = (result: unknown): GetGasPriceResult => {
   const camelCased = snakeToCamelCase(result);
@@ -23,6 +25,15 @@ const GetGasPriceArgsSchema = z.optional(
   }),
 );
 
+const getBlockId = (
+  atMomentOf?: GetGasPriceArgs['atMomentOf'],
+): BlockHeight | BlockHash | null => {
+  if (atMomentOf === 'LatestBlock') return null;
+  if (atMomentOf && 'blockHash' in atMomentOf) return atMomentOf.blockHash;
+  if (atMomentOf && 'blockHeight' in atMomentOf) return atMomentOf.blockHeight;
+  return null;
+};
+
 export const createGetGasPrice: CreateGetGasPrice =
   ({ sendRequest }) =>
   async (args) => {
@@ -32,7 +43,7 @@ export const createGetGasPrice: CreateGetGasPrice =
       body: {
         method: 'gas_price',
         params: {
-          block_id: args?.blockId ?? null,
+          block_id: getBlockId(args?.atMomentOf),
         },
       },
     });

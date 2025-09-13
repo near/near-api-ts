@@ -57,7 +57,7 @@ export const createGetAccountState: CreateGetAccountState =
         params: {
           request_type: 'view_account',
           account_id: args.accountId,
-          ...toNativeBlockReference(args.blockReference),
+          ...toNativeBlockReference(args.atMomentOf),
         },
       },
     });

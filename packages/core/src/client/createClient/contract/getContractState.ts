@@ -52,7 +52,7 @@ export const createGetContractState: CreateGetContractState =
           account_id: args.contractAccountId,
           prefix_base64: base64KeyPrefix,
           include_proof: args.includeProof,
-          ...toNativeBlockReference(args.blockReference),
+          ...toNativeBlockReference(args.atMomentOf),
         },
       },
     });

@@ -39,7 +39,7 @@ export const createGetAccountKeys: CreateGetAccountKeys =
         params: {
           request_type: 'view_access_key_list',
           account_id: args.accountId,
-          ...toNativeBlockReference(args.blockReference),
+          ...toNativeBlockReference(args.atMomentOf),
         },
       },
     });

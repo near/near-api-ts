@@ -32,7 +32,7 @@ export const createGetProtocolConfig: CreateGetProtocolConfig =
     const result = await sendRequest({
       body: {
         method: 'EXPERIMENTAL_protocol_config',
-        params: toNativeBlockReference(args?.blockReference),
+        params: toNativeBlockReference(args?.atMomentOf),
       },
     });
     return transformResult(result);

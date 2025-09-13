@@ -11,7 +11,7 @@ export type GetContractStateArgs = {
   contractAccountId: AccountId;
   keyPrefix?: string;
   includeProof?: boolean;
-  blockReference?: BlockReference;
+  atMomentOf?: BlockReference;
 };
 
 type StateRecord = { key: Base64String; value: Base64String };

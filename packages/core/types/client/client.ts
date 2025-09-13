@@ -9,7 +9,7 @@ import type { SendSignedTransaction } from 'nat-types/client/transaction/sendSig
 import type { GetContractState } from 'nat-types/client/contract/getContractState';
 import type { CallContractReadFunction } from 'nat-types/client/contract/callContractReadFunction';
 
-type Rpc = {
+export type Rpc = {
   url: string;
   headers?: Record<string, string>;
 };

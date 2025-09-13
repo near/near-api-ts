@@ -1,8 +1,9 @@
 import type { BlockId, NearToken } from 'nat-types/common';
 import type { ClientContext } from 'nat-types/client/client';
 
-type GetGasPriceArgs = {
-  blockId?: BlockId;
+// TODO replace LatestBlock with a real block finality stage, i.e LatestFinalBlock
+export type GetGasPriceArgs = {
+  atMomentOf?: 'LatestBlock' | BlockId;
 };
 
 export type GetGasPriceResult = {

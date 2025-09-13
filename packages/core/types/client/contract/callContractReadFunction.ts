@@ -23,7 +23,7 @@ export type MaybeBaseResultTransformer = BaseResultTransformer | undefined;
 type BaseFnCallArgs = {
   contractAccountId: AccountId;
   fnName: ContractFunctionName;
-  blockReference?: BlockReference;
+  withStateAt?: BlockReference;
 };
 
 type Response<F extends MaybeBaseResultTransformer> = [F] extends [
@@ -67,3 +67,16 @@ export type CallContractReadFunction = <
 export type CreateCallContractReadFunction = (
   clientContext: ClientContext,
 ) => CallContractReadFunction;
+
+// await client.callContractReadFunction({
+//   contractAccountId: 'usdl.lantstool.testnet',
+//   functionName: 'ft_metadata',
+//   functionArgs: {
+//     accountId: 'lantstool.testnet',
+//   },
+//   atMomentOf: 'LatestNearFinalBlock',
+//   options: {
+//     serializeArgs,
+//     deserializeResult,
+//   },
+// });

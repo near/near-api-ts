@@ -38,11 +38,6 @@ const signer: any = await createMemorySigner({
 });
 
 const res = await signer.executeTransaction({
-  // action: functionCall({
-  //   fnName: 'add_record',
-  //   gasLimit: { teraGas: '15' },
-  //   fnArgsJson: { a: 1 },
-  // }),
   action: transfer({ amount: { near: '100_000' } }),
   receiverAccountId: 'eclipseer.testnet',
 });

@@ -5,16 +5,22 @@ export type CryptoHash = string;
 
 export type BlockHash = CryptoHash;
 export type BlockHeight = number;
-export type BlockId = BlockHash | BlockHeight;
 
-export type Finality = 'Optimistic' | 'NearFinal' | 'Final';
-export type SyncCheckpoint = 'Genesis' | 'EarliestAvailable';
+export type BlockId = { blockHash: BlockHash } | { blockHeight: BlockHeight };
 
-export type BlockReference =
-  | { finality: Finality }
-  | { blockId: BlockId }
-  | { syncCheckpoint: SyncCheckpoint };
+export type LatestBlock =
+  | 'LatestOptimisticBlock'
+  | 'LatestNearFinalBlock'
+  | 'LatestFinalBlock';
 
+export type SyncCheckpoint = 'EarliestAvailableBlock' | 'GenesisBlock';
+
+export type BlockReference = LatestBlock | SyncCheckpoint | BlockId;
+
+export type NativeBlockReference =
+  | { block_id: BlockHash | BlockHeight }
+  | { finality: 'optimistic' | 'near-final' | 'final' }
+  | { sync_checkpoint: 'genesis' | 'earliest_available' };
 /**
  * Represents data encoded in hexadecimal format.
  * Can be either a raw byte array (Uint8Array) or a hexadecimal string (e.g., "deadbeef" or "0xdeadbeef").
@@ -23,7 +29,6 @@ export type Hex = Uint8Array | string;
 export type Base58String = string;
 export type Base64String = string;
 
-// Rust type: u64
 export type Nonce = number;
 export type AccountId = string;
 export type BorshBytes = Uint8Array;

@@ -62,7 +62,7 @@ export const createCallContractReadFunction: CreateCallContractReadFunction = ({
           account_id: args.contractAccountId,
           method_name: args.fnName,
           args_base64: base64.encode(toContractFnArgsBytes<AJ>(args)),
-          ...toNativeBlockReference(args.blockReference),
+          ...toNativeBlockReference(args.withStateAt),
         },
       },
     });

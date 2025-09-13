@@ -3,7 +3,7 @@ import type { ClientContext } from 'nat-types/client/client';
 import type { TemporaryProtocolConfig } from '../../../src/client/createClient/protocol/getProtocolConfig';
 
 type GetProtocolConfigArgs = {
-  blockReference?: BlockReference;
+  atMomentOf?: BlockReference;
 };
 
 export type GetProtocolConfigResult = TemporaryProtocolConfig;

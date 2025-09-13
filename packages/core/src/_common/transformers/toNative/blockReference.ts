@@ -1,20 +1,30 @@
-import type { BlockReference } from 'nat-types/common';
+import type { BlockReference, NativeBlockReference } from 'nat-types/common';
 
-const FinalityMap = {
-  Optimistic: 'optimistic',
-  NearFinal: 'near-final',
-  Final: 'final',
-} as const;
+export const toNativeBlockReference = (
+  blockReference?: BlockReference,
+  defaultBlockReference?: BlockReference,
+): NativeBlockReference => {
+  if (blockReference === 'LatestOptimisticBlock')
+    return { finality: 'optimistic' };
 
-const SyncCheckpointMap = {
-  Genesis: 'genesis',
-  EarliestAvailable: 'earliest_available',
-} as const;
+  if (blockReference === 'LatestNearFinalBlock')
+    return { finality: 'near-final' };
 
-export const toNativeBlockReference = (args?: BlockReference) => {
-  if (typeof args === 'undefined') return { finality: FinalityMap.NearFinal };
-  if ('finality' in args) return { finality: FinalityMap[args.finality] };
-  if ('blockId' in args) return { block_id: args.blockId };
-  if ('syncCheckpoint' in args)
-    return { sync_checkpoint: SyncCheckpointMap[args.syncCheckpoint] };
+  if (blockReference === 'LatestFinalBlock') return { finality: 'final' };
+
+  if (blockReference === 'EarliestAvailableBlock')
+    return { sync_checkpoint: 'earliest_available' };
+
+  if (blockReference === 'GenesisBlock') return { sync_checkpoint: 'genesis' };
+
+  if (blockReference && 'blockHash' in blockReference)
+    return { block_id: blockReference.blockHash };
+
+  if (blockReference && 'blockHeight' in blockReference)
+    return { block_id: blockReference.blockHeight };
+
+  if (defaultBlockReference)
+    return toNativeBlockReference(defaultBlockReference);
+
+  return { finality: 'near-final' };
 };

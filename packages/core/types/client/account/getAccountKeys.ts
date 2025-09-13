@@ -9,7 +9,7 @@ import type { ClientContext } from 'nat-types/client/client';
 
 export type GetAccountKeysArgs = {
   accountId: AccountId;
-  blockReference?: BlockReference;
+  atMomentOf?: BlockReference;
 };
 
 export type GetAccountKeysResult = {

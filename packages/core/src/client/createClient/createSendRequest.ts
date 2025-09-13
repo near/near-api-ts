@@ -3,13 +3,13 @@ import type { CreateSendRequest } from 'nat-types/client/client';
 export const createSendRequest: CreateSendRequest =
   (clientContext) =>
   async ({ body }) => {
-    const { url, headers } = clientContext.regularRpcQueue.next();
+    const rpc = clientContext.regularRpcQueue.next();
 
-    const response = await fetch(url, {
+    const response = await fetch(rpc.url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        ...headers,
+        'Content-Type': 'application/json',
+        ...rpc.headers,
       },
       body: JSON.stringify({
         jsonrpc: '2.0',
