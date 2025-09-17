@@ -1,6 +1,6 @@
 {
   "name": "@near-api-ts/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Typescript library for interactions with Near Protocol in the browser or Node.js",
   "type": "module",
   "exports": {

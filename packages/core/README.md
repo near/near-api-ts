@@ -3,7 +3,7 @@ Typescript library for interactions with Near Protocol in the browser or Node.js
 
 **Installation**
 ```text
-pnpm add @near-api-ts/core
+pnpm add @eclipseeer/near-api-ts
 ```
 
 **Node.js (esm) / Browser**
@@ -15,7 +15,7 @@ import {
   createMemorySigner,
   testnet,
   transfer,
-} from '@near-api-ts/core';
+} from '@eclipseeer/near-api-ts';
 
 const client = createClient({ network: testnet });
 
