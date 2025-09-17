@@ -24,9 +24,7 @@ const resultTransformer = ({ rawResult }: { rawResult: number[] }) => {
 const response = await client.callContractReadFunction({
   contractAccountId: 'usdl.lantstool.testnet',
   fnName: 'ft_metadata',
-  blockReference: {
-    finality: 'Optimistic',
-  },
+  withStateAt: 'LatestOptimisticBlock',
   response: {
     resultTransformer,
   },
@@ -57,16 +55,3 @@ const result2 = await client.callContractReadFunction(
 );
 
 console.log(result2.result.parsedResult);
-
-// await client.callContractReadFunction({
-//   contractAccountId: 'usdl.lantstool.testnet',
-//   functionName: 'ft_metadata',
-//   functionArgs: {
-//     accountId: 'lantstool.testnet',
-//   },
-//   atMomentOf: 'LatestNearFinalBlock',
-//   options: {
-//     serializeArgs,
-//     deserializeResult,
-//   },
-// });

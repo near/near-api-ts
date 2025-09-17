@@ -1,6 +1,6 @@
 export const createSignMultipleTransactions =
-  (context: any) => async (params: any) => {
-    const { transactionIntents } = params;
+  (context: any) => async (args: any) => {
+    const { transactionIntents } = args;
     const { signTransaction } = context.signerContext.taskQueue;
 
     const output = [];

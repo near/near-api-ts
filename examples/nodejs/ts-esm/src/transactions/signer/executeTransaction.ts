@@ -3,7 +3,6 @@ import {
   createMemoryKeyService,
   createMemorySigner,
   testnet,
-  functionCall,
   transfer,
 } from '@near-api-ts/core';
 import { testKeys } from '../testKeys';
@@ -24,33 +23,14 @@ const signer = await createMemorySigner({
   signerAccountId: 'nat-t1.lantstool.testnet',
   client,
   keyService,
+  keyPool: {
+    signingKeys: ['ed25519:9x4hUmLKYzQhi5BR3d4faoifAt8beyUqLTBk99p16dj9'], // will sign only by this key
+  },
 });
 
-const res = await signer.executeMultipleTransactions({
-  transactionIntents: [
-    {
-      action: functionCall({
-        fnName: 'add_record',
-        gasLimit: { teraGas: '10' },
-      }),
-      receiverAccountId: 'lantstool.testnet',
-    },
-    {
-      action: functionCall({
-        fnName: 'claim',
-        gasLimit: { teraGas: '10' },
-      }),
-      receiverAccountId: 'testnet',
-    },
-    {
-      action: transfer({ amount: { yoctoNear: '1' } }),
-      receiverAccountId: 'eclipseer.testnet',
-    },
-    {
-      action: transfer({ amount: { yoctoNear: '1' } }),
-      receiverAccountId: 'lantstool.testnet',
-    },
-  ],
+const res = await signer.executeTransaction({
+  action: transfer({ amount: { yoctoNear: '1' } }),
+  receiverAccountId: 'eclipseer.testnet',
 });
 
 console.dir(res, { depth: null });

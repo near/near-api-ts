@@ -1,10 +1,9 @@
 import {
   createClient,
   createMemoryKeyService,
-  createMemorySigner,
   testnet,
-  functionCall,
   transfer,
+  createMemorySigner,
 } from '@near-api-ts/core';
 import { testKeys } from '../testKeys';
 
@@ -26,31 +25,19 @@ const signer = await createMemorySigner({
   keyService,
 });
 
-const res = await signer.executeMultipleTransactions({
-  transactionIntents: [
-    {
-      action: functionCall({
-        fnName: 'add_record',
-        gasLimit: { teraGas: '10' },
-      }),
-      receiverAccountId: 'lantstool.testnet',
-    },
-    {
-      action: functionCall({
-        fnName: 'claim',
-        gasLimit: { teraGas: '10' },
-      }),
-      receiverAccountId: 'testnet',
-    },
-    {
-      action: transfer({ amount: { yoctoNear: '1' } }),
-      receiverAccountId: 'eclipseer.testnet',
-    },
-    {
-      action: transfer({ amount: { yoctoNear: '1' } }),
-      receiverAccountId: 'lantstool.testnet',
-    },
-  ],
-});
+const res = await Promise.all([
+  signer.signTransaction({
+    action: transfer({ amount: { yoctoNear: '1' } }),
+    receiverAccountId: 'eclipseer.testnet',
+  }),
+  signer.signTransaction({
+    action: transfer({ amount: { yoctoNear: '2' } }),
+    receiverAccountId: 'eclipseer.testnet',
+  }),
+  signer.signTransaction({
+    action: transfer({ amount: { yoctoNear: '3' } }),
+    receiverAccountId: 'eclipseer.testnet',
+  }),
+]);
 
-console.dir(res, { depth: null });
+console.log(res);

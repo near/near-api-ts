@@ -9,11 +9,12 @@ const client = createClient({ network: testnet });
 
 const result = await client.getAccountState({
   accountId: 'testnet',
-  atMomentOf: 'LatestFinalBlock', // or atBlock: LatestFinalBlock
+  atMomentOf: 'LatestFinalBlock',
 })
 
 // await client.callContractReadFunction({
 //   contractAccountId: 'usdl.lantstool.testnet',
+//   fnName: 'some',
 //   withStateAt: 'LatestFinalBlock',
 // });
 //

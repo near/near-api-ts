@@ -1,6 +1,6 @@
 export const createExecuteMultipleTransactions =
-  (context: any) => async (params: any) => {
-    const { transactionIntents, options } = params;
+  (context: any) => async (args: any) => {
+    const { transactionIntents } = args;
     const { executeTransaction } = context.signerContext.taskQueue;
 
     const output = [];
@@ -16,7 +16,7 @@ export const createExecuteMultipleTransactions =
       try {
         output.push({
           status: 'Success',
-          result: await executeTransaction({ ...intent, options }),
+          result: await executeTransaction({ ...intent }),
         });
       } catch (error) {
         output.push({ status: 'Error', error });

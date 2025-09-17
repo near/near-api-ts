@@ -1,29 +1,4 @@
 import { getSignedTransaction } from './helpers/getSignedTransaction';
-import type { RpcError } from '@near-js/jsonrpc-types';
-// import type { SignerContext } from 'nat-types/signers/memorySigner';
-
-/*
-const err = {
-  name: 'HANDLER_ERROR',
-  cause: { info: {}, name: 'INVALID_TRANSACTION' },
-  code: -32000,
-  message: 'Server error',
-  data: {
-    TxExecutionError: {
-      InvalidTxError: {
-        InvalidNonce: {
-          ak_nonce: 210072560000031,
-          tx_nonce: 210072560000031,
-        },
-      },
-    },
-  },
-};
- */
-
-const isInvalidNonceError = (error: any) =>
-  error.name === 'HANDLER_ERROR' &&
-  error?.data?.TxExecutionError?.InvalidTxError?.InvalidNonce;
 
 export const executeTransaction = async (
   signerContext: any,
