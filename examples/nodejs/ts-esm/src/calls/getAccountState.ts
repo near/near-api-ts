@@ -2,13 +2,12 @@ import { createClient, testnet } from '@near-api-ts/core';
 
 const client = createClient({ network: testnet });
 
-// const result = await client.getAccountKey({
-//   accountId,
-//   publicKey: 'ed25519:5JgE5tBqbtd4ghgRqu2SFjxFs1x7GonNuLhXbi4Z2pik'
+// const result = await client.getAccountKeys({
+//   accountId: 'eclipseer.testnet',
 // });
 
 const result = await client.getAccountState({
-  accountId: 'testnet',
+  accountId: 'lantstool.testnet',
   atMomentOf: 'LatestFinalBlock',
 })
 
@@ -18,7 +17,7 @@ const result = await client.getAccountState({
 //   withStateAt: 'LatestFinalBlock',
 // });
 //
-// await client.getBlock({
+// const result = await client.getBlock({
 //   blockReference: 'LatestFinalBlock',
 // })
 

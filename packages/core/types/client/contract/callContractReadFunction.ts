@@ -4,79 +4,97 @@ import type {
   BlockHeight,
   BlockReference,
   ContractFunctionName,
+  JsonLikeValue,
   MaybeJsonLikeValue,
 } from 'nat-types/common';
 import type { ClientContext } from 'nat-types/client/client';
-import type { FnArgs } from 'nat-types/contract';
+import type { KeyIf, Prettify } from 'nat-types/utils';
 
 export type RawCallResult = number[];
 export type RawCallLogs = string[];
 
-export type BaseResultTransformer = ({
+export type BaseDeserializeResult = ({
   rawResult,
 }: {
   rawResult: RawCallResult;
 }) => unknown;
 
-export type MaybeBaseResultTransformer = BaseResultTransformer | undefined;
+type MaybeBaseDeserializeResult = BaseDeserializeResult | undefined;
+
+type BaseSerializeArgs<A> = (args: { functionArgs: A }) => Uint8Array;
 
 type BaseFnCallArgs = {
   contractAccountId: AccountId;
-  fnName: ContractFunctionName;
+  functionName: ContractFunctionName;
   withStateAt?: BlockReference;
 };
 
-type Response<F extends MaybeBaseResultTransformer> = [F] extends [
-  BaseResultTransformer,
-]
+export type InnerCallContractReadFunctionArgs = BaseFnCallArgs & {
+  functionArgs?: unknown;
+  options?: {
+    serializeArgs?: BaseSerializeArgs<unknown>;
+    deserializeResult?: BaseDeserializeResult;
+  };
+};
+
+type Options<
+  A,
+  SR extends BaseSerializeArgs<A> | undefined,
+  DR extends MaybeBaseDeserializeResult,
+> = [SR, DR] extends [undefined, undefined]
   ? {
-      response: {
-        resultTransformer: F;
-      };
+      options?: never;
     }
   : {
-      response?: {
-        resultTransformer?: never;
-      };
+      options: KeyIf<'serializeArgs', SR> & KeyIf<'deserializeResult', DR>;
     };
 
-export type Args<
-  AJ extends MaybeJsonLikeValue,
-  F extends MaybeBaseResultTransformer,
-> = Response<F> & BaseFnCallArgs & FnArgs<AJ>;
+type FunctionArgs<A> = KeyIf<'functionArgs', A>;
 
-export type BaseFnCallResult = {
+export type Result<R> = Prettify<{
   blockHash: BlockHash;
   blockHeight: BlockHeight;
   logs: RawCallLogs;
-};
+  result: R;
+}>;
 
-export type Result<F extends MaybeBaseResultTransformer> = [F] extends [
-  BaseResultTransformer,
+type CallResult<DR extends MaybeBaseDeserializeResult> = [DR] extends [
+  BaseDeserializeResult,
 ]
-  ? BaseFnCallResult & { result: ReturnType<F> }
-  : BaseFnCallResult & { result: unknown };
+  ? Promise<Result<ReturnType<DR>>>
+  : Promise<Result<unknown>>;
 
-export type CallContractReadFunction = <
-  AJ extends MaybeJsonLikeValue = undefined,
-  F extends MaybeBaseResultTransformer = undefined,
->(
-  args: Args<AJ, F>,
-) => Promise<Result<F>>;
+export type CallContractReadFunction = {
+  // #1: Has only JSON-like or undefined functionArgs
+  <A extends MaybeJsonLikeValue = undefined>(
+    args: BaseFnCallArgs &
+      FunctionArgs<A> &
+      Options<undefined, undefined, undefined>,
+  ): CallResult<undefined>;
+
+  // #2: Has only custom deserializeResult
+  <DR extends BaseDeserializeResult>(
+    args: BaseFnCallArgs &
+      FunctionArgs<undefined> &
+      Options<undefined, undefined, DR>,
+  ): CallResult<DR>;
+
+  // #3: Has JSON-like functionArgs and custom deserializeResult
+  <A extends JsonLikeValue, DR extends BaseDeserializeResult>(
+    args: BaseFnCallArgs & FunctionArgs<A> & Options<undefined, undefined, DR>,
+  ): CallResult<DR>;
+
+  // #4: Has custom serializeArgs and functionArgs === serializeArgs.args.functionArgs.
+  // Also, may have custom deserializeResult;
+  <
+    A,
+    SA extends BaseSerializeArgs<A>,
+    DR extends MaybeBaseDeserializeResult = undefined,
+  >(
+    args: BaseFnCallArgs & FunctionArgs<A> & Options<A, SA, DR>,
+  ): CallResult<DR>;
+};
 
 export type CreateCallContractReadFunction = (
   clientContext: ClientContext,
 ) => CallContractReadFunction;
-
-// await client.callContractReadFunction({
-//   contractAccountId: 'usdl.lantstool.testnet',
-//   functionName: 'ft_metadata',
-//   functionArgs: {
-//     accountId: 'lantstool.testnet',
-//   },
-//   atMomentOf: 'LatestNearFinalBlock',
-//   options: {
-//     serializeArgs,
-//     deserializeResult,
-//   },
-// });

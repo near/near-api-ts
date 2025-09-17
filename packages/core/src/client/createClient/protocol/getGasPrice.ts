@@ -28,7 +28,7 @@ const GetGasPriceArgsSchema = z.optional(
 const getBlockId = (
   atMomentOf?: GetGasPriceArgs['atMomentOf'],
 ): BlockHeight | BlockHash | null => {
-  if (atMomentOf === 'LatestBlock') return null;
+  if (atMomentOf === 'LatestOptimisticBlock') return null;
   if (atMomentOf && 'blockHash' in atMomentOf) return atMomentOf.blockHash;
   if (atMomentOf && 'blockHeight' in atMomentOf) return atMomentOf.blockHeight;
   return null;

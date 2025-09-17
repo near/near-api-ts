@@ -6,7 +6,9 @@
     "strict": true,
     "skipLibCheck": false,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+
+    "strictFunctionTypes": true
   },
   "include": ["src/**/*"]
 }

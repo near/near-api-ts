@@ -13,7 +13,7 @@ const FtMetadataSchema = z.object({
   reference_hash: z.nullish(z.string()),
 });
 
-const resultTransformer = ({ rawResult }: { rawResult: number[] }) => {
+const deserializeResult = ({ rawResult }: { rawResult: number[] }) => {
   const obj = JSON.parse(new TextDecoder().decode(new Uint8Array(rawResult)));
   return {
     parsedResult: FtMetadataSchema.parse(obj),
@@ -23,32 +23,34 @@ const resultTransformer = ({ rawResult }: { rawResult: number[] }) => {
 
 const response = await client.callContractReadFunction({
   contractAccountId: 'usdl.lantstool.testnet',
-  fnName: 'ft_metadata',
+  functionName: 'ft_metadata',
   withStateAt: 'LatestOptimisticBlock',
-  response: {
-    resultTransformer,
+  options: {
+    deserializeResult,
   },
 });
 
 console.log(response.result.parsedResult);
 
 // Generated from ABI by a future tool
-const getFtBalance = (args: {
+const getFtBalanceOf = (args: {
   contractAccountId: string;
   args: { accountId: string };
 }) => {
   return {
     contractAccountId: args.contractAccountId,
-    fnName: 'ft_metadata',
-    fnArgsJson: {
+    functionName: 'ft_balance_of',
+    functionArgs: {
       account_id: args.args.accountId,
     },
-    response: { resultTransformer },
+    options: {
+      deserializeResult,
+    },
   };
 };
 
 const result2 = await client.callContractReadFunction(
-  getFtBalance({
+  getFtBalanceOf({
     contractAccountId: 'usdl.lantstool.testnet',
     args: { accountId: 'lantstool.testnet' },
   }),

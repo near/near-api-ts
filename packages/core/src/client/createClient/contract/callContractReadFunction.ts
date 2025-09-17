@@ -3,18 +3,14 @@ import * as z from 'zod/mini';
 import { toNativeBlockReference } from '@common/transformers/toNative/blockReference';
 import { CallResultSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
 import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
-import { toContractFnArgsBytes } from '@common/transformers/contract';
-import { fromJsonBytes } from '@common/utils/common';
+import { fromJsonBytes, toJsonBytes } from '@common/utils/common';
 import type {
   CreateCallContractReadFunction,
-  Args,
-  CallContractReadFunction,
-  MaybeBaseResultTransformer,
-  BaseResultTransformer,
+  BaseDeserializeResult,
+  InnerCallContractReadFunctionArgs,
 } from 'nat-types/client/contract/callContractReadFunction';
-import type { MaybeJsonLikeValue } from 'nat-types/common';
 
-const baseResultTransformer: BaseResultTransformer = ({ rawResult }) =>
+const baseDeserializeResul: BaseDeserializeResult = ({ rawResult }) =>
   fromJsonBytes(rawResult);
 
 const RpcCallFunctionResponseSchema = z.object({
@@ -23,19 +19,16 @@ const RpcCallFunctionResponseSchema = z.object({
   blockHeight: z.number(),
 });
 
-const transformResult = <
-  AJ extends MaybeJsonLikeValue,
-  F extends MaybeBaseResultTransformer,
->(
+const transformResult = (
   result: unknown,
-  args: Args<AJ, F>,
+  args: InnerCallContractReadFunctionArgs,
 ) => {
   const camelCased = snakeToCamelCase(result);
   const valid = RpcCallFunctionResponseSchema.parse(camelCased);
 
-  const transformer = args.response?.resultTransformer
-    ? args.response.resultTransformer
-    : baseResultTransformer;
+  const transformer = args?.options?.deserializeResult
+    ? args.options.deserializeResult
+    : baseDeserializeResul;
 
   return {
     blockHash: valid.blockHash,
@@ -45,26 +38,29 @@ const transformResult = <
   };
 };
 
-export const createCallContractReadFunction: CreateCallContractReadFunction = ({
-  sendRequest,
-}) =>
-  (async <
-    AJ extends MaybeJsonLikeValue = undefined,
-    F extends MaybeBaseResultTransformer = undefined,
-  >(
-    args: Args<AJ, F>,
-  ) => {
+const serializeFunctionArgs = (args: InnerCallContractReadFunctionArgs) => {
+  if (args?.options?.serializeArgs)
+    return args.options.serializeArgs({ functionArgs: args.functionArgs });
+
+  if (args?.functionArgs) return toJsonBytes(args?.functionArgs);
+
+  return new Uint8Array();
+};
+
+export const createCallContractReadFunction: CreateCallContractReadFunction =
+  ({ sendRequest }) =>
+  async (args: InnerCallContractReadFunctionArgs) => {
     const result = await sendRequest({
       body: {
         method: 'query',
         params: {
           request_type: 'call_function',
           account_id: args.contractAccountId,
-          method_name: args.fnName,
-          args_base64: base64.encode(toContractFnArgsBytes<AJ>(args)),
+          method_name: args.functionName,
+          args_base64: base64.encode(serializeFunctionArgs(args)),
           ...toNativeBlockReference(args.withStateAt),
         },
       },
     });
-    return transformResult<AJ, F>(result, args);
-  }) as CallContractReadFunction;
+    return transformResult(result, args);
+  };
