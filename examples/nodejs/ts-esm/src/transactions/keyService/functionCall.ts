@@ -27,7 +27,7 @@ const signedTransaction = await keyService.signTransaction({
   signerAccountId,
   signerPublicKey: signerPublicKey,
   action: functionCall({
-    fnName: 'fill',
+    functionName: 'fill',
     fnArgsJson: {
       list: [
         {

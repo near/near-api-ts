@@ -7,7 +7,7 @@ import type {
 import type { FnArgs } from 'nat-types/contract';
 
 type FunctionCallBase = {
-  fnName: ContractFunctionName;
+  functionName: ContractFunctionName;
   gasLimit: GasOption;
   attachedDeposit?: NearOption;
 };

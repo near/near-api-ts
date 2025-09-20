@@ -2,7 +2,7 @@ import { createClient, testnet } from '@near-api-ts/core';
 import * as z from 'zod/mini';
 
 const client = createClient({ network: testnet });
-
+``
 const toObject = (rawResult: number[]) =>
   JSON.parse(new TextDecoder().decode(new Uint8Array(rawResult)));
 

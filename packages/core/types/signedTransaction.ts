@@ -9,6 +9,6 @@ export type SignedTransaction = {
 };
 
 export type NativeSignedTransaction = {
-  transaction: NativeTransaction
-  signature: NativeSignature
-}
+  transaction: NativeTransaction;
+  signature: NativeSignature;
+};

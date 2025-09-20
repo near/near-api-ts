@@ -49,7 +49,7 @@ const signedTransaction = await keyService.signTransaction({
     addFullAccessKey({ publicKey: signerPublicKey }),
     deployContract({ wasmBytes: ftWasmBytes }),
     functionCall({
-      fnName: 'new_default_meta',
+      functionName: 'new_default_meta',
       fnArgsJson: {
         owner_id: signerAccountId,
         total_supply: '1000',

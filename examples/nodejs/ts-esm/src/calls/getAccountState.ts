@@ -13,7 +13,7 @@ const result = await client.getAccountState({
 
 // await client.callContractReadFunction({
 //   contractAccountId: 'usdl.lantstool.testnet',
-//   fnName: 'some',
+//   functionName: 'some',
 //   withStateAt: 'LatestFinalBlock',
 // });
 //

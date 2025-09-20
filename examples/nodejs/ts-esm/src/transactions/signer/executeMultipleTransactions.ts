@@ -30,14 +30,14 @@ const res = await signer.executeMultipleTransactions({
   transactionIntents: [
     {
       action: functionCall({
-        fnName: 'add_record',
+        functionName: 'add_record',
         gasLimit: { teraGas: '10' },
       }),
       receiverAccountId: 'lantstool.testnet',
     },
     {
       action: functionCall({
-        fnName: 'claim',
+        functionName: 'claim',
         gasLimit: { teraGas: '10' },
       }),
       receiverAccountId: 'testnet',

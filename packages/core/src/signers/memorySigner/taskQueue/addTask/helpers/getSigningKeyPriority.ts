@@ -17,7 +17,7 @@ const getPriorityForFunctionCallTransaction = (
   {
     type: 'FunctionCall',
     contractAccountId: receiverAccountId,
-    calledFnName: action.params.fnName,
+    calledFnName: action.params.functionName,
   },
 ];
 

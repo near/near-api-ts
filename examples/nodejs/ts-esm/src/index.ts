@@ -7,8 +7,9 @@
 // import './transactions/deployContract';
 
 // import './calls/getAccountState';
-import './calls/callContractReadFunction/callContractReadFunction';
+// import './calls/callContractReadFunction/callContractReadFunction';
 
 // import './transactions/signer/signTransaction';
+import './transactions/signer/functionCall';
 // import './transactions/signer/executeTransaction';
 // import './transactions/signer/executeMultipleTransactions';

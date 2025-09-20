@@ -10,10 +10,10 @@ import type { MaybeJsonLikeValue } from 'nat-types/common';
 export const toNativeFunctionCallAction = <AJ extends MaybeJsonLikeValue>(
   action: FunctionCallAction<AJ>,
 ): NativeFunctionCallAction => {
-  const { fnName, attachedDeposit, gasLimit } = action.params;
+  const { functionName, attachedDeposit, gasLimit } = action.params;
   return {
     functionCall: {
-      methodName: fnName,
+      methodName: functionName,
       args: toContractFnArgsBytes(action.params),
       gas: fromGasOption(gasLimit).gas,
       deposit: attachedDeposit ? fromNearOption(attachedDeposit).yoctoNear : 0n,
