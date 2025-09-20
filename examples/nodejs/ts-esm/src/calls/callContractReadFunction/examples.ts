@@ -28,7 +28,7 @@ type SerializeBigintArgs = (args: {
 
 /// ----------------
 const serializeEmptyArgs = () => new Uint8Array(1);
-type SerializeEmptyArgs = () => Uint8Array;
+type SerializeEmptyArgs = (_args: { functionArgs?: never }) => Uint8Array;
 
 // Examples
 
@@ -70,33 +70,40 @@ await client.callContractReadFunction<{ a: number }>({
   functionArgs: { a: 1 },
 });
 
-// OVERLOAD #2 - only deserializeResult
+// OVERLOAD #2 - deserializeResult + maybe Json-like functionArgs
 
-const knownResult21 = await client.callContractReadFunction({
+const knownResult20 = await client.callContractReadFunction({
   contractAccountId,
   functionName,
   options: { deserializeResult },
 });
 
-const knownResult22 =
+const knownResult21 =
   await client.callContractReadFunction<CustomDeserializeResult>({
     contractAccountId,
     functionName,
     options: { deserializeResult },
   });
 
-// OVERLOAD #3 Json-like functionArgs + deserializeResult
+const knownResult22 = await client.callContractReadFunction<
+  CustomDeserializeResult,
+  undefined
+>({
+  contractAccountId,
+  functionName,
+  options: { deserializeResult },
+});
 
-const knownResult31 = await client.callContractReadFunction({
+const knownResult23 = await client.callContractReadFunction({
   contractAccountId,
   functionName,
   functionArgs: { a: 1 },
   options: { deserializeResult },
 });
 
-const knownResult32 = await client.callContractReadFunction<
-  { a: number },
-  CustomDeserializeResult
+const knownResult24 = await client.callContractReadFunction<
+  (args: { rawResult: number[] }) => { decimals: number },
+  { a: number }
 >({
   contractAccountId,
   functionName,
@@ -104,22 +111,32 @@ const knownResult32 = await client.callContractReadFunction<
   options: { deserializeResult },
 });
 
-// OVERLOAD #4
+// OVERLOAD #3
+
+await client.callContractReadFunction({
+  contractAccountId,
+  functionName,
+  options: {
+    serializeArgs: (_args) => new Uint8Array(1),
+  },
+});
+
+await client.callContractReadFunction<
+  (args: { functionArgs: never }) => Uint8Array
+>({
+  contractAccountId,
+  functionName,
+  options: {
+    serializeArgs: () => new Uint8Array(1),
+  },
+});
 
 await client.callContractReadFunction({
   contractAccountId,
   functionName,
   functionArgs: undefined,
   options: {
-    serializeArgs: serializeEmptyArgs,
-  },
-});
-
-await client.callContractReadFunction<undefined, SerializeEmptyArgs>({
-  contractAccountId,
-  functionName,
-  options: {
-    serializeArgs: serializeEmptyArgs,
+    serializeArgs: (_args: { functionArgs?: never }) => new Uint8Array(1),
   },
 });
 
@@ -132,7 +149,9 @@ await client.callContractReadFunction({
   },
 });
 
-await client.callContractReadFunction<{ b: bigint }, SerializeBigintArgs>({
+await client.callContractReadFunction<
+  (args: { functionArgs: { b: bigint } }) => Uint8Array
+>({
   contractAccountId,
   functionName,
   functionArgs: { b: 1n },
@@ -141,7 +160,20 @@ await client.callContractReadFunction<{ b: bigint }, SerializeBigintArgs>({
   },
 });
 
-const knownResult41 = await client.callContractReadFunction({
+await client.callContractReadFunction<
+  (args: { functionArgs: { b: bigint } }) => Uint8Array,
+  undefined,
+  { b: bigint }
+>({
+  contractAccountId,
+  functionName,
+  functionArgs: { b: 1n },
+  options: {
+    serializeArgs: serializeBigintArgs,
+  },
+});
+
+const knownResult31 = await client.callContractReadFunction({
   contractAccountId,
   functionName,
   functionArgs: { b: 1n },
@@ -151,10 +183,10 @@ const knownResult41 = await client.callContractReadFunction({
   },
 });
 
-const knownResult42 = await client.callContractReadFunction<
-  number[],
+const knownResult32 = await client.callContractReadFunction<
   (args: { functionArgs: number[] }) => Uint8Array,
-  CustomDeserializeResult
+  CustomDeserializeResult,
+  number[]
 >({
   contractAccountId,
   functionName,
@@ -165,15 +197,14 @@ const knownResult42 = await client.callContractReadFunction<
   },
 });
 
-const knownResult43 = await client.callContractReadFunction<
-  undefined,
+const knownResult33 = await client.callContractReadFunction<
   SerializeEmptyArgs,
   CustomDeserializeResult
 >({
   contractAccountId,
   functionName,
   options: {
-    serializeArgs: serializeEmptyArgs,
+    serializeArgs: () => new Uint8Array(1),
     deserializeResult,
   },
 });
