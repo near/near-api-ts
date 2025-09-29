@@ -9,10 +9,10 @@ import { testKeys } from '../testKeys';
 
 const client = createClient({ network: testnet });
 
+// biome-ignore format: keep compact
 const keyService = await createMemoryKeyService({
   keySource: {
-    privateKey:
-      testKeys['ed25519:9x4hUmLKYzQhi5BR3d4faoifAt8beyUqLTBk99p16dj9'],
+    privateKey: testKeys['ed25519:9x4hUmLKYzQhi5BR3d4faoifAt8beyUqLTBk99p16dj9']
   },
 });
 
