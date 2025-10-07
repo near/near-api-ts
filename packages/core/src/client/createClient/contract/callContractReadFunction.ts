@@ -24,6 +24,7 @@ const transformResult = (
   args: InnerCallContractReadFunctionArgs,
 ) => {
   const camelCased = snakeToCamelCase(result);
+  console.log('camelCased', camelCased);
   const valid = RpcCallFunctionResponseSchema.parse(camelCased);
 
   const transformer = args?.options?.deserializeResult

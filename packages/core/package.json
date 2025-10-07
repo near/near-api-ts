@@ -28,7 +28,10 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "run": "tsx src/index.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "sandbox:start": "tsx scripts/sandbox/start.ts",
+    "sandbox:stop": "kill-port 4560",
+    "test:all": "vitest run"
   },
   "dependencies": {
     "@near-js/jsonrpc-types": "^1.4.0",

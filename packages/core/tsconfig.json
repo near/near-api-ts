@@ -8,6 +8,5 @@
       "@common/*": ["./src/_common/*"],
       "nat-types/*": ["./types/*"]
     }
-  },
-  "include": ["src/**/*", "types/**/*"]
+  }
 }

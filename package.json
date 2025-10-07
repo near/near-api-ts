@@ -6,19 +6,30 @@
     "dev": "pnpm -r --parallel dev",
     "typecheck": "pnpm -r typecheck"
   },
-  "packageManager": "pnpm@10.13.1",
+  "packageManager": "pnpm@10.17.1",
   "devDependencies": {
     "@biomejs/biome": "^2.1.2",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-terser": "^0.4.4",
+    "@types/express": "^5.0.3",
+    "@types/express-http-proxy": "^1.6.7",
     "@types/node": "^24.0.15",
+    "consola": "^3.4.2",
+    "express": "^5.1.0",
+    "express-http-proxy": "^2.1.2",
+    "http-proxy-middleware": "^3.0.5",
+    "kill-port": "^2.0.1",
+    "near-sandbox": "^0.2.0",
     "rollup": "^4.45.1",
     "rollup-plugin-gzip": "^4.1.1",
     "rollup-plugin-visualizer": "^6.0.3",
     "terser": "^5.43.1",
     "tsup": "^8.5.0",
     "tsx": "^4.20.3",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3",
+    "vite": "^7.1.8",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "zod": "^4.0.11"

@@ -25,16 +25,21 @@ const client = createClient({ network: testnet });
 //   accountId: 'eclipseer.testnet',
 // });
 
-const result = await client.getAccountState({
-  accountId: 'lantstool.testnet',
-  atMomentOf: 'LatestFinalBlock',
-})
+// const result = await client.getAccountState({
+//   accountId: 'lantstool.testnet',
+//   atMomentOf: 'LatestFinalBlock',
+// })
 
-// await client.callContractReadFunction({
-//   contractAccountId: 'usdl.lantstool.testnet',
-//   functionName: 'some',
-//   withStateAt: 'LatestFinalBlock',
-// });
+// const res = await client.callContractReadFunction({
+//   contractAccountId: 'testnet',
+//   functionName: 'read'
+// })
+
+const result = await client.callContractReadFunction({
+  contractAccountId: 'usdl.lantstool.testnet',
+  functionName: 'ft_metadata1',
+  withStateAt: 'LatestFinalBlock',
+});
 //
 // const result = await client.getBlock({
 //   blockReference: 'LatestFinalBlock',
