@@ -13,7 +13,10 @@ export type ClientContext = {
   sendRequest: SendRequest;
 };
 
-export type SendRequest = (args: { body: JsonLikeValue }) => Promise<unknown>;
+export type SendRequest = (args: {
+  method: string;
+  params: JsonLikeValue;
+}) => Promise<unknown>;
 
 type CreateClientArgs = {
   transport: {

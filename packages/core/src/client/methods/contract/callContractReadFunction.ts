@@ -2,7 +2,6 @@ import { base64 } from '@scure/base';
 import * as z from 'zod/mini';
 import { toNativeBlockReference } from '@common/transformers/toNative/blockReference';
 import { CallResultSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
-import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import { fromJsonBytes, toJsonBytes } from '@common/utils/common';
 import type {
   CreateCallContractReadFunction,
@@ -13,8 +12,13 @@ import type {
 const baseDeserializeResul: BaseDeserializeResult = ({ rawResult }) =>
   fromJsonBytes(rawResult);
 
+/*
+logs: z.array(z.string()),
+    result: z.array(z.number()),
+ */
+
 const RpcCallFunctionResponseSchema = z.object({
-  ...CallResultSchema().shape,
+  ...CallResultSchema().shape, // TODO Fix it
   blockHash: CryptoHashSchema(),
   blockHeight: z.number(),
 });
@@ -23,9 +27,7 @@ const transformResult = (
   result: unknown,
   args: InnerCallContractReadFunctionArgs,
 ) => {
-  const camelCased = snakeToCamelCase(result);
-  console.log('camelCased', camelCased);
-  const valid = RpcCallFunctionResponseSchema.parse(camelCased);
+  const valid = RpcCallFunctionResponseSchema.parse(result);
 
   const transformer = args?.options?.deserializeResult
     ? args.options.deserializeResult
@@ -52,15 +54,13 @@ export const createCallContractReadFunction: CreateCallContractReadFunction =
   ({ sendRequest }) =>
   async (args: InnerCallContractReadFunctionArgs) => {
     const result = await sendRequest({
-      body: {
-        method: 'query',
-        params: {
-          request_type: 'call_function',
-          account_id: args.contractAccountId,
-          method_name: args.functionName,
-          args_base64: base64.encode(serializeFunctionArgs(args)),
-          ...toNativeBlockReference(args.withStateAt),
-        },
+      method: 'query',
+      params: {
+        request_type: 'call_function',
+        account_id: args.contractAccountId,
+        method_name: args.functionName,
+        args_base64: base64.encode(serializeFunctionArgs(args)),
+        ...toNativeBlockReference(args.withStateAt),
       },
     });
     return transformResult(result, args);

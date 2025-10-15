@@ -41,8 +41,8 @@ test(
 
     try {
       const res = await client.getAccountState({
-        accountId: 'near',
-        atMomentOf: { blockHeight: 160839194 }, // 212788565
+        accountId: 'eclipseeer.near',
+        // atMomentOf: { blockHeight: 160839194 }, // 212788565
         // atMomentOf: { blockHash: 'UQcU8hMLAG96mBFEW8rwn5hj1icKbgVUE4G3QKUB5gy' }, // 212788565
       });
       console.log('FINAL RESULT ', res);

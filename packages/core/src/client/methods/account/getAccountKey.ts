@@ -5,7 +5,6 @@ import type {
   GetAccountKeyArgs,
 } from 'nat-types/client/methods/account/getAccountKey';
 import type { GetAccountKeyResult } from 'nat-types/client/methods/account/getAccountKey';
-import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import { AccessKeyViewSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
 import { transformKey } from './helpers/transformKey';
 
@@ -15,12 +14,24 @@ const RpcQueryAccessKeyViewResponseSchema = z.object({
   blockHeight: z.number(),
 });
 
+/* TODO handle error
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "block_hash": "EBKFaNMjXbpekTTcSkuELuMkGxsp5SHZVLknQWsA9aw4",
+        "block_height": 168412701,
+        "error": "access key ed25519:2daCm7Ux8igXXFDtMJ2nSRHVR5PM8jSaarum6X8ka9o2 does not exist while viewing",
+        "logs": []
+    },
+    "id": 0
+}
+ */
+
 const transformResult = (
   result: unknown,
   args: GetAccountKeyArgs,
 ): GetAccountKeyResult => {
-  const camelCased = snakeToCamelCase(result);
-  const valid = RpcQueryAccessKeyViewResponseSchema.parse(camelCased);
+  const valid = RpcQueryAccessKeyViewResponseSchema.parse(result);
 
   return {
     blockHash: valid.blockHash,
@@ -37,14 +48,12 @@ export const createGetAccountKey: CreateGetAccountKey =
   ({ sendRequest }) =>
   async (args) => {
     const result = await sendRequest({
-      body: {
-        method: 'query',
-        params: {
-          request_type: 'view_access_key',
-          account_id: args.accountId,
-          public_key: args.publicKey,
-          ...toNativeBlockReference(args.atMomentOf),
-        },
+      method: 'query',
+      params: {
+        request_type: 'view_access_key',
+        account_id: args.accountId,
+        public_key: args.publicKey,
+        ...toNativeBlockReference(args.atMomentOf),
       },
     });
     return transformResult(result, args);

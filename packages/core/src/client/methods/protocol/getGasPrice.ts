@@ -1,6 +1,5 @@
 import * as z from 'zod/mini';
 import { RpcGasPriceResponseSchema } from '@near-js/jsonrpc-types';
-import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import { yoctoNear } from '../../../helpers/near';
 import type {
   CreateGetGasPrice,
@@ -11,8 +10,7 @@ import { BlockIdSchema } from '@common/schemas/zod/common';
 import type { BlockHash, BlockHeight } from 'nat-types/common';
 
 const transformResult = (result: unknown): GetGasPriceResult => {
-  const camelCased = snakeToCamelCase(result);
-  const valid = RpcGasPriceResponseSchema().parse(camelCased);
+  const valid = RpcGasPriceResponseSchema().parse(result);
 
   return {
     gasPrice: yoctoNear(valid.gasPrice),
@@ -40,11 +38,9 @@ export const createGetGasPrice: CreateGetGasPrice =
     GetGasPriceArgsSchema.parse(args);
 
     const result = await sendRequest({
-      body: {
-        method: 'gas_price',
-        params: {
-          block_id: getBlockId(args?.atMomentOf),
-        },
+      method: 'gas_price',
+      params: {
+        block_id: getBlockId(args?.atMomentOf),
       },
     });
     return transformResult(result);

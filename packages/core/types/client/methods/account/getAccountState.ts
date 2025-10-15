@@ -13,8 +13,6 @@ export type GetAccountStateArgs = {
   atMomentOf?: BlockReference;
 };
 
-// storage_paid_at - deprecated since March 18, 2020: https://github.com/near/nearcore/issues/2271
-
 export type GetAccountStateResult = {
   blockHash: BlockHash;
   blockHeight: BlockHeight;
@@ -25,9 +23,9 @@ export type GetAccountStateResult = {
       locked: NearToken;
     };
     usedStorageBytes: number;
-    contractWasmHash: CryptoHash;
-    globalContractAccountId?: AccountId;
-    globalContractHash?: CryptoHash;
+    contractHash: CryptoHash | null;
+    globalContractHash: CryptoHash | null;
+    globalContractAccountId: AccountId | null;
   };
 };
 

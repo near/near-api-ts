@@ -5,7 +5,6 @@ import {
   ViewStateResultSchema,
   CryptoHashSchema,
 } from '@near-js/jsonrpc-types';
-import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import type {
   CreateGetContractState,
   GetContractStateArgs,
@@ -22,8 +21,7 @@ const transformResult = (
   result: unknown,
   args: GetContractStateArgs,
 ): GetContractStateResult => {
-  const camelCased = snakeToCamelCase(result);
-  const valid = RpcQueryViewStateResponseSchema.parse(camelCased);
+  const valid = RpcQueryViewStateResponseSchema.parse(result);
 
   const final = {
     blockHash: valid.blockHash,
@@ -45,15 +43,13 @@ export const createGetContractState: CreateGetContractState =
       : '';
 
     const result = await sendRequest({
-      body: {
-        method: 'query',
-        params: {
-          request_type: 'view_state',
-          account_id: args.contractAccountId,
-          prefix_base64: base64KeyPrefix,
-          include_proof: args.includeProof,
-          ...toNativeBlockReference(args.atMomentOf),
-        },
+      method: 'query',
+      params: {
+        request_type: 'view_state',
+        account_id: args.contractAccountId,
+        prefix_base64: base64KeyPrefix,
+        include_proof: args.includeProof,
+        ...toNativeBlockReference(args.atMomentOf),
       },
     });
     return transformResult(result, args);

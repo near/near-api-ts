@@ -1,7 +1,6 @@
 import * as z from 'zod/mini';
 import { toNativeBlockReference } from '@common/transformers/toNative/blockReference';
 import { AccessKeyListSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
-import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import { transformKey } from './helpers/transformKey';
 import type {
   CreateGetAccountKeys,
@@ -19,8 +18,7 @@ const transformResult = (
   result: unknown,
   args: GetAccountKeysArgs,
 ): GetAccountKeysResult => {
-  const camelCased = snakeToCamelCase(result);
-  const valid = RpcQueryAccessKeyListResponseSchema.parse(camelCased);
+  const valid = RpcQueryAccessKeyListResponseSchema.parse(result);
 
   return {
     blockHash: valid.blockHash,
@@ -34,13 +32,11 @@ export const createGetAccountKeys: CreateGetAccountKeys =
   ({ sendRequest }) =>
   async (args) => {
     const result = await sendRequest({
-      body: {
-        method: 'query',
-        params: {
-          request_type: 'view_access_key_list',
-          account_id: args.accountId,
-          ...toNativeBlockReference(args.atMomentOf),
-        },
+      method: 'query',
+      params: {
+        request_type: 'view_access_key_list',
+        account_id: args.accountId,
+        ...toNativeBlockReference(args.atMomentOf),
       },
     });
     return transformResult(result, args);

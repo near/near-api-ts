@@ -1,6 +1,5 @@
 import * as z from 'zod/mini';
 import { toNativeBlockReference } from '@common/transformers/toNative/blockReference';
-import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import {
   RpcProtocolConfigResponseSchema,
   RuntimeConfigViewSchema,
@@ -22,18 +21,15 @@ export type TemporaryProtocolConfig = z.infer<
 >;
 
 const transformResult = (result: unknown): TemporaryProtocolConfig => {
-  const camelCased = snakeToCamelCase(result);
-  return TemporaryProtocolConfigShema.parse(camelCased);
+  return TemporaryProtocolConfigShema.parse(result);
 };
 
 export const createGetProtocolConfig: CreateGetProtocolConfig =
   ({ sendRequest }) =>
   async (args) => {
     const result = await sendRequest({
-      body: {
-        method: 'EXPERIMENTAL_protocol_config',
-        params: toNativeBlockReference(args?.atMomentOf),
-      },
+      method: 'EXPERIMENTAL_protocol_config',
+      params: toNativeBlockReference(args?.atMomentOf),
     });
     return transformResult(result);
   };
