@@ -1,40 +1,23 @@
-import type { CircularQueue } from '@common/utils/createCircularQueue';
-import type { GetAccountState } from 'nat-types/client/account/getAccountState';
-import type { GetAccountKey } from 'nat-types/client/account/getAccountKey';
-import type { GetAccountKeys } from 'nat-types/client/account/getAccountKeys';
-import type { GetBlock } from 'nat-types/client/block/getBlock';
-import type { GetGasPrice } from 'nat-types/client/protocol/getGasPrice';
-import type { GetProtocolConfig } from 'nat-types/client/protocol/getProtocolConfig';
-import type { SendSignedTransaction } from 'nat-types/client/transaction/sendSignedTransaction';
-import type { GetContractState } from 'nat-types/client/contract/getContractState';
-import type { CallContractReadFunction } from 'nat-types/client/contract/callContractReadFunction';
-
-export type Rpc = {
-  url: string;
-  headers?: Record<string, string>;
-};
-
-export type Network = {
-  rpcs: {
-    regular: Rpc[];
-    archival: Rpc[];
-  };
-};
-
-export type SendRequest = <Body, Result>(args: {
-  body: Body;
-}) => Promise<Result>;
-
-export type CreateSendRequest = (clientContext: ClientContext) => SendRequest;
+import type { GetAccountState } from 'nat-types/client/methods/account/getAccountState';
+import type { GetAccountKey } from 'nat-types/client/methods/account/getAccountKey';
+import type { GetAccountKeys } from 'nat-types/client/methods/account/getAccountKeys';
+import type { GetBlock } from 'nat-types/client/methods/block/getBlock';
+import type { GetGasPrice } from 'nat-types/client/methods/protocol/getGasPrice';
+import type { GetProtocolConfig } from 'nat-types/client/methods/protocol/getProtocolConfig';
+import type { SendSignedTransaction } from 'nat-types/client/methods/transaction/sendSignedTransaction';
+import type { GetContractState } from 'nat-types/client/methods/contract/getContractState';
+import type { CallContractReadFunction } from 'nat-types/client/methods/contract/callContractReadFunction';
 
 export type ClientContext = {
-  regularRpcQueue: CircularQueue<Rpc>;
-  archivalRpcQueue: CircularQueue<Rpc>;
   sendRequest: SendRequest;
 };
 
-export type Input = {
-  network: Network;
+export type SendRequest = <B, R>(args: { body: B }) => Promise<R>;
+
+type CreateClientArgs = {
+  transport: {
+    sendRequest: SendRequest;
+  };
 };
 
 export type Client = {
@@ -49,4 +32,4 @@ export type Client = {
   sendSignedTransaction: SendSignedTransaction;
 };
 
-export type CreateClient = (input: Input) => Client;
+export type CreateClient = (args: CreateClientArgs) => Client;

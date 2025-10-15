@@ -77,13 +77,11 @@ export type CallContractReadFunction = {
       FunctionArgs<A> &
       Options<undefined, undefined, undefined>,
   ): CallResult<undefined>;
-
   // #2
   <DR extends BaseDeserializeResult, A extends MaybeJsonLikeValue = undefined>(
     args: BaseFnCallArgs & FunctionArgs<A> & Options<undefined, undefined, DR>,
   ): CallResult<DR>;
-
-  // #3:
+  // #3
   <
     SA extends BaseSerializeArgs<A>,
     DR extends MaybeBaseDeserializeResult = undefined,

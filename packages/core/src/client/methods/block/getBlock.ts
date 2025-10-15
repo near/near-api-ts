@@ -4,7 +4,7 @@ import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import type {
   CreateGetBlock,
   GetBlockResult,
-} from 'nat-types/client/block/getBlock';
+} from 'nat-types/client/methods/block/getBlock';
 
 const transformResult = (result: unknown): GetBlockResult => {
   const camelCased = snakeToCamelCase(result);

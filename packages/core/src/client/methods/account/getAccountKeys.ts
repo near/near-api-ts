@@ -1,48 +1,44 @@
 import * as z from 'zod/mini';
 import { toNativeBlockReference } from '@common/transformers/toNative/blockReference';
-import type {
-  CreateGetAccountKey,
-  GetAccountKeyArgs,
-} from 'nat-types/client/account/getAccountKey';
-import type { GetAccountKeyResult } from 'nat-types/client/account/getAccountKey';
+import { AccessKeyListSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
 import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
-import { AccessKeyViewSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
 import { transformKey } from './helpers/transformKey';
+import type {
+  CreateGetAccountKeys,
+  GetAccountKeysArgs,
+  GetAccountKeysResult,
+} from 'nat-types/client/methods/account/getAccountKeys';
 
-const RpcQueryAccessKeyViewResponseSchema = z.object({
-  ...AccessKeyViewSchema().shape,
+const RpcQueryAccessKeyListResponseSchema = z.object({
+  ...AccessKeyListSchema().shape,
   blockHash: CryptoHashSchema(),
   blockHeight: z.number(),
 });
 
 const transformResult = (
   result: unknown,
-  args: GetAccountKeyArgs,
-): GetAccountKeyResult => {
+  args: GetAccountKeysArgs,
+): GetAccountKeysResult => {
   const camelCased = snakeToCamelCase(result);
-  const valid = RpcQueryAccessKeyViewResponseSchema.parse(camelCased);
+  const valid = RpcQueryAccessKeyListResponseSchema.parse(camelCased);
 
   return {
     blockHash: valid.blockHash,
     blockHeight: valid.blockHeight,
     accountId: args.accountId,
-    accountKey: transformKey({
-      accessKey: valid,
-      publicKey: args.publicKey,
-    }),
+    accountKeys: valid.keys.map(transformKey),
   };
 };
 
-export const createGetAccountKey: CreateGetAccountKey =
+export const createGetAccountKeys: CreateGetAccountKeys =
   ({ sendRequest }) =>
   async (args) => {
     const result = await sendRequest({
       body: {
         method: 'query',
         params: {
-          request_type: 'view_access_key',
+          request_type: 'view_access_key_list',
           account_id: args.accountId,
-          public_key: args.publicKey,
           ...toNativeBlockReference(args.atMomentOf),
         },
       },

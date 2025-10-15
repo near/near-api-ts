@@ -1,6 +1,7 @@
 import { test, expect } from 'vitest';
 import { createClient } from '../../../src';
 import { createMockRpc } from '../utils/mockRpc';
+import { createDefaultTransport } from '../../../src/client/transport/createDefaultTransport';
 
 const log = (data: unknown) =>
   console.dir(data, { depth: null, customInspect: true });
@@ -13,28 +14,55 @@ test(
     timeout: 10 * 60 * 1000,
   },
   async () => {
-    const server1 = await createMockRpc({ port: 4561 });
-
+    // const server1 = await createMockRpc({ port: 4561 });
     const client = createClient({
-      network: {
-        rpcs: {
-          regular: [{ url: 'http://localhost:4562' }], // Mock 1
-          archival: [],
+      transport: createDefaultTransport({
+        rpcEndpoints: {
+          regular: [
+            { url: 'https://free.rpc.fastnear.com' },
+            { url: 'https://near.blockpi.network/v1/rpc/public' },
+            // { url: 'https://getblock.io/nodes/near/' }, // Error - html
+            // { url: 'https://allthatnode.com/protocol/near.dsrv' }, // Error - html
+            // { url: 'https://near.drpc.org/' }, // Error - custom error format
+          ],
+          // archival: [{ url: 'https://1rpc.io/near' }],
         },
-      },
+        requestPolicy: {
+          // rpcTypePreferences: ['archival'],
+        },
+      }),
     });
 
-    for (let i = 0; i < 10; i++) {
-      // await sleep(1000);
-      try {
-        const res = await client.getAccountState({ accountId: 'nat' });
-        console.log('success', i);
-      } catch (e) {
-        console.log('error', i, e );
-      }
+    // const res = await client.getAccountState({
+    //   accountId: 'near',
+    //   atMomentOf: { blockHeight: 212788565 },
+    // });
+    // console.log('FINAL RESULT ', res);
+
+    try {
+      const res = await client.getAccountState({
+        accountId: 'near',
+        atMomentOf: { blockHeight: 160839194 }, // 212788565
+        // atMomentOf: { blockHash: 'UQcU8hMLAG96mBFEW8rwn5hj1icKbgVUE4G3QKUB5gy' }, // 212788565
+      });
+      console.log('FINAL RESULT ', res);
+    } catch (e) {
+      console.dir(e, { depth: null, customInspect: true });
     }
 
-    server1.close();
+    console.log('---------------------');
+
+    // for (let i = 0; i < 10; i++) {
+    //   // await sleep(1000);
+    //   try {
+    //     const res = await client.getAccountState({ accountId: 'nat' });
+    //     console.log('success', i);
+    //   } catch (e) {
+    //     console.log('error', i, e );
+    //   }
+    // }
+    //
+    // server1.close();
 
     expect(5).toBe(5);
   },

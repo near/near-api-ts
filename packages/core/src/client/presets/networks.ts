@@ -1,6 +1,6 @@
-import type { Network } from 'nat-types/client/client';
+import type { DefaultTransport } from 'nat-types/client/client';
 
-export const mainnet: Network = {
+export const mainnet: DefaultTransport = {
   rpcs: {
     regular: [
       { url: 'https://free.rpc.fastnear.com' },
@@ -10,7 +10,7 @@ export const mainnet: Network = {
   },
 };
 
-export const testnet: Network = {
+export const testnet: DefaultTransport = {
   rpcs: {
     regular: [
       { url: 'https://rpc.testnet.near.org' },

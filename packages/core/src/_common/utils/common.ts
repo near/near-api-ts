@@ -20,3 +20,15 @@ export const fromJsonBytes = (bytes: Uint8Array | number[]): unknown => {
   const u8 = Array.isArray(bytes) ? new Uint8Array(bytes) : bytes;
   return JSON.parse(new TextDecoder().decode(u8));
 };
+
+export const sleep = (ms: number, signal?: AbortSignal) =>
+  new Promise((resolve, reject) => {
+    if (signal?.aborted) reject(new Error('abort signal'));
+    const timeoutId = setTimeout(resolve, ms);
+
+    if (signal)
+      signal.onabort = () => {
+        clearTimeout(timeoutId);
+        reject(new Error('abort signal'));
+      };
+  });

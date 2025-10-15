@@ -8,7 +8,7 @@ import type {
   CreateCallContractReadFunction,
   BaseDeserializeResult,
   InnerCallContractReadFunctionArgs,
-} from 'nat-types/client/contract/callContractReadFunction';
+} from 'nat-types/client/methods/contract/callContractReadFunction';
 
 const baseDeserializeResul: BaseDeserializeResult = ({ rawResult }) =>
   fromJsonBytes(rawResult);

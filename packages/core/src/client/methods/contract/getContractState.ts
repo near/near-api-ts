@@ -10,7 +10,7 @@ import type {
   CreateGetContractState,
   GetContractStateArgs,
   GetContractStateResult,
-} from 'nat-types/client/contract/getContractState';
+} from 'nat-types/client/methods/contract/getContractState';
 
 const RpcQueryViewStateResponseSchema = z.object({
   ...ViewStateResultSchema().shape,

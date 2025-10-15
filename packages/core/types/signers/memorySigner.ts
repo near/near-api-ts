@@ -4,7 +4,7 @@ import type { Client } from 'nat-types/client/client';
 import type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService';
 import type { TransactionIntent } from 'nat-types/transaction';
 import type { SignedTransaction } from 'nat-types/signedTransaction';
-import type { SendSignedTransactionResult } from 'nat-types/client/transaction/sendSignedTransaction';
+import type { SendSignedTransactionResult } from 'nat-types/client/methods/transaction/sendSignedTransaction';
 
 type ExecuteMultipleTransactionsResult = (
   | { status: 'Success'; result: SendSignedTransactionResult }

@@ -6,7 +6,7 @@ import type {
   CreateGetGasPrice,
   GetGasPriceResult,
   GetGasPriceArgs,
-} from 'nat-types/client/protocol/getGasPrice';
+} from 'nat-types/client/methods/protocol/getGasPrice';
 import { BlockIdSchema } from '@common/schemas/zod/common';
 import type { BlockHash, BlockHeight } from 'nat-types/common';
 

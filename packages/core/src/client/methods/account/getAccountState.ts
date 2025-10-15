@@ -7,7 +7,7 @@ import type {
   CreateGetAccountState,
   GetAccountStateArgs,
   GetAccountStateResult,
-} from 'nat-types/client/account/getAccountState';
+} from 'nat-types/client/methods/account/getAccountState';
 
 const RpcQueryAccountViewResponseSchema = z.object({
   ...AccountViewSchema().shape,
@@ -19,6 +19,7 @@ const transformResult = (
   result: unknown,
   args: GetAccountStateArgs,
 ): GetAccountStateResult => {
+  // remove snakeToCamelCase - we do it on the sendRequest level
   const camelCased = snakeToCamelCase(result);
   const valid = RpcQueryAccountViewResponseSchema.parse(camelCased);
 
@@ -52,6 +53,7 @@ export const createGetAccountState: CreateGetAccountState =
   ({ sendRequest }) =>
   async (args) => {
     const result = await sendRequest({
+      // TODO remove body
       body: {
         method: 'query',
         params: {

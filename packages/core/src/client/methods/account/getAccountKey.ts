@@ -1,44 +1,48 @@
 import * as z from 'zod/mini';
 import { toNativeBlockReference } from '@common/transformers/toNative/blockReference';
-import { AccessKeyListSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
-import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
-import { transformKey } from './helpers/transformKey';
 import type {
-  CreateGetAccountKeys,
-  GetAccountKeysArgs,
-  GetAccountKeysResult,
-} from 'nat-types/client/account/getAccountKeys';
+  CreateGetAccountKey,
+  GetAccountKeyArgs,
+} from 'nat-types/client/methods/account/getAccountKey';
+import type { GetAccountKeyResult } from 'nat-types/client/methods/account/getAccountKey';
+import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
+import { AccessKeyViewSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
+import { transformKey } from './helpers/transformKey';
 
-const RpcQueryAccessKeyListResponseSchema = z.object({
-  ...AccessKeyListSchema().shape,
+const RpcQueryAccessKeyViewResponseSchema = z.object({
+  ...AccessKeyViewSchema().shape,
   blockHash: CryptoHashSchema(),
   blockHeight: z.number(),
 });
 
 const transformResult = (
   result: unknown,
-  args: GetAccountKeysArgs,
-): GetAccountKeysResult => {
+  args: GetAccountKeyArgs,
+): GetAccountKeyResult => {
   const camelCased = snakeToCamelCase(result);
-  const valid = RpcQueryAccessKeyListResponseSchema.parse(camelCased);
+  const valid = RpcQueryAccessKeyViewResponseSchema.parse(camelCased);
 
   return {
     blockHash: valid.blockHash,
     blockHeight: valid.blockHeight,
     accountId: args.accountId,
-    accountKeys: valid.keys.map(transformKey),
+    accountKey: transformKey({
+      accessKey: valid,
+      publicKey: args.publicKey,
+    }),
   };
 };
 
-export const createGetAccountKeys: CreateGetAccountKeys =
+export const createGetAccountKey: CreateGetAccountKey =
   ({ sendRequest }) =>
   async (args) => {
     const result = await sendRequest({
       body: {
         method: 'query',
         params: {
-          request_type: 'view_access_key_list',
+          request_type: 'view_access_key',
           account_id: args.accountId,
+          public_key: args.publicKey,
           ...toNativeBlockReference(args.atMomentOf),
         },
       },

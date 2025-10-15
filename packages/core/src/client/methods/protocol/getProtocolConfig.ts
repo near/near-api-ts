@@ -6,7 +6,7 @@ import {
   RuntimeConfigViewSchema,
   VMConfigViewSchema,
 } from '@near-js/jsonrpc-types';
-import type { CreateGetProtocolConfig } from 'nat-types/client/protocol/getProtocolConfig';
+import type { CreateGetProtocolConfig } from 'nat-types/client/methods/protocol/getProtocolConfig';
 
 // TODO Use jsonrpc-types RpcProtocolConfigResponseSchema after 2.8.0
 const TemporaryProtocolConfigShema = z.object({

@@ -1,5 +1,5 @@
 // Client
-export { createClient } from './client/createClient/createClient';
+export { createClient } from './client/createClient';
 export { testnet, mainnet } from './client/presets/networks';
 // Key Services
 export { createMemoryKeyService } from './keyServices/memoryKeyService/createMemoryKeyService';

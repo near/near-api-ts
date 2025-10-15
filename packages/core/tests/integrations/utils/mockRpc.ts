@@ -22,7 +22,7 @@ export const createMockRpc = async ({ port }: { port: number }) => {
   app.use(proxy('http://localhost:4560'));
 
   const server = app.listen(port, () =>
-    console.log(`Mock RPC server is up on port: ${port}`),
+    console.log(`Mock RPC node is up on port: ${port}`),
   );
 
   process.on('SIGINT', () => server.close());

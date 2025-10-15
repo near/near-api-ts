@@ -63,6 +63,7 @@ export type GasOption = { gas: GasInput } | { teraGas: TeraGasInput };
 type Gas = bigint;
 type TeraGas = string;
 
+// TODO Rename to NearGas
 export type GasLimit = Readonly<{
   gas: Gas;
   teraGas: TeraGas;
@@ -77,3 +78,5 @@ export type JsonLikeValue =
   | { [key: string]: JsonLikeValue | undefined };
 
 export type MaybeJsonLikeValue = JsonLikeValue | undefined;
+
+export type Milliseconds = number;

@@ -6,7 +6,7 @@ import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import type {
   CreateSendSignedTransaction,
   SendSignedTransactionResult,
-} from 'nat-types/client/transaction/sendSignedTransaction';
+} from 'nat-types/client/methods/transaction/sendSignedTransaction';
 
 const transformResult = (result: unknown): SendSignedTransactionResult => {
   const camelCased = snakeToCamelCase(result);
