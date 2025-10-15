@@ -47,7 +47,7 @@ const validateRpcEndpoints = (
 
   if (rpcTypePreferences.length === 1 && preferredList.length === 0)
     throw new DefaultTransportError({
-      code: 'E1010',
+      code: 'InvalidTransportConfiguration',
       message:
         `Invalid transport configuration: no "${rpcTypePreferences[0]}" RPC endpoints found ` +
         `while it's the only preferred type.`,
@@ -60,6 +60,7 @@ export const createDefaultTransport = (args: DefaultTransportArgs) => {
     args.requestPolicy,
   );
 
+  // TODO validate requestPolicy;
   validateRpcEndpoints(args.rpcEndpoints, requestPolicy.rpcTypePreferences);
 
   const context: DefaultTransportContext = {

@@ -8,6 +8,7 @@ import type {
   GetAccountStateArgs,
   GetAccountStateResult,
 } from 'nat-types/client/methods/account/getAccountState';
+import type {SendRequest} from 'nat-types/client/client';
 
 const RpcQueryAccountViewResponseSchema = z.object({
   ...AccountViewSchema().shape,
@@ -20,8 +21,9 @@ const transformResult = (
   args: GetAccountStateArgs,
 ): GetAccountStateResult => {
   // remove snakeToCamelCase - we do it on the sendRequest level
-  const camelCased = snakeToCamelCase(result);
-  const valid = RpcQueryAccountViewResponseSchema.parse(camelCased);
+  // const camelCased = snakeToCamelCase(result);
+
+  const valid = RpcQueryAccountViewResponseSchema.parse(result);
 
   const lockedBalance = yoctoNear(valid.locked);
   const totalBalance = yoctoNear(valid.amount).add(lockedBalance);

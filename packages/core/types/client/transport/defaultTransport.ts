@@ -13,7 +13,7 @@ export type RequestPolicy = {
     totalMs: Milliseconds;
     attemptMs: Milliseconds;
   };
-  maxFullRounds: number;
+  maxRounds: number;
   rpcRetry: {
     maxAttempts: number;
     backoff: {

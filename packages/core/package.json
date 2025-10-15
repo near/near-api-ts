@@ -40,7 +40,6 @@
     "@scure/base": "^1.2.6",
     "borsh": "^2.0.0",
     "lodash-es": "^4.17.21",
-    "neverthrow": "^8.2.0",
     "valibot": "^1.1.0",
     "zod": "^4.0.11"
   }

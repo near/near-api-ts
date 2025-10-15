@@ -8,16 +8,16 @@ export const defaultRequestPolicy: RequestPolicy = {
     totalMs: 30_000,
     attemptMs: 1000,
   },
-  maxFullRounds: 2,
+  maxRounds: 2,
   rpcRetry: {
     maxAttempts: 2,
     backoff: {
       minDelayMs: 100,
-      maxDelayMs: 300,
+      maxDelayMs: 1000,
       multiplier: 3,
     },
   },
-  nextRpcDelayMs: 200,
+  nextRpcDelayMs: 500,
 };
 
 export const mergeRequestPolicy = (

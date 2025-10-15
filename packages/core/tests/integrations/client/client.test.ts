@@ -11,7 +11,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 test(
   'test',
   {
-    timeout: 10 * 60 * 1000,
+    timeout: 60 * 1000,
   },
   async () => {
     // const server1 = await createMockRpc({ port: 4561 });
@@ -25,7 +25,7 @@ test(
             // { url: 'https://allthatnode.com/protocol/near.dsrv' }, // Error - html
             // { url: 'https://near.drpc.org/' }, // Error - custom error format
           ],
-          // archival: [{ url: 'https://1rpc.io/near' }],
+          archival: [{ url: 'https://1rpc.io/near' }],
         },
         requestPolicy: {
           // rpcTypePreferences: ['archival'],

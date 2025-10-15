@@ -3,6 +3,7 @@ export type CircularQueue<V> = {
   size: number;
 };
 
+// TODO Remove
 export const createCircularQueue = <V>(arr: V[]): CircularQueue<V> => {
   const state = {
     items: [...arr],
