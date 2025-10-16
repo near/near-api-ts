@@ -7,31 +7,37 @@ import type {
 import type { GetAccountKeyResult } from 'nat-types/client/methods/account/getAccountKey';
 import { AccessKeyViewSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
 import { transformKey } from './helpers/transformKey';
+import { NatError } from '../../transport/defaultTransportError';
 
-const RpcQueryAccessKeyViewResponseSchema = z.object({
-  ...AccessKeyViewSchema().shape,
+const BaseSchema = z.object({
   blockHash: CryptoHashSchema(),
   blockHeight: z.number(),
 });
 
-/* TODO handle error
-{
-    "jsonrpc": "2.0",
-    "result": {
-        "block_hash": "EBKFaNMjXbpekTTcSkuELuMkGxsp5SHZVLknQWsA9aw4",
-        "block_height": 168412701,
-        "error": "access key ed25519:2daCm7Ux8igXXFDtMJ2nSRHVR5PM8jSaarum6X8ka9o2 does not exist while viewing",
-        "logs": []
-    },
-    "id": 0
-}
- */
+const RpcQueryAccessKeyViewResponseSchema = z.union([
+  z.object({
+    ...BaseSchema.shape,
+    ...AccessKeyViewSchema().shape,
+  }),
+  z.object({
+    ...BaseSchema.shape,
+    error: z.string(),
+    logs: z.array(z.string()),
+  }),
+]);
 
 const transformResult = (
   result: unknown,
   args: GetAccountKeyArgs,
 ): GetAccountKeyResult => {
   const valid = RpcQueryAccessKeyViewResponseSchema.parse(result);
+
+  if ('error' in valid)
+    throw new NatError({
+      code: 'AccountKeyNotFound',
+      message: `This account does not have such key.`,
+      cause: valid,
+    });
 
   return {
     blockHash: valid.blockHash,

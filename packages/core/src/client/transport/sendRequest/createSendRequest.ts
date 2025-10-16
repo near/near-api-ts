@@ -5,8 +5,7 @@ import { runRounds } from './runRounds';
 
 export const createSendRequest =
   (context: DefaultTransportContext): SendRequest =>
-  async ({ body }) => {
-    const { method, params } = body as any;
+  async ({ method, params }) => {
     // TODO: pass requestPolicy from the client method(f.e: from getTransaction)
     const requestPolicy = mergeRequestPolicy(context.requestPolicy);
 

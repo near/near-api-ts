@@ -1,33 +1,41 @@
 import { base64 } from '@scure/base';
 import * as z from 'zod/mini';
 import { toNativeBlockReference } from '@common/transformers/toNative/blockReference';
-import { CallResultSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
+import { CryptoHashSchema } from '@near-js/jsonrpc-types';
 import { fromJsonBytes, toJsonBytes } from '@common/utils/common';
 import type {
   CreateCallContractReadFunction,
   BaseDeserializeResult,
   InnerCallContractReadFunctionArgs,
 } from 'nat-types/client/methods/contract/callContractReadFunction';
+import { NatError } from '../../transport/defaultTransportError';
 
 const baseDeserializeResul: BaseDeserializeResult = ({ rawResult }) =>
   fromJsonBytes(rawResult);
 
-/*
-logs: z.array(z.string()),
-    result: z.array(z.number()),
- */
-
-const RpcCallFunctionResponseSchema = z.object({
-  ...CallResultSchema().shape, // TODO Fix it
+const BaseSchema = z.object({
+  logs: z.array(z.string()),
   blockHash: CryptoHashSchema(),
   blockHeight: z.number(),
 });
+
+const RpcCallFunctionResponseSchema = z.union([
+  z.object({ ...BaseSchema.shape, result: z.array(z.number()) }),
+  z.object({ ...BaseSchema.shape, error: z.string() }),
+]);
 
 const transformResult = (
   result: unknown,
   args: InnerCallContractReadFunctionArgs,
 ) => {
   const valid = RpcCallFunctionResponseSchema.parse(result);
+
+  if ('error' in valid)
+    throw new NatError({
+      code: 'ContractExecutionError',
+      message: `Contract read function call failed: ${valid.error}`,
+      cause: valid,
+    });
 
   const transformer = args?.options?.deserializeResult
     ? args.options.deserializeResult

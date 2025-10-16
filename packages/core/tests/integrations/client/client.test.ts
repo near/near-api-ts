@@ -40,8 +40,12 @@ test(
     // console.log('FINAL RESULT ', res);
 
     try {
+      // const res = await client.getAccountKey({
+      //   accountId: 'eclipseeer.near',
+      //   publicKey: 'ed25519:3Dhkm2g9gKHQNeinRA1eH9ModH9aK3iJaw1uuKsRUuR1',
+      // })
       const res = await client.getAccountState({
-        accountId: 'eclipseeer.near',
+        accountId: 'near',
         // atMomentOf: { blockHeight: 160839194 }, // 212788565
         // atMomentOf: { blockHash: 'UQcU8hMLAG96mBFEW8rwn5hj1icKbgVUE4G3QKUB5gy' }, // 212788565
       });

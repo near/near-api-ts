@@ -23,9 +23,9 @@ export type GetAccountStateResult = {
       locked: NearToken;
     };
     usedStorageBytes: number;
-    contractHash: CryptoHash | null;
-    globalContractHash: CryptoHash | null;
-    globalContractAccountId: AccountId | null;
+    contractHash?: CryptoHash;
+    globalContractHash?: CryptoHash;
+    globalContractAccountId?: AccountId;
   };
 };
 
