@@ -24,7 +24,7 @@ export class NatError extends Error {
 }
 
 const DefaultTransportErrorBrand = Symbol.for(
-  'near-api-ts.DefaultTransportErrorBrand',
+  'near-api-ts.DefaultTransportError',
 );
 
 export class DefaultTransportError extends NatError {
@@ -34,3 +34,7 @@ export class DefaultTransportError extends NatError {
     super(args, 'DefaultTransportError');
   }
 }
+
+export const hasTransportErrorCode = (error: unknown, list: string[]) =>
+  DefaultTransportError.is(error) &&
+  list.includes((error as DefaultTransportError).code);

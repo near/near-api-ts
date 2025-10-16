@@ -1,12 +1,15 @@
 import { fetchOnce } from './fetchOnce';
 import { sleep } from '@common/utils/common';
-import { RpcError } from '../../rpcError';
+import { hasRpcErrorCode, RpcError } from '../../rpcError';
 import type {
   InnerRpcEndpoint,
   RequestPolicy,
 } from 'nat-types/client/transport/defaultTransport';
 import type { JsonLikeValue } from 'nat-types/common';
-import { DefaultTransportError } from '../defaultTransportError';
+import {
+  DefaultTransportError,
+  hasTransportErrorCode,
+} from '../defaultTransportError';
 
 export const fetchWithRetry = async (
   rpc: InnerRpcEndpoint,
@@ -20,20 +23,21 @@ export const fetchWithRetry = async (
   const { maxAttempts, backoff } = requestPolicy.rpcRetry;
 
   for (let i = 0; i < maxAttempts; i++) {
-    const result = await fetchOnce(rpc, method, params);
+    const result = await fetchOnce(rpc, requestPolicy, method, params);
+    console.log('res in fetchWithRetry', result.error?.code, rpc.url);
 
     // If it's a last attempt - return any result
     if (i === maxAttempts - 1) return result;
 
     // If it makes sense to try again on the same rpc - try
     if (
-      RpcError.is(result.error) &&
-      [
-        'InternalServerError',
-        'UnknownRequestError',
-        'TransactionTimeout',
+      hasTransportErrorCode(result.error, ['AttemptTimeout']) ||
+      hasRpcErrorCode(result.error, [
+        'RpcTransactionTimeout',
         'NoSyncedBlocks',
-      ].includes((result.error as RpcError).code)
+        'UnknownRequestError',
+        'InternalServerError',
+      ])
     ) {
       await sleep(backoff.maxDelayMs);
       continue;

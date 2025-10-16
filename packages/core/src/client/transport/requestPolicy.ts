@@ -6,18 +6,18 @@ export const defaultRequestPolicy: RequestPolicy = {
   rpcTypePreferences: ['regular', 'archival'],
   timeouts: {
     totalMs: 30_000,
-    attemptMs: 1000,
+    attemptMs: 100,
   },
   maxRounds: 2,
   rpcRetry: {
     maxAttempts: 2,
     backoff: {
       minDelayMs: 100,
-      maxDelayMs: 1000,
+      maxDelayMs: 100,
       multiplier: 3,
     },
   },
-  nextRpcDelayMs: 500,
+  nextRpcDelayMs: 100,
 };
 
 export const mergeRequestPolicy = (

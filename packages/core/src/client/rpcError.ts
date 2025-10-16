@@ -35,7 +35,7 @@ const parseHandlerError = (cause: unknown) => {
 
   if (name === 'TIMEOUT_ERROR')
     return {
-      code: 'TransactionTimeout',
+      code: 'RpcTransactionTimeout',
       message: oneLine(`RPC does not know the result of this transaction, 
         probably it is not executed yet. Please try again later.`),
     };
@@ -115,3 +115,6 @@ export class RpcError extends Error {
     return typeof e === 'object' && (e as any)[Brand] === true;
   }
 }
+
+export const hasRpcErrorCode = (error: unknown, list: string[]) =>
+  RpcError.is(error) && list.includes((error as RpcError).code);

@@ -1,21 +1,38 @@
 import * as z from 'zod/mini';
-import { DefaultTransportError } from '../defaultTransportError';
+import {
+  DefaultTransportError,
+  hasTransportErrorCode,
+} from '../defaultTransportError';
 import { RpcError } from '../../rpcError';
 import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import { RpcResponseSchema } from '@common/schemas/zod/rpc';
-import type { InnerRpcEndpoint } from 'nat-types/client/transport/defaultTransport';
-import type { JsonLikeValue } from 'nat-types/common';
+import type {
+  InnerRpcEndpoint,
+  RequestPolicy,
+} from 'nat-types/client/transport/defaultTransport';
+import type { JsonLikeValue, Milliseconds } from 'nat-types/common';
+import { oneLine, sleep } from '@common/utils/common';
 
-const fetchData = async (rpc: InnerRpcEndpoint, body: JsonLikeValue) => {
+const fetchData = async (
+  rpc: InnerRpcEndpoint,
+  body: JsonLikeValue,
+  signal: AbortSignal,
+) => {
   try {
+    await sleep(200);
+
     const value = await fetch(rpc.url, {
       method: 'POST',
       headers: rpc.headers,
       body: JSON.stringify(body),
+      signal,
     });
 
     return { value };
   } catch (e) {
+    if (hasTransportErrorCode(e, ['AttemptTimeout']))
+      return { error: e as DefaultTransportError };
+
     return {
       error: new DefaultTransportError({
         code: 'Fetch',
@@ -34,7 +51,7 @@ const parseJsonResponse = async (response: Response, rpc: InnerRpcEndpoint) => {
   } catch (e) {
     return {
       error: new DefaultTransportError({
-        code: 'ParseJson',
+        code: 'ParseResponseJson',
         message: `Failed to parse response as JSON from the RPC node: ${rpc.url}`,
         cause: e,
       }),
@@ -42,8 +59,30 @@ const parseJsonResponse = async (response: Response, rpc: InnerRpcEndpoint) => {
   }
 };
 
+const createAttemptController = (attemptTimeout: Milliseconds) => {
+  const attemptController = new AbortController();
+
+  const timeoutId = setTimeout(
+    () =>
+      attemptController.abort(
+        new DefaultTransportError({
+          code: 'AttemptTimeout',
+          message: oneLine(`The request attempt exceeded the configured timeout 
+          and was aborted.`),
+        }),
+      ),
+    attemptTimeout,
+  );
+
+  return {
+    signal: attemptController.signal,
+    timeoutId,
+  };
+};
+
 export const fetchOnce = async (
   rpc: InnerRpcEndpoint,
+  requestPolicy: RequestPolicy,
   method: string,
   params: JsonLikeValue,
 ): Promise<
@@ -57,8 +96,19 @@ export const fetchOnce = async (
     params,
   };
 
-  const response = await fetchData(rpc, body);
+  const attemptController = createAttemptController(
+    requestPolicy.timeouts.attemptMs,
+  );
+
+  const response = await fetchData(
+    rpc,
+    body,
+    attemptController.signal,
+    // AbortSignal.any([AbortSignal.timeout(500)]),
+  );
   if (response.error) return response;
+
+  clearTimeout(attemptController.timeoutId);
 
   // TODO Handle 429 status
 

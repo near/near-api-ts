@@ -6,8 +6,12 @@ import type {
   RpcTypePreferences,
 } from 'nat-types/client/transport/defaultTransport';
 import type { JsonLikeValue } from 'nat-types/common';
-import { DefaultTransportError } from '../defaultTransportError';
+import {
+  DefaultTransportError,
+  hasTransportErrorCode,
+} from '../defaultTransportError';
 import { sleep } from '@common/utils/common';
+import { hasRpcErrorCode } from '../../rpcError';
 
 const getSortedRpcs = (
   rpcEndpoints: DefaultTransportContext['rpcEndpoints'],
@@ -44,12 +48,29 @@ export const runRounds = async (
   for (let i = 0; i < requestPolicy.maxRounds; i++) {
     const result = await runOneRound(rpcs.value, requestPolicy, method, params);
 
-    // If success
-    if (result.value) return result;
     // If it's the last round
     if (i === requestPolicy.maxRounds - 1) return result;
 
-    await sleep(requestPolicy.nextRpcDelayMs);
+    // When it makes sense to run another round with the same request
+    if (
+      hasTransportErrorCode(result.error, [
+        // 'Fetch',
+        'AttemptTimeout',
+        'ParseResponseJson',
+        'InvalidResponseSchema',
+      ]) ||
+      hasRpcErrorCode(result.error, [
+        'ParseRequest',
+        'MethodNotFound',
+        'UnknownValidationError',
+        'RpcTransactionTimeout',
+      ])
+    ) {
+      await sleep(requestPolicy.nextRpcDelayMs);
+      continue;
+    }
+    // In all other cases - return result (successful of failed)
+    return result;
   }
 
   return {
