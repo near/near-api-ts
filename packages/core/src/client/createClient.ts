@@ -8,9 +8,12 @@ import { createGetGasPrice } from './methods/protocol/getGasPrice';
 import { createGetProtocolConfig } from './methods/protocol/getProtocolConfig';
 import { createSendSignedTransaction } from './methods/transaction/sendSignedTransaction';
 import type { CreateClient } from 'nat-types/client/client';
+import { createTransport } from './transport/createTransport';
 
 // TODO add state for protocol config / blockHash
-export const createClient: CreateClient = ({ transport }) => {
+export const createClient: CreateClient = async (args) => {
+  const transport = createTransport(args.transport);
+
   const context = {
     sendRequest: transport.sendRequest,
   };

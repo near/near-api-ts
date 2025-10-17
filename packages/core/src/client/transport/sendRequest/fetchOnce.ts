@@ -1,15 +1,12 @@
 import * as z from 'zod/mini';
-import {
-  DefaultTransportError,
-  hasTransportErrorCode,
-} from '../defaultTransportError';
+import { TransportError, hasTransportErrorCode } from '../transportError';
 import { RpcError } from '../../rpcError';
 import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import { RpcResponseSchema } from '@common/schemas/zod/rpc';
 import type {
   InnerRpcEndpoint,
-  RequestPolicy,
-} from 'nat-types/client/transport/defaultTransport';
+  TransportPolicy,
+} from 'nat-types/client/transport';
 import type { JsonLikeValue, Milliseconds } from 'nat-types/common';
 import { oneLine, sleep } from '@common/utils/common';
 
@@ -19,7 +16,7 @@ const fetchData = async (
   signal: AbortSignal,
 ) => {
   try {
-    await sleep(200);
+    await sleep(200); // TODO remove after tests
 
     const value = await fetch(rpc.url, {
       method: 'POST',
@@ -31,10 +28,10 @@ const fetchData = async (
     return { value };
   } catch (e) {
     if (hasTransportErrorCode(e, ['AttemptTimeout']))
-      return { error: e as DefaultTransportError };
+      return { error: e as TransportError };
 
     return {
-      error: new DefaultTransportError({
+      error: new TransportError({
         code: 'Fetch',
         message:
           `Fetch failed: unable to send the request to '${rpc.url}' ` +
@@ -50,7 +47,7 @@ const parseJsonResponse = async (response: Response, rpc: InnerRpcEndpoint) => {
     return { value: await response.json() };
   } catch (e) {
     return {
-      error: new DefaultTransportError({
+      error: new TransportError({
         code: 'ParseResponseJson',
         message: `Failed to parse response as JSON from the RPC node: ${rpc.url}`,
         cause: e,
@@ -65,7 +62,7 @@ const createAttemptController = (attemptTimeout: Milliseconds) => {
   const timeoutId = setTimeout(
     () =>
       attemptController.abort(
-        new DefaultTransportError({
+        new TransportError({
           code: 'AttemptTimeout',
           message: oneLine(`The request attempt exceeded the configured timeout 
           and was aborted.`),
@@ -82,12 +79,12 @@ const createAttemptController = (attemptTimeout: Milliseconds) => {
 
 export const fetchOnce = async (
   rpc: InnerRpcEndpoint,
-  requestPolicy: RequestPolicy,
+  requestPolicy: TransportPolicy,
   method: string,
   params: JsonLikeValue,
 ): Promise<
   | { value: unknown; error?: never }
-  | { value?: never; error: DefaultTransportError | RpcError }
+  | { value?: never; error: TransportError | RpcError }
 > => {
   const body = {
     jsonrpc: '2.0',
@@ -121,7 +118,7 @@ export const fetchOnce = async (
   // When the RPC response doesn't match the expected format
   if (validated.error)
     return {
-      error: new DefaultTransportError({
+      error: new TransportError({
         code: 'InvalidResponseSchema',
         message:
           `Invalid RPC response format: \n` +

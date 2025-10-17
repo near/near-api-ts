@@ -15,6 +15,7 @@ export const createMemorySigner: CreateMemorySigner = async (args) => {
     taskTtlMs: args?.queue?.taskTtlMs ?? SignerTaskTtlMs,
   };
 
+  // TODO move block hash to the client level and make it lazy
   const [keyPool, state] = await Promise.all([
     createKeyPool(context),
     createState(context),

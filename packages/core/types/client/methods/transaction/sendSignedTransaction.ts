@@ -2,10 +2,17 @@ import type { SignedTransaction } from 'nat-types/signedTransaction';
 import type { ClientContext } from 'nat-types/client/client';
 import type { TransactionExecutionStatus } from 'nat-types/transaction';
 import type { RpcTransactionResponse } from '@near-js/jsonrpc-types';
+import type { TransportPolicy } from 'nat-types/client/transport';
 
 type SendSignedTransactionArgs = {
   signedTransaction: SignedTransaction;
-  waitUntil?: TransactionExecutionStatus;
+  policies?: {
+    waitUntil?: TransactionExecutionStatus;
+    transport?: TransportPolicy;
+  };
+  options?: {
+    signal?: AbortSignal;
+  };
 };
 
 export type SendSignedTransactionResult = RpcTransactionResponse;

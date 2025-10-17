@@ -7,7 +7,7 @@ import type {
 import type { GetAccountKeyResult } from 'nat-types/client/methods/account/getAccountKey';
 import { AccessKeyViewSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
 import { transformKey } from './helpers/transformKey';
-import { NatError } from '../../transport/defaultTransportError';
+import { NatError } from '../../transport/transportError';
 
 const BaseSchema = z.object({
   blockHash: CryptoHashSchema(),

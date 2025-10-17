@@ -14,13 +14,15 @@ const transformResult = (result: unknown): SendSignedTransactionResult => {
 export const createSendSignedTransaction: CreateSendSignedTransaction =
   ({ sendRequest }) =>
   async (args) => {
+    const waitUntil = args?.policies?.waitUntil ?? 'ExecutedOptimistic';
+
     const result = await sendRequest({
       method: 'send_tx',
       params: {
         signed_tx_base64: base64.encode(
           serializeSignedTransaction(args.signedTransaction),
         ),
-        wait_until: toNativeTransactionExecutionStatus(args?.waitUntil),
+        wait_until: toNativeTransactionExecutionStatus(waitUntil),
       },
     });
     return transformResult(result);

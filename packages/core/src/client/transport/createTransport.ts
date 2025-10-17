@@ -1,17 +1,22 @@
 import { createSendRequest } from './sendRequest/createSendRequest';
 import type {
-  DefaultTransportArgs,
-  DefaultTransportContext,
+  CreateTransportArgs,
+  TransportContext,
   RpcEndpoint,
   RpcEndpoints,
   InnerRpcEndpoint,
   RpcTypePreferences,
-  RpcType,
-} from 'nat-types/client/transport/defaultTransport';
-import { defaultRequestPolicy, mergeRequestPolicy } from './requestPolicy';
-import { DefaultTransportError } from './defaultTransportError';
+} from 'nat-types/client/transport';
+import {
+  defaultTransportPolicy,
+  mergeTransportPolicy,
+} from './transportPolicy';
+import { TransportError } from './transportError';
 
-const getRpcs = (list: RpcEndpoint[] = [], type: RpcType): InnerRpcEndpoint[] =>
+const getRpcs = (
+  list: RpcEndpoint[] = [],
+  type: 'regular' | 'archival',
+): InnerRpcEndpoint[] =>
   list.map((rpc) => ({
     type,
     url: rpc.url,
@@ -43,10 +48,13 @@ const validateRpcEndpoints = (
   rpcEndpoints: RpcEndpoints,
   rpcTypePreferences: RpcTypePreferences,
 ) => {
-  const preferredList = rpcEndpoints[rpcTypePreferences[0]] ?? [];
+  const preferredType =
+    rpcTypePreferences[0] === 'Regular' ? 'regular' : 'archival';
+
+  const preferredList = rpcEndpoints[preferredType] ?? [];
 
   if (rpcTypePreferences.length === 1 && preferredList.length === 0)
-    throw new DefaultTransportError({
+    throw new TransportError({
       code: 'InvalidTransportConfiguration',
       message:
         `Invalid transport configuration: no "${rpcTypePreferences[0]}" RPC endpoints found ` +
@@ -54,21 +62,21 @@ const validateRpcEndpoints = (
     });
 };
 
-export const createDefaultTransport = (args: DefaultTransportArgs) => {
-  const requestPolicy = mergeRequestPolicy(
-    defaultRequestPolicy,
-    args.requestPolicy,
+export const createTransport = (args: CreateTransportArgs) => {
+  const transportPolicy = mergeTransportPolicy(
+    defaultTransportPolicy,
+    args.policy,
   );
 
-  // TODO validate requestPolicy;
-  validateRpcEndpoints(args.rpcEndpoints, requestPolicy.rpcTypePreferences);
+  // TODO validate transportPolicy;
+  validateRpcEndpoints(args.rpcEndpoints, transportPolicy.rpcTypePreferences);
 
-  const context: DefaultTransportContext = {
+  const context: TransportContext = {
     rpcEndpoints: {
       regular: getRpcs(args.rpcEndpoints.regular, 'regular'),
       archival: getRpcs(args.rpcEndpoints.archival, 'archival'),
     },
-    requestPolicy,
+    transportPolicy,
   };
 
   return {

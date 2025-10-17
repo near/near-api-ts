@@ -1,13 +1,13 @@
-import { mergeRequestPolicy } from '../requestPolicy';
-import type { DefaultTransportContext } from 'nat-types/client/transport/defaultTransport';
+import { mergeTransportPolicy } from '../transportPolicy';
+import type { TransportContext } from 'nat-types/client/transport';
 import type { SendRequest } from 'nat-types/client/client';
 import { runRounds } from './runRounds';
 
 export const createSendRequest =
-  (context: DefaultTransportContext): SendRequest =>
+  (context: TransportContext): SendRequest =>
   async ({ method, params }) => {
     // TODO: pass requestPolicy from the client method(f.e: from getTransaction)
-    const requestPolicy = mergeRequestPolicy(context.requestPolicy);
+    const requestPolicy = mergeTransportPolicy(context.transportPolicy);
 
     // errorStack
 

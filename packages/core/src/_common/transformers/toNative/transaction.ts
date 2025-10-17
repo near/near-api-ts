@@ -60,8 +60,5 @@ const TransactionExecutionStatusMap = {
 } as const;
 
 export const toNativeTransactionExecutionStatus = (
-  status?: TransactionExecutionStatus,
-) =>
-  status
-    ? TransactionExecutionStatusMap[status]
-    : TransactionExecutionStatusMap.ExecutedOptimistic;
+  status: TransactionExecutionStatus,
+) => TransactionExecutionStatusMap[status];

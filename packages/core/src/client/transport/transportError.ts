@@ -23,18 +23,15 @@ export class NatError extends Error {
   }
 }
 
-const DefaultTransportErrorBrand = Symbol.for(
-  'near-api-ts.DefaultTransportError',
-);
+const TransportErrorBrand = Symbol.for('near-api-ts.TransportError');
 
-export class DefaultTransportError extends NatError {
-  readonly [DefaultTransportErrorBrand] = true;
+export class TransportError extends NatError {
+  readonly [TransportErrorBrand] = true;
 
   constructor(args: { code: string; message: string; cause?: unknown }) {
-    super(args, 'DefaultTransportError');
+    super(args, 'TransportError');
   }
 }
 
 export const hasTransportErrorCode = (error: unknown, list: string[]) =>
-  DefaultTransportError.is(error) &&
-  list.includes((error as DefaultTransportError).code);
+  TransportError.is(error) && list.includes((error as TransportError).code);

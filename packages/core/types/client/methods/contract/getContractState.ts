@@ -6,12 +6,19 @@ import type {
   BlockReference,
 } from 'nat-types/common';
 import type { ClientContext } from 'nat-types/client/client';
+import type { PartialTransportPolicy } from 'nat-types/client/transport';
 
 export type GetContractStateArgs = {
   contractAccountId: AccountId;
+  atMomentOf?: BlockReference;
   keyPrefix?: string;
   includeProof?: boolean;
-  atMomentOf?: BlockReference;
+  policies?: {
+    transport?: PartialTransportPolicy;
+  };
+  options?: {
+    signal?: AbortSignal;
+  };
 };
 
 type StateRecord = { key: Base64String; value: Base64String };

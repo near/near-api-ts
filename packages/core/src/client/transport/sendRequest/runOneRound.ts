@@ -2,24 +2,26 @@ import { fetchWithRetry } from './fetchWithRetry';
 import { sleep } from '@common/utils/common';
 import type {
   InnerRpcEndpoint,
-  RequestPolicy,
-} from 'nat-types/client/transport/defaultTransport';
+  TransportPolicy,
+} from 'nat-types/client/transport';
 import type { JsonLikeValue } from 'nat-types/common';
-import {
-  DefaultTransportError,
-  hasTransportErrorCode,
-} from '../defaultTransportError';
+import { TransportError, hasTransportErrorCode } from '../transportError';
 import { hasRpcErrorCode } from '../../rpcError';
 
 export const runOneRound = async (
   rpcs: InnerRpcEndpoint[],
-  requestPolicy: RequestPolicy,
+  transportPolicy: TransportPolicy,
   method: string,
   params: JsonLikeValue,
 ) => {
   for (let i = 0; i < rpcs.length; i++) {
     // TODO filter only available with no inactiveUntil
-    const result = await fetchWithRetry(rpcs[i], requestPolicy, method, params);
+    const result = await fetchWithRetry(
+      rpcs[i],
+      transportPolicy,
+      method,
+      params,
+    );
     console.log('res in runOneRound', result.error?.code, rpcs[i].url);
 
     // If it's the last RPC in the list
@@ -28,7 +30,7 @@ export const runOneRound = async (
     // When it makes sense to try the same request on the different RPC during this round
     if (
       hasTransportErrorCode(result.error, [
-        //'Fetch',
+        'Fetch',
         'AttemptTimeout',
         'ParseResponseJson',
         'InvalidResponseSchema',
@@ -40,7 +42,7 @@ export const runOneRound = async (
         'RpcTransactionTimeout',
       ])
     ) {
-      await sleep(requestPolicy.nextRpcDelayMs);
+      await sleep(transportPolicy.failover.nextRpcDelayMs);
       continue;
     }
     // In all other cases - return result (successful of failed)
@@ -48,15 +50,9 @@ export const runOneRound = async (
   }
 
   return {
-    error: new DefaultTransportError({
+    error: new TransportError({
       code: 'Unreachable',
       message: `Unreachable error in 'runOneRound'.`,
     }),
   };
 };
-/*
- (DefaultTransportError.is(result.error) &&
-        ['Fetch1', 'ParseResponseJson', 'InvalidResponseSchema'].includes(
-          (result.error as DefaultTransportError).code,
-        ))
- */

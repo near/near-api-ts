@@ -1,7 +1,6 @@
 import { test, expect } from 'vitest';
 import { createClient } from '../../../src';
 import { createMockRpc } from '../utils/mockRpc';
-import { createDefaultTransport } from '../../../src/client/transport/createDefaultTransport';
 
 const log = (data: unknown) =>
   console.dir(data, { depth: null, customInspect: true });
@@ -15,8 +14,8 @@ test(
   },
   async () => {
     // const server1 = await createMockRpc({ port: 4561 });
-    const client = createClient({
-      transport: createDefaultTransport({
+    const client = await createClient({
+      transport: {
         rpcEndpoints: {
           regular: [
             { url: 'https://free.rpc.fastnear.com' },
@@ -27,10 +26,10 @@ test(
           ],
           archival: [{ url: 'https://1rpc.io/near' }],
         },
-        requestPolicy: {
+        policy: {
           // rpcTypePreferences: ['archival'],
         },
-      }),
+      },
     });
 
     // const res = await client.getAccountState({

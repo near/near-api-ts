@@ -31,9 +31,14 @@ type BaseFnCallArgs = {
 export type InnerCallContractReadFunctionArgs = BaseFnCallArgs & {
   functionArgs?: unknown;
   options?: {
+    signal?: AbortSignal;
     serializeArgs?: BaseSerializeArgs<unknown>;
     deserializeResult?: BaseDeserializeResult;
   };
+};
+
+type BaseOptions = {
+  signal?: AbortSignal;
 };
 
 type Options<
@@ -42,10 +47,12 @@ type Options<
   DR extends MaybeBaseDeserializeResult,
 > = [SR, DR] extends [undefined, undefined]
   ? {
-      options?: never;
+      options?: BaseOptions;
     }
   : {
-      options: KeyIf<'serializeArgs', SR> & KeyIf<'deserializeResult', DR>;
+      options: BaseOptions &
+        KeyIf<'serializeArgs', SR> &
+        KeyIf<'deserializeResult', DR>;
     };
 
 type FunctionArgs<A> = KeyIf<'functionArgs', A>;

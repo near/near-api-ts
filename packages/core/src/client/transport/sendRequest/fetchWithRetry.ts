@@ -3,27 +3,24 @@ import { sleep } from '@common/utils/common';
 import { hasRpcErrorCode, RpcError } from '../../rpcError';
 import type {
   InnerRpcEndpoint,
-  RequestPolicy,
-} from 'nat-types/client/transport/defaultTransport';
+  TransportPolicy,
+} from 'nat-types/client/transport';
 import type { JsonLikeValue } from 'nat-types/common';
-import {
-  DefaultTransportError,
-  hasTransportErrorCode,
-} from '../defaultTransportError';
+import { TransportError, hasTransportErrorCode } from '../transportError';
 
 export const fetchWithRetry = async (
   rpc: InnerRpcEndpoint,
-  requestPolicy: RequestPolicy,
+  transportPolicy: TransportPolicy,
   method: string,
   params: JsonLikeValue,
 ): Promise<
   | { value: unknown; error?: never }
-  | { value?: never; error: DefaultTransportError | RpcError }
+  | { value?: never; error: TransportError | RpcError }
 > => {
-  const { maxAttempts, backoff } = requestPolicy.rpcRetry;
+  const { maxAttempts, backoff } = transportPolicy.retry;
 
   for (let i = 0; i < maxAttempts; i++) {
-    const result = await fetchOnce(rpc, requestPolicy, method, params);
+    const result = await fetchOnce(rpc, transportPolicy, method, params);
     console.log('res in fetchWithRetry', result.error?.code, rpc.url);
 
     // If it's a last attempt - return any result
@@ -47,7 +44,7 @@ export const fetchWithRetry = async (
   }
 
   return {
-    error: new DefaultTransportError({
+    error: new TransportError({
       code: 'Unreachable',
       message: `Unreachable error in 'fetchWithRetry'.`,
     }),

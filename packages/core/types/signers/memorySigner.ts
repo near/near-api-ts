@@ -1,4 +1,4 @@
-import type { AccountId } from 'nat-types/common';
+import type {AccountId, Milliseconds} from 'nat-types/common';
 import type { PublicKey } from 'nat-types/crypto';
 import type { Client } from 'nat-types/client/client';
 import type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService';
@@ -18,6 +18,7 @@ type SignMultipleTransactionsResult = (
   | { status: 'Canceled' }
 )[];
 
+// TODO add policies
 export type MemorySigner = {
   executeTransaction: (
     args: TransactionIntent,
@@ -42,7 +43,7 @@ type CreateMemorySignerArgs = {
     signingKeys?: PublicKey[];
   };
   queue?: {
-    taskTtlMs?: number;
+    taskTtlMs?: Milliseconds;
   };
 };
 
@@ -51,7 +52,7 @@ export type SignerContext = {
   client: Client;
   keyService: MemoryKeyService;
   signingKeys?: PublicKey[];
-  taskTtlMs?: number;
+  taskTtlMs?: Milliseconds;
 };
 
 export type CreateMemorySigner = (

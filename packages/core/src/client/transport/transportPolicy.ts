@@ -1,15 +1,14 @@
-import type { RequestPolicy } from 'nat-types/client/transport/defaultTransport';
+import type { TransportPolicy } from 'nat-types/client/transport';
 import type { PartialDeep } from 'type-fest';
 import { cloneDeep, mergeWith } from 'lodash-es';
 
-export const defaultRequestPolicy: RequestPolicy = {
-  rpcTypePreferences: ['regular', 'archival'],
+export const defaultTransportPolicy: TransportPolicy = {
+  rpcTypePreferences: ['Regular', 'Archival'],
   timeouts: {
-    totalMs: 30_000,
-    attemptMs: 100,
+    requestMs: 30_000,
+    attemptMs: 1000,
   },
-  maxRounds: 2,
-  rpcRetry: {
+  retry: {
     maxAttempts: 2,
     backoff: {
       minDelayMs: 100,
@@ -17,13 +16,17 @@ export const defaultRequestPolicy: RequestPolicy = {
       multiplier: 3,
     },
   },
-  nextRpcDelayMs: 100,
+  failover: {
+    maxRounds: 2,
+    nextRpcDelayMs: 100,
+    nextRoundDelayMs: 100,
+  },
 };
 
-export const mergeRequestPolicy = (
-  base: RequestPolicy,
-  next: PartialDeep<RequestPolicy> = {},
-): RequestPolicy =>
+export const mergeTransportPolicy = (
+  base: TransportPolicy,
+  next: PartialDeep<TransportPolicy> = {},
+): TransportPolicy =>
   mergeWith(
     {},
     cloneDeep(base),

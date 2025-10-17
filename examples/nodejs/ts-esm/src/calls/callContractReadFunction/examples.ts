@@ -1,10 +1,10 @@
-import { createClient, testnet } from '@near-api-ts/core';
+import { createTestnetClient } from '@near-api-ts/core';
 import * as z from 'zod/mini';
 
 const contractAccountId = 'usdl.lantstool.testnet';
 const functionName = 'ft_balance_of';
 
-const client = createClient({ network: testnet });
+const client = await createTestnetClient();
 
 /// ----------------
 const responseZodSchema = z.object({ decimals: z.number() });

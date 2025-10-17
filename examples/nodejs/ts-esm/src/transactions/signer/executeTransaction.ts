@@ -1,13 +1,12 @@
 import {
-  createClient,
   createMemoryKeyService,
   createMemorySigner,
-  testnet,
-  transfer,
+  createTestnetClient,
+  transfer
 } from '@near-api-ts/core';
 import { testKeys } from '../testKeys';
 
-const client = createClient({ network: testnet });
+const client = await createTestnetClient();
 
 // biome-ignore format: keep compact
 const keyService = await createMemoryKeyService({

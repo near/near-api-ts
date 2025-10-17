@@ -7,10 +7,17 @@ import type {
   BlockReference,
 } from 'nat-types/common';
 import type { ClientContext } from 'nat-types/client/client';
+import type { PartialTransportPolicy } from 'nat-types/client/transport';
 
 export type GetAccountStateArgs = {
   accountId: AccountId;
   atMomentOf?: BlockReference;
+  policies?: {
+    transport?: PartialTransportPolicy;
+  };
+  options?: {
+    signal?: AbortSignal;
+  };
 };
 
 export type GetAccountStateResult = {

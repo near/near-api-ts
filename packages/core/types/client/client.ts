@@ -8,6 +8,7 @@ import type { SendSignedTransaction } from 'nat-types/client/methods/transaction
 import type { GetContractState } from 'nat-types/client/methods/contract/getContractState';
 import type { CallContractReadFunction } from 'nat-types/client/methods/contract/callContractReadFunction';
 import type { JsonLikeValue } from 'nat-types/common';
+import type { CreateTransportArgs } from 'nat-types/client/transport';
 
 export type ClientContext = {
   sendRequest: SendRequest;
@@ -19,9 +20,9 @@ export type SendRequest = (args: {
 }) => Promise<unknown>;
 
 type CreateClientArgs = {
-  transport: {
-    sendRequest: SendRequest;
-  };
+  transport: CreateTransportArgs;
+  // TODO add cache
+  // TODO add defaults atMomentOf
 };
 
 export type Client = {
@@ -36,4 +37,4 @@ export type Client = {
   sendSignedTransaction: SendSignedTransaction;
 };
 
-export type CreateClient = (args: CreateClientArgs) => Client;
+export type CreateClient = (args: CreateClientArgs) => Promise<Client>;

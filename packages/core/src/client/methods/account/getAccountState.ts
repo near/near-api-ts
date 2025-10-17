@@ -43,7 +43,7 @@ const transformResult = (
       'contractHash',
       valid.codeHash,
       // When near account doesn't have a deployed contract on it,
-      // it returns the placeholder instead
+      // it returns the placeholder instead of WASM hash
       (v) => v !== '11111111111111111111111111111111',
     )
     .field(

@@ -6,10 +6,17 @@ import type {
 } from 'nat-types/common';
 import type { AccountKey } from 'nat-types/accountKey';
 import type { ClientContext } from 'nat-types/client/client';
+import type { PartialTransportPolicy } from 'nat-types/client/transport';
 
 export type GetAccountKeysArgs = {
   accountId: AccountId;
   atMomentOf?: BlockReference;
+  policies?: {
+    transport?: PartialTransportPolicy;
+  };
+  options?: {
+    signal?: AbortSignal;
+  };
 };
 
 export type GetAccountKeysResult = {

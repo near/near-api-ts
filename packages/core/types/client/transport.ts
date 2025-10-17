@@ -1,20 +1,19 @@
 import type { PartialDeep } from 'type-fest';
 import type { Milliseconds } from 'nat-types/common';
 
-export type RpcType = 'regular' | 'archival';
-type RegularFirst = ['regular', 'archival'];
-type ArchivalFirst = ['archival', 'regular'];
+export type RpcType = 'Regular' | 'Archival';
+type RegularFirst = ['Regular', 'Archival'];
+type ArchivalFirst = ['Archival', 'Regular'];
 
 export type RpcTypePreferences = RegularFirst | ArchivalFirst | [RpcType];
 
-export type RequestPolicy = {
+export type TransportPolicy = {
   rpcTypePreferences: RpcTypePreferences;
   timeouts: {
-    totalMs: Milliseconds;
+    requestMs: Milliseconds;
     attemptMs: Milliseconds;
   };
-  maxRounds: number;
-  rpcRetry: {
+  retry: {
     maxAttempts: number;
     backoff: {
       minDelayMs: Milliseconds;
@@ -22,7 +21,11 @@ export type RequestPolicy = {
       multiplier: number;
     };
   };
-  nextRpcDelayMs: Milliseconds;
+  failover: {
+    maxRounds: number;
+    nextRpcDelayMs: Milliseconds;
+    nextRoundDelayMs: Milliseconds;
+  };
 };
 
 export type RpcEndpoint = {
@@ -47,22 +50,24 @@ type BothTypes = {
 
 export type RpcEndpoints = BothTypes | OnlyRegularType | OnlyArchivalType;
 
-export type DefaultTransportArgs = {
+export type PartialTransportPolicy = PartialDeep<TransportPolicy>;
+
+export type CreateTransportArgs = {
   rpcEndpoints: RpcEndpoints;
-  requestPolicy?: PartialDeep<RequestPolicy>;
+  policy?: PartialTransportPolicy;
 };
 
 export type InnerRpcEndpoint = {
   url: string;
   headers: Record<string, string>;
-  type: RpcType;
+  type: 'regular' | 'archival';
   inactiveUntil: number | null;
 };
 
-export type DefaultTransportContext = {
-  rpcEndpoints: {
+export type TransportContext = {
+  readonly rpcEndpoints: {
     regular: InnerRpcEndpoint[];
     archival: InnerRpcEndpoint[];
   };
-  readonly requestPolicy: RequestPolicy;
+  readonly transportPolicy: TransportPolicy;
 };
