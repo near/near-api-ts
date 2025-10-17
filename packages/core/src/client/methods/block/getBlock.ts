@@ -15,6 +15,9 @@ export const createGetBlock: CreateGetBlock =
     const result = await sendRequest({
       method: 'block',
       params: toNativeBlockReference(args?.blockReference),
+      transportPolicy: args?.policies?.transport,
+      signal: args?.options?.signal,
     });
+
     return transformResult(result);
   };

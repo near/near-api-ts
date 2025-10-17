@@ -24,6 +24,9 @@ export const createSendSignedTransaction: CreateSendSignedTransaction =
         ),
         wait_until: toNativeTransactionExecutionStatus(waitUntil),
       },
+      transportPolicy: args.policies?.transport,
+      signal: args.options?.signal,
     });
+
     return transformResult(result);
   };

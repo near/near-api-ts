@@ -38,6 +38,9 @@ export const createGetAccountKeys: CreateGetAccountKeys =
         account_id: args.accountId,
         ...toNativeBlockReference(args.atMomentOf),
       },
+      transportPolicy: args.policies?.transport,
+      signal: args.options?.signal,
     });
+
     return transformResult(result, args);
   };

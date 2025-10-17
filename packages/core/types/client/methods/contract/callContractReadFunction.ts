@@ -8,6 +8,7 @@ import type {
 } from 'nat-types/common';
 import type { ClientContext } from 'nat-types/client/client';
 import type { KeyIf, Prettify } from 'nat-types/utils';
+import type { PartialTransportPolicy } from 'nat-types/client/transport';
 
 export type RawCallResult = number[];
 export type RawCallLogs = string[];
@@ -26,6 +27,9 @@ type BaseFnCallArgs = {
   contractAccountId: AccountId;
   functionName: ContractFunctionName;
   withStateAt?: BlockReference;
+  policies?: {
+    transport?: PartialTransportPolicy;
+  };
 };
 
 export type InnerCallContractReadFunctionArgs = BaseFnCallArgs & {

@@ -5,17 +5,19 @@ import { runRounds } from './runRounds';
 
 export const createSendRequest =
   (context: TransportContext): SendRequest =>
-  async ({ method, params }) => {
-    // TODO: pass requestPolicy from the client method(f.e: from getTransaction)
-    const requestPolicy = mergeTransportPolicy(context.transportPolicy);
+  async (args) => {
+    const transportPolicy = mergeTransportPolicy(
+      context.transportPolicy,
+      args.transportPolicy,
+    );
 
     // errorStack
 
     const result = await runRounds(
       context.rpcEndpoints,
-      requestPolicy,
-      method,
-      params,
+      transportPolicy,
+      args.method,
+      args.params,
     );
 
     if (result.error) throw result.error;

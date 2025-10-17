@@ -70,6 +70,9 @@ export const createCallContractReadFunction: CreateCallContractReadFunction =
         args_base64: base64.encode(serializeFunctionArgs(args)),
         ...toNativeBlockReference(args.withStateAt),
       },
+      transportPolicy: args.policies?.transport,
+      signal: args.options?.signal,
     });
+
     return transformResult(result, args);
   };

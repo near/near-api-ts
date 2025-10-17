@@ -51,6 +51,9 @@ export const createGetContractState: CreateGetContractState =
         include_proof: args.includeProof,
         ...toNativeBlockReference(args.atMomentOf),
       },
+      transportPolicy: args.policies?.transport,
+      signal: args.options?.signal,
     });
+
     return transformResult(result, args);
   };

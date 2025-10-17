@@ -47,6 +47,19 @@ test(
         accountId: 'near',
         // atMomentOf: { blockHeight: 160839194 }, // 212788565
         // atMomentOf: { blockHash: 'UQcU8hMLAG96mBFEW8rwn5hj1icKbgVUE4G3QKUB5gy' }, // 212788565
+        policies: {
+          transport: {
+            timeouts: {
+              attemptMs: 100,
+            },
+            retry: {
+              maxAttempts: 1,
+            },
+            failover: {
+              maxRounds: 1
+            }
+          },
+        },
       });
       console.log('FINAL RESULT ', res);
     } catch (e) {

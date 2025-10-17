@@ -42,6 +42,9 @@ export const createGetGasPrice: CreateGetGasPrice =
       params: {
         block_id: getBlockId(args?.atMomentOf),
       },
+      transportPolicy: args?.policies?.transport,
+      signal: args?.options?.signal,
     });
+
     return transformResult(result);
   };

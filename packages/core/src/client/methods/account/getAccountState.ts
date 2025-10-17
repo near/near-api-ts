@@ -20,7 +20,8 @@ const transformResult = (
   args: GetAccountStateArgs,
 ): GetAccountStateResult => {
   const valid = RpcQueryAccountViewResponseSchema.parse(result);
-  // storage_paid_at - deprecated since March 18, 2020: https://github.com/near/nearcore/issues/2271
+  // storage_paid_at - deprecated since March 18, 2020:
+  // https://github.com/near/nearcore/issues/2271
 
   const lockedBalance = yoctoNear(valid.locked);
   const totalBalance = yoctoNear(valid.amount).add(lockedBalance);
@@ -71,6 +72,9 @@ export const createGetAccountState: CreateGetAccountState =
         account_id: args.accountId,
         ...toNativeBlockReference(args.atMomentOf),
       },
+      transportPolicy: args.policies?.transport,
+      signal: args.options?.signal,
     });
+
     return transformResult(result, args);
   };

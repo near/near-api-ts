@@ -8,7 +8,10 @@ import type { SendSignedTransaction } from 'nat-types/client/methods/transaction
 import type { GetContractState } from 'nat-types/client/methods/contract/getContractState';
 import type { CallContractReadFunction } from 'nat-types/client/methods/contract/callContractReadFunction';
 import type { JsonLikeValue } from 'nat-types/common';
-import type { CreateTransportArgs } from 'nat-types/client/transport';
+import type {
+  CreateTransportArgs,
+  PartialTransportPolicy,
+} from 'nat-types/client/transport';
 
 export type ClientContext = {
   sendRequest: SendRequest;
@@ -17,6 +20,8 @@ export type ClientContext = {
 export type SendRequest = (args: {
   method: string;
   params: JsonLikeValue;
+  transportPolicy?: PartialTransportPolicy;
+  signal?: AbortSignal;
 }) => Promise<unknown>;
 
 type CreateClientArgs = {
