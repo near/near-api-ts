@@ -15,6 +15,7 @@ type SendWithRetry = (args: {
   method: string;
   params: JsonLikeValue;
   externalAbortSignal?: AbortSignal;
+  requestTimeoutSignal: AbortSignal;
 }) => Promise<
   | { value: unknown; error?: never }
   | { value?: never; error: TransportError | RpcError }
@@ -43,7 +44,10 @@ export const sendWithRetry: SendWithRetry = async (args) => {
       // If user aborted the request or request time out while delay - stop the loop
       const error = await safeSleep<TransportError>(
         backoff.maxDelayMs,
-        combineAbortSignals([args.externalAbortSignal]),
+        combineAbortSignals([
+          args.externalAbortSignal,
+          args.requestTimeoutSignal,
+        ]),
       );
       if (error) return { error };
 

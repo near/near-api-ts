@@ -1,22 +1,20 @@
 import type { Milliseconds } from 'nat-types/common';
-import { TransportError } from '../../../transportError';
+import { TransportError } from '../../transportError';
 import { oneLine } from '@common/utils/common';
 
-export const createAttemptTimeout = (
-  attemptTimeoutMs: Milliseconds,
-) => {
+export const createRequestTimeout = (requestTimeoutMs: Milliseconds) => {
   const controller = new AbortController();
 
   const timeoutId = setTimeout(
     () =>
       controller.abort(
         new TransportError({
-          code: 'AttemptTimeout',
-          message: oneLine(`The request attempt exceeded the configured timeout 
+          code: 'RequestTimeout',
+          message: oneLine(`The request exceeded the configured timeout 
           and was aborted.`),
         }),
       ),
-    attemptTimeoutMs,
+    requestTimeoutMs,
   );
 
   return {

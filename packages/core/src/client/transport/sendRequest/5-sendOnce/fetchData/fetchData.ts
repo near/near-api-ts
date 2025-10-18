@@ -1,4 +1,3 @@
-import { sleep } from '@common/utils/sleep';
 import { hasTransportErrorCode } from '../../../transportError';
 import { TransportError } from '../../../transportError';
 import type {
@@ -13,6 +12,7 @@ type FetchData = (args: {
   rpc: InnerRpcEndpoint;
   transportPolicy: TransportPolicy;
   body: JsonLikeValue;
+  requestTimeoutSignal: AbortSignal;
   externalAbortSignal?: AbortSignal;
 }) => Promise<
   { value: Response; error?: never } | { value?: never; error: TransportError }
@@ -22,6 +22,7 @@ export const fetchData: FetchData = async ({
   rpc,
   transportPolicy,
   body,
+  requestTimeoutSignal,
   externalAbortSignal,
 }) => {
   const attemptTimeout = createAttemptTimeout(
@@ -29,24 +30,26 @@ export const fetchData: FetchData = async ({
   );
 
   try {
-    // TODO remove after tests
-    // await sleep(
-    //   5000,
-    //   externalAbortSignal,
-    // );
-    // if (sleepResult.error) return { error: sleepResult.error };
-
     const value = await fetch(rpc.url, {
       method: 'POST',
       headers: rpc.headers,
       body: JSON.stringify(body),
-      signal: combineAbortSignals([externalAbortSignal, attemptTimeout.signal]),
+      signal: combineAbortSignals([
+        externalAbortSignal,
+        requestTimeoutSignal,
+        attemptTimeout.signal,
+      ]),
     });
 
     return { value };
   } catch (e) {
-    if (hasTransportErrorCode(e, ['ExternalAbort', 'AttemptTimeout']))
-      // RequestTimeout // ExternalAbort
+    if (
+      hasTransportErrorCode(e, [
+        'ExternalAbort',
+        'RequestTimeout',
+        'AttemptTimeout',
+      ])
+    )
       return { error: e as TransportError };
 
     return {

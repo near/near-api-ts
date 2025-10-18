@@ -1,47 +1,28 @@
 import { tryOneRound } from '../3-tryOneRound/tryOneRound';
 import type {
   TransportContext,
-  InnerRpcEndpoint,
   TransportPolicy,
-  RpcTypePreferences,
 } from 'nat-types/client/transport';
 import type { JsonLikeValue } from 'nat-types/common';
 import { TransportError, hasTransportErrorCode } from '../../transportError';
 import { safeSleep } from '@common/utils/sleep';
-import { hasRpcErrorCode } from '../../../rpcError';
+import { hasRpcErrorCode, RpcError } from '../../../rpcError';
 import { combineAbortSignals } from '@common/utils/common';
+import { getSortedRpcs } from './getSortedRpcs';
 
-const getSortedRpcs = (
-  rpcEndpoints: TransportContext['rpcEndpoints'],
-  rpcTypePriority: RpcTypePreferences,
-) => {
-  const sortedList = rpcTypePriority.reduce((acc: InnerRpcEndpoint[], type) => {
-    const normalizedType = type === 'Regular' ? 'regular' : 'archival';
-    const value = rpcEndpoints[normalizedType] ?? [];
-    acc.push(...value);
-    return acc;
-  }, []);
-
-  if (sortedList.length === 0)
-    return {
-      error: new TransportError({
-        code: 'NoAvailableRpc',
-        message:
-          `Invalid request configuration: no RPC endpoints found for any of the preferred types ` +
-          `(${rpcTypePriority.join(', ')}).`,
-      }),
-    };
-
-  return { value: sortedList };
-};
-
-export const tryMultipleRounds = async (args: {
+type TryMultipleRounds = (args: {
   rpcEndpoints: TransportContext['rpcEndpoints'];
   transportPolicy: TransportPolicy;
   method: string;
   params: JsonLikeValue;
   externalAbortSignal?: AbortSignal;
-}) => {
+  requestTimeoutSignal: AbortSignal;
+}) => Promise<
+  | { value: unknown; error?: never }
+  | { value?: never; error: TransportError | RpcError }
+>;
+
+export const tryMultipleRounds: TryMultipleRounds = async (args) => {
   const rpcs = getSortedRpcs(
     args.rpcEndpoints,
     args.transportPolicy.rpcTypePreferences,
@@ -74,7 +55,10 @@ export const tryMultipleRounds = async (args: {
       // If user aborted the request or request time out while delay - stop the loop
       const error = await safeSleep<TransportError>(
         nextRoundDelayMs,
-        combineAbortSignals([args.externalAbortSignal]),
+        combineAbortSignals([
+          args.externalAbortSignal,
+          args.requestTimeoutSignal,
+        ]),
       );
       if (error) return { error };
 

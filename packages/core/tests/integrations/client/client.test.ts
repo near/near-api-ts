@@ -47,7 +47,8 @@ test(
         policies: {
           transport: {
             timeouts: {
-              attemptMs: 1000,
+              // requestMs: 1000,
+              // attemptMs: 1000,
             },
             retry: {
               maxAttempts: 1,
@@ -58,12 +59,12 @@ test(
             failover: {
               maxRounds: 3,
               nextRpcDelayMs: 50,
-              nextRoundDelayMs: 10000,
+              nextRoundDelayMs: 1000,
             },
           },
         },
         options: {
-          signal: controller.signal,
+          // signal: controller.signal,
         },
       });
 
@@ -73,18 +74,6 @@ test(
     }
 
     console.log('---------------------');
-
-    // for (let i = 0; i < 10; i++) {
-    //   // await sleep(1000);
-    //   try {
-    //     const res = await client.getAccountState({ accountId: 'nat' });
-    //     console.log('success', i);
-    //   } catch (e) {
-    //     console.log('error', i, e );
-    //   }
-    // }
-    //
-    // server1.close();
 
     expect(5).toBe(5);
   },

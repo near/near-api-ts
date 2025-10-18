@@ -16,6 +16,7 @@ type SendOnce = (args: {
   transportPolicy: TransportPolicy;
   method: string;
   params: JsonLikeValue;
+  requestTimeoutSignal: AbortSignal;
   externalAbortSignal?: AbortSignal;
 }) => Promise<
   | { value: unknown; error?: never }
@@ -28,6 +29,7 @@ export const sendOnce: SendOnce = async ({
   method,
   params,
   externalAbortSignal,
+  requestTimeoutSignal,
 }) => {
   const body = {
     jsonrpc: '2.0',
@@ -40,6 +42,7 @@ export const sendOnce: SendOnce = async ({
     rpc,
     transportPolicy,
     body,
+    requestTimeoutSignal,
     externalAbortSignal,
   });
   if (response.error) return response;

@@ -6,16 +6,22 @@ import type {
 } from 'nat-types/client/transport';
 import type { JsonLikeValue } from 'nat-types/common';
 import { TransportError, hasTransportErrorCode } from '../../transportError';
-import { hasRpcErrorCode } from '../../../rpcError';
+import { hasRpcErrorCode, RpcError } from '../../../rpcError';
 import { combineAbortSignals } from '@common/utils/common';
 
-export const tryOneRound = async (args: {
+type TryOneRound = (args: {
   rpcs: InnerRpcEndpoint[];
   transportPolicy: TransportPolicy;
   method: string;
   params: JsonLikeValue;
   externalAbortSignal?: AbortSignal;
-}) => {
+  requestTimeoutSignal: AbortSignal;
+}) => Promise<
+  | { value: unknown; error?: never }
+  | { value?: never; error: TransportError | RpcError }
+>;
+
+export const tryOneRound: TryOneRound = async (args) => {
   // Try to complete the request on all available rpcs once
   for (let i = 0; i < args.rpcs.length; i++) {
     // TODO filter only available with no inactiveUntil
@@ -43,7 +49,10 @@ export const tryOneRound = async (args: {
       // If user aborted the request or request time out while delay - stop the loop
       const error = await safeSleep<TransportError>(
         args.transportPolicy.failover.nextRpcDelayMs,
-        combineAbortSignals([args.externalAbortSignal]),
+        combineAbortSignals([
+          args.externalAbortSignal,
+          args.requestTimeoutSignal,
+        ]),
       );
       if (error) return { error };
 
