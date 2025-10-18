@@ -6,13 +6,13 @@ export const defaultTransportPolicy: TransportPolicy = {
   rpcTypePreferences: ['Regular', 'Archival'],
   timeouts: {
     requestMs: 30_000,
-    attemptMs: 1000,
+    attemptMs: 10_000,
   },
   retry: {
     maxAttempts: 2,
     backoff: {
       minDelayMs: 100,
-      maxDelayMs: 100,
+      maxDelayMs: 200,
       multiplier: 3,
     },
   },

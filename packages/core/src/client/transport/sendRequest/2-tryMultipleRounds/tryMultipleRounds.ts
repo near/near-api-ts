@@ -1,4 +1,4 @@
-import { runOneRound } from './runOneRound';
+import { tryOneRound } from '../3-tryOneRound/tryOneRound';
 import type {
   TransportContext,
   InnerRpcEndpoint,
@@ -6,9 +6,10 @@ import type {
   RpcTypePreferences,
 } from 'nat-types/client/transport';
 import type { JsonLikeValue } from 'nat-types/common';
-import { TransportError, hasTransportErrorCode } from '../transportError';
-import { sleep } from '@common/utils/common';
-import { hasRpcErrorCode } from '../../rpcError';
+import { TransportError, hasTransportErrorCode } from '../../transportError';
+import { safeSleep } from '@common/utils/sleep';
+import { hasRpcErrorCode } from '../../../rpcError';
+import { combineAbortSignals } from '@common/utils/common';
 
 const getSortedRpcs = (
   rpcEndpoints: TransportContext['rpcEndpoints'],
@@ -34,24 +35,23 @@ const getSortedRpcs = (
   return { value: sortedList };
 };
 
-export const runRounds = async (
-  rpcEndpoints: TransportContext['rpcEndpoints'],
-  transportPolicy: TransportPolicy,
-  method: string,
-  params: JsonLikeValue,
-) => {
-  const rpcs = getSortedRpcs(rpcEndpoints, transportPolicy.rpcTypePreferences);
+export const tryMultipleRounds = async (args: {
+  rpcEndpoints: TransportContext['rpcEndpoints'];
+  transportPolicy: TransportPolicy;
+  method: string;
+  params: JsonLikeValue;
+  externalAbortSignal?: AbortSignal;
+}) => {
+  const rpcs = getSortedRpcs(
+    args.rpcEndpoints,
+    args.transportPolicy.rpcTypePreferences,
+  );
   if (rpcs.error) return rpcs;
 
-  const { maxRounds, nextRoundDelayMs } = transportPolicy.failover;
+  const { maxRounds, nextRoundDelayMs } = args.transportPolicy.failover;
 
   for (let i = 0; i < maxRounds; i++) {
-    const result = await runOneRound(
-      rpcs.value,
-      transportPolicy,
-      method,
-      params,
-    );
+    const result = await tryOneRound({ ...args, rpcs: rpcs.value });
 
     // If it's the last round
     if (i === maxRounds - 1) return result;
@@ -71,7 +71,13 @@ export const runRounds = async (
         'RpcTransactionTimeout',
       ])
     ) {
-      await sleep(nextRoundDelayMs);
+      // If user aborted the request or request time out while delay - stop the loop
+      const error = await safeSleep<TransportError>(
+        nextRoundDelayMs,
+        combineAbortSignals([args.externalAbortSignal]),
+      );
+      if (error) return { error };
+
       continue;
     }
     // In all other cases - return result (successful of failed)

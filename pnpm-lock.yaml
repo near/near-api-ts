@@ -84,15 +84,6 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/node@24.0.15)(terser@5.44.0)(tsx@4.20.6)
 
-  examples/nodejs/ts-esm:
-    dependencies:
-      '@near-api-ts/core':
-        specifier: workspace:*
-        version: link:../../../packages/core
-      zod:
-        specifier: ^4.0.11
-        version: 4.0.11
-
   packages/core:
     dependencies:
       '@near-js/jsonrpc-types':

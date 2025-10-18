@@ -1,4 +1,4 @@
-import { createSendRequest } from './sendRequest/createSendRequest';
+import { createSendRequest } from './sendRequest/1-createSendRequest/createSendRequest';
 import type {
   CreateTransportArgs,
   TransportContext,
@@ -63,12 +63,12 @@ const validateRpcEndpoints = (
 };
 
 export const createTransport = (args: CreateTransportArgs) => {
+  // TODO validate transportPolicy;
   const transportPolicy = mergeTransportPolicy(
     defaultTransportPolicy,
     args.policy,
   );
 
-  // TODO validate transportPolicy;
   validateRpcEndpoints(args.rpcEndpoints, transportPolicy.rpcTypePreferences);
 
   const context: TransportContext = {

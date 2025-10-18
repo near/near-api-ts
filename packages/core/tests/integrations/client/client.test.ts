@@ -24,43 +24,49 @@ test(
             // { url: 'https://allthatnode.com/protocol/near.dsrv' }, // Error - html
             // { url: 'https://near.drpc.org/' }, // Error - custom error format
           ],
-          archival: [{ url: 'https://1rpc.io/near' }],
-        },
-        policy: {
-          // rpcTypePreferences: ['archival'],
+          // archival: [{ url: 'https://1rpc.io/near' }],
         },
       },
     });
-
-    // const res = await client.getAccountState({
-    //   accountId: 'near',
-    //   atMomentOf: { blockHeight: 212788565 },
-    // });
-    // console.log('FINAL RESULT ', res);
 
     try {
       // const res = await client.getAccountKey({
       //   accountId: 'eclipseeer.near',
       //   publicKey: 'ed25519:3Dhkm2g9gKHQNeinRA1eH9ModH9aK3iJaw1uuKsRUuR1',
       // })
+      const controller = new AbortController();
+
+      setTimeout(() => {
+        controller.abort(new Error('aborted by user'));
+      }, 5000);
+
       const res = await client.getAccountState({
         accountId: 'near',
         // atMomentOf: { blockHeight: 160839194 }, // 212788565
-        // atMomentOf: { blockHash: 'UQcU8hMLAG96mBFEW8rwn5hj1icKbgVUE4G3QKUB5gy' }, // 212788565
+        atMomentOf: { blockHash: 'UQcU8hMLAG96mBFEW8rwn5hj1icKbgVUE4G3QKUB5gy' }, // 212788565
         policies: {
           transport: {
             timeouts: {
-              attemptMs: 100,
+              attemptMs: 1000,
             },
             retry: {
               maxAttempts: 1,
+              backoff: {
+                maxDelayMs: 50,
+              }
             },
             failover: {
-              maxRounds: 1
-            }
+              maxRounds: 3,
+              nextRpcDelayMs: 50,
+              nextRoundDelayMs: 10000,
+            },
           },
         },
+        options: {
+          signal: controller.signal,
+        },
       });
+
       console.log('FINAL RESULT ', res);
     } catch (e) {
       console.dir(e, { depth: null, customInspect: true });

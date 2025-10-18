@@ -21,14 +21,12 @@ export const fromJsonBytes = (bytes: Uint8Array | number[]): unknown => {
   return JSON.parse(new TextDecoder().decode(u8));
 };
 
-export const sleep = (ms: number, signal?: AbortSignal) =>
-  new Promise((resolve, reject) => {
-    if (signal?.aborted) reject(new Error('abort signal'));
-    const timeoutId = setTimeout(resolve, ms);
-
-    if (signal)
-      signal.onabort = () => {
-        clearTimeout(timeoutId);
-        reject(new Error('abort signal'));
-      };
-  });
+/**
+ * Creates a single AbortSignal that merges multiple signals.
+ * The output signal will be aborted as soon as any of the input signals is aborted.
+ * The output signal reason will be taken from the first aborted input signal.
+ */
+export const combineAbortSignals = (
+  signals: (AbortSignal | undefined)[],
+): AbortSignal =>
+  AbortSignal.any(signals.filter((signal) => typeof signal !== 'undefined'));

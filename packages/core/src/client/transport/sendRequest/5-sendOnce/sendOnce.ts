@@ -1,0 +1,85 @@
+import * as z from 'zod/mini';
+import { TransportError } from '../../transportError';
+import { RpcError } from '../../../rpcError';
+import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
+import { RpcResponseSchema } from '@common/schemas/zod/rpc';
+import { fetchData } from './fetchData/fetchData';
+import { parseJsonResponse } from './parseJsonResponse';
+import type {
+  InnerRpcEndpoint,
+  TransportPolicy,
+} from 'nat-types/client/transport';
+import type { JsonLikeValue } from 'nat-types/common';
+
+type SendOnce = (args: {
+  rpc: InnerRpcEndpoint;
+  transportPolicy: TransportPolicy;
+  method: string;
+  params: JsonLikeValue;
+  externalAbortSignal?: AbortSignal;
+}) => Promise<
+  | { value: unknown; error?: never }
+  | { value?: never; error: TransportError | RpcError }
+>;
+
+export const sendOnce: SendOnce = async ({
+  rpc,
+  transportPolicy,
+  method,
+  params,
+  externalAbortSignal,
+}) => {
+  const body = {
+    jsonrpc: '2.0',
+    id: 0,
+    method,
+    params,
+  };
+
+  const response = await fetchData({
+    rpc,
+    transportPolicy,
+    body,
+    externalAbortSignal,
+  });
+  if (response.error) return response;
+
+  // TODO Handle 429 status
+
+  const json = await parseJsonResponse(response.value, rpc);
+  if (json.error) return json;
+
+  const camelCased = snakeToCamelCase(json.value);
+  const validated = RpcResponseSchema.safeParse(camelCased);
+
+  // When the RPC response doesn't match the expected format
+  if (validated.error)
+    return {
+      error: new TransportError({
+        code: 'InvalidResponseSchema',
+        message:
+          `Invalid RPC response format: \n` +
+          `${z.prettifyError(validated.error)} \n\n` +
+          `Response: ${JSON.stringify(camelCased, null, 2)} \n\n` +
+          `Please try again or use another RPC node.`,
+        cause: validated.error,
+      }),
+    };
+
+  const { result, error } = validated.data;
+
+  if (error)
+    return {
+      error: new RpcError({
+        request: {
+          url: rpc.url,
+          method: 'POST',
+          headers: rpc.headers,
+          body,
+        },
+        __rawRpcError: error,
+      }),
+    };
+
+  return { value: result };
+};
