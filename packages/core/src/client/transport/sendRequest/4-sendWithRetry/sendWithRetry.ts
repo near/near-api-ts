@@ -14,8 +14,8 @@ type SendWithRetry = (args: {
   transportPolicy: TransportPolicy;
   method: string;
   params: JsonLikeValue;
-  externalAbortSignal?: AbortSignal;
   requestTimeoutSignal: AbortSignal;
+  externalAbortSignal?: AbortSignal;
 }) => Promise<
   | { value: unknown; error?: never }
   | { value?: never; error: TransportError | RpcError }

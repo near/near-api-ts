@@ -14,18 +14,33 @@ type TryOneRound = (args: {
   transportPolicy: TransportPolicy;
   method: string;
   params: JsonLikeValue;
-  externalAbortSignal?: AbortSignal;
+  fallbackWhenUnknownBlock: boolean;
   requestTimeoutSignal: AbortSignal;
+  externalAbortSignal?: AbortSignal;
 }) => Promise<
   | { value: unknown; error?: never }
   | { value?: never; error: TransportError | RpcError }
 >;
 
 export const tryOneRound: TryOneRound = async (args) => {
+  let result = {
+    error: new TransportError({
+      code: 'Unreachable',
+      message: `Unreachable error in 'tryOneRound'.`,
+    }),
+  };
+  let archivalOnly = false;
+
   // Try to complete the request on all available rpcs once
   for (let i = 0; i < args.rpcs.length; i++) {
-    // TODO filter only available with no inactiveUntil
-    const result = await sendWithRetry({ ...args, rpc: args.rpcs[i] });
+    const rpc = args.rpcs[i];
+    // Skip regular RPC if 'UnknownBlock' or 'GarbageCollectedBlock';
+    // This rule applies only after 1 attempt;
+    // console.log('rpc', archivalOnly, rpc);
+    // console.log(args.rpcs);
+    if (archivalOnly && rpc.type === 'regular') continue;
+
+    result = await sendWithRetry({ ...args, rpc });
     console.log('res in runOneRound', result.error?.code, args.rpcs[i].url);
 
     // If it's the last RPC in the list
@@ -44,6 +59,8 @@ export const tryOneRound: TryOneRound = async (args) => {
         'MethodNotFound',
         'UnknownValidationError',
         'RpcTransactionTimeout',
+        'UnknownBlock',
+        'GarbageCollectedBlock',
       ])
     ) {
       // If user aborted the request or request time out while delay - stop the loop
@@ -56,6 +73,12 @@ export const tryOneRound: TryOneRound = async (args) => {
       );
       if (error) return { error };
 
+      if (
+        hasRpcErrorCode(result.error, ['UnknownBlock', 'GarbageCollectedBlock'])
+      ) {
+        archivalOnly = true;
+      }
+
       continue;
     }
 
@@ -63,10 +86,5 @@ export const tryOneRound: TryOneRound = async (args) => {
     return result;
   }
 
-  return {
-    error: new TransportError({
-      code: 'Unreachable',
-      message: `Unreachable error in 'runOneRound'.`,
-    }),
-  };
+  return result;
 };

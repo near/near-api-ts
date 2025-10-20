@@ -49,6 +49,7 @@ export const sendOnce: SendOnce = async ({
 
   // TODO Handle 429 status
 
+  // Try to parse response in JSON
   const json = await parseJsonResponse(response.value, rpc);
   if (json.error) return json;
 
@@ -76,6 +77,7 @@ export const sendOnce: SendOnce = async ({
       error: new RpcError({
         request: {
           url: rpc.url,
+          rpcType: rpc.type,
           method: 'POST',
           headers: rpc.headers,
           body,

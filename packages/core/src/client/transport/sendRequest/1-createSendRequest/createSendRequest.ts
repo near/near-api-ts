@@ -5,6 +5,8 @@ import { tryMultipleRounds } from '../2-tryMultipleRounds/tryMultipleRounds';
 import { hasTransportErrorCode } from '../../transportError';
 import { createExternalAbortSignal } from './createExternalAbortSignal';
 import { createRequestTimeout } from './createRequestTimeout';
+import { handleMaybeUnknownBlock } from './handleMaybeUnknownBlock';
+import { getAvailableRpcs } from './_common/getAvailableRpcs';
 
 export const createSendRequest =
   (context: TransportContext): SendRequest =>
@@ -14,6 +16,12 @@ export const createSendRequest =
       args.transportPolicy,
     );
 
+    const rpcs = getAvailableRpcs(
+      context.rpcEndpoints,
+      transportPolicy.rpcTypePreferences,
+    );
+    if (rpcs.error) throw rpcs.error;
+
     const externalAbortSignal = createExternalAbortSignal(args.signal);
 
     const requestTimeout = createRequestTimeout(
@@ -21,13 +29,24 @@ export const createSendRequest =
     );
 
     const result = await tryMultipleRounds({
-      rpcEndpoints: context.rpcEndpoints,
+      rpcs: rpcs.value,
       transportPolicy,
       method: args.method,
       params: args.params,
+      fallbackWhenUnknownBlock: false,
       externalAbortSignal,
       requestTimeoutSignal: requestTimeout.signal,
     });
+
+    // result = await handleMaybeUnknownBlock({
+    //   result,
+    //   rpcEndpoints: context.rpcEndpoints,
+    //   transportPolicy,
+    //   method: args.method,
+    //   params: args.params,
+    //   externalAbortSignal,
+    //   requestTimeoutSignal: requestTimeout.signal,
+    // });
 
     clearTimeout(requestTimeout.timeoutId);
 

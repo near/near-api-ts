@@ -1,8 +1,10 @@
 import type { RpcError as JsonRpcError } from '@near-js/jsonrpc-types';
 import { oneLine } from '@common/utils/common';
+import type { InnerRpcEndpoint } from 'nat-types/client/transport';
 
 type RpcRequest = {
   url: string;
+  rpcType: InnerRpcEndpoint['type'];
   method: string;
   headers: Record<string, string>;
   body: unknown;

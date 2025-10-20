@@ -3,9 +3,9 @@ import type {
   RpcTypePreferences,
   TransportContext,
 } from 'nat-types/client/transport';
-import { TransportError } from '../../transportError';
+import { TransportError } from '../../../transportError';
 
-export const getSortedRpcs = (
+export const getAvailableRpcs = (
   rpcEndpoints: TransportContext['rpcEndpoints'],
   rpcTypePriority: RpcTypePreferences,
 ) => {

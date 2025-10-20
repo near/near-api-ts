@@ -1,43 +1,38 @@
 import { tryOneRound } from '../3-tryOneRound/tryOneRound';
-import type {
-  TransportContext,
-  TransportPolicy,
-} from 'nat-types/client/transport';
-import type { JsonLikeValue } from 'nat-types/common';
 import { TransportError, hasTransportErrorCode } from '../../transportError';
 import { safeSleep } from '@common/utils/sleep';
 import { hasRpcErrorCode, RpcError } from '../../../rpcError';
 import { combineAbortSignals } from '@common/utils/common';
-import { getSortedRpcs } from './getSortedRpcs';
+import type {
+  InnerRpcEndpoint,
+  TransportPolicy,
+} from 'nat-types/client/transport';
+import type { JsonLikeValue } from 'nat-types/common';
 
 type TryMultipleRounds = (args: {
-  rpcEndpoints: TransportContext['rpcEndpoints'];
+  rpcs: InnerRpcEndpoint[];
   transportPolicy: TransportPolicy;
   method: string;
   params: JsonLikeValue;
-  externalAbortSignal?: AbortSignal;
+  fallbackWhenUnknownBlock: boolean;
   requestTimeoutSignal: AbortSignal;
+  externalAbortSignal?: AbortSignal;
 }) => Promise<
   | { value: unknown; error?: never }
   | { value?: never; error: TransportError | RpcError }
 >;
 
 export const tryMultipleRounds: TryMultipleRounds = async (args) => {
-  const rpcs = getSortedRpcs(
-    args.rpcEndpoints,
-    args.transportPolicy.rpcTypePreferences,
-  );
-  if (rpcs.error) return rpcs;
-
   const { maxRounds, nextRoundDelayMs } = args.transportPolicy.failover;
 
   for (let i = 0; i < maxRounds; i++) {
-    const result = await tryOneRound({ ...args, rpcs: rpcs.value });
-
+    const result = await tryOneRound(args);
     // If it's the last round
     if (i === maxRounds - 1) return result;
 
-    // When it makes sense to run another round with the same request
+    // When it makes sense to run another round through all rpcs with the same request
+    // For example - ParseRequest error - we validate all input data, and mostly it will be
+    // a problem on the rpc side (rpc expects wrong format).
     if (
       hasTransportErrorCode(result.error, [
         'Fetch',

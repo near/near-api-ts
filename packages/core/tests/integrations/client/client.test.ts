@@ -18,13 +18,14 @@ test(
       transport: {
         rpcEndpoints: {
           regular: [
+            // { url: 'https://getblock.io/nodes/near/' }, // Error - html
             { url: 'https://free.rpc.fastnear.com' },
             { url: 'https://near.blockpi.network/v1/rpc/public' },
             // { url: 'https://getblock.io/nodes/near/' }, // Error - html
             // { url: 'https://allthatnode.com/protocol/near.dsrv' }, // Error - html
             // { url: 'https://near.drpc.org/' }, // Error - custom error format
           ],
-          // archival: [{ url: 'https://1rpc.io/near' }],
+          archival: [{ url: 'https://1rpc.io/near' }],
         },
       },
     });
@@ -42,10 +43,11 @@ test(
 
       const res = await client.getAccountState({
         accountId: 'near',
-        // atMomentOf: { blockHeight: 160839194 }, // 212788565
-        atMomentOf: { blockHash: 'UQcU8hMLAG96mBFEW8rwn5hj1icKbgVUE4G3QKUB5gy' }, // 212788565
+        atMomentOf: { blockHeight: 160839194 }, // 212788565
+        // atMomentOf: { blockHash: 'UQcU8hMLAG96mBFEW8rwn5hj1icKbgVUE4G3QKUB5gy' }, // 212788565
         policies: {
           transport: {
+            // rpcTypePreferences: ['Regular'],
             timeouts: {
               // requestMs: 1000,
               // attemptMs: 1000,
@@ -54,7 +56,7 @@ test(
               maxAttempts: 1,
               backoff: {
                 maxDelayMs: 50,
-              }
+              },
             },
             failover: {
               maxRounds: 3,
