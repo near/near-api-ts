@@ -15,7 +15,7 @@ const shouldTryAnotherRound = (
   hasTransportErrorCode(result.error, [
     'Fetch',
     'AttemptTimeout',
-    'ParseFetchResponseToJson',
+    'ParseResponseToJson',
     'InvalidResponseSchema',
   ]) ||
   hasRpcErrorCode(result.error, [

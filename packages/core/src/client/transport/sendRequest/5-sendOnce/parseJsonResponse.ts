@@ -11,7 +11,7 @@ export const parseJsonResponse = async (
   } catch (e) {
     return {
       error: new TransportError({
-        code: 'ParseFetchResponseToJson',
+        code: 'ParseResponseToJson',
         message: `Failed to parse response as JSON from the RPC node: ${rpc.url}`,
         cause: e,
       }),

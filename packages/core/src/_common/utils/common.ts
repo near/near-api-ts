@@ -30,3 +30,9 @@ export const combineAbortSignals = (
   signals: (AbortSignal | undefined)[],
 ): AbortSignal =>
   AbortSignal.any(signals.filter((signal) => typeof signal !== 'undefined'));
+
+/**
+ * Generate a random value in range between min and max.
+ */
+export const randomBetween = (min: number, max: number): number =>
+  Math.random() * (max - min) + min;
