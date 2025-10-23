@@ -25,7 +25,7 @@ test(
             // { url: 'https://allthatnode.com/protocol/near.dsrv' }, // Error - html
             // { url: 'https://near.drpc.org/' }, // Error - custom error format
           ],
-          archival: [{ url: 'https://1rpc.io1/near' }],
+          archival: [{ url: 'https://1rpc.io/near' }],
         },
       },
     });
@@ -47,9 +47,9 @@ test(
         // atMomentOf: { blockHash: 'UQcU8hMLAG96mBFEW8rwn5hj1icKbgVUE4G3QKUB5gy' }, // 212788565
         policies: {
           transport: {
-            // rpcTypePreferences: ['Regular'],
+            // rpcTypePreferences: ['Archival'],
             timeouts: {
-              // requestMs: 1000,
+              // requestMs: 1500,
               // attemptMs: 1000,
             },
             retry: {
@@ -60,7 +60,7 @@ test(
             },
             failover: {
               maxRounds: 2,
-              nextRpcDelayMs: 50,
+              nextRpcDelayMs: 5000,
               nextRoundDelayMs: 1000,
             },
           },

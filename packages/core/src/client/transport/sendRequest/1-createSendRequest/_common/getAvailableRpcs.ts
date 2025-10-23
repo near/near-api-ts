@@ -3,7 +3,7 @@ import type {
   RpcTypePreferences,
   TransportContext,
 } from 'nat-types/client/transport';
-import { TransportError } from '../../transportError';
+import { TransportError } from '../../../transportError';
 import type { Result } from 'nat-types/common';
 
 export const getAvailableRpcs = (

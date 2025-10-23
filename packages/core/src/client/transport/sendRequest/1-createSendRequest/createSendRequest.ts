@@ -8,7 +8,8 @@ import { tryMultipleRounds } from '../2-tryMultipleRounds/tryMultipleRounds';
 import { hasTransportErrorCode } from '../../transportError';
 import { createExternalAbortSignal } from './createExternalAbortSignal';
 import { createRequestTimeout } from './createRequestTimeout';
-import { getAvailableRpcs } from './getAvailableRpcs';
+import { getAvailableRpcs } from './_common/getAvailableRpcs';
+import { handleMaybeUnknownBlock } from './handleMaybeUnknownBlock';
 import { oneLine } from '@common/utils/common';
 
 export const createSendRequest =
@@ -41,20 +42,29 @@ export const createSendRequest =
       errors: [],
     };
 
-    const result = await tryMultipleRounds(context, rpcs.result);
+    // Try to execute the request with fallback;
+    let result = await tryMultipleRounds(context, rpcs.result);
+
+    // Try to use archival rpc if it's an UnknownBlock/GarbageCollectedBlock error
+    result = await handleMaybeUnknownBlock({
+      result,
+      context,
+      rpcEndpoints: transportContext.rpcEndpoints,
+    });
+
     clearTimeout(requestTimeout.timeoutId);
 
     // TODO think how to integrate this into a logger
-    console.error(
-      'Errors during request: ',
-      context.errors.map((err: any) =>
-        oneLine(`R${err?.request?.roundIndex + 1}; 
-        A${err?.request?.attemptIndex + 1}; 
-        ${err.code}; 
-        ${err?.request?.url};
-       `),
-      ),
-    );
+    if (context.errors.length > 0)
+      console.error(
+        'Errors during request: ',
+        context.errors.map((err: any) =>
+          oneLine(`R${err?.request?.roundIndex + 1}; 
+            A${err?.request?.attemptIndex + 1}; 
+            ${err.code}; 
+            ${err?.request?.url};`),
+        ),
+      );
 
     // Return the original abort reason
     if (hasTransportErrorCode(result.error, ['ExternalAbort']))
