@@ -27,7 +27,7 @@ export const sendWithRetry: SendWithRetry = async (args) => {
     const result = await sendOnce(args);
     console.log('sendWithRetry', result.error?.code, args.rpc.url);
 
-    const isLastAttempt = attemptIndex >= maxAttempts;
+    const isLastAttempt = attemptIndex >= maxAttempts - 1;
     if (isLastAttempt) return result;
 
     if (
@@ -41,7 +41,7 @@ export const sendWithRetry: SendWithRetry = async (args) => {
     ) {
       // Sleep before next attempt, but allow both external abort and request timeout to cancel the delay.
       const error = await safeSleep<TransportError>(
-        backoff.maxDelayMs,
+        backoff.maxDelayMs, // TODO add real backoff
         combineAbortSignals([
           args.externalAbortSignal,
           args.requestTimeoutSignal,
@@ -55,5 +55,5 @@ export const sendWithRetry: SendWithRetry = async (args) => {
     return result;
   };
 
-  return attempt(1);
+  return attempt(0);
 };

@@ -21,10 +21,13 @@ type TryMultipleRounds = (args: {
 export const tryMultipleRounds: TryMultipleRounds = async (args) => {
   const { maxRounds, nextRoundDelayMs } = args.transportPolicy.failover;
 
-  for (let i = 0; i < maxRounds; i++) {
+  const round = async (
+    roundIndex: number,
+  ): Promise<Result<unknown, TransportError | RpcError>> => {
     const result = await tryOneRound(args);
-    // If it's the last round
-    if (i === maxRounds - 1) return result;
+
+    const isLastRound = roundIndex >= maxRounds;
+    if (isLastRound) return result;
 
     // When it makes sense to run another round through all rpcs with the same request
     // For example - ParseRequest error - we validate all input data, and mostly it will be
@@ -43,7 +46,7 @@ export const tryMultipleRounds: TryMultipleRounds = async (args) => {
         'RpcTransactionTimeout',
       ])
     ) {
-      // If user aborted the request or request time out while delay - stop the loop
+      // If user aborted the request or request time out while delay - stop
       const error = await safeSleep<TransportError>(
         nextRoundDelayMs,
         combineAbortSignals([
@@ -53,16 +56,11 @@ export const tryMultipleRounds: TryMultipleRounds = async (args) => {
       );
       if (error) return { error };
 
-      continue;
+      return round(roundIndex + 1);
     }
     // In all other cases - return result (successful of failed)
     return result;
-  }
-
-  return {
-    error: new TransportError({
-      code: 'Unreachable',
-      message: `Unreachable error in 'runRounds'.`,
-    }),
   };
+
+  return round(1);
 };

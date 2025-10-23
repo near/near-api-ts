@@ -4,7 +4,7 @@ import type {
   InnerRpcEndpoint,
   TransportPolicy,
 } from 'nat-types/client/transport';
-import type {JsonLikeValue, Result} from 'nat-types/common';
+import type { JsonLikeValue, Result } from 'nat-types/common';
 import { TransportError, hasTransportErrorCode } from '../../transportError';
 import { hasRpcErrorCode, RpcError } from '../../../rpcError';
 import { combineAbortSignals } from '@common/utils/common';
@@ -16,26 +16,28 @@ type TryOneRound = (args: {
   params: JsonLikeValue;
   requestTimeoutSignal: AbortSignal;
   externalAbortSignal?: AbortSignal;
-}) => Promise<Result<unknown, TransportError | RpcError>>;;
+}) => Promise<Result<unknown, TransportError | RpcError>>;
 
 export const tryOneRound: TryOneRound = async (args) => {
-  let result;
-  let archivalOnly = false;
+  const { nextRpcDelayMs } = args.transportPolicy.failover;
 
-  // Try to complete the request on all available rpcs once
-  for (let i = 0; i < args.rpcs.length; i++) {
-    const rpc = args.rpcs[i];
-    // Skip regular RPC if 'UnknownBlock' or 'GarbageCollectedBlock';
-    // This rule applies only after 1 attempt;
-    if (archivalOnly && rpc.type !== 'archival') continue;
+  const roundOnRpc = async (
+    index: number,
+    archivalOnly: boolean,
+  ): Promise<Result<unknown, TransportError | RpcError>> => {
+    const rpc = args.rpcs[index];
 
-    result = await sendWithRetry({ ...args, rpc });
-    console.log('res in runOneRound', result.error?.code, args.rpcs[i].url);
+    // Skip non-archival RPCs if we've switched to archival-only mode
+    if (archivalOnly && rpc.type !== 'archival')
+      return roundOnRpc(index + 1, archivalOnly);
 
-    // If it's the last RPC in the list
-    if (i === args.rpcs.length - 1) return result;
+    const result = await sendWithRetry({ ...args, rpc });
+    console.log('res in runOneRound', result.error?.code, rpc.url);
 
-    // When it makes sense to try the same request on the different RPC during this round
+    const isLastRpc = index >= args.rpcs.length - 1;
+    if (isLastRpc) return result;
+
+    // Decide whether to continue to the next RPC within this round
     if (
       hasTransportErrorCode(result.error, [
         'Fetch',
@@ -52,9 +54,9 @@ export const tryOneRound: TryOneRound = async (args) => {
         'GarbageCollectedBlock',
       ])
     ) {
-      // If user aborted the request or request time out while delay - stop the loop
+      // Delay before trying the next RPC, but allow abort/timeouts to cancel the wait
       const error = await safeSleep<TransportError>(
-        args.transportPolicy.failover.nextRpcDelayMs,
+        nextRpcDelayMs,
         combineAbortSignals([
           args.externalAbortSignal,
           args.requestTimeoutSignal,
@@ -62,25 +64,19 @@ export const tryOneRound: TryOneRound = async (args) => {
       );
       if (error) return { error };
 
-      // When all next requests must go to archival only;
-      if (
-        hasRpcErrorCode(result.error, ['UnknownBlock', 'GarbageCollectedBlock'])
-      ) {
-        archivalOnly = true;
-      }
+      const nextArchivalOnly =
+        archivalOnly ||
+        hasRpcErrorCode(result.error, [
+          'UnknownBlock',
+          'GarbageCollectedBlock',
+        ]);
 
-      continue;
+      return roundOnRpc(index + 1, nextArchivalOnly);
     }
-    // In all other cases - return result (successful of failed)
+
+    // In all other cases return the current result (success or non-retryable error)
     return result;
-  }
+  };
 
-  return (
-    result ?? {
-      error: new TransportError({
-        code: 'Unreachable',
-        message: `Unreachable error in 'tryOneRound'.`,
-      }),
-    }
-  );
+  return roundOnRpc(0, false);
 };

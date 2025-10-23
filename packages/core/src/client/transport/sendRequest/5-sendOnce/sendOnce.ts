@@ -44,8 +44,6 @@ export const sendOnce: SendOnce = async ({
   });
   if (response.error) return response;
 
-  // TODO Handle 429 status
-
   // Try to parse response in JSON
   const json = await parseJsonResponse(response.result, rpc);
   if (json.error) return json;
