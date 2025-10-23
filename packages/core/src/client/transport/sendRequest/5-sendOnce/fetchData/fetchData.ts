@@ -1,45 +1,35 @@
 import { hasTransportErrorCode } from '../../../transportError';
 import { TransportError } from '../../../transportError';
-import type {
-  InnerRpcEndpoint,
-  TransportPolicy,
-} from 'nat-types/client/transport';
-import type { JsonLikeValue, Result } from 'nat-types/common';
 import { createAttemptTimeout } from './createAttemptTimeout';
 import { combineAbortSignals } from '@common/utils/common';
+import type {
+  InnerRpcEndpoint,
+  SendRequestContext,
+} from 'nat-types/client/transport';
+import type { JsonLikeValue, Result } from 'nat-types/common';
 
-type FetchData = (args: {
-  rpc: InnerRpcEndpoint;
-  transportPolicy: TransportPolicy;
-  body: JsonLikeValue;
-  requestTimeoutSignal: AbortSignal;
-  externalAbortSignal?: AbortSignal;
-}) => Promise<Result<Response, TransportError>>;
-
-export const fetchData: FetchData = async ({
-  rpc,
-  transportPolicy,
-  body,
-  requestTimeoutSignal,
-  externalAbortSignal,
-}) => {
+export const fetchData = async (
+  context: SendRequestContext,
+  rpc: InnerRpcEndpoint,
+  body: JsonLikeValue,
+): Promise<Result<Response, TransportError>> => {
   const attemptTimeout = createAttemptTimeout(
-    transportPolicy.timeouts.attemptMs,
+    context.transportPolicy.timeouts.attemptMs,
   );
 
   try {
-    const result = await fetch(rpc.url, {
+    const response = await fetch(rpc.url, {
       method: 'POST',
       headers: rpc.headers,
       body: JSON.stringify(body),
       signal: combineAbortSignals([
-        externalAbortSignal,
-        requestTimeoutSignal,
+        context.externalAbortSignal,
+        context.requestTimeoutSignal,
         attemptTimeout.signal,
       ]),
     });
 
-    return { result };
+    return { result: response };
   } catch (e) {
     if (
       hasTransportErrorCode(e, [

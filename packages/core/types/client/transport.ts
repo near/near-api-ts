@@ -1,5 +1,7 @@
 import type { PartialDeep } from 'type-fest';
-import type { Milliseconds } from 'nat-types/common';
+import type { JsonLikeValue, Milliseconds } from 'nat-types/common';
+import type { TransportError } from '../../src/client/transport/transportError';
+import type { RpcError } from '../../src/client/rpcError';
 
 export type RpcType = 'Regular' | 'Archival';
 type RegularFirst = ['Regular', 'Archival'];
@@ -70,4 +72,23 @@ export type TransportContext = {
     archival: InnerRpcEndpoint[];
   };
   readonly transportPolicy: TransportPolicy;
+};
+
+export type SendRequestContext = {
+  transportPolicy: TransportPolicy;
+  method: string;
+  params: JsonLikeValue;
+  requestTimeoutSignal: AbortSignal;
+  externalAbortSignal?: AbortSignal;
+  errors: (TransportError | RpcError)[];
+};
+
+export type RpcRequestLog = {
+  url: string;
+  rpcType: InnerRpcEndpoint['type'];
+  method: string;
+  headers: Record<string, string>;
+  body: unknown;
+  roundIndex: number,
+  attemptIndex: number,
 };

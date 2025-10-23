@@ -3,56 +3,50 @@ import { safeSleep } from '@common/utils/sleep';
 import { hasRpcErrorCode, RpcError } from '../../../rpcError';
 import { TransportError, hasTransportErrorCode } from '../../transportError';
 import { combineAbortSignals } from '@common/utils/common';
-import type { JsonLikeValue, Result } from 'nat-types/common';
+import type { Result } from 'nat-types/common';
 import type {
   InnerRpcEndpoint,
-  TransportPolicy,
+  SendRequestContext,
 } from 'nat-types/client/transport';
 
-type SendWithRetry = (args: {
-  rpc: InnerRpcEndpoint;
-  transportPolicy: TransportPolicy;
-  method: string;
-  params: JsonLikeValue;
-  requestTimeoutSignal: AbortSignal;
-  externalAbortSignal?: AbortSignal;
-}) => Promise<Result<unknown, TransportError | RpcError>>;
+const shouldRetry = (
+  result: Result<unknown, TransportError | RpcError>,
+): boolean =>
+  hasTransportErrorCode(result.error, ['AttemptTimeout']) ||
+  hasRpcErrorCode(result.error, [
+    'RpcTransactionTimeout',
+    'NoSyncedBlocks',
+    'UnknownRequestError',
+    'InternalServerError',
+  ]);
 
-export const sendWithRetry: SendWithRetry = async (args) => {
-  const { maxAttempts, backoff } = args.transportPolicy.retry;
+export const sendWithRetry = async (
+  context: SendRequestContext,
+  rpc: InnerRpcEndpoint,
+  roundIndex: number,
+): Promise<Result<unknown, TransportError | RpcError>> => {
+  const { maxAttempts, backoff } = context.transportPolicy.retry;
 
-  const attempt = async (
-    attemptIndex: number,
-  ): Promise<Result<unknown, TransportError | RpcError>> => {
-    const result = await sendOnce(args);
-    console.log('sendWithRetry', result.error?.code, args.rpc.url);
+  const attempt = async (attemptIndex: number) => {
+    const result = await sendOnce(context, rpc, roundIndex, attemptIndex);
 
     const isLastAttempt = attemptIndex >= maxAttempts - 1;
-    if (isLastAttempt) return result;
+    if (isLastAttempt || !shouldRetry(result)) return result;
 
-    if (
-      hasTransportErrorCode(result.error, ['AttemptTimeout']) ||
-      hasRpcErrorCode(result.error, [
-        'RpcTransactionTimeout',
-        'NoSyncedBlocks',
-        'UnknownRequestError',
-        'InternalServerError',
-      ])
-    ) {
-      // Sleep before next attempt, but allow both external abort and request timeout to cancel the delay.
-      const error = await safeSleep<TransportError>(
-        backoff.maxDelayMs, // TODO add real backoff
-        combineAbortSignals([
-          args.externalAbortSignal,
-          args.requestTimeoutSignal,
-        ]),
-      );
-      if (error) return { error };
+    const abortError = await safeSleep<TransportError>(
+      backoff.maxDelayMs, // TODO add real backoff
+      combineAbortSignals([
+        context.externalAbortSignal,
+        context.requestTimeoutSignal,
+      ]),
+    );
 
-      return attempt(attemptIndex + 1);
+    if (abortError) {
+      context.errors.push(abortError);
+      return { error: abortError };
     }
-    // In all other cases return the current result (success or non-retryable error)
-    return result;
+
+    return attempt(attemptIndex + 1);
   };
 
   return attempt(0);

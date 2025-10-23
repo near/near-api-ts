@@ -5,62 +5,53 @@ import { hasRpcErrorCode, RpcError } from '../../../rpcError';
 import { combineAbortSignals } from '@common/utils/common';
 import type {
   InnerRpcEndpoint,
-  TransportPolicy,
+  SendRequestContext,
 } from 'nat-types/client/transport';
-import type { JsonLikeValue, Result } from 'nat-types/common';
+import type { Result } from 'nat-types/common';
 
-type TryMultipleRounds = (args: {
-  rpcs: InnerRpcEndpoint[];
-  transportPolicy: TransportPolicy;
-  method: string;
-  params: JsonLikeValue;
-  requestTimeoutSignal: AbortSignal;
-  externalAbortSignal?: AbortSignal;
-}) => Promise<Result<unknown, TransportError | RpcError>>;
+const shouldTryAnotherRound = (
+  result: Result<unknown, TransportError | RpcError>,
+): boolean =>
+  hasTransportErrorCode(result.error, [
+    'Fetch',
+    'AttemptTimeout',
+    'ParseFetchResponseToJson',
+    'InvalidResponseSchema',
+  ]) ||
+  hasRpcErrorCode(result.error, [
+    'ParseRequest',
+    'MethodNotFound',
+    'UnknownValidationError',
+    'RpcTransactionTimeout',
+  ]);
 
-export const tryMultipleRounds: TryMultipleRounds = async (args) => {
-  const { maxRounds, nextRoundDelayMs } = args.transportPolicy.failover;
+export const tryMultipleRounds = async (
+  context: SendRequestContext,
+  rpcs: InnerRpcEndpoint[],
+): Promise<Result<unknown, TransportError | RpcError>> => {
+  const { maxRounds, nextRoundDelayMs } = context.transportPolicy.failover;
 
-  const round = async (
-    roundIndex: number,
-  ): Promise<Result<unknown, TransportError | RpcError>> => {
-    const result = await tryOneRound(args);
+  const round = async (roundIndex: number) => {
+    const result = await tryOneRound(context, rpcs, roundIndex);
 
-    const isLastRound = roundIndex >= maxRounds;
-    if (isLastRound) return result;
+    const isLastRound = roundIndex >= maxRounds - 1;
+    if (isLastRound || !shouldTryAnotherRound(result)) return result;
 
-    // When it makes sense to run another round through all rpcs with the same request
-    // For example - ParseRequest error - we validate all input data, and mostly it will be
-    // a problem on the rpc side (rpc expects wrong format).
-    if (
-      hasTransportErrorCode(result.error, [
-        'Fetch',
-        'AttemptTimeout',
-        'ParseResponseJson',
-        'InvalidResponseSchema',
-      ]) ||
-      hasRpcErrorCode(result.error, [
-        'ParseRequest',
-        'MethodNotFound',
-        'UnknownValidationError',
-        'RpcTransactionTimeout',
-      ])
-    ) {
-      // If user aborted the request or request time out while delay - stop
-      const error = await safeSleep<TransportError>(
-        nextRoundDelayMs,
-        combineAbortSignals([
-          args.externalAbortSignal,
-          args.requestTimeoutSignal,
-        ]),
-      );
-      if (error) return { error };
+    const abortError = await safeSleep<TransportError>(
+      nextRoundDelayMs,
+      combineAbortSignals([
+        context.externalAbortSignal,
+        context.requestTimeoutSignal,
+      ]),
+    );
 
-      return round(roundIndex + 1);
+    if (abortError) {
+      context.errors.push(abortError);
+      return { error: abortError };
     }
-    // In all other cases - return result (successful of failed)
-    return result;
+
+    return round(roundIndex + 1);
   };
 
-  return round(1);
+  return round(0);
 };

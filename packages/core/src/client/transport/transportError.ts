@@ -1,11 +1,18 @@
+import { RpcError } from '../rpcError';
+import type { RpcRequestLog } from 'nat-types/client/transport';
+
 export class NatError extends Error {
   public code: string;
   public name: string;
+  public errors?: (RpcError | TransportError)[];
+  public timestamp: number;
+  public request?: RpcRequestLog;
 
   constructor(
     args: {
       code: string;
       message: string;
+      request?: RpcRequestLog;
       cause?: unknown;
     },
     name = 'NatError',
@@ -13,6 +20,8 @@ export class NatError extends Error {
     super(`[${args.code}] ${args.message}`, { cause: args.cause });
     this.name = name;
     this.code = args.code;
+    this.timestamp = Date.now();
+    this.request = args.request;
   }
 
   static is(e: unknown) {
@@ -28,7 +37,12 @@ const TransportErrorBrand = Symbol.for('near-api-ts.TransportError');
 export class TransportError extends NatError {
   readonly [TransportErrorBrand] = true;
 
-  constructor(args: { code: string; message: string; cause?: unknown }) {
+  constructor(args: {
+    code: string;
+    message: string;
+    cause?: unknown;
+    request?: RpcRequestLog;
+  }) {
     super(args, 'TransportError');
   }
 }

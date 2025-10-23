@@ -83,4 +83,4 @@ export type Milliseconds = number;
 
 export type Result<R, E> =
   | { result: R; error?: never }
-  | { value?: never; error: E };
+  | { result?: never; error: E };

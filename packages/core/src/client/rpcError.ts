@@ -1,14 +1,7 @@
 import type { RpcError as JsonRpcError } from '@near-js/jsonrpc-types';
 import { oneLine } from '@common/utils/common';
-import type { InnerRpcEndpoint } from 'nat-types/client/transport';
-
-type RpcRequest = {
-  url: string;
-  rpcType: InnerRpcEndpoint['type'];
-  method: string;
-  headers: Record<string, string>;
-  body: unknown;
-};
+import type { RpcRequestLog } from 'nat-types/client/transport';
+import type { TransportError } from './transport/transportError';
 
 const Brand = Symbol.for('near-api-ts.RpcError');
 
@@ -93,11 +86,13 @@ const getErrorInfo = (__rawRpcError: JsonRpcError) => {
 export class RpcError extends Error {
   readonly [Brand] = true;
   public code: string;
-  public request: RpcRequest;
+  public request?: RpcRequestLog;
   public __rawRpcError: JsonRpcError;
+  public errors?: (RpcError | TransportError)[];
+  public timestamp: number;
 
   constructor(args: {
-    request: RpcRequest;
+    request: RpcRequestLog;
     __rawRpcError: JsonRpcError;
   }) {
     const { code, message } = getErrorInfo(args.__rawRpcError);
@@ -111,6 +106,7 @@ export class RpcError extends Error {
     this.code = code;
     this.request = args.request;
     this.__rawRpcError = args.__rawRpcError;
+    this.timestamp = Date.now();
   }
 
   static is(e: unknown) {

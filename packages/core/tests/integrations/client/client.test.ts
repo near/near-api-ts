@@ -18,14 +18,14 @@ test(
       transport: {
         rpcEndpoints: {
           regular: [
-            { url: 'https://getblock1.io/nodes/near/abc' }, // Error - html
+            { url: 'https://getblock.io/nodes/near' }, // Error - html
             { url: 'https://free.rpc.fastnear.com' },
             { url: 'https://near.blockpi.network/v1/rpc/public' },
             // { url: 'https://getblock.io/nodes/near/' }, // Error - html
             // { url: 'https://allthatnode.com/protocol/near.dsrv' }, // Error - html
             // { url: 'https://near.drpc.org/' }, // Error - custom error format
           ],
-          archival: [{ url: 'https://1rpc.io/near' }],
+          archival: [{ url: 'https://1rpc.io1/near' }],
         },
       },
     });
@@ -59,7 +59,7 @@ test(
               },
             },
             failover: {
-              maxRounds: 3,
+              maxRounds: 2,
               nextRpcDelayMs: 50,
               nextRoundDelayMs: 1000,
             },
@@ -71,8 +71,8 @@ test(
       });
 
       console.log('FINAL RESULT ', res);
-    } catch (e) {
-      console.dir(e, { depth: null, customInspect: true });
+    } catch (e: any) {
+      console.log(e?.request?.url, e?.message);
     }
 
     console.log('---------------------');
