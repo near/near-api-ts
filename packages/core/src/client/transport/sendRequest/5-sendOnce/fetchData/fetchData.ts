@@ -4,7 +4,7 @@ import type {
   InnerRpcEndpoint,
   TransportPolicy,
 } from 'nat-types/client/transport';
-import type { JsonLikeValue } from 'nat-types/common';
+import type { JsonLikeValue, Result } from 'nat-types/common';
 import { createAttemptTimeout } from './createAttemptTimeout';
 import { combineAbortSignals } from '@common/utils/common';
 
@@ -14,9 +14,7 @@ type FetchData = (args: {
   body: JsonLikeValue;
   requestTimeoutSignal: AbortSignal;
   externalAbortSignal?: AbortSignal;
-}) => Promise<
-  { value: Response; error?: never } | { value?: never; error: TransportError }
->;
+}) => Promise<Result<Response, TransportError>>;
 
 export const fetchData: FetchData = async ({
   rpc,
@@ -30,7 +28,7 @@ export const fetchData: FetchData = async ({
   );
 
   try {
-    const value = await fetch(rpc.url, {
+    const result = await fetch(rpc.url, {
       method: 'POST',
       headers: rpc.headers,
       body: JSON.stringify(body),
@@ -41,7 +39,7 @@ export const fetchData: FetchData = async ({
       ]),
     });
 
-    return { value };
+    return { result };
   } catch (e) {
     if (
       hasTransportErrorCode(e, [

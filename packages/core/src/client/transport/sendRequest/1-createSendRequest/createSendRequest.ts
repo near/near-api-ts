@@ -5,8 +5,7 @@ import { tryMultipleRounds } from '../2-tryMultipleRounds/tryMultipleRounds';
 import { hasTransportErrorCode } from '../../transportError';
 import { createExternalAbortSignal } from './createExternalAbortSignal';
 import { createRequestTimeout } from './createRequestTimeout';
-import { handleMaybeUnknownBlock } from './handleMaybeUnknownBlock';
-import { getAvailableRpcs } from './_common/getAvailableRpcs';
+import { getAvailableRpcs } from './getAvailableRpcs';
 
 export const createSendRequest =
   (context: TransportContext): SendRequest =>
@@ -29,24 +28,13 @@ export const createSendRequest =
     );
 
     const result = await tryMultipleRounds({
-      rpcs: rpcs.value,
+      rpcs: rpcs.result,
       transportPolicy,
       method: args.method,
       params: args.params,
-      fallbackWhenUnknownBlock: false,
       externalAbortSignal,
       requestTimeoutSignal: requestTimeout.signal,
     });
-
-    // result = await handleMaybeUnknownBlock({
-    //   result,
-    //   rpcEndpoints: context.rpcEndpoints,
-    //   transportPolicy,
-    //   method: args.method,
-    //   params: args.params,
-    //   externalAbortSignal,
-    //   requestTimeoutSignal: requestTimeout.signal,
-    // });
 
     clearTimeout(requestTimeout.timeoutId);
 
@@ -55,5 +43,6 @@ export const createSendRequest =
       throw result?.error?.cause;
 
     if (result.error) throw result.error;
-    return result.value;
+
+    return result.result;
   };

@@ -80,3 +80,7 @@ export type JsonLikeValue =
 export type MaybeJsonLikeValue = JsonLikeValue | undefined;
 
 export type Milliseconds = number;
+
+export type Result<R, E> =
+  | { result: R; error?: never }
+  | { value?: never; error: E };

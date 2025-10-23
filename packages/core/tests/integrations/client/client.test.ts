@@ -18,8 +18,8 @@ test(
       transport: {
         rpcEndpoints: {
           regular: [
-            // { url: 'https://getblock.io/nodes/near/' }, // Error - html
-            { url: 'https://free.rpc.fastnear.com' },
+            { url: 'https://getblock.io/nodes/near/abc' }, // Error - html
+            { url: 'https://free.rpc.fastnear.com/abc' },
             { url: 'https://near.blockpi.network/v1/rpc/public' },
             // { url: 'https://getblock.io/nodes/near/' }, // Error - html
             // { url: 'https://allthatnode.com/protocol/near.dsrv' }, // Error - html
@@ -53,7 +53,7 @@ test(
               // attemptMs: 1000,
             },
             retry: {
-              maxAttempts: 1,
+              maxAttempts: 2,
               backoff: {
                 maxDelayMs: 50,
               },

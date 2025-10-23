@@ -9,7 +9,7 @@ import type {
   InnerRpcEndpoint,
   TransportPolicy,
 } from 'nat-types/client/transport';
-import type { JsonLikeValue } from 'nat-types/common';
+import type { JsonLikeValue, Result } from 'nat-types/common';
 
 type SendOnce = (args: {
   rpc: InnerRpcEndpoint;
@@ -18,10 +18,7 @@ type SendOnce = (args: {
   params: JsonLikeValue;
   requestTimeoutSignal: AbortSignal;
   externalAbortSignal?: AbortSignal;
-}) => Promise<
-  | { value: unknown; error?: never }
-  | { value?: never; error: TransportError | RpcError }
->;
+}) => Promise<Result<unknown, TransportError | RpcError>>;
 
 export const sendOnce: SendOnce = async ({
   rpc,
@@ -50,7 +47,7 @@ export const sendOnce: SendOnce = async ({
   // TODO Handle 429 status
 
   // Try to parse response in JSON
-  const json = await parseJsonResponse(response.value, rpc);
+  const json = await parseJsonResponse(response.result, rpc);
   if (json.error) return json;
 
   const camelCased = snakeToCamelCase(json.value);
@@ -86,5 +83,5 @@ export const sendOnce: SendOnce = async ({
       }),
     };
 
-  return { value: result };
+  return { result };
 };

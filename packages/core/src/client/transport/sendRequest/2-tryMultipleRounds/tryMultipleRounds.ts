@@ -7,20 +7,16 @@ import type {
   InnerRpcEndpoint,
   TransportPolicy,
 } from 'nat-types/client/transport';
-import type { JsonLikeValue } from 'nat-types/common';
+import type { JsonLikeValue, Result } from 'nat-types/common';
 
 type TryMultipleRounds = (args: {
   rpcs: InnerRpcEndpoint[];
   transportPolicy: TransportPolicy;
   method: string;
   params: JsonLikeValue;
-  fallbackWhenUnknownBlock: boolean;
   requestTimeoutSignal: AbortSignal;
   externalAbortSignal?: AbortSignal;
-}) => Promise<
-  | { value: unknown; error?: never }
-  | { value?: never; error: TransportError | RpcError }
->;
+}) => Promise<Result<unknown, TransportError | RpcError>>;
 
 export const tryMultipleRounds: TryMultipleRounds = async (args) => {
   const { maxRounds, nextRoundDelayMs } = args.transportPolicy.failover;

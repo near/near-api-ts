@@ -4,7 +4,7 @@ import type {
   InnerRpcEndpoint,
   TransportPolicy,
 } from 'nat-types/client/transport';
-import type { JsonLikeValue } from 'nat-types/common';
+import type {JsonLikeValue, Result} from 'nat-types/common';
 import { TransportError, hasTransportErrorCode } from '../../transportError';
 import { hasRpcErrorCode, RpcError } from '../../../rpcError';
 import { combineAbortSignals } from '@common/utils/common';
@@ -14,21 +14,12 @@ type TryOneRound = (args: {
   transportPolicy: TransportPolicy;
   method: string;
   params: JsonLikeValue;
-  fallbackWhenUnknownBlock: boolean;
   requestTimeoutSignal: AbortSignal;
   externalAbortSignal?: AbortSignal;
-}) => Promise<
-  | { value: unknown; error?: never }
-  | { value?: never; error: TransportError | RpcError }
->;
+}) => Promise<Result<unknown, TransportError | RpcError>>;;
 
 export const tryOneRound: TryOneRound = async (args) => {
-  let result = {
-    error: new TransportError({
-      code: 'Unreachable',
-      message: `Unreachable error in 'tryOneRound'.`,
-    }),
-  };
+  let result;
   let archivalOnly = false;
 
   // Try to complete the request on all available rpcs once
@@ -36,9 +27,7 @@ export const tryOneRound: TryOneRound = async (args) => {
     const rpc = args.rpcs[i];
     // Skip regular RPC if 'UnknownBlock' or 'GarbageCollectedBlock';
     // This rule applies only after 1 attempt;
-    // console.log('rpc', archivalOnly, rpc);
-    // console.log(args.rpcs);
-    if (archivalOnly && rpc.type === 'regular') continue;
+    if (archivalOnly && rpc.type !== 'archival') continue;
 
     result = await sendWithRetry({ ...args, rpc });
     console.log('res in runOneRound', result.error?.code, args.rpcs[i].url);
@@ -73,6 +62,7 @@ export const tryOneRound: TryOneRound = async (args) => {
       );
       if (error) return { error };
 
+      // When all next requests must go to archival only;
       if (
         hasRpcErrorCode(result.error, ['UnknownBlock', 'GarbageCollectedBlock'])
       ) {
@@ -81,10 +71,16 @@ export const tryOneRound: TryOneRound = async (args) => {
 
       continue;
     }
-
     // In all other cases - return result (successful of failed)
     return result;
   }
 
-  return result;
+  return (
+    result ?? {
+      error: new TransportError({
+        code: 'Unreachable',
+        message: `Unreachable error in 'tryOneRound'.`,
+      }),
+    }
+  );
 };

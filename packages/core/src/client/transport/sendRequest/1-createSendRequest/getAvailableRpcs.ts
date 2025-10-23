@@ -3,12 +3,13 @@ import type {
   RpcTypePreferences,
   TransportContext,
 } from 'nat-types/client/transport';
-import { TransportError } from '../../../transportError';
+import { TransportError } from '../../transportError';
+import type { Result } from 'nat-types/common';
 
 export const getAvailableRpcs = (
   rpcEndpoints: TransportContext['rpcEndpoints'],
   rpcTypePriority: RpcTypePreferences,
-) => {
+): Result<InnerRpcEndpoint[], TransportError> => {
   const sortedList = rpcTypePriority.reduce((acc: InnerRpcEndpoint[], type) => {
     const normalizedType = type === 'Regular' ? 'regular' : 'archival';
     const value = rpcEndpoints[normalizedType] ?? [];
@@ -26,5 +27,5 @@ export const getAvailableRpcs = (
       }),
     };
 
-  return { value: sortedList };
+  return { result: sortedList };
 };
