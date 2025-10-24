@@ -1,7 +1,7 @@
 import {
   createUnlock,
   createLock,
-  createIncrementNonce,
+  createSetNonce,
 } from './helpers/keyUtils';
 import type { AccountKey, FullAccessKey } from 'nat-types/accountKey';
 import type { SignerContext } from 'nat-types/signers/memorySigner';
@@ -19,7 +19,7 @@ const transformKey = (fullAccessKey: FullAccessKey, keyPairs: KeyPairs) => {
   };
   key.lock = createLock(key);
   key.unlock = createUnlock(key);
-  key.incrementNonce = createIncrementNonce(key);
+  key.setNonce = createSetNonce(key);
 
   return key;
 };

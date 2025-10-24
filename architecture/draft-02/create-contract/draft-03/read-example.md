@@ -19,9 +19,6 @@ await client.callContractReadFunction({
   }
 });
 ```
-
-TODO: Add additionalFields: false for types
-
 #### With ABI
 
 ```ts

@@ -1,5 +1,5 @@
 import {
-  createIncrementNonce,
+  createSetNonce,
   createLock,
   createUnlock,
 } from './helpers/keyUtils';
@@ -23,7 +23,7 @@ const transformKey = (functionCallKey: FunctionCallKey, keyPairs: KeyPairs) => {
 
   key.lock = createLock(key);
   key.unlock = createUnlock(key);
-  key.incrementNonce = createIncrementNonce(key);
+  key.setNonce = createSetNonce(key);
 
   return key;
 };

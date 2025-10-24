@@ -15,7 +15,7 @@ export const signTransaction = async (
       nextNonce,
     );
 
-    key.incrementNonce();
+    key.setNonce(nextNonce);
 
     signerContext.resolver.completeTask(task.taskId, {
       result: signedTransaction,

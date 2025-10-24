@@ -10,7 +10,7 @@ import { createSendSignedTransaction } from './methods/transaction/sendSignedTra
 import type { CreateClient } from 'nat-types/client/client';
 import { createTransport } from './transport/createTransport';
 
-// TODO add state for protocol config / blockHash
+// TODO add cache for protocol config / blockHash
 export const createClient: CreateClient = async (args) => {
   const transport = createTransport(args.transport);
 

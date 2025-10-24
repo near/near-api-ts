@@ -1,12 +1,13 @@
 import { getTransactionHash } from '../../../../helpers/crypto/getTransactionHash';
 import { sign } from '../../../../helpers/crypto/sign';
 import type { SignedTransaction } from 'nat-types/signedTransaction';
+import type { Nonce } from 'nat-types/common';
 
 export const getSignedTransaction = (
   signerContext: any,
   task: any,
   key: any,
-  nextNonce: bigint,
+  nextNonce: Nonce,
 ): SignedTransaction => {
   const transaction = {
     ...task.transactionIntent,

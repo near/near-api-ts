@@ -1,4 +1,3 @@
-# TODO Need to clean up + write rationale
 
 ```ts
 functionCall({
@@ -52,7 +51,7 @@ interface NEARInterface {
 
 function NEAR(value: string): NEARInterface {
     return {
-        yoctoNear: 1n, // TODO: value to bigint
+        yoctoNear: 1n, 
         greaterThan: (v) => true,
         // add: () => NEARInterface,
     }
