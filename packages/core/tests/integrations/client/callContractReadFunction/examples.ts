@@ -1,4 +1,4 @@
-import { createTestnetClient } from '@near-api-ts/core';
+import { createTestnetClient } from '../../../../src';
 import * as z from 'zod/mini';
 
 const contractAccountId = 'usdl.lantstool.testnet';
@@ -117,7 +117,16 @@ await client.callContractReadFunction({
   contractAccountId,
   functionName,
   options: {
-    serializeArgs: (_args) => new Uint8Array(1),
+    serializeArgs: (_) => new Uint8Array(1),
+  },
+});
+
+await client.callContractReadFunction({
+  contractAccountId,
+  functionName,
+  functionArgs: undefined,
+  options: {
+    serializeArgs: () => new Uint8Array(1),
   },
 });
 

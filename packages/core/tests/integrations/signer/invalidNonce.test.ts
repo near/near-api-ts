@@ -9,7 +9,7 @@ import { log } from '../utils/common';
 import { DEFAULT_ACCOUNT_ID, DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 
 test(
-  'Execute Transaction',
+  'Handle invalid nonce',
   {
     timeout: 30 * 1000,
   },

@@ -3,6 +3,22 @@ import { getSignedTransaction } from './helpers/getSignedTransaction';
 import { hasRpcErrorCode } from '../../../client/rpcError';
 import type { Nonce, Result } from 'nat-types/common';
 
+/*
+"data": {
+    "TxExecutionError": {
+      "InvalidTxError": {
+        "InvalidAccessKeyError": {
+          "NotEnoughAllowance": {
+            "accountId": "user.nat",
+            "allowance": "100",
+            "cost": "1119831546455600000000",
+            "publicKey": "ed25519:DT5gLSaN4b8GHKFafMozJtVB62pqtXWgt9X74d6ahXm8"
+          }
+        }
+      }
+    }
+ */
+
 const NonceErrorSchema = z.object({
   __rawRpcError: z.object({
     data: z.object({

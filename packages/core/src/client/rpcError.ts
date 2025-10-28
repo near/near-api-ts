@@ -100,7 +100,7 @@ export class RpcError extends Error {
     super(
       `[${code}]: ${message} \n` +
         `Type: ${args.__rawRpcError.name} \n` +
-        `Cause: ${JSON.stringify(args.__rawRpcError.cause, null, 2)}`,
+        `Cause: ${JSON.stringify(args.__rawRpcError, null, 2)}`,
     );
     this.name = 'RpcError';
     this.code = code;

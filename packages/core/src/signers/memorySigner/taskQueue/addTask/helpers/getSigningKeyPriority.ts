@@ -1,23 +1,23 @@
 import type { TransactionIntent } from 'nat-types/transaction';
 import type { FunctionCallAction } from 'nat-types/actions/functionCall';
-import type {AccountId, MaybeJsonLikeValue} from 'nat-types/common';
+import type { AccountId } from 'nat-types/common';
 
 /**
  * We always want to sign txns with FA key when possible and use FC only if all
  * FA keys are busy/non-present
  */
-  // TODO #1: Find all FC keys which can sign the task, not only 1.
-  // TODO #2: Add ability to define the keyType priority by user himself.
-  //   For example ['FunctionCall', 'FullAccess']
+// TODO #1: Find all FC keys which can sign the task, not only 1.
+// TODO #2: Add ability to define the keyType priority by user himself.
+//   For example ['FunctionCall', 'FullAccess']
 const getPriorityForFunctionCallTransaction = (
-  action: FunctionCallAction<MaybeJsonLikeValue>,
+  action: FunctionCallAction,
   receiverAccountId: AccountId,
 ) => [
   { type: 'FullAccess' },
   {
     type: 'FunctionCall',
     contractAccountId: receiverAccountId,
-    calledFnName: action.params.functionName,
+    calledFnName: action.functionName,
   },
 ];
 

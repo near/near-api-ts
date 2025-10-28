@@ -25,5 +25,5 @@ const CryptoHashSchema = Base58StringSchema.check(
 );
 
 export const BlockHashSchema = CryptoHashSchema;
-export const BlockHeightSchema = z.uint64();
+export const BlockHeightSchema = z.uint64(); // TODO fix it  - should be number
 export const BlockIdSchema = z.union([BlockHeightSchema, BlockHashSchema]);

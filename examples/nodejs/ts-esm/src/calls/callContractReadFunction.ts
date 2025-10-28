@@ -1,8 +1,8 @@
-import { createClient, testnet } from '@near-api-ts/core';
+import { createTestnetClient } from '@near-api-ts/core';
 import * as z from 'zod/mini';
 
-const client = createClient({ network: testnet });
-``
+const client = await createTestnetClient();
+
 const toObject = (rawResult: number[]) =>
   JSON.parse(new TextDecoder().decode(new Uint8Array(rawResult)));
 
@@ -28,6 +28,7 @@ const fullResult = await client.callContractReadFunction({
   functionName: 'ft_metadata',
   withStateAt: 'LatestOptimisticBlock',
   options: {
+    serializeArgs: (_) => new Uint8Array(1),
     deserializeResult: deserializeMetadataResult,
   },
 });
