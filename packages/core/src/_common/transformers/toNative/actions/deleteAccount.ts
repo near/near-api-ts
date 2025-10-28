@@ -7,6 +7,6 @@ export const toNativeDeleteAccountAction = (
   action: DeleteAccountAction,
 ): NativeDeleteAccountAction => ({
   deleteAccount: {
-    beneficiaryId: action.params.beneficiaryAccountId,
+    beneficiaryId: action.beneficiaryAccountId,
   },
 });

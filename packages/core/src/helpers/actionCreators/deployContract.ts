@@ -1,13 +1,11 @@
 import type {
   DeployContractAction,
-  DeployContractActionParams,
+  CreateDeployContractActionArgs,
 } from 'nat-types/actions/deployContract';
 
 export const deployContract = (
-  params: DeployContractActionParams,
+  args: CreateDeployContractActionArgs,
 ): DeployContractAction => ({
+  ...args,
   actionType: 'DeployContract',
-  params,
 });
-
-

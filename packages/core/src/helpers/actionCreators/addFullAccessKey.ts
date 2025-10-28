@@ -1,14 +1,12 @@
 import type {
-  AddKeyAction,
-  FullAccessKeyParams,
+  AddFullAccessKeyAction,
+  CreateAddFullAccessKeyActionArgs,
 } from 'nat-types/actions/addKey';
 
-export const addFullAccessKey = ({
-  publicKey,
-}: Omit<FullAccessKeyParams, 'accessType'>): AddKeyAction => ({
+export const addFullAccessKey = (
+  args: CreateAddFullAccessKeyActionArgs,
+): AddFullAccessKeyAction => ({
+  ...args,
   actionType: 'AddKey',
-  params: {
-    accessType: 'FullAccess',
-    publicKey,
-  },
+  accessType: 'FullAccess',
 });

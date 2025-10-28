@@ -8,6 +8,6 @@ export const toNativeTransferAction = (
   action: TransferAction,
 ): NativeTransferAction => ({
   transfer: {
-    deposit: fromNearOption(action.params.amount).yoctoNear,
+    deposit: fromNearOption(action.amount).yoctoNear,
   },
 });

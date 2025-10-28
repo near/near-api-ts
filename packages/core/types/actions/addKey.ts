@@ -5,23 +5,28 @@ import type {
   NearOption,
 } from 'nat-types/common';
 
-export type FullAccessKeyParams = {
-  accessType: 'FullAccess';
+export type CreateAddFullAccessKeyActionArgs = {
   publicKey: PublicKey;
 };
 
-export type FunctionCallKeyParams = {
-  accessType: 'FunctionCall';
+export type CreateAddFunctionCallKeyActionArgs = {
   publicKey: PublicKey;
   contractAccountId: AccountId;
   gasBudget?: NearOption;
   allowedFunctions?: ContractFunctionName[];
 };
 
-export type AddKeyAction = {
+export type AddFullAccessKeyAction = {
   actionType: 'AddKey';
-  params: FullAccessKeyParams | FunctionCallKeyParams;
-};
+  accessType: 'FullAccess';
+} & CreateAddFullAccessKeyActionArgs;
+
+export type AddFunctionCallKeyAction = {
+  actionType: 'AddKey';
+  accessType: 'FunctionCall';
+} & CreateAddFunctionCallKeyActionArgs;
+
+export type AddKeyAction = AddFullAccessKeyAction | AddFunctionCallKeyAction;
 
 // ****** NATIVE ********
 

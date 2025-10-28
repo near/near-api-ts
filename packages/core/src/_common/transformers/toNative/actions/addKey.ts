@@ -6,11 +6,11 @@ import { toNativePublicKey } from '@common/transformers/toNative/publicKey';
 import { fromNearOption } from '../../../../helpers/near';
 
 const getPermission = (
-  params: AddKeyAction['params'],
+  action: AddKeyAction,
 ): NativeAddKeyAction['addKey']['accessKey']['permission'] => {
-  if (params.accessType === 'FullAccess') return { fullAccess: {} };
+  if (action.accessType === 'FullAccess') return { fullAccess: {} };
 
-  const { contractAccountId, gasBudget, allowedFunctions } = params;
+  const { contractAccountId, gasBudget, allowedFunctions } = action;
 
   return {
     functionCall: {
@@ -25,10 +25,10 @@ export const toNativeAddKeyAction = (
   action: AddKeyAction,
 ): NativeAddKeyAction => ({
   addKey: {
-    publicKey: toNativePublicKey(action.params.publicKey),
+    publicKey: toNativePublicKey(action.publicKey),
     accessKey: {
       nonce: 0n, // Placeholder; It's not usable anymore: https://gov.near.org/t/issue-with-access-key-nonce/749
-      permission: getPermission(action.params),
+      permission: getPermission(action),
     },
   },
 });

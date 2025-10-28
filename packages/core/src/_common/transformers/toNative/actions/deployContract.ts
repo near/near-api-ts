@@ -7,9 +7,9 @@ import type {
 export const toNativeDeployContractAction = (
   action: DeployContractAction,
 ): NativeDeployContractAction => {
-  const code = action.params.wasmBytes
-    ? action.params.wasmBytes
-    : base64.decode(action.params.wasmBase64);
+  const code = action.wasmBytes
+    ? action.wasmBytes
+    : base64.decode(action.wasmBase64);
 
   return {
     deployContract: { code },

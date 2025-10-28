@@ -1,13 +1,12 @@
 import type { PublicKey, NativePublicKey } from 'nat-types/crypto';
 
-export type DeleteKeyActionParams = {
+export type CreateDeleteKeyActionArgs = {
   publicKey: PublicKey;
 };
 
 export type DeleteKeyAction = {
   actionType: 'DeleteKey';
-  params: DeleteKeyActionParams;
-};
+} & CreateDeleteKeyActionArgs;
 
 // ****** NATIVE ********
 

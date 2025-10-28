@@ -1,9 +1,9 @@
 import type {
   TransferAction,
-  TransferActionParams,
+  CreateTransferActionArgs,
 } from 'nat-types/actions/transfer';
 
-export const transfer = (params: TransferActionParams): TransferAction => ({
+export const transfer = (args: CreateTransferActionArgs): TransferAction => ({
+  ...args,
   actionType: 'Transfer',
-  params,
 });

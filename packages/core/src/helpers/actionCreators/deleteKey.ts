@@ -1,9 +1,11 @@
 import type {
   DeleteKeyAction,
-  DeleteKeyActionParams,
+  CreateDeleteKeyActionArgs,
 } from 'nat-types/actions/deleteKey';
 
-export const deleteKey = (params: DeleteKeyActionParams): DeleteKeyAction => ({
+export const deleteKey = (
+  args: CreateDeleteKeyActionArgs,
+): DeleteKeyAction => ({
+  ...args,
   actionType: 'DeleteKey',
-  params,
 });

@@ -8,6 +8,6 @@ export const toNativeDeleteKeyAction = (
   action: DeleteKeyAction,
 ): NativeDeleteKeyAction => ({
   deleteKey: {
-    publicKey: toNativePublicKey(action.params.publicKey),
+    publicKey: toNativePublicKey(action.publicKey),
   },
 });

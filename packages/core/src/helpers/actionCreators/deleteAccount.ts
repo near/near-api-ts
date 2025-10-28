@@ -1,11 +1,11 @@
 import type {
   DeleteAccountAction,
-  DeleteAccountActionParams,
+  CreateDeleteAccountActionArgs,
 } from 'nat-types/actions/deleteAccount';
 
 export const deleteAccount = (
-  params: DeleteAccountActionParams,
+  args: CreateDeleteAccountActionArgs,
 ): DeleteAccountAction => ({
+  ...args,
   actionType: 'DeleteAccount',
-  params,
 });

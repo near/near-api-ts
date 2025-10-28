@@ -1,13 +1,12 @@
 import type { AccountId } from 'nat-types/common';
 
-export type DeleteAccountActionParams = {
+export type CreateDeleteAccountActionArgs = {
   beneficiaryAccountId: AccountId;
 };
 
 export type DeleteAccountAction = {
   actionType: 'DeleteAccount';
-  params: DeleteAccountActionParams;
-};
+} & CreateDeleteAccountActionArgs;
 
 // ****** NATIVE ********
 

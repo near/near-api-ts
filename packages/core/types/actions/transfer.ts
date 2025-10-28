@@ -1,13 +1,12 @@
 import type { NearOption } from 'nat-types/common';
 
-export type TransferActionParams = {
+export type CreateTransferActionArgs = {
   amount: NearOption;
 };
 
 export type TransferAction = {
   actionType: 'Transfer';
-  params: TransferActionParams;
-};
+} & CreateTransferActionArgs;
 
 // ****** NATIVE ********
 
