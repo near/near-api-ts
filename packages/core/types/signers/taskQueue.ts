@@ -10,10 +10,10 @@ import type { SendSignedTransactionResult } from 'nat-types/client/methods/trans
 import type { SignedTransaction } from 'nat-types/signedTransaction';
 import type { KeyPoolKey } from 'nat-types/signers/keyPool';
 
-export type FullAccessKeyPriority = { type: 'FullAccess' };
+export type FullAccessKeyPriority = { accessType: 'FullAccess' };
 
 export type FunctionCallKeyPriority = {
-  type: 'FunctionCall';
+  accessType: 'FunctionCall';
   contractAccountId: AccountId;
   calledFnName: ContractFunctionName;
 };

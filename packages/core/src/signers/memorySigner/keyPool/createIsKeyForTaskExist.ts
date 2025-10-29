@@ -9,7 +9,7 @@ const isKeyExist = (
   keyList: KeyList,
 ) => {
   // If exists at least 1 FA key - return true
-  if (keyPriority.type === 'FullAccess') return keyList.fullAccess.length > 0;
+  if (keyPriority.accessType === 'FullAccess') return keyList.fullAccess.length > 0;
 
   // If keyType is FunctionCall - find the key which follows all criteria
   return keyList.functionCall.find((key) => {

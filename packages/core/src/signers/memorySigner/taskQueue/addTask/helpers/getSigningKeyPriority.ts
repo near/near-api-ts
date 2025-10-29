@@ -11,9 +11,9 @@ const getPriorityForFunctionCallTransaction = (
   action: FunctionCallAction,
   receiverAccountId: AccountId,
 ): SigningKeyPriority => [
-  { type: 'FullAccess' },
+  { accessType: 'FullAccess' },
   {
-    type: 'FunctionCall',
+    accessType: 'FunctionCall',
     contractAccountId: receiverAccountId,
     calledFnName: action.functionName,
   },
@@ -33,5 +33,5 @@ export const getSigningKeyPriority = ({
     return getPriorityForFunctionCallTransaction(actions[0], receiverAccountId);
 
   // For everything else use FA key only
-  return [{ type: 'FullAccess' }];
+  return [{ accessType: 'FullAccess' }];
 };

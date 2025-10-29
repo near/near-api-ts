@@ -10,7 +10,7 @@ const checkIfKeyMatchRequirements = (
   keyPriority: FullAccessKeyPriority | FunctionCallKeyPriority,
   key: KeyPoolKey,
 ): boolean => {
-  if (key.accessType !== keyPriority.type) return false;
+  if (key.accessType !== keyPriority.accessType) return false;
   if (key.accessType === 'FullAccess') return true;
 
   // If keyType is FunctionCall - find the key which follows all criteria

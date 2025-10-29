@@ -8,7 +8,7 @@ const findSigningKey = (
   keyPriority: FullAccessKeyPriority | FunctionCallKeyPriority,
   keyList: KeyList,
 ) => {
-  if (keyPriority.type === 'FullAccess')
+  if (keyPriority.accessType === 'FullAccess')
     return keyList.fullAccess.find((key) => !key.isLocked);
 
   // If keyType is FunctionCall - find the key which follows all criteria
