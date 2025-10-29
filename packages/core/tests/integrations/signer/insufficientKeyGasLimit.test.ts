@@ -15,7 +15,6 @@ import { getFileBytes, log } from '../utils/common';
 import { withSandbox } from '../utils/sandbox/startSandbox';
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { testKeys } from '../utils/testKeys';
-import type { Client, MemoryKeyService } from '../../../src';
 
 /*
     1. Setup demo contract with set/get record

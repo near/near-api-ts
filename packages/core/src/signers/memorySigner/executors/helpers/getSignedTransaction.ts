@@ -2,14 +2,18 @@ import { getTransactionHash } from '../../../../helpers/crypto/getTransactionHas
 import { sign } from '../../../../helpers/crypto/sign';
 import type { SignedTransaction } from 'nat-types/signedTransaction';
 import type { Nonce } from 'nat-types/common';
+import type { SignerContext } from 'nat-types/signers/memorySigner';
+import type { Task } from 'nat-types/signers/taskQueue';
+import type { KeyPoolKey } from 'nat-types/signers/keyPool';
+import type { Transaction } from 'nat-types/transaction';
 
 export const getSignedTransaction = (
-  signerContext: any,
-  task: any,
-  key: any,
+  signerContext: SignerContext,
+  task: Task,
+  key: KeyPoolKey,
   nextNonce: Nonce,
 ): SignedTransaction => {
-  const transaction = {
+  const transaction: Transaction = {
     ...task.transactionIntent,
     signerAccountId: signerContext.signerAccountId,
     signerPublicKey: key.publicKey,

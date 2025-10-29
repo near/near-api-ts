@@ -1,9 +1,12 @@
 import { getSignedTransaction } from './helpers/getSignedTransaction';
+import type { SignerContext } from 'nat-types/signers/memorySigner';
+import type { Task } from 'nat-types/signers/taskQueue';
+import type { KeyPoolKey } from 'nat-types/signers/keyPool';
 
 export const signTransaction = async (
-  signerContext: any,
-  task: any,
-  key: any,
+  signerContext: SignerContext,
+  task: Task,
+  key: KeyPoolKey,
 ) => {
   try {
     const nextNonce = key.nonce + 1;

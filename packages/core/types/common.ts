@@ -84,3 +84,5 @@ export type Milliseconds = number;
 export type Result<R, E> =
   | { result: R; error?: never }
   | { result?: never; error: E };
+
+export type TimeoutId = ReturnType<typeof setTimeout>;

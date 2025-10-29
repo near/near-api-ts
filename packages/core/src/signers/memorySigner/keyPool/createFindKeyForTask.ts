@@ -1,12 +1,18 @@
-const findSigningKey = (keyPriority: any, keyList: any) => {
-  if (keyPriority.type === 'FullAccess') {
-    return keyList.fullAccess.find((key: any) => !key.isLocked);
-  }
+import type { FindKeyForTask, KeyList } from 'nat-types/signers/keyPool';
+import type {
+  FullAccessKeyPriority,
+  FunctionCallKeyPriority,
+} from 'nat-types/signers/taskQueue';
+
+const findSigningKey = (
+  keyPriority: FullAccessKeyPriority | FunctionCallKeyPriority,
+  keyList: KeyList,
+) => {
+  if (keyPriority.type === 'FullAccess')
+    return keyList.fullAccess.find((key) => !key.isLocked);
 
   // If keyType is FunctionCall - find the key which follows all criteria
-  return keyList.functionCall.find((key: any) => {
-    const isUnlocked = key.isLocked === false;
-
+  return keyList.functionCall.find((key) => {
     const isContractIdMatch =
       key.contractAccountId === keyPriority.contractAccountId;
 
@@ -15,13 +21,15 @@ const findSigningKey = (keyPriority: any, keyList: any) => {
       key.allowedFunctions === undefined ||
       key.allowedFunctions.includes(keyPriority.calledFnName);
 
-    return isUnlocked && isContractIdMatch && isFnCallAllowed;
+    return !key.isLocked && isContractIdMatch && isFnCallAllowed;
   });
 };
 
-export const createFindKeyForTask = (keyList: any) => (task: any) => {
-  for (const keyPriority of task.signingKeyPriority) {
-    const key = findSigningKey(keyPriority, keyList);
-    if (key) return key;
-  }
-};
+export const createFindKeyForTask =
+  (keyList: KeyList): FindKeyForTask =>
+  (task) => {
+    for (const keyPriority of task.signingKeyPriority) {
+      const key = findSigningKey(keyPriority, keyList);
+      if (key) return key;
+    }
+  };

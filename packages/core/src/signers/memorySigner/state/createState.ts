@@ -1,11 +1,18 @@
 import { RefetchBlockHashInterval } from '@common/configs/constants';
+import type { SignerContext } from 'nat-types/signers/memorySigner';
+import type { State } from 'nat-types/signers/state';
+import type { BlockHash } from 'nat-types/common';
 
-const fetchBlockHash = async (signerContext: any) => {
+const fetchBlockHash = async (
+  signerContext: SignerContext,
+): Promise<BlockHash> => {
   const block = await signerContext.client.getBlock();
   return block.header.hash;
 };
 
-export const createState = async (signerContext: any) => {
+export const createState = async (
+  signerContext: SignerContext,
+): Promise<State> => {
   const blockHash = await fetchBlockHash(signerContext);
 
   const state = {

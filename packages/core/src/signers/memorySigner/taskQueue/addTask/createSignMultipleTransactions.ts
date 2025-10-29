@@ -1,5 +1,11 @@
+import type {
+  SignMultipleTransactions,
+  TaskQueueContext,
+} from 'nat-types/signers/taskQueue';
+
 export const createSignMultipleTransactions =
-  (context: any) => async (args: any) => {
+  (context: TaskQueueContext): SignMultipleTransactions =>
+  async (args) => {
     const { transactionIntents } = args;
     const { signTransaction } = context.signerContext.taskQueue;
 
@@ -8,16 +14,19 @@ export const createSignMultipleTransactions =
 
     for (const intent of transactionIntents) {
       if (failed) {
-        output.push({ status: 'Canceled' });
+        output.push({ status: 'Canceled' as const });
         continue;
       }
       try {
         output.push({
-          status: 'Success',
+          status: 'Success' as const,
           result: await signTransaction(intent),
         });
       } catch (error) {
-        output.push({ status: 'Error', error });
+        output.push({
+          status: 'Error' as const,
+          error,
+        });
         failed = true;
       }
     }

@@ -1,13 +1,20 @@
 import { signTransaction } from '../executors/signTransaction';
 import { executeTransaction } from '../executors/executeTransaction';
+import type { Task } from 'nat-types/signers/taskQueue';
+import type { KeyPoolKey } from 'nat-types/signers/keyPool';
+import type { SignerContext } from 'nat-types/signers/memorySigner';
 
-const execute = (task: any) => {
+const execute = (task: Task) => {
   if (task.type === 'SignTransaction') return signTransaction;
   if (task.type === 'ExecuteTransaction') return executeTransaction;
   throw new Error('Unsupported task type');
 };
 
-const executeTask = async (signerContext: any, task: any, key: any) => {
+const executeTask = async (
+  signerContext: SignerContext,
+  task: Task,
+  key: KeyPoolKey,
+) => {
   key.lock();
   signerContext.taskQueue.removeTask(task.taskId);
 
@@ -17,21 +24,20 @@ const executeTask = async (signerContext: any, task: any, key: any) => {
   void signerContext.matcher.handleKeyUnlock(key);
 };
 
-export const createMatcher = (signerContext: any) => {
-  const handleAddTask = async (task: any) => {
+export const createMatcher = (signerContext: SignerContext) => {
+  const handleAddTask = async (task: Task) => {
     const key = signerContext.keyPool.findKeyForTask(task);
     if (key) void executeTask(signerContext, task, key);
   };
 
-  const handleKeyUnlock = async (key: any) => {
+  const handleKeyUnlock = async (key: KeyPoolKey) => {
     const task = signerContext.taskQueue.findTaskForKey(key);
     if (task) void executeTask(signerContext, task, key);
   };
 
-  const canHandleTaskInFuture = (task: any) => {
+  const canHandleTaskInFuture = (task: Task) => {
     const canHandle = signerContext.keyPool.isKeyForTaskExist(task);
-    if (canHandle) return true;
-    throw new Error(`There is no key, which can sigh the task`);
+    if (!canHandle) throw new Error(`There is no key, which can sigh the task`);
   };
 
   return {

@@ -4,6 +4,7 @@ import { getFullAccessKeyList } from './getFullAccessKeyList';
 import { getFunctionCallKeyList } from './getFunctionCallKeyList';
 import type { SignerContext } from 'nat-types/signers/memorySigner';
 import type { AccountKey } from 'nat-types/accountKey';
+import type { KeyPool } from 'nat-types/signers/keyPool';
 
 const getAllowedSigningKeys = (
   signerContext: SignerContext,
@@ -14,7 +15,9 @@ const getAllowedSigningKeys = (
   return accountKeys.filter((key) => set.has(key.publicKey));
 };
 
-export const createKeyPool = async (signerContext: SignerContext) => {
+export const createKeyPool = async (
+  signerContext: SignerContext,
+): Promise<KeyPool> => {
   const { accountKeys } = await signerContext.client.getAccountKeys({
     accountId: signerContext.signerAccountId,
   });

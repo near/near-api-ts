@@ -1,35 +1,42 @@
 import { createFindTaskForKey } from './createFindTaskForKey';
-import { createSignTransaction } from './addTask/signTransaction';
-import { createExecuteTransaction } from './addTask/executeTransaction';
-import { createSignMultipleTransactions } from './addTask/signMultipleTransactions';
-import { createExecuteMultipleTransactions } from './addTask/executeMultipleTransactions';
+import { createSignTransaction } from './addTask/createSignTransaction';
+import { createExecuteTransaction } from './addTask/createExecuteTransaction';
+import { createSignMultipleTransactions } from './addTask/createSignMultipleTransactions';
+import { createExecuteMultipleTransactions } from './addTask/createExecuteMultipleTransactions';
 import type { SignerContext } from 'nat-types/signers/memorySigner';
+import type {
+  RemoveTask,
+  TaskQueue,
+  TaskQueueContext,
+} from 'nat-types/signers/taskQueue';
 
-export const createTaskQueue = (signerContext: SignerContext) => {
-  const context: any = {
+export const createTaskQueue = (signerContext: SignerContext): TaskQueue => {
+  const context: TaskQueueContext = {
     queue: [],
     cleaners: {},
     signerContext,
+    addTask: (_) => {},
+    removeTask: (_) => {},
   };
 
-  context.addTask = (task: any) => {
+  context.addTask = (task) => {
     context.queue.push(task);
     // Cancel the task if it wasn't started during queueTimeout time
     context.cleaners[task.taskId] = setTimeout(() => {
       context.queue = context.queue.filter(
-        ({ taskId }: any) => taskId !== task.taskId,
+        ({ taskId }) => taskId !== task.taskId,
       );
       delete context.cleaners[task.taskId];
 
       context.signerContext.resolver.completeTask(task.taskId, {
-        error: 'Task execution was rejected after timeout',
+        error: 'Task execution was rejected after timeout', // TODO use new Error?
       });
     }, context.signerContext.taskTtlMs);
   };
 
   // We remove the task from the queue when the task execution starts
-  const removeTask = (taskId: any) => {
-    context.queue = context.queue.filter((task: any) => task.taskId !== taskId);
+  const removeTask: RemoveTask = (taskId) => {
+    context.queue = context.queue.filter((task) => task.taskId !== taskId);
     clearTimeout(context.cleaners[taskId]);
     delete context.cleaners[taskId];
   };
@@ -38,7 +45,7 @@ export const createTaskQueue = (signerContext: SignerContext) => {
     signTransaction: createSignTransaction(context),
     signMultipleTransactions: createSignMultipleTransactions(context),
     executeTransaction: createExecuteTransaction(context),
-    executeeMultipleTransactions: createExecuteMultipleTransactions(context),
+    executeMultipleTransactions: createExecuteMultipleTransactions(context),
     findTaskForKey: createFindTaskForKey(context),
     removeTask,
   };

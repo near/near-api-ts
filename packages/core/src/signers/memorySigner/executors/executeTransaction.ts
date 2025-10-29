@@ -2,6 +2,9 @@ import * as z from 'zod/mini';
 import { getSignedTransaction } from './helpers/getSignedTransaction';
 import { hasRpcErrorCode } from '../../../client/rpcError';
 import type { Nonce, Result } from 'nat-types/common';
+import type { SignerContext } from 'nat-types/signers/memorySigner';
+import type { Task } from 'nat-types/signers/taskQueue';
+import type { KeyPoolKey } from 'nat-types/signers/keyPool';
 
 /*
 "data": {
@@ -48,13 +51,13 @@ const maybeNonceError = (e: unknown): Result<{ akNonce: Nonce }, undefined> => {
 };
 
 export const executeTransaction = async (
-  signerContext: any,
-  task: any,
-  key: any,
+  signerContext: SignerContext,
+  task: Task,
+  key: KeyPoolKey,
 ) => {
   const maxAttempts = 3; // Maybe we will allow user to configure it in the future
 
-  const attempt = async (attemptIndex: number, newNonce: number) => {
+  const attempt = async (attemptIndex: number, newNonce: Nonce) => {
     try {
       const signedTransaction = getSignedTransaction(
         signerContext,
