@@ -1,8 +1,8 @@
 import { signTransaction } from '../executors/signTransaction';
 import { executeTransaction } from '../executors/executeTransaction';
-import type { Task } from 'nat-types/signers/taskQueue';
-import type { KeyPoolKey } from 'nat-types/signers/keyPool';
-import type { SignerContext } from 'nat-types/signers/memorySigner';
+import type { Task } from 'nat-types/signers/memorySigner/taskQueue';
+import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
+import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 
 const execute = (task: Task) => {
   if (task.taskType === 'SignTransaction') return signTransaction;

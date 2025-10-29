@@ -1,8 +1,8 @@
 import { createUnlock, createLock, createSetNonce } from './helpers/keyUtils';
 import type { AccountKey, FullAccessKey } from 'nat-types/accountKey';
-import type { SignerContext } from 'nat-types/signers/memorySigner';
+import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { KeyPairs } from 'nat-types/keyServices/memoryKeyService';
-import type { KeyPoolFullAccessKey } from 'nat-types/signers/keyPool';
+import type { KeyPoolFullAccessKey } from 'nat-types/signers/memorySigner/keyPool';
 
 const transformKey = (
   fullAccessKey: FullAccessKey,

@@ -1,5 +1,5 @@
-import type { Task } from 'nat-types/signers/taskQueue';
-import type { KeyPoolKey } from 'nat-types/signers/keyPool';
+import type { Task } from 'nat-types/signers/memorySigner/taskQueue';
+import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
 
 export type Matcher = {
   handleAddTask: (task: Task) => Promise<void>;

@@ -2,7 +2,7 @@ import { getSigningKeyPriority } from './helpers/getSigningKeyPriority';
 import type {
   SignTransaction,
   TaskQueueContext,
-} from 'nat-types/signers/taskQueue';
+} from 'nat-types/signers/memorySigner/taskQueue';
 import type { SignedTransaction } from 'nat-types/signedTransaction';
 
 export const createSignTransaction =

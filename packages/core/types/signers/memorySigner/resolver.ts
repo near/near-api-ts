@@ -1,4 +1,4 @@
-import type { TaskId } from 'nat-types/signers/taskQueue';
+import type { TaskId } from 'nat-types/signers/memorySigner/taskQueue';
 import type { Result } from 'nat-types/common';
 
 export type ActiveTasks = Record<

@@ -2,9 +2,9 @@ import { createFindKeyForTask } from './createFindKeyForTask';
 import { createIsKeyForTaskExist } from './createIsKeyForTaskExist';
 import { getFullAccessKeyList } from './getFullAccessKeyList';
 import { getFunctionCallKeyList } from './getFunctionCallKeyList';
-import type { SignerContext } from 'nat-types/signers/memorySigner';
+import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { AccountKey } from 'nat-types/accountKey';
-import type { KeyPool } from 'nat-types/signers/keyPool';
+import type { KeyPool } from 'nat-types/signers/memorySigner/keyPool';
 
 const getAllowedSigningKeys = (
   signerContext: SignerContext,

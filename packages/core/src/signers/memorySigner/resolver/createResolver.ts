@@ -1,10 +1,10 @@
-import type { TaskId } from 'nat-types/signers/taskQueue';
+import type { TaskId } from 'nat-types/signers/memorySigner/taskQueue';
 import type {
   ActiveTasks,
   CompleteTask,
   Resolver,
   WaitForTask,
-} from 'nat-types/signers/resolver';
+} from 'nat-types/signers/memorySigner/resolver';
 
 export const createResolver = (): Resolver => {
   const activeTasks: ActiveTasks = {};

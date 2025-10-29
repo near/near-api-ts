@@ -21,4 +21,4 @@ export { gas, teraGas } from './helpers/gas';
 
 export type { Client } from 'nat-types/client/client';
 export type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService';
-export type { MemorySigner } from 'nat-types/signers/memorySigner';
+export type { MemorySigner } from 'nat-types/signers/memorySigner/memorySigner';

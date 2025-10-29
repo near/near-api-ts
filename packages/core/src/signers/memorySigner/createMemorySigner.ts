@@ -7,7 +7,7 @@ import { SignerTaskTtlMs } from '@common/configs/constants';
 import type {
   CreateMemorySigner,
   SignerContext,
-} from 'nat-types/signers/memorySigner';
+} from 'nat-types/signers/memorySigner/memorySigner';
 
 export const createMemorySigner: CreateMemorySigner = async (args) => {
   const context = {

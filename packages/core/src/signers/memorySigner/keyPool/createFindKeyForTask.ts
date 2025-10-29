@@ -1,8 +1,8 @@
-import type { FindKeyForTask, KeyList } from 'nat-types/signers/keyPool';
+import type { FindKeyForTask, KeyList } from 'nat-types/signers/memorySigner/keyPool';
 import type {
   FullAccessKeyPriority,
   FunctionCallKeyPriority,
-} from 'nat-types/signers/taskQueue';
+} from 'nat-types/signers/memorySigner/taskQueue';
 
 const findSigningKey = (
   keyPriority: FullAccessKeyPriority | FunctionCallKeyPriority,

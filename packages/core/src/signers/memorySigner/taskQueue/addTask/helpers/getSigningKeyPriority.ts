@@ -1,7 +1,7 @@
 import type { TransactionIntent } from 'nat-types/transaction';
 import type { FunctionCallAction } from 'nat-types/actions/functionCall';
 import type { AccountId } from 'nat-types/common';
-import type { SigningKeyPriority } from 'nat-types/signers/taskQueue';
+import type { SigningKeyPriority } from 'nat-types/signers/memorySigner/taskQueue';
 
 /**
  * We always want to sign txns with FA key when possible and use FC only if all

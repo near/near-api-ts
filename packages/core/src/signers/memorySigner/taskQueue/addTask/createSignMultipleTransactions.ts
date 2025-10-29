@@ -1,7 +1,7 @@
 import type {
   SignMultipleTransactions,
   TaskQueueContext,
-} from 'nat-types/signers/taskQueue';
+} from 'nat-types/signers/memorySigner/taskQueue';
 
 export const createSignMultipleTransactions =
   (context: TaskQueueContext): SignMultipleTransactions =>

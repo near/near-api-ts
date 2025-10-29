@@ -1,8 +1,8 @@
-import type { IsKeyForTaskExist, KeyList } from 'nat-types/signers/keyPool';
+import type { IsKeyForTaskExist, KeyList } from 'nat-types/signers/memorySigner/keyPool';
 import type {
   FullAccessKeyPriority,
   FunctionCallKeyPriority,
-} from 'nat-types/signers/taskQueue';
+} from 'nat-types/signers/memorySigner/taskQueue';
 
 const isKeyExist = (
   keyPriority: FullAccessKeyPriority | FunctionCallKeyPriority,

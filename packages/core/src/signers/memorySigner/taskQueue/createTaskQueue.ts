@@ -3,12 +3,12 @@ import { createSignTransaction } from './addTask/createSignTransaction';
 import { createExecuteTransaction } from './addTask/createExecuteTransaction';
 import { createSignMultipleTransactions } from './addTask/createSignMultipleTransactions';
 import { createExecuteMultipleTransactions } from './addTask/createExecuteMultipleTransactions';
-import type { SignerContext } from 'nat-types/signers/memorySigner';
+import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type {
   RemoveTask,
   TaskQueue,
   TaskQueueContext,
-} from 'nat-types/signers/taskQueue';
+} from 'nat-types/signers/memorySigner/taskQueue';
 
 export const createTaskQueue = (signerContext: SignerContext): TaskQueue => {
   const context: TaskQueueContext = {

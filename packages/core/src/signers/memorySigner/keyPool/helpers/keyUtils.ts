@@ -1,5 +1,5 @@
 import type { Nonce } from 'nat-types/common';
-import type { KeyPoolKey } from 'nat-types/signers/keyPool';
+import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
 
 export const createLock = (key: KeyPoolKey) => () => {
   key.isLocked = true;

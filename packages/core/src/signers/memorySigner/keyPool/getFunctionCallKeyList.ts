@@ -1,8 +1,8 @@
 import { createSetNonce, createLock, createUnlock } from './helpers/keyUtils';
 import type { AccountKey, FunctionCallKey } from 'nat-types/accountKey';
-import type { SignerContext } from 'nat-types/signers/memorySigner';
+import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { KeyPairs } from 'nat-types/keyServices/memoryKeyService';
-import type { KeyPoolFunctionCallKey } from 'nat-types/signers/keyPool';
+import type { KeyPoolFunctionCallKey } from 'nat-types/signers/memorySigner/keyPool';
 
 const transformKey = (
   functionCallKey: FunctionCallKey,

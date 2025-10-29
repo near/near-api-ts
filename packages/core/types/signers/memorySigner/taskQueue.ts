@@ -1,4 +1,4 @@
-import type { SignerContext } from 'nat-types/signers/memorySigner';
+import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { UUID } from 'crypto';
 import type {
   AccountId,
@@ -8,7 +8,7 @@ import type {
 import type { TransactionIntent } from 'nat-types/transaction';
 import type { SendSignedTransactionResult } from 'nat-types/client/methods/transaction/sendSignedTransaction';
 import type { SignedTransaction } from 'nat-types/signedTransaction';
-import type { KeyPoolKey } from 'nat-types/signers/keyPool';
+import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
 
 export type FullAccessKeyPriority = { accessType: 'FullAccess' };
 
