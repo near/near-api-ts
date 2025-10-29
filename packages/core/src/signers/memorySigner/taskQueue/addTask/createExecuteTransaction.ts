@@ -22,7 +22,7 @@ export const createExecuteTransaction =
           };
 
     const task = {
-      type: 'ExecuteTransaction' as const,
+      taskType: 'ExecuteTransaction' as const,
       taskId: crypto.randomUUID(),
       signingKeyPriority: getSigningKeyPriority(transactionIntent),
       transactionIntent,

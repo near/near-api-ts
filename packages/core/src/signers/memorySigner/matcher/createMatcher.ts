@@ -5,8 +5,8 @@ import type { KeyPoolKey } from 'nat-types/signers/keyPool';
 import type { SignerContext } from 'nat-types/signers/memorySigner';
 
 const execute = (task: Task) => {
-  if (task.type === 'SignTransaction') return signTransaction;
-  if (task.type === 'ExecuteTransaction') return executeTransaction;
+  if (task.taskType === 'SignTransaction') return signTransaction;
+  if (task.taskType === 'ExecuteTransaction') return executeTransaction;
   throw new Error('Unsupported task type');
 };
 

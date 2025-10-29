@@ -11,7 +11,7 @@ export const createSignTransaction =
     const { matcher, resolver } = context.signerContext;
 
     const task = {
-      type: 'SignTransaction' as const,
+      taskType: 'SignTransaction' as const,
       taskId: crypto.randomUUID(),
       signingKeyPriority: getSigningKeyPriority(transactionIntent),
       transactionIntent,

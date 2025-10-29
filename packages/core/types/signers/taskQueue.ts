@@ -32,11 +32,11 @@ type TaskBase = {
 };
 
 type SignTransactionTask = {
-  type: 'SignTransaction';
+  taskType: 'SignTransaction';
 } & TaskBase;
 
 type ExecuteTransactionTask = {
-  type: 'ExecuteTransaction';
+  taskType: 'ExecuteTransaction';
 } & TaskBase;
 
 export type Task = SignTransactionTask | ExecuteTransactionTask;
