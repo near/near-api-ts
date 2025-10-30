@@ -34,29 +34,19 @@ export type AccountId = string;
 export type BorshBytes = Uint8Array;
 
 /**
- * Contract function name has limit - max 256 characters
+ * Contract function name has max 256 characters
  */
 export type ContractFunctionName = string;
 
-// Tokens
+/**
+ * Smallest part of cryptocurrency token, used for math operations, f.e
+ * 1 yoctoNear or 1 satoshi
+ */
 export type Units = bigint | string;
+/**
+ * Human-readable token amount, f.e 1 NEAR or 1 Bitcoin
+ */
 export type Tokens = string;
-
-// Near Gas
-export type GasInputAmount = bigint | number;
-export type TeraGasInputAmount = string;
-
-export type NearGasArgs =
-  | { gas: GasInputAmount }
-  | { teraGas: TeraGasInputAmount };
-
-type Gas = bigint;
-type TeraGas = string;
-
-export type NearGas = Readonly<{
-  gas: Gas;
-  teraGas: TeraGas;
-}>;
 
 export type JsonLikeValue =
   | string

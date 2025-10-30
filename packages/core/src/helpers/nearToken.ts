@@ -4,17 +4,19 @@ import { NearDecimals } from '@common/configs/constants';
 import { nodeInspectSymbol } from '@common/utils/common';
 import type { InspectOptionsStylized } from 'node:util';
 import type {
-  Near, NearInputAmount,
+  Near,
+  NearInputAmount,
   NearToken,
   NearTokenArgs,
-  YoctoNear, YoctoNearInputAmount
+  YoctoNear,
+  YoctoNearInputAmount,
 } from 'nat-types/nearToken';
 
 const NearTokenBrand = Symbol('NearTokenBrand');
 
 const cache = {
-  near: new WeakMap<NearToken, string>(),
-  yoctoNear: new WeakMap<NearToken, bigint>(),
+  yoctoNear: new WeakMap<NearToken, YoctoNear>(),
+  near: new WeakMap<NearToken, Near>(),
 };
 
 const toYoctoNear = (x: NearTokenArgs | NearToken): YoctoNear =>
@@ -26,7 +28,6 @@ const toYoctoNear = (x: NearTokenArgs | NearToken): YoctoNear =>
  */
 const nearTokenProto: ThisType<NearToken> = {
   [NearTokenBrand]: true,
-
   // Lazy getter - calculate the 'near' value only after the first direct access;
   // save the result in the cache
   get near(): Near {
@@ -91,26 +92,26 @@ const nearTokenProto: ThisType<NearToken> = {
 } as const;
 
 export const yoctoNear = (units: YoctoNearInputAmount): NearToken => {
-  const yoctoNear = BigInt(units); // TODO validate units
-  const obj = Object.create(nearTokenProto) as NearToken;
+  const yoctoNearValue = BigInt(units); // TODO validate units
+  const nearToken = Object.create(nearTokenProto) as NearToken;
 
-  Object.defineProperty(obj, 'yoctoNear', {
-    value: yoctoNear,
+  Object.defineProperty(nearToken, 'yoctoNear', {
+    value: yoctoNearValue,
     enumerable: true,
   });
 
-  return Object.freeze(obj);
+  return Object.freeze(nearToken);
 };
 
 export const near = (tokens: NearInputAmount): NearToken => {
-  const obj = Object.create(nearTokenProto) as NearToken;
+  const nearToken = Object.create(nearTokenProto) as NearToken;
 
-  Object.defineProperty(obj, 'near', {
+  Object.defineProperty(nearToken, 'near', {
     value: tokens, // TODO validate tokens
     enumerable: true,
   });
 
-  return Object.freeze(obj);
+  return Object.freeze(nearToken);
 };
 
 export const nearToken = (args: NearTokenArgs): NearToken => {
