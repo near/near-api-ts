@@ -6,8 +6,6 @@ import type {
   NearToken,
 } from 'nat-types/common';
 
-export type AccessType = 'FullAccess' | 'FunctionCall';
-
 export type FullAccessKey = {
   accessType: 'FullAccess';
   publicKey: PublicKey;

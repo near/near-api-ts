@@ -6,7 +6,7 @@
     "dev": "pnpm -r --parallel dev",
     "typecheck": "pnpm -r typecheck"
   },
-  "packageManager": "pnpm@10.18.3",
+  "packageManager": "pnpm@10.20.0",
   "devDependencies": {
     "@biomejs/biome": "^2.2.6",
     "@rollup/plugin-node-resolve": "^16.0.3",

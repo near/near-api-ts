@@ -104,12 +104,9 @@ importers:
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
-      valibot:
-        specifier: ^1.1.0
-        version: 1.1.0(typescript@5.9.3)
       zod:
-        specifier: ^4.0.11
-        version: 4.0.11
+        specifier: ^4.1.12
+        version: 4.1.12
 
   packages/near-api-ts:
     dependencies:
@@ -1719,14 +1716,6 @@ packages:
     resolution: {integrity: sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==}
     engines: {node: '>= 0.8'}
 
-  valibot@1.1.0:
-    resolution: {integrity: sha512-Nk8lX30Qhu+9txPYTwM0cFlWLdPFsFr6LblzqIySfbZph9+BFsAHsNvHOymEviUepeIW6KFHzpX8TKhbptBXXw==}
-    peerDependencies:
-      typescript: '>=5'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
@@ -1856,6 +1845,9 @@ packages:
 
   zod@4.0.11:
     resolution: {integrity: sha512-LVrgstTaQJek72n6ZGxhAhH/Q24PhGx4lIAcgBmjtvjRq0qYjiH9U0o3hfuC2vfExsnpoHElc4XOJjMKQjUQxg==}
+
+  zod@4.1.12:
+    resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
 
 snapshots:
 
@@ -2002,7 +1994,7 @@ snapshots:
 
   '@near-js/jsonrpc-types@1.4.0':
     dependencies:
-      zod: 4.0.11
+      zod: 4.1.12
 
   '@near-js/tokens@2.3.3': {}
 
@@ -3320,10 +3312,6 @@ snapshots:
 
   unpipe@1.0.0: {}
 
-  valibot@1.1.0(typescript@5.9.3):
-    optionalDependencies:
-      typescript: 5.9.3
-
   vary@1.1.2: {}
 
   vite-node@3.2.4(@types/node@24.0.15)(terser@5.44.0)(tsx@4.20.6):
@@ -3461,3 +3449,5 @@ snapshots:
       yargs-parser: 21.1.1
 
   zod@4.0.11: {}
+
+  zod@4.1.12: {}

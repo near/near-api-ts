@@ -18,10 +18,7 @@ const parseKeySource = (
 
   // TODO implement
   if ('seedPhrase' in keySource) {
-    return {
-      publicKey: 'ed25519:213',
-      privateKey: 'ed25519:213',
-    };
+    throw new Error('Unimplemented!');
   }
 
   throw new Error('Unknown keySource');
