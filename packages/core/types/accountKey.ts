@@ -3,8 +3,9 @@ import type {
   AccountId,
   ContractFunctionName,
   Nonce,
-  NearToken,
+
 } from 'nat-types/common';
+import type {NearToken} from 'nat-types/nearToken';
 
 export type FullAccessKey = {
   accessType: 'FullAccess';

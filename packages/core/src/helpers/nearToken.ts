@@ -2,15 +2,13 @@ import { convertTokensToUnits } from '@common/utils/tokenConverter/convertTokens
 import { convertUnitsToTokens } from '@common/utils/tokenConverter/convertUnitsToTokens';
 import { NearDecimals } from '@common/configs/constants';
 import { nodeInspectSymbol } from '@common/utils/common';
-import type {
-  NearTokenArgs,
-  NearToken,
-  Near,
-  YoctoNear,
-  NearInputAmount,
-  YoctoNearInputAmount,
-} from 'nat-types/common';
 import type { InspectOptionsStylized } from 'node:util';
+import type {
+  Near, NearInputAmount,
+  NearToken,
+  NearTokenArgs,
+  YoctoNear, YoctoNearInputAmount
+} from 'nat-types/nearToken';
 
 const NearTokenBrand = Symbol('NearTokenBrand');
 

@@ -42,27 +42,6 @@ export type ContractFunctionName = string;
 export type Units = bigint | string;
 export type Tokens = string;
 
-// Near Token
-export type YoctoNearInputAmount = Units;
-export type NearInputAmount = Tokens;
-
-export type NearTokenArgs =
-  | { near: NearInputAmount }
-  | { yoctoNear: YoctoNearInputAmount };
-
-export type YoctoNear = bigint;
-export type Near = string;
-
-export type NearToken = Readonly<{
-  yoctoNear: YoctoNear;
-  near: Near;
-  add: (value: NearTokenArgs) => NearToken;
-  sub: (value: NearTokenArgs) => NearToken;
-  mul: (value: NearTokenArgs) => NearToken;
-  gt: (value: NearTokenArgs) => boolean;
-  lt: (value: NearTokenArgs) => boolean;
-}>;
-
 // Near Gas
 export type GasInputAmount = bigint | number;
 export type TeraGasInputAmount = string;

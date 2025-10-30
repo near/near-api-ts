@@ -1,4 +1,4 @@
-import type { NearTokenArgs } from 'nat-types/common';
+import type {NearTokenArgs} from 'nat-types/nearToken';
 
 export type CreateTransferActionArgs = {
   amount: NearTokenArgs;
