@@ -2,7 +2,7 @@ import type { NativePublicKey, PublicKey } from 'nat-types/crypto';
 import type {
   AccountId,
   ContractFunctionName,
-  NearOption,
+  NearTokenArgs,
 } from 'nat-types/common';
 
 export type CreateAddFullAccessKeyActionArgs = {
@@ -12,7 +12,7 @@ export type CreateAddFullAccessKeyActionArgs = {
 export type CreateAddFunctionCallKeyActionArgs = {
   publicKey: PublicKey;
   contractAccountId: AccountId;
-  gasBudget?: NearOption;
+  gasBudget?: NearTokenArgs;
   allowedFunctions?: ContractFunctionName[];
 };
 

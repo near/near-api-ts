@@ -3,7 +3,7 @@ import type {
   NativeAddKeyAction,
 } from 'nat-types/actions/addKey';
 import { toNativePublicKey } from '@common/transformers/toNative/publicKey';
-import { fromNearOption } from '../../../../helpers/near';
+import { nearToken } from '../../../../helpers/nearToken';
 
 const getPermission = (
   action: AddKeyAction,
@@ -15,7 +15,7 @@ const getPermission = (
   return {
     functionCall: {
       receiverId: contractAccountId,
-      allowance: gasBudget && fromNearOption(gasBudget).yoctoNear,
+      allowance: gasBudget && nearToken(gasBudget).yoctoNear,
       methodNames: allowedFunctions ?? [],
     },
   };

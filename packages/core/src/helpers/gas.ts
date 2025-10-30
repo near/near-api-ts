@@ -1,8 +1,13 @@
-import type { GasLimit, GasOption, GasInput, TeraGasInput } from 'nat-types/common';
+import type {
+  NearGas,
+  NearGasArgs,
+  GasInputAmount,
+  TeraGasInputAmount,
+} from 'nat-types/common';
 
 const TeraCoefficient = 10n ** 12n;
 
-export const gas = (gas: GasInput) => {
+export const gas = (gas: GasInputAmount) => {
   // TODO Validate
   return {
     gas: BigInt(gas),
@@ -10,7 +15,7 @@ export const gas = (gas: GasInput) => {
   };
 };
 
-export const teraGas = (teraGas: TeraGasInput) => {
+export const teraGas = (teraGas: TeraGasInputAmount) => {
   // TODO Validate
   return {
     gas: BigInt(teraGas) * TeraCoefficient,
@@ -18,8 +23,8 @@ export const teraGas = (teraGas: TeraGasInput) => {
   };
 };
 
-export const fromGasOption = (gasOption: GasOption): GasLimit => {
-  if ('teraGas' in gasOption) return teraGas(gasOption.teraGas);
-  if ('gas' in gasOption) return gas(gasOption.gas);
+export const fromGasOption = (nearGasArgs: NearGasArgs): NearGas => {
+  if ('teraGas' in nearGasArgs) return teraGas(nearGasArgs.teraGas);
+  if ('gas' in nearGasArgs) return gas(nearGasArgs.gas);
   throw new Error('Invalid gas option');
 };

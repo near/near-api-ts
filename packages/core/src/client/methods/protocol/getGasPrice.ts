@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
 import { RpcGasPriceResponseSchema } from '@near-js/jsonrpc-types';
-import { yoctoNear } from '../../../helpers/near';
+import { yoctoNear } from '../../../helpers/nearToken';
 import type {
   CreateGetGasPrice,
   GetGasPriceResult,

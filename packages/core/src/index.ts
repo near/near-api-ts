@@ -16,7 +16,7 @@ export { deleteKey } from './helpers/actionCreators/deleteKey';
 export { deleteAccount } from './helpers/actionCreators/deleteAccount';
 export { deployContract } from './helpers/actionCreators/deployContract';
 // Helpers
-export { near, yoctoNear } from './helpers/near';
+export { near, yoctoNear, nearToken, isNearToken } from './helpers/nearToken';
 export { gas, teraGas } from './helpers/gas';
 
 export type { Client } from 'nat-types/client/client';

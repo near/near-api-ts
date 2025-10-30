@@ -3,7 +3,7 @@ import { oneLine } from '@common/utils/common';
 import type { RpcRequestLog } from 'nat-types/client/transport';
 import type { TransportError } from './transport/transportError';
 
-const Brand = Symbol.for('near-api-ts.RpcError');
+const Brand = Symbol.for('near-api-ts.RpcError'); // TODO check if it's a valid solution!
 
 const parseRequestValidationError = (name: string) => {
   if (name === 'PARSE_ERROR')

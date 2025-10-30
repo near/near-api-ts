@@ -2,12 +2,12 @@ import type {
   TransferAction,
   NativeTransferAction,
 } from 'nat-types/actions/transfer';
-import { fromNearOption } from '../../../../helpers/near';
+import { nearToken } from '../../../../helpers/nearToken';
 
 export const toNativeTransferAction = (
   action: TransferAction,
 ): NativeTransferAction => ({
   transfer: {
-    deposit: fromNearOption(action.amount).yoctoNear,
+    deposit: nearToken(action.amount).yoctoNear,
   },
 });

@@ -1,7 +1,7 @@
-import type { NearOption } from 'nat-types/common';
+import type { NearTokenArgs } from 'nat-types/common';
 
 export type CreateTransferActionArgs = {
-  amount: NearOption;
+  amount: NearTokenArgs;
 };
 
 export type TransferAction = {

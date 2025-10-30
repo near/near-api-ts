@@ -38,33 +38,43 @@ export type BorshBytes = Uint8Array;
  */
 export type ContractFunctionName = string;
 
+// Tokens
+export type Units = bigint | string;
+export type Tokens = string;
+
+// Near Token
+export type YoctoNearInputAmount = Units;
+export type NearInputAmount = Tokens;
+
+export type NearTokenArgs =
+  | { near: NearInputAmount }
+  | { yoctoNear: YoctoNearInputAmount };
+
 export type YoctoNear = bigint;
 export type Near = string;
 
 export type NearToken = Readonly<{
   yoctoNear: YoctoNear;
   near: Near;
-  add: (value: NearOption) => NearToken;
-  sub: (value: NearOption) => NearToken;
-  mul: (value: NearOption) => NearToken;
-  gt: (value: NearOption) => NearToken;
-  lt: (value: NearOption) => NearToken;
+  add: (value: NearTokenArgs) => NearToken;
+  sub: (value: NearTokenArgs) => NearToken;
+  mul: (value: NearTokenArgs) => NearToken;
+  gt: (value: NearTokenArgs) => boolean;
+  lt: (value: NearTokenArgs) => boolean;
 }>;
 
-export type Units = bigint | string;
-export type Tokens = string;
-export type NearOption = { near: Tokens } | { yoctoNear: Units };
+// Near Gas
+export type GasInputAmount = bigint | number;
+export type TeraGasInputAmount = string;
 
-// TODO rename to better names
-export type GasInput = bigint | number;
-export type TeraGasInput = string;
-export type GasOption = { gas: GasInput } | { teraGas: TeraGasInput };
+export type NearGasArgs =
+  | { gas: GasInputAmount }
+  | { teraGas: TeraGasInputAmount };
 
 type Gas = bigint;
 type TeraGas = string;
 
-// TODO Rename to NearGas
-export type GasLimit = Readonly<{
+export type NearGas = Readonly<{
   gas: Gas;
   teraGas: TeraGas;
 }>;

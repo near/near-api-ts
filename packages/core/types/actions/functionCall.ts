@@ -1,15 +1,15 @@
 import type {
   ContractFunctionName,
-  NearOption,
-  GasOption,
+  NearTokenArgs,
+  NearGasArgs,
   MaybeJsonLikeValue,
 } from 'nat-types/common';
 import type { KeyIf } from 'nat-types/utils';
 
 type BaseFunctionCallActionArgs = {
   functionName: ContractFunctionName;
-  gasLimit: GasOption;
-  attachedDeposit?: NearOption;
+  gasLimit: NearGasArgs;
+  attachedDeposit?: NearTokenArgs;
 };
 
 export type FunctionCallAction = BaseFunctionCallActionArgs & {

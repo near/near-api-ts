@@ -2,7 +2,7 @@ import type {
   FunctionCallAction,
   NativeFunctionCallAction,
 } from 'nat-types/actions/functionCall';
-import { fromNearOption } from '../../../../helpers/near';
+import { nearToken } from '../../../../helpers/nearToken';
 import { fromGasOption } from '../../../../helpers/gas';
 
 export const toNativeFunctionCallAction = (
@@ -14,7 +14,7 @@ export const toNativeFunctionCallAction = (
       methodName: functionName,
       args: functionArgs,
       gas: fromGasOption(gasLimit).gas,
-      deposit: attachedDeposit ? fromNearOption(attachedDeposit).yoctoNear : 0n,
+      deposit: attachedDeposit ? nearToken(attachedDeposit).yoctoNear : 0n,
     },
   };
 };

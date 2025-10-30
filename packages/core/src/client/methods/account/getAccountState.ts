@@ -1,7 +1,7 @@
 import * as z from 'zod/mini';
 import { toNativeBlockReference } from '@common/transformers/toNative/blockReference';
 import { AccountViewSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
-import { yoctoNear } from '../../../helpers/near';
+import { yoctoNear } from '../../../helpers/nearToken';
 import { addTo } from '@common/utils/addTo';
 import type {
   CreateGetAccountState,

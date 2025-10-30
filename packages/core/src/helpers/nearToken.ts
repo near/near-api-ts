@@ -3,25 +3,32 @@ import { convertUnitsToTokens } from '@common/utils/tokenConverter/convertUnitsT
 import { NearDecimals } from '@common/configs/constants';
 import { nodeInspectSymbol } from '@common/utils/common';
 import type {
-  Units,
-  Tokens,
-  NearOption,
+  NearTokenArgs,
   NearToken,
   Near,
   YoctoNear,
+  NearInputAmount,
+  YoctoNearInputAmount,
 } from 'nat-types/common';
 import type { InspectOptionsStylized } from 'node:util';
+
+const NearTokenBrand = Symbol('NearTokenBrand');
 
 const cache = {
   near: new WeakMap<NearToken, string>(),
   yoctoNear: new WeakMap<NearToken, bigint>(),
 };
 
+const toYoctoNear = (x: NearTokenArgs | NearToken): YoctoNear =>
+  isNearToken(x) ? x.yoctoNear : nearToken(x).yoctoNear;
+
 /**
  * We use it as a prototype for all new NearToken instances. It allows us to reuse
  * these functions without creating a new fn instances every time we create a new NearToken
  */
 const nearTokenProto: ThisType<NearToken> = {
+  [NearTokenBrand]: true,
+
   // Lazy getter - calculate the 'near' value only after the first direct access;
   // save the result in the cache
   get near(): Near {
@@ -43,25 +50,24 @@ const nearTokenProto: ThisType<NearToken> = {
     return value;
   },
 
-  // TODO add support for NearToken and avoid creating a new instance if x is NearToken
-  add(x: NearOption): NearToken {
-    return yoctoNear(this.yoctoNear + fromNearOption(x).yoctoNear);
+  add(x: NearTokenArgs | NearToken): NearToken {
+    return yoctoNear(this.yoctoNear + toYoctoNear(x));
   },
 
-  sub(x: NearOption): NearToken {
-    return yoctoNear(this.yoctoNear - fromNearOption(x).yoctoNear);
+  sub(x: NearTokenArgs | NearToken): NearToken {
+    return yoctoNear(this.yoctoNear - toYoctoNear(x));
   },
 
-  mul(x: NearOption): NearToken {
-    return yoctoNear(this.yoctoNear * fromNearOption(x).yoctoNear);
+  mul(x: NearTokenArgs | NearToken): NearToken {
+    return yoctoNear(this.yoctoNear * toYoctoNear(x));
   },
 
-  gt(x: NearOption): boolean {
-    return this.yoctoNear > fromNearOption(x).yoctoNear;
+  gt(x: NearTokenArgs | NearToken): boolean {
+    return this.yoctoNear > toYoctoNear(x);
   },
 
-  lt(x: NearOption): boolean {
-    return this.yoctoNear < fromNearOption(x).yoctoNear;
+  lt(x: NearTokenArgs | NearToken): boolean {
+    return this.yoctoNear < toYoctoNear(x);
   },
 
   toString() {
@@ -86,9 +92,8 @@ const nearTokenProto: ThisType<NearToken> = {
   }),
 } as const;
 
-export const yoctoNear = (units: Units): NearToken => {
-  // TODO validate units
-  const yoctoNear = BigInt(units);
+export const yoctoNear = (units: YoctoNearInputAmount): NearToken => {
+  const yoctoNear = BigInt(units); // TODO validate units
   const obj = Object.create(nearTokenProto) as NearToken;
 
   Object.defineProperty(obj, 'yoctoNear', {
@@ -99,20 +104,22 @@ export const yoctoNear = (units: Units): NearToken => {
   return Object.freeze(obj);
 };
 
-export const near = (tokens: Tokens): NearToken => {
-  // TODO validate tokens
+export const near = (tokens: NearInputAmount): NearToken => {
   const obj = Object.create(nearTokenProto) as NearToken;
 
   Object.defineProperty(obj, 'near', {
-    value: tokens,
+    value: tokens, // TODO validate tokens
     enumerable: true,
   });
 
   return Object.freeze(obj);
 };
 
-export const fromNearOption = (nearOption: NearOption): NearToken => {
-  if ('yoctoNear' in nearOption) return yoctoNear(nearOption.yoctoNear);
-  if ('near' in nearOption) return near(nearOption.near);
-  throw new Error('Invalid nearOption format');
+export const nearToken = (args: NearTokenArgs): NearToken => {
+  if ('yoctoNear' in args) return yoctoNear(args.yoctoNear);
+  if ('near' in args) return near(args.near);
+  throw new Error('Invalid args format');
 };
+
+export const isNearToken = (value: unknown): value is NearToken =>
+  typeof value === 'object' && value !== null && NearTokenBrand in value;
