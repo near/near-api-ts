@@ -4,7 +4,7 @@ import {
   near,
   yoctoNear,
   isNearToken,
-} from '../../src';
+} from '../../../src';
 
 describe('NearToken', () => {
   it('1N + 2N = 3N', () => {

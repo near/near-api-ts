@@ -1,4 +1,4 @@
-import { functionCall } from './functionCall';
+import { functionCall } from '../../../../src';
 
 const functionName = 'test';
 const gasLimit = { teraGas: '100' };
