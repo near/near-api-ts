@@ -12,15 +12,14 @@ pnpm add near-api-ts
 
 ```ts
 import {
-  createClient,
+  createTestnetClient,
   createMemoryKeyService,
   createMemorySigner,
-  testnet,
   transfer,
 } from 'near-api-ts';
 
-// Create a near client
-const client = createClient({ network: testnet });
+// Create a near testnet client
+const client = await createTestnetClient();
 
 
 // Read some data from the chain

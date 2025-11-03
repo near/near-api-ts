@@ -25,7 +25,7 @@ test(
             // { url: 'https://allthatnode.com/protocol/near.dsrv' }, // Error - html
             // { url: 'https://near.drpc.org/' }, // Error - custom error format
           ],
-          archival: [{ url: 'https://1rpc.io/near' }],
+          // archival: [{ url: 'https://1rpc.io/near' }],
         },
       },
     });
@@ -35,11 +35,11 @@ test(
       //   accountId: 'eclipseeer.near',
       //   publicKey: 'ed25519:3Dhkm2g9gKHQNeinRA1eH9ModH9aK3iJaw1uuKsRUuR1',
       // })
-      const controller = new AbortController();
+      // const controller = new AbortController();
 
-      setTimeout(() => {
-        controller.abort(new Error('aborted by user'));
-      }, 5000);
+      // setTimeout(() => {
+      //   controller.abort(new Error('aborted by user'));
+      // }, 5000);
 
       const res = await client.getAccountState({
         accountId: 'near',
