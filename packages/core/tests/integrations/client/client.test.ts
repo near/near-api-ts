@@ -52,9 +52,9 @@ test(
               // requestMs: 1500,
               // attemptMs: 1000,
             },
-            retry: {
+            rpc: {
               maxAttempts: 3,
-              backoff: {
+              retryBackoff: {
                 minDelayMs: 100,
                 maxDelayMs: 1000,
               },

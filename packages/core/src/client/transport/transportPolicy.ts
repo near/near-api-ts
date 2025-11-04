@@ -6,20 +6,20 @@ export const defaultTransportPolicy: TransportPolicy = {
   rpcTypePreferences: ['Regular', 'Archival'],
   timeouts: {
     requestMs: 30_000,
-    attemptMs: 10_000,
+    attemptMs: 5_000,
   },
-  retry: {
+  rpc: {
     maxAttempts: 2,
-    backoff: {
+    retryBackoff: {
       minDelayMs: 100,
-      maxDelayMs: 200,
+      maxDelayMs: 500,
       multiplier: 3,
     },
   },
   failover: {
     maxRounds: 2,
-    nextRpcDelayMs: 100,
-    nextRoundDelayMs: 100,
+    nextRpcDelayMs: 200,
+    nextRoundDelayMs: 200,
   },
 };
 

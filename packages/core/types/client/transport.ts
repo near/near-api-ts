@@ -15,9 +15,9 @@ export type TransportPolicy = {
     requestMs: Milliseconds;
     attemptMs: Milliseconds;
   };
-  retry: {
+  rpc: {
     maxAttempts: number;
-    backoff: {
+    retryBackoff: {
       minDelayMs: Milliseconds;
       maxDelayMs: Milliseconds;
       multiplier: number;

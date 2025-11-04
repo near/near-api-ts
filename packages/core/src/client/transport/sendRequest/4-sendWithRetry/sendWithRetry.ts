@@ -20,7 +20,7 @@ const getBackoffDelay = (
 const shouldRetry = (
   result: Result<unknown, TransportError | RpcError>,
 ): boolean =>
-  hasTransportErrorCode(result.error, ['Fetch', 'AttemptTimeout']) ||
+  hasTransportErrorCode(result.error, ['AttemptTimeout']) ||
   hasRpcErrorCode(result.error, [
     'RpcTransactionTimeout',
     'NoSyncedBlocks',
@@ -33,9 +33,9 @@ export const sendWithRetry = async (
   rpc: InnerRpcEndpoint,
   roundIndex: number,
 ): Promise<Result<unknown, TransportError | RpcError>> => {
-  const { maxAttempts, backoff } = context.transportPolicy.retry;
+  const { maxAttempts, retryBackoff } = context.transportPolicy.rpc;
 
-  let backoffDelay = backoff.minDelayMs;
+  let backoffDelay = retryBackoff.minDelayMs;
 
   const attempt = async (attemptIndex: number) => {
     const result = await sendOnce(context, rpc, roundIndex, attemptIndex);
@@ -44,10 +44,10 @@ export const sendWithRetry = async (
     if (isLastAttempt || !shouldRetry(result)) return result;
 
     backoffDelay = getBackoffDelay(
-      backoff.maxDelayMs,
-      backoff.minDelayMs,
+      retryBackoff.maxDelayMs,
+      retryBackoff.minDelayMs,
       backoffDelay,
-      backoff.multiplier,
+      retryBackoff.multiplier,
     );
 
     const abortError = await safeSleep<TransportError>(
