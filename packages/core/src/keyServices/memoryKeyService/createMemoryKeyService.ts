@@ -1,23 +1,39 @@
-import { createSignTransaction } from './createSignTransaction';
-import { parseKeySources } from './parseKeySources';
-import { createFindPrivateKey } from './createFindPrivateKey';
+import { createSafeSignTransaction } from './createSafeSignTransaction';
+import { safeParseKeySources } from './safeParseKeySources';
+import { createSafeFindPrivateKey } from './createSafeFindPrivateKey';
+import { asThrowable } from '@common/utils/asThrowable';
+import { result } from '@common/utils/result';
+import { wrapUnknownError } from '@common/utils/wrapUnknownError';
 import type {
   Context,
-  MemoryKeyService,
-  CreateMemoryKeyServiceInput,
+  CreateMemoryKeyService,
+  SafeCreateMemoryKeyService,
 } from 'nat-types/keyServices/memoryKeyService';
 
-export const createMemoryKeyService = async (
-  params: CreateMemoryKeyServiceInput,
-): Promise<MemoryKeyService> => {
-  const context: Context = {
-    keyPairs: parseKeySources(params),
-  } as Context;
+export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService =
+  wrapUnknownError(async (args) => {
+    const keyPairs = safeParseKeySources(args);
+    if (!keyPairs.ok) return keyPairs;
 
-  context.findPrivateKey = createFindPrivateKey(context.keyPairs);
+    const context: Context = {
+      keyPairs: keyPairs.value,
+    } as Context;
 
-  return {
-    signTransaction: createSignTransaction(context),
-    getKeyPairs: () => context.keyPairs,
-  };
-};
+    const safeFindPrivateKey = createSafeFindPrivateKey(context);
+    const safeSignTransaction = createSafeSignTransaction(context);
+
+    context.safeFindPrivateKey = safeFindPrivateKey;
+
+    return result.ok({
+      signTransaction: asThrowable(safeSignTransaction),
+      findPrivateKey: asThrowable(safeFindPrivateKey),
+      safe: {
+        signTransaction: safeSignTransaction,
+        findPrivateKey: safeFindPrivateKey,
+      },
+    });
+  });
+
+export const createMemoryKeyService: CreateMemoryKeyService = asThrowable(
+  safeCreateMemoryKeyService,
+);

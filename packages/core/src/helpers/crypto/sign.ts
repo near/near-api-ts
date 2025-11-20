@@ -49,9 +49,9 @@ type SignResult = {
   u8Signature: Uint8Array;
 };
 
-export const sign = ({ message, privateKey }: SignArgs): SignResult => {
-  const { curve, u8Data: u8PrivateKey } = fromCurveString(privateKey);
+export const sign = (args: SignArgs): SignResult => {
+  const { curve, u8Data: u8PrivateKey } = fromCurveString(args.privateKey);
   return curve === 'ed25519'
-    ? signByEd25519Key(message, u8PrivateKey)
-    : signBySecp256k1Key(message, u8PrivateKey);
+    ? signByEd25519Key(args.message, u8PrivateKey)
+    : signBySecp256k1Key(args.message, u8PrivateKey);
 };

@@ -3,6 +3,7 @@ import { createSignTransaction } from './addTask/createSignTransaction';
 import { createExecuteTransaction } from './addTask/createExecuteTransaction';
 import { createSignMultipleTransactions } from './addTask/createSignMultipleTransactions';
 import { createExecuteMultipleTransactions } from './addTask/createExecuteMultipleTransactions';
+import { result } from '@common/utils/result';
 import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type {
   RemoveTask,
@@ -28,9 +29,10 @@ export const createTaskQueue = (signerContext: SignerContext): TaskQueue => {
       );
       delete context.cleaners[task.taskId];
 
-      context.signerContext.resolver.completeTask(task.taskId, {
-        error: 'Task execution was rejected after timeout', // TODO use new Error?
-      });
+      context.signerContext.resolver.completeTask(
+        task.taskId,
+        result.err('Task execution was rejected after timeout'), // TODO use NatError
+      );
     }, context.signerContext.taskTtlMs);
   };
 

@@ -1,29 +1,37 @@
-import { getSignedTransaction } from './helpers/getSignedTransaction';
+import { result } from '@common/utils/result';
 import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { Task } from 'nat-types/signers/memorySigner/taskQueue';
 import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
+import type { Transaction } from 'nat-types/transaction';
 
 export const signTransaction = async (
   signerContext: SignerContext,
   task: Task,
   key: KeyPoolKey,
-) => {
+): Promise<void> => {
   try {
     const nextNonce = key.nonce + 1;
 
-    const signedTransaction = getSignedTransaction(
-      signerContext,
-      task,
-      key,
-      nextNonce,
-    );
+    const transaction: Transaction = {
+      ...task.transactionIntent,
+      signerAccountId: signerContext.signerAccountId,
+      signerPublicKey: key.publicKey,
+      nonce: nextNonce,
+      blockHash: signerContext.state.getBlockHash(),
+    };
+
+    const signedTransaction = await signerContext.keyService.signTransaction({
+      transaction,
+    });
 
     key.setNonce(nextNonce);
 
-    signerContext.resolver.completeTask(task.taskId, {
-      result: signedTransaction,
-    });
+    signerContext.resolver.completeTask(
+      task.taskId,
+      result.ok(signedTransaction),
+    );
   } catch (e) {
-    signerContext.resolver.completeTask(task.taskId, { error: e });
+    // TODO remove catch
+    signerContext.resolver.completeTask(task.taskId, result.err(e));
   }
 };

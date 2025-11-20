@@ -12,7 +12,7 @@ import type {
   YoctoNearInputAmount,
 } from 'nat-types/nearToken';
 
-const NearTokenBrand = Symbol('NearTokenBrand');
+const NearTokenBrand = Symbol('NearToken');
 
 const cache = {
   yoctoNear: new WeakMap<NearToken, YoctoNear>(),

@@ -17,12 +17,12 @@ export const createSignTransaction =
       transactionIntent,
     };
 
-    matcher.canHandleTaskInFuture(task);
+    matcher.canHandleTaskInFuture(task); // TODO return error
     context.addTask(task);
 
     queueMicrotask(() => {
       matcher.handleAddTask(task);
     });
 
-    return resolver.waitForTask<SignedTransaction>(task.taskId);
+    return resolver.waitForTask<SignedTransaction, any>(task.taskId);
   };

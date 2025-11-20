@@ -17,10 +17,10 @@ import type {
 // TODO add policies
 export type MemorySigner = {
   signerAccountId: AccountId;
-  executeTransaction: ExecuteTransaction;
-  executeMultipleTransactions: ExecuteMultipleTransactions;
-  signTransaction: SignTransaction;
-  signMultipleTransactions: SignMultipleTransactions;
+  // executeTransaction: ExecuteTransaction;
+  // executeMultipleTransactions: ExecuteMultipleTransactions;
+  // signTransaction: SignTransaction;
+  // signMultipleTransactions: SignMultipleTransactions;
 };
 
 type CreateMemorySignerArgs = {

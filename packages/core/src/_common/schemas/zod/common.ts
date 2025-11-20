@@ -2,7 +2,7 @@ import * as z from 'zod/mini';
 import { base58 } from '@scure/base';
 import { oneLine } from '@common/utils/common';
 
-const Base58StringSchema = z.string().check(
+export const Base58StringSchema = z.string().check(
   z.regex(
     /^[1-9A-HJ-NP-Za-km-z]+$/,
     oneLine(`Base58 string contains invalid characters. Allowed characters:
@@ -10,7 +10,7 @@ const Base58StringSchema = z.string().check(
   ),
 );
 
-const CryptoHashSchema = Base58StringSchema.check(
+export const CryptoHashSchema = Base58StringSchema.check(
   z.refine(
     (val) => {
       try {

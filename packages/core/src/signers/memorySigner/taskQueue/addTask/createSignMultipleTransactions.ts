@@ -12,6 +12,8 @@ export const createSignMultipleTransactions =
     const output = [];
     let failed = false;
 
+    // TODO check if all txns could be executed in the future (if keyPool has all needed keys)
+
     for (const intent of transactionIntents) {
       if (failed) {
         output.push({ status: 'Canceled' as const });

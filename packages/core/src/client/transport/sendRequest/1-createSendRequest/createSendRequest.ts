@@ -12,9 +12,11 @@ import { getAvailableRpcs } from './_common/getAvailableRpcs';
 import { handleMaybeUnknownBlock } from './handleMaybeUnknownBlock';
 import { oneLine } from '@common/utils/common';
 
+// TODO should return Result<> only, no throw; also should return request/response details
 export const createSendRequest =
   (transportContext: TransportContext): SendRequest =>
   async (args) => {
+  // TODO Validate policy
     const transportPolicy = mergeTransportPolicy(
       transportContext.transportPolicy,
       args.transportPolicy,
@@ -25,7 +27,7 @@ export const createSendRequest =
       transportContext.rpcEndpoints,
       transportPolicy.rpcTypePreferences,
     );
-    if (rpcs.error) throw rpcs.error;
+    if (!rpcs.ok) throw rpcs.error;
 
     const externalAbortSignal = createExternalAbortSignal(args.signal);
 
@@ -43,11 +45,11 @@ export const createSendRequest =
     };
 
     // Try to execute the request with fallback;
-    let result = await tryMultipleRounds(context, rpcs.result);
+    let requestResult = await tryMultipleRounds(context, rpcs.value);
 
     // Try to use archival rpc if it's an UnknownBlock/GarbageCollectedBlock error
-    result = await handleMaybeUnknownBlock({
-      result,
+    requestResult = await handleMaybeUnknownBlock({
+      requestResult,
       context,
       rpcEndpoints: transportContext.rpcEndpoints,
     });
@@ -66,14 +68,12 @@ export const createSendRequest =
         ),
       );
 
+    if (requestResult.ok) return requestResult.value;
+
     // Return the original abort reason
-    if (hasTransportErrorCode(result.error, ['ExternalAbort']))
-      throw result?.error?.cause;
+    if (hasTransportErrorCode(requestResult.error, ['ExternalAbort']))
+      throw requestResult?.error?.cause;
 
-    if (result.error) {
-      result.error.errors = context.errors;
-      throw result.error;
-    }
-
-    return result.result;
+    requestResult.error.errors = context.errors;
+    throw requestResult.error;
   };

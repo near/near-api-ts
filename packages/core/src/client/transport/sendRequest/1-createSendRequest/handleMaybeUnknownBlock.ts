@@ -10,13 +10,13 @@ import { getAvailableRpcs } from './_common/getAvailableRpcs';
 import type { Result } from 'nat-types/common';
 
 type HandleMaybeUnknownBlock = (args: {
-  result: Result<unknown, TransportError | RpcError>;
+  requestResult: Result<unknown, TransportError | RpcError>;
   rpcEndpoints: TransportContext['rpcEndpoints'];
   context: SendRequestContext;
 }) => Promise<Result<unknown, TransportError | RpcError>>;
 
 export const handleMaybeUnknownBlock: HandleMaybeUnknownBlock = async ({
-  result: previousResult,
+  requestResult: previousResult,
   rpcEndpoints,
   context,
 }) => {
@@ -26,6 +26,7 @@ export const handleMaybeUnknownBlock: HandleMaybeUnknownBlock = async ({
   // - The user has already tried running this request on an archival RPC OR;
   // - The user wants to use only regular RPC (and do not use archival RPC)
   if (
+    previousResult.ok ||
     !(
       hasRpcErrorCode(previousResult.error, [
         'UnknownBlock',
@@ -39,7 +40,7 @@ export const handleMaybeUnknownBlock: HandleMaybeUnknownBlock = async ({
 
   // If there are no available archival RPCs to try — return the previous error
   const rpcs = getAvailableRpcs(rpcEndpoints, ['Archival']);
-  if (rpcs.error) return previousResult;
+  if (!rpcs.ok) return previousResult;
 
   // Execute the request only on archival RPCs — one attempt will be
   // made for each RPC in the list
@@ -50,7 +51,7 @@ export const handleMaybeUnknownBlock: HandleMaybeUnknownBlock = async ({
         rpcTypePreferences: ['Archival'],
       }),
     },
-    rpcs.result,
+    rpcs.value,
     0,
   );
 };

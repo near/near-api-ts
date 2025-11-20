@@ -59,9 +59,8 @@ export type JsonLikeValue =
 export type MaybeJsonLikeValue = JsonLikeValue | undefined;
 
 export type Milliseconds = number;
-
-export type Result<R, E> =
-  | { result: R; error?: never }
-  | { result?: never; error: E };
-
 export type TimeoutId = ReturnType<typeof setTimeout>;
+
+export type ResultOk<V> = { ok: true; value: V };
+export type ResultErr<E> = { ok: false; error: E };
+export type Result<V, E> = ResultOk<V> | ResultErr<E>;

@@ -1,10 +1,11 @@
 import * as z from 'zod/mini';
-import { getSignedTransaction } from './helpers/getSignedTransaction';
 import { hasRpcErrorCode } from '../../../client/rpcError';
 import type { Nonce, Result } from 'nat-types/common';
 import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { Task } from 'nat-types/signers/memorySigner/taskQueue';
 import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
+import { result } from '@common/utils/result';
+import type { Transaction } from 'nat-types/transaction';
 
 /*
 "data": {
@@ -40,14 +41,12 @@ const NonceErrorSchema = z.object({
 const maybeNonceError = (e: unknown): Result<{ akNonce: Nonce }, undefined> => {
   const validated = NonceErrorSchema.safeParse(e);
   if (hasRpcErrorCode(e, ['HandlerError']) && validated.success)
-    return {
-      result: {
-        akNonce:
-          validated.data.__rawRpcError.data.TxExecutionError.InvalidTxError
-            .InvalidNonce.akNonce,
-      },
-    };
-  return { error: undefined };
+    return result.ok({
+      akNonce:
+        validated.data.__rawRpcError.data.TxExecutionError.InvalidTxError
+          .InvalidNonce.akNonce,
+    });
+  return result.err(undefined);
 };
 
 export const executeTransaction = async (
@@ -57,34 +56,43 @@ export const executeTransaction = async (
 ) => {
   const maxAttempts = 3; // Maybe we will allow user to configure it in the future
 
-  const attempt = async (attemptIndex: number, newNonce: Nonce) => {
+  const attempt = async (
+    attemptIndex: number,
+    newNonce: Nonce,
+  ): Promise<Result<unknown, unknown>> => {
     try {
-      const signedTransaction = getSignedTransaction(
-        signerContext,
-        task,
-        key,
-        newNonce,
-      );
+      const transaction: Transaction = {
+        ...task.transactionIntent,
+        signerAccountId: signerContext.signerAccountId,
+        signerPublicKey: key.publicKey,
+        nonce: newNonce,
+        blockHash: signerContext.state.getBlockHash(),
+      };
 
-      const result = await signerContext.client.sendSignedTransaction({
+      const signedTransaction = await signerContext.keyService.signTransaction({
+        transaction,
+      });
+
+      const txResult = await signerContext.client.sendSignedTransaction({
         signedTransaction,
       });
 
       key.setNonce(newNonce);
 
-      return { result };
+      return result.ok(txResult);
     } catch (e) {
       // If last attempt
-      if (attemptIndex >= maxAttempts - 1) return { error: e };
+      if (attemptIndex >= maxAttempts - 1) return result.err(e);
 
+      // MemorySigner.ExecuteTransaction.Client.SendSignedTransaction
       const nonceError = maybeNonceError(e);
-      if (nonceError.result)
-        return await attempt(attemptIndex + 1, nonceError.result.akNonce + 1);
+      if (nonceError.ok)
+        return await attempt(attemptIndex + 1, nonceError.value.akNonce + 1);
 
-      return { error: e };
+      return result.err(e);
     }
   };
 
-  const result = await attempt(0, key.nonce + 1);
-  signerContext.resolver.completeTask(task.taskId, result);
+  const executeTransactionResult = await attempt(0, key.nonce + 1);
+  signerContext.resolver.completeTask(task.taskId, executeTransactionResult);
 };

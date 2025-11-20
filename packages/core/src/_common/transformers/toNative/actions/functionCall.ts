@@ -14,7 +14,9 @@ export const toNativeFunctionCallAction = (
       methodName: functionName,
       args: functionArgs,
       gas: nearGas(gasLimit).gas,
-      deposit: attachedDeposit ? nearToken(attachedDeposit).yoctoNear : 0n,
+      deposit: attachedDeposit
+        ? nearToken(attachedDeposit).yoctoNear
+        : 0n,
     },
   };
 };

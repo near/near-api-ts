@@ -1,7 +1,7 @@
 import { RpcError } from '../rpcError';
 import type { RpcRequestLog } from 'nat-types/client/transport';
 
-export class NatError extends Error {
+export class DeprecatedNatError extends Error {
   public code: string;
   public name: string;
   public errors?: (RpcError | TransportError)[];
@@ -34,7 +34,7 @@ export class NatError extends Error {
 
 const TransportErrorBrand = Symbol.for('near-api-ts.TransportError');
 
-export class TransportError extends NatError {
+export class TransportError extends DeprecatedNatError {
   readonly [TransportErrorBrand] = true;
 
   constructor(args: {

@@ -3,7 +3,10 @@ export { createClient } from './client/createClient';
 export { createTestnetClient } from './client/presets/testnet';
 export { createMainnetClient } from './client/presets/mainnet';
 // Key Services
-export { createMemoryKeyService } from './keyServices/memoryKeyService/createMemoryKeyService';
+export {
+  createMemoryKeyService,
+  safeCreateMemoryKeyService,
+} from './keyServices/memoryKeyService/createMemoryKeyService';
 // Signers
 export { createMemorySigner } from './signers/memorySigner/createMemorySigner';
 // Action Creators

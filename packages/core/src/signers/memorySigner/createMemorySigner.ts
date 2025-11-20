@@ -14,7 +14,7 @@ export const createMemorySigner: CreateMemorySigner = async (args) => {
     signerAccountId: args.signerAccountId,
     client: args.client,
     keyService: args.keyService,
-    signingKeys: args?.keyPool?.signingKeys,
+    signingKeys: args?.keyPool?.signingKeys, // TODO remove useless change or structure - just pass keyPool
     taskTtlMs: args?.queue?.taskTtlMs ?? SignerTaskTtlMs,
   } as SignerContext;
 
@@ -32,9 +32,9 @@ export const createMemorySigner: CreateMemorySigner = async (args) => {
 
   return {
     signerAccountId: context.signerAccountId,
-    executeTransaction: context.taskQueue.executeTransaction,
-    executeMultipleTransactions: context.taskQueue.executeMultipleTransactions,
-    signTransaction: context.taskQueue.signTransaction,
-    signMultipleTransactions: context.taskQueue.signMultipleTransactions,
+    // executeTransaction: context.taskQueue.executeTransaction, // add throwErrors
+    // executeMultipleTransactions: context.taskQueue.executeMultipleTransactions,
+    // signTransaction: context.taskQueue.signTransaction,
+    // signMultipleTransactions: context.taskQueue.signMultipleTransactions,
   };
 };

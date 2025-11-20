@@ -9,6 +9,7 @@ import type { PublicKey, PrivateKey } from 'nat-types/crypto';
 const { Ed25519, Secp256k1 } = BinaryCryptoKeyLengths;
 
 const getEd25519PublicKey = (u8PrivateKey: Uint8Array) => {
+  // check binary length
   const u8PublicKey = u8PrivateKey.slice(Ed25519.SecretKey);
   return toEd25519CurveString(u8PublicKey);
 };

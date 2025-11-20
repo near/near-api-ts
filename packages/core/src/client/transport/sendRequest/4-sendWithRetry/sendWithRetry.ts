@@ -3,6 +3,7 @@ import { safeSleep } from '@common/utils/sleep';
 import { hasRpcErrorCode, RpcError } from '../../../rpcError';
 import { TransportError, hasTransportErrorCode } from '../../transportError';
 import { combineAbortSignals, randomBetween } from '@common/utils/common';
+import { result } from '@common/utils/result';
 import type { Result } from 'nat-types/common';
 import type {
   InnerRpcEndpoint,
@@ -18,15 +19,16 @@ const getBackoffDelay = (
 ) => Math.min(cap, Math.round(randomBetween(base, sleep * multiplier)));
 
 const shouldRetry = (
-  result: Result<unknown, TransportError | RpcError>,
+  sendOnceResult: Result<unknown, TransportError | RpcError>,
 ): boolean =>
-  hasTransportErrorCode(result.error, ['AttemptTimeout']) ||
-  hasRpcErrorCode(result.error, [
-    'RpcTransactionTimeout',
-    'NoSyncedBlocks',
-    'UnknownRequestError',
-    'InternalServerError',
-  ]);
+  !sendOnceResult.ok &&
+  (hasTransportErrorCode(sendOnceResult.error, ['AttemptTimeout']) ||
+    hasRpcErrorCode(sendOnceResult.error, [
+      'RpcTransactionTimeout',
+      'NoSyncedBlocks',
+      'UnknownRequestError',
+      'InternalServerError',
+    ]));
 
 export const sendWithRetry = async (
   context: SendRequestContext,
@@ -38,10 +40,15 @@ export const sendWithRetry = async (
   let backoffDelay = retryBackoff.minDelayMs;
 
   const attempt = async (attemptIndex: number) => {
-    const result = await sendOnce(context, rpc, roundIndex, attemptIndex);
+    const sendOnceResult = await sendOnce(
+      context,
+      rpc,
+      roundIndex,
+      attemptIndex,
+    );
 
     const isLastAttempt = attemptIndex >= maxAttempts - 1;
-    if (isLastAttempt || !shouldRetry(result)) return result;
+    if (isLastAttempt || !shouldRetry(sendOnceResult)) return sendOnceResult;
 
     backoffDelay = getBackoffDelay(
       retryBackoff.maxDelayMs,
@@ -60,7 +67,7 @@ export const sendWithRetry = async (
 
     if (abortError) {
       context.errors.push(abortError);
-      return { error: abortError };
+      return result.err(abortError);
     }
 
     return attempt(attemptIndex + 1);

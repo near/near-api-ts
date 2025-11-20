@@ -10,7 +10,7 @@ import { nodeInspectSymbol } from '@common/utils/common';
 import type { InspectOptionsStylized } from 'node:util';
 
 const TeraCoefficient = 1_000_000_000_000n; // 10 ** 12
-const NearGasBrand = Symbol('NearGasBrand');
+const NearGasBrand = Symbol('NearGas');
 
 const cache = {
   gas: new WeakMap<NearGas, Gas>(),

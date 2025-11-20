@@ -14,6 +14,7 @@ export const sleep = (ms: number, signal?: AbortSignal): Promise<void> =>
       );
   });
 
+// TODO unite sleep and safeSleep - add hasThrowError: true
 export const safeSleep = <E>(
   ms: number,
   signal?: AbortSignal,

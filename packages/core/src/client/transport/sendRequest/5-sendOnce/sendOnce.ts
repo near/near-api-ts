@@ -10,6 +10,7 @@ import type {
   SendRequestContext,
 } from 'nat-types/client/transport';
 import type { Result } from 'nat-types/common';
+import { result } from '@common/utils/result';
 
 export const sendOnce = async (
   context: SendRequestContext,
@@ -37,25 +38,25 @@ export const sendOnce = async (
 
   // Try to send request to the rpc
   const response = await fetchData(context, rpc, body);
-  if (response.error) {
+  if (!response.ok) {
     response.error.request = request; // TODO move inside
     context.errors.push(response.error);
     return response;
   }
 
   // Try to parse response in JSON
-  const json = await parseJsonResponse(response.result, rpc);
-  if (json.error) {
+  const json = await parseJsonResponse(response.value, rpc);
+  if (!json.ok) {
     json.error.request = request; // TODO move inside
     context.errors.push(json.error);
     return json;
   }
 
-  const camelCased = snakeToCamelCase(json.result);
+  const camelCased = snakeToCamelCase(json.value);
   const validated = RpcResponseSchema.safeParse(camelCased);
 
   // When the RPC response doesn't match the expected format
-  if (validated.error) {
+  if (!validated.success) {
     const validationError = new TransportError({
       code: 'InvalidResponseSchema',
       message:
@@ -67,20 +68,18 @@ export const sendOnce = async (
       cause: validated.error,
     });
     context.errors.push(validationError);
-    return { error: validationError };
+    return result.err(validationError);
   }
 
-  const { result, error } = validated.data;
-
-  // If error happened during execution request on the RPC side
-  if (error) {
+  // If error happened during request execution on the RPC side
+  if ('error' in validated.data) {
     const rpcError = new RpcError({
       request,
-      __rawRpcError: error,
+      __rawRpcError: validated.data.error,
     });
     context.errors.push(rpcError);
-    return { error: rpcError };
+    return result.err(rpcError);
   }
 
-  return { result };
+  return result.ok(validated.data.result);
 };

@@ -8,22 +8,24 @@ import type {
   SendRequestContext,
 } from 'nat-types/client/transport';
 import type { Result } from 'nat-types/common';
+import { result } from '@common/utils/result';
 
 const shouldTryAnotherRound = (
   result: Result<unknown, TransportError | RpcError>,
 ): boolean =>
-  hasTransportErrorCode(result.error, [
+  !result.ok &&
+  (hasTransportErrorCode(result.error, [
     'Fetch',
     'AttemptTimeout',
     'ParseResponseToJson',
     'InvalidResponseSchema',
   ]) ||
-  hasRpcErrorCode(result.error, [
-    'ParseRequest',
-    'MethodNotFound',
-    'UnknownValidationError',
-    'RpcTransactionTimeout',
-  ]);
+    hasRpcErrorCode(result.error, [
+      'ParseRequest',
+      'MethodNotFound',
+      'UnknownValidationError',
+      'RpcTransactionTimeout',
+    ]));
 
 export const tryMultipleRounds = async (
   context: SendRequestContext,
@@ -32,10 +34,11 @@ export const tryMultipleRounds = async (
   const { maxRounds, nextRoundDelayMs } = context.transportPolicy.failover;
 
   const round = async (roundIndex: number) => {
-    const result = await tryOneRound(context, rpcs, roundIndex);
-
+    const tryOneRoundResult = await tryOneRound(context, rpcs, roundIndex);
     const isLastRound = roundIndex >= maxRounds - 1;
-    if (isLastRound || !shouldTryAnotherRound(result)) return result;
+
+    if (isLastRound || !shouldTryAnotherRound(tryOneRoundResult))
+      return tryOneRoundResult;
 
     const abortError = await safeSleep<TransportError>(
       nextRoundDelayMs,
@@ -47,7 +50,7 @@ export const tryMultipleRounds = async (
 
     if (abortError) {
       context.errors.push(abortError);
-      return { error: abortError };
+      return result.err(abortError);
     }
 
     return round(roundIndex + 1);

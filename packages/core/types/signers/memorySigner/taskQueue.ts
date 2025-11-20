@@ -4,6 +4,7 @@ import type {
   AccountId,
   ContractFunctionName,
   TimeoutId,
+  Result,
 } from 'nat-types/common';
 import type { TransactionIntent } from 'nat-types/transaction';
 import type { SendSignedTransactionResult } from 'nat-types/client/methods/transaction/sendSignedTransaction';
@@ -59,14 +60,14 @@ type ExecuteMultipleTransactionsResult = (
 )[];
 
 type SignMultipleTransactionsResult = (
-  | { status: 'Success'; result: SignedTransaction }
+  | { status: 'Success'; result: Result<SignedTransaction, unknown> }  // TODO Fix error type
   | { status: 'Error'; error: unknown } // TODO Fix error type
   | { status: 'Canceled' }
 )[];
 
 export type ExecuteTransaction = (
   args: TransactionIntent,
-) => Promise<SendSignedTransactionResult>;
+) => Promise<Result<SendSignedTransactionResult, unknown>>;
 
 export type ExecuteMultipleTransactions = (args: {
   transactionIntents: TransactionIntent[];
@@ -74,7 +75,7 @@ export type ExecuteMultipleTransactions = (args: {
 
 export type SignTransaction = (
   args: TransactionIntent,
-) => Promise<SignedTransaction>;
+) => Promise<Result<SignedTransaction, unknown>>;
 
 export type SignMultipleTransactions = (args: {
   transactionIntents: TransactionIntent[];

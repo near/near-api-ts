@@ -3,22 +3,25 @@ import { withSandbox } from '../utils/sandbox/startSandbox';
 import { createClient } from '../../../src';
 import { log } from '../utils/common';
 
-const gasPrice = async ({ rpcUrl }: { rpcUrl: string }) => {
+const testFn = async ({ rpcUrl }: { rpcUrl: string }) => {
   const client = await createClient({
     transport: {
       rpcEndpoints: { regular: [{ url: rpcUrl }] },
     },
   });
 
-
-  const res = await client.getAccountState({ accountId: 'nat'})
-  log(res);
+  try {
+    const res = await client.getAccountState({ accountId: 'nat2№' });
+    log(res);
+  } catch (e) {
+    log(e);
+  }
 };
-// TODO rename state to info
+
 test(
-  'Gas Price',
+  'GetAccountInfo',
   {
     timeout: 30 * 1000,
   },
-  async () => withSandbox(gasPrice),
+  async () => withSandbox(testFn),
 );

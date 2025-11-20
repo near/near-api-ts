@@ -1,9 +1,12 @@
 import * as z from 'zod/mini';
 import { RpcErrorSchema } from '@near-js/jsonrpc-types';
 
-export const RpcResponseSchema = z.object({
+const BaseSchema = z.object({
   jsonrpc: z.literal('2.0'),
   id: z.unknown(),
-  result: z.optional(z.unknown()),
-  error: z.optional(RpcErrorSchema()),
 });
+
+export const RpcResponseSchema = z.union([
+  z.object({ ...BaseSchema.shape, result: z.unknown() }),
+  z.object({ ...BaseSchema.shape, error: RpcErrorSchema() }),
+]);

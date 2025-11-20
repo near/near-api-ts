@@ -7,6 +7,7 @@ import type {
   SendRequestContext,
 } from 'nat-types/client/transport';
 import type { JsonLikeValue, Result } from 'nat-types/common';
+import { result } from '@common/utils/result';
 
 export const fetchData = async (
   context: SendRequestContext,
@@ -29,7 +30,7 @@ export const fetchData = async (
       ]),
     });
 
-    return { result: response };
+    return result.ok(response);
   } catch (e) {
     if (
       hasTransportErrorCode(e, [
@@ -38,17 +39,17 @@ export const fetchData = async (
         'AttemptTimeout',
       ])
     )
-      return { error: e as TransportError };
+      return result.err(e as TransportError);
 
-    return {
-      error: new TransportError({
+    return result.err(
+      new TransportError({
         code: 'Fetch',
         message:
           `Fetch failed: unable to send the request to '${rpc.url}' ` +
           '(connection refused, DNS error or network issues).',
         cause: e,
       }),
-    };
+    );
   } finally {
     clearTimeout(attemptTimeout.timeoutId);
   }

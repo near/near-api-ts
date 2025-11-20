@@ -30,24 +30,28 @@ test(
       keyService,
     });
 
-    const signer2 = await createMemorySigner({
-      signerAccountId: 'nat',
-      client,
-      keyService,
-    });
+    // const signer2 = await createMemorySigner({
+    //   signerAccountId: 'nat',
+    //   client,
+    //   keyService,
+    // });
+
+    // const r = await client.sendSignedTransaction();
 
     const result1 = await signer1.executeTransaction({
-      action: transfer({ amount: { near: '1' } }),
-      receiverAccountId: DEFAULT_ACCOUNT_ID,
+      // intent: {
+        action: transfer({ amount: { near: '1' } }),
+        receiverAccountId: DEFAULT_ACCOUNT_ID,
+      // },
     });
 
     log(result1);
 
-    const result2 = await signer2.executeTransaction({
-      action: transfer({ amount: { near: '2' } }),
-      receiverAccountId: DEFAULT_ACCOUNT_ID,
-    });
-
-    log(result2);
+    // const result2 = await signer2.executeTransaction({
+    //   action: transfer({ amount: { near: '2' } }),
+    //   receiverAccountId: DEFAULT_ACCOUNT_ID,
+    // });
+    //
+    // log(result2);
   },
 );
