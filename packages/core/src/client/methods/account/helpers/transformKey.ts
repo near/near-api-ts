@@ -1,4 +1,4 @@
-import { yoctoNear } from '../../../../helpers/nearToken';
+import { yoctoNear } from '../../../../helpers/tokens/nearToken';
 import type { AccessKeyInfoView } from '@near-js/jsonrpc-types';
 import type { AccountKey, FunctionCallKey } from 'nat-types/accountKey';
 import type { PublicKey } from 'nat-types/crypto';

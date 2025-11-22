@@ -3,10 +3,7 @@ export { createClient } from './client/createClient';
 export { createTestnetClient } from './client/presets/testnet';
 export { createMainnetClient } from './client/presets/mainnet';
 // Key Services
-export {
-  createMemoryKeyService,
-  safeCreateMemoryKeyService,
-} from './keyServices/memoryKeyService/createMemoryKeyService';
+export { createMemoryKeyService, safeCreateMemoryKeyService } from './keyServices/memoryKeyService/createMemoryKeyService';
 // Signers
 export { createMemorySigner } from './signers/memorySigner/createMemorySigner';
 // Action Creators
@@ -19,8 +16,10 @@ export { deleteKey } from './helpers/actionCreators/deleteKey';
 export { deleteAccount } from './helpers/actionCreators/deleteAccount';
 export { deployContract } from './helpers/actionCreators/deployContract';
 // Helpers
-export { near, yoctoNear, nearToken, isNearToken } from './helpers/nearToken';
+export { near, yoctoNear, nearToken, isNearToken } from './helpers/tokens/nearToken';
 export { gas, teraGas, nearGas, isNearGas } from './helpers/nearGas';
+// Errors
+export { isNatError } from '@common/natError';
 
 export type { Client } from 'nat-types/client/client';
 export type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService';

@@ -34,7 +34,7 @@ const testFn = async (args: { rpcUrl: string }) => {
     });
     // signerPublicKey: testKeys.fc.forContract.publicKey,
 
-
+    // const x = await keyService.signTransaction()
     const signedTransaction = await keyService.safe.signTransaction({
       transaction: {
         signerAccountId: 'nat',

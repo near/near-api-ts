@@ -1,10 +1,12 @@
-import { fromCurveString } from '@common/transformers/curveString/fromCurveString';
+import type {PrivateKey, PublicKey} from 'nat-types/crypto';
+import {BinaryCryptoKeyLengths} from '@common/configs/constants';
 import {
   toEd25519CurveString,
-  toSecp256k1CurveString,
+  toSecp256k1CurveString
 } from '@common/transformers/curveString/toCurveString';
-import { BinaryCryptoKeyLengths } from '@common/configs/constants';
-import type { PublicKey, PrivateKey } from 'nat-types/crypto';
+import {
+  fromCurveString
+} from '@common/transformers/curveString/fromCurveString';
 
 const { Ed25519, Secp256k1 } = BinaryCryptoKeyLengths;
 
@@ -19,10 +21,15 @@ const getSecp256k1PublicKey = (u8PrivateKey: Uint8Array) => {
   return toSecp256k1CurveString(u8PublicKey);
 };
 
-export const getPublicKey = (privateKey: PrivateKey): PublicKey => {
+const getPublicKey = (privateKey: PrivateKey): PublicKey => {
   // TODO validate private key
   const { curve, u8Data: u8PrivateKey } = fromCurveString(privateKey);
   return curve === 'ed25519'
     ? getEd25519PublicKey(u8PrivateKey)
     : getSecp256k1PublicKey(u8PrivateKey);
 };
+
+const ed25519Key = {};
+const secp256k1Key = {};
+
+const keyPair = (privateKey: PrivateKey) => {};

@@ -1,5 +1,5 @@
 import type { PublicKey, NativePublicKey } from 'nat-types/crypto';
-import { fromCurveString } from '@common/transformers/curveString';
+import { fromCurveString } from '@common/transformers/curveString/fromCurveString';
 
 export const toNativePublicKey = (publicKey: PublicKey): NativePublicKey => {
   const { curve, u8Data } = fromCurveString(publicKey);

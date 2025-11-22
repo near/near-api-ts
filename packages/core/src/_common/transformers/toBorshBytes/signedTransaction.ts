@@ -14,7 +14,7 @@ export const serializeNativeSignedTransaction = (
 
 export const serializeSignedTransaction = (
   signedTransaction: SignedTransaction,
-): BorshBytes =>
-  serializeNativeSignedTransaction(
-    toNativeSignedTransaction(signedTransaction),
-  );
+): BorshBytes => {
+  const nativeSignedTransaction = toNativeSignedTransaction(signedTransaction);
+  return serializeNativeSignedTransaction(nativeSignedTransaction);
+};

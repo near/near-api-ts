@@ -38,14 +38,14 @@ test(
 
     // const r = await client.sendSignedTransaction();
 
-    const result1 = await signer1.executeTransaction({
-      // intent: {
-        action: transfer({ amount: { near: '1' } }),
-        receiverAccountId: DEFAULT_ACCOUNT_ID,
-      // },
-    });
-
-    log(result1);
+    // const result1 = await signer1.executeTransaction({
+    //   // intent: {
+    //     action: transfer({ amount: { near: '1' } }),
+    //     receiverAccountId: DEFAULT_ACCOUNT_ID,
+    //   // },
+    // });
+    //
+    // log(result1);
 
     // const result2 = await signer2.executeTransaction({
     //   action: transfer({ amount: { near: '2' } }),

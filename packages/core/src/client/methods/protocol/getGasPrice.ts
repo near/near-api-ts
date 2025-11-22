@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
 import { RpcGasPriceResponseSchema } from '@near-js/jsonrpc-types';
-import { yoctoNear } from '../../../helpers/nearToken';
+import { yoctoNear } from '../../../helpers/tokens/nearToken';
 import type {
   CreateGetGasPrice,
   GetGasPriceResult,
@@ -19,7 +19,7 @@ const transformResult = (result: unknown): GetGasPriceResult => {
 
 const GetGasPriceArgsSchema = z.optional(
   z.object({
-    blockId: z.optional(BlockIdSchema),
+    blockId: z.optional(BlockIdSchema), // TODO use atMomentOf?
   }),
 );
 
@@ -35,7 +35,7 @@ const getBlockId = (
 export const createGetGasPrice: CreateGetGasPrice =
   ({ sendRequest }) =>
   async (args) => {
-    GetGasPriceArgsSchema.parse(args);
+    // GetGasPriceArgsSchema.parse(args);
 
     const result = await sendRequest({
       method: 'gas_price',

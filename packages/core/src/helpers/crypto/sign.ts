@@ -2,11 +2,11 @@ import type { PrivateKey, Signature } from 'nat-types/crypto';
 import type { Hex } from 'nat-types/common';
 import { ed25519 } from '@noble/curves/ed25519';
 import { secp256k1 } from '@noble/curves/secp256k1';
+import { fromCurveString } from '@common/transformers/curveString/fromCurveString';
 import {
-  fromCurveString,
   toEd25519CurveString,
   toSecp256k1CurveString,
-} from '@common/transformers/curveString';
+} from '@common/transformers/curveString/toCurveString';
 import { BinaryCryptoKeyLengths } from '@common/configs/constants';
 
 const signByEd25519Key = (message: Hex, u8PrivateKey: Uint8Array) => {

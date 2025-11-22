@@ -3,7 +3,7 @@ import type {
   NativeAddKeyAction,
 } from 'nat-types/actions/addKey';
 import { toNativePublicKey } from '@common/transformers/toNative/publicKey';
-import { nearToken } from '../../../../helpers/nearToken';
+import { nearToken } from '../../../../helpers/tokens/nearToken';
 
 const getPermission = (
   action: AddKeyAction,

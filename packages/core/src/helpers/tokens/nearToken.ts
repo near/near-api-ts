@@ -1,5 +1,5 @@
-import { convertTokensToUnits } from '@common/utils/tokenConverter/convertTokensToUnits';
-import { convertUnitsToTokens } from '@common/utils/tokenConverter/convertUnitsToTokens';
+import { convertTokensToUnits } from './tokenConverter/convertTokensToUnits';
+import { convertUnitsToTokens } from './tokenConverter/convertUnitsToTokens';
 import { NearDecimals } from '@common/configs/constants';
 import { nodeInspectSymbol } from '@common/utils/common';
 import type { InspectOptionsStylized } from 'node:util';

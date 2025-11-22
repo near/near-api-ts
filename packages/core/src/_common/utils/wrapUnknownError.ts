@@ -37,10 +37,7 @@ export const wrapUnknownError: WrapUnknownError =
   (...args: unknown[]) => {
     try {
       const res = safeFn(...args);
-
-      if (res instanceof Promise)
-        return res.catch((e) => returnError(e));
-
+      if (res instanceof Promise) return res.catch((e) => returnError(e));
       return res;
     } catch (e) {
       return returnError(e);

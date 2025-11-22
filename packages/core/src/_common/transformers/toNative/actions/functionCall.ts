@@ -2,7 +2,7 @@ import type {
   FunctionCallAction,
   NativeFunctionCallAction,
 } from 'nat-types/actions/functionCall';
-import { nearToken } from '../../../../helpers/nearToken';
+import { nearToken } from '../../../../helpers/tokens/nearToken';
 import { nearGas } from '../../../../helpers/nearGas';
 
 export const toNativeFunctionCallAction = (
