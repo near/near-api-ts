@@ -1,7 +1,7 @@
 import { result } from '@common/utils/result';
 import type { InnerRpcEndpoint } from 'nat-types/client/transport';
 import { TransportError } from '../../transportError';
-import type { JsonLikeValue, Result } from 'nat-types/common';
+import type { JsonLikeValue, Result } from 'nat-types/_common/common';
 
 export const parseJsonResponse = async (
   response: Response,

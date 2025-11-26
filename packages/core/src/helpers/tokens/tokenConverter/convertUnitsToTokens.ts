@@ -1,5 +1,5 @@
 import { pow10, assertValidDecimals } from './helpers';
-import type { Units } from 'nat-types/common';
+import type { Units } from 'nat-types/_common/common';
 
 // Validate units input: must be positive integer digits only
 const assertValidUnits = (units: bigint | string) => {

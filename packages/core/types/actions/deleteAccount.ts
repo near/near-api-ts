@@ -1,4 +1,4 @@
-import type { AccountId } from 'nat-types/common';
+import type { AccountId } from 'nat-types/_common/common';
 
 export type CreateDeleteAccountActionArgs = {
   beneficiaryAccountId: AccountId;

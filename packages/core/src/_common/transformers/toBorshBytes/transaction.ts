@@ -1,5 +1,5 @@
 import type { NativeTransaction, Transaction } from 'nat-types/transaction';
-import type { BorshBytes } from 'nat-types/common';
+import type { BorshBytes } from 'nat-types/_common/common';
 import { serialize } from 'borsh';
 import { transactionBorshSchema } from '@common/schemas/borsh';
 import { toNativeTransaction } from '@common/transformers/toNative/transaction';

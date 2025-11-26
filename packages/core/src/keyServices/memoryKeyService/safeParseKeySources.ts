@@ -1,18 +1,18 @@
-import { getPublicKey } from '../../helpers/crypto/getPublicKey';
+
 import type {
   KeyPairs,
   KeySource,
   CreateMemoryKeyServiceArgs,
   KeyPair,
 } from 'nat-types/keyServices/memoryKeyService';
-import type { Result } from 'nat-types/common';
+import type { Result } from 'nat-types/_common/common';
 import { result } from '@common/utils/result';
 
 const parseKeySource = (keySource: KeySource): KeyPair => {
-  // TODO validate
+  // TODO validate - create keyPair
 
   return {
-    publicKey: getPublicKey(keySource.privateKey),
+    // publicKey: getPublicKey(keySource.privateKey),
     privateKey: keySource.privateKey,
   };
 };

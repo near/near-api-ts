@@ -1,6 +1,6 @@
-import type { FunctionCallKey } from 'nat-types/accountKey';
-import type { PrivateKey, PublicKey } from 'nat-types/crypto';
-import type { AccountId, Nonce } from 'nat-types/common';
+import type { FunctionCallKey } from 'nat-types/_common/accountKey';
+import type { PrivateKey, PublicKey } from 'nat-types/_common/crypto';
+import type { AccountId, Nonce } from 'nat-types/_common/common';
 import type { Task } from 'nat-types/signers/memorySigner/taskQueue';
 
 type KeyPoolKeyBase = {

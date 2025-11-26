@@ -1,4 +1,4 @@
-import type { BlockHash } from 'nat-types/common';
+import type { BlockHash } from 'nat-types/_common/common';
 
 export type State = {
   getBlockHash: () => BlockHash;

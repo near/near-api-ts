@@ -2,7 +2,7 @@ import type {
   NativeSignedTransaction,
   SignedTransaction,
 } from 'nat-types/signedTransaction';
-import type { BorshBytes } from 'nat-types/common';
+import type { BorshBytes } from 'nat-types/_common/common';
 import { serialize } from 'borsh';
 import { signedTransactionBorshSchema } from '@common/schemas/borsh';
 import { toNativeSignedTransaction } from '@common/transformers/toNative/signedTransaction';

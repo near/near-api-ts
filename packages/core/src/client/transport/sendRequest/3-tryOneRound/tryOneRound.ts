@@ -8,7 +8,7 @@ import type {
   InnerRpcEndpoint,
   SendRequestContext,
 } from 'nat-types/client/transport';
-import type { Result } from 'nat-types/common';
+import type { Result } from 'nat-types/_common/common';
 
 const shouldTryAnotherRpc = (
   result: Result<unknown, TransportError | RpcError>,

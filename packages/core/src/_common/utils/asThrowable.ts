@@ -1,4 +1,4 @@
-import type { Result } from 'nat-types/common';
+import type { Result } from 'nat-types/_common/common';
 
 type AsThrowable = {
   <A extends unknown[], V, E>(

@@ -7,7 +7,7 @@ import type { GetProtocolConfig } from 'nat-types/client/methods/protocol/getPro
 import type { SendSignedTransaction } from 'nat-types/client/methods/transaction/sendSignedTransaction';
 import type { GetContractState } from 'nat-types/client/methods/contract/getContractState';
 import type { CallContractReadFunction } from 'nat-types/client/methods/contract/callContractReadFunction';
-import type { JsonLikeValue } from 'nat-types/common';
+import type { JsonLikeValue } from 'nat-types/_common/common';
 import type {
   CreateTransportArgs,
   PartialTransportPolicy,

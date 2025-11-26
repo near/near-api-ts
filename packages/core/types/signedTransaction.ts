@@ -1,5 +1,5 @@
-import type { CryptoHash } from 'nat-types/common';
-import type { Signature, NativeSignature } from 'nat-types/crypto';
+import type { CryptoHash } from 'nat-types/_common/common';
+import type { Signature, NativeSignature } from 'nat-types/_common/crypto';
 import type { Transaction, NativeTransaction } from 'nat-types/transaction';
 
 export type SignedTransaction = {

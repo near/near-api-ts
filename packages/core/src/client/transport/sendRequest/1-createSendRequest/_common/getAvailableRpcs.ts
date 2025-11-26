@@ -5,7 +5,7 @@ import type {
 } from 'nat-types/client/transport';
 import { TransportError } from '../../../transportError';
 import { result } from '@common/utils/result';
-import type { Result } from 'nat-types/common';
+import type { Result } from 'nat-types/_common/common';
 
 export const getAvailableRpcs = (
   rpcEndpoints: TransportContext['rpcEndpoints'],

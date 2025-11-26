@@ -1,5 +1,5 @@
-import type { AccountId, BlockHash, Nonce } from './common';
-import type { PublicKey, NativePublicKey } from './crypto';
+import type { AccountId, BlockHash, Nonce } from './_common/common';
+import type { PublicKey, NativePublicKey } from './_common/crypto';
 import type {
   CreateAccountAction,
   NativeCreateAccountAction,
@@ -28,6 +28,7 @@ import type {
   DeployContractAction,
   NativeDeployContractAction,
 } from 'nat-types/actions/deployContract';
+import type { Prettify } from 'nat-types/utils';
 
 export type Action =
   | CreateAccountAction
@@ -49,7 +50,10 @@ type TransactionBase = {
   blockHash: BlockHash;
 };
 
-export type Transaction = TransactionBase & (SingleAction | MultiActions);
+type SingleActionTransaction = TransactionBase & SingleAction;
+type MultiActionsTransaction = TransactionBase & MultiActions;
+
+export type Transaction = SingleActionTransaction | MultiActionsTransaction;
 
 export type TransactionIntent = {
   receiverAccountId: AccountId;

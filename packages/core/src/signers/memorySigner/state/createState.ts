@@ -1,7 +1,7 @@
 import { RefetchBlockHashInterval } from '@common/configs/constants';
 import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { State } from 'nat-types/signers/memorySigner/state';
-import type { BlockHash } from 'nat-types/common';
+import type { BlockHash } from 'nat-types/_common/common';
 
 const fetchBlockHash = async (
   signerContext: SignerContext,

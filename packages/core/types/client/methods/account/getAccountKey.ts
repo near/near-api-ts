@@ -3,10 +3,10 @@ import type {
   BlockHash,
   BlockHeight,
   BlockReference,
-} from 'nat-types/common';
+} from 'nat-types/_common/common';
 import type { ClientContext } from 'nat-types/client/client';
-import type { PublicKey } from 'nat-types/crypto';
-import type { AccountKey } from 'nat-types/accountKey';
+import type { PublicKey } from 'nat-types/_common/crypto';
+import type { AccountKey } from 'nat-types/_common/accountKey';
 import type { PartialTransportPolicy } from 'nat-types/client/transport';
 
 export type GetAccountKeyArgs = {

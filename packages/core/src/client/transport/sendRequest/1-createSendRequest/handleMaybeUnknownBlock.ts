@@ -7,7 +7,7 @@ import { TransportError } from '../../transportError';
 import { tryOneRound } from '../3-tryOneRound/tryOneRound';
 import { mergeTransportPolicy } from '../../transportPolicy';
 import { getAvailableRpcs } from './_common/getAvailableRpcs';
-import type { Result } from 'nat-types/common';
+import type { Result } from 'nat-types/_common/common';
 
 type HandleMaybeUnknownBlock = (args: {
   requestResult: Result<unknown, TransportError | RpcError>;

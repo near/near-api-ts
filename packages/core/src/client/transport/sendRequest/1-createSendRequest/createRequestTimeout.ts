@@ -1,4 +1,4 @@
-import type { Milliseconds } from 'nat-types/common';
+import type { Milliseconds } from 'nat-types/_common/common';
 import { TransportError } from '../../transportError';
 import { oneLine } from '@common/utils/common';
 

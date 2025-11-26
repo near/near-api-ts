@@ -1,4 +1,4 @@
-import type { PublicKey, NativePublicKey } from 'nat-types/crypto';
+import type { PublicKey, NativePublicKey } from 'nat-types/_common/crypto';
 
 export type CreateDeleteKeyActionArgs = {
   publicKey: PublicKey;

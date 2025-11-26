@@ -1,11 +1,11 @@
-import type { PublicKey } from 'nat-types/crypto';
+import type { PublicKey } from 'nat-types/_common/crypto';
 import type {
   AccountId,
   ContractFunctionName,
   Nonce,
 
-} from 'nat-types/common';
-import type {NearToken} from 'nat-types/nearToken';
+} from 'nat-types/_common/common';
+import type {NearToken} from 'nat-types/_common/nearToken';
 
 export type FullAccessKey = {
   accessType: 'FullAccess';

@@ -1,5 +1,5 @@
 import { pow10, assertValidDecimals } from './helpers';
-import type { Tokens } from 'nat-types/common';
+import type { Tokens } from 'nat-types/_common/common';
 
 /**
  * Validate a positive decimal string with an optional fractional part

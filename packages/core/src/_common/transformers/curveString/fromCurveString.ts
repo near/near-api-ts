@@ -3,9 +3,8 @@ import { base58 } from '@scure/base';
 import { result } from '@common/utils/result';
 import { Base58StringSchema } from '@common/schemas/zod/common';
 import { asThrowable } from '@common/utils/asThrowable';
-import { NatError } from '@common/natError';
-import type { Curve } from 'nat-types/crypto';
-import type { SafeFromCurveString } from 'nat-types/_common/transformers/fromCurveString';
+import { createNatError } from '@common/natError';
+import type { Curve, SafeFromCurveString } from 'nat-types/_common/curveString';
 
 export const CurveStringSchema = z.templateLiteral([
   z.enum(['ed25519', 'secp256k1']),
@@ -18,8 +17,8 @@ export const safeFromCurveString: SafeFromCurveString = (value) => {
 
   if (!curveString.success)
     return result.err(
-      NatError.create({
-        kind: 'FromCurveString.InvalidFormat',
+      createNatError({
+        kind: 'FromCurveString.InvalidStringFormat',
         context: { zodError: curveString.error },
       }),
     );

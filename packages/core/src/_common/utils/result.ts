@@ -1,4 +1,4 @@
-import type { ResultOk, ResultErr } from 'nat-types/common';
+import type { ResultOk, ResultErr } from 'nat-types/_common/common';
 
 export const result = {
   ok: <V>(value: V): ResultOk<V> => ({ ok: true, value }),

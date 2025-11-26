@@ -9,7 +9,7 @@ import type {
   InnerRpcEndpoint,
   SendRequestContext,
 } from 'nat-types/client/transport';
-import type { Result } from 'nat-types/common';
+import type { Result } from 'nat-types/_common/common';
 import { result } from '@common/utils/result';
 
 export const sendOnce = async (

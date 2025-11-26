@@ -6,7 +6,7 @@ import type {
   InnerRpcEndpoint,
   SendRequestContext,
 } from 'nat-types/client/transport';
-import type { JsonLikeValue, Result } from 'nat-types/common';
+import type { JsonLikeValue, Result } from 'nat-types/_common/common';
 import { result } from '@common/utils/result';
 
 export const fetchData = async (

@@ -1,10 +1,10 @@
 import type {
   ContractFunctionName,
   MaybeJsonLikeValue,
-} from 'nat-types/common';
+} from 'nat-types/_common/common';
 import type { KeyIf } from 'nat-types/utils';
-import type {NearTokenArgs} from 'nat-types/nearToken';
-import type {NearGasArgs} from 'nat-types/nearGas';
+import type {NearTokenArgs} from 'nat-types/_common/nearToken';
+import type {NearGasArgs} from 'nat-types/_common/nearGas';
 
 type BaseFunctionCallActionArgs = {
   functionName: ContractFunctionName;

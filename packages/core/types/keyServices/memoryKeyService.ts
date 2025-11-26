@@ -1,7 +1,7 @@
-import type { PrivateKey, PublicKey } from '../crypto';
+import type { PrivateKey, PublicKey } from '../_common/crypto';
 import type { Transaction } from '../transaction';
 import type { SignedTransaction } from '../signedTransaction';
-import type { Result } from 'nat-types/common';
+import type { Result } from 'nat-types/_common/common';
 
 export type KeySource = { privateKey: PrivateKey };
 

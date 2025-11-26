@@ -1,6 +1,6 @@
 import type { TransactionIntent } from 'nat-types/transaction';
 import type { FunctionCallAction } from 'nat-types/actions/functionCall';
-import type { AccountId } from 'nat-types/common';
+import type { AccountId } from 'nat-types/_common/common';
 import type { SigningKeyPriority } from 'nat-types/signers/memorySigner/taskQueue';
 
 /**

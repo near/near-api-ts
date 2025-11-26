@@ -1,25 +1,29 @@
-import type { Kind, CreateNatErrorArgs, ContextFor } from 'nat-types/natError';
+import type {
+  NatErrorKind,
+  CreateNatErrorArgs,
+  ContextFor,
+} from 'nat-types/_common/natError';
 
 export const NatErrorBrand = Symbol('NatError');
 
-export class NatError<K extends Kind> extends Error {
+export class NatError<K extends NatErrorKind> extends Error {
   public readonly [NatErrorBrand] = true;
   public readonly kind: K;
   public readonly context: ContextFor<K>;
 
   constructor(args: CreateNatErrorArgs<K>) {
-    super(`<${args.kind}> ${args.message ?? ''}`);
+    super(`<${args.kind}>}`);
     this.name = 'NatError';
     this.kind = args.kind;
     this.context = args.context;
   }
-
-  static create<K extends Kind>(args: CreateNatErrorArgs<K>): NatError<K> {
-    return new NatError(args);
-  }
 }
 
-export const isNatError = <K extends Kind>(
+export const createNatError = <K extends NatErrorKind>(
+  args: CreateNatErrorArgs<K>,
+): NatError<K> => new NatError(args);
+
+export const isNatError = <K extends NatErrorKind>(
   error: unknown,
   kind?: K,
 ): error is NatError<K> => {

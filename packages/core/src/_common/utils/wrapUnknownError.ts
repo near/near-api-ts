@@ -1,17 +1,28 @@
-import type { ResultErr } from 'nat-types/common';
 import { result } from '@common/utils/result';
+import { createNatError, type NatError } from '@common/natError';
+import type { NatUnknownErrorKind } from 'nat-types/_common/natError';
+import type { ResultErr } from 'nat-types/_common/common';
 
-type WrapUnknownError = {
-  <A extends unknown[], R>(
-    safeFn: (...args: A) => Promise<R>,
-  ): (...args: A) => Promise<R | ResultErr<string>>;
-  <A extends unknown[], R>(
-    safeFn: (...args: A) => R,
-  ): (...args: A) => R | ResultErr<string>;
+export type WrapUnknownError = {
+  // #1
+  <A extends unknown[], R, K extends NatUnknownErrorKind>(
+    kind: K,
+    fn: (...args: A) => Promise<R>,
+  ): (...args: A) => Promise<R | ResultErr<NatError<K>>>;
+  // #2
+  <A extends unknown[], R, K extends NatUnknownErrorKind>(
+    kind: K,
+    fn: (...args: A) => R,
+  ): (...args: A) => R | ResultErr<NatError<K>>;
 };
 
-const returnError = (e: unknown) =>
-  result.err(new Error('Unknown error', { cause: e })); // TODO Use NatError
+const returnError = <K extends NatUnknownErrorKind>(e: unknown, kind: K) =>
+  result.err(
+    createNatError<NatUnknownErrorKind>({
+      kind,
+      context: { cause: e },
+    }),
+  );
 
 /**
  * Wrap a function and convert *all* unexpected errors (sync or async)
@@ -33,13 +44,13 @@ const returnError = (e: unknown) =>
  * even if the underlying implementation misbehaves.
  */
 export const wrapUnknownError: WrapUnknownError =
-  (safeFn: any) =>
+  (kind, fn: any) =>
   (...args: unknown[]) => {
     try {
-      const res = safeFn(...args);
-      if (res instanceof Promise) return res.catch((e) => returnError(e));
+      const res = fn(...args);
+      if (res instanceof Promise) return res.catch((e) => returnError(e, kind));
       return res;
     } catch (e) {
-      return returnError(e);
+      return returnError(e, kind);
     }
   };

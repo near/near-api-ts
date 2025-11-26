@@ -1,5 +1,5 @@
 import { createUnlock, createLock, createSetNonce } from './helpers/keyUtils';
-import type { AccountKey, FullAccessKey } from 'nat-types/accountKey';
+import type { AccountKey, FullAccessKey } from 'nat-types/_common/accountKey';
 import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { KeyPairs } from 'nat-types/keyServices/memoryKeyService';
 import type { KeyPoolFullAccessKey } from 'nat-types/signers/memorySigner/keyPool';
@@ -13,7 +13,7 @@ const transformKey = (
   const key = {
     accessType: 'FullAccess',
     publicKey,
-    privateKey: keyPairs[publicKey],
+    privateKey: keyPairs[publicKey], // TODO Remove it!
     isLocked: false,
     nonce,
   } as KeyPoolFullAccessKey;

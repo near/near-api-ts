@@ -4,7 +4,7 @@ import { hasRpcErrorCode, RpcError } from '../../../rpcError';
 import { TransportError, hasTransportErrorCode } from '../../transportError';
 import { combineAbortSignals, randomBetween } from '@common/utils/common';
 import { result } from '@common/utils/result';
-import type { Result } from 'nat-types/common';
+import type { Result } from 'nat-types/_common/common';
 import type {
   InnerRpcEndpoint,
   SendRequestContext,

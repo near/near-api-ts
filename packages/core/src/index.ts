@@ -18,6 +18,8 @@ export { deployContract } from './helpers/actionCreators/deployContract';
 // Helpers
 export { near, yoctoNear, nearToken, isNearToken } from './helpers/tokens/nearToken';
 export { gas, teraGas, nearGas, isNearGas } from './helpers/nearGas';
+export { safeKeyPair, keyPair } from './helpers/keyPair/keyPair';
+export { randomSecp256k1KeyPair } from './helpers/keyPair/randomSecp256k1KeyPair';
 // Errors
 export { isNatError } from '@common/natError';
 

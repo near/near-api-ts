@@ -10,7 +10,7 @@ import type {
   NearTokenArgs,
   YoctoNear,
   YoctoNearInputAmount,
-} from 'nat-types/nearToken';
+} from 'nat-types/_common/nearToken';
 
 const NearTokenBrand = Symbol('NearToken');
 

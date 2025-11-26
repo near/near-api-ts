@@ -5,7 +5,7 @@ import type {
   NearGasArgs,
   TeraGas,
   TeraGasInputAmount,
-} from 'nat-types/nearGas';
+} from 'nat-types/_common/nearGas';
 import { nodeInspectSymbol } from '@common/utils/common';
 import type { InspectOptionsStylized } from 'node:util';
 
@@ -16,6 +16,9 @@ const cache = {
   gas: new WeakMap<NearGas, Gas>(),
   teraGas: new WeakMap<NearGas, TeraGas>(),
 };
+
+export const isNearGas = (value: unknown): value is NearGas =>
+  typeof value === 'object' && value !== null && NearGasBrand in value;
 
 const toGas = (x: NearGasArgs | NearGas): Gas =>
   isNearGas(x) ? x.gas : nearGas(x).gas;
@@ -118,6 +121,3 @@ export const nearGas = (args: NearGasArgs): NearGas => {
   if ('gas' in args) return gas(args.gas);
   throw new Error('Invalid gas option');
 };
-
-export const isNearGas = (value: unknown): value is NearGas =>
-  typeof value === 'object' && value !== null && NearGasBrand in value;

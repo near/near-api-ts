@@ -1,4 +1,4 @@
-import type { Tokens, Units } from 'nat-types/common';
+import type { Tokens, Units } from 'nat-types/_common/common';
 
 export type YoctoNearInputAmount = Units;
 export type NearInputAmount = Tokens;

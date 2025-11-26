@@ -5,7 +5,7 @@ import type {
   Resolver,
   WaitForTask,
 } from 'nat-types/signers/memorySigner/resolver';
-import type { Result } from 'nat-types/common';
+import type { Result } from 'nat-types/_common/common';
 
 export const createResolver = (): Resolver => {
   const activeTasks: ActiveTasks = {};

@@ -1,6 +1,6 @@
-import type { NativePublicKey, PublicKey } from 'nat-types/crypto';
-import type { AccountId, ContractFunctionName } from 'nat-types/common';
-import type { NearTokenArgs } from 'nat-types/nearToken';
+import type { NativePublicKey, PublicKey } from 'nat-types/_common/crypto';
+import type { AccountId, ContractFunctionName } from 'nat-types/_common/common';
+import type { NearTokenArgs } from 'nat-types/_common/nearToken';
 
 export type CreateAddFullAccessKeyActionArgs = {
   publicKey: PublicKey;

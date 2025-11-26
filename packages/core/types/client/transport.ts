@@ -1,5 +1,5 @@
 import type { PartialDeep } from 'type-fest';
-import type { JsonLikeValue, Milliseconds } from 'nat-types/common';
+import type { JsonLikeValue, Milliseconds } from 'nat-types/_common/common';
 import type { TransportError } from '../../src/client/transport/transportError';
 import type { RpcError } from '../../src/client/rpcError';
 

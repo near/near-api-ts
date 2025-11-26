@@ -1,17 +1,18 @@
 import type { Transaction } from 'nat-types/transaction';
-import type { Base58String } from 'nat-types/common';
+import type { Base58String } from 'nat-types/_common/common';
 import { sha256 } from '@noble/hashes/sha2';
 import { base58 } from '@scure/base';
 import { serializeTransaction } from '@common/transformers/toBorshBytes/transaction';
 
-type GetTransactionHashOutput = {
+type GetTransactionHashResult = {
   transactionHash: Base58String;
   u8TransactionHash: Uint8Array;
 };
 
+// TODO Validate tx in serializeTransaction
 export const getTransactionHash = (
   transaction: Transaction,
-): GetTransactionHashOutput => {
+): GetTransactionHashResult => {
   const transactionBorshBytes = serializeTransaction(transaction);
   const u8TransactionHash = sha256(transactionBorshBytes);
   return {

@@ -1,4 +1,4 @@
-import type { Signature, NativeSignature } from 'nat-types/crypto';
+import type { Signature, NativeSignature } from 'nat-types/_common/crypto';
 import { fromCurveString } from '@common/transformers/curveString/fromCurveString';
 
 export const toNativeSignature = (signature: Signature): NativeSignature => {

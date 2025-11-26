@@ -5,7 +5,7 @@ import type {
   ContractFunctionName,
   TimeoutId,
   Result,
-} from 'nat-types/common';
+} from 'nat-types/_common/common';
 import type { TransactionIntent } from 'nat-types/transaction';
 import type { SendSignedTransactionResult } from 'nat-types/client/methods/transaction/sendSignedTransaction';
 import type { SignedTransaction } from 'nat-types/signedTransaction';

@@ -7,7 +7,7 @@ import type {
   GetGasPriceArgs,
 } from 'nat-types/client/methods/protocol/getGasPrice';
 import { BlockIdSchema } from '@common/schemas/zod/common';
-import type { BlockHash, BlockHeight } from 'nat-types/common';
+import type { BlockHash, BlockHeight } from 'nat-types/_common/common';
 
 const transformResult = (result: unknown): GetGasPriceResult => {
   const valid = RpcGasPriceResponseSchema().parse(result);
