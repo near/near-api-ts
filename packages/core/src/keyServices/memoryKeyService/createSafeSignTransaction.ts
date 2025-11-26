@@ -1,5 +1,5 @@
 import { getTransactionHash } from '../../helpers/getTransactionHash';
-import { createSafeSign } from '../../helpers/keyPair/_common/createSafeSign';
+import { createSafeSign } from '../../helpers/keyPair/_common/sign';
 import { result } from '@common/utils/result';
 import { wrapUnknownError } from '@common/utils/wrapUnknownError';
 import type {

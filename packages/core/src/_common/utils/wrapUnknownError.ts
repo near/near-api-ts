@@ -1,6 +1,6 @@
 import { result } from '@common/utils/result';
 import { createNatError, type NatError } from '@common/natError';
-import type { NatUnknownErrorKind } from 'nat-types/_common/natError';
+import type { NatUnknownErrorKind } from 'nat-types/natError';
 import type { ResultErr } from 'nat-types/_common/common';
 
 export type WrapUnknownError = {

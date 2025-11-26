@@ -1,10 +1,21 @@
-import type { Curve, CurveString } from 'nat-types/_common/curveString';
+import type {
+  Curve,
+  Ed25519CurveString,
+  Secp256k1CurveString,
+  CurveString,
+} from 'nat-types/_common/curveString';
 
-export type PublicKey = CurveString;
+export type Ed25519PublicKey = Ed25519CurveString;
+export type Secp256k1PublicKey = Secp256k1CurveString;
+export type PublicKey = Ed25519PublicKey | Secp256k1PublicKey;
 
-export type PrivateKey = CurveString;
+export type Ed25519PrivateKey = Ed25519CurveString;
+export type Secp256k1PrivateKey = Secp256k1CurveString;
+export type PrivateKey = Ed25519PrivateKey | Secp256k1PrivateKey;
 export type U8PrivateKey = { curve: Curve; u8PrivateKey: Uint8Array };
 
+export type Ed25519Signature = Ed25519CurveString;
+export type Secp256k1Signature = Secp256k1CurveString;
 export type Signature = CurveString;
 export type U8Signature = { curve: Curve; u8Signature: Uint8Array };
 

@@ -8,7 +8,7 @@ import type { Hex, Result } from 'nat-types/_common/common';
 import type { NatError } from '@common/natError';
 import type { Curve } from 'nat-types/_common/curveString';
 import type { $ZodError } from 'zod/v4/core';
-import type { UnknownErrorContext } from 'nat-types/_common/natError';
+import type { UnknownErrorContext } from 'nat-types/natError';
 
 export type KeyPairErrorVariant = {
   kind: 'KeyPair.Sign.Unknown';
@@ -60,3 +60,5 @@ export type CreateKeyPair = (privateKey: PrivateKey) => KeyPair;
 export type SafeCreateKeyPair = (
   privateKey: PrivateKey,
 ) => Result<KeyPair, CreateKeyPairError>;
+
+

@@ -1,5 +1,5 @@
 import { expect, describe, it } from 'vitest';
-import { safeKeyPair } from '../../../src';
+import { safeKeyPair } from '../../../../src';
 
 const privateKey =
   'ed25519:3kDMsPd8EsgPNV2yarJFtKMvCtV4fN4MkwhaW5BXcNx4a2NhMjE8ycVb3Vu1yrhqZc31dCPHNNUYJV3UK9GbFFd6';

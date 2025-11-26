@@ -21,9 +21,10 @@ export type NativeBlockReference =
   | { block_id: BlockHash | BlockHeight }
   | { finality: 'optimistic' | 'near-final' | 'final' }
   | { sync_checkpoint: 'genesis' | 'earliest_available' };
+
 /**
- * Represents data encoded in hexadecimal format.
- * Can be either a raw byte array (Uint8Array) or a hexadecimal string (e.g., "deadbeef" or "0xdeadbeef").
+ * Data for signing can be either a raw byte array (Uint8Array) or a hexadecimal string
+ * (e.g., "Hello world!" -> "48656c6c6f20776f726c6421").
  */
 export type Hex = Uint8Array | string;
 export type Base58String = string;

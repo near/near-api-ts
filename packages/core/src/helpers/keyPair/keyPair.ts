@@ -1,4 +1,5 @@
-import { createSafeSign } from './_common/createSafeSign';
+import { signByEd25519Key } from './_common/signByEd25519Key';
+import { signBySecp256k1Key } from './_common/signBySecp256k1Key';
 import { safeFromCurveString } from '@common/transformers/curveString/fromCurveString';
 import { result } from '@common/utils/result';
 import {
@@ -8,15 +9,13 @@ import {
 import { BinaryCryptoKeyLengths } from '@common/configs/constants';
 import { wrapUnknownError } from '@common/utils/wrapUnknownError';
 import { asThrowable } from '@common/utils/asThrowable';
-import type {
-  Curve,
-  FromCurveStringOutput,
-} from 'nat-types/_common/curveString';
+import type { FromCurveStringOutput } from 'nat-types/_common/curveString';
 import type { PublicKey, U8PrivateKey } from 'nat-types/_common/crypto';
 import type {
   CreateKeyPair,
   SafeCreateKeyPair,
-} from 'nat-types/_common/keyPair';
+  SafeSign,
+} from 'nat-types/_common/keyPair/keyPair';
 import { createNatError, NatError } from '@common/natError';
 import type { Result } from 'nat-types/_common/common';
 
@@ -53,6 +52,13 @@ const validatePrivateKeyBinaryLength = (
     }),
   );
 };
+
+const createSafeSign = ({ curve, u8PrivateKey }: U8PrivateKey): SafeSign =>
+  wrapUnknownError('KeyPair.Sign.Unknown', (message) =>
+    curve === 'ed25519'
+      ? signByEd25519Key(u8PrivateKey, message)
+      : signBySecp256k1Key(u8PrivateKey, message),
+  );
 
 export const safeKeyPair: SafeCreateKeyPair = wrapUnknownError(
   'CreateKeyPair.Unknown',
