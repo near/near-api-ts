@@ -7,13 +7,19 @@ import type { NatError } from '@common/natError';
 import type {
   CreateRandomSecp256k1KeyPairErrorVariant,
   RandomSecp256k1KeyPairErrorVariant,
-} from 'nat-types/_common/keyPair/randomKeyPair';
+} from 'nat-types/_common/keyPair/randomSecp256k1KeyPair';
+import type {
+  CreateRandomEd25519KeyPairErrorVariant,
+  RandomEd25519KeyPairErrorVariant,
+} from 'nat-types/_common/keyPair/randomEd25519KeyPair';
 
 export type UnknownErrorContext = { cause: unknown };
 
 export type NatUnknownErrorKind = NatError<
   | 'CreateKeyPair.Unknown'
   | 'KeyPair.Sign.Unknown'
+  | 'CreateRandomEd25519KeyPair.Unknown'
+  | 'RandomEd25519KeyPair.Sign.Unknown'
   | 'CreateRandomSecp256k1KeyPair.Unknown'
   | 'RandomSecp256k1KeyPair.Sign.Unknown'
 >['kind'];
@@ -22,6 +28,8 @@ type NatErrorVariant =
   | FromCurveStringErrorVariant
   | CreateKeyPairErrorVariant
   | KeyPairErrorVariant
+  | CreateRandomEd25519KeyPairErrorVariant
+  | RandomEd25519KeyPairErrorVariant
   | CreateRandomSecp256k1KeyPairErrorVariant
   | RandomSecp256k1KeyPairErrorVariant;
 

@@ -36,7 +36,7 @@ export type CreateRandomSecp256k1KeyPairErrorVariant = {
   context: UnknownErrorContext;
 };
 
-type CreateRandomKeyPairError =
+type CreateRandomSecp256k1Error =
   NatError<'CreateRandomSecp256k1KeyPair.Unknown'>;
 
 export type Secp256k1KeyPair = {
@@ -50,7 +50,7 @@ export type Secp256k1KeyPair = {
 
 export type SafeCreateRandomSecp256k1KeyPair = () => Result<
   Secp256k1KeyPair,
-  CreateRandomKeyPairError
+  CreateRandomSecp256k1Error
 >;
 
 export type CreateRandomSecp256k1KeyPair = () => Secp256k1KeyPair;

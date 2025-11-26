@@ -7,7 +7,7 @@ import { wrapUnknownError } from '@common/utils/wrapUnknownError';
 import type {
   CreateRandomSecp256k1KeyPair,
   SafeCreateRandomSecp256k1KeyPair,
-} from 'nat-types/_common/keyPair/randomKeyPair';
+} from 'nat-types/_common/keyPair/randomSecp256k1KeyPair';
 import type { Hex } from 'nat-types/_common/common';
 
 const createSafeSignBySecp256k1Key = (u8PrivateKey: Uint8Array) =>

@@ -1,5 +1,4 @@
 import { getTransactionHash } from '../../helpers/getTransactionHash';
-import { createSafeSign } from '../../helpers/keyPair/_common/sign';
 import { result } from '@common/utils/result';
 import { wrapUnknownError } from '@common/utils/wrapUnknownError';
 import type {
@@ -22,14 +21,14 @@ export const createSafeSignTransaction = (
       args.transaction,
     );
 
-    const { signature } = createSafeSign({
-      message: u8TransactionHash,
-      privateKey: privateKey.value,
-    });
+    // const { signature } = createSafeSign({
+    //   message: u8TransactionHash,
+    //   privateKey: privateKey.value,
+    // });
 
     return result.ok({
       transaction: args.transaction,
       transactionHash,
-      signature,
+      signature: null,
     });
   });
