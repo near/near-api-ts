@@ -15,18 +15,15 @@ import type {
   TransactionExecutionStatus,
 } from 'nat-types/transaction';
 
+// biome-ignore format: keep compact
 const toNativeAction = (action: Action): NativeAction => {
   if (action.actionType === 'Transfer') return toNativeTransferAction(action);
-  if (action.actionType === 'CreateAccount')
-    return toNativeCreateAccountAction();
+  if (action.actionType === 'CreateAccount') return toNativeCreateAccountAction();
   if (action.actionType === 'AddKey') return toNativeAddKeyAction(action);
-  if (action.actionType === 'DeployContract')
-    return toNativeDeployContractAction(action);
-  if (action.actionType === 'FunctionCall')
-    return toNativeFunctionCallAction(action);
+  if (action.actionType === 'DeployContract') return toNativeDeployContractAction(action);
+  if (action.actionType === 'FunctionCall') return toNativeFunctionCallAction(action);
   if (action.actionType === 'DeleteKey') return toNativeDeleteKeyAction(action);
-  if (action.actionType === 'DeleteAccount')
-    return toNativeDeleteAccountAction(action);
+  if (action.actionType === 'DeleteAccount') return toNativeDeleteAccountAction(action);
   throw new Error('Invalid transaction action type');
 };
 

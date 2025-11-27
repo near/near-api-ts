@@ -1,13 +1,9 @@
-import { expect, describe, it } from 'vitest';
-import {
-  safeFromCurveString,
-  fromCurveString,
-} from '@common/transformers/curveString/fromCurveString';
-
+import {describe, it} from 'vitest';
+import {fromCurveString} from '@common/transformers/curveString';
 
 describe('fromCurveString', () => {
   it('Error', () => {
-    const r = safeFromCurveString('ed25519:#');
+    const r = fromCurveString('ed25519:#');
 
     console.log(r);
 

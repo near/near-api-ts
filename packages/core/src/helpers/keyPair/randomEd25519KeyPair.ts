@@ -1,5 +1,5 @@
 import { ed25519 } from '@noble/curves/ed25519';
-import { toEd25519CurveString } from '@common/transformers/curveString/toCurveString';
+import { toEd25519CurveString } from '@common/transformers/curveString';
 import { asThrowable } from '@common/utils/asThrowable';
 import { result } from '@common/utils/result';
 import { wrapUnknownError } from '@common/utils/wrapUnknownError';
@@ -34,6 +34,5 @@ export const safeRandomEd25519KeyPair: SafeCreateRandomEd25519KeyPair =
     });
   });
 
-export const randomEd25519KeyPair: CreateRandomEd25519KeyPair = asThrowable(
-  safeRandomEd25519KeyPair,
-);
+export const throwableRandomEd25519KeyPair: CreateRandomEd25519KeyPair =
+  asThrowable(safeRandomEd25519KeyPair);

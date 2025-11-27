@@ -4,15 +4,14 @@ import { sha256 } from '@noble/hashes/sha2';
 import { base58 } from '@scure/base';
 import { serializeTransaction } from '@common/transformers/toBorshBytes/transaction';
 
-type GetTransactionHashResult = {
+type GetTransactionHashOutput = {
   transactionHash: Base58String;
   u8TransactionHash: Uint8Array;
 };
 
-// TODO Validate tx in serializeTransaction
-export const getTransactionHash = (
+export const unsafeGetTransactionHash = (
   transaction: Transaction,
-): GetTransactionHashResult => {
+): GetTransactionHashOutput => {
   const transactionBorshBytes = serializeTransaction(transaction);
   const u8TransactionHash = sha256(transactionBorshBytes);
   return {
@@ -20,3 +19,5 @@ export const getTransactionHash = (
     u8TransactionHash,
   };
 };
+
+// wrapUnknownError

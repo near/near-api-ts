@@ -5,9 +5,6 @@
     "indentStyle": "space",
     "indentWidth": 2
   },
-  "files": {
-    "includes": ["**", "!**/packages/core/src/index.ts"]
-  },
   "javascript": {
     "formatter": {
       "quoteStyle": "single"

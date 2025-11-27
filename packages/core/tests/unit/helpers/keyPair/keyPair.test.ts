@@ -1,5 +1,5 @@
-import { expect, describe, it } from 'vitest';
-import { safeKeyPair } from '../../../../src';
+import {describe, expect, it} from 'vitest';
+import {safeKeyPair} from '../../../../src';
 
 const privateKey =
   'ed25519:3kDMsPd8EsgPNV2yarJFtKMvCtV4fN4MkwhaW5BXcNx4a2NhMjE8ycVb3Vu1yrhqZc31dCPHNNUYJV3UK9GbFFd6';
@@ -16,14 +16,14 @@ describe('KeyPair', () => {
     }
   });
 
-  it('CreateKeyPair.PrivateKey.InvalidStringFormat error', () => {
+  it('CreateKeyPair.PrivateKey.InvalidCurveString error', () => {
     //@ts-expect-error
     const kp1 = safeKeyPair('123');
 
     expect(kp1.ok).toBe(false);
     //@ts-ignore
     expect(kp1?.error?.kind).toBe(
-      'CreateKeyPair.PrivateKey.InvalidStringFormat',
+      'CreateKeyPair.PrivateKey.InvalidCurveString',
     );
   });
 });

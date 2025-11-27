@@ -1,5 +1,5 @@
-import { expect, describe, it } from 'vitest';
-import { keyPair, randomSecp256k1KeyPair } from '../../../../src';
+import {describe, expect, it} from 'vitest';
+import {keyPair, randomSecp256k1KeyPair} from '../../../../src';
 
 describe('randomSecp256k1KeyPair', () => {
   it('Ok', () => {

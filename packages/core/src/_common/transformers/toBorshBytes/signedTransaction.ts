@@ -7,7 +7,7 @@ import { serialize } from 'borsh';
 import { signedTransactionBorshSchema } from '@common/schemas/borsh';
 import { toNativeSignedTransaction } from '@common/transformers/toNative/signedTransaction';
 
-export const serializeNativeSignedTransaction = (
+const serializeNativeSignedTransaction = (
   nativeSignedTransaction: NativeSignedTransaction,
 ): BorshBytes =>
   serialize(signedTransactionBorshSchema, nativeSignedTransaction);

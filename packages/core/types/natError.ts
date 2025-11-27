@@ -1,4 +1,3 @@
-import type { FromCurveStringErrorVariant } from 'nat-types/_common/curveString';
 import type {
   CreateKeyPairErrorVariant,
   KeyPairErrorVariant,
@@ -25,7 +24,6 @@ export type NatUnknownErrorKind = NatError<
 >['kind'];
 
 type NatErrorVariant =
-  | FromCurveStringErrorVariant
   | CreateKeyPairErrorVariant
   | KeyPairErrorVariant
   | CreateRandomEd25519KeyPairErrorVariant

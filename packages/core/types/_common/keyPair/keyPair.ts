@@ -4,11 +4,11 @@ import type {
   Signature,
   U8Signature,
 } from 'nat-types/_common/crypto';
-import type { Hex, Result } from 'nat-types/_common/common';
-import type { NatError } from '@common/natError';
-import type { Curve } from 'nat-types/_common/curveString';
-import type { $ZodError } from 'zod/v4/core';
-import type { UnknownErrorContext } from 'nat-types/natError';
+import type {Hex, Result} from 'nat-types/_common/common';
+import type {NatError} from '@common/natError';
+import type {Curve} from 'nat-types/_common/curveString';
+import type {$ZodError} from 'zod/v4/core';
+import type {UnknownErrorContext} from 'nat-types/natError';
 
 export type KeyPairErrorVariant = {
   kind: 'KeyPair.Sign.Unknown';
@@ -23,7 +23,7 @@ export type SafeSign = (message: Hex) => Result<SignOutput, SignError>;
 
 export type CreateKeyPairErrorVariant =
   | {
-      kind: 'CreateKeyPair.PrivateKey.InvalidStringFormat';
+      kind: 'CreateKeyPair.PrivateKey.InvalidCurveString';
       context: {
         zodError: $ZodError;
       };
@@ -42,7 +42,7 @@ export type CreateKeyPairErrorVariant =
     };
 
 type CreateKeyPairError =
-  | NatError<'CreateKeyPair.PrivateKey.InvalidStringFormat'>
+  | NatError<'CreateKeyPair.PrivateKey.InvalidCurveString'>
   | NatError<'CreateKeyPair.PrivateKey.InvalidBinaryLength'>
   | NatError<'CreateKeyPair.Unknown'>;
 

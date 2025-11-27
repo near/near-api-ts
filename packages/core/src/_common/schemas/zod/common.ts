@@ -10,6 +10,13 @@ export const Base58StringSchema = z.string().check(
   ),
 );
 
+export const CurveStringSchema = z.templateLiteral([
+  z.enum(['ed25519', 'secp256k1']),
+  ':',
+  Base58StringSchema,
+]);
+
+// TODO remove
 export const CryptoHashSchema = Base58StringSchema.check(
   z.refine(
     (val) => {

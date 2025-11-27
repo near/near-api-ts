@@ -1,14 +1,14 @@
-import { secp256k1 } from '@noble/curves/secp256k1';
-import { toSecp256k1CurveString } from '@common/transformers/curveString/toCurveString';
-import { signBySecp256k1Key } from './_common/signBySecp256k1Key';
-import { asThrowable } from '@common/utils/asThrowable';
-import { result } from '@common/utils/result';
-import { wrapUnknownError } from '@common/utils/wrapUnknownError';
+import {secp256k1} from '@noble/curves/secp256k1';
+import {toSecp256k1CurveString} from '@common/transformers/curveString';
+import {signBySecp256k1Key} from './_common/signBySecp256k1Key';
+import {asThrowable} from '@common/utils/asThrowable';
+import {result} from '@common/utils/result';
+import {wrapUnknownError} from '@common/utils/wrapUnknownError';
 import type {
   CreateRandomSecp256k1KeyPair,
   SafeCreateRandomSecp256k1KeyPair,
 } from 'nat-types/_common/keyPair/randomSecp256k1KeyPair';
-import type { Hex } from 'nat-types/_common/common';
+import type {Hex} from 'nat-types/_common/common';
 
 const createSafeSignBySecp256k1Key = (u8PrivateKey: Uint8Array) =>
   wrapUnknownError('RandomSecp256k1KeyPair.Sign.Unknown', (message: Hex) =>
@@ -42,6 +42,5 @@ export const safeRandomSecp256k1KeyPair: SafeCreateRandomSecp256k1KeyPair =
     });
   });
 
-export const randomSecp256k1KeyPair: CreateRandomSecp256k1KeyPair = asThrowable(
-  safeRandomSecp256k1KeyPair,
-);
+export const throwableRandomSecp256k1KeyPair: CreateRandomSecp256k1KeyPair =
+  asThrowable(safeRandomSecp256k1KeyPair);
