@@ -15,7 +15,7 @@ const createSafeSignByEd25519Key = (u8PrivateKey: Uint8Array) =>
     signByEd25519Key(u8PrivateKey, message),
   );
 
-export const safeRandomEd25519KeyPair: SafeCreateRandomEd25519KeyPair =
+export const safeCreateRandomEd25519KeyPair: SafeCreateRandomEd25519KeyPair =
   wrapUnknownError('CreateRandomEd25519KeyPair.Unknown', () => {
     const { secretKey: u8SecretKey, publicKey: u8PublicKey } = ed25519.keygen();
 
@@ -34,5 +34,5 @@ export const safeRandomEd25519KeyPair: SafeCreateRandomEd25519KeyPair =
     });
   });
 
-export const throwableRandomEd25519KeyPair: CreateRandomEd25519KeyPair =
-  asThrowable(safeRandomEd25519KeyPair);
+export const throwableCreateRandomEd25519KeyPair: CreateRandomEd25519KeyPair =
+  asThrowable(safeCreateRandomEd25519KeyPair);

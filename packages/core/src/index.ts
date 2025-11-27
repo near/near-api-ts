@@ -33,16 +33,16 @@ export { gas, teraGas, nearGas, isNearGas } from './helpers/nearGas';
 
 // KeyPair
 export {
-  safeKeyPair,
-  throwableKeyPair as keyPair,
+  safeCreateKeyPair as safeKeyPair,
+  throwableCreateKeyPair as keyPair,
 } from './helpers/keyPair/keyPair';
 export {
-  safeRandomEd25519KeyPair,
-  throwableRandomEd25519KeyPair as randomEd25519KeyPair,
+  safeCreateRandomEd25519KeyPair as safeRandomEd25519KeyPair,
+  throwableCreateRandomEd25519KeyPair as randomEd25519KeyPair,
 } from './helpers/keyPair/randomEd25519KeyPair';
 export {
-  safeRandomSecp256k1KeyPair,
-  throwableRandomSecp256k1KeyPair as randomSecp256k1KeyPair,
+  safeCreateRandomSecp256k1KeyPair as safeRandomSecp256k1KeyPair,
+  throwableCreateRandomSecp256k1KeyPair as randomSecp256k1KeyPair,
 } from './helpers/keyPair/randomSecp256k1KeyPair';
 
 // Errors
