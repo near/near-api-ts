@@ -11,7 +11,7 @@ import type {
 import { signByEd25519Key } from './_common/signByEd25519Key';
 
 const createSafeSignByEd25519Key = (u8PrivateKey: Uint8Array) =>
-  wrapUnknownError('RandomEd25519KeyPair.Sign.Unknown', (message: Hex) =>
+  wrapUnknownError('Ed25519KeyPair.Sign.Unknown', (message: Hex) =>
     signByEd25519Key(u8PrivateKey, message),
   );
 

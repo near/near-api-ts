@@ -18,9 +18,9 @@ export type NatUnknownErrorKind = NatError<
   | 'CreateKeyPair.Unknown'
   | 'KeyPair.Sign.Unknown'
   | 'CreateRandomEd25519KeyPair.Unknown'
-  | 'RandomEd25519KeyPair.Sign.Unknown'
+  | 'Ed25519KeyPair.Sign.Unknown'
   | 'CreateRandomSecp256k1KeyPair.Unknown'
-  | 'RandomSecp256k1KeyPair.Sign.Unknown'
+  | 'Secp256k1KeyPair.Sign.Unknown'
 >['kind'];
 
 type NatErrorVariant =

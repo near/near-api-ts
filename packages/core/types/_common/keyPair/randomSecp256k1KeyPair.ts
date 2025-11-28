@@ -9,7 +9,7 @@ import type { Hex, Result } from 'nat-types/_common/common';
 import type { Secp256k1Curve } from 'nat-types/_common/curveString';
 
 export type RandomSecp256k1KeyPairErrorVariant = {
-  kind: 'RandomSecp256k1KeyPair.Sign.Unknown';
+  kind: 'Secp256k1KeyPair.Sign.Unknown';
   context: UnknownErrorContext;
 };
 
@@ -21,7 +21,7 @@ export type SignBySecp256k1KeyOutput = {
   u8Signature: Uint8Array;
 };
 
-type SignBySecp256k1KeyError = NatError<'RandomSecp256k1KeyPair.Sign.Unknown'>;
+type SignBySecp256k1KeyError = NatError<'Secp256k1KeyPair.Sign.Unknown'>;
 
 export type SignBySecp256k1Key = (message: Hex) => SignBySecp256k1KeyOutput;
 

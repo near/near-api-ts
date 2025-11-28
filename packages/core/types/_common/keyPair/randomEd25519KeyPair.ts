@@ -9,7 +9,7 @@ import type { Hex, Result } from 'nat-types/_common/common';
 import type { Ed25519Curve } from 'nat-types/_common/curveString';
 
 export type RandomEd25519KeyPairErrorVariant = {
-  kind: 'RandomEd25519KeyPair.Sign.Unknown';
+  kind: 'Ed25519KeyPair.Sign.Unknown';
   context: UnknownErrorContext;
 };
 
@@ -21,7 +21,7 @@ export type SignByEd25519KeyOutput = {
   u8Signature: Uint8Array;
 };
 
-type SignByEd25519KeyError = NatError<'RandomEd25519KeyPair.Sign.Unknown'>;
+type SignByEd25519KeyError = NatError<'Ed25519KeyPair.Sign.Unknown'>;
 
 export type SignByEd25519Key = (message: Hex) => SignByEd25519KeyOutput;
 

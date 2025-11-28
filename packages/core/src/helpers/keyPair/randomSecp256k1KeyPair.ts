@@ -11,7 +11,7 @@ import type {
 import type { Hex } from 'nat-types/_common/common';
 
 const createSafeSignBySecp256k1Key = (u8PrivateKey: Uint8Array) =>
-  wrapUnknownError('RandomSecp256k1KeyPair.Sign.Unknown', (message: Hex) =>
+  wrapUnknownError('Secp256k1KeyPair.Sign.Unknown', (message: Hex) =>
     signBySecp256k1Key(u8PrivateKey, message),
   );
 
