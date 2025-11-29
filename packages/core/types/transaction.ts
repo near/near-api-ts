@@ -28,7 +28,6 @@ import type {
   DeployContractAction,
   NativeDeployContractAction,
 } from 'nat-types/actions/deployContract';
-import type { Prettify } from 'nat-types/utils';
 
 export type Action =
   | CreateAccountAction

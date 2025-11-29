@@ -11,10 +11,17 @@ import type {
   CreateRandomEd25519KeyPairErrorVariant,
   RandomEd25519KeyPairErrorVariant,
 } from 'nat-types/_common/keyPair/randomEd25519KeyPair';
+import type {
+  CreateMemoryKeyServiceErrorVariant,
+  MemoryKeyServiceErrorVariant,
+} from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 
 export type UnknownErrorContext = { cause: unknown };
 
 export type NatUnknownErrorKind = NatError<
+  | 'CreateMemoryKeyService.Unknown'
+  | 'MemoryKeyService.SignTransaction.Unknown'
+  | 'MemoryKeyService.FindKeyPair.Unknown'
   | 'CreateKeyPair.Unknown'
   | 'KeyPair.Sign.Unknown'
   | 'CreateRandomEd25519KeyPair.Unknown'
@@ -23,7 +30,10 @@ export type NatUnknownErrorKind = NatError<
   | 'Secp256k1KeyPair.Sign.Unknown'
 >['kind'];
 
+// TODO split on inner/public errors
 type NatErrorVariant =
+  | CreateMemoryKeyServiceErrorVariant
+  | MemoryKeyServiceErrorVariant
   | CreateKeyPairErrorVariant
   | KeyPairErrorVariant
   | CreateRandomEd25519KeyPairErrorVariant

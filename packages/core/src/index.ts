@@ -50,5 +50,5 @@ export { isNatError } from '@common/natError';
 
 // Types
 export type { Client } from 'nat-types/client/client';
-export type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService';
+export type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 export type { MemorySigner } from 'nat-types/signers/memorySigner/memorySigner';

@@ -1,7 +1,7 @@
 import type { AccountId, Milliseconds } from 'nat-types/_common/common';
 import type { PublicKey } from 'nat-types/_common/crypto';
 import type { Client } from 'nat-types/client/client';
-import type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService';
+import type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 import type { KeyPool } from 'nat-types/signers/memorySigner/keyPool';
 import type { Resolver } from 'nat-types/signers/memorySigner/resolver';
 import type { State } from 'nat-types/signers/memorySigner/state';

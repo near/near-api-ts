@@ -9,7 +9,7 @@ type GetTransactionHashOutput = {
   u8TransactionHash: Uint8Array;
 };
 
-export const unsafeGetTransactionHash = (
+export const getTransactionHash = (
   transaction: Transaction,
 ): GetTransactionHashOutput => {
   const transactionBorshBytes = serializeTransaction(transaction);
@@ -19,5 +19,3 @@ export const unsafeGetTransactionHash = (
     u8TransactionHash,
   };
 };
-
-// wrapUnknownError

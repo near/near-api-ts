@@ -1,5 +1,5 @@
-import {describe, it} from 'vitest';
-import {fromCurveString} from '@common/transformers/curveString';
+import { describe, it } from 'vitest';
+import { fromCurveString } from '@common/transformers/curveString';
 
 describe('fromCurveString', () => {
   it('Error', () => {
