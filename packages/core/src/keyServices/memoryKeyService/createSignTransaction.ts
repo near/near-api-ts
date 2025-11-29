@@ -1,11 +1,9 @@
 import { getTransactionHash } from '../../helpers/getTransactionHash';
 import { result } from '@common/utils/result';
 import { wrapUnknownError } from '@common/utils/wrapUnknownError';
-import type {
-  MemoryKeyServiceContext,
-  SafeSignTransaction,
-} from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
+import type { MemoryKeyServiceContext } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 import { createNatError } from '@common/natError';
+import type { SafeSignTransaction } from 'nat-types/keyServices/memoryKeyService/createSignTransaction';
 
 export const createSafeSignTransaction = (
   context: MemoryKeyServiceContext,

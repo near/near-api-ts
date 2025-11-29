@@ -1,10 +1,8 @@
 import { result } from '@common/utils/result';
 import { wrapUnknownError } from '@common/utils/wrapUnknownError';
-import type {
-  MemoryKeyServiceContext,
-  SafeFindKeyPair,
-} from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
+import type { MemoryKeyServiceContext } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 import { createNatError } from '@common/natError';
+import type { SafeFindKeyPair } from 'nat-types/keyServices/memoryKeyService/createFindKeyPair';
 
 export const createSafeFindKeyPair = (
   context: MemoryKeyServiceContext,

@@ -1,8 +1,6 @@
-import type {
-  KeyPairs,
-  CreateMemoryKeyServiceArgs,
-} from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
+import type { KeyPairs } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 import { throwableCreateKeyPair } from '../../helpers/keyPair/keyPair';
+import type { CreateMemoryKeyServiceArgs } from 'nat-types/keyServices/memoryKeyService/createMemoryKeyService';
 
 export const getKeyPairs = (args: CreateMemoryKeyServiceArgs): KeyPairs => {
   if (args.keySource) {

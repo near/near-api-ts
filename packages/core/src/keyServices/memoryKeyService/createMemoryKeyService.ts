@@ -4,11 +4,11 @@ import { createSafeFindKeyPair } from './createFindKeyPair';
 import { asThrowable } from '@common/utils/asThrowable';
 import { result } from '@common/utils/result';
 import { wrapUnknownError } from '@common/utils/wrapUnknownError';
+import type { MemoryKeyServiceContext } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 import type {
-  MemoryKeyServiceContext,
   CreateMemoryKeyService,
   SafeCreateMemoryKeyService,
-} from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
+} from 'nat-types/keyServices/memoryKeyService/createMemoryKeyService';
 
 export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService =
   wrapUnknownError('CreateMemoryKeyService.Unknown', async (args) => {

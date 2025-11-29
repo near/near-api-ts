@@ -11,10 +11,7 @@ import type {
   CreateRandomEd25519KeyPairErrorVariant,
   RandomEd25519KeyPairErrorVariant,
 } from 'nat-types/_common/keyPair/randomEd25519KeyPair';
-import type {
-  CreateMemoryKeyServiceErrorVariant,
-  MemoryKeyServiceErrorVariant,
-} from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
+import type { MemoryKeyServiceErrorVariant } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 
 export type UnknownErrorContext = { cause: unknown };
 
@@ -32,7 +29,6 @@ export type NatUnknownErrorKind = NatError<
 
 // TODO split on inner/public errors
 type NatErrorVariant =
-  | CreateMemoryKeyServiceErrorVariant
   | MemoryKeyServiceErrorVariant
   | CreateKeyPairErrorVariant
   | KeyPairErrorVariant

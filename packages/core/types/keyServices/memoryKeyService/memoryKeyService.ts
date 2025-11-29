@@ -1,17 +1,20 @@
-import type { PrivateKey, PublicKey } from '../../_common/crypto';
-import type { Transaction } from '../../transaction';
-import type { SignedTransaction } from '../../signedTransaction';
-import type { Result } from 'nat-types/_common/common';
+import type { PublicKey } from '../../_common/crypto';
 import type { KeyPair } from 'nat-types/_common/keyPair/keyPair';
 import type { UnknownErrorContext } from 'nat-types/natError';
-import type { NatError } from '@common/natError';
-
-export type CreateMemoryKeyServiceErrorVariant = {
-  kind: 'CreateMemoryKeyService.Unknown';
-  context: UnknownErrorContext;
-};
+import type {
+  SafeSignTransaction,
+  SignTransaction,
+} from 'nat-types/keyServices/memoryKeyService/createSignTransaction';
+import type {
+  FindKeyPair,
+  SafeFindKeyPair,
+} from 'nat-types/keyServices/memoryKeyService/createFindKeyPair';
 
 export type MemoryKeyServiceErrorVariant =
+  | {
+      kind: 'CreateMemoryKeyService.Unknown';
+      context: UnknownErrorContext;
+    }
   | {
       kind: 'MemoryKeyService.SignTransaction.SigningKeyPair.NotFound';
       context: {
@@ -33,39 +36,7 @@ export type MemoryKeyServiceErrorVariant =
       context: UnknownErrorContext;
     };
 
-type FindKeyPairArgs = { publicKey: PublicKey };
-
-type FindKeyPairError =
-  | NatError<'MemoryKeyService.FindKeyPair.NotFound'>
-  | NatError<'MemoryKeyService.FindKeyPair.Unknown'>;
-
-// Safe version
-export type SafeFindKeyPair = (
-  args: FindKeyPairArgs,
-) => Result<KeyPair, FindKeyPairError>;
-
-// Throwable version
-export type FindKeyPair = (args: FindKeyPairArgs) => KeyPair;
-
 export type KeyPairs = Record<PublicKey, KeyPair>;
-
-type SignTransactionArgs = {
-  transaction: Transaction;
-};
-
-type SignTransactionError =
-  | NatError<'MemoryKeyService.SignTransaction.SigningKeyPair.NotFound'>
-  | NatError<'MemoryKeyService.SignTransaction.Unknown'>;
-
-// Safe version
-export type SafeSignTransaction = (
-  args: SignTransactionArgs,
-) => Promise<Result<SignedTransaction, SignTransactionError>>;
-
-// Throwable version
-export type SignTransaction = (
-  args: SignTransactionArgs,
-) => Promise<SignedTransaction>;
 
 export type MemoryKeyServiceContext = {
   keyPairs: KeyPairs;
@@ -80,21 +51,3 @@ export type MemoryKeyService = {
     findKeyPair: SafeFindKeyPair;
   };
 };
-
-type KeySource = { privateKey: PrivateKey };
-type SingleKeySource = { keySource: KeySource; keySources?: never };
-type MultiKeySources = { keySource?: never; keySources: KeySource[] };
-
-export type CreateMemoryKeyServiceArgs = SingleKeySource | MultiKeySources;
-
-type CreateMemoryKeyServiceError = NatError<'CreateMemoryKeyService.Unknown'>;
-
-// Safe version
-export type SafeCreateMemoryKeyService = (
-  args: CreateMemoryKeyServiceArgs,
-) => Promise<Result<MemoryKeyService, CreateMemoryKeyServiceError>>;
-
-// Throwable version
-export type CreateMemoryKeyService = (
-  args: CreateMemoryKeyServiceArgs,
-) => Promise<MemoryKeyService>;
