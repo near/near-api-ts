@@ -6,7 +6,7 @@ import type {
   GetGasPriceResult,
   GetGasPriceArgs,
 } from 'nat-types/client/methods/protocol/getGasPrice';
-import { BlockIdSchema } from '@common/schemas/zod/common';
+import { BlockIdSchema } from '@common/schemas/zod/common/common';
 import type { BlockHash, BlockHeight } from 'nat-types/_common/common';
 
 const transformResult = (result: unknown): GetGasPriceResult => {
@@ -17,11 +17,11 @@ const transformResult = (result: unknown): GetGasPriceResult => {
   };
 };
 
-const GetGasPriceArgsSchema = z.optional(
-  z.object({
-    blockId: z.optional(BlockIdSchema), // TODO use atMomentOf?
-  }),
-);
+// const GetGasPriceArgsSchema = z.optional(
+//   z.object({
+//     blockId: z.optional(BlockIdSchema), // TODO use atMomentOf?
+//   }),
+// );
 
 const getBlockId = (
   atMomentOf?: GetGasPriceArgs['atMomentOf'],

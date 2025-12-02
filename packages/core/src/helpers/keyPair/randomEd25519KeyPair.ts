@@ -28,9 +28,7 @@ export const safeCreateRandomEd25519KeyPair: SafeCreateRandomEd25519KeyPair =
       publicKey,
       privateKey,
       sign: asThrowable(safeSign),
-      safe: {
-        sign: safeSign,
-      },
+      safeSign,
     });
   });
 

@@ -43,9 +43,7 @@ export type Ed25519KeyPair = {
   publicKey: Ed25519PublicKey;
   privateKey: Ed25519PrivateKey;
   sign: SignByEd25519Key;
-  safe: {
-    sign: SafeSignByEd25519Key;
-  };
+  safeSign: SafeSignByEd25519Key;
 };
 
 export type SafeCreateRandomEd25519KeyPair = () => Result<

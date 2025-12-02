@@ -1,7 +1,4 @@
-import type {
-  CreateKeyPairErrorVariant,
-  KeyPairErrorVariant,
-} from 'nat-types/_common/keyPair/keyPair';
+import type { KeyPairErrorVariant } from 'nat-types/_common/keyPair/keyPair';
 import type { NatError } from '@common/natError';
 import type {
   CreateRandomSecp256k1KeyPairErrorVariant,
@@ -12,8 +9,10 @@ import type {
   RandomEd25519KeyPairErrorVariant,
 } from 'nat-types/_common/keyPair/randomEd25519KeyPair';
 import type { MemoryKeyServiceErrorVariant } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
+import type { $ZodError } from 'zod/v4/core';
 
 export type UnknownErrorContext = { cause: unknown };
+export type InvalidArgsContext = { zodError: $ZodError };
 
 export type NatUnknownErrorKind = NatError<
   | 'CreateMemoryKeyService.Unknown'
@@ -30,7 +29,6 @@ export type NatUnknownErrorKind = NatError<
 // TODO split on inner/public errors
 type NatErrorVariant =
   | MemoryKeyServiceErrorVariant
-  | CreateKeyPairErrorVariant
   | KeyPairErrorVariant
   | CreateRandomEd25519KeyPairErrorVariant
   | RandomEd25519KeyPairErrorVariant

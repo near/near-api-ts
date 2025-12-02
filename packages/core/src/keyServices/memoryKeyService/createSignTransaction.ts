@@ -1,4 +1,4 @@
-import { getTransactionHash } from '../../helpers/getTransactionHash';
+import { getTransactionHash } from '@common/utils/getTransactionHash';
 import { result } from '@common/utils/result';
 import { wrapUnknownError } from '@common/utils/wrapUnknownError';
 import type { MemoryKeyServiceContext } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';

@@ -10,13 +10,13 @@ export const Base58StringSchema = z.string().check(
   ),
 );
 
-export const CurveStringSchema = z.templateLiteral([
-  z.enum(['ed25519', 'secp256k1']),
-  ':',
-  Base58StringSchema,
-]);
+export const CurveStringSchema = z.templateLiteral(
+  [z.enum(['ed25519', 'secp256k1']), ':', Base58StringSchema],
+  {
+    error: `Curve strings should use the ed25519:<base58String> or secp256k1:<base58String> format.`,
+  },
+);
 
-// TODO remove
 export const CryptoHashSchema = Base58StringSchema.check(
   z.refine(
     (val) => {
@@ -32,5 +32,5 @@ export const CryptoHashSchema = Base58StringSchema.check(
 );
 
 export const BlockHashSchema = CryptoHashSchema;
-export const BlockHeightSchema = z.uint64();
+export const BlockHeightSchema = z.number().check(z.positive());
 export const BlockIdSchema = z.union([BlockHeightSchema, BlockHashSchema]);

@@ -43,9 +43,7 @@ export type Secp256k1KeyPair = {
   publicKey: Secp256k1PublicKey;
   privateKey: Secp256k1PrivateKey;
   sign: SignBySecp256k1Key;
-  safe: {
-    sign: SafeSignBySecp256k1Key;
-  };
+  safeSign: SafeSignBySecp256k1Key;
 };
 
 export type SafeCreateRandomSecp256k1KeyPair = () => Result<

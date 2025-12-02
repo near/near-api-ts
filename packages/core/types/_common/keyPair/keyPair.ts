@@ -6,34 +6,24 @@ import type {
 } from 'nat-types/_common/crypto';
 import type { Hex, Result } from 'nat-types/_common/common';
 import type { NatError } from '@common/natError';
-import type { Curve } from 'nat-types/_common/curveString';
-import type { $ZodError } from 'zod/v4/core';
-import type { UnknownErrorContext } from 'nat-types/natError';
+import type {
+  InvalidArgsContext,
+  UnknownErrorContext,
+} from 'nat-types/natError';
 
-export type CreateKeyPairErrorVariant =
+export type KeyPairErrorVariant =
   | {
-      kind: 'CreateKeyPair.PrivateKey.InvalidCurveString';
-      context: {
-        zodError: $ZodError;
-      };
-    }
-  | {
-      kind: 'CreateKeyPair.PrivateKey.InvalidBinaryLength';
-      context: {
-        curve: Curve;
-        actualLength: number;
-        expectedLength: number;
-      };
+      kind: 'CreateKeyPair.InvalidArgs';
+      context: InvalidArgsContext;
     }
   | {
       kind: 'CreateKeyPair.Unknown';
       context: UnknownErrorContext;
+    }
+  | {
+      kind: 'KeyPair.Sign.Unknown';
+      context: UnknownErrorContext;
     };
-
-export type KeyPairErrorVariant = {
-  kind: 'KeyPair.Sign.Unknown';
-  context: UnknownErrorContext;
-};
 
 export type SignOutput = { signature: Signature } & U8Signature;
 type SignError = NatError<'KeyPair.Sign.Unknown'>;
@@ -42,17 +32,14 @@ export type Sign = (message: Hex) => SignOutput;
 export type SafeSign = (message: Hex) => Result<SignOutput, SignError>;
 
 type CreateKeyPairError =
-  | NatError<'CreateKeyPair.PrivateKey.InvalidCurveString'>
-  | NatError<'CreateKeyPair.PrivateKey.InvalidBinaryLength'>
+  | NatError<'CreateKeyPair.InvalidArgs'>
   | NatError<'CreateKeyPair.Unknown'>;
 
 export type KeyPair = {
   publicKey: PublicKey;
   privateKey: PrivateKey;
   sign: Sign;
-  safe: {
-    sign: SafeSign;
-  };
+  safeSign: SafeSign;
 };
 
 export type CreateKeyPair = (privateKey: PrivateKey) => KeyPair;

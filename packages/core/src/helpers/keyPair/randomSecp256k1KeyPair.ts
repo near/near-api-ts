@@ -36,9 +36,7 @@ export const safeCreateRandomSecp256k1KeyPair: SafeCreateRandomSecp256k1KeyPair 
       publicKey,
       privateKey,
       sign: asThrowable(safeSign),
-      safe: {
-        sign: safeSign,
-      },
+      safeSign,
     });
   });
 

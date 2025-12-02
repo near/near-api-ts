@@ -1,8 +1,8 @@
-import type {Hex} from 'nat-types/_common/common';
-import {BinaryCryptoKeyLengths} from '@common/configs/constants';
-import {secp256k1} from '@noble/curves/secp256k1';
-import {result} from '@common/utils/result';
-import {toSecp256k1CurveString} from '@common/transformers/curveString';
+import type { Hex } from 'nat-types/_common/common';
+import { BinaryCryptoKeyLengths } from '@common/configs/constants';
+import { secp256k1 } from '@noble/curves/secp256k1';
+import { result } from '@common/utils/result';
+import { toSecp256k1CurveString } from '@common/transformers/curveString';
 
 export const signBySecp256k1Key = (u8PrivateKey: Uint8Array, message: Hex) => {
   const u8SecretKey = u8PrivateKey.slice(
