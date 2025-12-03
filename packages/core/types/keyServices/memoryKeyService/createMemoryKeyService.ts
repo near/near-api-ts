@@ -9,7 +9,9 @@ type MultiKeySources = { keySource?: never; keySources: KeySource[] };
 
 export type CreateMemoryKeyServiceArgs = SingleKeySource | MultiKeySources;
 
-type CreateMemoryKeyServiceError = NatError<'CreateMemoryKeyService.Unknown'>;
+type CreateMemoryKeyServiceError =
+  | NatError<'CreateMemoryKeyService.InvalidArgs'>
+  | NatError<'CreateMemoryKeyService.Unknown'>;
 
 export type SafeCreateMemoryKeyService = (
   args: CreateMemoryKeyServiceArgs,

@@ -1,16 +1,18 @@
 import type { KeyPairs } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 import { throwableKeyPair } from '../../helpers/keyPair/keyPair';
-import type { CreateMemoryKeyServiceArgs } from 'nat-types/keyServices/memoryKeyService/createMemoryKeyService';
+import type { InnerCreateMemoryKeyServiceArgs } from './createMemoryKeyService';
 
-export const getKeyPairs = (args: CreateMemoryKeyServiceArgs): KeyPairs => {
-  if (args.keySource) {
-    const keyPair = throwableKeyPair(args.keySource.privateKey);
+export const getKeyPairs = (
+  args: InnerCreateMemoryKeyServiceArgs,
+): KeyPairs => {
+  if ('keySource' in args) {
+    const keyPair = throwableKeyPair(args.keySource.privateKey.privateKey);
     return { [keyPair.publicKey]: keyPair };
   }
 
   return Object.fromEntries(
     args.keySources.map((keySource) => {
-      const keyPair = throwableKeyPair(keySource.privateKey);
+      const keyPair = throwableKeyPair(keySource.privateKey.privateKey);
       return [keyPair.publicKey, keyPair];
     }),
   );

@@ -22,3 +22,5 @@ export const PrivateKeySchema = z
       { error: 'Invalid private key length' },
     ),
   );
+
+export type InnerPrivateKey = z.infer<typeof PrivateKeySchema>;

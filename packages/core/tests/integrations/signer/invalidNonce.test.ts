@@ -1,12 +1,10 @@
-import { expect, test } from 'vitest';
+import { test } from 'vitest';
 import {
   createClient,
   createMemoryKeyService,
   createMemorySigner,
-  transfer,
 } from '../../../src';
-import { log } from '../utils/common';
-import { DEFAULT_ACCOUNT_ID, DEFAULT_PRIVATE_KEY } from 'near-sandbox';
+import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 
 test(
   'Handle invalid nonce',

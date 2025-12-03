@@ -1,16 +1,30 @@
+import * as z from 'zod/mini';
 import { result } from '@common/utils/result';
 import { wrapUnknownError } from '@common/utils/wrapUnknownError';
 import type { MemoryKeyServiceContext } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 import { createNatError } from '@common/natError';
 import type { SafeFindKeyPair } from 'nat-types/keyServices/memoryKeyService/createFindKeyPair';
+import { PublicKeySchema } from '@common/schemas/zod/common/publicKey';
+
+const FindKeyPairArgsSchema = z.object({
+  publicKey: PublicKeySchema,
+});
 
 export const createSafeFindKeyPair = (
   context: MemoryKeyServiceContext,
 ): SafeFindKeyPair =>
   wrapUnknownError('MemoryKeyService.FindKeyPair.Unknown', (args) => {
-    // TODO add validations
+    const validArgs = FindKeyPairArgsSchema.safeParse(args);
 
-    const { publicKey } = args;
+    if (!validArgs.success)
+      return result.err(
+        createNatError({
+          kind: 'MemoryKeyService.FindKeyPair.InvalidArgs',
+          context: { zodError: validArgs.error },
+        }),
+      );
+
+    const { publicKey } = validArgs.data.publicKey;
     const keyPair = context.keyPairs[publicKey];
 
     return context.keyPairs[publicKey]

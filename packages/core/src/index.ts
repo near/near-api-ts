@@ -5,8 +5,8 @@ export { createMainnetClient } from './client/presets/mainnet';
 
 // Key Services
 export {
-  createMemoryKeyService,
   safeCreateMemoryKeyService,
+  throwableCreateMemoryKeyService as createMemoryKeyService,
 } from './keyServices/memoryKeyService/createMemoryKeyService';
 
 // Signers

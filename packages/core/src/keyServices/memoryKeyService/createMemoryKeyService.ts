@@ -1,3 +1,4 @@
+import * as z from 'zod/mini';
 import { createSafeSignTransaction } from './createSignTransaction';
 import { getKeyPairs } from './getKeyPairs';
 import { createSafeFindKeyPair } from './createFindKeyPair';
@@ -9,13 +10,40 @@ import type {
   CreateMemoryKeyService,
   SafeCreateMemoryKeyService,
 } from 'nat-types/keyServices/memoryKeyService/createMemoryKeyService';
+import { PrivateKeySchema } from '@common/schemas/zod/common/privateKey';
+import { createNatError } from '@common/natError';
+
+const KeySourceSchema = z.object({
+  privateKey: PrivateKeySchema,
+});
+
+const CreateMemoryKeyServiceArgsSchema = z.union([
+  z.object({
+    keySource: KeySourceSchema,
+  }),
+  z.object({
+    keySources: z.array(KeySourceSchema).check(z.minLength(1)),
+  }),
+]);
+
+export type InnerCreateMemoryKeyServiceArgs = z.infer<
+  typeof CreateMemoryKeyServiceArgsSchema
+>;
 
 export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService =
   wrapUnknownError('CreateMemoryKeyService.Unknown', async (args) => {
-    // TODO Validate args
+    const validArgs = CreateMemoryKeyServiceArgsSchema.safeParse(args);
+
+    if (!validArgs.success)
+      return result.err(
+        createNatError({
+          kind: 'CreateMemoryKeyService.InvalidArgs',
+          context: { zodError: validArgs.error },
+        }),
+      );
 
     const context = {
-      keyPairs: getKeyPairs(args),
+      keyPairs: getKeyPairs(validArgs.data),
     } as MemoryKeyServiceContext;
 
     const safeFindKeyPair = createSafeFindKeyPair(context);
@@ -25,14 +53,11 @@ export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService =
 
     return result.ok({
       signTransaction: asThrowable(safeSignTransaction),
+      safeSignTransaction,
       findKeyPair: asThrowable(safeFindKeyPair),
-      safe: {
-        signTransaction: safeSignTransaction,
-        findKeyPair: safeFindKeyPair,
-      },
+      safeFindKeyPair,
     });
   });
-// TODO throwable
-export const createMemoryKeyService: CreateMemoryKeyService = asThrowable(
-  safeCreateMemoryKeyService,
-);
+
+export const throwableCreateMemoryKeyService: CreateMemoryKeyService =
+  asThrowable(safeCreateMemoryKeyService);

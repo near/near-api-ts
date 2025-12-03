@@ -37,6 +37,10 @@ export type MemoryKeyServiceErrorVariant =
       context: UnknownErrorContext;
     }
   | {
+      kind: 'MemoryKeyService.FindKeyPair.InvalidArgs';
+      context: InvalidArgsContext;
+    }
+  | {
       kind: 'MemoryKeyService.FindKeyPair.NotFound';
       context: {
         publicKey: PublicKey;
@@ -56,9 +60,7 @@ export type MemoryKeyServiceContext = {
 
 export type MemoryKeyService = {
   signTransaction: SignTransaction;
+  safeSignTransaction: SafeSignTransaction;
   findKeyPair: FindKeyPair;
-  safe: {
-    signTransaction: SafeSignTransaction;
-    findKeyPair: SafeFindKeyPair;
-  };
+  safeFindKeyPair: SafeFindKeyPair;
 };

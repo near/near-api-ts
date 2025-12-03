@@ -40,7 +40,7 @@ describe('KeyService', () => {
       keySource: { privateKey },
     });
 
-    const res = await keyService.safe.signTransaction({
+    const res = await keyService.safeSignTransaction({
       transaction: {
         ...transaction,
         signerPublicKey: randomEd25519KeyPair().publicKey,

@@ -6,6 +6,7 @@ import type { Result } from 'nat-types/_common/common';
 type FindKeyPairArgs = { publicKey: PublicKey };
 
 type FindKeyPairError =
+  | NatError<'MemoryKeyService.FindKeyPair.InvalidArgs'>
   | NatError<'MemoryKeyService.FindKeyPair.NotFound'>
   | NatError<'MemoryKeyService.FindKeyPair.Unknown'>;
 
