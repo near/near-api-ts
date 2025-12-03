@@ -1,8 +1,10 @@
-import type { PublicKey, NativePublicKey } from 'nat-types/_common/crypto';
-import { fromCurveString } from '@common/transformers/curveString';
+import type { NativePublicKey } from 'nat-types/_common/crypto';
+import type { InnerPublicKey } from '@common/schemas/zod/common/publicKey';
 
-export const toNativePublicKey = (publicKey: PublicKey): NativePublicKey => {
-  const { curve, u8Data } = fromCurveString(publicKey);
-  if (curve === 'ed25519') return { ed25519Key: { data: u8Data } };
-  return { secp256k1Key: { data: u8Data } };
-};
+export const toNativePublicKey = ({
+  u8PublicKey,
+  curve,
+}: InnerPublicKey): NativePublicKey =>
+  curve === 'ed25519'
+    ? { ed25519Key: { data: u8PublicKey } }
+    : { secp256k1Key: { data: u8PublicKey } };

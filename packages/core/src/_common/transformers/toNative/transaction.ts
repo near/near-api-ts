@@ -1,4 +1,3 @@
-import { base58 } from '@scure/base';
 import { toNativePublicKey } from '@common/transformers/toNative/publicKey';
 import { toNativeTransferAction } from '@common/transformers/toNative/actions/transfer';
 import { toNativeCreateAccountAction } from '@common/transformers/toNative/actions/createAccount';
@@ -8,27 +7,29 @@ import { toNativeFunctionCallAction } from '@common/transformers/toNative/action
 import { toNativeDeleteKeyAction } from '@common/transformers/toNative/actions/deleteKey';
 import { toNativeDeleteAccountAction } from '@common/transformers/toNative/actions/deleteAccount';
 import type {
-  Action,
   NativeAction,
   NativeTransaction,
-  Transaction,
   TransactionExecutionStatus,
 } from 'nat-types/transaction';
+import type {
+  InnerAction,
+  InnerTransaction,
+} from '@common/schemas/zod/transaction/transaction';
 
 // biome-ignore format: keep compact
-const toNativeAction = (action: Action): NativeAction => {
+const toNativeAction = (action: InnerAction): NativeAction => {
   if (action.actionType === 'Transfer') return toNativeTransferAction(action);
   if (action.actionType === 'CreateAccount') return toNativeCreateAccountAction();
   if (action.actionType === 'AddKey') return toNativeAddKeyAction(action);
   if (action.actionType === 'DeployContract') return toNativeDeployContractAction(action);
   if (action.actionType === 'FunctionCall') return toNativeFunctionCallAction(action);
   if (action.actionType === 'DeleteKey') return toNativeDeleteKeyAction(action);
-  if (action.actionType === 'DeleteAccount') return toNativeDeleteAccountAction(action);
-  throw new Error('Invalid transaction action type');
+  // the last could only be a DeleteAccount action
+  return toNativeDeleteAccountAction(action);
 };
 
-const toNativeActions = (transaction: Transaction) => {
-  if (transaction.action) return [toNativeAction(transaction.action)];
+const toNativeActions = (transaction: InnerTransaction) => {
+  if ('action' in transaction) return [toNativeAction(transaction.action)];
 
   if (transaction.actions)
     return transaction.actions.map((action) => toNativeAction(action));
@@ -37,16 +38,17 @@ const toNativeActions = (transaction: Transaction) => {
 };
 
 export const toNativeTransaction = (
-  transaction: Transaction, // InnerTransaction
+  transaction: InnerTransaction,
 ): NativeTransaction => ({
   signerId: transaction.signerAccountId,
   publicKey: toNativePublicKey(transaction.signerPublicKey),
   actions: toNativeActions(transaction),
   receiverId: transaction.receiverAccountId,
   nonce: BigInt(transaction.nonce),
-  blockHash: base58.decode(transaction.blockHash),
+  blockHash: transaction.blockHash.u8CryptoHash,
 });
 
+// TODO Remove
 const TransactionExecutionStatusMap = {
   None: 'NONE',
   Included: 'INCLUDED',
@@ -55,7 +57,7 @@ const TransactionExecutionStatusMap = {
   Executed: 'EXECUTED',
   Final: 'FINAL',
 } as const;
-
+// TODO Remove
 export const toNativeTransactionExecutionStatus = (
   status: TransactionExecutionStatus,
 ) => TransactionExecutionStatusMap[status];

@@ -22,7 +22,7 @@ export const createSendSignedTransaction: CreateSendSignedTransaction =
         signed_tx_base64: base64.encode(
           serializeSignedTransaction(args.signedTransaction),
         ),
-        wait_until: toNativeTransactionExecutionStatus(waitUntil),
+        wait_until: toNativeTransactionExecutionStatus(waitUntil), // TODO Remove
       },
       transportPolicy: args.policies?.transport,
       signal: args.options?.signal,

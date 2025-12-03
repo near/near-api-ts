@@ -1,13 +1,11 @@
-import type {
-  TransferAction,
-  NativeTransferAction,
-} from 'nat-types/actions/transfer';
-import { nearToken } from '../../../../helpers/tokens/nearToken';
+import type { NativeTransferAction } from 'nat-types/actions/transfer';
+import { throwableNearToken } from '../../../../helpers/tokens/nearToken';
+import type { InnerTransferAction } from '@common/schemas/zod/transaction/actions/transfer';
 
 export const toNativeTransferAction = (
-  action: TransferAction,
+  action: InnerTransferAction,
 ): NativeTransferAction => ({
   transfer: {
-    deposit: nearToken(action.amount).yoctoNear,
+    deposit: throwableNearToken(action.amount).yoctoNear,
   },
 });

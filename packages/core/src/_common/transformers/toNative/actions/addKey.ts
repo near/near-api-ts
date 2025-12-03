@@ -1,12 +1,10 @@
-import type {
-  AddKeyAction,
-  NativeAddKeyAction,
-} from 'nat-types/actions/addKey';
+import type { NativeAddKeyAction } from 'nat-types/actions/addKey';
 import { toNativePublicKey } from '@common/transformers/toNative/publicKey';
-import { nearToken } from '../../../../helpers/tokens/nearToken';
+import { throwableNearToken } from '../../../../helpers/tokens/nearToken';
+import type { InnerAddKeyAction } from '@common/schemas/zod/transaction/actions/addKey';
 
 const getPermission = (
-  action: AddKeyAction,
+  action: InnerAddKeyAction,
 ): NativeAddKeyAction['addKey']['accessKey']['permission'] => {
   if (action.accessType === 'FullAccess') return { fullAccess: {} };
 
@@ -15,14 +13,14 @@ const getPermission = (
   return {
     functionCall: {
       receiverId: contractAccountId,
-      allowance: gasBudget && nearToken(gasBudget).yoctoNear,
+      allowance: gasBudget && throwableNearToken(gasBudget).yoctoNear,
       methodNames: allowedFunctions ?? [],
     },
   };
 };
 
 export const toNativeAddKeyAction = (
-  action: AddKeyAction,
+  action: InnerAddKeyAction,
 ): NativeAddKeyAction => ({
   addKey: {
     publicKey: toNativePublicKey(action.publicKey),

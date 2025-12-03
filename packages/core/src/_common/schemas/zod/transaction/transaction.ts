@@ -7,8 +7,23 @@ import {
 } from '@common/schemas/zod/common/common';
 import { CreateAccountActionSchema } from '@common/schemas/zod/transaction/actions/createAccount';
 import { AddKeyActionSchema } from '@common/schemas/zod/transaction/actions/addKey';
+import { TransferActionSchema } from '@common/schemas/zod/transaction/actions/transfer';
+import { DeployContractActionSchema } from '@common/schemas/zod/transaction/actions/deployContract';
+import { DeleteKeyActionSchema } from '@common/schemas/zod/transaction/actions/deleteKey';
+import { DeleteAccountActionSchema } from '@common/schemas/zod/transaction/actions/deleteAccount';
+import { FunctionCallActionSchema } from '@common/schemas/zod/transaction/actions/functionCall';
 
-const ActionSchema = z.union([CreateAccountActionSchema, AddKeyActionSchema]);
+const ActionSchema = z.union([
+  CreateAccountActionSchema,
+  TransferActionSchema,
+  AddKeyActionSchema,
+  DeployContractActionSchema,
+  FunctionCallActionSchema,
+  DeleteKeyActionSchema,
+  DeleteAccountActionSchema,
+]);
+
+export type InnerAction = z.infer<typeof ActionSchema>;
 
 const TransactionBaseSchema = z.object({
   signerAccountId: AccountIdSchema,
@@ -32,3 +47,5 @@ export const TransactionSchema = z.union([
   SingleActionTransactionSchema,
   MultiActionsTransactionSchema,
 ]);
+
+export type InnerTransaction = z.infer<typeof TransactionSchema>;

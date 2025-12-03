@@ -1,21 +1,19 @@
-import type {
-  FunctionCallAction,
-  NativeFunctionCallAction,
-} from 'nat-types/actions/functionCall';
-import { nearToken } from '../../../../helpers/tokens/nearToken';
-import { nearGas } from '../../../../helpers/nearGas';
+import type { NativeFunctionCallAction } from 'nat-types/actions/functionCall';
+import { throwableNearToken } from '../../../../helpers/tokens/nearToken';
+import { throwableNearGas } from '../../../../helpers/nearGas';
+import type { InnerFunctionCallAction } from '@common/schemas/zod/transaction/actions/functionCall';
 
 export const toNativeFunctionCallAction = (
-  action: FunctionCallAction,
+  action: InnerFunctionCallAction,
 ): NativeFunctionCallAction => {
   const { functionName, attachedDeposit, gasLimit, functionArgs } = action;
   return {
     functionCall: {
       methodName: functionName,
       args: functionArgs,
-      gas: nearGas(gasLimit).gas,
+      gas: throwableNearGas(gasLimit).gas,
       deposit: attachedDeposit
-        ? nearToken(attachedDeposit).yoctoNear
+        ? throwableNearToken(attachedDeposit).yoctoNear
         : 0n,
     },
   };

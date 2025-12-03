@@ -1,24 +1,26 @@
 import * as z from 'zod/mini';
-import { CurveStringSchema } from '@common/schemas/zod/common/common';
-import { fromCurveString } from '@common/transformers/curveString';
 import { BinaryCryptoKeyLengths } from '@common/configs/constants';
+import { CurveStringSchema } from '@common/schemas/zod/common/curveString';
 
 const { Ed25519, Secp256k1 } = BinaryCryptoKeyLengths;
 
 export const PublicKeySchema = z
   .pipe(
     CurveStringSchema,
-    z.transform((publicKey) => {
-      const { curve, u8Data } = fromCurveString(publicKey);
-      return { publicKey, curve, u8PublicKeyKey: u8Data };
-    }),
+    z.transform((val) => ({
+      publicKey: val.curveString,
+      u8PublicKey: val.u8Data,
+      curve: val.curve,
+    })),
   )
   .check(
     z.refine(
-      ({ curve, u8PublicKeyKey }) =>
+      ({ curve, u8PublicKey }) =>
         curve === 'ed25519'
-          ? u8PublicKeyKey.length === Ed25519.PublicKey
-          : u8PublicKeyKey.length === Secp256k1.PublicKey,
+          ? u8PublicKey.length === Ed25519.PublicKey
+          : u8PublicKey.length === Secp256k1.PublicKey,
       { error: 'Invalid public key length' },
     ),
   );
+
+export type InnerPublicKey = z.infer<typeof PublicKeySchema>;

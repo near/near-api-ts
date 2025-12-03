@@ -25,3 +25,5 @@ export const AddKeyActionSchema = z.union([
   AddFullAccessKeyActionSchema,
   AddFunctionCallKeyActionSchema,
 ]);
+
+export type InnerAddKeyAction = z.infer<typeof AddKeyActionSchema>;
