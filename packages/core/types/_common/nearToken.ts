@@ -41,7 +41,11 @@ export type NearTokenArgs = { near: NearInput } | { yoctoNear: YoctoNearInput };
 export type YoctoNear = bigint;
 export type Near = string;
 
-export type NearToken = {
+export type CreateNearTokenError =
+  | NatError<'CreateNearToken.InvalidArgs'>
+  | NatError<'CreateNearToken.Unknown'>;
+
+export type NearToken = Readonly<{
   yoctoNear: YoctoNear;
   near: Near;
 
@@ -64,11 +68,7 @@ export type NearToken = {
     value: NearTokenArgs | NearToken,
   ) => Result<boolean, CreateNearTokenError>;
   lt: (value: NearTokenArgs | NearToken) => boolean;
-};
-
-export type CreateNearTokenError =
-  | NatError<'CreateNearToken.InvalidArgs'>
-  | NatError<'CreateNearToken.Unknown'>;
+}>;
 
 export type SafeCreateNearToken = (
   args: NearTokenArgs,

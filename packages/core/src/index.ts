@@ -23,6 +23,7 @@ export { deleteAccount } from './helpers/actionCreators/deleteAccount';
 export { deployContract } from './helpers/actionCreators/deployContract';
 
 // Helpers
+// Near Token
 export {
   safeNear,
   throwableNear as near,
@@ -32,20 +33,30 @@ export {
   throwableNearToken as nearToken,
   isNearToken,
 } from './helpers/tokens/nearToken';
-export { gas, teraGas, nearGas, isNearGas } from './helpers/nearGas';
+
+// NearGas
+export {
+  safeTeraGas,
+  throwableTeraGas as teraGas,
+  safeGas,
+  throwableGas as gas,
+  safeNearGas,
+  throwableNearGas as nearGas,
+  isNearGas,
+} from './helpers/nearGas';
 
 // KeyPair
 export {
-  safeCreateKeyPair as safeKeyPair,
-  throwableCreateKeyPair as keyPair,
+  safeKeyPair,
+  throwableKeyPair as keyPair,
 } from './helpers/keyPair/keyPair';
 export {
-  safeCreateRandomEd25519KeyPair as safeRandomEd25519KeyPair,
-  throwableCreateRandomEd25519KeyPair as randomEd25519KeyPair,
+  safeRandomEd25519KeyPair,
+  throwableRandomEd25519KeyPair as randomEd25519KeyPair,
 } from './helpers/keyPair/randomEd25519KeyPair';
 export {
-  safeCreateRandomSecp256k1KeyPair as safeRandomSecp256k1KeyPair,
-  throwableCreateRandomSecp256k1KeyPair as randomSecp256k1KeyPair,
+  safeRandomSecp256k1KeyPair,
+  throwableRandomSecp256k1KeyPair as randomSecp256k1KeyPair,
 } from './helpers/keyPair/randomSecp256k1KeyPair';
 
 // Errors

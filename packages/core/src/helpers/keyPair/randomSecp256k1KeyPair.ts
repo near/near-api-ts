@@ -15,7 +15,7 @@ const createSafeSignBySecp256k1Key = (u8PrivateKey: Uint8Array) =>
     signBySecp256k1Key(u8PrivateKey, message),
   );
 
-export const safeCreateRandomSecp256k1KeyPair: SafeCreateRandomSecp256k1KeyPair =
+export const safeRandomSecp256k1KeyPair: SafeCreateRandomSecp256k1KeyPair =
   wrapUnknownError('CreateRandomSecp256k1KeyPair.Unknown', () => {
     const u8SecretKey = secp256k1.utils.randomSecretKey();
     // nearcore expects uncompressed public key without header 0x04
@@ -40,5 +40,5 @@ export const safeCreateRandomSecp256k1KeyPair: SafeCreateRandomSecp256k1KeyPair 
     });
   });
 
-export const throwableCreateRandomSecp256k1KeyPair: CreateRandomSecp256k1KeyPair =
-  asThrowable(safeCreateRandomSecp256k1KeyPair);
+export const throwableRandomSecp256k1KeyPair: CreateRandomSecp256k1KeyPair =
+  asThrowable(safeRandomSecp256k1KeyPair);

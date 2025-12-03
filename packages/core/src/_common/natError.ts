@@ -12,7 +12,7 @@ export class NatError<K extends NatErrorKind> extends Error {
   public readonly context: ContextFor<K>;
 
   constructor(args: CreateNatErrorArgs<K>) {
-    super(`<${args.kind}>}`);
+    super(`<${args.kind}>`);
     this.name = 'NatError';
     this.kind = args.kind;
     this.context = args.context;

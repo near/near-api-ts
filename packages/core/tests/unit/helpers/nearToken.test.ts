@@ -24,7 +24,12 @@ describe('NearToken', () => {
     expect(v).toBe('7');
   });
 
-  it('5N > 2yN', () => {
+  it('3N - 10N = -7N', () => {
+    const v = nearToken({ near: '3' }).sub(near('10'));
+    expect(v.near).toBe('-7');
+  });
+
+  it('5N > 2yN = true', () => {
     const v = nearToken({ near: '5' }).gt(yoctoNear(2n));
     expect(v).toBe(true);
   });

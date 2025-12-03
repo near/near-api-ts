@@ -1,15 +1,31 @@
 import type {
+  CreateNearGas,
+  CreateNearGasError,
+  CreateNearGasFromGas,
+  CreateNearGasFromTeraGas,
   Gas,
-  GasInputAmount,
   NearGas,
-  NearGasArgs,
+  NearGasMethodArgs,
+  SafeCreateNearGas,
+  SafeCreateNearGasFromGas,
+  SafeCreateNearGasFromTeraGas,
   TeraGas,
-  TeraGasInputAmount,
 } from 'nat-types/_common/nearGas';
 import { nodeInspectSymbol } from '@common/utils/common';
 import type { InspectOptionsStylized } from 'node:util';
+import { wrapUnknownError } from '@common/utils/wrapUnknownError';
+import { result } from '@common/utils/result';
+import { createNatError } from '@common/natError';
+import {
+  GasInputSchema,
+  NearGasArgsSchema,
+  TeraGasInputSchema,
+} from '@common/schemas/zod/common/nearGas';
+import { asThrowable } from '@common/utils/asThrowable';
+import { convertUnitsToTokens } from './tokens/tokenConverter/convertUnitsToTokens';
+import { convertTokensToUnits } from './tokens/tokenConverter/convertTokensToUnits';
+import type { Result } from 'nat-types/_common/common';
 
-const TeraCoefficient = 1_000_000_000_000n; // 10 ** 12
 const NearGasBrand = Symbol('NearGas');
 
 const cache = {
@@ -20,8 +36,11 @@ const cache = {
 export const isNearGas = (value: unknown): value is NearGas =>
   typeof value === 'object' && value !== null && NearGasBrand in value;
 
-const toGas = (x: NearGasArgs | NearGas): Gas =>
-  isNearGas(x) ? x.gas : nearGas(x).gas;
+const toGas = (x: NearGasMethodArgs): Result<Gas, CreateNearGasError> => {
+  if (isNearGas(x)) return result.ok(x.gas);
+  const nearGas = safeNearGas(x);
+  return nearGas.ok ? result.ok(nearGas.value.gas) : nearGas;
+};
 
 /**
  * We use it as a prototype for all new NearGas instances. It allows us to reuse
@@ -29,46 +48,72 @@ const toGas = (x: NearGasArgs | NearGas): Gas =>
  */
 const nearGasProto: ThisType<NearGas> = {
   [NearGasBrand]: true,
-  // Lazy getter - calculate the 'gas' value only after the first direct access;
-  // save the result in the cache
-  get gas(): Gas {
-    const maybeValue = cache.gas.get(this);
-    if (maybeValue) return maybeValue;
-
-    const value = BigInt(this.teraGas) * TeraCoefficient;
-    cache.gas.set(this, value);
-
-    return value;
-  },
-
   get teraGas(): TeraGas {
+    // Lazy getter - calculate the 'teraGas' value only after the first direct access;
+    // save the result in the cache
     const maybeValue = cache.teraGas.get(this);
     if (maybeValue) return maybeValue;
-
-    const value = String(this.gas / TeraCoefficient); // We don't keep decimals
+    //  12 - max digits after period for tera coefficient
+    const value = convertUnitsToTokens(this.gas, 12);
     cache.teraGas.set(this, value);
 
     return value;
   },
 
-  add(x: NearGasArgs | NearGas): NearGas {
-    return gas(this.gas + toGas(x));
+  get gas(): Gas {
+    const maybeValue = cache.gas.get(this);
+    if (maybeValue) return maybeValue;
+    // TODO maybe we can use a better name for this?
+    const value = convertTokensToUnits(this.teraGas, 12);
+    cache.gas.set(this, value);
+
+    return value;
   },
 
-  sub(x: NearGasArgs | NearGas): NearGas {
-    return gas(this.gas - toGas(x));
+  // TODO Need to reuse method code and reduce boilerplate code, and reduce useless
+  // transformations
+  safeAdd(value: NearGasMethodArgs): Result<NearGas, CreateNearGasError> {
+    return wrapUnknownError('CreateNearGas.Unknown', () => {
+      const gas = toGas(value);
+      return gas.ok ? safeNearGas({ gas: this.gas + gas.value }) : gas;
+    })();
   },
 
-  mul(x: NearGasArgs | NearGas): NearGas {
-    return gas(this.gas * toGas(x));
+  add(value: NearGasMethodArgs) {
+    return asThrowable(this.safeAdd.bind(this))(value);
   },
 
-  gt(x: NearGasArgs | NearGas): boolean {
-    return this.gas > toGas(x);
+  safeSub(value: NearGasMethodArgs): Result<NearGas, CreateNearGasError> {
+    return wrapUnknownError('CreateNearGas.Unknown', () => {
+      const gas = toGas(value);
+      return gas.ok ? safeNearGas({ gas: this.gas - gas.value }) : gas;
+    })();
   },
 
-  lt(x: NearGasArgs | NearGas): boolean {
-    return this.gas < toGas(x);
+  sub(value: NearGasMethodArgs) {
+    return asThrowable(this.safeSub.bind(this))(value);
+  },
+
+  safeGt(value: NearGasMethodArgs): Result<boolean, CreateNearGasError> {
+    return wrapUnknownError('CreateNearGas.Unknown', () => {
+      const gas = toGas(value);
+      return gas.ok ? result.ok(this.gas > gas.value) : gas;
+    })();
+  },
+
+  gt(value: NearGasMethodArgs) {
+    return asThrowable(this.safeGt.bind(this))(value);
+  },
+
+  safeLt(value: NearGasMethodArgs): Result<boolean, CreateNearGasError> {
+    return wrapUnknownError('CreateNearGas.Unknown', () => {
+      const gas = toGas(value);
+      return gas.ok ? result.ok(this.gas < gas.value) : gas;
+    })();
+  },
+
+  lt(value: NearGasMethodArgs) {
+    return asThrowable(this.safeLt.bind(this))(value);
   },
 
   toString() {
@@ -93,32 +138,82 @@ const nearGasProto: ThisType<NearGas> = {
   }),
 } as const;
 
-export const gas = (gasInputAmount: GasInputAmount): NearGas => {
-  const gasValue = BigInt(gasInputAmount); // TODO validate
-  const nearGas = Object.create(nearGasProto) as NearGas;
+// FromGas
 
-  Object.defineProperty(nearGas, 'gas', {
-    value: gasValue,
-    enumerable: true,
-  });
+export const safeGas: SafeCreateNearGasFromGas = wrapUnknownError(
+  'CreateNearGasFromGas.Unknown',
+  (gas) => {
+    const validGas = GasInputSchema.safeParse(gas);
 
-  return Object.freeze(nearGas);
-};
+    if (!validGas.success)
+      return result.err(
+        createNatError({
+          kind: 'CreateNearGasFromGas.InvalidArgs',
+          context: { zodError: validGas.error },
+        }),
+      );
 
-// TODO must accept 3.5 Tgas
-export const teraGas = (teraGas: TeraGasInputAmount): NearGas => {
-  const nearGas = Object.create(nearGasProto) as NearGas;
+    const nearGas = Object.create(nearGasProto) as NearGas;
 
-  Object.defineProperty(nearGas, 'teraGas', {
-    value: teraGas, // TODO Validate
-    enumerable: true,
-  });
+    Object.defineProperty(nearGas, 'gas', {
+      value: validGas.data,
+      enumerable: true,
+    });
 
-  return Object.freeze(nearGas);
-};
+    return result.ok(Object.freeze(nearGas));
+  },
+);
 
-export const nearGas = (args: NearGasArgs): NearGas => {
-  if ('teraGas' in args) return teraGas(args.teraGas);
-  if ('gas' in args) return gas(args.gas);
-  throw new Error('Invalid gas option');
-};
+export const throwableGas: CreateNearGasFromGas = asThrowable(safeGas);
+
+// FromTeraGas
+
+export const safeTeraGas: SafeCreateNearGasFromTeraGas = wrapUnknownError(
+  'CreateNearGasFromTeraGas.Unknown',
+  (teraGas) => {
+    const validTeraGas = TeraGasInputSchema.safeParse(teraGas);
+
+    if (!validTeraGas.success)
+      return result.err(
+        createNatError({
+          kind: 'CreateNearGasFromTeraGas.InvalidArgs',
+          context: { zodError: validTeraGas.error },
+        }),
+      );
+
+    const nearGas = Object.create(nearGasProto) as NearGas;
+
+    Object.defineProperty(nearGas, 'teraGas', {
+      value: validTeraGas.data,
+      enumerable: true,
+    });
+
+    return result.ok(Object.freeze(nearGas));
+  },
+);
+
+export const throwableTeraGas: CreateNearGasFromTeraGas =
+  asThrowable(safeTeraGas);
+
+// NearGas
+
+export const safeNearGas: SafeCreateNearGas = wrapUnknownError(
+  'CreateNearGas.Unknown',
+  (args) => {
+    const validArgs = NearGasArgsSchema.safeParse(args);
+
+    if (!validArgs.success)
+      return result.err(
+        createNatError({
+          kind: 'CreateNearGas.InvalidArgs',
+          context: { zodError: validArgs.error },
+        }),
+      );
+
+    return 'gas' in args
+      ? result.ok(throwableGas(args.gas))
+      : result.ok(throwableTeraGas(args.teraGas));
+  },
+);
+
+export const throwableNearGas: CreateNearGas = asThrowable(safeNearGas);

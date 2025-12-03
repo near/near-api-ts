@@ -34,6 +34,9 @@ const cache = {
   near: new WeakMap<NearToken, Near>(),
 };
 
+export const isNearToken = (value: unknown): value is NearToken =>
+  typeof value === 'object' && value !== null && NearTokenBrand in value;
+
 const toYoctoNear = (
   x: NearTokenArgs | NearToken,
 ): Result<YoctoNear, CreateNearTokenError> => {
@@ -232,6 +235,3 @@ export const safeNearToken: SafeCreateNearToken = wrapUnknownError(
 );
 
 export const throwableNearToken: CreateNearToken = asThrowable(safeNearToken);
-
-export const isNearToken = (value: unknown): value is NearToken =>
-  typeof value === 'object' && value !== null && NearTokenBrand in value;

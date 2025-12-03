@@ -31,7 +31,7 @@ const createSafeSign = ({ curve, u8PrivateKey }: U8PrivateKey): SafeSign =>
       : signBySecp256k1Key(u8PrivateKey, message),
   );
 
-export const safeCreateKeyPair: SafeCreateKeyPair = wrapUnknownError(
+export const safeKeyPair: SafeCreateKeyPair = wrapUnknownError(
   'CreateKeyPair.Unknown',
   (privateKey) => {
     const validPrivateKey = PrivateKeySchema.safeParse(privateKey);
@@ -55,5 +55,4 @@ export const safeCreateKeyPair: SafeCreateKeyPair = wrapUnknownError(
   },
 );
 
-export const throwableCreateKeyPair: CreateKeyPair =
-  asThrowable(safeCreateKeyPair);
+export const throwableKeyPair: CreateKeyPair = asThrowable(safeKeyPair);
