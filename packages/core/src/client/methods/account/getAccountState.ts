@@ -1,7 +1,7 @@
 import * as z from 'zod/mini';
 import { toNativeBlockReference } from '@common/transformers/toNative/blockReference';
 import { AccountViewSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
-import { yoctoNear } from '../../../helpers/tokens/nearToken';
+import { throwableYoctoNear } from '../../../helpers/tokens/nearToken';
 import { addTo } from '@common/utils/addTo';
 import type {
   CreateGetAccountState,
@@ -23,8 +23,8 @@ const transformResult = (
   // storage_paid_at - deprecated since March 18, 2020:
   // https://github.com/near/nearcore/issues/2271
 
-  const lockedBalance = yoctoNear(valid.locked);
-  const totalBalance = yoctoNear(valid.amount).add(lockedBalance);
+  const lockedBalance = throwableYoctoNear(valid.locked);
+  const totalBalance = throwableYoctoNear(valid.amount).add(lockedBalance);
 
   const final = {
     blockHash: valid.blockHash,

@@ -36,9 +36,8 @@ const toNativeActions = (transaction: Transaction) => {
   return [];
 };
 
-// TODO Validate - main point
 export const toNativeTransaction = (
-  transaction: Transaction,
+  transaction: Transaction, // InnerTransaction
 ): NativeTransaction => ({
   signerId: transaction.signerAccountId,
   publicKey: toNativePublicKey(transaction.signerPublicKey),

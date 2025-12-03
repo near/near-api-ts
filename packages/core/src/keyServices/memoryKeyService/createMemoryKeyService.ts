@@ -32,7 +32,7 @@ export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService =
       },
     });
   });
-
+// TODO throwable
 export const createMemoryKeyService: CreateMemoryKeyService = asThrowable(
   safeCreateMemoryKeyService,
 );

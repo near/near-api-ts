@@ -105,6 +105,7 @@ export const gas = (gasInputAmount: GasInputAmount): NearGas => {
   return Object.freeze(nearGas);
 };
 
+// TODO must accept 3.5 Tgas
 export const teraGas = (teraGas: TeraGasInputAmount): NearGas => {
   const nearGas = Object.create(nearGasProto) as NearGas;
 

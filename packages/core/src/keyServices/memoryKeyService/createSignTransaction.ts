@@ -1,18 +1,34 @@
+import * as z from 'zod/mini';
 import { getTransactionHash } from '@common/utils/getTransactionHash';
 import { result } from '@common/utils/result';
 import { wrapUnknownError } from '@common/utils/wrapUnknownError';
 import type { MemoryKeyServiceContext } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 import { createNatError } from '@common/natError';
 import type { SafeSignTransaction } from 'nat-types/keyServices/memoryKeyService/createSignTransaction';
+import { TransactionSchema } from '@common/schemas/zod/transaction/transaction';
+
+const SignTransactionArgsSchema = z.object({
+  transaction: TransactionSchema,
+});
 
 export const createSafeSignTransaction = (
   context: MemoryKeyServiceContext,
 ): SafeSignTransaction =>
   wrapUnknownError('MemoryKeyService.SignTransaction.Unknown', async (args) => {
-    // TODO Implement args validation
+    const validArgs = SignTransactionArgsSchema.safeParse(args);
+
+    if (!validArgs.success)
+      return result.err(
+        createNatError({
+          kind: 'MemoryKeyService.SignTransaction.InvalidArgs',
+          context: { zodError: validArgs.error },
+        }),
+      );
+
+    const { transaction: innerTransaction } = validArgs.data;
 
     const keyPair = context.safeFindKeyPair({
-      publicKey: args.transaction.signerPublicKey,
+      publicKey: innerTransaction.signerPublicKey.publicKey,
     });
 
     // TODO Think if it's possible to wrap into some helper function
@@ -21,15 +37,17 @@ export const createSafeSignTransaction = (
         return result.err(
           createNatError({
             kind: 'MemoryKeyService.SignTransaction.SigningKeyPair.NotFound',
-            context: { signerPublicKey: args.transaction.signerPublicKey },
+            context: {
+              signerPublicKey: innerTransaction.signerPublicKey.publicKey,
+            },
           }),
         );
       throw keyPair.error;
     }
 
-    const { transactionHash, u8TransactionHash } = getTransactionHash(
-      args.transaction,
-    );
+    const { transactionHash, u8TransactionHash } =
+      getTransactionHash(innerTransaction);
+
     const { signature } = keyPair.value.sign(u8TransactionHash);
 
     return result.ok({

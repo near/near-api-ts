@@ -1,21 +1,103 @@
-import type { Tokens, Units } from 'nat-types/_common/common';
+import type { Result, Tokens, Units } from 'nat-types/_common/common';
+import type {
+  InvalidArgsContext,
+  UnknownErrorContext,
+} from 'nat-types/natError';
+import type { NatError } from '@common/natError';
 
-export type YoctoNearInputAmount = Units;
-export type NearInputAmount = Tokens;
+export type NearTokenErrorVariant =
+  | {
+      kind: 'CreateNearToken.InvalidArgs';
+      context: InvalidArgsContext;
+    }
+  | {
+      kind: 'CreateNearToken.Unknown';
+      context: UnknownErrorContext;
+    }
+  | {
+      kind: 'CreateNearTokenFromYoctoNear.InvalidArgs';
+      context: InvalidArgsContext;
+    }
+  | {
+      kind: 'CreateNearTokenFromYoctoNear.Unknown';
+      context: UnknownErrorContext;
+    }
+  | {
+      kind: 'CreateNearTokenFromNear.InvalidArgs';
+      context: InvalidArgsContext;
+    }
+  | {
+      kind: 'CreateNearTokenFromNear.Unknown';
+      context: UnknownErrorContext;
+    };
 
-export type NearTokenArgs =
-  | { near: NearInputAmount }
-  | { yoctoNear: YoctoNearInputAmount };
+export type YoctoNearInput = Units;
+export type NearInput = Tokens;
+
+// CreateNearToken --------------------------------------------------------
+
+export type NearTokenArgs = { near: NearInput } | { yoctoNear: YoctoNearInput };
 
 export type YoctoNear = bigint;
 export type Near = string;
 
-export type NearToken = Readonly<{
+export type NearToken = {
   yoctoNear: YoctoNear;
   near: Near;
+
+  safeAdd: (
+    value: NearTokenArgs | NearToken,
+  ) => Result<NearToken, CreateNearTokenError>;
   add: (value: NearTokenArgs | NearToken) => NearToken;
+
+  safeSub: (
+    value: NearTokenArgs | NearToken,
+  ) => Result<NearToken, CreateNearTokenError>;
   sub: (value: NearTokenArgs | NearToken) => NearToken;
-  mul: (value: NearTokenArgs | NearToken) => NearToken;
+
+  safeGt: (
+    value: NearTokenArgs | NearToken,
+  ) => Result<boolean, CreateNearTokenError>;
   gt: (value: NearTokenArgs | NearToken) => boolean;
+
+  safeLt: (
+    value: NearTokenArgs | NearToken,
+  ) => Result<boolean, CreateNearTokenError>;
   lt: (value: NearTokenArgs | NearToken) => boolean;
-}>;
+};
+
+export type CreateNearTokenError =
+  | NatError<'CreateNearToken.InvalidArgs'>
+  | NatError<'CreateNearToken.Unknown'>;
+
+export type SafeCreateNearToken = (
+  args: NearTokenArgs,
+) => Result<NearToken, CreateNearTokenError>;
+
+export type CreateNearToken = (args: NearTokenArgs) => NearToken;
+
+// FromYoctoNear --------------------------------------------------------
+
+type CreateNearTokenFromYoctoNearError =
+  | NatError<'CreateNearTokenFromYoctoNear.InvalidArgs'>
+  | NatError<'CreateNearTokenFromYoctoNear.Unknown'>;
+
+export type SafeCreateNearTokenFromYoctoNear = (
+  yoctoNear: YoctoNearInput,
+) => Result<NearToken, CreateNearTokenFromYoctoNearError>;
+
+export type CreateNearTokenFromYoctoNear = (
+  yoctoNear: YoctoNearInput,
+) => NearToken;
+
+// FromNear --------------------------------------------------------
+
+type CreateNearTokenFromNearError =
+  | NatError<'CreateNearTokenFromNear.InvalidArgs'>
+  | NatError<'CreateNearTokenFromNear.Unknown'>;
+
+export type SafeCreateNearTokenFromNear = (
+  near: NearInput,
+) => Result<NearToken, CreateNearTokenFromNearError>;
+
+export type CreateNearTokenFromNear = (near: NearInput) => NearToken;

@@ -1,12 +1,4 @@
-import { pow10, assertValidDecimals } from './helpers';
-import type { Units } from 'nat-types/_common/common';
-
-// Validate units input: must be positive integer digits only
-const assertValidUnits = (units: bigint | string) => {
-  if (typeof units === 'string' && !/^\d+$/.test(units)) {
-    throw new Error('Units must be a positive integer string (digits only)');
-  }
-};
+import { pow10 } from './helpers';
 
 /**
  * Convert minimal units (integer string) to token amount (decimal string).
@@ -18,19 +10,14 @@ const assertValidUnits = (units: bigint | string) => {
  * @returns            Decimal string with up to `decimals` digits after the dot
  */
 export const convertUnitsToTokens = (
-  units: Units,
+  units: bigint,
   decimals: number,
 ): string => {
-  assertValidDecimals(decimals);
-  assertValidUnits(units);
-
-  // Numeric conversion
-  const unitsBigInt = BigInt(units);
   const scale = pow10(decimals);
 
   // Integer division gives the whole part; remainder gives the fractional digits
-  const wholePart = unitsBigInt / scale;
-  const fractionalRemainder = unitsBigInt % scale;
+  const wholePart = units / scale;
+  const fractionalRemainder = units % scale;
 
   // If there is no fractional remainder, return the whole part as a plain integer
   if (fractionalRemainder === 0n) return wholePart.toString();

@@ -4,13 +4,28 @@ import { NearDecimals } from '@common/configs/constants';
 import { nodeInspectSymbol } from '@common/utils/common';
 import type { InspectOptionsStylized } from 'node:util';
 import type {
+  CreateNearTokenFromNear,
+  CreateNearTokenFromYoctoNear,
   Near,
-  NearInputAmount,
   NearToken,
   NearTokenArgs,
+  SafeCreateNearTokenFromNear,
+  SafeCreateNearTokenFromYoctoNear,
   YoctoNear,
-  YoctoNearInputAmount,
+  SafeCreateNearToken,
+  CreateNearToken,
+  CreateNearTokenError,
 } from 'nat-types/_common/nearToken';
+import {
+  NearTokenArgsSchema,
+  NearInputSchema,
+  YoctoNearInputSchema,
+} from '@common/schemas/zod/common/nearToken';
+import { result } from '@common/utils/result';
+import { createNatError } from '@common/natError';
+import { wrapUnknownError } from '@common/utils/wrapUnknownError';
+import { asThrowable } from '@common/utils/asThrowable';
+import type { Result } from 'nat-types/_common/common';
 
 const NearTokenBrand = Symbol('NearToken');
 
@@ -19,8 +34,13 @@ const cache = {
   near: new WeakMap<NearToken, Near>(),
 };
 
-const toYoctoNear = (x: NearTokenArgs | NearToken): YoctoNear =>
-  isNearToken(x) ? x.yoctoNear : nearToken(x).yoctoNear;
+const toYoctoNear = (
+  x: NearTokenArgs | NearToken,
+): Result<YoctoNear, CreateNearTokenError> => {
+  if (isNearToken(x)) return result.ok(x.yoctoNear);
+  const nearToken = safeNearToken(x);
+  return nearToken.ok ? result.ok(nearToken.value.yoctoNear) : nearToken;
+};
 
 /**
  * We use it as a prototype for all new NearToken instances. It allows us to reuse
@@ -49,24 +69,66 @@ const nearTokenProto: ThisType<NearToken> = {
     return value;
   },
 
-  add(x: NearTokenArgs | NearToken): NearToken {
-    return yoctoNear(this.yoctoNear + toYoctoNear(x));
+  // TODO Need to reuse method code and reduce boilerplate code, and reduce useless
+  // transformations
+  safeAdd(
+    value: NearTokenArgs | NearToken,
+  ): Result<NearToken, CreateNearTokenError> {
+    return wrapUnknownError('CreateNearToken.Unknown', () => {
+      const yoctoNear = toYoctoNear(value);
+      return yoctoNear.ok
+        ? safeNearToken({ yoctoNear: this.yoctoNear + yoctoNear.value })
+        : yoctoNear;
+    })();
   },
 
-  sub(x: NearTokenArgs | NearToken): NearToken {
-    return yoctoNear(this.yoctoNear - toYoctoNear(x));
+  add(value: NearTokenArgs | NearToken) {
+    return asThrowable(this.safeAdd.bind(this))(value);
   },
 
-  mul(x: NearTokenArgs | NearToken): NearToken {
-    return yoctoNear(this.yoctoNear * toYoctoNear(x));
+  safeSub(
+    value: NearTokenArgs | NearToken,
+  ): Result<NearToken, CreateNearTokenError> {
+    return wrapUnknownError('CreateNearToken.Unknown', () => {
+      const yoctoNear = toYoctoNear(value);
+      return yoctoNear.ok
+        ? safeNearToken({ yoctoNear: this.yoctoNear - yoctoNear.value })
+        : yoctoNear;
+    })();
   },
 
-  gt(x: NearTokenArgs | NearToken): boolean {
-    return this.yoctoNear > toYoctoNear(x);
+  sub(value: NearTokenArgs | NearToken) {
+    return asThrowable(this.safeSub.bind(this))(value);
   },
 
-  lt(x: NearTokenArgs | NearToken): boolean {
-    return this.yoctoNear < toYoctoNear(x);
+  safeGt(
+    value: NearTokenArgs | NearToken,
+  ): Result<boolean, CreateNearTokenError> {
+    return wrapUnknownError('CreateNearToken.Unknown', () => {
+      const yoctoNear = toYoctoNear(value);
+      return yoctoNear.ok
+        ? result.ok(this.yoctoNear > yoctoNear.value)
+        : yoctoNear;
+    })();
+  },
+
+  gt(value: NearTokenArgs | NearToken) {
+    return asThrowable(this.safeGt.bind(this))(value);
+  },
+
+  safeLt(
+    value: NearTokenArgs | NearToken,
+  ): Result<boolean, CreateNearTokenError> {
+    return wrapUnknownError('CreateNearToken.Unknown', () => {
+      const yoctoNear = toYoctoNear(value);
+      return yoctoNear.ok
+        ? result.ok(this.yoctoNear < yoctoNear.value)
+        : yoctoNear;
+    })();
+  },
+
+  lt(value: NearTokenArgs | NearToken) {
+    return asThrowable(this.safeLt.bind(this))(value);
   },
 
   toString() {
@@ -91,34 +153,85 @@ const nearTokenProto: ThisType<NearToken> = {
   }),
 } as const;
 
-export const yoctoNear = (units: YoctoNearInputAmount): NearToken => {
-  const yoctoNearValue = BigInt(units); // TODO validate units
-  const nearToken = Object.create(nearTokenProto) as NearToken;
+// FromYoctoNear
 
-  Object.defineProperty(nearToken, 'yoctoNear', {
-    value: yoctoNearValue,
-    enumerable: true,
-  });
+export const safeYoctoNear: SafeCreateNearTokenFromYoctoNear = wrapUnknownError(
+  'CreateNearTokenFromYoctoNear.Unknown',
+  (yoctoNear) => {
+    const validYoctoNear = YoctoNearInputSchema.safeParse(yoctoNear);
 
-  return Object.freeze(nearToken);
-};
+    if (!validYoctoNear.success)
+      return result.err(
+        createNatError({
+          kind: 'CreateNearTokenFromYoctoNear.InvalidArgs',
+          context: { zodError: validYoctoNear.error },
+        }),
+      );
 
-export const near = (tokens: NearInputAmount): NearToken => {
-  const nearToken = Object.create(nearTokenProto) as NearToken;
+    const nearToken = Object.create(nearTokenProto) as NearToken;
 
-  Object.defineProperty(nearToken, 'near', {
-    value: tokens, // TODO validate tokens
-    enumerable: true,
-  });
+    Object.defineProperty(nearToken, 'yoctoNear', {
+      value: validYoctoNear.data,
+      enumerable: true,
+    });
 
-  return Object.freeze(nearToken);
-};
+    return result.ok(Object.freeze(nearToken));
+  },
+);
 
-export const nearToken = (args: NearTokenArgs): NearToken => {
-  if ('yoctoNear' in args) return yoctoNear(args.yoctoNear);
-  if ('near' in args) return near(args.near);
-  throw new Error('Invalid args format');
-};
+export const throwableYoctoNear: CreateNearTokenFromYoctoNear =
+  asThrowable(safeYoctoNear);
+
+// FromNear
+
+export const safeNear: SafeCreateNearTokenFromNear = wrapUnknownError(
+  'CreateNearTokenFromNear.Unknown',
+  (near) => {
+    const validNear = NearInputSchema.safeParse(near);
+
+    if (!validNear.success)
+      return result.err(
+        createNatError({
+          kind: 'CreateNearTokenFromNear.InvalidArgs',
+          context: { zodError: validNear.error },
+        }),
+      );
+
+    const nearToken = Object.create(nearTokenProto) as NearToken;
+
+    Object.defineProperty(nearToken, 'near', {
+      value: validNear.data,
+      enumerable: true,
+    });
+
+    return result.ok(Object.freeze(nearToken));
+  },
+);
+
+export const throwableNear: CreateNearTokenFromNear = asThrowable(safeNear);
+
+// Near Token
+
+export const safeNearToken: SafeCreateNearToken = wrapUnknownError(
+  'CreateNearToken.Unknown',
+  (args) => {
+    const validArgs = NearTokenArgsSchema.safeParse(args);
+
+    if (!validArgs.success)
+      return result.err(
+        createNatError({
+          kind: 'CreateNearToken.InvalidArgs',
+          context: { zodError: validArgs.error },
+        }),
+      );
+
+    return 'yoctoNear' in args
+      ? result.ok(throwableYoctoNear(args.yoctoNear))
+      : result.ok(throwableNear(args.near));
+  },
+);
+
+export const throwableNearToken: CreateNearToken = asThrowable(safeNearToken);
 
 export const isNearToken = (value: unknown): value is NearToken =>
   typeof value === 'object' && value !== null && NearTokenBrand in value;

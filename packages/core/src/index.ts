@@ -24,9 +24,12 @@ export { deployContract } from './helpers/actionCreators/deployContract';
 
 // Helpers
 export {
-  near,
-  yoctoNear,
-  nearToken,
+  safeNear,
+  throwableNear as near,
+  safeYoctoNear,
+  throwableYoctoNear as yoctoNear,
+  safeNearToken,
+  throwableNearToken as nearToken,
   isNearToken,
 } from './helpers/tokens/nearToken';
 export { gas, teraGas, nearGas, isNearGas } from './helpers/nearGas';
