@@ -1,5 +1,5 @@
 import { secp256k1 } from '@noble/curves/secp256k1';
-import { toSecp256k1CurveString } from '@common/transformers/curveString';
+import { toSecp256k1CurveString } from '@common/transformers/toCurveString';
 import { signBySecp256k1Key } from './_common/signBySecp256k1Key';
 import { asThrowable } from '@common/utils/asThrowable';
 import { result } from '@common/utils/result';

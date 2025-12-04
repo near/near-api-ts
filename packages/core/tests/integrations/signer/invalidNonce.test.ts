@@ -22,7 +22,7 @@ test(
       keySource: { privateKey: DEFAULT_PRIVATE_KEY },
     });
 
-    const signer1 = await createMemorySigner({
+    const _signer1 = await createMemorySigner({
       signerAccountId: 'nat',
       client,
       keyService,

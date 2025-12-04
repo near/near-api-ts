@@ -1,5 +1,5 @@
 import { ed25519 } from '@noble/curves/ed25519';
-import { toEd25519CurveString } from '@common/transformers/curveString';
+import { toEd25519CurveString } from '@common/transformers/toCurveString';
 import { asThrowable } from '@common/utils/asThrowable';
 import { result } from '@common/utils/result';
 import { wrapUnknownError } from '@common/utils/wrapUnknownError';

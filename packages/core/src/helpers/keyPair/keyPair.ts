@@ -4,7 +4,7 @@ import { result } from '@common/utils/result';
 import {
   toEd25519CurveString,
   toSecp256k1CurveString,
-} from '@common/transformers/curveString';
+} from '@common/transformers/toCurveString';
 import { BinaryLengths } from '@common/configs/constants';
 import { wrapUnknownError } from '@common/utils/wrapUnknownError';
 import { asThrowable } from '@common/utils/asThrowable';

@@ -1,5 +1,4 @@
 import type {
-  Curve,
   Ed25519CurveString,
   Secp256k1CurveString,
   CurveString,
@@ -16,7 +15,6 @@ export type PrivateKey = Ed25519PrivateKey | Secp256k1PrivateKey;
 export type Ed25519Signature = Ed25519CurveString;
 export type Secp256k1Signature = Secp256k1CurveString;
 export type Signature = CurveString;
-export type U8Signature = { curve: Curve; u8Signature: Uint8Array };
 
 type NativeEd25519PublicKey = { ed25519Key: { data: Uint8Array } };
 type NativeSecp256k1PublicKey = { secp256k1Key: { data: Uint8Array } };
