@@ -1,17 +1,28 @@
-import type { NativeTransaction } from 'nat-types/transaction';
 import type { BorshBytes } from 'nat-types/_common/common';
 import { serialize } from 'borsh';
-import { transactionBorshSchema } from '@common/schemas/borsh';
-import { toNativeTransaction } from '@common/transformers/toNative/transaction';
-import type { InnerTransaction } from '@common/schemas/zod/transaction/transaction';
+import {
+  signedTransactionBorshSchema,
+  transactionBorshSchema,
+} from '@common/schemas/borsh';
+import {
+  toNativeSignedTransaction,
+  toNativeTransaction,
+} from '@common/transformers/toNative/transaction';
+import type {
+  InnerSignedTransaction,
+  InnerTransaction,
+} from '@common/schemas/zod/transaction/transaction';
 
-const serializeNativeTransaction = (
-  nativeTransaction: NativeTransaction,
-): BorshBytes => serialize(transactionBorshSchema, nativeTransaction);
-
-export const serializeTransaction = (
+export const toBorshTransaction = (
   transaction: InnerTransaction,
 ): BorshBytes => {
   const nativeTransaction = toNativeTransaction(transaction);
-  return serializeNativeTransaction(nativeTransaction);
+  return serialize(transactionBorshSchema, nativeTransaction);
+};
+
+export const toBorshSignedTransaction = (
+  signedTransaction: InnerSignedTransaction,
+): BorshBytes => {
+  const nativeSignedTransaction = toNativeSignedTransaction(signedTransaction);
+  return serialize(signedTransactionBorshSchema, nativeSignedTransaction);
 };

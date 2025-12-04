@@ -1,8 +1,10 @@
-import type { Signature, NativeSignature } from 'nat-types/_common/crypto';
-import { fromCurveString } from '@common/transformers/curveString';
+import type { NativeSignature } from 'nat-types/_common/crypto';
+import type { InnerSignature } from '@common/schemas/zod/common/signature';
 
-export const toNativeSignature = (signature: Signature): NativeSignature => {
-  const { curve, u8Data } = fromCurveString(signature);
-  if (curve === 'ed25519') return { ed25519Signature: { data: u8Data } };
-  return { secp256k1Signature: { data: u8Data } };
-};
+export const toNativeSignature = ({
+  u8Signature,
+  curve,
+}: InnerSignature): NativeSignature =>
+  curve === 'ed25519'
+    ? { ed25519Signature: { data: u8Signature } }
+    : { secp256k1Signature: { data: u8Signature } };

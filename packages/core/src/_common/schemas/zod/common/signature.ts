@@ -4,23 +4,23 @@ import { CurveStringSchema } from '@common/schemas/zod/common/curveString';
 
 const { Ed25519, Secp256k1 } = BinaryLengths;
 
-export const PrivateKeySchema = z
+export const SignatureSchema = z
   .pipe(
     CurveStringSchema,
     z.transform((val) => ({
-      privateKey: val.curveString,
-      u8PrivateKey: val.u8Data,
+      signature: val.curveString,
+      u8Signature: val.u8Data,
       curve: val.curve,
     })),
   )
   .check(
     z.refine(
-      ({ curve, u8PrivateKey }) =>
+      ({ curve, u8Signature }) =>
         curve === 'ed25519'
-          ? u8PrivateKey.length === Ed25519.PrivateKey
-          : u8PrivateKey.length === Secp256k1.PrivateKey,
-      { error: 'Invalid private key length' },
+          ? u8Signature.length === Ed25519.Signature
+          : u8Signature.length === Secp256k1.Signature,
+      { error: 'Invalid signature length' },
     ),
   );
 
-export type InnerPrivateKey = z.infer<typeof PrivateKeySchema>;
+export type InnerSignature = z.infer<typeof SignatureSchema>;

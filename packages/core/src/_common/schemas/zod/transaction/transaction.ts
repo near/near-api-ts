@@ -12,6 +12,8 @@ import { DeployContractActionSchema } from '@common/schemas/zod/transaction/acti
 import { DeleteKeyActionSchema } from '@common/schemas/zod/transaction/actions/deleteKey';
 import { DeleteAccountActionSchema } from '@common/schemas/zod/transaction/actions/deleteAccount';
 import { FunctionCallActionSchema } from '@common/schemas/zod/transaction/actions/functionCall';
+import { SignatureSchema } from '@common/schemas/zod/common/signature';
+import {CryptoHashSchema} from '@common/schemas/zod/common/cryptoHash';
 
 const ActionSchema = z.union([
   CreateAccountActionSchema,
@@ -49,3 +51,11 @@ export const TransactionSchema = z.union([
 ]);
 
 export type InnerTransaction = z.infer<typeof TransactionSchema>;
+
+export const SignedTransactionSchema = z.object({
+  transaction: TransactionSchema,
+  transactionHash: CryptoHashSchema,
+  signature: SignatureSchema,
+});
+
+export type InnerSignedTransaction = z.infer<typeof SignedTransactionSchema>;

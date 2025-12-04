@@ -5,26 +5,29 @@ import {
   toEd25519CurveString,
   toSecp256k1CurveString,
 } from '@common/transformers/curveString';
-import { BinaryCryptoKeyLengths } from '@common/configs/constants';
+import { BinaryLengths } from '@common/configs/constants';
 import { wrapUnknownError } from '@common/utils/wrapUnknownError';
 import { asThrowable } from '@common/utils/asThrowable';
-import type { PublicKey, U8PrivateKey } from 'nat-types/_common/crypto';
+import type { PublicKey } from 'nat-types/_common/crypto';
 import type {
   CreateKeyPair,
   SafeCreateKeyPair,
   SafeSign,
 } from 'nat-types/_common/keyPair/keyPair';
 import { createNatError } from '@common/natError';
-import { PrivateKeySchema } from '@common/schemas/zod/common/privateKey';
+import {
+  type InnerPrivateKey,
+  PrivateKeySchema,
+} from '@common/schemas/zod/common/privateKey';
 
-const { Ed25519, Secp256k1 } = BinaryCryptoKeyLengths;
+const { Ed25519, Secp256k1 } = BinaryLengths;
 
-const getPublicKey = ({ curve, u8PrivateKey }: U8PrivateKey): PublicKey =>
+const getPublicKey = ({ curve, u8PrivateKey }: InnerPrivateKey): PublicKey =>
   curve === 'ed25519'
     ? toEd25519CurveString(u8PrivateKey.slice(Ed25519.SecretKey))
     : toSecp256k1CurveString(u8PrivateKey.slice(Secp256k1.SecretKey));
 
-const createSafeSign = ({ curve, u8PrivateKey }: U8PrivateKey): SafeSign =>
+const createSafeSign = ({ curve, u8PrivateKey }: InnerPrivateKey): SafeSign =>
   wrapUnknownError('KeyPair.Sign.Unknown', (message) =>
     curve === 'ed25519'
       ? signByEd25519Key(u8PrivateKey, message)

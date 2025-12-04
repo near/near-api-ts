@@ -8,13 +8,16 @@ import { toNativeDeleteKeyAction } from '@common/transformers/toNative/actions/d
 import { toNativeDeleteAccountAction } from '@common/transformers/toNative/actions/deleteAccount';
 import type {
   NativeAction,
+  NativeSignedTransaction,
   NativeTransaction,
   TransactionExecutionStatus,
 } from 'nat-types/transaction';
 import type {
   InnerAction,
+  InnerSignedTransaction,
   InnerTransaction,
 } from '@common/schemas/zod/transaction/transaction';
+import { toNativeSignature } from '@common/transformers/toNative/signature';
 
 // biome-ignore format: keep compact
 const toNativeAction = (action: InnerAction): NativeAction => {
@@ -46,6 +49,13 @@ export const toNativeTransaction = (
   receiverId: transaction.receiverAccountId,
   nonce: BigInt(transaction.nonce),
   blockHash: transaction.blockHash.u8CryptoHash,
+});
+
+export const toNativeSignedTransaction = (
+  signedTransaction: InnerSignedTransaction,
+): NativeSignedTransaction => ({
+  transaction: toNativeTransaction(signedTransaction.transaction),
+  signature: toNativeSignature(signedTransaction.signature),
 });
 
 // TODO Remove

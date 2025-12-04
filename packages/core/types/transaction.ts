@@ -1,12 +1,17 @@
-import type { AccountId, BlockHash, Nonce } from './_common/common';
-import type { PublicKey, NativePublicKey } from './_common/crypto';
+import type { AccountId, BlockHash, CryptoHash, Nonce } from './_common/common';
+import type {
+  NativePublicKey,
+  NativeSignature,
+  PublicKey,
+  Signature,
+} from './_common/crypto';
 import type {
   CreateAccountAction,
   NativeCreateAccountAction,
 } from 'nat-types/actions/createAccount';
 import type {
-  TransferAction,
   NativeTransferAction,
+  TransferAction,
 } from 'nat-types/actions/transfer';
 import type {
   AddKeyAction,
@@ -58,6 +63,8 @@ export type TransactionIntent = {
   receiverAccountId: AccountId;
 } & (SingleAction | MultiActions);
 
+// Native Transaction
+
 export type NativeAction =
   | NativeCreateAccountAction
   | NativeTransferAction
@@ -76,6 +83,20 @@ export type NativeTransaction = {
   blockHash: Uint8Array;
 };
 
+// Signed Transaction
+
+export type SignedTransaction = {
+  transaction: Transaction;
+  transactionHash: CryptoHash;
+  signature: Signature;
+};
+
+export type NativeSignedTransaction = {
+  transaction: NativeTransaction;
+  signature: NativeSignature;
+};
+
+// TODO remove
 /**
  *  <h3>Transaction Execution Levels:</h3>
  *

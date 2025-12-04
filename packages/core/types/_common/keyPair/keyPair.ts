@@ -2,7 +2,6 @@ import type {
   PrivateKey,
   PublicKey,
   Signature,
-  U8Signature,
 } from 'nat-types/_common/crypto';
 import type { Hex, Result } from 'nat-types/_common/common';
 import type { NatError } from '@common/natError';
@@ -10,6 +9,7 @@ import type {
   InvalidArgsContext,
   UnknownErrorContext,
 } from 'nat-types/natError';
+import type { Curve } from 'nat-types/_common/curveString';
 
 export type KeyPairErrorVariant =
   | {
@@ -25,7 +25,12 @@ export type KeyPairErrorVariant =
       context: UnknownErrorContext;
     };
 
-export type SignOutput = { signature: Signature } & U8Signature;
+export type SignOutput = {
+  signature: Signature;
+  curve: Curve;
+  u8Signature: Uint8Array;
+};
+
 type SignError = NatError<'KeyPair.Sign.Unknown'>;
 
 export type Sign = (message: Hex) => SignOutput;

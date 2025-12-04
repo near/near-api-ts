@@ -1,7 +1,7 @@
 import type { Base58String } from 'nat-types/_common/common';
 import { sha256 } from '@noble/hashes/sha2';
 import { base58 } from '@scure/base';
-import { serializeTransaction } from '@common/transformers/toBorshBytes/transaction';
+import { toBorshTransaction } from '@common/transformers/toBorshBytes/transaction';
 import type { InnerTransaction } from '@common/schemas/zod/transaction/transaction';
 
 type GetTransactionHashOutput = {
@@ -12,7 +12,7 @@ type GetTransactionHashOutput = {
 export const getTransactionHash = (
   transaction: InnerTransaction,
 ): GetTransactionHashOutput => {
-  const transactionBorshBytes = serializeTransaction(transaction);
+  const transactionBorshBytes = toBorshTransaction(transaction);
   const u8TransactionHash = sha256(transactionBorshBytes);
   return {
     transactionHash: base58.encode(u8TransactionHash),

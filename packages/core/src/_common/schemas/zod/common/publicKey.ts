@@ -1,8 +1,8 @@
 import * as z from 'zod/mini';
-import { BinaryCryptoKeyLengths } from '@common/configs/constants';
+import { BinaryLengths } from '@common/configs/constants';
 import { CurveStringSchema } from '@common/schemas/zod/common/curveString';
 
-const { Ed25519, Secp256k1 } = BinaryCryptoKeyLengths;
+const { Ed25519, Secp256k1 } = BinaryLengths;
 
 export const PublicKeySchema = z
   .pipe(

@@ -6,9 +6,8 @@ import type {
   TimeoutId,
   Result,
 } from 'nat-types/_common/common';
-import type { TransactionIntent } from 'nat-types/transaction';
+import type {SignedTransaction, TransactionIntent} from 'nat-types/transaction';
 import type { SendSignedTransactionResult } from 'nat-types/client/methods/transaction/sendSignedTransaction';
-import type { SignedTransaction } from 'nat-types/signedTransaction';
 import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
 
 export type FullAccessKeyPriority = { accessType: 'FullAccess' };

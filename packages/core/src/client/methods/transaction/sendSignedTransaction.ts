@@ -1,26 +1,34 @@
+import * as z from 'zod/mini';
 import { base64 } from '@scure/base';
-import { serializeSignedTransaction } from '@common/transformers/toBorshBytes/signedTransaction';
 import { toNativeTransactionExecutionStatus } from '@common/transformers/toNative/transaction';
 import { RpcTransactionResponseSchema } from '@near-js/jsonrpc-types';
 import type {
   CreateSendSignedTransaction,
   SendSignedTransactionResult,
 } from 'nat-types/client/methods/transaction/sendSignedTransaction';
+import { toBorshSignedTransaction } from '@common/transformers/toBorshBytes/transaction';
+import { SignedTransactionSchema } from '@common/schemas/zod/transaction/transaction';
 
 const transformResult = (result: unknown): SendSignedTransactionResult => {
   return RpcTransactionResponseSchema().parse(result);
 };
 
+const SendSignedTransactionArgsShema = z.object({
+  signedTransaction: SignedTransactionSchema,
+});
+
 export const createSendSignedTransaction: CreateSendSignedTransaction =
   ({ sendRequest }) =>
   async (args) => {
+    // TODO to safe format
+    const validArgs = SendSignedTransactionArgsShema.parse(args);
     const waitUntil = args?.policies?.waitUntil ?? 'ExecutedOptimistic';
 
     const result = await sendRequest({
       method: 'send_tx',
       params: {
         signed_tx_base64: base64.encode(
-          serializeSignedTransaction(args.signedTransaction),
+          toBorshSignedTransaction(validArgs.signedTransaction),
         ),
         wait_until: toNativeTransactionExecutionStatus(waitUntil), // TODO Remove
       },

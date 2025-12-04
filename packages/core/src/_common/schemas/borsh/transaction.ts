@@ -11,6 +11,7 @@ import { stakeActionBorshSchema } from './actions/stake';
 import { deleteKeyActionBorshSchema } from './actions/deleteKey';
 import { deleteAccountActionBorshSchema } from './actions/deleteAccount';
 import { signedDelegateActionBorshSchema } from './actions/signedDelegate';
+import { signatureBorshSchema } from '@common/schemas/borsh/signature';
 
 // Actions order in this enum is important and must match nearcore
 const actionBorshSchema: Schema = {
@@ -38,5 +39,12 @@ export const transactionBorshSchema: Schema = {
     receiverId: 'string',
     blockHash: { array: { type: 'u8', len: 32 } },
     actions: { array: { type: actionBorshSchema } },
+  },
+};
+
+export const signedTransactionBorshSchema: Schema = {
+  struct: {
+    transaction: transactionBorshSchema,
+    signature: signatureBorshSchema,
   },
 };
