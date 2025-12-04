@@ -1,6 +1,5 @@
 import * as z from 'zod/mini';
 import { base64 } from '@scure/base';
-import { toNativeTransactionExecutionStatus } from '@common/transformers/toNative/transaction';
 import { RpcTransactionResponseSchema } from '@near-js/jsonrpc-types';
 import type {
   CreateSendSignedTransaction,
@@ -17,12 +16,13 @@ const SendSignedTransactionArgsShema = z.object({
   signedTransaction: SignedTransactionSchema,
 });
 
+// We will return the ability to select waitUntil after redesign its name;
+
 export const createSendSignedTransaction: CreateSendSignedTransaction =
   ({ sendRequest }) =>
   async (args) => {
     // TODO to safe format
     const validArgs = SendSignedTransactionArgsShema.parse(args);
-    const waitUntil = args?.policies?.waitUntil ?? 'ExecutedOptimistic';
 
     const result = await sendRequest({
       method: 'send_tx',
@@ -30,7 +30,7 @@ export const createSendSignedTransaction: CreateSendSignedTransaction =
         signed_tx_base64: base64.encode(
           toBorshSignedTransaction(validArgs.signedTransaction),
         ),
-        wait_until: toNativeTransactionExecutionStatus(waitUntil), // TODO Remove
+        wait_until: 'EXECUTED_OPTIMISTIC',
       },
       transportPolicy: args.policies?.transport,
       signal: args.options?.signal,

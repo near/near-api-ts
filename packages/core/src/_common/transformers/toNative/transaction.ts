@@ -10,7 +10,6 @@ import type {
   NativeAction,
   NativeSignedTransaction,
   NativeTransaction,
-  TransactionExecutionStatus,
 } from 'nat-types/transaction';
 import type {
   InnerAction,
@@ -57,17 +56,3 @@ export const toNativeSignedTransaction = (
   transaction: toNativeTransaction(signedTransaction.transaction),
   signature: toNativeSignature(signedTransaction.signature),
 });
-
-// TODO Remove
-const TransactionExecutionStatusMap = {
-  None: 'NONE',
-  Included: 'INCLUDED',
-  ExecutedOptimistic: 'EXECUTED_OPTIMISTIC',
-  IncludedFinal: 'INCLUDED_FINAL',
-  Executed: 'EXECUTED',
-  Final: 'FINAL',
-} as const;
-// TODO Remove
-export const toNativeTransactionExecutionStatus = (
-  status: TransactionExecutionStatus,
-) => TransactionExecutionStatusMap[status];
