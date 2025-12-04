@@ -87,8 +87,8 @@ importers:
   packages/core:
     dependencies:
       '@near-js/jsonrpc-types':
-        specifier: ^1.4.0
-        version: 1.4.0
+        specifier: ^1.5.0
+        version: 1.5.0
       '@noble/curves':
         specifier: ^1.9.4
         version: 1.9.4
@@ -105,8 +105,8 @@ importers:
         specifier: ^4.17.21
         version: 4.17.21
       zod:
-        specifier: ^4.1.12
-        version: 4.1.12
+        specifier: ^4.1.13
+        version: 4.1.13
 
   packages/near-api-ts:
     dependencies:
@@ -354,8 +354,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.29':
     resolution: {integrity: sha512-uw6guiW/gcAGPDhLmd77/6lW8QLeiV5RUTsAX46Db6oLhGaVj4lhnPwb184s1bkc8kdVg/+h988dro8GRDpmYQ==}
 
-  '@near-js/jsonrpc-types@1.4.0':
-    resolution: {integrity: sha512-QE4EhXdBhWLbl3+ZwuYzcZjLZOQ1R80RYVrSkCo2yhOsQrmjJDW+wlTyBEJrMSElwoJ9wGUxdjQrSn88lBMtLA==}
+  '@near-js/jsonrpc-types@1.5.0':
+    resolution: {integrity: sha512-pgidkMApxPWp/tSgHUpVsn9n9fF1RZmk/A/yM/TEuzuczqMhnnT9I5ow4qmYPQyVMMWFialELT2SGm/LKym8bA==}
 
   '@near-js/tokens@2.3.3':
     resolution: {integrity: sha512-yLJoQiKkreCXSam6o+zS++nllCrMZfYEadAkq3BrCN50vLPT2w3h2gp5BaLCf8uFiMfnu+Tpu9DVGBo6fE+f1w==}
@@ -1846,8 +1846,8 @@ packages:
   zod@4.0.11:
     resolution: {integrity: sha512-LVrgstTaQJek72n6ZGxhAhH/Q24PhGx4lIAcgBmjtvjRq0qYjiH9U0o3hfuC2vfExsnpoHElc4XOJjMKQjUQxg==}
 
-  zod@4.1.12:
-    resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
+  zod@4.1.13:
+    resolution: {integrity: sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig==}
 
 snapshots:
 
@@ -1992,9 +1992,9 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.4
 
-  '@near-js/jsonrpc-types@1.4.0':
+  '@near-js/jsonrpc-types@1.5.0':
     dependencies:
-      zod: 4.1.12
+      zod: 4.1.13
 
   '@near-js/tokens@2.3.3': {}
 
@@ -3450,4 +3450,4 @@ snapshots:
 
   zod@4.0.11: {}
 
-  zod@4.1.12: {}
+  zod@4.1.13: {}
