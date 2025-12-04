@@ -1,4 +1,4 @@
-import type { GetAccountState } from 'nat-types/client/methods/account/getAccountState';
+import type { GetAccountInfo } from 'nat-types/client/methods/account/getAccountInfo';
 import type { GetAccountKey } from 'nat-types/client/methods/account/getAccountKey';
 import type { GetAccountKeys } from 'nat-types/client/methods/account/getAccountKeys';
 import type { GetBlock } from 'nat-types/client/methods/block/getBlock';
@@ -13,10 +13,6 @@ import type {
   PartialTransportPolicy,
 } from 'nat-types/client/transport';
 
-export type ClientContext = {
-  sendRequest: SendRequest;
-};
-
 export type SendRequest = (args: {
   method: string;
   params: JsonLikeValue;
@@ -24,14 +20,12 @@ export type SendRequest = (args: {
   signal?: AbortSignal;
 }) => Promise<unknown>;
 
-type CreateClientArgs = {
-  transport: CreateTransportArgs;
-  // TODO add cache
-  // TODO add defaults atMomentOf
+export type ClientContext = {
+  sendRequest: SendRequest;
 };
 
 export type Client = {
-  getAccountState: GetAccountState;
+  getAccountInfo: GetAccountInfo;
   getAccountKey: GetAccountKey;
   getAccountKeys: GetAccountKeys;
   getContractState: GetContractState;
@@ -40,6 +34,10 @@ export type Client = {
   getProtocolConfig: GetProtocolConfig;
   getGasPrice: GetGasPrice;
   sendSignedTransaction: SendSignedTransaction;
+};
+
+type CreateClientArgs = {
+  transport: CreateTransportArgs; // NextFeature: add cache / add defaults atMomentOf / logger
 };
 
 export type CreateClient = (args: CreateClientArgs) => Promise<Client>;

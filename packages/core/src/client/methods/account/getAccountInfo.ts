@@ -4,10 +4,10 @@ import { AccountViewSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
 import { throwableYoctoNear } from '../../../helpers/tokens/nearToken';
 import { addTo } from '@common/utils/addTo';
 import type {
-  CreateGetAccountState,
-  GetAccountStateArgs,
-  GetAccountStateResult,
-} from 'nat-types/client/methods/account/getAccountState';
+  CreateGetAccountInfo,
+  GetAccountInfoArgs,
+  GetAccountInfoOutput,
+} from 'nat-types/client/methods/account/getAccountInfo';
 
 const RpcQueryAccountViewResponseSchema = z.object({
   ...AccountViewSchema().shape,
@@ -17,8 +17,8 @@ const RpcQueryAccountViewResponseSchema = z.object({
 
 const transformResult = (
   result: unknown,
-  args: GetAccountStateArgs,
-): GetAccountStateResult => {
+  args: GetAccountInfoArgs,
+): GetAccountInfoOutput => {
   const valid = RpcQueryAccountViewResponseSchema.parse(result);
   // storage_paid_at - deprecated since March 18, 2020:
   // https://github.com/near/nearcore/issues/2271
@@ -30,7 +30,7 @@ const transformResult = (
     blockHash: valid.blockHash,
     blockHeight: valid.blockHeight,
     accountId: args.accountId,
-    accountState: {
+    accountInfo: {
       balance: {
         total: totalBalance,
         locked: lockedBalance,
@@ -39,7 +39,7 @@ const transformResult = (
     },
   };
   // TODO fix types - make sure .done() return a new proper type
-  addTo(final.accountState)
+  addTo(final.accountInfo)
     .field(
       'contractHash',
       valid.codeHash,
@@ -61,11 +61,11 @@ const transformResult = (
   return final;
 };
 
-// TODO Add ability to fetch detailed balance with 'available' field
-export const createGetAccountState: CreateGetAccountState =
-  ({ sendRequest }) =>
-  async (args) => {
-    const result = await sendRequest({
+// NextFeature: Add ability to fetch detailed balance with 'available' field
+
+export const createGetAccountInfo: CreateGetAccountInfo =
+  (context) => async (args) => {
+    const result = await context.sendRequest({
       method: 'query',
       params: {
         request_type: 'view_account',

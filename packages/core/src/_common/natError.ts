@@ -23,7 +23,6 @@ export const createNatError = <K extends NatErrorKind>(
   args: CreateNatErrorArgs<K>,
 ): NatError<K> => new NatError(args);
 
-// TODO Add safe version
 export const isNatError = <K extends NatErrorKind>(
   error: unknown,
   kind?: K,

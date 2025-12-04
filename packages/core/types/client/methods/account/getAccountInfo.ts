@@ -7,9 +7,9 @@ import type {
 } from 'nat-types/_common/common';
 import type { ClientContext } from 'nat-types/client/client';
 import type { PartialTransportPolicy } from 'nat-types/client/transport';
-import type {NearToken} from 'nat-types/_common/nearToken';
+import type { NearToken } from 'nat-types/_common/nearToken';
 
-export type GetAccountStateArgs = {
+export type GetAccountInfoArgs = {
   accountId: AccountId;
   atMomentOf?: BlockReference;
   policies?: {
@@ -20,11 +20,11 @@ export type GetAccountStateArgs = {
   };
 };
 
-export type GetAccountStateResult = {
+export type GetAccountInfoOutput = {
   blockHash: BlockHash;
   blockHeight: BlockHeight;
   accountId: AccountId;
-  accountState: {
+  accountInfo: {
     balance: {
       total: NearToken;
       locked: NearToken;
@@ -36,10 +36,10 @@ export type GetAccountStateResult = {
   };
 };
 
-export type GetAccountState = (
-  args: GetAccountStateArgs,
-) => Promise<GetAccountStateResult>;
+export type GetAccountInfo = (
+  args: GetAccountInfoArgs,
+) => Promise<GetAccountInfoOutput>;
 
-export type CreateGetAccountState = (
+export type CreateGetAccountInfo = (
   clientContext: ClientContext,
-) => GetAccountState;
+) => GetAccountInfo;

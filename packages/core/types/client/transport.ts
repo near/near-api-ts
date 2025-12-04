@@ -89,6 +89,6 @@ export type RpcRequestLog = {
   method: string;
   headers: Record<string, string>;
   body: unknown;
-  roundIndex: number,
-  attemptIndex: number,
+  roundIndex: number;
+  attemptIndex: number;
 };

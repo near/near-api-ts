@@ -5,8 +5,8 @@ export const createTestnetClient = () =>
     transport: {
       rpcEndpoints: {
         regular: [
-          { url: 'https://rpc.testnet.near.org' },
           { url: 'https://test.rpc.fastnear.com' },
+          { url: 'https://rpc.testnet.near.org' },
         ],
         archival: [],
       },

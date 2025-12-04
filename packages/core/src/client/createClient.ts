@@ -1,4 +1,4 @@
-import { createGetAccountState } from './methods/account/getAccountState';
+import { createGetAccountInfo } from './methods/account/getAccountInfo';
 import { createGetAccountKey } from './methods/account/getAccountKey';
 import { createGetAccountKeys } from './methods/account/getAccountKeys';
 import { createGetContractState } from './methods/contract/getContractState';
@@ -10,8 +10,10 @@ import { createSendSignedTransaction } from './methods/transaction/sendSignedTra
 import type { CreateClient } from 'nat-types/client/client';
 import { createTransport } from './transport/createTransport';
 
-// TODO add cache for protocol config / blockHash
+// NextFeature: add cache for protocol config / blockHash
+
 export const createClient: CreateClient = async (args) => {
+  // todo validate args
   const transport = createTransport(args.transport);
 
   const context = {
@@ -19,7 +21,7 @@ export const createClient: CreateClient = async (args) => {
   };
 
   return {
-    getAccountState: createGetAccountState(context),
+    getAccountInfo: createGetAccountInfo(context),
     getAccountKey: createGetAccountKey(context),
     getAccountKeys: createGetAccountKeys(context),
     getContractState: createGetContractState(context),
