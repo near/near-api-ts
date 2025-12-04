@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest';
-import { createClient } from '../../../src';
+import { safeCreateClient } from '../../../src';
 import { createMockRpc } from '../utils/mockRpc';
 
 const log = (data: unknown) =>
@@ -14,7 +14,7 @@ test(
   },
   async () => {
     // const server1 = await createMockRpc({ port: 4561 });
-    const client = await createClient({
+    const client = await safeCreateClient({
       transport: {
         rpcEndpoints: {
           regular: [

@@ -1,14 +1,14 @@
-import { createClient } from '../createClient';
+import { throwableCreateClient } from '../createClient';
 
 export const createTestnetClient = () =>
-  createClient({
+  throwableCreateClient({
     transport: {
       rpcEndpoints: {
         regular: [
           { url: 'https://test.rpc.fastnear.com' },
           { url: 'https://rpc.testnet.near.org' },
         ],
-        archival: [],
+        archival: [{ url: 'https://neart.lava.build:443' }],
       },
     },
   });

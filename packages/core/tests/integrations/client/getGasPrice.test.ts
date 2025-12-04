@@ -1,10 +1,10 @@
 import { test } from 'vitest';
 import { withSandbox } from '../utils/sandbox/startSandbox';
-import { createClient } from '../../../src';
+import { safeCreateClient } from '../../../src';
 import { log } from '../utils/common';
 
 const gasPrice = async ({ rpcUrl }: { rpcUrl: string }) => {
-  const client = await createClient({
+  const client = await safeCreateClient({
     transport: {
       rpcEndpoints: { regular: [{ url: rpcUrl }] },
     },

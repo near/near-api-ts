@@ -2,30 +2,38 @@ import { createSendRequest } from './sendRequest/1-createSendRequest/createSendR
 import type {
   CreateTransportArgs,
   TransportContext,
-  RpcEndpoint,
-  RpcEndpoints,
-  InnerRpcEndpoint,
-  RpcTypePreferences,
 } from 'nat-types/client/transport';
 import {
   defaultTransportPolicy,
   mergeTransportPolicy,
+  PartialTransportPolicySchema,
 } from './transportPolicy';
-import { TransportError } from './transportError';
+import * as z from 'zod/mini';
+import { getInnerRpcEndpoints, RpcEndpointsArgsSchema } from './rpcEndpoints';
 
-const getRpcs = (
-  list: RpcEndpoint[] = [],
-  type: 'regular' | 'archival',
-): InnerRpcEndpoint[] =>
-  list.map((rpc) => ({
-    type,
-    url: rpc.url,
-    headers: {
-      ...rpc.headers,
-      'Content-Type': 'application/json',
+export const CreateTransportArgsSchema = z.object({
+  rpcEndpoints: RpcEndpointsArgsSchema,
+  policy: z.optional(PartialTransportPolicySchema),
+});
+
+export const createTransport = (args: CreateTransportArgs) => {
+  const transportPolicy = mergeTransportPolicy(
+    defaultTransportPolicy,
+    args.policy,
+  );
+
+  const context: TransportContext = {
+    rpcEndpoints: {
+      regular: getInnerRpcEndpoints(args.rpcEndpoints.regular, 'regular'),
+      archival: getInnerRpcEndpoints(args.rpcEndpoints.archival, 'archival'),
     },
-    inactiveUntil: null,
-  }));
+    transportPolicy,
+  };
+
+  return {
+    sendRequest: createSendRequest(context),
+  };
+};
 
 /**
  * Validates that the provided RPC endpoints match the specified RPC type preferences.
@@ -44,42 +52,14 @@ const getRpcs = (
  * means that if `rpcTypePreferences` is set to ["regular"], but there are no "regular"
  * RPC endpoints available, an error will be thrown.
  */
-const validateRpcEndpoints = (
-  rpcEndpoints: RpcEndpoints,
-  rpcTypePreferences: RpcTypePreferences,
-) => {
-  const preferredType =
-    rpcTypePreferences[0] === 'Regular' ? 'regular' : 'archival';
 
-  const preferredList = rpcEndpoints[preferredType] ?? [];
-
-  if (rpcTypePreferences.length === 1 && preferredList.length === 0)
-    throw new TransportError({
-      code: 'InvalidTransportConfiguration',
-      message:
-        `Invalid transport configuration: no "${rpcTypePreferences[0]}" RPC endpoints found ` +
-        `while it's the only preferred type.`,
-    });
-};
-
-export const createTransport = (args: CreateTransportArgs) => {
-  // TODO validate transportPolicy;
-  const transportPolicy = mergeTransportPolicy(
-    defaultTransportPolicy,
-    args.policy,
-  );
-
-  validateRpcEndpoints(args.rpcEndpoints, transportPolicy.rpcTypePreferences);
-
-  const context: TransportContext = {
-    rpcEndpoints: {
-      regular: getRpcs(args.rpcEndpoints.regular, 'regular'),
-      archival: getRpcs(args.rpcEndpoints.archival, 'archival'),
-    },
-    transportPolicy,
-  };
-
-  return {
-    sendRequest: createSendRequest(context),
-  };
-};
+// TODO add in the future
+// const validateRpcEndpoints = (args: CreateTransportArgs) => {
+//   const { rpcEndpoints, policy } = args;
+//   if (!policy?.rpcTypePreferences) return true;
+//
+//   const preferredType =
+//     policy.rpcTypePreferences[0] === 'Regular' ? 'regular' : 'archival';
+//
+//   return !!rpcEndpoints[preferredType];
+// };

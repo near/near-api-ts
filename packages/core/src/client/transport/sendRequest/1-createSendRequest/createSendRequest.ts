@@ -1,9 +1,9 @@
 import { mergeTransportPolicy } from '../../transportPolicy';
 import type {
+  SendRequest,
   SendRequestContext,
   TransportContext,
 } from 'nat-types/client/transport';
-import type { SendRequest } from 'nat-types/client/client';
 import { tryMultipleRounds } from '../2-tryMultipleRounds/tryMultipleRounds';
 import { hasTransportErrorCode } from '../../transportError';
 import { createExternalAbortSignal } from './createExternalAbortSignal';

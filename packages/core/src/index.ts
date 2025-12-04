@@ -1,5 +1,8 @@
 // Client
-export { createClient } from './client/createClient';
+export {
+  safeCreateClient,
+  throwableCreateClient as createClient,
+} from './client/createClient';
 export { createTestnetClient } from './client/presets/testnet';
 export { createMainnetClient } from './client/presets/mainnet';
 

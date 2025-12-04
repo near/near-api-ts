@@ -12,11 +12,16 @@ import type { MemoryKeyServiceErrorVariant } from 'nat-types/keyServices/memoryK
 import type { $ZodError } from 'zod/v4/core';
 import type { NearTokenErrorVariant } from 'nat-types/_common/nearToken';
 import type { NearGasErrorVariant } from 'nat-types/_common/nearGas';
+import type {
+  ClientErrorVariant,
+  ClientUnknownErrorKind
+} from 'nat-types/client/client';
 
 export type UnknownErrorContext = { cause: unknown };
 export type InvalidArgsContext = { zodError: $ZodError };
 
 export type NatUnknownErrorKind = NatError<
+  | ClientUnknownErrorKind
   | 'CreateMemoryKeyService.Unknown'
   | 'MemoryKeyService.SignTransaction.Unknown'
   | 'MemoryKeyService.FindKeyPair.Unknown'
@@ -36,6 +41,7 @@ export type NatUnknownErrorKind = NatError<
 
 // TODO split on inner/public errors
 type NatErrorVariant =
+  | ClientErrorVariant
   | MemoryKeyServiceErrorVariant
   | NearTokenErrorVariant
   | NearGasErrorVariant

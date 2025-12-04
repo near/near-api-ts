@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import {
-  createClient,
+  safeCreateClient,
   createMemoryKeyService,
   transfer,
   addFullAccessKey,
@@ -15,7 +15,7 @@ import { testKeys } from '../utils/testKeys';
 
 const testFn = async (args: { rpcUrl: string }) => {
   try {
-    const client = await createClient({
+    const client = await safeCreateClient({
       transport: {
         rpcEndpoints: { regular: [{ url: args.rpcUrl }] },
       },

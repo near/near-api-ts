@@ -1,6 +1,42 @@
 import type { TransportPolicy } from 'nat-types/client/transport';
 import type { PartialDeep } from 'type-fest';
-import { cloneDeep, mergeWith } from 'lodash-es';
+import { cloneDeep, mergeWith } from 'lodash-es'; // TODO replace with embedded fn
+import * as z from 'zod/mini';
+
+const Regular = z.literal('Regular');
+const Archival = z.literal('Archival');
+
+const RpcTypePreferencesSchema = z.union([
+  z.tuple([Regular]),
+  z.tuple([Archival]),
+  z.tuple([Regular, Archival]),
+  z.tuple([Archival, Regular]),
+]);
+
+const TransportPolicySchema = z.object({
+  rpcTypePreferences: RpcTypePreferencesSchema,
+  timeouts: z.object({
+    // Unlikely that a request could finish less in than 100ms -
+    // doesn't make sense to have such small timeout
+    requestMs: z.number().check(z.int(), z.minimum(100)),
+    attemptMs: z.number().check(z.int(), z.minimum(100)),
+  }),
+  rpc: z.object({
+    maxAttempts: z.number().check(z.int(), z.minimum(1)),
+    retryBackoff: z.object({
+      minDelayMs: z.number().check(z.int(), z.nonnegative()),
+      maxDelayMs: z.number().check(z.int(), z.nonnegative()),
+      multiplier: z.number().check(z.int(), z.minimum(1)),
+    }),
+  }),
+  failover: z.object({
+    maxRounds: z.number().check(z.int(), z.minimum(1)),
+    nextRpcDelayMs: z.number().check(z.int(), z.nonnegative()),
+    nextRoundDelayMs: z.number().check(z.int(), z.nonnegative()),
+  }),
+});
+
+export const PartialTransportPolicySchema = z.partial(TransportPolicySchema);
 
 export const defaultTransportPolicy: TransportPolicy = {
   rpcTypePreferences: ['Regular', 'Archival'],

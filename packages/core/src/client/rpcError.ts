@@ -1,4 +1,3 @@
-import type { RpcError as JsonRpcError } from '@near-js/jsonrpc-types';
 import { oneLine } from '@common/utils/common';
 import type { RpcRequestLog } from 'nat-types/client/transport';
 import type { TransportError } from './transport/transportError';
@@ -63,7 +62,7 @@ const parseHandlerError = (cause: unknown) => {
   };
 };
 
-const getErrorInfo = (__rawRpcError: JsonRpcError) => {
+const getErrorInfo = (__rawRpcError: any) => {
   const { name: type, cause } = __rawRpcError;
 
   if (type === 'REQUEST_VALIDATION_ERROR')
@@ -87,13 +86,13 @@ export class RpcError extends Error {
   readonly [Brand] = true;
   public code: string;
   public request?: RpcRequestLog;
-  public __rawRpcError: JsonRpcError;
+  public __rawRpcError: any;
   public errors?: (RpcError | TransportError)[];
   public timestamp: number;
 
   constructor(args: {
     request: RpcRequestLog;
-    __rawRpcError: JsonRpcError;
+    __rawRpcError: any;
   }) {
     const { code, message } = getErrorInfo(args.__rawRpcError);
 

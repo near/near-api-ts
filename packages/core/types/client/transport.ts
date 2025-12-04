@@ -63,7 +63,7 @@ export type InnerRpcEndpoint = {
   url: string;
   headers: Record<string, string>;
   type: 'regular' | 'archival';
-  inactiveUntil: number | null;
+  inactiveUntil: number | null; // TODO remove - we don't use it anymore
 };
 
 export type TransportContext = {
@@ -92,3 +92,10 @@ export type RpcRequestLog = {
   roundIndex: number;
   attemptIndex: number;
 };
+
+export type SendRequest = (args: {
+  method: string;
+  params: JsonLikeValue;
+  transportPolicy?: PartialTransportPolicy;
+  signal?: AbortSignal;
+}) => Promise<unknown>;

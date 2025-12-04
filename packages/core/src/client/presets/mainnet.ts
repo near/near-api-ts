@@ -1,14 +1,15 @@
-import { createClient } from '../createClient';
+import { throwableCreateClient } from '../createClient';
 
 export const createMainnetClient = () =>
-  createClient({
+  throwableCreateClient({
     transport: {
       rpcEndpoints: {
         regular: [
           { url: 'https://free.rpc.fastnear.com' },
+          { url: 'https://rpc.intea.rs' },
           { url: 'https://near.blockpi.network/v1/rpc/public' },
         ],
-        archival: [],
+        archival: [{ url: 'https://near.lava.build:443' }],
       },
     },
   });

@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import {
-  createClient,
+  safeCreateClient,
   createMemoryKeyService,
   createMemorySigner,
 } from '../../../src';
@@ -12,7 +12,7 @@ test(
     timeout: 30 * 1000,
   },
   async () => {
-    const client = await createClient({
+    const client = await safeCreateClient({
       transport: {
         rpcEndpoints: { archival: [{ url: 'http://localhost:4560' }] },
       },
