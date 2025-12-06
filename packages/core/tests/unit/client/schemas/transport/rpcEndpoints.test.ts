@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { RpcEndpointsArgsSchema } from '../../../../../src/client/transport/rpcEndpoints';
-import type { RpcEndpoints } from 'nat-types/client/transport';
+import type { RpcEndpoints } from 'nat-types/client/transport/transport';
 import * as z from 'zod/mini';
 
 z.config(z.locales.en());

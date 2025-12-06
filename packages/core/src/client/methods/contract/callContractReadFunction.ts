@@ -8,7 +8,6 @@ import type {
   BaseDeserializeResult,
   InnerCallContractReadFunctionArgs,
 } from 'nat-types/client/methods/contract/callContractReadFunction';
-import { DeprecatedNatError } from '../../transport/transportError';
 
 // TODO Return standard error with unknown type?
 const baseDeserializeResul: BaseDeserializeResult = ({ rawResult }) =>
@@ -32,11 +31,12 @@ const transformResult = (
   const valid = RpcCallFunctionResponseSchema.parse(result);
 
   if ('error' in valid)
-    throw new DeprecatedNatError({
-      code: 'ContractExecutionError',
-      message: `Contract read function call failed: ${valid.error}`,
-      cause: valid,
-    });
+    throw new Error();
+    // throw new DeprecatedNatError({
+    //   code: 'ContractExecutionError',
+    //   message: `Contract read function call failed: ${valid.error}`,
+    //   cause: valid,
+    // });
 
   const transformer = args?.options?.deserializeResult
     ? args.options.deserializeResult

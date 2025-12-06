@@ -1,14 +1,9 @@
-import { sendOnce } from '../5-sendOnce/sendOnce';
+import { sendOnce, type SendOnceResult } from '../5-sendOnce/sendOnce';
 import { safeSleep } from '@common/utils/sleep';
-import { hasRpcErrorCode, RpcError } from '../../../rpcError';
-import { TransportError, hasTransportErrorCode } from '../../transportError';
 import { combineAbortSignals, randomBetween } from '@common/utils/common';
-import { result } from '@common/utils/result';
-import type { Result } from 'nat-types/_common/common';
-import type {
-  InnerRpcEndpoint,
-  SendRequestContext,
-} from 'nat-types/client/transport';
+import type { InnerRpcEndpoint } from 'nat-types/client/transport/transport';
+import type { SendRequestContext } from 'nat-types/client/transport/sendRequest';
+import { isNatErrorOf, NatError } from '@common/natError';
 
 // Decorrelated Jitter - https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/
 const getBackoffDelay = (
@@ -18,34 +13,26 @@ const getBackoffDelay = (
   multiplier: number,
 ) => Math.min(cap, Math.round(randomBetween(base, sleep * multiplier)));
 
-const shouldRetry = (
-  sendOnceResult: Result<unknown, TransportError | RpcError>,
-): boolean =>
+const shouldRetry = (sendOnceResult: SendOnceResult): boolean =>
   !sendOnceResult.ok &&
-  (hasTransportErrorCode(sendOnceResult.error, ['AttemptTimeout']) ||
-    hasRpcErrorCode(sendOnceResult.error, [
-      'RpcTransactionTimeout',
-      'NoSyncedBlocks',
-      'UnknownRequestError',
-      'InternalServerError',
-    ]));
+  isNatErrorOf(sendOnceResult.error, [
+    'Client.Transport.SendRequest.Request.FetchFailed',
+    'Client.Transport.SendRequest.Request.Attempt.Timeout',
+    'Client.Transport.SendRequest.Rpc.Transaction.Timeout',
+    'Client.Transport.SendRequest.Rpc.NotSynced',
+    'Client.Transport.SendRequest.Rpc.Internal',
+  ]);
 
 export const sendWithRetry = async (
   context: SendRequestContext,
   rpc: InnerRpcEndpoint,
-  roundIndex: number,
-): Promise<Result<unknown, TransportError | RpcError>> => {
+): Promise<SendOnceResult> => {
   const { maxAttempts, retryBackoff } = context.transportPolicy.rpc;
 
   let backoffDelay = retryBackoff.minDelayMs;
 
-  const attempt = async (attemptIndex: number) => {
-    const sendOnceResult = await sendOnce(
-      context,
-      rpc,
-      roundIndex,
-      attemptIndex,
-    );
+  const attempt = async (attemptIndex: number): Promise<SendOnceResult> => {
+    const sendOnceResult = await sendOnce(context, rpc);
 
     const isLastAttempt = attemptIndex >= maxAttempts - 1;
     if (isLastAttempt || !shouldRetry(sendOnceResult)) return sendOnceResult;
@@ -57,7 +44,10 @@ export const sendWithRetry = async (
       retryBackoff.multiplier,
     );
 
-    const abortError = await safeSleep<TransportError>(
+    const sleepResult = await safeSleep<
+      | NatError<'Client.Transport.SendRequest.Request.Aborted'>
+      | NatError<'Client.Transport.SendRequest.Request.Timeout'>
+    >(
       backoffDelay,
       combineAbortSignals([
         context.externalAbortSignal,
@@ -65,12 +55,7 @@ export const sendWithRetry = async (
       ]),
     );
 
-    if (abortError) {
-      context.errors.push(abortError);
-      return result.err(abortError);
-    }
-
-    return attempt(attemptIndex + 1);
+    return sleepResult.ok ? attempt(attemptIndex + 1) : sleepResult;
   };
 
   return attempt(0);

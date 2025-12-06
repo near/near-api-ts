@@ -4,10 +4,12 @@ import { AccountViewSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
 import { throwableYoctoNear } from '../../../helpers/tokens/nearToken';
 import { addTo } from '@common/utils/addTo';
 import type {
-  CreateGetAccountInfo,
+  CreateSafeGetAccountInfo,
   GetAccountInfoArgs,
-  GetAccountInfoOutput,
 } from 'nat-types/client/methods/account/getAccountInfo';
+import type { GeneralRpcResponse } from '@common/schemas/zod/rpc';
+import { wrapUnknownError } from '@common/utils/wrapUnknownError';
+import { result } from '@common/utils/result';
 
 const RpcQueryAccountViewResponseSchema = z.object({
   ...AccountViewSchema().shape,
@@ -16,10 +18,10 @@ const RpcQueryAccountViewResponseSchema = z.object({
 });
 
 const transformResult = (
-  result: unknown,
+  rpcResponse: GeneralRpcResponse,
   args: GetAccountInfoArgs,
-): GetAccountInfoOutput => {
-  const valid = RpcQueryAccountViewResponseSchema.parse(result);
+) => {
+  const valid = RpcQueryAccountViewResponseSchema.parse(rpcResponse.result);
   // storage_paid_at - deprecated since March 18, 2020:
   // https://github.com/near/nearcore/issues/2271
 
@@ -38,6 +40,7 @@ const transformResult = (
       usedStorageBytes: valid.storageUsage,
     },
   };
+
   // TODO fix types - make sure .done() return a new proper type
   addTo(final.accountInfo)
     .field(
@@ -58,14 +61,16 @@ const transformResult = (
       (v) => typeof v === 'string',
     );
 
-  return final;
+  return result.ok(final);
 };
 
 // NextFeature: Add ability to fetch detailed balance with 'available' field
 
-export const createGetAccountInfo: CreateGetAccountInfo =
-  (context) => async (args) => {
-    const result = await context.sendRequest({
+export const createSafeGetAccountInfo: CreateSafeGetAccountInfo = (context) =>
+  wrapUnknownError('Client.GetAccountInfo.Unknown', async (args) => {
+    // TODO Validate input args
+
+    const rpcResponse = await context.sendRequest({
       method: 'query',
       params: {
         request_type: 'view_account',
@@ -76,5 +81,9 @@ export const createGetAccountInfo: CreateGetAccountInfo =
       signal: args.options?.signal,
     });
 
-    return transformResult(result, args);
-  };
+    if (!rpcResponse.ok) return rpcResponse;
+
+    // TODO Handle rpcResponse.value.error
+
+    return transformResult(rpcResponse.value, args);
+  });

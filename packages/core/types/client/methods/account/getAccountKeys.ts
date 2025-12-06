@@ -6,7 +6,7 @@ import type {
 } from 'nat-types/_common/common';
 import type { AccountKey } from 'nat-types/_common/accountKey';
 import type { ClientContext } from 'nat-types/client/client';
-import type { PartialTransportPolicy } from 'nat-types/client/transport';
+import type { PartialTransportPolicy } from 'nat-types/client/transport/transport';
 
 export type GetAccountKeysArgs = {
   accountId: AccountId;

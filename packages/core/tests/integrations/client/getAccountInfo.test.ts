@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import { withSandbox } from '../utils/sandbox/startSandbox';
-import { safeCreateClient } from '../../../src';
+import { createClient } from '../../../src';
 import { log } from '../utils/common';
 
 test(
@@ -10,7 +10,7 @@ test(
   },
   async () =>
     withSandbox(async ({ rpcUrl }: { rpcUrl: string }) => {
-      const client = await safeCreateClient({
+      const client = await createClient({
         transport: {
           rpcEndpoints: { regular: [{ url: rpcUrl }] },
         },

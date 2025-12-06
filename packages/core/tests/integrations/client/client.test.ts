@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest';
-import { safeCreateClient } from '../../../src';
+import { createClient } from '../../../src';
 import { createMockRpc } from '../utils/mockRpc';
 
 const log = (data: unknown) =>
@@ -14,7 +14,7 @@ test(
   },
   async () => {
     // const server1 = await createMockRpc({ port: 4561 });
-    const client = await safeCreateClient({
+    const client = await createClient({
       transport: {
         rpcEndpoints: {
           regular: [
@@ -41,7 +41,7 @@ test(
       //   controller.abort(new Error('aborted by user'));
       // }, 5000);
 
-      const res = await client.getAccountState({
+      const res = await client.getAccountInfo({
         accountId: 'near',
         atMomentOf: { blockHeight: 160839194 }, // 212788565
         // atMomentOf: { blockHash: 'UQcU8hMLAG96mBFEW8rwn5hj1icKbgVUE4G3QKUB5gy' }, // 212788565

@@ -1,6 +1,6 @@
 // TODO do not rename keys which starts with _ or __
 
-export const snakeToCamelCase = (obj: any): any => {
+export const snakeToCamelCase = (obj: any): unknown => {
   if (obj === null || typeof obj !== 'object') {
     return obj;
   }

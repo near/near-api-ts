@@ -2,31 +2,37 @@ import type {
   InnerRpcEndpoint,
   RpcTypePreferences,
   TransportContext,
-} from 'nat-types/client/transport';
-import { TransportError } from '../../../transportError';
+} from 'nat-types/client/transport/transport';
 import { result } from '@common/utils/result';
 import type { Result } from 'nat-types/_common/common';
+import { createNatError, type NatError } from '@common/natError';
 
 export const getAvailableRpcs = (
   rpcEndpoints: TransportContext['rpcEndpoints'],
-  rpcTypePriority: RpcTypePreferences,
-): Result<InnerRpcEndpoint[], TransportError> => {
-  const sortedList = rpcTypePriority.reduce((acc: InnerRpcEndpoint[], type) => {
-    const normalizedType = type === 'Regular' ? 'regular' : 'archival';
-    const value = rpcEndpoints[normalizedType] ?? [];
-    acc.push(...value);
-    return acc;
-  }, []);
+  rpcTypePreferences: RpcTypePreferences,
+): Result<
+  InnerRpcEndpoint[],
+  NatError<'Client.Transport.SendRequest.PreferredRpc.NotFound'>
+> => {
+  const sortedList = rpcTypePreferences.reduce(
+    (acc: InnerRpcEndpoint[], type) => {
+      const normalizedType = type === 'Regular' ? 'regular' : 'archival';
+      const value = rpcEndpoints[normalizedType] ?? [];
+      acc.push(...value);
+      return acc;
+    },
+    [],
+  );
 
-  if (sortedList.length === 0)
-    return result.err(
-      new TransportError({
-        code: 'NoAvailableRpc',
-        message:
-          `Invalid request configuration: no RPC endpoints found for any of the preferred types ` +
-          `(${rpcTypePriority.join(', ')}).`,
-      }),
-    );
-
-  return result.ok(sortedList);
+  return sortedList.length > 0
+    ? result.ok(sortedList)
+    : result.err(
+        createNatError({
+          kind: 'Client.Transport.SendRequest.PreferredRpc.NotFound',
+          context: {
+            rpcEndpoints,
+            rpcTypePreferences,
+          },
+        }),
+      );
 };

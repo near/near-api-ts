@@ -1,6 +1,5 @@
 import type { Milliseconds } from 'nat-types/_common/common';
-import { TransportError } from '../../transportError';
-import { oneLine } from '@common/utils/common';
+import { createNatError } from '@common/natError';
 
 export const createRequestTimeout = (requestTimeoutMs: Milliseconds) => {
   const controller = new AbortController();
@@ -8,10 +7,9 @@ export const createRequestTimeout = (requestTimeoutMs: Milliseconds) => {
   const timeoutId = setTimeout(
     () =>
       controller.abort(
-        new TransportError({
-          code: 'RequestTimeout',
-          message: oneLine(`The request exceeded the configured timeout 
-          and was aborted.`),
+        createNatError({
+          kind: 'Client.Transport.SendRequest.Request.Timeout',
+          context: { allowedMs: requestTimeoutMs },
         }),
       ),
     requestTimeoutMs,

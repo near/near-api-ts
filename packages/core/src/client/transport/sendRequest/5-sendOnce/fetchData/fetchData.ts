@@ -1,19 +1,22 @@
-import { hasTransportErrorCode } from '../../../transportError';
-import { TransportError } from '../../../transportError';
 import { createAttemptTimeout } from './createAttemptTimeout';
 import { combineAbortSignals } from '@common/utils/common';
-import type {
-  InnerRpcEndpoint,
-  SendRequestContext,
-} from 'nat-types/client/transport';
+import type { InnerRpcEndpoint } from 'nat-types/client/transport/transport';
 import type { JsonLikeValue, Result } from 'nat-types/_common/common';
 import { result } from '@common/utils/result';
+import type { SendRequestContext } from 'nat-types/client/transport/sendRequest';
+import { createNatError, isNatErrorOf, type NatError } from '@common/natError';
+
+export type FetchDataError =
+  | NatError<'Client.Transport.SendRequest.Request.FetchFailed'>
+  | NatError<'Client.Transport.SendRequest.Request.Attempt.Timeout'>
+  | NatError<'Client.Transport.SendRequest.Request.Timeout'>
+  | NatError<'Client.Transport.SendRequest.Request.Aborted'>;
 
 export const fetchData = async (
   context: SendRequestContext,
   rpc: InnerRpcEndpoint,
   body: JsonLikeValue,
-): Promise<Result<Response, TransportError>> => {
+): Promise<Result<Response, FetchDataError>> => {
   const attemptTimeout = createAttemptTimeout(
     context.transportPolicy.timeouts.attemptMs,
   );
@@ -33,21 +36,22 @@ export const fetchData = async (
     return result.ok(response);
   } catch (e) {
     if (
-      hasTransportErrorCode(e, [
-        'ExternalAbort',
-        'RequestTimeout',
-        'AttemptTimeout',
+      isNatErrorOf(e, [
+        'Client.Transport.SendRequest.Request.Attempt.Timeout',
+        'Client.Transport.SendRequest.Request.Timeout',
+        'Client.Transport.SendRequest.Request.Aborted',
       ])
     )
-      return result.err(e as TransportError);
+      return result.err(e);
 
     return result.err(
-      new TransportError({
-        code: 'Fetch',
-        message:
-          `Fetch failed: unable to send the request to '${rpc.url}' ` +
-          '(connection refused, DNS error or network issues).',
-        cause: e,
+      createNatError({
+        kind: 'Client.Transport.SendRequest.Request.FetchFailed',
+        context: {
+          cause: e,
+          rpc,
+          requestBody: body,
+        },
       }),
     );
   } finally {

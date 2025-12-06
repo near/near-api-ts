@@ -1,4 +1,4 @@
-import { TransportError } from '../../transportError';
+import { createNatError } from '@common/natError';
 
 /**
  * This function creates a proxy controller that intercepts a user-provided AbortSignal
@@ -21,10 +21,9 @@ export const createExternalAbortSignal = (inputSignal?: AbortSignal) => {
     'abort',
     () => {
       controller.abort(
-        new TransportError({
-          code: 'ExternalAbort',
-          message: `The request was aborted by user.`,
-          cause: inputSignal.reason,
+        createNatError({
+          kind: 'Client.Transport.SendRequest.Request.Aborted',
+          context: { reason: inputSignal.reason },
         }),
       );
     },

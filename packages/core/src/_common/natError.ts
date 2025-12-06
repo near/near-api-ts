@@ -33,3 +33,18 @@ export const isNatError = <K extends NatErrorKind>(
   if (kind === undefined) return isNatErr;
   return isNatErr && (error as NatError<K>)?.kind === kind;
 };
+
+type NatErrorUnion<K extends readonly NatErrorKind[]> = {
+  [I in keyof K]: NatError<K[I]>;
+}[number];
+
+export const isNatErrorOf = <const K extends readonly NatErrorKind[]>(
+  error: unknown,
+  kinds: K,
+): error is NatErrorUnion<K> => {
+  const isNatErr =
+    typeof error === 'object' && error !== null && NatErrorBrand in error;
+
+  if (!isNatErr) return false;
+  return kinds.includes((error as NatError<any>).kind);
+};

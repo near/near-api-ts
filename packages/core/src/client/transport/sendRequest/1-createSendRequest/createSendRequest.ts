@@ -1,36 +1,36 @@
 import { mergeTransportPolicy } from '../../transportPolicy';
-import type {
-  SendRequest,
-  SendRequestContext,
-  TransportContext,
-} from 'nat-types/client/transport';
+import type { TransportContext } from 'nat-types/client/transport/transport';
 import { tryMultipleRounds } from '../2-tryMultipleRounds/tryMultipleRounds';
-import { hasTransportErrorCode } from '../../transportError';
 import { createExternalAbortSignal } from './createExternalAbortSignal';
 import { createRequestTimeout } from './createRequestTimeout';
 import { getAvailableRpcs } from './_common/getAvailableRpcs';
 import { handleMaybeUnknownBlock } from './handleMaybeUnknownBlock';
-import { oneLine } from '@common/utils/common';
+import type {
+  SendRequest,
+  SendRequestContext,
+} from 'nat-types/client/transport/sendRequest';
+import { isNatErrorOf } from '@common/natError';
+import { result } from '@common/utils/result';
 
-// TODO should return Result<> only, no throw; also should return request/response details
 export const createSendRequest =
   (transportContext: TransportContext): SendRequest =>
   async (args) => {
-  // TODO Validate policy
     const transportPolicy = mergeTransportPolicy(
       transportContext.transportPolicy,
       args.transportPolicy,
     );
 
-    // Get rpcs based on the rpc preferences policy
+    // Get rpc list based on the policy rpc preferences;
     const rpcs = getAvailableRpcs(
       transportContext.rpcEndpoints,
       transportPolicy.rpcTypePreferences,
     );
-    if (!rpcs.ok) throw rpcs.error;
+    if (!rpcs.ok) return rpcs;
 
-    const externalAbortSignal = createExternalAbortSignal(args.signal);
+    // We want to provide the ability to abort the request;
+    const maybeExternalAbortSignal = createExternalAbortSignal(args.signal);
 
+    // Start general timeout - how much we can try to execute a request;
     const requestTimeout = createRequestTimeout(
       transportPolicy.timeouts.requestMs,
     );
@@ -39,15 +39,14 @@ export const createSendRequest =
       transportPolicy,
       method: args.method,
       params: args.params,
-      externalAbortSignal,
+      externalAbortSignal: maybeExternalAbortSignal,
       requestTimeoutSignal: requestTimeout.signal,
-      errors: [],
     };
 
     // Try to execute the request with fallback;
     let requestResult = await tryMultipleRounds(context, rpcs.value);
 
-    // Try to use archival rpc if it's an UnknownBlock/GarbageCollectedBlock error
+    // Try to use archival rpc if it's Block.NotFound/GarbageCollected error;
     requestResult = await handleMaybeUnknownBlock({
       requestResult,
       context,
@@ -56,24 +55,31 @@ export const createSendRequest =
 
     clearTimeout(requestTimeout.timeoutId);
 
-    // TODO think how to integrate this into a logger
-    if (context.errors.length > 0)
-      console.error(
-        'Errors during request: ',
-        context.errors.map((err: any) =>
-          oneLine(`R${err?.request?.roundIndex + 1}; 
-            A${err?.request?.attemptIndex + 1}; 
-            ${err.code}; 
-            ${err?.request?.url};`),
-        ),
-      );
+    // If all ok - return the raw RPC result;
+    if (requestResult.ok) return requestResult;
 
-    if (requestResult.ok) return requestResult.value;
+    // Return only transport own errors as ResultErr;
+    if (
+      isNatErrorOf(requestResult.error, [
+        'Client.Transport.SendRequest.PreferredRpc.NotFound',
+        'Client.Transport.SendRequest.Request.FetchFailed',
+        'Client.Transport.SendRequest.Request.Attempt.Timeout',
+        'Client.Transport.SendRequest.Request.Timeout',
+        'Client.Transport.SendRequest.Request.Aborted',
+        'Client.Transport.SendRequest.Response.JsonParseFailed',
+        'Client.Transport.SendRequest.Response.InvalidSchema',
+      ])
+    )
+      // We repack error cuz TS compiler can't figure out the type
+      return result.err(requestResult.error);
 
-    // Return the original abort reason
-    if (hasTransportErrorCode(requestResult.error, ['ExternalAbort']))
-      throw requestResult?.error?.cause;
-
-    requestResult.error.errors = context.errors;
-    throw requestResult.error;
+    // Don't return high-level rpc errors - we will extract them in every client method again.
+    // This will help us to avoid binding transport and client methods and should
+    // simplify further integrations of a new client transports.
+    //
+    // For example: some transport may don't need to retry at all - and it will be
+    // useless to force its author to implement partial rpc error handling;
+    //
+    // Instead return the original rpc response;
+    return result.ok(requestResult.error.context.rawRpcResponse);
   };

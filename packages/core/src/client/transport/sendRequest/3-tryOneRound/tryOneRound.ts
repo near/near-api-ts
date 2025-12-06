@@ -1,49 +1,44 @@
 import { sendWithRetry } from '../4-sendWithRetry/sendWithRetry';
 import { safeSleep } from '@common/utils/sleep';
-import { TransportError, hasTransportErrorCode } from '../../transportError';
-import { hasRpcErrorCode, RpcError } from '../../../rpcError';
 import { combineAbortSignals } from '@common/utils/common';
-import { result } from '@common/utils/result';
-import type {
-  InnerRpcEndpoint,
-  SendRequestContext,
-} from 'nat-types/client/transport';
-import type { Result } from 'nat-types/_common/common';
+import type { InnerRpcEndpoint } from 'nat-types/client/transport/transport';
+import type { SendRequestContext } from 'nat-types/client/transport/sendRequest';
+import { isNatErrorOf, type NatError } from '@common/natError';
+import type { SendOnceResult } from '../5-sendOnce/sendOnce';
 
-const shouldTryAnotherRpc = (
-  result: Result<unknown, TransportError | RpcError>,
-): boolean =>
-  !result.ok &&
-  (hasTransportErrorCode(result.error, [
-    'Fetch',
-    'AttemptTimeout',
-    'ParseResponseToJson',
-    'InvalidResponseSchema',
-  ]) ||
-    hasRpcErrorCode(result.error, [
-      'ParseRequest',
-      'MethodNotFound',
-      'UnknownValidationError',
-      'RpcTransactionTimeout',
-    ]));
+const shouldTryAnotherRpc = (sendOnceResult: SendOnceResult): boolean =>
+  !sendOnceResult.ok &&
+  isNatErrorOf(sendOnceResult.error, [
+    'Client.Transport.SendRequest.Request.FetchFailed',
+    'Client.Transport.SendRequest.Request.Attempt.Timeout',
+    'Client.Transport.SendRequest.Response.JsonParseFailed',
+    'Client.Transport.SendRequest.Response.InvalidSchema',
+    'Client.Transport.SendRequest.Rpc.MethodNotFound',
+    'Client.Transport.SendRequest.Rpc.ParseFailed',
+    'Client.Transport.SendRequest.Rpc.Transaction.Timeout',
+    'Client.Transport.SendRequest.Rpc.NotSynced',
+    'Client.Transport.SendRequest.Rpc.Internal',
+  ]);
 
 export const tryOneRound = async (
   context: SendRequestContext,
   rpcs: InnerRpcEndpoint[],
-  roundIndex: number,
-): Promise<Result<unknown, TransportError | RpcError>> => {
+): Promise<SendOnceResult> => {
   const { nextRpcDelayMs } = context.transportPolicy.failover;
 
-  const roundOnRpc = async (rpcIndex: number) => {
+  const roundOnRpc = async (rpcIndex: number): Promise<SendOnceResult> => {
     const rpc = rpcs[rpcIndex];
 
-    const sendWithRetryResult = await sendWithRetry(context, rpc, roundIndex);
+    const sendWithRetryResult = await sendWithRetry(context, rpc);
     const isLastRpc = rpcIndex >= rpcs.length - 1;
 
     if (isLastRpc || !shouldTryAnotherRpc(sendWithRetryResult))
       return sendWithRetryResult;
 
-    const abortError = await safeSleep<TransportError>(
+    const sleepResult = await safeSleep<
+      | NatError<'Client.Transport.SendRequest.Request.Aborted'>
+      | NatError<'Client.Transport.SendRequest.Request.Timeout'>
+    >(
       nextRpcDelayMs,
       combineAbortSignals([
         context.externalAbortSignal,
@@ -51,12 +46,7 @@ export const tryOneRound = async (
       ]),
     );
 
-    if (abortError) {
-      context.errors.push(abortError);
-      return result.err(abortError);
-    }
-
-    return roundOnRpc(rpcIndex + 1);
+    return sleepResult.ok ? roundOnRpc(rpcIndex + 1) : sleepResult;
   };
 
   return roundOnRpc(0);

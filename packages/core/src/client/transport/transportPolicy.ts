@@ -1,4 +1,4 @@
-import type { TransportPolicy } from 'nat-types/client/transport';
+import type { TransportPolicy } from 'nat-types/client/transport/transport';
 import type { PartialDeep } from 'type-fest';
 import { cloneDeep, mergeWith } from 'lodash-es'; // TODO replace with embedded fn
 import * as z from 'zod/mini';

@@ -1,8 +1,8 @@
 import { createSendRequest } from './sendRequest/1-createSendRequest/createSendRequest';
 import type {
-  CreateTransportArgs,
+  CreateTransport,
   TransportContext,
-} from 'nat-types/client/transport';
+} from 'nat-types/client/transport/transport';
 import {
   defaultTransportPolicy,
   mergeTransportPolicy,
@@ -16,7 +16,7 @@ export const CreateTransportArgsSchema = z.object({
   policy: z.optional(PartialTransportPolicySchema),
 });
 
-export const createTransport = (args: CreateTransportArgs) => {
+export const createTransport: CreateTransport = (args) => {
   const transportPolicy = mergeTransportPolicy(
     defaultTransportPolicy,
     args.policy,

@@ -1,7 +1,11 @@
 import type { PartialDeep } from 'type-fest';
-import type { JsonLikeValue, Milliseconds } from 'nat-types/_common/common';
-import type { TransportError } from '../../src/client/transport/transportError';
-import type { RpcError } from '../../src/client/rpcError';
+import type { Milliseconds } from 'nat-types/_common/common';
+import type {
+  SendRequest,
+  SendRequestErrorVariant,
+} from 'nat-types/client/transport/sendRequest';
+
+export type TransportErrorVariant = SendRequestErrorVariant;
 
 export type RpcType = 'Regular' | 'Archival';
 type RegularFirst = ['Regular', 'Archival'];
@@ -54,16 +58,10 @@ export type RpcEndpoints = BothTypes | OnlyRegularType | OnlyArchivalType;
 
 export type PartialTransportPolicy = PartialDeep<TransportPolicy>;
 
-export type CreateTransportArgs = {
-  rpcEndpoints: RpcEndpoints;
-  policy?: PartialTransportPolicy;
-};
-
 export type InnerRpcEndpoint = {
   url: string;
   headers: Record<string, string>;
   type: 'regular' | 'archival';
-  inactiveUntil: number | null; // TODO remove - we don't use it anymore
 };
 
 export type TransportContext = {
@@ -74,28 +72,13 @@ export type TransportContext = {
   readonly transportPolicy: TransportPolicy;
 };
 
-export type SendRequestContext = {
-  transportPolicy: TransportPolicy;
-  method: string;
-  params: JsonLikeValue;
-  requestTimeoutSignal: AbortSignal;
-  externalAbortSignal?: AbortSignal;
-  errors: (TransportError | RpcError)[];
+export type CreateTransportArgs = {
+  rpcEndpoints: RpcEndpoints;
+  policy?: PartialTransportPolicy;
 };
 
-export type RpcRequestLog = {
-  url: string;
-  rpcType: InnerRpcEndpoint['type'];
-  method: string;
-  headers: Record<string, string>;
-  body: unknown;
-  roundIndex: number;
-  attemptIndex: number;
+type Transport = {
+  sendRequest: SendRequest;
 };
 
-export type SendRequest = (args: {
-  method: string;
-  params: JsonLikeValue;
-  transportPolicy?: PartialTransportPolicy;
-  signal?: AbortSignal;
-}) => Promise<unknown>;
+export type CreateTransport = (args: CreateTransportArgs) => Transport;

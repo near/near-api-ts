@@ -1,19 +1,16 @@
-import { hasRpcErrorCode, RpcError } from '../../../rpcError';
-import type {
-  SendRequestContext,
-  TransportContext,
-} from 'nat-types/client/transport';
-import { TransportError } from '../../transportError';
+import type { TransportContext } from 'nat-types/client/transport/transport';
 import { tryOneRound } from '../3-tryOneRound/tryOneRound';
 import { mergeTransportPolicy } from '../../transportPolicy';
 import { getAvailableRpcs } from './_common/getAvailableRpcs';
-import type { Result } from 'nat-types/_common/common';
+import type { SendRequestContext } from 'nat-types/client/transport/sendRequest';
+import type { SendOnceResult } from '../5-sendOnce/sendOnce';
+import { isNatErrorOf } from '@common/natError';
 
 type HandleMaybeUnknownBlock = (args: {
-  requestResult: Result<unknown, TransportError | RpcError>;
+  requestResult: SendOnceResult;
   rpcEndpoints: TransportContext['rpcEndpoints'];
   context: SendRequestContext;
-}) => Promise<Result<unknown, TransportError | RpcError>>;
+}) => Promise<SendOnceResult>;
 
 export const handleMaybeUnknownBlock: HandleMaybeUnknownBlock = async ({
   requestResult: previousResult,
@@ -28,11 +25,11 @@ export const handleMaybeUnknownBlock: HandleMaybeUnknownBlock = async ({
   if (
     previousResult.ok ||
     !(
-      hasRpcErrorCode(previousResult.error, [
-        'UnknownBlock',
-        'GarbageCollectedBlock',
+      isNatErrorOf(previousResult.error, [
+        'Client.Transport.SendRequest.Rpc.Block.GarbageCollected',
+        'Client.Transport.SendRequest.Rpc.Block.NotFound',
       ]) &&
-      (previousResult.error as RpcError)?.request?.rpcType === 'regular' &&
+      previousResult.error.context.rpc.type === 'regular' &&
       context.transportPolicy.rpcTypePreferences.includes('Archival')
     )
   )
@@ -52,6 +49,5 @@ export const handleMaybeUnknownBlock: HandleMaybeUnknownBlock = async ({
       }),
     },
     rpcs.value,
-    0,
   );
 };

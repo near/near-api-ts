@@ -7,7 +7,7 @@ import type {
 import type { ClientContext } from 'nat-types/client/client';
 import type { PublicKey } from 'nat-types/_common/crypto';
 import type { AccountKey } from 'nat-types/_common/accountKey';
-import type { PartialTransportPolicy } from 'nat-types/client/transport';
+import type { PartialTransportPolicy } from 'nat-types/client/transport/transport';
 
 export type GetAccountKeyArgs = {
   accountId: AccountId;

@@ -4,10 +4,28 @@ import type {
   BlockHash,
   BlockHeight,
   BlockReference,
+  Result,
 } from 'nat-types/_common/common';
 import type { ClientContext } from 'nat-types/client/client';
-import type { PartialTransportPolicy } from 'nat-types/client/transport';
+import type { PartialTransportPolicy } from 'nat-types/client/transport/transport';
 import type { NearToken } from 'nat-types/_common/nearToken';
+import type { NatError } from '@common/natError';
+import type {
+  InvalidArgsContext,
+  UnknownErrorContext,
+} from 'nat-types/natError';
+
+export type GetAccountInfoErrorVariant =
+  | {
+      kind: 'Client.GetAccountInfo.InvalidArgs';
+      context: InvalidArgsContext;
+    }
+  | {
+      kind: 'Client.GetAccountInfo.Unknown';
+      context: UnknownErrorContext;
+    };
+
+export type GetAccountInfoUnknownErrorKind = 'Client.GetAccountInfo.Unknown';
 
 export type GetAccountInfoArgs = {
   accountId: AccountId;
@@ -36,10 +54,16 @@ export type GetAccountInfoOutput = {
   };
 };
 
+type GetAccountInfoError = NatError<any>;
+
+export type SafeGetAccountInfo = (
+  args: GetAccountInfoArgs,
+) => Promise<Result<GetAccountInfoOutput, GetAccountInfoError>>;
+
 export type GetAccountInfo = (
   args: GetAccountInfoArgs,
 ) => Promise<GetAccountInfoOutput>;
 
-export type CreateGetAccountInfo = (
+export type CreateSafeGetAccountInfo = (
   clientContext: ClientContext,
-) => GetAccountInfo;
+) => SafeGetAccountInfo;

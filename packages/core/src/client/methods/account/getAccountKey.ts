@@ -7,7 +7,6 @@ import type {
 import type { GetAccountKeyResult } from 'nat-types/client/methods/account/getAccountKey';
 import { AccessKeyViewSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
 import { transformKey } from './helpers/transformKey';
-import { DeprecatedNatError } from '../../transport/transportError';
 
 const BaseSchema = z.object({
   blockHash: CryptoHashSchema(),
@@ -33,11 +32,12 @@ const transformResult = (
   const valid = RpcQueryAccessKeyViewResponseSchema.parse(result);
 
   if ('error' in valid)
-    throw new DeprecatedNatError({
-      code: 'AccountKeyNotFound',
-      message: `This account does not have such key.`,
-      cause: valid,
-    });
+    throw new Error();
+  // throw new DeprecatedNatError({
+    //   code: 'AccountKeyNotFound',
+    //   message: `This account does not have such key.`,
+    //   cause: valid,
+    // });
 
   return {
     blockHash: valid.blockHash,

@@ -1,7 +1,7 @@
 import type { ClientContext } from 'nat-types/client/client';
 import type { SignedTransaction } from 'nat-types/transaction';
 import type { RpcTransactionResponse } from '@near-js/jsonrpc-types';
-import type { TransportPolicy } from 'nat-types/client/transport';
+import type { TransportPolicy } from 'nat-types/client/transport/transport';
 
 type SendSignedTransactionArgs = {
   signedTransaction: SignedTransaction;

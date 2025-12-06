@@ -8,7 +8,7 @@ import type {
 } from 'nat-types/_common/common';
 import type { ClientContext } from 'nat-types/client/client';
 import type { KeyIf, Prettify } from 'nat-types/utils';
-import type { PartialTransportPolicy } from 'nat-types/client/transport';
+import type { PartialTransportPolicy } from 'nat-types/client/transport/transport';
 
 export type RawCallResult = number[];
 export type RawCallLogs = string[];

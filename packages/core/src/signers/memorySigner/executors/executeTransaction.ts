@@ -1,5 +1,4 @@
 import * as z from 'zod/mini';
-import { hasRpcErrorCode } from '../../../client/rpcError';
 import type { Nonce, Result } from 'nat-types/_common/common';
 import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { Task } from 'nat-types/signers/memorySigner/taskQueue';
@@ -40,12 +39,12 @@ const NonceErrorSchema = z.object({
 
 const maybeNonceError = (e: unknown): Result<{ akNonce: Nonce }, undefined> => {
   const validated = NonceErrorSchema.safeParse(e);
-  if (hasRpcErrorCode(e, ['HandlerError']) && validated.success)
-    return result.ok({
-      akNonce:
-        validated.data.__rawRpcError.data.TxExecutionError.InvalidTxError
-          .InvalidNonce.akNonce,
-    });
+  // if (hasRpcErrorCode(e, ['HandlerError']) && validated.success)
+  //   return result.ok({
+  //     akNonce:
+  //       validated.data.__rawRpcError.data.TxExecutionError.InvalidTxError
+  //         .InvalidNonce.akNonce,
+  //   });
   return result.err(undefined);
 };
 

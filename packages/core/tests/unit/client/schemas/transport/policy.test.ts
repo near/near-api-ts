@@ -3,7 +3,7 @@ import {
   defaultTransportPolicy,
   PartialTransportPolicySchema,
 } from '../../../../../src/client/transport/transportPolicy';
-import type { PartialTransportPolicy } from 'nat-types/client/transport';
+import type { PartialTransportPolicy } from 'nat-types/client/transport/transport';
 import * as z from 'zod/mini';
 
 z.config(z.locales.en());
