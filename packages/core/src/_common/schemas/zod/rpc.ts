@@ -1,19 +1,19 @@
 import * as z from 'zod/mini';
 
-const BaseResponseSchema = z.object({
+const BaseRpcResponseSchema = z.object({
   jsonrpc: z.literal('2.0'),
   id: z.number(),
 });
 
-const BaseErrorSchema = z.object({
+const BaseRpcErrorSchema = z.object({
   code: z.number(),
   message: z.string(),
   data: z.optional(z.unknown()),
 });
 
-const GeneralRpcErrorSchema = z.discriminatedUnion('name', [
+const RpcErrorSchema = z.discriminatedUnion('name', [
   z.object({
-    ...BaseErrorSchema.shape,
+    ...BaseRpcErrorSchema.shape,
     name: z.literal('REQUEST_VALIDATION_ERROR'),
     cause: z.discriminatedUnion('name', [
       z.object({
@@ -27,7 +27,7 @@ const GeneralRpcErrorSchema = z.discriminatedUnion('name', [
     ]),
   }),
   z.object({
-    ...BaseErrorSchema.shape,
+    ...BaseRpcErrorSchema.shape,
     name: z.literal('HANDLER_ERROR'),
     cause: z.object({
       info: z.unknown(),
@@ -35,7 +35,7 @@ const GeneralRpcErrorSchema = z.discriminatedUnion('name', [
     }),
   }),
   z.object({
-    ...BaseErrorSchema.shape,
+    ...BaseRpcErrorSchema.shape,
     name: z.literal('INTERNAL_ERROR'),
     cause: z.object({
       name: z.literal('INTERNAL_ERROR'),
@@ -44,19 +44,19 @@ const GeneralRpcErrorSchema = z.discriminatedUnion('name', [
   }),
 ]);
 
-export type GeneralRpcError = z.infer<typeof GeneralRpcErrorSchema>;
+export type RpcError = z.infer<typeof RpcErrorSchema>;
 
-export const GeneralRpcResponseSchema = z.union([
+export const RpcResponseSchema = z.union([
   z.object({
-    ...BaseResponseSchema.shape,
+    ...BaseRpcResponseSchema.shape,
     result: z.unknown(),
     error: z.optional(z.never()),
   }),
   z.object({
-    ...BaseResponseSchema.shape,
+    ...BaseRpcResponseSchema.shape,
     result: z.optional(z.never()),
-    error: GeneralRpcErrorSchema,
+    error: RpcErrorSchema,
   }),
 ]);
 
-export type GeneralRpcResponse = z.infer<typeof GeneralRpcResponseSchema>;
+export type RpcResponse = z.infer<typeof RpcResponseSchema>;

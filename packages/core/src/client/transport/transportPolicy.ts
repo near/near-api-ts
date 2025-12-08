@@ -1,7 +1,7 @@
+import * as z from 'zod/mini';
 import type { TransportPolicy } from 'nat-types/client/transport/transport';
 import type { PartialDeep } from 'type-fest';
 import { cloneDeep, mergeWith } from 'lodash-es'; // TODO replace with embedded fn
-import * as z from 'zod/mini';
 
 const Regular = z.literal('Regular');
 const Archival = z.literal('Archival');
@@ -36,7 +36,9 @@ const TransportPolicySchema = z.object({
   }),
 });
 
-export const PartialTransportPolicySchema = z.partial(TransportPolicySchema);
+export const PartialTransportPolicySchema = z.optional(
+  z.partial(TransportPolicySchema),
+);
 
 export const defaultTransportPolicy: TransportPolicy = {
   rpcTypePreferences: ['Regular', 'Archival'],

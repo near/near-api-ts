@@ -1,7 +1,7 @@
 import type { PublicKey } from '../../_common/crypto';
 import type { KeyPair } from 'nat-types/_common/keyPair/keyPair';
 import type {
-  InvalidArgsContext,
+  InvalidSchemaContext,
   UnknownErrorContext,
 } from 'nat-types/natError';
 import type {
@@ -16,7 +16,7 @@ import type {
 export type MemoryKeyServiceErrorVariant =
   | {
       kind: 'CreateMemoryKeyService.InvalidArgs';
-      context: InvalidArgsContext;
+      context: InvalidSchemaContext;
     }
   | {
       kind: 'CreateMemoryKeyService.Unknown';
@@ -24,7 +24,7 @@ export type MemoryKeyServiceErrorVariant =
     }
   | {
       kind: 'MemoryKeyService.SignTransaction.InvalidArgs';
-      context: InvalidArgsContext;
+      context: InvalidSchemaContext;
     }
   | {
       kind: 'MemoryKeyService.SignTransaction.SigningKeyPair.NotFound';
@@ -38,7 +38,7 @@ export type MemoryKeyServiceErrorVariant =
     }
   | {
       kind: 'MemoryKeyService.FindKeyPair.InvalidArgs';
-      context: InvalidArgsContext;
+      context: InvalidSchemaContext;
     }
   | {
       kind: 'MemoryKeyService.FindKeyPair.NotFound';

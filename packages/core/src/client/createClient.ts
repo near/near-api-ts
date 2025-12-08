@@ -1,5 +1,5 @@
 import * as z from 'zod/mini';
-import { createSafeGetAccountInfo } from './methods/account/getAccountInfo';
+import { createSafeGetAccountInfo } from './methods/account/getAccountInfo/getAccountInfo';
 import { createGetAccountKey } from './methods/account/getAccountKey';
 import { createGetAccountKeys } from './methods/account/getAccountKeys';
 import { createGetContractState } from './methods/contract/getContractState';

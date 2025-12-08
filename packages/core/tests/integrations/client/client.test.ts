@@ -25,7 +25,7 @@ test(
             // { url: 'https://allthatnode.com/protocol/near.dsrv' }, // Error - html
             // { url: 'https://near.drpc.org/' }, // Error - custom error format
           ],
-          // archival: [{ url: 'https://1rpc.io/near' }],
+          archival: [{ url: 'https://1rpc.io/near' }],
         },
       },
     });
@@ -35,13 +35,13 @@ test(
       //   accountId: 'eclipseeer.near',
       //   publicKey: 'ed25519:3Dhkm2g9gKHQNeinRA1eH9ModH9aK3iJaw1uuKsRUuR1',
       // })
-      // const controller = new AbortController();
+       const controller = new AbortController();
 
-      // setTimeout(() => {
-      //   controller.abort(new Error('aborted by user'));
-      // }, 5000);
+      setTimeout(() => {
+        controller.abort(new Error('aborted by user'));
+      }, 100);
 
-      const res = await client.getAccountInfo({
+      const res = await client.safeGetAccountInfo({
         accountId: 'near',
         atMomentOf: { blockHeight: 160839194 }, // 212788565
         // atMomentOf: { blockHash: 'UQcU8hMLAG96mBFEW8rwn5hj1icKbgVUE4G3QKUB5gy' }, // 212788565
@@ -49,14 +49,14 @@ test(
           transport: {
             // rpcTypePreferences: ['Archival'],
             timeouts: {
-              // requestMs: 1500,
+              requestMs: 100,
               // attemptMs: 1000,
             },
             rpc: {
               maxAttempts: 3,
               retryBackoff: {
-                minDelayMs: 100,
-                maxDelayMs: 1000,
+                minDelayMs: 2000,
+                maxDelayMs: 3000,
               },
             },
             failover: {
@@ -73,11 +73,7 @@ test(
 
       console.log('FINAL RESULT ', res);
     } catch (e: any) {
-      console.log(e?.request?.url, e?.message);
+      console.log(e);
     }
-
-    console.log('---------------------');
-
-    expect(5).toBe(5);
   },
 );

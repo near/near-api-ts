@@ -1,11 +1,14 @@
 import type { PartialDeep } from 'type-fest';
 import type { Milliseconds } from 'nat-types/_common/common';
 import type {
+  HighLevelRpcErrorVariant,
   SendRequest,
   SendRequestErrorVariant,
 } from 'nat-types/client/transport/sendRequest';
 
-export type TransportErrorVariant = SendRequestErrorVariant;
+export type TransportErrorVariant =
+  | SendRequestErrorVariant
+  | HighLevelRpcErrorVariant;
 
 export type RpcType = 'Regular' | 'Archival';
 type RegularFirst = ['Regular', 'Archival'];

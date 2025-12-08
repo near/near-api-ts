@@ -18,7 +18,7 @@ import type {
 } from 'nat-types/client/client';
 
 export type UnknownErrorContext = { cause: unknown };
-export type InvalidArgsContext = { zodError: $ZodError };
+export type InvalidSchemaContext = { zodError: $ZodError };
 
 export type NatUnknownErrorKind = NatError<
   | ClientUnknownErrorKind

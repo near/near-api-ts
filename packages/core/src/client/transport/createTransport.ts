@@ -13,7 +13,7 @@ import { getInnerRpcEndpoints, RpcEndpointsArgsSchema } from './rpcEndpoints';
 
 export const CreateTransportArgsSchema = z.object({
   rpcEndpoints: RpcEndpointsArgsSchema,
-  policy: z.optional(PartialTransportPolicySchema),
+  policy: PartialTransportPolicySchema,
 });
 
 export const createTransport: CreateTransport = (args) => {
@@ -51,15 +51,15 @@ export const createTransport: CreateTransport = (args) => {
  * ```
  * means that if `rpcTypePreferences` is set to ["regular"], but there are no "regular"
  * RPC endpoints available, an error will be thrown.
+ *
+ * // TODO add in the future
+ * // const validateRpcEndpoints = (args: CreateTransportArgs) => {
+ * //   const { rpcEndpoints, policy } = args;
+ * //   if (!policy?.rpcTypePreferences) return true;
+ * //
+ * //   const preferredType =
+ * //     policy.rpcTypePreferences[0] === 'Regular' ? 'regular' : 'archival';
+ * //
+ * //   return !!rpcEndpoints[preferredType];
+ * // };
  */
-
-// TODO add in the future
-// const validateRpcEndpoints = (args: CreateTransportArgs) => {
-//   const { rpcEndpoints, policy } = args;
-//   if (!policy?.rpcTypePreferences) return true;
-//
-//   const preferredType =
-//     policy.rpcTypePreferences[0] === 'Regular' ? 'regular' : 'archival';
-//
-//   return !!rpcEndpoints[preferredType];
-// };

@@ -1,5 +1,5 @@
 import type {
-  InvalidArgsContext,
+  InvalidSchemaContext,
   UnknownErrorContext,
 } from 'nat-types/natError';
 import type { NatError } from '@common/natError';
@@ -8,7 +8,7 @@ import type { Result } from 'nat-types/_common/common';
 export type NearGasErrorVariant =
   | {
       kind: 'CreateNearGas.InvalidArgs';
-      context: InvalidArgsContext;
+      context: InvalidSchemaContext;
     }
   | {
       kind: 'CreateNearGas.Unknown';
@@ -16,7 +16,7 @@ export type NearGasErrorVariant =
     }
   | {
       kind: 'CreateNearGasFromGas.InvalidArgs';
-      context: InvalidArgsContext;
+      context: InvalidSchemaContext;
     }
   | {
       kind: 'CreateNearGasFromGas.Unknown';
@@ -24,7 +24,7 @@ export type NearGasErrorVariant =
     }
   | {
       kind: 'CreateNearGasFromTeraGas.InvalidArgs';
-      context: InvalidArgsContext;
+      context: InvalidSchemaContext;
     }
   | {
       kind: 'CreateNearGasFromTeraGas.Unknown';

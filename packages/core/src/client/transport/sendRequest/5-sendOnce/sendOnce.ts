@@ -1,7 +1,7 @@
 import { snakeToCamelCase } from '@common/utils/snakeToCamelCase';
 import {
-  type GeneralRpcResponse,
-  GeneralRpcResponseSchema,
+  type RpcResponse,
+  RpcResponseSchema,
 } from '@common/schemas/zod/rpc';
 import { fetchData, type FetchDataError } from './fetchData/fetchData';
 import {
@@ -11,7 +11,6 @@ import {
 import type { InnerRpcEndpoint } from 'nat-types/client/transport/transport';
 import type { Result } from 'nat-types/_common/common';
 import { result } from '@common/utils/result';
-import { log } from '../../../../../tests/integrations/utils/common';
 import type { SendRequestContext } from 'nat-types/client/transport/sendRequest';
 import { createNatError, type NatError } from '@common/natError';
 import { extractRpcErrors, type HighLevelRpcErrors } from './extractRpcErrors';
@@ -22,7 +21,7 @@ type SendOnceError =
   | NatError<'Client.Transport.SendRequest.Response.InvalidSchema'>
   | HighLevelRpcErrors;
 
-export type SendOnceResult = Result<GeneralRpcResponse, SendOnceError>;
+export type SendOnceResult = Result<RpcResponse, SendOnceError>;
 
 export const sendOnce = async (
   context: SendRequestContext,
@@ -48,8 +47,7 @@ export const sendOnce = async (
 
   // Perform high level check if the RPC response matches the expected format;
   // We will do a precise check inside each client method (it's better for tree-shaking);
-  const generalRpcResponse = GeneralRpcResponseSchema.safeParse(camelCased);
-  log(generalRpcResponse); // TODO Delete
+  const generalRpcResponse = RpcResponseSchema.safeParse(camelCased);
 
   if (!generalRpcResponse.success) {
     return result.err(

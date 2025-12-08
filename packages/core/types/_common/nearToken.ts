@@ -1,6 +1,6 @@
 import type { Result, Tokens, Units } from 'nat-types/_common/common';
 import type {
-  InvalidArgsContext,
+  InvalidSchemaContext,
   UnknownErrorContext,
 } from 'nat-types/natError';
 import type { NatError } from '@common/natError';
@@ -8,7 +8,7 @@ import type { NatError } from '@common/natError';
 export type NearTokenErrorVariant =
   | {
       kind: 'CreateNearToken.InvalidArgs';
-      context: InvalidArgsContext;
+      context: InvalidSchemaContext;
     }
   | {
       kind: 'CreateNearToken.Unknown';
@@ -16,7 +16,7 @@ export type NearTokenErrorVariant =
     }
   | {
       kind: 'CreateNearTokenFromYoctoNear.InvalidArgs';
-      context: InvalidArgsContext;
+      context: InvalidSchemaContext;
     }
   | {
       kind: 'CreateNearTokenFromYoctoNear.Unknown';
@@ -24,7 +24,7 @@ export type NearTokenErrorVariant =
     }
   | {
       kind: 'CreateNearTokenFromNear.InvalidArgs';
-      context: InvalidArgsContext;
+      context: InvalidSchemaContext;
     }
   | {
       kind: 'CreateNearTokenFromNear.Unknown';

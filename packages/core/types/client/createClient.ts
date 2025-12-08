@@ -2,7 +2,7 @@ import type { CreateTransportArgs } from 'nat-types/client/transport/transport';
 import type { Result } from 'nat-types/_common/common';
 import type { Client } from 'nat-types/client/client';
 import type {
-  InvalidArgsContext,
+  InvalidSchemaContext,
   UnknownErrorContext,
 } from 'nat-types/natError';
 import type { NatError } from '@common/natError';
@@ -10,7 +10,7 @@ import type { NatError } from '@common/natError';
 export type CreateClientErrorVariant =
   | {
       kind: 'CreateClient.InvalidArgs';
-      context: InvalidArgsContext;
+      context: InvalidSchemaContext;
     }
   | {
       kind: 'CreateClient.Unknown';

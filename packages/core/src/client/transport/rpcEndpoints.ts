@@ -1,5 +1,8 @@
 import * as z from 'zod/mini';
-import type { InnerRpcEndpoint, RpcEndpoint } from 'nat-types/client/transport/transport';
+import type {
+  InnerRpcEndpoint,
+  RpcEndpoint,
+} from 'nat-types/client/transport/transport';
 
 const RpcEndpointSchema = z.object({
   url: z.url(),
@@ -32,5 +35,4 @@ export const getInnerRpcEndpoints = (
       ...rpc.headers,
       'Content-Type': 'application/json',
     },
-    inactiveUntil: null,
   }));

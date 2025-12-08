@@ -12,23 +12,25 @@ import type {
 } from 'nat-types/client/transport/transport';
 import type { NatError } from '@common/natError';
 import type { $ZodError } from 'zod/v4/core';
-import type { GeneralRpcResponse } from '@common/schemas/zod/rpc';
+import type { RpcResponse } from '@common/schemas/zod/rpc';
 
 type RpcErrorContext = {
-  rawRpcResponse: GeneralRpcResponse;
+  rawRpcResponse: RpcResponse;
   rpc: InnerRpcEndpoint;
 };
 
-export type SendRequestErrorVariant =
+export type SendRequestErrorVariant<
+  Prefix extends string = 'Client.Transport.SendRequest',
+> =
   | {
-      kind: 'Client.Transport.SendRequest.PreferredRpc.NotFound';
+      kind: `${Prefix}.PreferredRpc.NotFound`;
       context: {
         rpcEndpoints: TransportContext['rpcEndpoints'];
         rpcTypePreferences: RpcTypePreferences;
       };
     }
   | {
-      kind: 'Client.Transport.SendRequest.Request.FetchFailed';
+      kind: `${Prefix}.Request.FetchFailed`;
       context: {
         cause: unknown;
         rpc: InnerRpcEndpoint;
@@ -36,19 +38,19 @@ export type SendRequestErrorVariant =
       };
     }
   | {
-      kind: 'Client.Transport.SendRequest.Request.Attempt.Timeout';
+      kind: `${Prefix}.Request.Attempt.Timeout`;
       context: { allowedMs: Milliseconds };
     }
   | {
-      kind: 'Client.Transport.SendRequest.Request.Timeout';
+      kind: `${Prefix}.Request.Timeout`;
       context: { allowedMs: Milliseconds };
     }
   | {
-      kind: 'Client.Transport.SendRequest.Request.Aborted';
+      kind: `${Prefix}.Request.Aborted`;
       context: { reason: unknown };
     }
   | {
-      kind: 'Client.Transport.SendRequest.Response.JsonParseFailed';
+      kind: `${Prefix}.Response.JsonParseFailed`;
       context: {
         cause: unknown;
         rpc: InnerRpcEndpoint;
@@ -56,9 +58,11 @@ export type SendRequestErrorVariant =
       };
     }
   | {
-      kind: 'Client.Transport.SendRequest.Response.InvalidSchema';
+      kind: `${Prefix}.Response.InvalidSchema`;
       context: { zodError: $ZodError };
-    }
+    };
+
+export type HighLevelRpcErrorVariant =
   // RPC Related Errors
   | {
       kind: 'Client.Transport.SendRequest.Rpc.MethodNotFound';
@@ -72,15 +76,6 @@ export type SendRequestErrorVariant =
       kind: 'Client.Transport.SendRequest.Rpc.NotSynced';
       context: RpcErrorContext;
     }
-  // TODO check if we need do use these errors later
-  // | {
-  //     kind: ' Client.SendSignedTransaction.Rpc.Shard.NotTracked';
-  //     context: { rawRpcResponse: GeneralRpcResponse };
-  //   }
-  // | {
-  //     kind: ' Client.SendSignedTransaction.Rpc.Transaction.NotFound';
-  //     context: { rawRpcResponse: GeneralRpcResponse };
-  //   }
   | {
       kind: 'Client.Transport.SendRequest.Rpc.Transaction.Timeout';
       context: RpcErrorContext;
@@ -113,7 +108,7 @@ type SendRequestArgs = {
   signal?: AbortSignal;
 };
 
-type SendRequestError =
+export type SendRequestError =
   | NatError<'Client.Transport.SendRequest.PreferredRpc.NotFound'>
   | NatError<'Client.Transport.SendRequest.Request.FetchFailed'>
   | NatError<'Client.Transport.SendRequest.Request.Attempt.Timeout'>
@@ -124,4 +119,4 @@ type SendRequestError =
 
 export type SendRequest = (
   args: SendRequestArgs,
-) => Promise<Result<GeneralRpcResponse, SendRequestError>>;
+) => Promise<Result<RpcResponse, SendRequestError>>;

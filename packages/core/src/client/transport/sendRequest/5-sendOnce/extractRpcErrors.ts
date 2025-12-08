@@ -1,7 +1,7 @@
 import type { Result } from 'nat-types/_common/common';
 import type {
-  GeneralRpcError,
-  GeneralRpcResponse,
+  RpcError,
+  RpcResponse,
 } from '@common/schemas/zod/rpc';
 import { createNatError, type NatError } from '@common/natError';
 import { result } from '@common/utils/result';
@@ -21,7 +21,7 @@ const prefix = 'Client.Transport.SendRequest.Rpc';
 const getErrorKind = ({
   name,
   cause,
-}: GeneralRpcError): HighLevelRpcErrors['kind'] | undefined => {
+}: RpcError): HighLevelRpcErrors['kind'] | undefined => {
   // Request Validation Errors
   if (name === 'REQUEST_VALIDATION_ERROR') {
     if (cause.name === 'METHOD_NOT_FOUND') return `${prefix}.MethodNotFound`;
@@ -34,8 +34,9 @@ const getErrorKind = ({
   if (name === 'HANDLER_ERROR') {
     // biome-ignore format: keep compact
     if (cause.name === 'NO_SYNCED_BLOCKS') return `${prefix}.NotSynced`; // 'query'
-    // if (cause.name === 'UNAVAILABLE_SHARD') return `${prefix}.Shard.NotFound`; // 'query'
-    // if (cause.name === 'DOES_NOT_TRACK_SHARD') return `${prefix}.Shard.NotFound`; // 'send_tx' / 'tx'
+    if (cause.name === 'NOT_SYNCED_YET') return `${prefix}.NotSynced`; // 'block'
+    // if (cause.name === 'UNAVAILABLE_SHARD') return `${prefix}.Shard.NotTracked`; // 'query'
+    // if (cause.name === 'DOES_NOT_TRACK_SHARD') return `${prefix}.Shard.NotTracked`; // 'send_tx' / 'tx'
     if (cause.name === 'TIMEOUT_ERROR') return `${prefix}.Transaction.Timeout`; // 'send_tx' / 'tx'
     if (cause.name === 'GARBAGE_COLLECTED_BLOCK') return `${prefix}.Block.GarbageCollected`; // 'query'
     if (cause.name === 'UNKNOWN_BLOCK') return `${prefix}.Block.NotFound`; // 'query' / 'block'
@@ -47,9 +48,9 @@ const getErrorKind = ({
 };
 
 export const extractRpcErrors = (
-  generalRpcResponse: GeneralRpcResponse,
+  generalRpcResponse: RpcResponse,
   rpc: InnerRpcEndpoint,
-): Result<GeneralRpcResponse, HighLevelRpcErrors> => {
+): Result<RpcResponse, HighLevelRpcErrors> => {
   if ('result' in generalRpcResponse) return result.ok(generalRpcResponse);
 
   const kind = getErrorKind(generalRpcResponse.error);

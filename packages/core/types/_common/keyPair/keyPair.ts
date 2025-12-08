@@ -6,7 +6,7 @@ import type {
 import type { Hex, Result } from 'nat-types/_common/common';
 import type { NatError } from '@common/natError';
 import type {
-  InvalidArgsContext,
+  InvalidSchemaContext,
   UnknownErrorContext,
 } from 'nat-types/natError';
 import type { Curve } from 'nat-types/_common/curveString';
@@ -14,7 +14,7 @@ import type { Curve } from 'nat-types/_common/curveString';
 export type KeyPairErrorVariant =
   | {
       kind: 'CreateKeyPair.InvalidArgs';
-      context: InvalidArgsContext;
+      context: InvalidSchemaContext;
     }
   | {
       kind: 'CreateKeyPair.Unknown';
