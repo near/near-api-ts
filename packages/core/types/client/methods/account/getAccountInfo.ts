@@ -10,47 +10,15 @@ import type { ClientContext } from 'nat-types/client/client';
 import type { PartialTransportPolicy } from 'nat-types/client/transport/transport';
 import type { NearToken } from 'nat-types/_common/nearToken';
 import type { NatError } from '@common/natError';
-import type {
-  InvalidSchemaContext,
-  UnknownErrorContext,
-} from 'nat-types/natError';
 import type { SendRequestErrorVariant } from 'nat-types/client/transport/sendRequest';
-import type { RpcResponse } from '@common/schemas/zod/rpc';
-import type { ShardId } from '@near-js/jsonrpc-types';
+import type { CommonRpcQueryMethodErrorVariant } from 'nat-types/client/methods/_common/query';
+import type { CommonRpcMethodErrorVariant } from 'nat-types/client/methods/_common/common';
+import type { RpcQueryViewAccountResult } from '../../../../src/client/methods/account/getAccountInfo/handleResult';
 
 export type GetAccountInfoErrorVariant =
   | SendRequestErrorVariant<'Client.GetAccountInfo'>
-  | {
-      kind: 'Client.GetAccountInfo.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  // Rpc general 'query' Errors
-  | {
-      kind: 'Client.GetAccountInfo.Rpc.NotSynced';
-      context: null;
-    }
-  | {
-      kind: 'Client.GetAccountInfo.Rpc.Shard.NotTracked';
-      context: { shardId: ShardId };
-    }
-  | {
-      kind: 'Client.GetAccountInfo.Rpc.Block.GarbageCollected';
-      context: {
-        blockHash: BlockHash;
-        blockHeight: BlockHeight;
-      };
-    }
-  | {
-      kind: 'Client.GetAccountInfo.Rpc.Block.NotFound';
-      context: {
-        blockId: BlockHash | BlockHeight;
-      };
-    }
-  | {
-      kind: 'Client.GetAccountInfo.Rpc.Internal';
-      context: { message: string };
-    }
-  // Rpc view_account errors
+  | CommonRpcMethodErrorVariant<'Client.GetAccountInfo'>
+  | CommonRpcQueryMethodErrorVariant<'Client.GetAccountInfo'>
   | {
       kind: 'Client.GetAccountInfo.Rpc.Account.NotFound';
       context: {
@@ -58,15 +26,6 @@ export type GetAccountInfoErrorVariant =
         blockHash: BlockHash;
         blockHeight: BlockHeight;
       };
-    }
-  // Stub
-  | {
-      kind: 'Client.GetAccountInfo.Rpc.Unclassified';
-      context: { rawRpcResponse: RpcResponse };
-    }
-  | {
-      kind: 'Client.GetAccountInfo.Unknown';
-      context: UnknownErrorContext;
     };
 
 export type GetAccountInfoUnknownErrorKind = 'Client.GetAccountInfo.Unknown';
@@ -96,7 +55,7 @@ export type GetAccountInfoOutput = {
     globalContractHash?: CryptoHash;
     globalContractAccountId?: AccountId;
   };
-  rawRpcResponse: RpcResponse;
+  rawRpcResult: RpcQueryViewAccountResult;
 };
 
 type GetAccountInfoError =
@@ -110,15 +69,15 @@ type GetAccountInfoError =
   | NatError<'Client.GetAccountInfo.Request.Aborted'>
   | NatError<'Client.GetAccountInfo.Response.JsonParseFailed'>
   | NatError<'Client.GetAccountInfo.Response.InvalidSchema'>
-  // Rpc
+  // Rpc - query - common
   | NatError<'Client.GetAccountInfo.Rpc.NotSynced'>
   | NatError<'Client.GetAccountInfo.Rpc.Shard.NotTracked'>
   | NatError<'Client.GetAccountInfo.Rpc.Block.GarbageCollected'>
   | NatError<'Client.GetAccountInfo.Rpc.Block.NotFound'>
-  | NatError<'Client.GetAccountInfo.Rpc.Account.NotFound'>
   | NatError<'Client.GetAccountInfo.Rpc.Internal'>
+  // Rpc - query - view_account
+  | NatError<'Client.GetAccountInfo.Rpc.Account.NotFound'>
   // Stub
-  | NatError<'Client.GetAccountInfo.Rpc.Unclassified'>
   | NatError<'Client.GetAccountInfo.Unknown'>;
 
 export type SafeGetAccountInfo = (

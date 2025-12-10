@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
 import { createSafeGetAccountInfo } from './methods/account/getAccountInfo/getAccountInfo';
-import { createGetAccountKey } from './methods/account/getAccountKey';
+import { createSafeGetAccountAccessKey } from './methods/account/getAccountAccessKey/getAccountAccessKey';
 import { createGetAccountKeys } from './methods/account/getAccountKeys';
 import { createGetContractState } from './methods/contract/getContractState';
 import { createCallContractReadFunction } from './methods/contract/callContractReadFunction';
@@ -47,10 +47,13 @@ export const safeCreateClient: SafeCreateClient = wrapUnknownError(
     };
 
     const safeGetAccountInfo = createSafeGetAccountInfo(context);
+    const safeGetAccountAccessKey = createSafeGetAccountAccessKey(context);
 
     return result.ok({
-      safeGetAccountInfo,
       getAccountInfo: asThrowable(safeGetAccountInfo),
+      getAccountAccessKey: asThrowable(safeGetAccountAccessKey),
+      safeGetAccountInfo,
+      safeGetAccountAccessKey,
       // getAccountKey: createGetAccountKey(context),
       // getAccountKeys: createGetAccountKeys(context),
       // getContractState: createGetContractState(context),

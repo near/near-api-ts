@@ -3,12 +3,12 @@ import { createIsKeyForTaskExist } from './createIsKeyForTaskExist';
 import { getFullAccessKeyList } from './getFullAccessKeyList';
 import { getFunctionCallKeyList } from './getFunctionCallKeyList';
 import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
-import type { AccountKey } from 'nat-types/_common/accountKey';
+import type { AccountAccessKey } from 'nat-types/_common/accountAccessKey';
 import type { KeyPool } from 'nat-types/signers/memorySigner/keyPool';
 
 const getAllowedSigningKeys = (
   signerContext: SignerContext,
-  accountKeys: AccountKey[],
+  accountKeys: AccountAccessKey[],
 ) => {
   if (!signerContext.signingKeys) return accountKeys;
   const set = new Set(signerContext.signingKeys);

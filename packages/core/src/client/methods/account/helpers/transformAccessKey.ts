@@ -1,9 +1,9 @@
 import { throwableYoctoNear } from '../../../../helpers/tokens/nearToken';
 import type { AccessKeyInfoView } from '@near-js/jsonrpc-types';
-import type { AccountKey, FunctionCallKey } from 'nat-types/_common/accountKey';
+import type { AccountAccessKey, FunctionCallKey } from 'nat-types/_common/accountAccessKey';
 import type { PublicKey } from 'nat-types/_common/crypto';
 
-export const transformKey = (key: AccessKeyInfoView): AccountKey => {
+export const transformAccessKey = (key: AccessKeyInfoView): AccountAccessKey => {
   const publicKey = key.publicKey as PublicKey;
   const nonce = key.accessKey.nonce;
 

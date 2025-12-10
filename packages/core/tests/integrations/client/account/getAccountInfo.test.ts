@@ -20,6 +20,9 @@ test(
       const res1 = await client.safeGetAccountInfo({ accountId: 'nat' });
       expect(res1.ok);
 
+      const res11 = await client.getAccountInfo({ accountId: 'nat' });
+      expect(res11.rawRpcResult);
+
       const res2 = await client.safeGetAccountInfo({
         accountId: 'nat',
         // @ts-expect-error

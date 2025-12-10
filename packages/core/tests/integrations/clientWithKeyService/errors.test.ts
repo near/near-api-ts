@@ -78,17 +78,17 @@ const testFn = async (args: { rpcUrl: string }) => {
 
     console.log(signedTransaction);
 
-    const createContractResult = await client.sendSignedTransaction({
-      signedTransaction: {
-        ...signedTransaction.value,
-        // signature: 'ed25519:4ALChq1Czyemn5UGZLn7cW4zae45ycTwigru897bKYLGEt36p88vaY3Yht1cLNLtrRrrKwTqotKVeLWVFmp388GM'// M
-      },
-    });
-
-    log(createContractResult);
-
-    const balance = await client.getAccountInfo({ accountId: 'nat' });
-    log(balance);
+    // const createContractResult = await client.sendSignedTransaction({
+    //   signedTransaction: {
+    //     ...signedTransaction.value,
+    //     // signature: 'ed25519:4ALChq1Czyemn5UGZLn7cW4zae45ycTwigru897bKYLGEt36p88vaY3Yht1cLNLtrRrrKwTqotKVeLWVFmp388GM'// M
+    //   },
+    // });
+    //
+    // log(createContractResult);
+    //
+    // const balance = await client.getAccountInfo({ accountId: 'nat' });
+    // log(balance);
   } catch (e) {
     /*
 

@@ -1,62 +1,78 @@
 import * as z from 'zod/mini';
-import { AccountViewSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
+import { AccountViewSchema } from '@near-js/jsonrpc-types';
 import type { RpcResponse } from '@common/schemas/zod/rpc';
-import type { GetAccountInfoArgs } from 'nat-types/client/methods/account/getAccountInfo';
+import type {
+  GetAccountInfoArgs,
+  GetAccountInfoOutput,
+} from 'nat-types/client/methods/account/getAccountInfo';
 import { throwableYoctoNear } from '../../../../helpers/tokens/nearToken';
-import { addTo } from '@common/utils/addTo';
 import { result } from '@common/utils/result';
-import { BlockHeightSchema } from '@common/schemas/zod/common/common';
+import { createNatError } from '@common/natError';
 
-const RpcQueryAccountViewResponseSchema = z.object({
+const RpcQueryViewAccountResultSchema = z.object({
   ...AccountViewSchema().shape,
-  blockHash: CryptoHashSchema(),
-  blockHeight: BlockHeightSchema,
+  blockHash: z.string(),
+  blockHeight: z.number(),
 });
+
+export type RpcQueryViewAccountResult = z.infer<
+  typeof RpcQueryViewAccountResultSchema
+>;
 
 export const handleResult = (
   rpcResponse: RpcResponse,
   args: GetAccountInfoArgs,
 ) => {
-  const rpcResult = RpcQueryAccountViewResponseSchema.parse(rpcResponse.result);
-  // storage_paid_at - deprecated since March 18, 2020:
-  // https://github.com/near/nearcore/issues/2271
+  const rpcResult = RpcQueryViewAccountResultSchema.safeParse(
+    rpcResponse.result,
+  );
 
-  const lockedBalance = throwableYoctoNear(rpcResult.locked);
-  const totalBalance = throwableYoctoNear(rpcResult.amount).add(lockedBalance);
+  if (!rpcResult.success)
+    return result.err(
+      createNatError({
+        kind: 'Client.GetAccountInfo.Response.InvalidSchema',
+        context: { zodError: rpcResult.error },
+      }),
+    );
 
-  const final = {
-    blockHash: rpcResult.blockHash,
-    blockHeight: rpcResult.blockHeight,
+  const accountInfo = rpcResult.data;
+
+  const lockedBalance = throwableYoctoNear(accountInfo.locked);
+  const totalBalance = throwableYoctoNear(accountInfo.amount).add(
+    lockedBalance,
+  );
+
+  const output: GetAccountInfoOutput = {
+    blockHash: accountInfo.blockHash,
+    blockHeight: accountInfo.blockHeight,
     accountId: args.accountId,
     accountInfo: {
       balance: {
         total: totalBalance,
         locked: lockedBalance,
       },
-      usedStorageBytes: rpcResult.storageUsage,
+      usedStorageBytes: accountInfo.storageUsage,
     },
-    rawRpcResponse: rpcResponse,
+    rawRpcResult: accountInfo,
   };
 
-  // TODO fix types - make sure .done() return a new proper type
-  addTo(final.accountInfo)
-    .field(
-      'contractHash',
-      rpcResult.codeHash,
-      // When near account doesn't have a deployed contract on it,
-      // it returns the placeholder instead of WASM hash
-      (v) => v !== '11111111111111111111111111111111',
-    )
-    .field(
-      'globalContractHash',
-      rpcResult.globalContractHash,
-      (v) => typeof v === 'string',
-    )
-    .field(
-      'globalContractAccountId',
-      rpcResult.globalContractAccountId,
-      (v) => typeof v === 'string',
-    );
+  // When near account doesn't have a deployed contract on it,
+  // it returns the placeholder instead of WASM hash
+  if (accountInfo.codeHash !== '11111111111111111111111111111111') {
+    output.accountInfo.contractHash = accountInfo.codeHash;
+  }
 
-  return result.ok(final);
+  if (typeof accountInfo.globalContractHash === 'string') {
+    output.accountInfo.globalContractHash = accountInfo.globalContractHash;
+  }
+
+  if (typeof accountInfo.globalContractAccountId === 'string') {
+    output.accountInfo.globalContractAccountId =
+      accountInfo.globalContractAccountId;
+  }
+
+  // storage_paid_at - deprecated since March 18, 2020:
+  // https://github.com/near/nearcore/issues/2271
+
+  return result.ok(output);
 };

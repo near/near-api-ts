@@ -1,7 +1,7 @@
 import * as z from 'zod/mini';
 import { toNativeBlockReference } from '@common/transformers/toNative/blockReference';
 import { AccessKeyListSchema, CryptoHashSchema } from '@near-js/jsonrpc-types';
-import { transformKey } from './helpers/transformKey';
+import { transformAccessKey } from './helpers/transformAccessKey';
 import type {
   CreateGetAccountKeys,
   GetAccountKeysArgs,
@@ -24,7 +24,7 @@ const transformResult = (
     blockHash: valid.blockHash,
     blockHeight: valid.blockHeight,
     accountId: args.accountId,
-    accountKeys: valid.keys.map(transformKey),
+    accountKeys: valid.keys.map(transformAccessKey),
   };
 };
 

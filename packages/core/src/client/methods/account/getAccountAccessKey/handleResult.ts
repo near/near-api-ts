@@ -1,0 +1,77 @@
+import * as z from 'zod/mini';
+import { AccessKeyViewSchema } from '@near-js/jsonrpc-types';
+import type { RpcResponse } from '@common/schemas/zod/rpc';
+import { result } from '@common/utils/result';
+import { createNatError } from '@common/natError';
+import { transformAccessKey } from '../helpers/transformAccessKey';
+import type { GetAccountAccessKeyArgs } from 'nat-types/client/methods/account/getAccountAccessKey';
+
+const UnknownKeySchema = z.object({
+  blockHash: z.string(),
+  blockHeight: z.number(),
+  error: z.string(),
+  logs: z.array(z.string()), // will always an empty array
+});
+
+const RpcQueryViewAccessKeyOkResultSchema = z.object({
+  blockHash: z.string(),
+  blockHeight: z.number(),
+  ...AccessKeyViewSchema().shape,
+});
+
+export type RpcQueryViewAccessKeyOkResult = z.infer<
+  typeof RpcQueryViewAccessKeyOkResultSchema
+>;
+
+const RpcQueryViewAccessKeyResultSchema = z.union([
+  RpcQueryViewAccessKeyOkResultSchema,
+  UnknownKeySchema,
+]);
+
+export const handleResult = (
+  rpcResponse: RpcResponse,
+  args: GetAccountAccessKeyArgs,
+) => {
+  const rpcResult = RpcQueryViewAccessKeyResultSchema.safeParse(
+    rpcResponse.result,
+  );
+
+  if (!rpcResult.success)
+    return result.err(
+      createNatError({
+        kind: 'Client.GetAccountAccessKey.Response.InvalidSchema',
+        context: { zodError: rpcResult.error },
+      }),
+    );
+
+  const { blockHash, blockHeight } = rpcResult.data;
+
+  // This will only happen for RpcQueryError::UnknownAccessKey error;
+  // All others are going into response.error, and we handle them in handleError;
+  // https://github.com/near/nearcore/blob/a9557047d1bd45da0d06cf6b880fea6487c35e20/chain/jsonrpc/src/lib.rs#L210C13-L219C17
+  if ('error' in rpcResult.data)
+    return result.err(
+      createNatError({
+        kind: 'Client.GetAccountAccessKey.Rpc.AccountAccessKey.NotFound',
+        context: {
+          accountId: args.accountId,
+          publicKey: args.publicKey,
+          blockHash,
+          blockHeight,
+        },
+      }),
+    );
+
+  const output = {
+    blockHash,
+    blockHeight,
+    accountId: args.accountId,
+    accountAccessKey: transformAccessKey({
+      accessKey: rpcResult.data,
+      publicKey: args.publicKey,
+    }),
+    rawRpcResult: rpcResult.data,
+  };
+
+  return result.ok(output);
+};

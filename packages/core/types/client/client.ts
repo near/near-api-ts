@@ -1,26 +1,32 @@
 import type {
+  CreateClientErrorVariant,
+  CreateClientUnknownErrorKind,
+} from 'nat-types/client/createClient';
+import type { SendRequest } from 'nat-types/client/transport/sendRequest';
+import type {
   GetAccountInfo,
   GetAccountInfoErrorVariant,
   GetAccountInfoUnknownErrorKind,
   SafeGetAccountInfo,
 } from 'nat-types/client/methods/account/getAccountInfo';
 import type {
-  CreateClientErrorVariant,
-  CreateClientUnknownErrorKind,
-} from 'nat-types/client/createClient';
-import type { SendRequest } from 'nat-types/client/transport/sendRequest';
-import type { GetAccountKey } from 'nat-types/client/methods/account/getAccountKey';
-import type { SendSignedTransaction } from 'nat-types/client/methods/transaction/sendSignedTransaction';
+  GetAccountAccessKey,
+  GetAccountAccessKeyErrorVariant,
+  GetAccountAccessKeyUnknownErrorKind,
+  SafeGetAccountAccessKey,
+} from 'nat-types/client/methods/account/getAccountAccessKey';
 import type { TransportErrorVariant } from 'nat-types/client/transport/transport';
 
 export type ClientErrorVariant =
   | CreateClientErrorVariant
   | TransportErrorVariant
-  | GetAccountInfoErrorVariant;
+  | GetAccountInfoErrorVariant
+  | GetAccountAccessKeyErrorVariant;
 
 export type ClientUnknownErrorKind =
   | CreateClientUnknownErrorKind
-  | GetAccountInfoUnknownErrorKind;
+  | GetAccountInfoUnknownErrorKind
+  | GetAccountAccessKeyUnknownErrorKind;
 
 export type ClientContext = {
   sendRequest: SendRequest;
@@ -29,10 +35,11 @@ export type ClientContext = {
 // NextFeature: add cache / add defaults atMomentOf / logger
 
 export type Client = {
-  getAccountInfo: GetAccountInfo;
   safeGetAccountInfo: SafeGetAccountInfo;
+  getAccountInfo: GetAccountInfo;
+  safeGetAccountAccessKey: SafeGetAccountAccessKey;
+  getAccountAccessKey: GetAccountAccessKey;
 
-  // getAccountKey: GetAccountKey;
   // getAccountKeys: GetAccountKeys;
   // getContractState: GetContractState;
   // callContractReadFunction: CallContractReadFunction;
