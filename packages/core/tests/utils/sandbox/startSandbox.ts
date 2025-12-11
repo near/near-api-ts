@@ -5,7 +5,11 @@ export const startSandbox = async () =>
     version: '2.10.1',
     config: {
       rpcPort: 4560,
-      additionalAccounts: [GenesisAccount.createDefault('nat')],
+      additionalAccounts: [
+        GenesisAccount.createDefault('nat'),
+        GenesisAccount.createDefault('alice'),
+        GenesisAccount.createDefault('bob'),
+      ],
     },
   });
 

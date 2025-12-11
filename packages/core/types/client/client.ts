@@ -16,17 +16,25 @@ import type {
   SafeGetAccountAccessKey,
 } from 'nat-types/client/methods/account/getAccountAccessKey';
 import type { TransportErrorVariant } from 'nat-types/client/transport/transport';
+import type {
+  SafeSendSignedTransaction,
+  SendSignedTransaction,
+  SendSignedTransactionErrorVariant,
+  SendSignedTransactionUnknownErrorKind,
+} from 'nat-types/client/methods/transaction/sendSignedTransaction';
 
 export type ClientErrorVariant =
   | CreateClientErrorVariant
   | TransportErrorVariant
   | GetAccountInfoErrorVariant
-  | GetAccountAccessKeyErrorVariant;
+  | GetAccountAccessKeyErrorVariant
+  | SendSignedTransactionErrorVariant;
 
 export type ClientUnknownErrorKind =
   | CreateClientUnknownErrorKind
   | GetAccountInfoUnknownErrorKind
-  | GetAccountAccessKeyUnknownErrorKind;
+  | GetAccountAccessKeyUnknownErrorKind
+  | SendSignedTransactionUnknownErrorKind;
 
 export type ClientContext = {
   sendRequest: SendRequest;
@@ -35,11 +43,14 @@ export type ClientContext = {
 // NextFeature: add cache / add defaults atMomentOf / logger
 
 export type Client = {
-  safeGetAccountInfo: SafeGetAccountInfo;
+  // throwable variants
   getAccountInfo: GetAccountInfo;
-  safeGetAccountAccessKey: SafeGetAccountAccessKey;
   getAccountAccessKey: GetAccountAccessKey;
-
+  sendSignedTransaction: SendSignedTransaction;
+  // safe variants
+  safeGetAccountInfo: SafeGetAccountInfo;
+  safeGetAccountAccessKey: SafeGetAccountAccessKey;
+  safeSendSignedTransaction: SafeSendSignedTransaction;
   // getAccountKeys: GetAccountKeys;
   // getContractState: GetContractState;
   // callContractReadFunction: CallContractReadFunction;

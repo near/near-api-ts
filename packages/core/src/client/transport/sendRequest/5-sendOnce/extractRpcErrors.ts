@@ -1,11 +1,8 @@
 import type { Result } from 'nat-types/_common/common';
-import type {
-  RpcError,
-  RpcResponse,
-} from '@common/schemas/zod/rpc';
+import type { RpcError, RpcResponse } from '@common/schemas/zod/rpc';
 import { createNatError, type NatError } from '@common/natError';
 import { result } from '@common/utils/result';
-import type {InnerRpcEndpoint} from 'nat-types/client/transport/transport';
+import type { InnerRpcEndpoint } from 'nat-types/client/transport/transport';
 
 export type HighLevelRpcErrors =
   | NatError<'Client.Transport.SendRequest.Rpc.MethodNotFound'>
@@ -32,11 +29,8 @@ const getErrorKind = ({
 
   // Handler Errors
   if (name === 'HANDLER_ERROR') {
-    // biome-ignore format: keep compact
     if (cause.name === 'NO_SYNCED_BLOCKS') return `${prefix}.NotSynced`; // 'query'
     if (cause.name === 'NOT_SYNCED_YET') return `${prefix}.NotSynced`; // 'block'
-    // if (cause.name === 'UNAVAILABLE_SHARD') return `${prefix}.Shard.NotTracked`; // 'query'
-    // if (cause.name === 'DOES_NOT_TRACK_SHARD') return `${prefix}.Shard.NotTracked`; // 'send_tx' / 'tx'
     if (cause.name === 'TIMEOUT_ERROR') return `${prefix}.Transaction.Timeout`; // 'send_tx' / 'tx'
     if (cause.name === 'GARBAGE_COLLECTED_BLOCK') return `${prefix}.Block.GarbageCollected`; // 'query'
     if (cause.name === 'UNKNOWN_BLOCK') return `${prefix}.Block.NotFound`; // 'query' / 'block'
