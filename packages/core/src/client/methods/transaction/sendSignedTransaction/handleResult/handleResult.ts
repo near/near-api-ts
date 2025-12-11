@@ -1,4 +1,3 @@
-import * as z from 'zod/mini';
 import { RpcTransactionResponseSchema } from '@near-js/jsonrpc-types';
 import type { RpcResponse } from '@common/schemas/zod/rpc';
 import { result } from '@common/utils/result';
@@ -8,7 +7,7 @@ import { handleActionError } from './handleActionError';
 
 export const handleResult = (
   rpcResponse: RpcResponse,
-  args: SendSignedTransactionArgs,
+  inputArgs: SendSignedTransactionArgs,
 ) => {
   const rpcResult = RpcTransactionResponseSchema().safeParse(
     rpcResponse.result,
@@ -31,6 +30,7 @@ export const handleResult = (
     return handleActionError(
       rpcResult.data.status.Failure.ActionError,
       rpcResponse,
+      inputArgs,
     );
 
   const output = {

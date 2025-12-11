@@ -4,7 +4,12 @@ import type { RpcTransactionResponse } from '@near-js/jsonrpc-types';
 import type { TransportPolicy } from 'nat-types/client/transport/transport';
 import type { SendRequestErrorVariant } from 'nat-types/client/transport/sendRequest';
 import type { CommonRpcMethodErrorVariant } from 'nat-types/client/methods/_common/common';
-import type { AccountId, Nonce, Result } from 'nat-types/_common/common';
+import type {
+  AccountId,
+  CryptoHash,
+  Nonce,
+  Result,
+} from 'nat-types/_common/common';
 import type { NatError } from '@common/natError';
 
 export type SendSignedTransactionErrorVariant =
@@ -25,8 +30,9 @@ export type SendSignedTransactionErrorVariant =
   | {
       kind: `Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist`;
       context: {
-        actionIndex: number;
         accountId: AccountId;
+        actionIndex: number;
+        transactionHash: CryptoHash;
       };
     }
   | {

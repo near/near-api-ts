@@ -2,11 +2,14 @@ import { result } from '@common/utils/result';
 import { createNatError } from '@common/natError';
 import type { RpcResponse } from '@common/schemas/zod/rpc';
 import type { ActionError } from '@near-js/jsonrpc-types';
+import type { SendSignedTransactionArgs } from 'nat-types/client/methods/transaction/sendSignedTransaction';
 
 export const handleActionError = (
   actionError: ActionError,
   rpcResponse: RpcResponse,
+  inputArgs: SendSignedTransactionArgs,
 ) => {
+  const { transactionHash } = inputArgs.signedTransaction;
   const { kind, index: actionIndex } = actionError;
 
   // Action index is not defined if ActionError.kind is `ActionErrorKind::LackBalanceForState`;
@@ -19,6 +22,7 @@ export const handleActionError = (
           cause: {
             kind: 'Transaction.Action.InvalidIndex',
             actionIndex,
+            rpcResponse,
           },
         },
       }),
@@ -30,8 +34,9 @@ export const handleActionError = (
         createNatError({
           kind: 'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist',
           context: {
-            actionIndex,
             accountId: kind.AccountAlreadyExists.accountId,
+            actionIndex,
+            transactionHash,
           },
         }),
       );
