@@ -34,6 +34,15 @@ export const handleInvalidTransaction = (rpcResponse: RpcResponse) => {
         }),
       );
     }
+
+    if (InvalidTxError === 'InvalidSignature') {
+      return result.err(
+        createNatError({
+          kind: 'Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid',
+          context: null,
+        }),
+      );
+    }
   }
 
   if (typeof InvalidTxError === 'object') {

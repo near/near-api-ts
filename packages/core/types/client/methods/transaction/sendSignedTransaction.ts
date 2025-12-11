@@ -34,12 +34,16 @@ export type SendSignedTransactionErrorVariant =
       };
     }
   | {
-      kind: `Client.SendSignedTransaction.Rpc.Transaction.Action.Receiver.NotFound`;
+      kind: `Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound`;
       context: {
         receiverAccountId: AccountId;
         actionIndex: number;
         transactionHash: CryptoHash;
       };
+    }
+  | {
+      kind: `Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid`;
+      context: null;
     }
   | {
       kind: `Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist`;
@@ -86,7 +90,8 @@ type SendSignedTransactionError =
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Expired'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound'>
-  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.Receiver.NotFound'>
+  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound'>
+  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist'>
   | NatError<'Client.SendSignedTransaction.Rpc.Timeout'>
   | NatError<'Client.SendSignedTransaction.Rpc.Internal'>
