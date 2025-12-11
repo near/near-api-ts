@@ -10,10 +10,10 @@ import {
   deleteAccount,
   yoctoNear,
 } from '../../../src';
-import { getFileBytes, log } from '../utils/common';
-import { withSandbox } from '../utils/sandbox/startSandbox';
+import { getFileBytes, log } from '../../utils/common';
+import { withSandbox } from '../../utils/sandbox/startSandbox';
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
-import { testKeys } from '../utils/testKeys';
+import { testKeys } from '../../utils/testKeys';
 
 const testFn = async (args: { rpcUrl: string }) => {
   try {
@@ -30,7 +30,7 @@ const testFn = async (args: { rpcUrl: string }) => {
       ],
     });
 
-    const { accountKey, blockHash } = await client.getAccountKey({
+    const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
       accountId: 'nat',
       publicKey: DEFAULT_PUBLIC_KEY,
     });
@@ -42,7 +42,7 @@ const testFn = async (args: { rpcUrl: string }) => {
         signerAccountId: 'nat',
         signerPublicKey: DEFAULT_PUBLIC_KEY,
         // signerPublicKey: testKeys.fc.forContract.publicKey,
-        nonce: accountKey.nonce + 1,
+        nonce: accountAccessKey.nonce + 1,
         blockHash,
         // blockHash: '27ovJAPbgw1FyHWDmH62s7PinEDW5eif1ApG6dp4W2Wr',
         actions: [

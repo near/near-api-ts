@@ -8,10 +8,10 @@ import {
   deployContract,
   functionCall,
 } from '../../../src';
-import { getFileBytes, log } from '../utils/common';
-import { withSandbox } from '../utils/sandbox/startSandbox';
+import { getFileBytes, log } from '../../utils/common';
+import { withSandbox } from '../../utils/sandbox/startSandbox';
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
-import { testKeys } from '../utils/testKeys';
+import { testKeys } from '../../utils/testKeys';
 
 const testFn = async (args: { rpcUrl: string }) => {
   try {

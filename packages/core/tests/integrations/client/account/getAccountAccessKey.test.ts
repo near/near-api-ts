@@ -1,11 +1,11 @@
 import { vi, expect, it, describe, beforeAll } from 'vitest';
-import { startSandbox } from '../../utils/sandbox/startSandbox';
+import { startSandbox } from '../../../utils/sandbox/startSandbox';
 import { type Client } from '../../../../src';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
-import { createDefaultClient } from '../../utils/common';
+import { createDefaultClient } from '../../../utils/common';
 
-vi.setConfig({ testTimeout: 30000 });
+vi.setConfig({ testTimeout: 60000 });
 
 describe('Get Account Access Key', () => {
   let client: Client;

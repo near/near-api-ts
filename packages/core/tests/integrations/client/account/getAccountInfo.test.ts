@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { withSandbox } from '../../utils/sandbox/startSandbox';
+import { withSandbox } from '../../../utils/sandbox/startSandbox';
 import { createClient } from '../../../../src';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 

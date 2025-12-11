@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest';
-import { createClient } from '../../../src';
-import { createMockRpc } from '../utils/mockRpc';
+import { createClient } from '../../../../src';
+import { createMockRpc } from '../../../utils/mockRpc';
 
 const log = (data: unknown) =>
   console.dir(data, { depth: null, customInspect: true });
