@@ -28,6 +28,14 @@ export type SendSignedTransactionErrorVariant =
       context: null;
     }
   | {
+      kind: `Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound`;
+      context: {
+        receiverAccountId: AccountId;
+        actionIndex: number;
+        transactionHash: CryptoHash;
+      };
+    }
+  | {
       kind: `Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist`;
       context: {
         accountId: AccountId;
@@ -71,6 +79,7 @@ type SendSignedTransactionError =
   // Rpc
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Expired'>
+  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist'>
   | NatError<'Client.SendSignedTransaction.Rpc.Timeout'>
   | NatError<'Client.SendSignedTransaction.Rpc.Internal'>

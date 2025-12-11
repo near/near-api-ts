@@ -41,6 +41,19 @@ export const handleActionError = (
         }),
       );
     }
+
+    if ('AccountDoesNotExist' in kind) {
+      return result.err(
+        createNatError({
+          kind: 'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound',
+          context: {
+            receiverAccountId: kind.AccountDoesNotExist.accountId,
+            actionIndex,
+            transactionHash,
+          },
+        }),
+      );
+    }
   }
 
   return result.err(
