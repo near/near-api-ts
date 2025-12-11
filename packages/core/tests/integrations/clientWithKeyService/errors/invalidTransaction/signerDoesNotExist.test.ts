@@ -1,10 +1,9 @@
 import { beforeAll, describe, it, vi } from 'vitest';
 import {
   createMemoryKeyService,
+  transfer,
   type Client,
   type MemoryKeyService,
-  transfer,
-  deleteAccount,
 } from '../../../../../src';
 import { createDefaultClient } from '../../../../utils/common';
 import { startSandbox } from '../../../../utils/sandbox/startSandbox';
@@ -14,7 +13,7 @@ import { assertNatErrKind } from '../../../../utils/assertNatErrKind';
 
 vi.setConfig({ testTimeout: 60000 });
 
-describe('Execute transaction', () => {
+describe('Signer Does Not exist', () => {
   let client: Client;
   let keyService: MemoryKeyService;
 
@@ -30,20 +29,20 @@ describe('Execute transaction', () => {
     return () => sandbox.stop();
   });
 
-  it('Transfer to non-exist account', async () => {
-    const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+  it('not-existed signer', async () => {
+    const { blockHash } = await client.getAccountAccessKey({
       accountId: 'nat',
       publicKey: DEFAULT_PUBLIC_KEY,
     });
 
     const signedTransaction = await keyService.signTransaction({
       transaction: {
-        signerAccountId: 'nat',
+        signerAccountId: '123.nat',
         signerPublicKey: DEFAULT_PUBLIC_KEY,
-        nonce: accountAccessKey.nonce + 1,
+        nonce: 1,
         blockHash,
-        action: transfer({ amount: { near: '1' } }),
-        receiverAccountId: '123.nat',
+        action: transfer({ amount: { near: '100' } }),
+        receiverAccountId: 'bob',
       },
     });
 
@@ -53,34 +52,7 @@ describe('Execute transaction', () => {
 
     assertNatErrKind(
       res,
-      'Client.SendSignedTransaction.Rpc.Transaction.Action.Receiver.NotFound',
-    );
-  });
-
-  it('Delete account of non-exist account', async () => {
-    const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
-      accountId: 'nat',
-      publicKey: DEFAULT_PUBLIC_KEY,
-    });
-
-    const signedTransaction = await keyService.signTransaction({
-      transaction: {
-        signerAccountId: 'nat',
-        signerPublicKey: DEFAULT_PUBLIC_KEY,
-        nonce: accountAccessKey.nonce + 1,
-        blockHash,
-        action: deleteAccount({ beneficiaryAccountId: 'bob' }),
-        receiverAccountId: '123.nat',
-      },
-    });
-
-    const res = await client.safeSendSignedTransaction({
-      signedTransaction,
-    });
-
-    assertNatErrKind(
-      res,
-      'Client.SendSignedTransaction.Rpc.Transaction.Action.Receiver.NotFound',
+      'Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound',
     );
   });
 });

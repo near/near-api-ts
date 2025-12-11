@@ -49,6 +49,17 @@ export const handleInvalidTransaction = (rpcResponse: RpcResponse) => {
         }),
       );
     }
+
+    if ('SignerDoesNotExist' in InvalidTxError) {
+      return result.err(
+        createNatError({
+          kind: 'Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound',
+          context: {
+            signerAccountId: InvalidTxError.SignerDoesNotExist.signerId,
+          },
+        }),
+      );
+    }
   }
 
   // Stub
