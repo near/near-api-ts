@@ -3,6 +3,7 @@ import { InvalidTxErrorSchema } from '@near-js/jsonrpc-types';
 import { result } from '@common/utils/result';
 import { createNatError } from '@common/natError';
 import type { RpcResponse } from '@common/schemas/zod/rpc';
+import { yoctoNear } from '../../../../../index';
 
 const InvalidTransactionErrorSchema = z.object({
   TxExecutionError: z.object({
@@ -65,6 +66,20 @@ export const handleInvalidTransaction = (rpcResponse: RpcResponse) => {
           kind: 'Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound',
           context: {
             signerAccountId: InvalidTxError.SignerDoesNotExist.signerId,
+          },
+        }),
+      );
+    }
+
+    if ('NotEnoughBalance' in InvalidTxError) {
+      const { signerId, balance, cost } = InvalidTxError.NotEnoughBalance;
+      return result.err(
+        createNatError({
+          kind: 'Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow',
+          context: {
+            balance: yoctoNear(balance),
+            transactionCost: yoctoNear(cost),
+            signerAccountId: signerId,
           },
         }),
       );

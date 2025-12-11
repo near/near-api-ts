@@ -11,6 +11,7 @@ import type {
   Result,
 } from 'nat-types/_common/common';
 import type { NatError } from '@common/natError';
+import type { NearToken } from 'nat-types/_common/nearToken';
 
 export type SendSignedTransactionErrorVariant =
   | SendRequestErrorVariant<'Client.SendSignedTransaction'>
@@ -30,6 +31,14 @@ export type SendSignedTransactionErrorVariant =
   | {
       kind: `Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound`;
       context: {
+        signerAccountId: AccountId;
+      };
+    }
+  | {
+      kind: `Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow`;
+      context: {
+        balance: NearToken;
+        transactionCost: NearToken;
         signerAccountId: AccountId;
       };
     }
@@ -54,7 +63,7 @@ export type SendSignedTransactionErrorVariant =
       };
     }
   | {
-      kind: `Client.SendSignedTransaction.Rpc.Timeout`;
+      kind: `Client.SendSignedTransaction.Rpc.Transaction.Timeout`;
       context: null;
     };
 
@@ -86,16 +95,18 @@ type SendSignedTransactionError =
   | NatError<'Client.SendSignedTransaction.Request.Aborted'>
   | NatError<'Client.SendSignedTransaction.Response.JsonParseFailed'>
   | NatError<'Client.SendSignedTransaction.Response.InvalidSchema'>
-  // Rpc
+  // RPC - transaction
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Expired'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound'>
+  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid'>
+  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Timeout'>
+  // RPC - transaction action
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist'>
-  | NatError<'Client.SendSignedTransaction.Rpc.Timeout'>
-  | NatError<'Client.SendSignedTransaction.Rpc.Internal'>
   // Stub
+  | NatError<'Client.SendSignedTransaction.Rpc.Internal'>
   | NatError<'Client.SendSignedTransaction.Unknown'>;
 
 export type SafeSendSignedTransaction = (

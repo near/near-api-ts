@@ -39,7 +39,7 @@ export const handleError = (rpcResponse: RpcResponse) => {
     if (cause.name === 'TIMEOUT_ERROR')
       return result.err(
         createNatError({
-          kind: `Client.SendSignedTransaction.Rpc.Timeout`,
+          kind: `Client.SendSignedTransaction.Rpc.Transaction.Timeout`,
           context: null,
         }),
       );
