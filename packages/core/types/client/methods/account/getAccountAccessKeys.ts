@@ -57,8 +57,8 @@ type GetAccountAccessKeysError =
   | NatError<'Client.GetAccountAccessKeys.Rpc.Shard.NotTracked'>
   | NatError<'Client.GetAccountAccessKeys.Rpc.Block.GarbageCollected'>
   | NatError<'Client.GetAccountAccessKeys.Rpc.Block.NotFound'>
-  | NatError<'Client.GetAccountAccessKeys.Rpc.Internal'>
   // Stub
+  | NatError<'Client.GetAccountAccessKeys.Rpc.Internal'>
   | NatError<'Client.GetAccountAccessKeys.Unknown'>;
 
 export type SafeGetAccountAccessKeys = (

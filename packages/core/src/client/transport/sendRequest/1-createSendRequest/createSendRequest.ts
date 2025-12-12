@@ -30,7 +30,7 @@ export const createSendRequest =
     // We want to provide the ability to abort the request;
     const maybeExternalAbortSignal = createExternalAbortSignal(args.signal);
 
-    // Start general timeout - how much we can try to execute a request;
+    // Start general timeout - how much time we can try to execute a request;
     const requestTimeout = createRequestTimeout(
       transportPolicy.timeouts.requestMs,
     );

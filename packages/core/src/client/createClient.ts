@@ -2,8 +2,8 @@ import * as z from 'zod/mini';
 import { createSafeGetAccountInfo } from './methods/account/getAccountInfo/getAccountInfo';
 import { createSafeGetAccountAccessKey } from './methods/account/getAccountAccessKey/getAccountAccessKey';
 import { createSafeGetAccountAccessKeys } from './methods/account/getAccountAccessKeys/getAccountAccessKeys';
-
 import { createSafeSendSignedTransaction } from './methods/transaction/sendSignedTransaction/sendSignedTransaction';
+import { createSafeGetBlock } from './methods/block/getBlock/getBlock';
 import {
   createTransport,
   CreateTransportArgsSchema,
@@ -45,16 +45,19 @@ export const safeCreateClient: SafeCreateClient = wrapUnknownError(
     const safeGetAccountInfo = createSafeGetAccountInfo(context);
     const safeGetAccountAccessKey = createSafeGetAccountAccessKey(context);
     const safeGetAccountAccessKeys = createSafeGetAccountAccessKeys(context);
+    const safeGetBlock = createSafeGetBlock(context);
     const safeSendSignedTransaction = createSafeSendSignedTransaction(context);
 
     return result.ok({
       getAccountInfo: asThrowable(safeGetAccountInfo),
       getAccountAccessKey: asThrowable(safeGetAccountAccessKey),
       getAccountAccessKeys: asThrowable(safeGetAccountAccessKeys),
+      getBlock: asThrowable(safeGetBlock),
       sendSignedTransaction: asThrowable(safeSendSignedTransaction),
       safeGetAccountInfo,
       safeGetAccountAccessKey,
       safeGetAccountAccessKeys,
+      safeGetBlock,
       safeSendSignedTransaction,
     });
   },

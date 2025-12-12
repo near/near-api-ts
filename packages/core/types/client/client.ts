@@ -25,8 +25,15 @@ import type {
 import type {
   GetAccountAccessKeys,
   GetAccountAccessKeysErrorVariant,
-  GetAccountAccessKeysUnknownErrorKind, SafeGetAccountAccessKeys,
+  GetAccountAccessKeysUnknownErrorKind,
+  SafeGetAccountAccessKeys,
 } from 'nat-types/client/methods/account/getAccountAccessKeys';
+import type {
+  GetBlock,
+  GetBlockErrorVariant,
+  GetBlockUnknownErrorKind,
+  SafeGetBlock,
+} from 'nat-types/client/methods/block/getBlock';
 
 export type ClientErrorVariant =
   | CreateClientErrorVariant
@@ -34,6 +41,7 @@ export type ClientErrorVariant =
   | GetAccountInfoErrorVariant
   | GetAccountAccessKeyErrorVariant
   | GetAccountAccessKeysErrorVariant
+  | GetBlockErrorVariant
   | SendSignedTransactionErrorVariant;
 
 export type ClientUnknownErrorKind =
@@ -41,6 +49,7 @@ export type ClientUnknownErrorKind =
   | GetAccountInfoUnknownErrorKind
   | GetAccountAccessKeyUnknownErrorKind
   | GetAccountAccessKeysUnknownErrorKind
+  | GetBlockUnknownErrorKind
   | SendSignedTransactionUnknownErrorKind;
 
 export type ClientContext = {
@@ -54,16 +63,17 @@ export type Client = {
   getAccountInfo: GetAccountInfo;
   getAccountAccessKey: GetAccountAccessKey;
   getAccountAccessKeys: GetAccountAccessKeys;
+  getBlock: GetBlock;
   sendSignedTransaction: SendSignedTransaction;
   // safe variants
   safeGetAccountInfo: SafeGetAccountInfo;
   safeGetAccountAccessKey: SafeGetAccountAccessKey;
   safeGetAccountAccessKeys: SafeGetAccountAccessKeys;
+  safeGetBlock: SafeGetBlock;
   safeSendSignedTransaction: SafeSendSignedTransaction;
 
   // getContractState: GetContractState;
   // callContractReadFunction: CallContractReadFunction;
-  // getBlock: GetBlock;
   // getProtocolConfig: GetProtocolConfig;
   // getGasPrice: GetGasPrice;
 };

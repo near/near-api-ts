@@ -32,5 +32,3 @@ export const BlockReferenceSchema = z.union([
     blockHeight: BlockHeightSchema,
   }),
 ]);
-
-export type InnerBlockReference = z.infer<typeof BlockReferenceSchema>
