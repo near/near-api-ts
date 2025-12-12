@@ -3,9 +3,11 @@ import { AccessKeyViewSchema } from '@near-js/jsonrpc-types';
 import type { RpcResponse } from '@common/schemas/zod/rpc';
 import { result } from '@common/utils/result';
 import { createNatError } from '@common/natError';
-import { transformAccessKey } from '../helpers/transformAccessKey';
+import { transformAccessKey } from '../_common/transformAccessKey';
 import type { GetAccountAccessKeyArgs } from 'nat-types/client/methods/account/getAccountAccessKey';
 
+// For legacy reasons, nearcore returns result.error string field when
+// RpcQueryError::UnknownAccessKey error happen;
 const UnknownKeySchema = z.object({
   blockHash: z.string(),
   blockHeight: z.number(),

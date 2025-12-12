@@ -1,12 +1,8 @@
 import * as z from 'zod/mini';
 import { createSafeGetAccountInfo } from './methods/account/getAccountInfo/getAccountInfo';
 import { createSafeGetAccountAccessKey } from './methods/account/getAccountAccessKey/getAccountAccessKey';
-// import { createGetAccountKeys } from './methods/account/getAccountKeys';
-// import { createGetContractState } from './methods/contract/getContractState';
-// import { createCallContractReadFunction } from './methods/contract/callContractReadFunction';
-// import { createGetBlock } from './methods/block/getBlock';
-// import { createGetGasPrice } from './methods/protocol/getGasPrice';
-// import { createGetProtocolConfig } from './methods/protocol/getProtocolConfig';
+import { createSafeGetAccountAccessKeys } from './methods/account/getAccountAccessKeys/getAccountAccessKeys';
+
 import { createSafeSendSignedTransaction } from './methods/transaction/sendSignedTransaction/sendSignedTransaction';
 import {
   createTransport,
@@ -48,21 +44,18 @@ export const safeCreateClient: SafeCreateClient = wrapUnknownError(
 
     const safeGetAccountInfo = createSafeGetAccountInfo(context);
     const safeGetAccountAccessKey = createSafeGetAccountAccessKey(context);
+    const safeGetAccountAccessKeys = createSafeGetAccountAccessKeys(context);
     const safeSendSignedTransaction = createSafeSendSignedTransaction(context);
 
     return result.ok({
       getAccountInfo: asThrowable(safeGetAccountInfo),
       getAccountAccessKey: asThrowable(safeGetAccountAccessKey),
+      getAccountAccessKeys: asThrowable(safeGetAccountAccessKeys),
       sendSignedTransaction: asThrowable(safeSendSignedTransaction),
       safeGetAccountInfo,
       safeGetAccountAccessKey,
-      safeSendSignedTransaction
-      // getAccountKeys: createGetAccountKeys(context),
-      // getContractState: createGetContractState(context),
-      // callContractReadFunction: createCallContractReadFunction(context),
-      // getBlock: createGetBlock(context),
-      // getGasPrice: createGetGasPrice(context),
-      // getProtocolConfig: createGetProtocolConfig(context),
+      safeGetAccountAccessKeys,
+      safeSendSignedTransaction,
     });
   },
 );
