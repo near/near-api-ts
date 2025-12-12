@@ -37,7 +37,7 @@ export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService =
     if (!validArgs.success)
       return result.err(
         createNatError({
-          kind: 'CreateMemoryKeyService.InvalidArgs',
+          kind: 'CreateMemoryKeyService.Args.InvalidSchema',
           context: { zodError: validArgs.error },
         }),
       );

@@ -42,7 +42,7 @@ export const safeKeyPair: SafeCreateKeyPair = wrapUnknownError(
     if (!validPrivateKey.success)
       return result.err(
         createNatError({
-          kind: 'CreateKeyPair.InvalidArgs',
+          kind: 'CreateKeyPair.Args.InvalidSchema',
           context: { zodError: validPrivateKey.error },
         }),
       );

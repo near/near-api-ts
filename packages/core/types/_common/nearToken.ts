@@ -7,7 +7,7 @@ import type { NatError } from '@common/natError';
 
 export type NearTokenErrorVariant =
   | {
-      kind: 'CreateNearToken.InvalidArgs';
+      kind: 'CreateNearToken.Args.InvalidSchema';
       context: InvalidSchemaContext;
     }
   | {
@@ -15,7 +15,7 @@ export type NearTokenErrorVariant =
       context: UnknownErrorContext;
     }
   | {
-      kind: 'CreateNearTokenFromYoctoNear.InvalidArgs';
+      kind: 'CreateNearTokenFromYoctoNear.Args.InvalidSchema';
       context: InvalidSchemaContext;
     }
   | {
@@ -23,7 +23,7 @@ export type NearTokenErrorVariant =
       context: UnknownErrorContext;
     }
   | {
-      kind: 'CreateNearTokenFromNear.InvalidArgs';
+      kind: 'CreateNearTokenFromNear.Args.InvalidSchema';
       context: InvalidSchemaContext;
     }
   | {
@@ -42,7 +42,7 @@ export type YoctoNear = bigint;
 export type Near = string;
 
 export type CreateNearTokenError =
-  | NatError<'CreateNearToken.InvalidArgs'>
+  | NatError<'CreateNearToken.Args.InvalidSchema'>
   | NatError<'CreateNearToken.Unknown'>;
 
 export type NearToken = Readonly<{
@@ -79,7 +79,7 @@ export type CreateNearToken = (args: NearTokenArgs) => NearToken;
 // FromYoctoNear --------------------------------------------------------
 
 type CreateNearTokenFromYoctoNearError =
-  | NatError<'CreateNearTokenFromYoctoNear.InvalidArgs'>
+  | NatError<'CreateNearTokenFromYoctoNear.Args.InvalidSchema'>
   | NatError<'CreateNearTokenFromYoctoNear.Unknown'>;
 
 export type SafeCreateNearTokenFromYoctoNear = (
@@ -93,7 +93,7 @@ export type CreateNearTokenFromYoctoNear = (
 // FromNear --------------------------------------------------------
 
 type CreateNearTokenFromNearError =
-  | NatError<'CreateNearTokenFromNear.InvalidArgs'>
+  | NatError<'CreateNearTokenFromNear.Args.InvalidSchema'>
   | NatError<'CreateNearTokenFromNear.Unknown'>;
 
 export type SafeCreateNearTokenFromNear = (

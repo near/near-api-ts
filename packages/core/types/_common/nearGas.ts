@@ -7,7 +7,7 @@ import type { Result } from 'nat-types/_common/common';
 
 export type NearGasErrorVariant =
   | {
-      kind: 'CreateNearGas.InvalidArgs';
+      kind: 'CreateNearGas.Args.InvalidSchema';
       context: InvalidSchemaContext;
     }
   | {
@@ -15,7 +15,7 @@ export type NearGasErrorVariant =
       context: UnknownErrorContext;
     }
   | {
-      kind: 'CreateNearGasFromGas.InvalidArgs';
+      kind: 'CreateNearGasFromGas.Args.InvalidSchema';
       context: InvalidSchemaContext;
     }
   | {
@@ -23,7 +23,7 @@ export type NearGasErrorVariant =
       context: UnknownErrorContext;
     }
   | {
-      kind: 'CreateNearGasFromTeraGas.InvalidArgs';
+      kind: 'CreateNearGasFromTeraGas.Args.InvalidSchema';
       context: InvalidSchemaContext;
     }
   | {
@@ -42,7 +42,7 @@ export type TeraGas = string;
 export type NearGasMethodArgs = NearGasArgs | NearGas;
 
 export type CreateNearGasError =
-  | NatError<'CreateNearGas.InvalidArgs'>
+  | NatError<'CreateNearGas.Args.InvalidSchema'>
   | NatError<'CreateNearGas.Unknown'>;
 
 export type NearGas = Readonly<{
@@ -71,7 +71,7 @@ export type CreateNearGas = (args: NearGasArgs) => NearGas;
 // FromGas --------------------------------------------------------
 
 type CreateNearGasFromGasError =
-  | NatError<'CreateNearGasFromGas.InvalidArgs'>
+  | NatError<'CreateNearGasFromGas.Args.InvalidSchema'>
   | NatError<'CreateNearGasFromGas.Unknown'>;
 
 export type SafeCreateNearGasFromGas = (
@@ -83,7 +83,7 @@ export type CreateNearGasFromGas = (gas: GasInput) => NearGas;
 // FromTeraGas --------------------------------------------------------
 
 type CreateNearGasFromTeraGasError =
-  | NatError<'CreateNearGasFromTeraGas.InvalidArgs'>
+  | NatError<'CreateNearGasFromTeraGas.Args.InvalidSchema'>
   | NatError<'CreateNearGasFromTeraGas.Unknown'>;
 
 export type SafeCreateNearGasFromTeraGas = (

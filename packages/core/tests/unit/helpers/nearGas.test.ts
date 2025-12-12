@@ -46,18 +46,18 @@ describe('Create FromTeraGas - Ok', () => {
 describe('Create FromTeraGas - Err', () => {
   it(`'1a'`, () => {
     const x1 = safeTeraGas('1a');
-    assertNatErrKind(x1, 'CreateNearGasFromTeraGas.InvalidArgs');
+    assertNatErrKind(x1, 'CreateNearGasFromTeraGas.Args.InvalidSchema');
   });
 
   it(`'0.0000000000001'`, () => {
     const x1 = safeTeraGas('0.0000000000001');
-    assertNatErrKind(x1, 'CreateNearGasFromTeraGas.InvalidArgs');
+    assertNatErrKind(x1, 'CreateNearGasFromTeraGas.Args.InvalidSchema');
   });
 
   it(`1`, () => {
     //@ts-expect-error
     const x1 = safeTeraGas(1);
-    assertNatErrKind(x1, 'CreateNearGasFromTeraGas.InvalidArgs');
+    assertNatErrKind(x1, 'CreateNearGasFromTeraGas.Args.InvalidSchema');
   });
 });
 
@@ -85,16 +85,16 @@ describe('Create NearGas - Err', () => {
   it('Create { a: 1 } ', () => {
     //@ts-expect-error
     const x1 = safeNearGas({ a: 1 });
-    assertNatErrKind(x1, 'CreateNearGas.InvalidArgs');
+    assertNatErrKind(x1, 'CreateNearGas.Args.InvalidSchema');
   });
   it(`Create { gas: '0.1' } `, () => {
     //@ts-expect-error
     const x1 = safeNearGas({ gas: '0.1' });
-    assertNatErrKind(x1, 'CreateNearGas.InvalidArgs');
+    assertNatErrKind(x1, 'CreateNearGas.Args.InvalidSchema');
   });
   it(`Create { gas: 0.1 } `, () => {
     const x1 = safeNearGas({ gas: 0.1 });
-    assertNatErrKind(x1, 'CreateNearGas.InvalidArgs');
+    assertNatErrKind(x1, 'CreateNearGas.Args.InvalidSchema');
   });
 });
 

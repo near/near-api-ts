@@ -19,7 +19,7 @@ export const createSafeFindKeyPair = (
     if (!validArgs.success)
       return result.err(
         createNatError({
-          kind: 'MemoryKeyService.FindKeyPair.InvalidArgs',
+          kind: 'MemoryKeyService.FindKeyPair.Args.InvalidSchema',
           context: { zodError: validArgs.error },
         }),
       );

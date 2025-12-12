@@ -15,7 +15,7 @@ import type {
 
 export type MemoryKeyServiceErrorVariant =
   | {
-      kind: 'CreateMemoryKeyService.InvalidArgs';
+      kind: 'CreateMemoryKeyService.Args.InvalidSchema';
       context: InvalidSchemaContext;
     }
   | {
@@ -23,7 +23,7 @@ export type MemoryKeyServiceErrorVariant =
       context: UnknownErrorContext;
     }
   | {
-      kind: 'MemoryKeyService.SignTransaction.InvalidArgs';
+      kind: 'MemoryKeyService.SignTransaction.Args.InvalidSchema';
       context: InvalidSchemaContext;
     }
   | {
@@ -37,7 +37,7 @@ export type MemoryKeyServiceErrorVariant =
       context: UnknownErrorContext;
     }
   | {
-      kind: 'MemoryKeyService.FindKeyPair.InvalidArgs';
+      kind: 'MemoryKeyService.FindKeyPair.Args.InvalidSchema';
       context: InvalidSchemaContext;
     }
   | {

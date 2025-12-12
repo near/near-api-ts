@@ -53,12 +53,12 @@ describe('NearToken', () => {
 describe('CreateNearTokenFromNear error', () => {
   it('Plain string', () => {
     const x = safeNear('1a');
-    assertNatErrKind(x, 'CreateNearTokenFromNear.InvalidArgs');
+    assertNatErrKind(x, 'CreateNearTokenFromNear.Args.InvalidSchema');
   });
 
   it('Not a string number', () => {
     //@ts-expect-error
     const x2 = safeNear(1);
-    assertNatErrKind(x2, 'CreateNearTokenFromNear.InvalidArgs');
+    assertNatErrKind(x2, 'CreateNearTokenFromNear.Args.InvalidSchema');
   });
 });

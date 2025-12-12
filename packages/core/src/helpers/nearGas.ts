@@ -148,7 +148,7 @@ export const safeGas: SafeCreateNearGasFromGas = wrapUnknownError(
     if (!validGas.success)
       return result.err(
         createNatError({
-          kind: 'CreateNearGasFromGas.InvalidArgs',
+          kind: 'CreateNearGasFromGas.Args.InvalidSchema',
           context: { zodError: validGas.error },
         }),
       );
@@ -176,7 +176,7 @@ export const safeTeraGas: SafeCreateNearGasFromTeraGas = wrapUnknownError(
     if (!validTeraGas.success)
       return result.err(
         createNatError({
-          kind: 'CreateNearGasFromTeraGas.InvalidArgs',
+          kind: 'CreateNearGasFromTeraGas.Args.InvalidSchema',
           context: { zodError: validTeraGas.error },
         }),
       );
@@ -205,7 +205,7 @@ export const safeNearGas: SafeCreateNearGas = wrapUnknownError(
     if (!validArgs.success)
       return result.err(
         createNatError({
-          kind: 'CreateNearGas.InvalidArgs',
+          kind: 'CreateNearGas.Args.InvalidSchema',
           context: { zodError: validArgs.error },
         }),
       );

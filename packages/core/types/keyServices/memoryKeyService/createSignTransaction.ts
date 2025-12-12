@@ -7,7 +7,7 @@ type SignTransactionArgs = {
 };
 
 type SignTransactionError =
-  | NatError<'MemoryKeyService.SignTransaction.InvalidArgs'>
+  | NatError<'MemoryKeyService.SignTransaction.Args.InvalidSchema'>
   | NatError<'MemoryKeyService.SignTransaction.SigningKeyPair.NotFound'>
   | NatError<'MemoryKeyService.SignTransaction.Unknown'>;
 

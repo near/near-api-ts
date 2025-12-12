@@ -166,7 +166,7 @@ export const safeYoctoNear: SafeCreateNearTokenFromYoctoNear = wrapUnknownError(
     if (!validYoctoNear.success)
       return result.err(
         createNatError({
-          kind: 'CreateNearTokenFromYoctoNear.InvalidArgs',
+          kind: 'CreateNearTokenFromYoctoNear.Args.InvalidSchema',
           context: { zodError: validYoctoNear.error },
         }),
       );
@@ -195,7 +195,7 @@ export const safeNear: SafeCreateNearTokenFromNear = wrapUnknownError(
     if (!validNear.success)
       return result.err(
         createNatError({
-          kind: 'CreateNearTokenFromNear.InvalidArgs',
+          kind: 'CreateNearTokenFromNear.Args.InvalidSchema',
           context: { zodError: validNear.error },
         }),
       );
@@ -223,7 +223,7 @@ export const safeNearToken: SafeCreateNearToken = wrapUnknownError(
     if (!validArgs.success)
       return result.err(
         createNatError({
-          kind: 'CreateNearToken.InvalidArgs',
+          kind: 'CreateNearToken.Args.InvalidSchema',
           context: { zodError: validArgs.error },
         }),
       );

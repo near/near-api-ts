@@ -20,7 +20,7 @@ export const createSafeSignTransaction = (
     if (!validArgs.success)
       return result.err(
         createNatError({
-          kind: 'MemoryKeyService.SignTransaction.InvalidArgs',
+          kind: 'MemoryKeyService.SignTransaction.Args.InvalidSchema',
           context: { zodError: validArgs.error },
         }),
       );

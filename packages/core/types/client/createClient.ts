@@ -9,7 +9,7 @@ import type { NatError } from '@common/natError';
 
 export type CreateClientErrorVariant =
   | {
-      kind: 'CreateClient.InvalidArgs';
+      kind: 'CreateClient.Args.InvalidSchema';
       context: InvalidSchemaContext;
     }
   | {
@@ -24,7 +24,7 @@ type CreateClientArgs = {
 };
 
 type CreateClientError =
-  | NatError<'CreateClient.InvalidArgs'>
+  | NatError<'CreateClient.Args.InvalidSchema'>
   | NatError<'CreateClient.Unknown'>;
 
 export type SafeCreateClient = (

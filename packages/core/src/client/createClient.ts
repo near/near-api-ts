@@ -35,7 +35,7 @@ export const safeCreateClient: SafeCreateClient = wrapUnknownError(
     if (!validArgs.success)
       return result.err(
         createNatError({
-          kind: 'CreateClient.InvalidArgs',
+          kind: 'CreateClient.Args.InvalidSchema',
           context: { zodError: validArgs.error },
         }),
       );

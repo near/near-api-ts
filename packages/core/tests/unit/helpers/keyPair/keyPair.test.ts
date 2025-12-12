@@ -17,21 +17,21 @@ describe('KeyPair', () => {
     }
   });
 
-  it('CreateKeyPair.InvalidArgs', () => {
+  it('CreateKeyPair.Args.InvalidSchema', () => {
     //@ts-expect-error
     const kp1 = safeKeyPair('123');
-    assertNatErrKind(kp1, 'CreateKeyPair.InvalidArgs');
+    assertNatErrKind(kp1, 'CreateKeyPair.Args.InvalidSchema');
 
     //@ts-expect-error
     const kp2 = safeKeyPair('ed225519:AkTn58AmaJcF7L15WqKUUfm8fv5gwzSymHXg3EDRpC44',);
-    assertNatErrKind(kp2, 'CreateKeyPair.InvalidArgs');
+    assertNatErrKind(kp2, 'CreateKeyPair.Args.InvalidSchema');
 
     const kp3 = safeKeyPair(
       'ed25519:AkTn58AmaJcF7L15WqKUUfm8fv5gwzSymHXg3EDRpC44',
     );
-    assertNatErrKind(kp3, 'CreateKeyPair.InvalidArgs');
+    assertNatErrKind(kp3, 'CreateKeyPair.Args.InvalidSchema');
 
     const kp4 = safeKeyPair('ed25519:№?');
-    assertNatErrKind(kp4, 'CreateKeyPair.InvalidArgs');
+    assertNatErrKind(kp4, 'CreateKeyPair.Args.InvalidSchema');
   });
 });

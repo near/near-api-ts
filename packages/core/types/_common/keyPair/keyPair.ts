@@ -13,7 +13,7 @@ import type { Curve } from 'nat-types/_common/curveString';
 
 export type KeyPairErrorVariant =
   | {
-      kind: 'CreateKeyPair.InvalidArgs';
+      kind: 'CreateKeyPair.Args.InvalidSchema';
       context: InvalidSchemaContext;
     }
   | {
@@ -37,7 +37,7 @@ export type Sign = (message: Hex) => SignOutput;
 export type SafeSign = (message: Hex) => Result<SignOutput, SignError>;
 
 type CreateKeyPairError =
-  | NatError<'CreateKeyPair.InvalidArgs'>
+  | NatError<'CreateKeyPair.Args.InvalidSchema'>
   | NatError<'CreateKeyPair.Unknown'>;
 
 export type KeyPair = {
