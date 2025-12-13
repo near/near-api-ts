@@ -19,6 +19,7 @@ import { isMemoryKeyService } from '../../keyServices/memoryKeyService/createMem
 import { createNatError } from '@common/natError';
 import type { Client } from 'nat-types/client/client';
 import type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
+import { createSafeSignTransaction } from './createSignTransaction';
 
 // NextFeature: move block hash to the client level and make it lazy
 
@@ -87,15 +88,24 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
 
     context.keyPool = keyPool.value;
     context.state = state.value;
-    // context.taskQueue = createTaskQueue(context);
-    // context.matcher = createMatcher(context);
-    // context.resolver = createResolver();
+    context.taskQueue = createTaskQueue(context);
+    context.matcher = createMatcher(context);
+    context.resolver = createResolver();
+
+    const safeSignTransaction = createSafeSignTransaction(context);
+
+    // Should be called before destroying the signer
+    const stop = () => {
+      context.state.clearIntervals();
+    };
 
     return result.ok({
       signerAccountId,
+      signTransaction: asThrowable(safeSignTransaction),
+      safeSignTransaction,
+      stop,
       // executeTransaction: context.taskQueue.executeTransaction, // add throwErrors
       // signTransaction: context.taskQueue.signTransaction,
-      // TODO return stop() which will clear all signer intervals
     });
   },
 );

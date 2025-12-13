@@ -5,10 +5,23 @@ import type {
   ContractFunctionName,
   TimeoutId,
   Result,
+  Milliseconds,
 } from 'nat-types/_common/common';
-import type {SignedTransaction, TransactionIntent} from 'nat-types/transaction';
-import type { SendSignedTransactionResult } from 'nat-types/client/methods/transaction/sendSignedTransaction';
+import type {
+  SignedTransaction,
+  TransactionIntent,
+} from 'nat-types/transaction';
+import type { SendSignedTransactionOutput } from 'nat-types/client/methods/transaction/sendSignedTransaction';
 import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
+import type { NatError } from '@common/natError';
+
+export type TaskQueueErrorVariant = {
+  kind: 'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached';
+  context: {
+    task: Task;
+    maxWaitInQueueMs: Milliseconds;
+  };
+};
 
 export type FullAccessKeyPriority = { accessType: 'FullAccess' };
 
@@ -52,41 +65,49 @@ export type TaskQueueContext = {
   removeTask: RemoveTask;
 };
 
-type ExecuteMultipleTransactionsResult = (
-  | { status: 'Success'; result: SendSignedTransactionResult }
-  | { status: 'Error'; error: unknown }
-  | { status: 'Canceled' }
-)[];
+export type AddExecuteTransactionTask = (
+  intent: TransactionIntent,
+) => Promise<Result<SendSignedTransactionOutput, unknown>>;
 
-type SignMultipleTransactionsResult = (
-  | { status: 'Success'; result: Result<SignedTransaction, unknown> }  // TODO Fix error type
-  | { status: 'Error'; error: unknown } // TODO Fix error type
-  | { status: 'Canceled' }
-)[];
+type SignTransactionTaskError =
+  | NatError<'MemorySigner.Matcher.NoKeysForTaskFound'>
+  | NatError<'MemorySigner.SignTransaction.Internal'>;
 
-export type ExecuteTransaction = (
-  args: TransactionIntent,
-) => Promise<Result<SendSignedTransactionResult, unknown>>;
+export type AddSignTransactionTask = (
+  intent: TransactionIntent,
+) => Promise<Result<SignedTransaction, SignTransactionTaskError>>;
 
-export type ExecuteMultipleTransactions = (args: {
-  transactionIntents: TransactionIntent[];
-}) => Promise<ExecuteMultipleTransactionsResult>;
-
-export type SignTransaction = (
-  args: TransactionIntent,
-) => Promise<Result<SignedTransaction, unknown>>;
-
-export type SignMultipleTransactions = (args: {
-  transactionIntents: TransactionIntent[];
-}) => Promise<SignMultipleTransactionsResult>;
+export type CreateAddSignTransactionTask = (
+  context: TaskQueueContext,
+) => AddSignTransactionTask;
 
 export type FindTaskForKey = (key: KeyPoolKey) => Task | undefined;
 
 export type TaskQueue = {
-  executeTransaction: ExecuteTransaction;
-  executeMultipleTransactions: ExecuteMultipleTransactions;
-  signTransaction: SignTransaction;
-  signMultipleTransactions: SignMultipleTransactions;
+  addExecuteTransactionTask: AddExecuteTransactionTask;
+  addSignTransactionTask: AddSignTransactionTask;
   findTaskForKey: FindTaskForKey;
   removeTask: RemoveTask;
 };
+
+// TODO Add later
+
+// type ExecuteMultipleTransactionsResult = (
+//   | { status: 'Success'; result: SendSignedTransactionOutput }
+//   | { status: 'Error'; error: unknown }
+//   | { status: 'Canceled' }
+// )[];
+
+// type SignMultipleTransactionsResult = (
+//   | { status: 'Success'; result: Result<SignedTransaction, unknown> }
+//   | { status: 'Error'; error: unknown }
+//   | { status: 'Canceled' }
+// )[];
+
+// export type ExecuteMultipleTransactions = (args: {
+//   transactionIntents: TransactionIntent[];
+// }) => Promise<ExecuteMultipleTransactionsResult>;
+
+// export type SignMultipleTransactions = (args: {
+//   transactionIntents: TransactionIntent[];
+// }) => Promise<SignMultipleTransactionsResult>;

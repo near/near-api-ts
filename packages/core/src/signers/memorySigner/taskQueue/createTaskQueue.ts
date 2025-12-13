@@ -1,8 +1,6 @@
 import { createFindTaskForKey } from './createFindTaskForKey';
-import { createSignTransaction } from './addTask/createSignTransaction';
-import { createExecuteTransaction } from './addTask/createExecuteTransaction';
-import { createSignMultipleTransactions } from './addTask/createSignMultipleTransactions';
-import { createExecuteMultipleTransactions } from './addTask/createExecuteMultipleTransactions';
+import { createAddSignTransactionTask } from './addTask/createAddSignTransactionTask';
+import { createAddExecuteTransactionTask } from './addTask/createAddExecuteTransactionTask';
 import { result } from '@common/utils/result';
 import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type {
@@ -10,8 +8,11 @@ import type {
   TaskQueue,
   TaskQueueContext,
 } from 'nat-types/signers/memorySigner/taskQueue';
+import { createNatError } from '@common/natError';
 
-export const createTaskQueue = (signerContext: MemorySignerContext): TaskQueue => {
+export const createTaskQueue = (
+  signerContext: MemorySignerContext,
+): TaskQueue => {
   const context: TaskQueueContext = {
     queue: [],
     cleaners: {},
@@ -31,7 +32,15 @@ export const createTaskQueue = (signerContext: MemorySignerContext): TaskQueue =
 
       context.signerContext.resolver.completeTask(
         task.taskId,
-        result.err('Task execution was rejected after timeout'), // TODO use NatError
+        result.err(
+          createNatError({
+            kind: 'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached',
+            context: {
+              task,
+              maxWaitInQueueMs: context.signerContext.maxWaitInQueueMs,
+            },
+          }),
+        ),
       );
     }, context.signerContext.maxWaitInQueueMs);
   };
@@ -44,10 +53,8 @@ export const createTaskQueue = (signerContext: MemorySignerContext): TaskQueue =
   };
 
   return {
-    signTransaction: createSignTransaction(context),
-    signMultipleTransactions: createSignMultipleTransactions(context),
-    executeTransaction: createExecuteTransaction(context),
-    executeMultipleTransactions: createExecuteMultipleTransactions(context),
+    addSignTransactionTask: createAddSignTransactionTask(context),
+    addExecuteTransactionTask: createAddExecuteTransactionTask(context),
     findTaskForKey: createFindTaskForKey(context),
     removeTask,
   };

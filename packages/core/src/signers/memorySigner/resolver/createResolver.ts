@@ -10,7 +10,7 @@ import type { Result } from 'nat-types/_common/common';
 export const createResolver = (): Resolver => {
   const activeTasks: ActiveTasks = {};
 
-  // Return Promise which will be resolved by callback, stored in the state
+  // It returns Promise which will be resolved by callback, stored in the state
   const waitForTask: WaitForTask = <T, E>(
     taskId: TaskId,
   ): Promise<Result<T, E>> =>

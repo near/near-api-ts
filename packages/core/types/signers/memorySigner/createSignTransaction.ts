@@ -1,0 +1,52 @@
+import type {
+  SignedTransaction,
+  TransactionIntent,
+} from 'nat-types/transaction';
+import type { NatError } from '@common/natError';
+import type { Result } from 'nat-types/_common/common';
+import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
+import type {
+  InternalErrorContext,
+  InvalidSchemaContext,
+} from 'nat-types/natError';
+import type { SigningKeyPriority } from 'nat-types/signers/memorySigner/taskQueue';
+
+export type SignTransactionIntentErrorVariant =
+  | {
+      kind: `MemorySigner.SignTransaction.Args.InvalidSchema`;
+      context: InvalidSchemaContext;
+    }
+  | {
+      kind: 'MemorySigner.SignTransaction.NoKeysForTaskFound';
+      context: {
+        signingKeyPriority: SigningKeyPriority;
+      };
+    }
+  | {
+      kind: `MemorySigner.SignTransaction.Internal`;
+      context: InternalErrorContext;
+    };
+
+export type SignTransactionIntentInternalErrorKind =
+  'MemorySigner.SignTransaction.Internal';
+
+type SignTransactionIntentArgs = {
+  intent: TransactionIntent;
+};
+
+type SignTransactionIntentError =
+  | NatError<'MemorySigner.SignTransaction.Args.InvalidSchema'>
+  | NatError<'MemorySigner.SignTransaction.NoKeysForTaskFound'>
+  | NatError<'MemorySigner.SignTransaction.Internal'>;
+
+export type SafeSignTransactionIntent = (
+  args: SignTransactionIntentArgs,
+) => Promise<Result<SignedTransaction, SignTransactionIntentError>>;
+
+export type SignTransactionIntent = (
+  args: SignTransactionIntentArgs,
+) => Promise<SignedTransaction>;
+
+export type CreateSafeSignTransaction = (
+  context: MemorySignerContext,
+) => SafeSignTransactionIntent;

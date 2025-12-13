@@ -3,6 +3,7 @@ import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memoryS
 import type { Task } from 'nat-types/signers/memorySigner/taskQueue';
 import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
 import type { Transaction } from 'nat-types/transaction';
+import { createNatError } from '@common/natError';
 
 export const signTransaction = async (
   signerContext: MemorySignerContext,
@@ -31,7 +32,14 @@ export const signTransaction = async (
       result.ok(signedTransaction),
     );
   } catch (e) {
-    // TODO remove catch
-    signerContext.resolver.completeTask(task.taskId, result.err(e));
+    signerContext.resolver.completeTask(
+      task.taskId,
+      result.err(
+        createNatError({
+          kind: 'MemorySigner.SignTransaction.Internal',
+          context: { cause: e },
+        }),
+      ),
+    );
   }
 };

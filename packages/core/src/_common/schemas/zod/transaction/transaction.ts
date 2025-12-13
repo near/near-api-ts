@@ -13,7 +13,7 @@ import { DeleteKeyActionSchema } from '@common/schemas/zod/transaction/actions/d
 import { DeleteAccountActionSchema } from '@common/schemas/zod/transaction/actions/deleteAccount';
 import { FunctionCallActionSchema } from '@common/schemas/zod/transaction/actions/functionCall';
 import { SignatureSchema } from '@common/schemas/zod/common/signature';
-import {CryptoHashSchema} from '@common/schemas/zod/common/cryptoHash';
+import { CryptoHashSchema } from '@common/schemas/zod/common/cryptoHash';
 
 const ActionSchema = z.union([
   CreateAccountActionSchema,
@@ -38,10 +38,12 @@ const TransactionBaseSchema = z.object({
 export const SingleActionTransactionSchema = z.object({
   ...TransactionBaseSchema.shape,
   action: ActionSchema,
+  actions: z.optional(z.never()),
 });
 
 export const MultiActionsTransactionSchema = z.object({
   ...TransactionBaseSchema.shape,
+  action: z.optional(z.never()),
   actions: z.array(ActionSchema).check(z.minLength(1)),
 });
 
@@ -51,6 +53,23 @@ export const TransactionSchema = z.union([
 ]);
 
 export type InnerTransaction = z.infer<typeof TransactionSchema>;
+
+export const SingleActionTransactionIntentSchema = z.object({
+  action: ActionSchema,
+  actions: z.optional(z.never()),
+  receiverAccountId: AccountIdSchema,
+});
+
+export const MultiActionsTransactionIntentSchema = z.object({
+  action: z.optional(z.never()),
+  actions: z.array(ActionSchema).check(z.minLength(1)),
+  receiverAccountId: AccountIdSchema,
+});
+
+export const TransactionIntentSchema = z.union([
+  SingleActionTransactionIntentSchema,
+  MultiActionsTransactionIntentSchema,
+]);
 
 export const SignedTransactionSchema = z.object({
   transaction: TransactionSchema,

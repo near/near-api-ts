@@ -3,6 +3,9 @@ import { executeTransaction } from '../executors/executeTransaction';
 import type { Task } from 'nat-types/signers/memorySigner/taskQueue';
 import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
 import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
+import type { CreateMatcher } from 'nat-types/signers/memorySigner/matcher';
+import { result } from '@common/utils/result';
+import { createNatError } from '@common/natError';
 
 const execute = (task: Task) => {
   if (task.taskType === 'SignTransaction') return signTransaction;
@@ -23,7 +26,7 @@ const executeTask = async (
   void signerContext.matcher.handleKeyUnlock(key);
 };
 
-export const createMatcher = (signerContext: MemorySignerContext) => {
+export const createMatcher: CreateMatcher = (signerContext) => {
   const handleAddTask = async (task: Task) => {
     const key = signerContext.keyPool.findKeyForTask(task);
     if (key) void executeTask(signerContext, task, key);
@@ -36,7 +39,14 @@ export const createMatcher = (signerContext: MemorySignerContext) => {
 
   const canHandleTaskInFuture = (task: Task) => {
     const canHandle = signerContext.keyPool.isKeyForTaskExist(task);
-    if (!canHandle) throw new Error(`There is no key, which can sigh the task`);
+    return canHandle
+      ? result.ok(true as const)
+      : result.err(
+          createNatError({
+            kind: 'MemorySigner.Matcher.NoKeysForTaskFound',
+            context: { signingKeyPriority: task.signingKeyPriority },
+          }),
+        );
   };
 
   return {

@@ -11,19 +11,36 @@ import type {
   CreateStateErrorVariant,
   State,
 } from 'nat-types/signers/memorySigner/state';
-import type { Matcher } from 'nat-types/signers/memorySigner/matcher';
-import type { TaskQueue } from 'nat-types/signers/memorySigner/taskQueue';
+import type {
+  Matcher,
+  MatcherErrorVariant,
+} from 'nat-types/signers/memorySigner/matcher';
+import type {
+  TaskQueue,
+  TaskQueueErrorVariant,
+} from 'nat-types/signers/memorySigner/taskQueue';
 import type {
   CreateMemorySignerErrorVariant,
   CreateMemorySignerInternalErrorKind,
 } from 'nat-types/signers/memorySigner/createMemorySigner';
+import type {
+  SafeSignTransactionIntent,
+  SignTransactionIntent,
+  SignTransactionIntentErrorVariant,
+  SignTransactionIntentInternalErrorKind,
+} from 'nat-types/signers/memorySigner/createSignTransaction';
 
 export type MemorySignerErrorVariant =
   | CreateMemorySignerErrorVariant
   | CreateStateErrorVariant
-  | CreateKeyPoolErrorVariant;
+  | CreateKeyPoolErrorVariant
+  | TaskQueueErrorVariant
+  | MatcherErrorVariant
+  | SignTransactionIntentErrorVariant;
 
-export type MemorySignerInternalErrorKind = CreateMemorySignerInternalErrorKind;
+export type MemorySignerInternalErrorKind =
+  | CreateMemorySignerInternalErrorKind
+  | SignTransactionIntentInternalErrorKind;
 
 export type MemorySignerContext = {
   signerAccountId: AccountId;
@@ -42,8 +59,8 @@ export type MemorySignerContext = {
 
 export type MemorySigner = {
   signerAccountId: AccountId;
+  signTransaction: SignTransactionIntent;
+  safeSignTransaction: SafeSignTransactionIntent;
+  stop: () => void;
   // executeTransaction: ExecuteTransaction;
-  // executeMultipleTransactions: ExecuteMultipleTransactions;
-  // signTransaction: SignTransaction;
-  // signMultipleTransactions: SignMultipleTransactions;
 };

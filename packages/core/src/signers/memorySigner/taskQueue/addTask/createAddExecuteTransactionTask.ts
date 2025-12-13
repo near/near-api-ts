@@ -1,12 +1,12 @@
 import { getSigningKeyPriority } from './helpers/getSigningKeyPriority';
 import type {
-  ExecuteTransaction,
+  AddExecuteTransactionTask,
   TaskQueueContext,
 } from 'nat-types/signers/memorySigner/taskQueue';
 import type { TransactionIntent } from 'nat-types/transaction';
 
-export const createExecuteTransaction =
-  (context: TaskQueueContext): ExecuteTransaction =>
+export const createAddExecuteTransactionTask =
+  (context: TaskQueueContext): AddExecuteTransactionTask =>
   async (args) => {
     const { matcher, resolver } = context.signerContext;
 
