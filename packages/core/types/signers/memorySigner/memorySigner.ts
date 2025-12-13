@@ -2,45 +2,35 @@ import type { AccountId, Milliseconds } from 'nat-types/_common/common';
 import type { PublicKey } from 'nat-types/_common/crypto';
 import type { Client } from 'nat-types/client/client';
 import type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
-import type { KeyPool } from 'nat-types/signers/memorySigner/keyPool';
-import type { Resolver } from 'nat-types/signers/memorySigner/resolver';
-import type { State } from 'nat-types/signers/memorySigner/state';
-import type { Matcher } from 'nat-types/signers/memorySigner/matcher';
 import type {
-  ExecuteMultipleTransactions,
-  ExecuteTransaction,
-  SignMultipleTransactions,
-  SignTransaction,
-  TaskQueue,
-} from 'nat-types/signers/memorySigner/taskQueue';
+  CreateKeyPoolErrorVariant,
+  KeyPool,
+} from 'nat-types/signers/memorySigner/keyPool';
+import type { Resolver } from 'nat-types/signers/memorySigner/resolver';
+import type {
+  CreateStateErrorVariant,
+  State,
+} from 'nat-types/signers/memorySigner/state';
+import type { Matcher } from 'nat-types/signers/memorySigner/matcher';
+import type { TaskQueue } from 'nat-types/signers/memorySigner/taskQueue';
+import type {
+  CreateMemorySignerErrorVariant,
+  CreateMemorySignerInternalErrorKind,
+} from 'nat-types/signers/memorySigner/createMemorySigner';
 
-// TODO add policies
-export type MemorySigner = {
-  signerAccountId: AccountId;
-  // executeTransaction: ExecuteTransaction;
-  // executeMultipleTransactions: ExecuteMultipleTransactions;
-  // signTransaction: SignTransaction;
-  // signMultipleTransactions: SignMultipleTransactions;
-};
+export type MemorySignerErrorVariant =
+  | CreateMemorySignerErrorVariant
+  | CreateStateErrorVariant
+  | CreateKeyPoolErrorVariant;
 
-type CreateMemorySignerArgs = {
-  signerAccountId: AccountId;
-  client: Client;
-  keyService: MemoryKeyService;
-  keyPool?: {
-    signingKeys?: PublicKey[];
-  };
-  queue?: {
-    taskTtlMs?: Milliseconds;
-  };
-};
+export type MemorySignerInternalErrorKind = CreateMemorySignerInternalErrorKind;
 
-export type SignerContext = {
+export type MemorySignerContext = {
   signerAccountId: AccountId;
   client: Client;
   keyService: MemoryKeyService;
   signingKeys?: PublicKey[];
-  taskTtlMs?: Milliseconds;
+  maxWaitInQueueMs: Milliseconds;
   taskQueue: TaskQueue;
   keyPool: KeyPool;
   resolver: Resolver;
@@ -48,6 +38,12 @@ export type SignerContext = {
   matcher: Matcher;
 };
 
-export type CreateMemorySigner = (
-  args: CreateMemorySignerArgs,
-) => Promise<MemorySigner>;
+// NextFeature: add policies
+
+export type MemorySigner = {
+  signerAccountId: AccountId;
+  // executeTransaction: ExecuteTransaction;
+  // executeMultipleTransactions: ExecuteMultipleTransactions;
+  // signTransaction: SignTransaction;
+  // signMultipleTransactions: SignMultipleTransactions;
+};

@@ -2,16 +2,15 @@ import { signTransaction } from '../executors/signTransaction';
 import { executeTransaction } from '../executors/executeTransaction';
 import type { Task } from 'nat-types/signers/memorySigner/taskQueue';
 import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
-import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
+import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 
 const execute = (task: Task) => {
   if (task.taskType === 'SignTransaction') return signTransaction;
-  if (task.taskType === 'ExecuteTransaction') return executeTransaction;
-  throw new Error('Unsupported task type');
+  return executeTransaction;
 };
 
 const executeTask = async (
-  signerContext: SignerContext,
+  signerContext: MemorySignerContext,
   task: Task,
   key: KeyPoolKey,
 ) => {
@@ -24,7 +23,7 @@ const executeTask = async (
   void signerContext.matcher.handleKeyUnlock(key);
 };
 
-export const createMatcher = (signerContext: SignerContext) => {
+export const createMatcher = (signerContext: MemorySignerContext) => {
   const handleAddTask = async (task: Task) => {
     const key = signerContext.keyPool.findKeyForTask(task);
     if (key) void executeTask(signerContext, task, key);

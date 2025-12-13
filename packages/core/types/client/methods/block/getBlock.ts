@@ -2,12 +2,10 @@ import type { BlockReference, Result } from 'nat-types/_common/common';
 import type { RpcBlockResponse } from '@near-js/jsonrpc-types';
 import type { ClientContext } from 'nat-types/client/client';
 import type { PartialTransportPolicy } from 'nat-types/client/transport/transport';
-import type { SendRequestErrorVariant } from 'nat-types/client/transport/sendRequest';
-import type { CommonRpcMethodErrorVariant } from 'nat-types/client/methods/_common/common';
 import type { NatError } from '@common/natError';
+import type { CommonRpcMethodErrorVariant } from 'nat-types/client/methods/_common/common';
 
 export type GetBlockErrorVariant =
-  | SendRequestErrorVariant<'Client.GetBlock'>
   | CommonRpcMethodErrorVariant<'Client.GetBlock'>
   | {
       kind: `Client.GetBlock.Rpc.NotSynced`;
@@ -18,7 +16,7 @@ export type GetBlockErrorVariant =
       context: null;
     };
 
-export type GetBlockUnknownErrorKind = 'Client.GetBlock.Unknown';
+export type GetBlockInternalErrorKind = 'Client.GetBlock.Internal';
 
 export type GetBlockArgs = {
   blockReference?: BlockReference;
@@ -34,23 +32,12 @@ export type GetBlockOutcome = {
   rawRpcResult: RpcBlockResponse;
 };
 
-type GetBlockError =
-  // Function Arguments
+export type GetBlockError =
   | NatError<'Client.GetBlock.Args.InvalidSchema'>
-  // Transport
-  | NatError<'Client.GetBlock.PreferredRpc.NotFound'>
-  | NatError<'Client.GetBlock.Request.FetchFailed'>
-  | NatError<'Client.GetBlock.Request.Attempt.Timeout'>
-  | NatError<'Client.GetBlock.Request.Timeout'>
-  | NatError<'Client.GetBlock.Request.Aborted'>
-  | NatError<'Client.GetBlock.Response.JsonParseFailed'>
-  | NatError<'Client.GetBlock.Response.InvalidSchema'>
-  // Rpc - block
+  | NatError<'Client.GetBlock.SendRequest.Failed'>
   | NatError<'Client.GetBlock.Rpc.NotSynced'>
   | NatError<'Client.GetBlock.Rpc.Block.NotFound'>
-  // Stub
-  | NatError<'Client.GetBlock.Rpc.Internal'>
-  | NatError<'Client.GetBlock.Unknown'>;
+  | NatError<'Client.GetBlock.Internal'>;
 
 export type SafeGetBlock = (
   args?: GetBlockArgs,

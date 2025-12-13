@@ -7,7 +7,7 @@ import type { Hex, Result } from 'nat-types/_common/common';
 import type { NatError } from '@common/natError';
 import type {
   InvalidSchemaContext,
-  UnknownErrorContext,
+  InternalErrorContext,
 } from 'nat-types/natError';
 import type { Curve } from 'nat-types/_common/curveString';
 
@@ -17,12 +17,12 @@ export type KeyPairErrorVariant =
       context: InvalidSchemaContext;
     }
   | {
-      kind: 'CreateKeyPair.Unknown';
-      context: UnknownErrorContext;
+      kind: 'CreateKeyPair.Internal';
+      context: InternalErrorContext;
     }
   | {
-      kind: 'KeyPair.Sign.Unknown';
-      context: UnknownErrorContext;
+      kind: 'KeyPair.Sign.Internal';
+      context: InternalErrorContext;
     };
 
 export type SignOutput = {
@@ -31,14 +31,14 @@ export type SignOutput = {
   u8Signature: Uint8Array;
 };
 
-type SignError = NatError<'KeyPair.Sign.Unknown'>;
+type SignError = NatError<'KeyPair.Sign.Internal'>;
 
 export type Sign = (message: Hex) => SignOutput;
 export type SafeSign = (message: Hex) => Result<SignOutput, SignError>;
 
 type CreateKeyPairError =
   | NatError<'CreateKeyPair.Args.InvalidSchema'>
-  | NatError<'CreateKeyPair.Unknown'>;
+  | NatError<'CreateKeyPair.Internal'>;
 
 export type KeyPair = {
   publicKey: PublicKey;

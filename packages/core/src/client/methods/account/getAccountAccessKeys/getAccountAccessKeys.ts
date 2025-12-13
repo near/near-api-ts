@@ -7,10 +7,9 @@ import {
   BlockReferenceSchema,
   PoliciesSchema,
 } from '@common/schemas/zod/client';
-import { wrapUnknownError } from '@common/utils/wrapUnknownError';
+import { wrapInternalError } from '@common/utils/wrapInternalError';
 import { result } from '@common/utils/result';
 import { createNatError } from '@common/natError';
-import { repackError } from '@common/utils/repackError';
 import { handleError } from './handleError';
 import { handleResult } from './handleResult';
 
@@ -24,7 +23,7 @@ const GetAccountAccessKeysArgsSchema = z.object({
 export const createSafeGetAccountAccessKeys: CreateSafeGetAccountAccessKeys = (
   context,
 ) =>
-  wrapUnknownError('Client.GetAccountAccessKeys.Unknown', async (args) => {
+  wrapInternalError('Client.GetAccountAccessKeys.Internal', async (args) => {
     const validArgs = GetAccountAccessKeysArgsSchema.safeParse(args);
 
     if (!validArgs.success)
@@ -47,11 +46,12 @@ export const createSafeGetAccountAccessKeys: CreateSafeGetAccountAccessKeys = (
     });
 
     if (!rpcResponse.ok)
-      return repackError({
-        error: rpcResponse.error,
-        originPrefix: 'Client.Transport.SendRequest',
-        targetPrefix: 'Client.GetAccountAccessKeys',
-      });
+      return result.err(
+        createNatError({
+          kind: 'Client.GetAccountAccessKeys.SendRequest.Failed',
+          context: { cause: rpcResponse.error },
+        }),
+      );
 
     return rpcResponse.value.error
       ? handleError(rpcResponse.value)

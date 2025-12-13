@@ -9,8 +9,13 @@ export const handleResult = (rpcResponse: RpcResponse) => {
   if (!rpcResult.success)
     return result.err(
       createNatError({
-        kind: 'Client.GetBlock.Response.InvalidSchema',
-        context: { zodError: rpcResult.error },
+        kind: 'Client.GetBlock.SendRequest.Failed',
+        context: {
+          cause: createNatError({
+            kind: 'Client.Transport.SendRequest.Response.Result.InvalidSchema',
+            context: { zodError: rpcResult.error },
+          }),
+        },
       }),
     );
 

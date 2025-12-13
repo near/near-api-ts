@@ -1,9 +1,8 @@
 import * as z from 'zod/mini';
 import { toNativeBlockReference } from '@common/transformers/toNative/blockReference';
 import type { CreateSafeGetAccountInfo } from 'nat-types/client/methods/account/getAccountInfo';
-import { wrapUnknownError } from '@common/utils/wrapUnknownError';
+import { wrapInternalError } from '@common/utils/wrapInternalError';
 import { handleResult } from './handleResult';
-import { repackError } from '@common/utils/repackError';
 import {
   BaseOptionsSchema,
   BlockReferenceSchema,
@@ -24,7 +23,7 @@ const GetAccountInfoArgsSchema = z.object({
 });
 
 export const createSafeGetAccountInfo: CreateSafeGetAccountInfo = (context) =>
-  wrapUnknownError('Client.GetAccountInfo.Unknown', async (args) => {
+  wrapInternalError('Client.GetAccountInfo.Internal', async (args) => {
     const validArgs = GetAccountInfoArgsSchema.safeParse(args);
 
     if (!validArgs.success)
@@ -49,11 +48,12 @@ export const createSafeGetAccountInfo: CreateSafeGetAccountInfo = (context) =>
     });
 
     if (!rpcResponse.ok)
-      return repackError({
-        error: rpcResponse.error,
-        originPrefix: 'Client.Transport.SendRequest',
-        targetPrefix: 'Client.GetAccountInfo',
-      });
+      return result.err(
+        createNatError({
+          kind: 'Client.GetAccountInfo.SendRequest.Failed',
+          context: { cause: rpcResponse.error },
+        }),
+      );
 
     return rpcResponse.value.error
       ? handleError(rpcResponse.value)

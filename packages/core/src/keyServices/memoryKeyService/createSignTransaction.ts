@@ -1,7 +1,7 @@
 import * as z from 'zod/mini';
 import { getTransactionHash } from '@common/utils/getTransactionHash';
 import { result } from '@common/utils/result';
-import { wrapUnknownError } from '@common/utils/wrapUnknownError';
+import { wrapInternalError } from '@common/utils/wrapInternalError';
 import type { MemoryKeyServiceContext } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 import { createNatError } from '@common/natError';
 import type { SafeSignTransaction } from 'nat-types/keyServices/memoryKeyService/createSignTransaction';
@@ -14,45 +14,48 @@ const SignTransactionArgsSchema = z.object({
 export const createSafeSignTransaction = (
   context: MemoryKeyServiceContext,
 ): SafeSignTransaction =>
-  wrapUnknownError('MemoryKeyService.SignTransaction.Unknown', async (args) => {
-    const validArgs = SignTransactionArgsSchema.safeParse(args);
+  wrapInternalError(
+    'MemoryKeyService.SignTransaction.Internal',
+    async (args) => {
+      const validArgs = SignTransactionArgsSchema.safeParse(args);
 
-    if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'MemoryKeyService.SignTransaction.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
-
-    const { transaction: innerTransaction } = validArgs.data;
-
-    const keyPair = context.safeFindKeyPair({
-      publicKey: innerTransaction.signerPublicKey.publicKey,
-    });
-
-    // TODO Think if it's possible to wrap into some helper function
-    if (!keyPair.ok) {
-      if (keyPair.error.kind === 'MemoryKeyService.FindKeyPair.NotFound')
+      if (!validArgs.success)
         return result.err(
           createNatError({
-            kind: 'MemoryKeyService.SignTransaction.SigningKeyPair.NotFound',
-            context: {
-              signerPublicKey: innerTransaction.signerPublicKey.publicKey,
-            },
+            kind: 'MemoryKeyService.SignTransaction.Args.InvalidSchema',
+            context: { zodError: validArgs.error },
           }),
         );
-      throw keyPair.error;
-    }
 
-    const { transactionHash, u8TransactionHash } =
-      getTransactionHash(innerTransaction);
+      const { transaction: innerTransaction } = validArgs.data;
 
-    const { signature } = keyPair.value.sign(u8TransactionHash);
+      const keyPair = context.safeFindKeyPair({
+        publicKey: innerTransaction.signerPublicKey.publicKey,
+      });
 
-    return result.ok({
-      transaction: args.transaction,
-      transactionHash,
-      signature,
-    });
-  });
+      // TODO Think if it's possible to wrap into some helper function
+      if (!keyPair.ok) {
+        if (keyPair.error.kind === 'MemoryKeyService.FindKeyPair.NotFound')
+          return result.err(
+            createNatError({
+              kind: 'MemoryKeyService.SignTransaction.SigningKeyPair.NotFound',
+              context: {
+                signerPublicKey: innerTransaction.signerPublicKey.publicKey,
+              },
+            }),
+          );
+        throw keyPair.error;
+      }
+
+      const { transactionHash, u8TransactionHash } =
+        getTransactionHash(innerTransaction);
+
+      const { signature } = keyPair.value.sign(u8TransactionHash);
+
+      return result.ok({
+        transaction: args.transaction,
+        transactionHash,
+        signature,
+      });
+    },
+  );

@@ -1,24 +1,24 @@
 import { result } from '@common/utils/result';
 import { createNatError, type NatError } from '@common/natError';
-import type { NatUnknownErrorKind } from 'nat-types/natError';
+import type { NatInternalErrorKind } from 'nat-types/natError';
 import type { ResultErr } from 'nat-types/_common/common';
 
-export type WrapUnknownError = {
+export type WrapInternalError = {
   // #1
-  <A extends unknown[], R, K extends NatUnknownErrorKind>(
+  <A extends unknown[], R, K extends NatInternalErrorKind>(
     kind: K,
     fn: (...args: A) => Promise<R>,
   ): (...args: A) => Promise<R | ResultErr<NatError<K>>>;
   // #2
-  <A extends unknown[], R, K extends NatUnknownErrorKind>(
+  <A extends unknown[], R, K extends NatInternalErrorKind>(
     kind: K,
     fn: (...args: A) => R,
   ): (...args: A) => R | ResultErr<NatError<K>>;
 };
 
-const returnError = <K extends NatUnknownErrorKind>(e: unknown, kind: K) =>
+const returnError = <K extends NatInternalErrorKind>(e: unknown, kind: K) =>
   result.err(
-    createNatError<NatUnknownErrorKind>({
+    createNatError<NatInternalErrorKind>({
       kind,
       context: { cause: e },
     }),
@@ -43,7 +43,7 @@ const returnError = <K extends NatUnknownErrorKind>(e: unknown, kind: K) =>
  * ensuring that all internal "safe" functions behave consistently,
  * even if the underlying implementation misbehaves.
  */
-export const wrapUnknownError: WrapUnknownError =
+export const wrapInternalError: WrapInternalError =
   (kind, fn: any) =>
   (...args: unknown[]) => {
     try {

@@ -1,4 +1,4 @@
-import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
+import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { UUID } from 'crypto';
 import type {
   AccountId,
@@ -47,7 +47,7 @@ export type RemoveTask = (taskId: TaskId) => void;
 export type TaskQueueContext = {
   queue: Task[];
   cleaners: Record<TaskId, TimeoutId>;
-  signerContext: SignerContext;
+  signerContext: MemorySignerContext;
   addTask: AddTask;
   removeTask: RemoveTask;
 };

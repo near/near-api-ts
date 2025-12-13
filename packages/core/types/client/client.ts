@@ -1,18 +1,18 @@
 import type {
   CreateClientErrorVariant,
-  CreateClientUnknownErrorKind,
+  CreateClientInternalErrorKind,
 } from 'nat-types/client/createClient';
 import type { SendRequest } from 'nat-types/client/transport/sendRequest';
 import type {
   GetAccountInfo,
   GetAccountInfoErrorVariant,
-  GetAccountInfoUnknownErrorKind,
+  GetAccountInfoInternalErrorKind,
   SafeGetAccountInfo,
 } from 'nat-types/client/methods/account/getAccountInfo';
 import type {
   GetAccountAccessKey,
   GetAccountAccessKeyErrorVariant,
-  GetAccountAccessKeyUnknownErrorKind,
+  GetAccountAccessKeyInternalErrorKind,
   SafeGetAccountAccessKey,
 } from 'nat-types/client/methods/account/getAccountAccessKey';
 import type { TransportErrorVariant } from 'nat-types/client/transport/transport';
@@ -20,20 +20,21 @@ import type {
   SafeSendSignedTransaction,
   SendSignedTransaction,
   SendSignedTransactionErrorVariant,
-  SendSignedTransactionUnknownErrorKind,
+  SendSignedTransactionInternalErrorKind,
 } from 'nat-types/client/methods/transaction/sendSignedTransaction';
 import type {
   GetAccountAccessKeys,
   GetAccountAccessKeysErrorVariant,
-  GetAccountAccessKeysUnknownErrorKind,
+  GetAccountAccessKeysInternalErrorKind,
   SafeGetAccountAccessKeys,
 } from 'nat-types/client/methods/account/getAccountAccessKeys';
 import type {
   GetBlock,
   GetBlockErrorVariant,
-  GetBlockUnknownErrorKind,
+  GetBlockInternalErrorKind,
   SafeGetBlock,
 } from 'nat-types/client/methods/block/getBlock';
+import {ClientBrand} from '../../src/client/createClient';
 
 export type ClientErrorVariant =
   | CreateClientErrorVariant
@@ -44,13 +45,13 @@ export type ClientErrorVariant =
   | GetBlockErrorVariant
   | SendSignedTransactionErrorVariant;
 
-export type ClientUnknownErrorKind =
-  | CreateClientUnknownErrorKind
-  | GetAccountInfoUnknownErrorKind
-  | GetAccountAccessKeyUnknownErrorKind
-  | GetAccountAccessKeysUnknownErrorKind
-  | GetBlockUnknownErrorKind
-  | SendSignedTransactionUnknownErrorKind;
+export type ClientInternalErrorKind =
+  | CreateClientInternalErrorKind
+  | GetAccountInfoInternalErrorKind
+  | GetAccountAccessKeyInternalErrorKind
+  | GetAccountAccessKeysInternalErrorKind
+  | GetBlockInternalErrorKind
+  | SendSignedTransactionInternalErrorKind;
 
 export type ClientContext = {
   sendRequest: SendRequest;
@@ -59,6 +60,7 @@ export type ClientContext = {
 // NextFeature: add cache / add defaults atMomentOf / logger
 
 export type Client = {
+  [ClientBrand]: true;
   // throwable variants
   getAccountInfo: GetAccountInfo;
   getAccountAccessKey: GetAccountAccessKey;

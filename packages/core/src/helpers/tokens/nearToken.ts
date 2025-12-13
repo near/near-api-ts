@@ -23,7 +23,7 @@ import {
 } from '@common/schemas/zod/common/nearToken';
 import { result } from '@common/utils/result';
 import { createNatError } from '@common/natError';
-import { wrapUnknownError } from '@common/utils/wrapUnknownError';
+import { wrapInternalError } from '@common/utils/wrapInternalError';
 import { asThrowable } from '@common/utils/asThrowable';
 import type { Result } from 'nat-types/_common/common';
 
@@ -77,7 +77,7 @@ const nearTokenProto: ThisType<NearToken> = {
   safeAdd(
     value: NearTokenArgs | NearToken,
   ): Result<NearToken, CreateNearTokenError> {
-    return wrapUnknownError('CreateNearToken.Unknown', () => {
+    return wrapInternalError('CreateNearToken.Internal', () => {
       const yoctoNear = toYoctoNear(value);
       return yoctoNear.ok
         ? safeNearToken({ yoctoNear: this.yoctoNear + yoctoNear.value })
@@ -92,7 +92,7 @@ const nearTokenProto: ThisType<NearToken> = {
   safeSub(
     value: NearTokenArgs | NearToken,
   ): Result<NearToken, CreateNearTokenError> {
-    return wrapUnknownError('CreateNearToken.Unknown', () => {
+    return wrapInternalError('CreateNearToken.Internal', () => {
       const yoctoNear = toYoctoNear(value);
       return yoctoNear.ok
         ? safeNearToken({ yoctoNear: this.yoctoNear - yoctoNear.value })
@@ -107,7 +107,7 @@ const nearTokenProto: ThisType<NearToken> = {
   safeGt(
     value: NearTokenArgs | NearToken,
   ): Result<boolean, CreateNearTokenError> {
-    return wrapUnknownError('CreateNearToken.Unknown', () => {
+    return wrapInternalError('CreateNearToken.Internal', () => {
       const yoctoNear = toYoctoNear(value);
       return yoctoNear.ok
         ? result.ok(this.yoctoNear > yoctoNear.value)
@@ -122,7 +122,7 @@ const nearTokenProto: ThisType<NearToken> = {
   safeLt(
     value: NearTokenArgs | NearToken,
   ): Result<boolean, CreateNearTokenError> {
-    return wrapUnknownError('CreateNearToken.Unknown', () => {
+    return wrapInternalError('CreateNearToken.Internal', () => {
       const yoctoNear = toYoctoNear(value);
       return yoctoNear.ok
         ? result.ok(this.yoctoNear < yoctoNear.value)
@@ -158,8 +158,8 @@ const nearTokenProto: ThisType<NearToken> = {
 
 // FromYoctoNear
 
-export const safeYoctoNear: SafeCreateNearTokenFromYoctoNear = wrapUnknownError(
-  'CreateNearTokenFromYoctoNear.Unknown',
+export const safeYoctoNear: SafeCreateNearTokenFromYoctoNear = wrapInternalError(
+  'CreateNearTokenFromYoctoNear.Internal',
   (yoctoNear) => {
     const validYoctoNear = YoctoNearInputSchema.safeParse(yoctoNear);
 
@@ -187,8 +187,8 @@ export const throwableYoctoNear: CreateNearTokenFromYoctoNear =
 
 // FromNear
 
-export const safeNear: SafeCreateNearTokenFromNear = wrapUnknownError(
-  'CreateNearTokenFromNear.Unknown',
+export const safeNear: SafeCreateNearTokenFromNear = wrapInternalError(
+  'CreateNearTokenFromNear.Internal',
   (near) => {
     const validNear = NearInputSchema.safeParse(near);
 
@@ -215,8 +215,8 @@ export const throwableNear: CreateNearTokenFromNear = asThrowable(safeNear);
 
 // Near Token
 
-export const safeNearToken: SafeCreateNearToken = wrapUnknownError(
-  'CreateNearToken.Unknown',
+export const safeNearToken: SafeCreateNearToken = wrapInternalError(
+  'CreateNearToken.Internal',
   (args) => {
     const validArgs = NearTokenArgsSchema.safeParse(args);
 

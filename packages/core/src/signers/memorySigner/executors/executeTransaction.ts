@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
 import type { Nonce, Result } from 'nat-types/_common/common';
-import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
+import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { Task } from 'nat-types/signers/memorySigner/taskQueue';
 import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
 import { result } from '@common/utils/result';
@@ -49,7 +49,7 @@ const maybeNonceError = (e: unknown): Result<{ akNonce: Nonce }, undefined> => {
 };
 
 export const executeTransaction = async (
-  signerContext: SignerContext,
+  signerContext: MemorySignerContext,
   task: Task,
   key: KeyPoolKey,
 ) => {

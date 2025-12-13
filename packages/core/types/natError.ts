@@ -14,35 +14,20 @@ import type { NearTokenErrorVariant } from 'nat-types/_common/nearToken';
 import type { NearGasErrorVariant } from 'nat-types/_common/nearGas';
 import type {
   ClientErrorVariant,
-  ClientUnknownErrorKind
+  ClientInternalErrorKind,
 } from 'nat-types/client/client';
+import type {
+  MemorySignerErrorVariant,
+  MemorySignerInternalErrorKind,
+} from 'nat-types/signers/memorySigner/memorySigner';
 
-export type UnknownErrorContext = { cause: unknown };
+export type InternalErrorContext = { cause: unknown };
 export type InvalidSchemaContext = { zodError: $ZodError };
 
-export type NatUnknownErrorKind = NatError<
-  | ClientUnknownErrorKind
-  | 'CreateMemoryKeyService.Unknown'
-  | 'MemoryKeyService.SignTransaction.Unknown'
-  | 'MemoryKeyService.FindKeyPair.Unknown'
-  | 'CreateNearToken.Unknown'
-  | 'CreateNearTokenFromYoctoNear.Unknown'
-  | 'CreateNearTokenFromNear.Unknown'
-  | 'CreateNearGas.Unknown'
-  | 'CreateNearGasFromGas.Unknown'
-  | 'CreateNearGasFromTeraGas.Unknown'
-  | 'CreateKeyPair.Unknown'
-  | 'KeyPair.Sign.Unknown'
-  | 'CreateRandomEd25519KeyPair.Unknown'
-  | 'Ed25519KeyPair.Sign.Unknown'
-  | 'CreateRandomSecp256k1KeyPair.Unknown'
-  | 'Secp256k1KeyPair.Sign.Unknown'
->['kind'];
-
-// TODO split on inner/public errors
 type NatErrorVariant =
   | ClientErrorVariant
   | MemoryKeyServiceErrorVariant
+  | MemorySignerErrorVariant
   | NearTokenErrorVariant
   | NearGasErrorVariant
   | KeyPairErrorVariant
@@ -51,6 +36,27 @@ type NatErrorVariant =
   | CreateRandomSecp256k1KeyPairErrorVariant
   | RandomSecp256k1KeyPairErrorVariant;
 
+export type NatInternalErrorKind = NatError<
+  | ClientInternalErrorKind
+  | MemorySignerInternalErrorKind
+  | 'CreateMemoryKeyService.Internal'
+  | 'MemoryKeyService.SignTransaction.Internal'
+  | 'MemoryKeyService.FindKeyPair.Internal'
+  | 'CreateNearToken.Internal'
+  | 'CreateNearTokenFromYoctoNear.Internal'
+  | 'CreateNearTokenFromNear.Internal'
+  | 'CreateNearGas.Internal'
+  | 'CreateNearGasFromGas.Internal'
+  | 'CreateNearGasFromTeraGas.Internal'
+  | 'CreateKeyPair.Internal'
+  | 'KeyPair.Sign.Internal'
+  | 'CreateRandomEd25519KeyPair.Internal'
+  | 'Ed25519KeyPair.Sign.Internal'
+  | 'CreateRandomSecp256k1KeyPair.Internal'
+  | 'Secp256k1KeyPair.Sign.Internal'
+>['kind'];
+
+// TODO split on inner/public errors
 export type NatErrorKind = NatErrorVariant['kind'];
 
 export type ContextFor<K extends NatErrorKind> = Extract<

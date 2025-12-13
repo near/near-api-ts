@@ -25,5 +25,6 @@ export const createSignTransaction =
       matcher.handleAddTask(task);
     });
 
+    // TODO think if we can remove any
     return resolver.waitForTask<SignedTransaction, any>(task.taskId);
   };

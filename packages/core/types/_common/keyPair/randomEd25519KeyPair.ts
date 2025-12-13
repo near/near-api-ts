@@ -1,4 +1,4 @@
-import type { UnknownErrorContext } from 'nat-types/natError';
+import type { InternalErrorContext } from 'nat-types/natError';
 import type {
   Ed25519PrivateKey,
   Ed25519PublicKey,
@@ -9,8 +9,8 @@ import type { Hex, Result } from 'nat-types/_common/common';
 import type { Ed25519Curve } from 'nat-types/_common/curveString';
 
 export type RandomEd25519KeyPairErrorVariant = {
-  kind: 'Ed25519KeyPair.Sign.Unknown';
-  context: UnknownErrorContext;
+  kind: 'Ed25519KeyPair.Sign.Internal';
+  context: InternalErrorContext;
 };
 
 // *********** Sign *****
@@ -21,7 +21,7 @@ export type SignByEd25519KeyOutput = {
   u8Signature: Uint8Array;
 };
 
-type SignByEd25519KeyError = NatError<'Ed25519KeyPair.Sign.Unknown'>;
+type SignByEd25519KeyError = NatError<'Ed25519KeyPair.Sign.Internal'>;
 
 export type SignByEd25519Key = (message: Hex) => SignByEd25519KeyOutput;
 
@@ -32,12 +32,12 @@ export type SafeSignByEd25519Key = (
 // ***********  CreateRandomEd25519KeyPair *****
 
 export type CreateRandomEd25519KeyPairErrorVariant = {
-  kind: 'CreateRandomEd25519KeyPair.Unknown';
-  context: UnknownErrorContext;
+  kind: 'CreateRandomEd25519KeyPair.Internal';
+  context: InternalErrorContext;
 };
 
 type CreateRandomEd25519KeyPairError =
-  NatError<'CreateRandomEd25519KeyPair.Unknown'>;
+  NatError<'CreateRandomEd25519KeyPair.Internal'>;
 
 export type Ed25519KeyPair = {
   publicKey: Ed25519PublicKey;

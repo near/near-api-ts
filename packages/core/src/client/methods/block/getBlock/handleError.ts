@@ -11,30 +11,17 @@ export const handleError = (rpcResponse: RpcResponse) => {
   if (!rpcError.success)
     return result.err(
       createNatError({
-        kind: 'Client.GetBlock.Response.InvalidSchema',
-        context: { zodError: rpcError.error },
+        kind: 'Client.GetBlock.SendRequest.Failed',
+        context: {
+          cause: createNatError({
+            kind: 'Client.Transport.SendRequest.Response.Error.InvalidSchema',
+            context: { zodError: rpcError.error },
+          }),
+        },
       }),
     );
 
   const { name, cause } = rpcError.data;
-
-  // General errors
-  if (name === 'INTERNAL_ERROR')
-    return result.err(
-      createNatError({
-        kind: `Client.GetBlock.Rpc.Internal`,
-        context: { message: cause.info.errorMessage },
-      }),
-    );
-
-  if (name === 'HANDLER_ERROR' && cause.name === 'INTERNAL_ERROR') {
-    return result.err(
-      createNatError({
-        kind: `Client.GetBlock.Rpc.Internal`,
-        context: { message: cause.info.errorMessage },
-      }),
-    );
-  }
 
   // Block errors
   if (name === 'HANDLER_ERROR') {
@@ -58,12 +45,12 @@ export const handleError = (rpcResponse: RpcResponse) => {
   // Stub
   return result.err(
     createNatError({
-      kind: 'Client.GetBlock.Unknown',
+      kind: 'Client.GetBlock.Internal',
       context: {
-        cause: {
-          kind: 'RpcError.Unclassified',
-          rpcResponse,
-        },
+        cause: createNatError({
+          kind: 'Client.GetBlock.Rpc.Unclassified',
+          context: { rpcResponse },
+        }),
       },
     }),
   );

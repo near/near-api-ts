@@ -10,13 +10,11 @@ import type {
 import type { ClientContext } from 'nat-types/client/client';
 import type { PartialTransportPolicy } from 'nat-types/client/transport/transport';
 import type { NatError } from '@common/natError';
-import type { SendRequestErrorVariant } from 'nat-types/client/transport/sendRequest';
 import type { CommonRpcMethodErrorVariant } from 'nat-types/client/methods/_common/common';
 import type { CommonRpcQueryMethodErrorVariant } from 'nat-types/client/methods/_common/query';
 import type { RpcQueryViewAccessKeyOkResult } from '../../../../src/client/methods/account/getAccountAccessKey/handleResult';
 
 export type GetAccountAccessKeyErrorVariant =
-  | SendRequestErrorVariant<'Client.GetAccountAccessKey'>
   | CommonRpcMethodErrorVariant<'Client.GetAccountAccessKey'>
   | CommonRpcQueryMethodErrorVariant<'Client.GetAccountAccessKey'>
   | {
@@ -29,8 +27,8 @@ export type GetAccountAccessKeyErrorVariant =
       };
     };
 
-export type GetAccountAccessKeyUnknownErrorKind =
-  'Client.GetAccountAccessKey.Unknown';
+export type GetAccountAccessKeyInternalErrorKind =
+  'Client.GetAccountAccessKey.Internal';
 
 export type GetAccountAccessKeyArgs = {
   accountId: AccountId;
@@ -53,26 +51,16 @@ export type GetAccountAccessKeyOutput = {
 };
 
 type GetAccountAccessKeyError =
-  // Function Arguments
   | NatError<'Client.GetAccountAccessKey.Args.InvalidSchema'>
-  // Transport
-  | NatError<'Client.GetAccountAccessKey.PreferredRpc.NotFound'>
-  | NatError<'Client.GetAccountAccessKey.Request.FetchFailed'>
-  | NatError<'Client.GetAccountAccessKey.Request.Attempt.Timeout'>
-  | NatError<'Client.GetAccountAccessKey.Request.Timeout'>
-  | NatError<'Client.GetAccountAccessKey.Request.Aborted'>
-  | NatError<'Client.GetAccountAccessKey.Response.JsonParseFailed'>
-  | NatError<'Client.GetAccountAccessKey.Response.InvalidSchema'>
-  // Rpc - query - common
+  | NatError<'Client.GetAccountAccessKey.SendRequest.Failed'>
+  // Rpc - query
   | NatError<'Client.GetAccountAccessKey.Rpc.NotSynced'>
   | NatError<'Client.GetAccountAccessKey.Rpc.Shard.NotTracked'>
   | NatError<'Client.GetAccountAccessKey.Rpc.Block.GarbageCollected'>
   | NatError<'Client.GetAccountAccessKey.Rpc.Block.NotFound'>
-  | NatError<'Client.GetAccountAccessKey.Rpc.Internal'>
-  // Rpc - query - view_access_key
   | NatError<'Client.GetAccountAccessKey.Rpc.AccountAccessKey.NotFound'>
   // Stub
-  | NatError<'Client.GetAccountAccessKey.Unknown'>;
+  | NatError<'Client.GetAccountAccessKey.Internal'>;
 
 export type SafeGetAccountAccessKey = (
   args: GetAccountAccessKeyArgs,

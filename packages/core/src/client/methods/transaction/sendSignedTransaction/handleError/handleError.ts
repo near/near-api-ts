@@ -12,30 +12,19 @@ export const handleError = (rpcResponse: RpcResponse) => {
   if (!rpcError.success)
     return result.err(
       createNatError({
-        kind: 'Client.SendSignedTransaction.Response.InvalidSchema',
-        context: { zodError: rpcError.error },
+        kind: 'Client.SendSignedTransaction.SendRequest.Failed',
+        context: {
+          cause: createNatError({
+            kind: 'Client.Transport.SendRequest.Response.Error.InvalidSchema',
+            context: { zodError: rpcError.error },
+          }),
+        },
       }),
     );
 
   const { name, cause } = rpcError.data;
 
-  if (name === 'INTERNAL_ERROR')
-    return result.err(
-      createNatError({
-        kind: `Client.SendSignedTransaction.Rpc.Internal`,
-        context: { message: cause.info.errorMessage },
-      }),
-    );
-
   if (name === 'HANDLER_ERROR') {
-    if (cause.name === 'INTERNAL_ERROR')
-      return result.err(
-        createNatError({
-          kind: `Client.SendSignedTransaction.Rpc.Internal`,
-          context: { message: cause.info.debugInfo },
-        }),
-      );
-
     if (cause.name === 'TIMEOUT_ERROR')
       return result.err(
         createNatError({
@@ -51,12 +40,12 @@ export const handleError = (rpcResponse: RpcResponse) => {
   // Stub
   return result.err(
     createNatError({
-      kind: 'Client.SendSignedTransaction.Unknown',
+      kind: 'Client.SendSignedTransaction.Internal',
       context: {
-        cause: {
-          kind: 'RpcError.Unclassified',
-          rpcResponse,
-        },
+        cause: createNatError({
+          kind: 'Client.SendSignedTransaction.Rpc.Unclassified',
+          context: { rpcResponse },
+        }),
       },
     }),
   );

@@ -6,7 +6,7 @@ import {
   toSecp256k1CurveString,
 } from '@common/transformers/toCurveString';
 import { BinaryLengths } from '@common/configs/constants';
-import { wrapUnknownError } from '@common/utils/wrapUnknownError';
+import { wrapInternalError } from '@common/utils/wrapInternalError';
 import { asThrowable } from '@common/utils/asThrowable';
 import type { PublicKey } from 'nat-types/_common/crypto';
 import type {
@@ -28,14 +28,14 @@ const getPublicKey = ({ curve, u8PrivateKey }: InnerPrivateKey): PublicKey =>
     : toSecp256k1CurveString(u8PrivateKey.slice(Secp256k1.SecretKey));
 
 const createSafeSign = ({ curve, u8PrivateKey }: InnerPrivateKey): SafeSign =>
-  wrapUnknownError('KeyPair.Sign.Unknown', (message) =>
+  wrapInternalError('KeyPair.Sign.Internal', (message) =>
     curve === 'ed25519'
       ? signByEd25519Key(u8PrivateKey, message)
       : signBySecp256k1Key(u8PrivateKey, message),
   );
 
-export const safeKeyPair: SafeCreateKeyPair = wrapUnknownError(
-  'CreateKeyPair.Unknown',
+export const safeKeyPair: SafeCreateKeyPair = wrapInternalError(
+  'CreateKeyPair.Internal',
   (privateKey) => {
     const validPrivateKey = PrivateKeySchema.safeParse(privateKey);
 

@@ -1,4 +1,4 @@
-// Client
+// Clients
 export {
   safeCreateClient,
   throwableCreateClient as createClient,
@@ -13,7 +13,10 @@ export {
 } from './keyServices/memoryKeyService/createMemoryKeyService';
 
 // Signers
-export { createMemorySigner } from './signers/memorySigner/createMemorySigner';
+export {
+  safeCreateMemorySigner,
+  throwableCreateMemorySigner as createMemorySigner,
+} from './signers/memorySigner/createMemorySigner';
 
 // Action Creators
 export { transfer } from './helpers/actionCreators/transfer';

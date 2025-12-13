@@ -1,6 +1,6 @@
 import { vi, expect, it, describe, beforeAll } from 'vitest';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
-import { type Client, createClient } from '../../../../src';
+import { type Client, createClient, isNatError } from '../../../../src';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { createDefaultClient } from '../../../utils/common';
@@ -43,7 +43,13 @@ describe('Get Account Access Keys', () => {
     const res = await brokenClient.safeGetAccountAccessKeys({
       accountId: 'nat',
     });
-    assertNatErrKind(res, 'Client.GetAccountAccessKeys.Request.FetchFailed');
+    assertNatErrKind(res, 'Client.GetAccountAccessKeys.SendRequest.Failed');
+
+    expect(
+      isNatError(res.error, 'Client.GetAccountAccessKeys.SendRequest.Failed') &&
+        res.error.context.cause.kind ===
+          'Client.Transport.SendRequest.Request.FetchFailed',
+    ).toBe(true);
   });
 
   it('Non-existing account', async () => {

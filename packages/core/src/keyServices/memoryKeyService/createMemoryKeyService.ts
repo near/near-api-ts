@@ -4,14 +4,22 @@ import { getKeyPairs } from './getKeyPairs';
 import { createSafeFindKeyPair } from './createFindKeyPair';
 import { asThrowable } from '@common/utils/asThrowable';
 import { result } from '@common/utils/result';
-import { wrapUnknownError } from '@common/utils/wrapUnknownError';
-import type { MemoryKeyServiceContext } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
+import { wrapInternalError } from '@common/utils/wrapInternalError';
+import type {
+  MemoryKeyService,
+  MemoryKeyServiceContext,
+} from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 import type {
   CreateMemoryKeyService,
   SafeCreateMemoryKeyService,
 } from 'nat-types/keyServices/memoryKeyService/createMemoryKeyService';
 import { PrivateKeySchema } from '@common/schemas/zod/common/privateKey';
 import { createNatError } from '@common/natError';
+
+export const MemoryKeyServiceBrand = Symbol('MemoryKeyService');
+
+export const isMemoryKeyService = (value: unknown): value is MemoryKeyService =>
+  typeof value === 'object' && value !== null && MemoryKeyServiceBrand in value;
 
 const KeySourceSchema = z.object({
   privateKey: PrivateKeySchema,
@@ -31,7 +39,7 @@ export type InnerCreateMemoryKeyServiceArgs = z.infer<
 >;
 
 export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService =
-  wrapUnknownError('CreateMemoryKeyService.Unknown', async (args) => {
+  wrapInternalError('CreateMemoryKeyService.Internal', async (args) => {
     const validArgs = CreateMemoryKeyServiceArgsSchema.safeParse(args);
 
     if (!validArgs.success)
@@ -52,6 +60,7 @@ export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService =
     context.safeFindKeyPair = safeFindKeyPair;
 
     return result.ok({
+      [MemoryKeyServiceBrand]: true,
       signTransaction: asThrowable(safeSignTransaction),
       safeSignTransaction,
       findKeyPair: asThrowable(safeFindKeyPair),

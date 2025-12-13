@@ -30,8 +30,13 @@ export const handleResult = (
   if (!rpcResult.success)
     return result.err(
       createNatError({
-        kind: 'Client.GetAccountInfo.Response.InvalidSchema',
-        context: { zodError: rpcResult.error },
+        kind: 'Client.GetAccountInfo.SendRequest.Failed',
+        context: {
+          cause: createNatError({
+            kind: 'Client.Transport.SendRequest.Response.Result.InvalidSchema',
+            context: { zodError: rpcResult.error },
+          }),
+        },
       }),
     );
 

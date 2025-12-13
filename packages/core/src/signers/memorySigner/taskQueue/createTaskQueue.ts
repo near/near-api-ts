@@ -4,14 +4,14 @@ import { createExecuteTransaction } from './addTask/createExecuteTransaction';
 import { createSignMultipleTransactions } from './addTask/createSignMultipleTransactions';
 import { createExecuteMultipleTransactions } from './addTask/createExecuteMultipleTransactions';
 import { result } from '@common/utils/result';
-import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
+import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type {
   RemoveTask,
   TaskQueue,
   TaskQueueContext,
 } from 'nat-types/signers/memorySigner/taskQueue';
 
-export const createTaskQueue = (signerContext: SignerContext): TaskQueue => {
+export const createTaskQueue = (signerContext: MemorySignerContext): TaskQueue => {
   const context: TaskQueueContext = {
     queue: [],
     cleaners: {},
@@ -33,7 +33,7 @@ export const createTaskQueue = (signerContext: SignerContext): TaskQueue => {
         task.taskId,
         result.err('Task execution was rejected after timeout'), // TODO use NatError
       );
-    }, context.signerContext.taskTtlMs);
+    }, context.signerContext.maxWaitInQueueMs);
   };
 
   // We remove the task from the queue when the task execution starts

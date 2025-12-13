@@ -12,19 +12,25 @@ import type {
   CreateClient,
   SafeCreateClient,
 } from 'nat-types/client/createClient';
-import { wrapUnknownError } from '@common/utils/wrapUnknownError';
+import { wrapInternalError } from '@common/utils/wrapInternalError';
 import { result } from '@common/utils/result';
 import { asThrowable } from '@common/utils/asThrowable';
 import { createNatError } from '@common/natError';
+import type { Client } from 'nat-types/client/client';
 
 // NextFeature: add cache for protocol config / blockHash
+
+export const ClientBrand = Symbol('Client');
+
+export const isClient = (value: unknown): value is Client =>
+  typeof value === 'object' && value !== null && ClientBrand in value;
 
 const CreateClientArgsSchema = z.object({
   transport: CreateTransportArgsSchema,
 });
 
-export const safeCreateClient: SafeCreateClient = wrapUnknownError(
-  'CreateClient.Unknown',
+export const safeCreateClient: SafeCreateClient = wrapInternalError(
+  'CreateClient.Internal',
   async (args) => {
     const validArgs = CreateClientArgsSchema.safeParse(args);
 
@@ -49,6 +55,7 @@ export const safeCreateClient: SafeCreateClient = wrapUnknownError(
     const safeSendSignedTransaction = createSafeSendSignedTransaction(context);
 
     return result.ok({
+      [ClientBrand]: true,
       getAccountInfo: asThrowable(safeGetAccountInfo),
       getAccountAccessKey: asThrowable(safeGetAccountAccessKey),
       getAccountAccessKeys: asThrowable(safeGetAccountAccessKeys),

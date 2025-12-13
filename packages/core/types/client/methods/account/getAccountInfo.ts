@@ -10,13 +10,11 @@ import type { ClientContext } from 'nat-types/client/client';
 import type { PartialTransportPolicy } from 'nat-types/client/transport/transport';
 import type { NearToken } from 'nat-types/_common/nearToken';
 import type { NatError } from '@common/natError';
-import type { SendRequestErrorVariant } from 'nat-types/client/transport/sendRequest';
 import type { CommonRpcQueryMethodErrorVariant } from 'nat-types/client/methods/_common/query';
 import type { CommonRpcMethodErrorVariant } from 'nat-types/client/methods/_common/common';
 import type { RpcQueryViewAccountResult } from '../../../../src/client/methods/account/getAccountInfo/handleResult';
 
 export type GetAccountInfoErrorVariant =
-  | SendRequestErrorVariant<'Client.GetAccountInfo'>
   | CommonRpcMethodErrorVariant<'Client.GetAccountInfo'>
   | CommonRpcQueryMethodErrorVariant<'Client.GetAccountInfo'>
   | {
@@ -28,7 +26,7 @@ export type GetAccountInfoErrorVariant =
       };
     };
 
-export type GetAccountInfoUnknownErrorKind = 'Client.GetAccountInfo.Unknown';
+export type GetAccountInfoInternalErrorKind = 'Client.GetAccountInfo.Internal';
 
 export type GetAccountInfoArgs = {
   accountId: AccountId;
@@ -59,26 +57,16 @@ export type GetAccountInfoOutput = {
 };
 
 type GetAccountInfoError =
-  // Function Arguments
   | NatError<'Client.GetAccountInfo.Args.InvalidSchema'>
-  // Transport
-  | NatError<'Client.GetAccountInfo.PreferredRpc.NotFound'>
-  | NatError<'Client.GetAccountInfo.Request.FetchFailed'>
-  | NatError<'Client.GetAccountInfo.Request.Attempt.Timeout'>
-  | NatError<'Client.GetAccountInfo.Request.Timeout'>
-  | NatError<'Client.GetAccountInfo.Request.Aborted'>
-  | NatError<'Client.GetAccountInfo.Response.JsonParseFailed'>
-  | NatError<'Client.GetAccountInfo.Response.InvalidSchema'>
-  // Rpc - query - common
+  | NatError<'Client.GetAccountInfo.SendRequest.Failed'>
+  // Rpc - query
   | NatError<'Client.GetAccountInfo.Rpc.NotSynced'>
   | NatError<'Client.GetAccountInfo.Rpc.Shard.NotTracked'>
   | NatError<'Client.GetAccountInfo.Rpc.Block.GarbageCollected'>
   | NatError<'Client.GetAccountInfo.Rpc.Block.NotFound'>
-  | NatError<'Client.GetAccountInfo.Rpc.Internal'>
-  // Rpc - query - view_account
   | NatError<'Client.GetAccountInfo.Rpc.Account.NotFound'>
   // Stub
-  | NatError<'Client.GetAccountInfo.Unknown'>;
+  | NatError<'Client.GetAccountInfo.Internal'>;
 
 export type SafeGetAccountInfo = (
   args: GetAccountInfoArgs,

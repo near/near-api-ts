@@ -1,7 +1,7 @@
 import type { Result, Tokens, Units } from 'nat-types/_common/common';
 import type {
   InvalidSchemaContext,
-  UnknownErrorContext,
+  InternalErrorContext,
 } from 'nat-types/natError';
 import type { NatError } from '@common/natError';
 
@@ -11,24 +11,24 @@ export type NearTokenErrorVariant =
       context: InvalidSchemaContext;
     }
   | {
-      kind: 'CreateNearToken.Unknown';
-      context: UnknownErrorContext;
+      kind: 'CreateNearToken.Internal';
+      context: InternalErrorContext;
     }
   | {
       kind: 'CreateNearTokenFromYoctoNear.Args.InvalidSchema';
       context: InvalidSchemaContext;
     }
   | {
-      kind: 'CreateNearTokenFromYoctoNear.Unknown';
-      context: UnknownErrorContext;
+      kind: 'CreateNearTokenFromYoctoNear.Internal';
+      context: InternalErrorContext;
     }
   | {
       kind: 'CreateNearTokenFromNear.Args.InvalidSchema';
       context: InvalidSchemaContext;
     }
   | {
-      kind: 'CreateNearTokenFromNear.Unknown';
-      context: UnknownErrorContext;
+      kind: 'CreateNearTokenFromNear.Internal';
+      context: InternalErrorContext;
     };
 
 export type YoctoNearInput = Units;
@@ -43,7 +43,7 @@ export type Near = string;
 
 export type CreateNearTokenError =
   | NatError<'CreateNearToken.Args.InvalidSchema'>
-  | NatError<'CreateNearToken.Unknown'>;
+  | NatError<'CreateNearToken.Internal'>;
 
 export type NearToken = Readonly<{
   yoctoNear: YoctoNear;
@@ -80,7 +80,7 @@ export type CreateNearToken = (args: NearTokenArgs) => NearToken;
 
 type CreateNearTokenFromYoctoNearError =
   | NatError<'CreateNearTokenFromYoctoNear.Args.InvalidSchema'>
-  | NatError<'CreateNearTokenFromYoctoNear.Unknown'>;
+  | NatError<'CreateNearTokenFromYoctoNear.Internal'>;
 
 export type SafeCreateNearTokenFromYoctoNear = (
   yoctoNear: YoctoNearInput,
@@ -94,7 +94,7 @@ export type CreateNearTokenFromYoctoNear = (
 
 type CreateNearTokenFromNearError =
   | NatError<'CreateNearTokenFromNear.Args.InvalidSchema'>
-  | NatError<'CreateNearTokenFromNear.Unknown'>;
+  | NatError<'CreateNearTokenFromNear.Internal'>;
 
 export type SafeCreateNearTokenFromNear = (
   near: NearInput,

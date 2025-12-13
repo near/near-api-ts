@@ -2,7 +2,7 @@ import type { PublicKey } from '../../_common/crypto';
 import type { KeyPair } from 'nat-types/_common/keyPair/keyPair';
 import type {
   InvalidSchemaContext,
-  UnknownErrorContext,
+  InternalErrorContext,
 } from 'nat-types/natError';
 import type {
   SafeSignTransaction,
@@ -12,6 +12,7 @@ import type {
   FindKeyPair,
   SafeFindKeyPair,
 } from 'nat-types/keyServices/memoryKeyService/createFindKeyPair';
+import { MemoryKeyServiceBrand } from '../../../src/keyServices/memoryKeyService/createMemoryKeyService';
 
 export type MemoryKeyServiceErrorVariant =
   | {
@@ -19,8 +20,8 @@ export type MemoryKeyServiceErrorVariant =
       context: InvalidSchemaContext;
     }
   | {
-      kind: 'CreateMemoryKeyService.Unknown';
-      context: UnknownErrorContext;
+      kind: 'CreateMemoryKeyService.Internal';
+      context: InternalErrorContext;
     }
   | {
       kind: 'MemoryKeyService.SignTransaction.Args.InvalidSchema';
@@ -33,8 +34,8 @@ export type MemoryKeyServiceErrorVariant =
       };
     }
   | {
-      kind: 'MemoryKeyService.SignTransaction.Unknown';
-      context: UnknownErrorContext;
+      kind: 'MemoryKeyService.SignTransaction.Internal';
+      context: InternalErrorContext;
     }
   | {
       kind: 'MemoryKeyService.FindKeyPair.Args.InvalidSchema';
@@ -47,8 +48,8 @@ export type MemoryKeyServiceErrorVariant =
       };
     }
   | {
-      kind: 'MemoryKeyService.FindKeyPair.Unknown';
-      context: UnknownErrorContext;
+      kind: 'MemoryKeyService.FindKeyPair.Internal';
+      context: InternalErrorContext;
     };
 
 export type KeyPairs = Record<PublicKey, KeyPair>;
@@ -59,6 +60,7 @@ export type MemoryKeyServiceContext = {
 };
 
 export type MemoryKeyService = {
+  [MemoryKeyServiceBrand]: true;
   signTransaction: SignTransaction;
   safeSignTransaction: SafeSignTransaction;
   findKeyPair: FindKeyPair;

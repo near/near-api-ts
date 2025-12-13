@@ -14,9 +14,3 @@ export const BinaryLengths = {
 } as const;
 
 export const NearDecimals = 24;
-
-// Fetch block every 1000 blocks * 600ms best block time = >10 minutes
-export const RefetchBlockHashInterval = 600_000;
-
-// 1 minute
-export const SignerTaskTtlMs = 60_000 as const;

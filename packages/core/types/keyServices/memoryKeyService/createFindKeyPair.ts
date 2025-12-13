@@ -8,7 +8,7 @@ type FindKeyPairArgs = { publicKey: PublicKey };
 type FindKeyPairError =
   | NatError<'MemoryKeyService.FindKeyPair.Args.InvalidSchema'>
   | NatError<'MemoryKeyService.FindKeyPair.NotFound'>
-  | NatError<'MemoryKeyService.FindKeyPair.Unknown'>;
+  | NatError<'MemoryKeyService.FindKeyPair.Internal'>;
 
 export type SafeFindKeyPair = (
   args: FindKeyPairArgs,

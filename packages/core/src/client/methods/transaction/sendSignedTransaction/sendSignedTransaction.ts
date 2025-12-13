@@ -3,10 +3,9 @@ import { base64 } from '@scure/base';
 import type { CreateSafeSendSignedTransaction } from 'nat-types/client/methods/transaction/sendSignedTransaction';
 import { toBorshSignedTransaction } from '@common/transformers/toBorshBytes/transaction';
 import { SignedTransactionSchema } from '@common/schemas/zod/transaction/transaction';
-import { wrapUnknownError } from '@common/utils/wrapUnknownError';
+import { wrapInternalError } from '@common/utils/wrapInternalError';
 import { result } from '@common/utils/result';
 import { createNatError } from '@common/natError';
-import { repackError } from '@common/utils/repackError';
 import { handleError } from './handleError/handleError';
 import { handleResult } from './handleResult/handleResult';
 import { BaseOptionsSchema, PoliciesSchema } from '@common/schemas/zod/client';
@@ -21,7 +20,7 @@ const SendSignedTransactionArgsShema = z.object({
 
 export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction =
   (context) =>
-    wrapUnknownError('Client.SendSignedTransaction.Unknown', async (args) => {
+    wrapInternalError('Client.SendSignedTransaction.Internal', async (args) => {
       const validArgs = SendSignedTransactionArgsShema.safeParse(args);
 
       if (!validArgs.success)
@@ -45,11 +44,12 @@ export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction =
       });
 
       if (!rpcResponse.ok)
-        return repackError({
-          error: rpcResponse.error,
-          originPrefix: 'Client.Transport.SendRequest',
-          targetPrefix: 'Client.SendSignedTransaction',
-        });
+        return result.err(
+          createNatError({
+            kind: 'Client.SendSignedTransaction.SendRequest.Failed',
+            context: { cause: rpcResponse.error },
+          }),
+        );
 
       return rpcResponse.value.error
         ? handleError(rpcResponse.value)

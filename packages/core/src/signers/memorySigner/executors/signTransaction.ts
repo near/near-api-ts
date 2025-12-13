@@ -1,11 +1,11 @@
 import { result } from '@common/utils/result';
-import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
+import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { Task } from 'nat-types/signers/memorySigner/taskQueue';
 import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
 import type { Transaction } from 'nat-types/transaction';
 
 export const signTransaction = async (
-  signerContext: SignerContext,
+  signerContext: MemorySignerContext,
   task: Task,
   key: KeyPoolKey,
 ): Promise<void> => {

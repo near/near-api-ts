@@ -1,18 +1,26 @@
 import type {
   InvalidSchemaContext,
-  UnknownErrorContext,
+  InternalErrorContext,
 } from 'nat-types/natError';
+import type { SendRequestError } from 'nat-types/client/transport/sendRequest';
+import type { RpcResponse } from '@common/schemas/zod/rpc';
 
 export type CommonRpcMethodErrorVariant<Prefix extends string> =
+  // Internal
+  | {
+      kind: `${Prefix}.Rpc.Unclassified`;
+      context: { rpcResponse: RpcResponse };
+    }
+  // Public
   | {
       kind: `${Prefix}.Args.InvalidSchema`;
       context: InvalidSchemaContext;
     }
   | {
-      kind: `${Prefix}.Rpc.Internal`;
-      context: { message: string };
+      kind: `${Prefix}.SendRequest.Failed`;
+      context: { cause: SendRequestError };
     }
   | {
-      kind: `${Prefix}.Unknown`;
-      context: UnknownErrorContext;
+      kind: `${Prefix}.Internal`;
+      context: InternalErrorContext;
     };

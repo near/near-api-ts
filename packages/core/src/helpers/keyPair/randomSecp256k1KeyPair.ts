@@ -3,7 +3,7 @@ import { toSecp256k1CurveString } from '@common/transformers/toCurveString';
 import { signBySecp256k1Key } from './_common/signBySecp256k1Key';
 import { asThrowable } from '@common/utils/asThrowable';
 import { result } from '@common/utils/result';
-import { wrapUnknownError } from '@common/utils/wrapUnknownError';
+import { wrapInternalError } from '@common/utils/wrapInternalError';
 import type {
   CreateRandomSecp256k1KeyPair,
   SafeCreateRandomSecp256k1KeyPair,
@@ -11,12 +11,12 @@ import type {
 import type { Hex } from 'nat-types/_common/common';
 
 const createSafeSignBySecp256k1Key = (u8PrivateKey: Uint8Array) =>
-  wrapUnknownError('Secp256k1KeyPair.Sign.Unknown', (message: Hex) =>
+  wrapInternalError('Secp256k1KeyPair.Sign.Internal', (message: Hex) =>
     signBySecp256k1Key(u8PrivateKey, message),
   );
 
 export const safeRandomSecp256k1KeyPair: SafeCreateRandomSecp256k1KeyPair =
-  wrapUnknownError('CreateRandomSecp256k1KeyPair.Unknown', () => {
+  wrapInternalError('CreateRandomSecp256k1KeyPair.Internal', () => {
     const u8SecretKey = secp256k1.utils.randomSecretKey();
     // nearcore expects uncompressed public key without header 0x04
     const u8PublicKey = secp256k1.getPublicKey(u8SecretKey, false);

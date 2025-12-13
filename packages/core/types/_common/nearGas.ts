@@ -1,6 +1,6 @@
 import type {
   InvalidSchemaContext,
-  UnknownErrorContext,
+  InternalErrorContext,
 } from 'nat-types/natError';
 import type { NatError } from '@common/natError';
 import type { Result } from 'nat-types/_common/common';
@@ -11,24 +11,24 @@ export type NearGasErrorVariant =
       context: InvalidSchemaContext;
     }
   | {
-      kind: 'CreateNearGas.Unknown';
-      context: UnknownErrorContext;
+      kind: 'CreateNearGas.Internal';
+      context: InternalErrorContext;
     }
   | {
       kind: 'CreateNearGasFromGas.Args.InvalidSchema';
       context: InvalidSchemaContext;
     }
   | {
-      kind: 'CreateNearGasFromGas.Unknown';
-      context: UnknownErrorContext;
+      kind: 'CreateNearGasFromGas.Internal';
+      context: InternalErrorContext;
     }
   | {
       kind: 'CreateNearGasFromTeraGas.Args.InvalidSchema';
       context: InvalidSchemaContext;
     }
   | {
-      kind: 'CreateNearGasFromTeraGas.Unknown';
-      context: UnknownErrorContext;
+      kind: 'CreateNearGasFromTeraGas.Internal';
+      context: InternalErrorContext;
     };
 
 export type GasInput = bigint | number;
@@ -43,7 +43,7 @@ export type NearGasMethodArgs = NearGasArgs | NearGas;
 
 export type CreateNearGasError =
   | NatError<'CreateNearGas.Args.InvalidSchema'>
-  | NatError<'CreateNearGas.Unknown'>;
+  | NatError<'CreateNearGas.Internal'>;
 
 export type NearGas = Readonly<{
   gas: Gas;
@@ -72,7 +72,7 @@ export type CreateNearGas = (args: NearGasArgs) => NearGas;
 
 type CreateNearGasFromGasError =
   | NatError<'CreateNearGasFromGas.Args.InvalidSchema'>
-  | NatError<'CreateNearGasFromGas.Unknown'>;
+  | NatError<'CreateNearGasFromGas.Internal'>;
 
 export type SafeCreateNearGasFromGas = (
   gas: GasInput,
@@ -84,7 +84,7 @@ export type CreateNearGasFromGas = (gas: GasInput) => NearGas;
 
 type CreateNearGasFromTeraGasError =
   | NatError<'CreateNearGasFromTeraGas.Args.InvalidSchema'>
-  | NatError<'CreateNearGasFromTeraGas.Unknown'>;
+  | NatError<'CreateNearGasFromTeraGas.Internal'>;
 
 export type SafeCreateNearGasFromTeraGas = (
   teraGas: TeraGasInput,

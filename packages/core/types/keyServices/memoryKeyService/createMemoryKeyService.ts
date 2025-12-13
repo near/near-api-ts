@@ -11,7 +11,7 @@ export type CreateMemoryKeyServiceArgs = SingleKeySource | MultiKeySources;
 
 type CreateMemoryKeyServiceError =
   | NatError<'CreateMemoryKeyService.Args.InvalidSchema'>
-  | NatError<'CreateMemoryKeyService.Unknown'>;
+  | NatError<'CreateMemoryKeyService.Internal'>;
 
 export type SafeCreateMemoryKeyService = (
   args: CreateMemoryKeyServiceArgs,

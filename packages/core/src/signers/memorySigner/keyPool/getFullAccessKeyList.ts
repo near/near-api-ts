@@ -1,19 +1,17 @@
 import { createUnlock, createLock, createSetNonce } from './helpers/keyUtils';
-import type { AccountAccessKey, FullAccessKey } from 'nat-types/_common/accountAccessKey';
-import type { SignerContext } from 'nat-types/signers/memorySigner/memorySigner';
-import type { KeyPairs } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
+import type {
+  AccountAccessKey,
+  FullAccessKey,
+} from 'nat-types/_common/accountAccessKey';
+import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { KeyPoolFullAccessKey } from 'nat-types/signers/memorySigner/keyPool';
 
-const transformKey = (
-  fullAccessKey: FullAccessKey,
-  keyPairs: KeyPairs,
-): KeyPoolFullAccessKey => {
+const transformKey = (fullAccessKey: FullAccessKey): KeyPoolFullAccessKey => {
   const { publicKey, nonce } = fullAccessKey;
 
   const key = {
     accessType: 'FullAccess',
     publicKey,
-    privateKey: keyPairs[publicKey], // TODO Remove it!
     isLocked: false,
     nonce,
   } as KeyPoolFullAccessKey;
@@ -27,14 +25,12 @@ const transformKey = (
 
 export const getFullAccessKeyList = (
   accountKeys: AccountAccessKey[],
-  signerContext: SignerContext,
-) => {
-  const keyPairs = signerContext.keyService.getKeyPairs();
-
-  return accountKeys
+  signerContext: MemorySignerContext,
+): KeyPoolFullAccessKey[] =>
+  accountKeys
     .filter(
       ({ publicKey, accessType }) =>
-        Object.hasOwn(keyPairs, publicKey) && accessType === 'FullAccess',
+        signerContext.keyService.safeFindKeyPair({ publicKey }).ok &&
+        accessType === 'FullAccess',
     )
-    .map((key) => transformKey(key as FullAccessKey, keyPairs));
-};
+    .map((key) => transformKey(key as FullAccessKey));

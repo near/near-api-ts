@@ -2,7 +2,6 @@ import type { ClientContext } from 'nat-types/client/client';
 import type { SignedTransaction } from 'nat-types/transaction';
 import type { RpcTransactionResponse } from '@near-js/jsonrpc-types';
 import type { TransportPolicy } from 'nat-types/client/transport/transport';
-import type { SendRequestErrorVariant } from 'nat-types/client/transport/sendRequest';
 import type { CommonRpcMethodErrorVariant } from 'nat-types/client/methods/_common/common';
 import type {
   AccountId,
@@ -12,10 +11,22 @@ import type {
 } from 'nat-types/_common/common';
 import type { NatError } from '@common/natError';
 import type { NearToken } from 'nat-types/_common/nearToken';
+import type { RpcResponse } from '@common/schemas/zod/rpc';
 
 export type SendSignedTransactionErrorVariant =
-  | SendRequestErrorVariant<'Client.SendSignedTransaction'>
+  // Internal
+  | {
+      kind: `Client.SendSignedTransaction.Rpc.Transaction.Action.InvalidIndex`;
+      context: {
+        rpcResponse: RpcResponse;
+      };
+    }
+  // Public
   | CommonRpcMethodErrorVariant<'Client.SendSignedTransaction'>
+  | {
+      kind: `Client.SendSignedTransaction.Rpc.Transaction.Expired`;
+      context: null;
+    }
   | {
       kind: `Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid`;
       context: {
@@ -23,10 +34,6 @@ export type SendSignedTransactionErrorVariant =
         transactionNonce: Nonce;
         accessKeyNonce: Nonce;
       };
-    }
-  | {
-      kind: `Client.SendSignedTransaction.Rpc.Transaction.Expired`;
-      context: null;
     }
   | {
       kind: `Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound`;
@@ -67,8 +74,8 @@ export type SendSignedTransactionErrorVariant =
       context: null;
     };
 
-export type SendSignedTransactionUnknownErrorKind =
-  'Client.SendSignedTransaction.Unknown';
+export type SendSignedTransactionInternalErrorKind =
+  'Client.SendSignedTransaction.Internal';
 
 export type SendSignedTransactionArgs = {
   signedTransaction: SignedTransaction;
@@ -85,16 +92,8 @@ export type SendSignedTransactionOutput = {
 };
 
 type SendSignedTransactionError =
-  // Function Arguments
   | NatError<'Client.SendSignedTransaction.Args.InvalidSchema'>
-  // Transport
-  | NatError<'Client.SendSignedTransaction.PreferredRpc.NotFound'>
-  | NatError<'Client.SendSignedTransaction.Request.FetchFailed'>
-  | NatError<'Client.SendSignedTransaction.Request.Attempt.Timeout'>
-  | NatError<'Client.SendSignedTransaction.Request.Timeout'>
-  | NatError<'Client.SendSignedTransaction.Request.Aborted'>
-  | NatError<'Client.SendSignedTransaction.Response.JsonParseFailed'>
-  | NatError<'Client.SendSignedTransaction.Response.InvalidSchema'>
+  | NatError<'Client.SendSignedTransaction.SendRequest.Failed'>
   // RPC - transaction
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Expired'>
@@ -106,8 +105,7 @@ type SendSignedTransactionError =
   // RPC - transaction action
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist'>
   // Stub
-  | NatError<'Client.SendSignedTransaction.Rpc.Internal'>
-  | NatError<'Client.SendSignedTransaction.Unknown'>;
+  | NatError<'Client.SendSignedTransaction.Internal'>;
 
 export type SafeSendSignedTransaction = (
   args: SendSignedTransactionArgs,

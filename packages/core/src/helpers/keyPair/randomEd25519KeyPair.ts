@@ -2,7 +2,7 @@ import { ed25519 } from '@noble/curves/ed25519';
 import { toEd25519CurveString } from '@common/transformers/toCurveString';
 import { asThrowable } from '@common/utils/asThrowable';
 import { result } from '@common/utils/result';
-import { wrapUnknownError } from '@common/utils/wrapUnknownError';
+import { wrapInternalError } from '@common/utils/wrapInternalError';
 import type { Hex } from 'nat-types/_common/common';
 import type {
   CreateRandomEd25519KeyPair,
@@ -11,12 +11,12 @@ import type {
 import { signByEd25519Key } from './_common/signByEd25519Key';
 
 const createSafeSignByEd25519Key = (u8PrivateKey: Uint8Array) =>
-  wrapUnknownError('Ed25519KeyPair.Sign.Unknown', (message: Hex) =>
+  wrapInternalError('Ed25519KeyPair.Sign.Internal', (message: Hex) =>
     signByEd25519Key(u8PrivateKey, message),
   );
 
 export const safeRandomEd25519KeyPair: SafeCreateRandomEd25519KeyPair =
-  wrapUnknownError('CreateRandomEd25519KeyPair.Unknown', () => {
+  wrapInternalError('CreateRandomEd25519KeyPair.Internal', () => {
     const { secretKey: u8SecretKey, publicKey: u8PublicKey } = ed25519.keygen();
 
     const u8PrivateKey = new Uint8Array([...u8SecretKey, ...u8PublicKey]);

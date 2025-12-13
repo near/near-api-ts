@@ -1,4 +1,4 @@
-import type { UnknownErrorContext } from 'nat-types/natError';
+import type { InternalErrorContext } from 'nat-types/natError';
 import type {
   Secp256k1PrivateKey,
   Secp256k1PublicKey,
@@ -9,8 +9,8 @@ import type { Hex, Result } from 'nat-types/_common/common';
 import type { Secp256k1Curve } from 'nat-types/_common/curveString';
 
 export type RandomSecp256k1KeyPairErrorVariant = {
-  kind: 'Secp256k1KeyPair.Sign.Unknown';
-  context: UnknownErrorContext;
+  kind: 'Secp256k1KeyPair.Sign.Internal';
+  context: InternalErrorContext;
 };
 
 // *********** Sign *****
@@ -21,7 +21,7 @@ export type SignBySecp256k1KeyOutput = {
   u8Signature: Uint8Array;
 };
 
-type SignBySecp256k1KeyError = NatError<'Secp256k1KeyPair.Sign.Unknown'>;
+type SignBySecp256k1KeyError = NatError<'Secp256k1KeyPair.Sign.Internal'>;
 
 export type SignBySecp256k1Key = (message: Hex) => SignBySecp256k1KeyOutput;
 
@@ -32,12 +32,12 @@ export type SafeSignBySecp256k1Key = (
 // ***********  CreateRandomSecp256k1KeyPair *****
 
 export type CreateRandomSecp256k1KeyPairErrorVariant = {
-  kind: 'CreateRandomSecp256k1KeyPair.Unknown';
-  context: UnknownErrorContext;
+  kind: 'CreateRandomSecp256k1KeyPair.Internal';
+  context: InternalErrorContext;
 };
 
 type CreateRandomSecp256k1Error =
-  NatError<'CreateRandomSecp256k1KeyPair.Unknown'>;
+  NatError<'CreateRandomSecp256k1KeyPair.Internal'>;
 
 export type Secp256k1KeyPair = {
   publicKey: Secp256k1PublicKey;

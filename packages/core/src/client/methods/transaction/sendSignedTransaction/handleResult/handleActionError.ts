@@ -17,13 +17,12 @@ export const handleActionError = (
   if (typeof actionIndex !== 'number')
     return result.err(
       createNatError({
-        kind: 'Client.SendSignedTransaction.Unknown',
+        kind: 'Client.SendSignedTransaction.Internal',
         context: {
-          cause: {
-            kind: 'Transaction.Action.InvalidIndex',
-            actionIndex,
-            rpcResponse,
-          },
+          cause: createNatError({
+            kind: 'Client.SendSignedTransaction.Rpc.Transaction.Action.InvalidIndex',
+            context: { rpcResponse },
+          }),
         },
       }),
     );
@@ -58,12 +57,12 @@ export const handleActionError = (
 
   return result.err(
     createNatError({
-      kind: 'Client.SendSignedTransaction.Unknown',
+      kind: 'Client.SendSignedTransaction.Internal',
       context: {
-        cause: {
-          kind: 'RpcError.Unclassified',
-          rpcResponse,
-        },
+        cause: createNatError({
+          kind: 'Client.SendSignedTransaction.Rpc.Unclassified',
+          context: { rpcResponse },
+        }),
       },
     }),
   );

@@ -13,7 +13,7 @@ import type {
 } from 'nat-types/_common/nearGas';
 import { nodeInspectSymbol } from '@common/utils/common';
 import type { InspectOptionsStylized } from 'node:util';
-import { wrapUnknownError } from '@common/utils/wrapUnknownError';
+import { wrapInternalError } from '@common/utils/wrapInternalError';
 import { result } from '@common/utils/result';
 import { createNatError } from '@common/natError';
 import {
@@ -73,7 +73,7 @@ const nearGasProto: ThisType<NearGas> = {
   // TODO Need to reuse method code and reduce boilerplate code, and reduce useless
   // transformations
   safeAdd(value: NearGasMethodArgs): Result<NearGas, CreateNearGasError> {
-    return wrapUnknownError('CreateNearGas.Unknown', () => {
+    return wrapInternalError('CreateNearGas.Internal', () => {
       const gas = toGas(value);
       return gas.ok ? safeNearGas({ gas: this.gas + gas.value }) : gas;
     })();
@@ -84,7 +84,7 @@ const nearGasProto: ThisType<NearGas> = {
   },
 
   safeSub(value: NearGasMethodArgs): Result<NearGas, CreateNearGasError> {
-    return wrapUnknownError('CreateNearGas.Unknown', () => {
+    return wrapInternalError('CreateNearGas.Internal', () => {
       const gas = toGas(value);
       return gas.ok ? safeNearGas({ gas: this.gas - gas.value }) : gas;
     })();
@@ -95,7 +95,7 @@ const nearGasProto: ThisType<NearGas> = {
   },
 
   safeGt(value: NearGasMethodArgs): Result<boolean, CreateNearGasError> {
-    return wrapUnknownError('CreateNearGas.Unknown', () => {
+    return wrapInternalError('CreateNearGas.Internal', () => {
       const gas = toGas(value);
       return gas.ok ? result.ok(this.gas > gas.value) : gas;
     })();
@@ -106,7 +106,7 @@ const nearGasProto: ThisType<NearGas> = {
   },
 
   safeLt(value: NearGasMethodArgs): Result<boolean, CreateNearGasError> {
-    return wrapUnknownError('CreateNearGas.Unknown', () => {
+    return wrapInternalError('CreateNearGas.Internal', () => {
       const gas = toGas(value);
       return gas.ok ? result.ok(this.gas < gas.value) : gas;
     })();
@@ -140,8 +140,8 @@ const nearGasProto: ThisType<NearGas> = {
 
 // FromGas
 
-export const safeGas: SafeCreateNearGasFromGas = wrapUnknownError(
-  'CreateNearGasFromGas.Unknown',
+export const safeGas: SafeCreateNearGasFromGas = wrapInternalError(
+  'CreateNearGasFromGas.Internal',
   (gas) => {
     const validGas = GasInputSchema.safeParse(gas);
 
@@ -168,8 +168,8 @@ export const throwableGas: CreateNearGasFromGas = asThrowable(safeGas);
 
 // FromTeraGas
 
-export const safeTeraGas: SafeCreateNearGasFromTeraGas = wrapUnknownError(
-  'CreateNearGasFromTeraGas.Unknown',
+export const safeTeraGas: SafeCreateNearGasFromTeraGas = wrapInternalError(
+  'CreateNearGasFromTeraGas.Internal',
   (teraGas) => {
     const validTeraGas = TeraGasInputSchema.safeParse(teraGas);
 
@@ -197,8 +197,8 @@ export const throwableTeraGas: CreateNearGasFromTeraGas =
 
 // NearGas
 
-export const safeNearGas: SafeCreateNearGas = wrapUnknownError(
-  'CreateNearGas.Unknown',
+export const safeNearGas: SafeCreateNearGas = wrapInternalError(
+  'CreateNearGas.Internal',
   (args) => {
     const validArgs = NearGasArgsSchema.safeParse(args);
 

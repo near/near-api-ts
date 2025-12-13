@@ -19,8 +19,13 @@ export const handleInvalidTransaction = (rpcResponse: RpcResponse) => {
   if (!invalidTransactionError.success)
     return result.err(
       createNatError({
-        kind: 'Client.SendSignedTransaction.Response.InvalidSchema',
-        context: { zodError: invalidTransactionError.error },
+        kind: 'Client.SendSignedTransaction.SendRequest.Failed',
+        context: {
+          cause: createNatError({
+            kind: 'Client.Transport.SendRequest.Response.Error.InvalidSchema',
+            context: { zodError: invalidTransactionError.error },
+          }),
+        },
       }),
     );
 
@@ -89,12 +94,12 @@ export const handleInvalidTransaction = (rpcResponse: RpcResponse) => {
   // Stub
   return result.err(
     createNatError({
-      kind: 'Client.SendSignedTransaction.Unknown',
+      kind: 'Client.SendSignedTransaction.Internal',
       context: {
-        cause: {
-          kind: 'RpcError.Unclassified',
-          rpcResponse,
-        },
+        cause: createNatError({
+          kind: 'Client.SendSignedTransaction.Rpc.Unclassified',
+          context: { rpcResponse },
+        }),
       },
     }),
   );

@@ -3,7 +3,7 @@ import type { Result } from 'nat-types/_common/common';
 import type { Client } from 'nat-types/client/client';
 import type {
   InvalidSchemaContext,
-  UnknownErrorContext,
+  InternalErrorContext,
 } from 'nat-types/natError';
 import type { NatError } from '@common/natError';
 
@@ -13,11 +13,11 @@ export type CreateClientErrorVariant =
       context: InvalidSchemaContext;
     }
   | {
-      kind: 'CreateClient.Unknown';
-      context: UnknownErrorContext;
+      kind: 'CreateClient.Internal';
+      context: InternalErrorContext;
     };
 
-export type CreateClientUnknownErrorKind = 'CreateClient.Unknown';
+export type CreateClientInternalErrorKind = 'CreateClient.Internal';
 
 type CreateClientArgs = {
   transport: CreateTransportArgs;
@@ -25,7 +25,7 @@ type CreateClientArgs = {
 
 type CreateClientError =
   | NatError<'CreateClient.Args.InvalidSchema'>
-  | NatError<'CreateClient.Unknown'>;
+  | NatError<'CreateClient.Internal'>;
 
 export type SafeCreateClient = (
   args: CreateClientArgs,

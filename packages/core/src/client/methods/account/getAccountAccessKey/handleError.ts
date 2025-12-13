@@ -8,38 +8,27 @@ import { result } from '@common/utils/result';
 export const handleError = (rpcResponse: RpcResponse) => {
   // We use QueryErrorSchema cuz there is no separate 'view_access_key' method -
   // it's part of 'query'
-  const queryError = ErrorWrapperFor_RpcQueryErrorSchema().safeParse(
+  const rpcError = ErrorWrapperFor_RpcQueryErrorSchema().safeParse(
     rpcResponse.error,
   );
 
-  if (!queryError.success)
+  if (!rpcError.success)
     return result.err(
       createNatError({
-        kind: 'Client.GetAccountAccessKey.Response.InvalidSchema',
-        context: { zodError: queryError.error },
+        kind: 'Client.GetAccountAccessKey.SendRequest.Failed',
+        context: {
+          cause: createNatError({
+            kind: 'Client.Transport.SendRequest.Response.Error.InvalidSchema',
+            context: { zodError: rpcError.error },
+          }),
+        },
       }),
     );
 
-  const { name, cause } = queryError.data;
-
-  if (name === 'INTERNAL_ERROR')
-    return result.err(
-      createNatError({
-        kind: `Client.GetAccountAccessKey.Rpc.Internal`,
-        context: { message: cause.info.errorMessage },
-      }),
-    );
+  const { name, cause } = rpcError.data;
 
   if (name === 'HANDLER_ERROR') {
     // General 'query' Errors
-    if (cause.name === 'INTERNAL_ERROR')
-      return result.err(
-        createNatError({
-          kind: `Client.GetAccountAccessKey.Rpc.Internal`,
-          context: { message: cause.info.errorMessage },
-        }),
-      );
-
     if (cause.name === 'NO_SYNCED_BLOCKS')
       return result.err(
         createNatError({
@@ -87,12 +76,12 @@ export const handleError = (rpcResponse: RpcResponse) => {
 
   return result.err(
     createNatError({
-      kind: 'Client.GetAccountAccessKey.Unknown',
+      kind: 'Client.GetAccountAccessKey.Internal',
       context: {
-        cause: {
-          kind: 'RpcError.Unclassified',
-          rpcResponse,
-        },
+        cause: createNatError({
+          kind: 'Client.GetAccountAccessKey.Rpc.Unclassified',
+          context: { rpcResponse },
+        }),
       },
     }),
   );

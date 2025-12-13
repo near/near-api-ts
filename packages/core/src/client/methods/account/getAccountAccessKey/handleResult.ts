@@ -41,8 +41,13 @@ export const handleResult = (
   if (!rpcResult.success)
     return result.err(
       createNatError({
-        kind: 'Client.GetAccountAccessKey.Response.InvalidSchema',
-        context: { zodError: rpcResult.error },
+        kind: 'Client.GetAccountAccessKey.SendRequest.Failed',
+        context: {
+          cause: createNatError({
+            kind: 'Client.Transport.SendRequest.Response.Result.InvalidSchema',
+            context: { zodError: rpcResult.error },
+          }),
+        },
       }),
     );
 

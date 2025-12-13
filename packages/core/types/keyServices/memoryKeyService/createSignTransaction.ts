@@ -9,7 +9,7 @@ type SignTransactionArgs = {
 type SignTransactionError =
   | NatError<'MemoryKeyService.SignTransaction.Args.InvalidSchema'>
   | NatError<'MemoryKeyService.SignTransaction.SigningKeyPair.NotFound'>
-  | NatError<'MemoryKeyService.SignTransaction.Unknown'>;
+  | NatError<'MemoryKeyService.SignTransaction.Internal'>;
 
 export type SafeSignTransaction = (
   args: SignTransactionArgs,

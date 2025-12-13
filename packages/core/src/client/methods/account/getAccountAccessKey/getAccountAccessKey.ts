@@ -1,7 +1,6 @@
 import * as z from 'zod/mini';
 import { toNativeBlockReference } from '@common/transformers/toNative/blockReference';
-import { wrapUnknownError } from '@common/utils/wrapUnknownError';
-import { repackError } from '@common/utils/repackError';
+import { wrapInternalError } from '@common/utils/wrapInternalError';
 import {
   BaseOptionsSchema,
   BlockReferenceSchema,
@@ -26,7 +25,7 @@ const GetAccountAccessKeyArgsSchema = z.object({
 export const createSafeGetAccountAccessKey: CreateSafeGetAccountAccessKey = (
   context,
 ) =>
-  wrapUnknownError('Client.GetAccountAccessKey.Unknown', async (args) => {
+  wrapInternalError('Client.GetAccountAccessKey.Internal', async (args) => {
     const validArgs = GetAccountAccessKeyArgsSchema.safeParse(args);
 
     if (!validArgs.success)
@@ -50,11 +49,12 @@ export const createSafeGetAccountAccessKey: CreateSafeGetAccountAccessKey = (
     });
 
     if (!rpcResponse.ok)
-      return repackError({
-        error: rpcResponse.error,
-        originPrefix: 'Client.Transport.SendRequest',
-        targetPrefix: 'Client.GetAccountAccessKey',
-      });
+      return result.err(
+        createNatError({
+          kind: 'Client.GetAccountAccessKey.SendRequest.Failed',
+          context: { cause: rpcResponse.error },
+        }),
+      );
 
     return rpcResponse.value.error
       ? handleError(rpcResponse.value)

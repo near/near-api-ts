@@ -4,7 +4,6 @@ import type { RpcResponse } from '@common/schemas/zod/rpc';
 import { result } from '@common/utils/result';
 import { createNatError } from '@common/natError';
 import { transformAccessKey } from '../_common/transformAccessKey';
-
 import type { GetAccountAccessKeysArgs } from 'nat-types/client/methods/account/getAccountAccessKeys';
 
 const RpcQueryAccessKeyListResultSchema = z.object({
@@ -28,8 +27,13 @@ export const handleResult = (
   if (!rpcResult.success)
     return result.err(
       createNatError({
-        kind: 'Client.GetAccountAccessKeys.Response.InvalidSchema',
-        context: { zodError: rpcResult.error },
+        kind: 'Client.GetAccountAccessKeys.SendRequest.Failed',
+        context: {
+          cause: createNatError({
+            kind: 'Client.Transport.SendRequest.Response.Result.InvalidSchema',
+            context: { zodError: rpcResult.error },
+          }),
+        },
       }),
     );
 
