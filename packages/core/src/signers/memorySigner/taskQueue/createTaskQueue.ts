@@ -36,7 +36,6 @@ export const createTaskQueue = (
           createNatError({
             kind: 'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached',
             context: {
-              task,
               maxWaitInQueueMs: context.signerContext.maxWaitInQueueMs,
             },
           }),

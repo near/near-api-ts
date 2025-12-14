@@ -4,6 +4,7 @@ import type { CreateSafeSignTransaction } from 'nat-types/signers/memorySigner/c
 import { TransactionIntentSchema } from '@common/schemas/zod/transaction/transaction';
 import { result } from '@common/utils/result';
 import { createNatError } from '@common/natError';
+import { repackError } from '@common/utils/repackError';
 
 const SignTransactionArgsSchema = z.object({
   intent: TransactionIntentSchema,
@@ -28,28 +29,24 @@ export const createSafeSignTransaction: CreateSafeSignTransaction = (context) =>
     if (signedTransaction.ok) return signedTransaction;
 
     if (
-      signedTransaction.error.kind === 'MemorySigner.Matcher.NoKeysForTaskFound'
+      signedTransaction.error.kind === 'MemorySigner.Matcher.KeyForTaskNotFound'
     ) {
-      return result.err(
-        createNatError({
-          kind: 'MemorySigner.SignTransaction.KeyForTaskNotFound',
-          context: signedTransaction.error.context,
-        }),
-      );
+      return repackError({
+        error: signedTransaction.error,
+        originPrefix: 'MemorySigner.Matcher',
+        targetPrefix: 'MemorySigner.SignTransaction',
+      });
     }
 
     if (
       signedTransaction.error.kind ===
       'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached'
     )
-      return result.err(
-        createNatError({
-          kind: 'MemorySigner.SignTransaction.MaxTimeInTaskQueueReached',
-          context: {
-            maxWaitInQueueMs: signedTransaction.error.context.maxWaitInQueueMs,
-          },
-        }),
-      );
+      return repackError({
+        error: signedTransaction.error,
+        originPrefix: 'MemorySigner.TaskQueue.Task',
+        targetPrefix: 'MemorySigner.SignTransaction',
+      });
 
     return result.err(signedTransaction.error);
   });

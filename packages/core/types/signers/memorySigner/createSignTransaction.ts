@@ -23,7 +23,7 @@ export type SignTransactionIntentErrorVariant =
       };
     }
   | {
-      kind: 'MemorySigner.SignTransaction.MaxTimeInTaskQueueReached';
+      kind: 'MemorySigner.SignTransaction.MaxTimeInQueueReached';
       context: {
         maxWaitInQueueMs: Milliseconds;
       };
@@ -43,7 +43,7 @@ type SignTransactionIntentArgs = {
 type SignTransactionIntentError =
   | NatError<'MemorySigner.SignTransaction.Args.InvalidSchema'>
   | NatError<'MemorySigner.SignTransaction.KeyForTaskNotFound'>
-  | NatError<'MemorySigner.SignTransaction.MaxTimeInTaskQueueReached'>
+  | NatError<'MemorySigner.SignTransaction.MaxTimeInQueueReached'>
   | NatError<'MemorySigner.SignTransaction.Internal'>;
 
 export type SafeSignTransactionIntent = (

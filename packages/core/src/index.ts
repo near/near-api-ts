@@ -16,6 +16,8 @@ export {
 export {
   safeCreateMemorySigner,
   throwableCreateMemorySigner as createMemorySigner,
+  createSafeMemorySignerFactory,
+  createThrowableMemorySignerFactory as createMemorySignerFactory,
 } from './signers/memorySigner/createMemorySigner';
 
 // Action Creators
@@ -72,3 +74,7 @@ export { isNatError } from '@common/natError';
 export type { Client } from 'nat-types/client/client';
 export type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 export type { MemorySigner } from 'nat-types/signers/memorySigner/memorySigner';
+export type {
+  SafeMemorySignerFactory,
+  MemorySignerFactory,
+} from 'nat-types/signers/memorySigner/createMemorySigner';

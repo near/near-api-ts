@@ -22,7 +22,6 @@ export type TaskQueueErrorVariant =
   | {
       kind: 'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached';
       context: {
-        task: Task;
         maxWaitInQueueMs: Milliseconds;
       };
     }
@@ -77,7 +76,7 @@ export type TaskQueueContext = {
 
 // ExecuteTransaction
 type ExecuteTransactionTaskError =
-  | NatError<'MemorySigner.Matcher.NoKeysForTaskFound'>
+  | NatError<'MemorySigner.Matcher.KeyForTaskNotFound'>
   | NatError<'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached'>
   | NatError<'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction'>
   | NatError<'MemorySigner.ExecuteTransaction.Internal'>;
@@ -92,7 +91,7 @@ export type CreateAddExecuteTransactionTask = (
 
 // SignTransaction
 export type SignTransactionTaskError =
-  | NatError<'MemorySigner.Matcher.NoKeysForTaskFound'>
+  | NatError<'MemorySigner.Matcher.KeyForTaskNotFound'>
   | NatError<'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached'>
   | NatError<'MemorySigner.SignTransaction.Internal'>;
 

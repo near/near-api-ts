@@ -56,3 +56,21 @@ export type SafeCreateMemorySigner = (
 export type CreateMemorySigner = (
   args: CreateMemorySignerArgs,
 ) => Promise<MemorySigner>;
+
+// Factory
+
+export type SafeMemorySignerFactory = (
+  signerAccountId: AccountId,
+) => Promise<Result<MemorySigner, CreateMemorySignerError>>;
+
+export type CreateSafeMemorySignerFactory = (
+  args: Omit<CreateMemorySignerArgs, 'signerAccountId'>,
+) => SafeMemorySignerFactory;
+
+export type MemorySignerFactory = (
+  signerAccountId: AccountId,
+) => Promise<MemorySigner>;
+
+export type CreateMemorySignerFactory = (
+  args: Omit<CreateMemorySignerArgs, 'signerAccountId'>,
+) => MemorySignerFactory;

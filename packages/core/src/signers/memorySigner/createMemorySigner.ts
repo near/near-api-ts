@@ -7,6 +7,8 @@ import { createState } from './state/createState';
 import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type {
   CreateMemorySigner,
+  CreateMemorySignerFactory,
+  CreateSafeMemorySignerFactory,
   SafeCreateMemorySigner,
 } from 'nat-types/signers/memorySigner/createMemorySigner';
 import { wrapInternalError } from '@common/utils/wrapInternalError';
@@ -20,7 +22,7 @@ import { createNatError } from '@common/natError';
 import type { Client } from 'nat-types/client/client';
 import type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 import { createSafeSignTransaction } from './createSignTransaction';
-import {createSafeExecuteTransaction} from './createExecuteTransaction';
+import { createSafeExecuteTransaction } from './createExecuteTransaction';
 
 // NextFeature: move block hash to the client level and make it lazy
 
@@ -115,3 +117,11 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
 export const throwableCreateMemorySigner: CreateMemorySigner = asThrowable(
   safeCreateMemorySigner,
 );
+
+export const createSafeMemorySignerFactory: CreateSafeMemorySignerFactory =
+  (args) => (signerAccountId) =>
+    safeCreateMemorySigner({ ...args, signerAccountId });
+
+export const createThrowableMemorySignerFactory: CreateMemorySignerFactory =
+  (args) => (signerAccountId) =>
+    throwableCreateMemorySigner({ ...args, signerAccountId });

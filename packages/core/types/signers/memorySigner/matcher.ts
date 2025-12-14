@@ -8,7 +8,7 @@ import type { NatError } from '@common/natError';
 import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 
 export type MatcherErrorVariant = {
-  kind: 'MemorySigner.Matcher.NoKeysForTaskFound';
+  kind: 'MemorySigner.Matcher.KeyForTaskNotFound';
   context: {
     accessTypePriority: AccessTypePriority;
   };
@@ -16,7 +16,7 @@ export type MatcherErrorVariant = {
 
 export type CanHandleTaskInFuture = (
   task: Task,
-) => Result<true, NatError<'MemorySigner.Matcher.NoKeysForTaskFound'>>;
+) => Result<true, NatError<'MemorySigner.Matcher.KeyForTaskNotFound'>>;
 
 export type Matcher = {
   handleAddTask: (task: Task) => Promise<void>;

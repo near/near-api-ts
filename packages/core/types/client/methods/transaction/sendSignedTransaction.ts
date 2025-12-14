@@ -5,13 +5,12 @@ import type { TransportPolicy } from 'nat-types/client/transport/transport';
 import type { CommonRpcMethodErrorVariant } from 'nat-types/client/methods/_common/common';
 import type {
   AccountId,
-  CryptoHash,
   Nonce,
   Result,
 } from 'nat-types/_common/common';
 import type { NatError } from '@common/natError';
-import type { NearToken } from 'nat-types/_common/nearToken';
 import type { RpcResponse } from '@common/schemas/zod/rpc';
+import type { SharedTransactionErrorVariant } from 'nat-types/_common/sharedTransactionErrors';
 
 export type SendSignedTransactionErrorVariant =
   // Internal
@@ -23,6 +22,7 @@ export type SendSignedTransactionErrorVariant =
     }
   // Public
   | CommonRpcMethodErrorVariant<'Client.SendSignedTransaction'>
+  | SharedTransactionErrorVariant<'Client.SendSignedTransaction'>
   | {
       kind: `Client.SendSignedTransaction.Rpc.Transaction.Expired`;
       context: null;
@@ -30,8 +30,7 @@ export type SendSignedTransactionErrorVariant =
   | {
       kind: `Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid`;
       context: {
-        // transactionNonce must be > than accessKeyNonce
-        transactionNonce: Nonce;
+        transactionNonce: Nonce; // transactionNonce must be > than accessKeyNonce
         accessKeyNonce: Nonce;
       };
     }
@@ -42,37 +41,10 @@ export type SendSignedTransactionErrorVariant =
       };
     }
   | {
-      kind: `Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow`;
-      context: {
-        balance: NearToken;
-        transactionCost: NearToken;
-        signerAccountId: AccountId;
-      };
-    }
-  | {
-      kind: `Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound`;
-      context: {
-        receiverAccountId: AccountId;
-        actionIndex: number;
-        transactionHash: CryptoHash;
-      };
-    }
-  | {
       kind: `Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid`;
       context: null;
     }
-  | {
-      kind: `Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist`;
-      context: {
-        accountId: AccountId;
-        actionIndex: number;
-        transactionHash: CryptoHash;
-      };
-    }
-  | {
-      kind: `Client.SendSignedTransaction.Rpc.Transaction.Timeout`;
-      context: null;
-    };
+  ;
 
 export type SendSignedTransactionInternalErrorKind =
   'Client.SendSignedTransaction.Internal';
@@ -95,14 +67,14 @@ export type SendSignedTransactionError =
   | NatError<'Client.SendSignedTransaction.Args.InvalidSchema'>
   | NatError<'Client.SendSignedTransaction.SendRequest.Failed'>
   // RPC - transaction
-  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Expired'>
+  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound'>
+  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid'>
+  // RPC - shared with signer.executeTransaction
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound'>
-  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Timeout'>
-  // RPC - transaction action
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist'>
   // Stub
   | NatError<'Client.SendSignedTransaction.Internal'>;
