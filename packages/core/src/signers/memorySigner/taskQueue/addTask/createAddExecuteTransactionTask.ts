@@ -3,23 +3,11 @@ import type {
   AddExecuteTransactionTask,
   TaskQueueContext,
 } from 'nat-types/signers/memorySigner/taskQueue';
-import type { TransactionIntent } from 'nat-types/transaction';
 
 export const createAddExecuteTransactionTask =
   (context: TaskQueueContext): AddExecuteTransactionTask =>
-  async (args) => {
+  async (transactionIntent) => {
     const { matcher, resolver } = context.signerContext;
-
-    const transactionIntent: TransactionIntent =
-      args.action !== undefined
-        ? {
-            receiverAccountId: args.receiverAccountId,
-            action: args.action,
-          }
-        : {
-            receiverAccountId: args.receiverAccountId,
-            actions: args.actions,
-          };
 
     const task = {
       taskType: 'ExecuteTransaction' as const,
@@ -28,8 +16,8 @@ export const createAddExecuteTransactionTask =
       transactionIntent,
     };
 
-    matcher.canHandleTaskInFuture(task);
-    context.addTask(task);
+    const canHandle = matcher.canHandleTaskInFuture(task);
+    if (!canHandle.ok) return canHandle;
 
     queueMicrotask(() => {
       matcher.handleAddTask(task);

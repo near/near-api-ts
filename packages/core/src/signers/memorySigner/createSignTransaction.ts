@@ -25,20 +25,31 @@ export const createSafeSignTransaction: CreateSafeSignTransaction = (context) =>
       args.intent,
     );
 
-    if (!signedTransaction.ok) {
-      if (
-        signedTransaction.error.kind ===
-        'MemorySigner.Matcher.NoKeysForTaskFound'
-      ) {
-        return result.err(
-          createNatError({
-            kind: 'MemorySigner.SignTransaction.KeyForTaskNotFound',
-            context: signedTransaction.error.context,
-          }),
-        );
-      }
-      return result.err(signedTransaction.error);
+    if (signedTransaction.ok) return signedTransaction;
+
+    if (
+      signedTransaction.error.kind === 'MemorySigner.Matcher.NoKeysForTaskFound'
+    ) {
+      return result.err(
+        createNatError({
+          kind: 'MemorySigner.SignTransaction.KeyForTaskNotFound',
+          context: signedTransaction.error.context,
+        }),
+      );
     }
 
-    return signedTransaction;
+    if (
+      signedTransaction.error.kind ===
+      'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached'
+    )
+      return result.err(
+        createNatError({
+          kind: 'MemorySigner.SignTransaction.MaxTimeInTaskQueueReached',
+          context: {
+            maxWaitInQueueMs: signedTransaction.error.context.maxWaitInQueueMs,
+          },
+        }),
+      );
+
+    return result.err(signedTransaction.error);
   });

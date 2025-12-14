@@ -15,7 +15,7 @@ const AddFunctionCallKeyActionSchema = z.object({
   accessType: z.literal('FunctionCall'),
   publicKey: PublicKeySchema,
   contractAccountId: AccountIdSchema,
-  gasBudget: NearTokenArgsSchema,
+  gasBudget: z.optional(NearTokenArgsSchema),
   allowedFunctions: z.optional(
     z.array(ContractFunctionNameSchema).check(z.minLength(1)),
   ),

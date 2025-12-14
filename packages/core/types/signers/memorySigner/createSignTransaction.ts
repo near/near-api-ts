@@ -3,7 +3,7 @@ import type {
   TransactionIntent,
 } from 'nat-types/transaction';
 import type { NatError } from '@common/natError';
-import type { Result } from 'nat-types/_common/common';
+import type { Milliseconds, Result } from 'nat-types/_common/common';
 import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type {
   InternalErrorContext,
@@ -23,6 +23,12 @@ export type SignTransactionIntentErrorVariant =
       };
     }
   | {
+      kind: 'MemorySigner.SignTransaction.MaxTimeInTaskQueueReached';
+      context: {
+        maxWaitInQueueMs: Milliseconds;
+      };
+    }
+  | {
       kind: `MemorySigner.SignTransaction.Internal`;
       context: InternalErrorContext;
     };
@@ -37,6 +43,7 @@ type SignTransactionIntentArgs = {
 type SignTransactionIntentError =
   | NatError<'MemorySigner.SignTransaction.Args.InvalidSchema'>
   | NatError<'MemorySigner.SignTransaction.KeyForTaskNotFound'>
+  | NatError<'MemorySigner.SignTransaction.MaxTimeInTaskQueueReached'>
   | NatError<'MemorySigner.SignTransaction.Internal'>;
 
 export type SafeSignTransactionIntent = (

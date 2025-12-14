@@ -38,19 +38,19 @@ export type AccessTypePriority =
 
 export type TaskId = UUID;
 
-type TaskBase = {
+type SignTransactionTask = {
+  taskType: 'SignTransaction';
   taskId: TaskId;
   transactionIntent: TransactionIntent;
   accessTypePriority: AccessTypePriority;
 };
 
-type SignTransactionTask = {
-  taskType: 'SignTransaction';
-} & TaskBase;
-
 type ExecuteTransactionTask = {
   taskType: 'ExecuteTransaction';
-} & TaskBase;
+  taskId: TaskId;
+  transactionIntent: TransactionIntent;
+  accessTypePriority: AccessTypePriority;
+};
 
 export type Task = SignTransactionTask | ExecuteTransactionTask;
 
@@ -65,12 +65,23 @@ export type TaskQueueContext = {
   removeTask: RemoveTask;
 };
 
+// ExecuteTransaction
+type ExecuteTransactionTaskError =
+  | NatError<'MemorySigner.Matcher.NoKeysForTaskFound'>
+  | NatError<'MemorySigner.ExecuteTransaction.Internal'>;
+
 export type AddExecuteTransactionTask = (
   intent: TransactionIntent,
-) => Promise<Result<SendSignedTransactionOutput, unknown>>;
+) => Promise<Result<SendSignedTransactionOutput, ExecuteTransactionTaskError>>;
 
+export type CreateAddExecuteTransactionTask = (
+  context: TaskQueueContext,
+) => AddExecuteTransactionTask;
+
+// SignTransaction
 type SignTransactionTaskError =
   | NatError<'MemorySigner.Matcher.NoKeysForTaskFound'>
+  | NatError<'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached'>
   | NatError<'MemorySigner.SignTransaction.Internal'>;
 
 export type AddSignTransactionTask = (
