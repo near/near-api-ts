@@ -18,5 +18,6 @@ export const createAddSignTransactionTask: CreateAddSignTransactionTask =
     context.addTask(task);
     queueMicrotask(() => matcher.handleAddTask(task));
 
-    return resolver.waitForTask(task.taskId);
+    // TODO Fix types
+    return await resolver.waitForTask(task.taskId);
   };

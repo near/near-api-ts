@@ -91,7 +91,7 @@ export type SendSignedTransactionOutput = {
   rawRpcResult: RpcTransactionResponse; // TODO Tx without Failure
 };
 
-type SendSignedTransactionError =
+export type SendSignedTransactionError =
   | NatError<'Client.SendSignedTransaction.Args.InvalidSchema'>
   | NatError<'Client.SendSignedTransaction.SendRequest.Failed'>
   // RPC - transaction

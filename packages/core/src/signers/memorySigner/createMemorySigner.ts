@@ -20,6 +20,7 @@ import { createNatError } from '@common/natError';
 import type { Client } from 'nat-types/client/client';
 import type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 import { createSafeSignTransaction } from './createSignTransaction';
+import {createSafeExecuteTransaction} from './createExecuteTransaction';
 
 // NextFeature: move block hash to the client level and make it lazy
 
@@ -93,6 +94,7 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
     context.resolver = createResolver();
 
     const safeSignTransaction = createSafeSignTransaction(context);
+    const safeExecuteTransaction = createSafeExecuteTransaction(context);
 
     // Should be called before destroying the signer
     const stop = () => {
@@ -102,10 +104,10 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
     return result.ok({
       signerAccountId,
       signTransaction: asThrowable(safeSignTransaction),
+      executeTransaction: asThrowable(safeExecuteTransaction),
       safeSignTransaction,
+      safeExecuteTransaction,
       stop,
-      // executeTransaction: context.taskQueue.executeTransaction, // add throwErrors
-      // signTransaction: context.taskQueue.signTransaction,
     });
   },
 );

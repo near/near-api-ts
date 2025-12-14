@@ -1,44 +1,64 @@
 import * as z from 'zod/mini';
 import { wrapInternalError } from '@common/utils/wrapInternalError';
-import type { CreateSafeSignTransaction } from 'nat-types/signers/memorySigner/createSignTransaction';
 import { TransactionIntentSchema } from '@common/schemas/zod/transaction/transaction';
 import { result } from '@common/utils/result';
 import { createNatError } from '@common/natError';
+import type { CreateSafeExecuteTransaction } from 'nat-types/signers/memorySigner/createExecuteTransaction';
 
 const SignTransactionArgsSchema = z.object({
   intent: TransactionIntentSchema,
 });
 
-export const createSafeExecuteTransaction: CreateSafeSignTransaction = (context) =>
-  wrapInternalError('MemorySigner.SignTransaction.Internal', async (args) => {
-    const validArgs = SignTransactionArgsSchema.safeParse(args);
+export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (
+  context,
+) =>
+  wrapInternalError(
+    'MemorySigner.ExecuteTransaction.Internal',
+    async (args) => {
+      const validArgs = SignTransactionArgsSchema.safeParse(args);
 
-    if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'MemorySigner.SignTransaction.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
-
-    const signedTransaction = await context.taskQueue.addSignTransactionTask(
-      args.intent,
-    );
-
-    if (!signedTransaction.ok) {
-      if (
-        signedTransaction.error.kind ===
-        'MemorySigner.Matcher.NoKeysForTaskFound'
-      ) {
+      if (!validArgs.success)
         return result.err(
           createNatError({
-            kind: 'MemorySigner.SignTransaction.KeyForTaskNotFound',
-            context: signedTransaction.error.context,
+            kind: 'MemorySigner.ExecuteTransaction.Args.InvalidSchema',
+            context: { zodError: validArgs.error },
+          }),
+        );
+
+      const taskResult = await context.taskQueue.addExecuteTransactionTask(
+        args.intent,
+      );
+
+      if (taskResult.ok) return taskResult;
+
+      if (taskResult.error.kind === 'MemorySigner.Matcher.NoKeysForTaskFound') {
+        return result.err(
+          createNatError({
+            kind: 'MemorySigner.ExecuteTransaction.KeyForTaskNotFound',
+            context: taskResult.error.context,
           }),
         );
       }
-      return result.err(signedTransaction.error);
-    }
 
-    return signedTransaction;
-  });
+      if (
+        taskResult.error.kind ===
+        'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached'
+      )
+        return result.err(
+          createNatError({
+            kind: 'MemorySigner.ExecuteTransaction.MaxTimeInTaskQueueReached',
+            context: {
+              maxWaitInQueueMs: taskResult.error.context.maxWaitInQueueMs,
+            },
+          }),
+        );
+
+      if (
+        taskResult.error.kind ===
+        'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction'
+      )
+        throw taskResult.error; // TODO repack
+
+      return result.err(taskResult.error);
+    },
+  );

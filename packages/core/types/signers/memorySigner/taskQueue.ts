@@ -11,17 +11,27 @@ import type {
   SignedTransaction,
   TransactionIntent,
 } from 'nat-types/transaction';
-import type { SendSignedTransactionOutput } from 'nat-types/client/methods/transaction/sendSignedTransaction';
+import type {
+  SendSignedTransactionError,
+  SendSignedTransactionOutput,
+} from 'nat-types/client/methods/transaction/sendSignedTransaction';
 import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
 import type { NatError } from '@common/natError';
 
-export type TaskQueueErrorVariant = {
-  kind: 'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached';
-  context: {
-    task: Task;
-    maxWaitInQueueMs: Milliseconds;
-  };
-};
+export type TaskQueueErrorVariant =
+  | {
+      kind: 'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached';
+      context: {
+        task: Task;
+        maxWaitInQueueMs: Milliseconds;
+      };
+    }
+  | {
+      kind: 'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction';
+      context: {
+        cause: SendSignedTransactionError;
+      };
+    };
 
 export type FullAccessKeyPriority = { accessType: 'FullAccess' };
 
@@ -68,6 +78,8 @@ export type TaskQueueContext = {
 // ExecuteTransaction
 type ExecuteTransactionTaskError =
   | NatError<'MemorySigner.Matcher.NoKeysForTaskFound'>
+  | NatError<'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached'>
+  | NatError<'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction'>
   | NatError<'MemorySigner.ExecuteTransaction.Internal'>;
 
 export type AddExecuteTransactionTask = (
@@ -79,7 +91,7 @@ export type CreateAddExecuteTransactionTask = (
 ) => AddExecuteTransactionTask;
 
 // SignTransaction
-type SignTransactionTaskError =
+export type SignTransactionTaskError =
   | NatError<'MemorySigner.Matcher.NoKeysForTaskFound'>
   | NatError<'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached'>
   | NatError<'MemorySigner.SignTransaction.Internal'>;

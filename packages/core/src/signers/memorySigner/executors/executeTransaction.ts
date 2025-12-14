@@ -1,65 +1,34 @@
-import * as z from 'zod/mini';
 import type { Nonce, Result } from 'nat-types/_common/common';
 import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { Task } from 'nat-types/signers/memorySigner/taskQueue';
 import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
 import { result } from '@common/utils/result';
 import type { Transaction } from 'nat-types/transaction';
+import { createNatError, type NatError } from '@common/natError';
+import type { SendSignedTransactionOutput } from 'nat-types/client/methods/transaction/sendSignedTransaction';
+import { wrapInternalError } from '@common/utils/wrapInternalError';
 
-/*
-"data": {
-    "TxExecutionError": {
-      "InvalidTxError": {
-        "InvalidAccessKeyError": {
-          "NotEnoughAllowance": {
-            "accountId": "user.nat",
-            "allowance": "100",
-            "cost": "1119831546455600000000",
-            "publicKey": "ed25519:DT5gLSaN4b8GHKFafMozJtVB62pqtXWgt9X74d6ahXm8"
-          }
-        }
-      }
-    }
- */
-
-const NonceErrorSchema = z.object({
-  __rawRpcError: z.object({
-    data: z.object({
-      TxExecutionError: z.object({
-        InvalidTxError: z.object({
-          InvalidNonce: z.object({
-            akNonce: z.number(),
-            txNonce: z.number(),
-          }),
-        }),
-      }),
-    }),
-  }),
-});
-
-const maybeNonceError = (e: unknown): Result<{ akNonce: Nonce }, undefined> => {
-  const validated = NonceErrorSchema.safeParse(e);
-  // if (hasRpcErrorCode(e, ['HandlerError']) && validated.success)
-  //   return result.ok({
-  //     akNonce:
-  //       validated.data.__rawRpcError.data.TxExecutionError.InvalidTxError
-  //         .InvalidNonce.akNonce,
-  //   });
-  return result.err(undefined);
-};
+type Attempt = (
+  attemptIndex: number,
+  newNonce: Nonce,
+) => Promise<
+  Result<
+    SendSignedTransactionOutput,
+    | NatError<'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction'>
+    | NatError<'MemorySigner.ExecuteTransaction.Internal'>
+  >
+>;
 
 export const executeTransaction = async (
   signerContext: MemorySignerContext,
   task: Task,
   key: KeyPoolKey,
-) => {
+): Promise<void> => {
   const maxAttempts = 3; // Maybe we will allow user to configure it in the future
 
-  const attempt = async (
-    attemptIndex: number,
-    newNonce: Nonce,
-  ): Promise<Result<unknown, unknown>> => {
-    try {
+  const attempt: Attempt = wrapInternalError(
+    'MemorySigner.ExecuteTransaction.Internal',
+    async (attemptIndex, newNonce) => {
       const transaction: Transaction = {
         ...task.transactionIntent,
         signerAccountId: signerContext.signerAccountId,
@@ -68,30 +37,44 @@ export const executeTransaction = async (
         blockHash: signerContext.state.getBlockHash(),
       };
 
+      // This call will never fail
       const signedTransaction = await signerContext.keyService.signTransaction({
         transaction,
       });
 
-      const txResult = await signerContext.client.sendSignedTransaction({
+      const txResult = await signerContext.client.safeSendSignedTransaction({
         signedTransaction,
       });
 
-      key.setNonce(newNonce);
+      // If tx executed successfully - update key nonce and return tx execution result;
+      if (txResult.ok) {
+        key.setNonce(newNonce);
+        return txResult;
+      }
 
-      return result.ok(txResult);
-    } catch (e) {
-      // If last attempt
-      if (attemptIndex >= maxAttempts - 1) return result.err(e);
+      // If it's not a last attempt + it's a nonce error -
+      // re-sign with a new nonce and try to send again;
+      if (
+        attemptIndex <= maxAttempts &&
+        txResult.error.kind ===
+          'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid'
+      ) {
+        return await attempt(
+          attemptIndex + 1,
+          txResult.error.context.accessKeyNonce + 1,
+        );
+      }
 
-      // MemorySigner.ExecuteTransaction.Client.SendSignedTransaction
-      const nonceError = maybeNonceError(e);
-      if (nonceError.ok)
-        return await attempt(attemptIndex + 1, nonceError.value.akNonce + 1);
+      // Pack sendSignedTransaction error and return;
+      return result.err(
+        createNatError({
+          kind: 'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction',
+          context: { cause: txResult.error },
+        }),
+      );
+    },
+  );
 
-      return result.err(e);
-    }
-  };
-
-  const executeTransactionResult = await attempt(0, key.nonce + 1);
+  const executeTransactionResult = await attempt(1, key.nonce + 1);
   signerContext.resolver.completeTask(task.taskId, executeTransactionResult);
 };
