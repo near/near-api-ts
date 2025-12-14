@@ -14,9 +14,9 @@ export const createResolver = (): Resolver => {
   const waitForTask: WaitForTask = <T, E>(
     taskId: TaskId,
   ): Promise<Result<T, E>> =>
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       activeTasks[taskId] = (taskResult: Result<T, E>) => {
-        taskResult.ok ? resolve(taskResult) : reject(taskResult);
+        resolve(taskResult);
         delete activeTasks[taskId];
       };
     });
