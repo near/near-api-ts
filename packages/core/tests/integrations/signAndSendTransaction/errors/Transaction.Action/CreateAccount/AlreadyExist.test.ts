@@ -4,12 +4,12 @@ import {
   createAccount,
   type Client,
   type MemoryKeyService,
-} from '../../../../../src';
-import { createDefaultClient } from '../../../../utils/common';
-import { startSandbox } from '../../../../utils/sandbox/startSandbox';
+} from '../../../../../../src';
+import { createDefaultClient } from '../../../../../utils/common';
+import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
-import { testKeys } from '../../../../utils/testKeys';
-import { assertNatErrKind } from '../../../../utils/assertNatErrKind';
+import { testKeys } from '../../../../../utils/testKeys';
+import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 
 vi.setConfig({ testTimeout: 60000 });
 

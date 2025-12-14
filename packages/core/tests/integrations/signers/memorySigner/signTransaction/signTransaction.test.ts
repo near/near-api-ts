@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
 import { vi, expect, it, describe, beforeAll } from 'vitest';
-import { startSandbox } from '../../../utils/sandbox/startSandbox';
+import { startSandbox } from '../../../../utils/sandbox/startSandbox';
 import {
   addFunctionCallKey,
   type Client,
@@ -10,10 +10,10 @@ import {
   type MemoryKeyService,
   randomEd25519KeyPair,
   transfer,
-} from '../../../../src';
-import { assertNatErrKind } from '../../../utils/assertNatErrKind';
+} from '../../../../../src';
+import { assertNatErrKind } from '../../../../utils/assertNatErrKind';
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { createDefaultClient } from '../../../utils/common';
+import { createDefaultClient } from '../../../../utils/common';
 
 z.config(z.locales.en());
 vi.setConfig({ testTimeout: 60000 });
