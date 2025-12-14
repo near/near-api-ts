@@ -28,7 +28,7 @@ const findSigningKey = (
 export const createFindKeyForTask =
   (keyList: KeyList): FindKeyForTask =>
   (task) => {
-    for (const keyPriority of task.signingKeyPriority) {
+    for (const keyPriority of task.accessTypePriority) {
       const key = findSigningKey(keyPriority, keyList);
       if (key) return key;
     }

@@ -28,6 +28,6 @@ const isKeyExist = (
 export const createIsKeyForTaskExist =
   (keyList: KeyList): IsKeyForTaskExist =>
   (task) =>
-    task.signingKeyPriority.some((keyPriority) =>
+    task.accessTypePriority.some((keyPriority) =>
       isKeyExist(keyPriority, keyList),
     );

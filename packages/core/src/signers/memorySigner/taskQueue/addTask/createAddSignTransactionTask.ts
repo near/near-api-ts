@@ -1,4 +1,4 @@
-import { getSigningKeyPriority } from './helpers/getSigningKeyPriority';
+import { getAccessTypePriority } from './helpers/getAccessTypePriority';
 import type { CreateAddSignTransactionTask } from 'nat-types/signers/memorySigner/taskQueue';
 
 export const createAddSignTransactionTask: CreateAddSignTransactionTask =
@@ -8,7 +8,7 @@ export const createAddSignTransactionTask: CreateAddSignTransactionTask =
     const task = {
       taskType: 'SignTransaction' as const,
       taskId: crypto.randomUUID(),
-      signingKeyPriority: getSigningKeyPriority(transactionIntent),
+      accessTypePriority: getAccessTypePriority(transactionIntent),
       transactionIntent,
     };
 

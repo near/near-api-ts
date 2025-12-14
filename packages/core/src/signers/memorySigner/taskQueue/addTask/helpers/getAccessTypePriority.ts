@@ -1,7 +1,7 @@
 import type { TransactionIntent } from 'nat-types/transaction';
 import type { FunctionCallAction } from 'nat-types/actions/functionCall';
 import type { AccountId } from 'nat-types/_common/common';
-import type { SigningKeyPriority } from 'nat-types/signers/memorySigner/taskQueue';
+import type { AccessTypePriority } from 'nat-types/signers/memorySigner/taskQueue';
 
 /**
  * We always want to sign txns with FA key when possible and use FC only if all
@@ -10,7 +10,7 @@ import type { SigningKeyPriority } from 'nat-types/signers/memorySigner/taskQueu
 const getPriorityForFunctionCallTransaction = (
   action: FunctionCallAction,
   receiverAccountId: AccountId,
-): SigningKeyPriority => [
+): AccessTypePriority => [
   { accessType: 'FullAccess' },
   {
     accessType: 'FunctionCall',
@@ -19,11 +19,11 @@ const getPriorityForFunctionCallTransaction = (
   },
 ];
 
-export const getSigningKeyPriority = ({
+export const getAccessTypePriority = ({
   action,
   actions,
   receiverAccountId,
-}: TransactionIntent): SigningKeyPriority => {
+}: TransactionIntent): AccessTypePriority => {
   // If a tx has only 1 FC action - it's possible to sign it with FC
   // (if present/ meet requirements)
   if (action?.actionType === 'FunctionCall')

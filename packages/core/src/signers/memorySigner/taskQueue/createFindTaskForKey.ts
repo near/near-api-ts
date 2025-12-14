@@ -32,7 +32,7 @@ export const createFindTaskForKey =
   (context: TaskQueueContext): FindTaskForKey =>
   (key) =>
     context.queue.find((task) =>
-      task.signingKeyPriority.some((keyPriority) =>
+      task.accessTypePriority.some((keyPriority) =>
         checkIfKeyMatchRequirements(keyPriority, key),
       ),
     );

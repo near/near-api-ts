@@ -1,4 +1,4 @@
-import { getSigningKeyPriority } from './helpers/getSigningKeyPriority';
+import { getAccessTypePriority } from './helpers/getAccessTypePriority';
 import type {
   AddExecuteTransactionTask,
   TaskQueueContext,
@@ -24,7 +24,7 @@ export const createAddExecuteTransactionTask =
     const task = {
       taskType: 'ExecuteTransaction' as const,
       taskId: crypto.randomUUID(),
-      signingKeyPriority: getSigningKeyPriority(transactionIntent),
+      accessTypePriority: getAccessTypePriority(transactionIntent),
       transactionIntent,
     };
 

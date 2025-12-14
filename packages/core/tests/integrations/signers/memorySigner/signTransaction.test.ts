@@ -43,7 +43,7 @@ describe('MemorySigner.signTransaction', async () => {
         receiverAccountId: 'bob',
       },
     });
-    signer.stop();
+    // signer.stop();
     expect(tx.ok).toBe(true);
   });
 });

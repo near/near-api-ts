@@ -1,5 +1,5 @@
 import type {
-  SigningKeyPriority,
+  AccessTypePriority,
   Task,
 } from 'nat-types/signers/memorySigner/taskQueue';
 import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
@@ -10,7 +10,7 @@ import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memoryS
 export type MatcherErrorVariant = {
   kind: 'MemorySigner.Matcher.NoKeysForTaskFound';
   context: {
-    signingKeyPriority: SigningKeyPriority;
+    accessTypePriority: AccessTypePriority;
   };
 };
 

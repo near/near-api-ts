@@ -9,7 +9,7 @@ import type {
   InternalErrorContext,
   InvalidSchemaContext,
 } from 'nat-types/natError';
-import type { SigningKeyPriority } from 'nat-types/signers/memorySigner/taskQueue';
+import type { AccessTypePriority } from 'nat-types/signers/memorySigner/taskQueue';
 
 export type SignTransactionIntentErrorVariant =
   | {
@@ -17,9 +17,9 @@ export type SignTransactionIntentErrorVariant =
       context: InvalidSchemaContext;
     }
   | {
-      kind: 'MemorySigner.SignTransaction.NoKeysForTaskFound';
+      kind: 'MemorySigner.SignTransaction.KeyForTaskNotFound';
       context: {
-        signingKeyPriority: SigningKeyPriority;
+        accessTypePriority: AccessTypePriority;
       };
     }
   | {
@@ -36,7 +36,7 @@ type SignTransactionIntentArgs = {
 
 type SignTransactionIntentError =
   | NatError<'MemorySigner.SignTransaction.Args.InvalidSchema'>
-  | NatError<'MemorySigner.SignTransaction.NoKeysForTaskFound'>
+  | NatError<'MemorySigner.SignTransaction.KeyForTaskNotFound'>
   | NatError<'MemorySigner.SignTransaction.Internal'>;
 
 export type SafeSignTransactionIntent = (

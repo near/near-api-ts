@@ -29,6 +29,10 @@ import type {
   SignTransactionIntentErrorVariant,
   SignTransactionIntentInternalErrorKind,
 } from 'nat-types/signers/memorySigner/createSignTransaction';
+import type {
+  ExecuteTransactionErrorVariant,
+  ExecuteTransactionInternalErrorKind,
+} from 'nat-types/signers/memorySigner/createExecuteTransaction';
 
 export type MemorySignerErrorVariant =
   | CreateMemorySignerErrorVariant
@@ -36,11 +40,13 @@ export type MemorySignerErrorVariant =
   | CreateKeyPoolErrorVariant
   | TaskQueueErrorVariant
   | MatcherErrorVariant
-  | SignTransactionIntentErrorVariant;
+  | SignTransactionIntentErrorVariant
+  | ExecuteTransactionErrorVariant;
 
 export type MemorySignerInternalErrorKind =
   | CreateMemorySignerInternalErrorKind
-  | SignTransactionIntentInternalErrorKind;
+  | SignTransactionIntentInternalErrorKind
+  | ExecuteTransactionInternalErrorKind;
 
 export type MemorySignerContext = {
   signerAccountId: AccountId;

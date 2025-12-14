@@ -31,7 +31,7 @@ export type FunctionCallKeyPriority = {
   calledFnName: ContractFunctionName;
 };
 
-export type SigningKeyPriority =
+export type AccessTypePriority =
   | [FullAccessKeyPriority | FunctionCallKeyPriority]
   | [FullAccessKeyPriority, FunctionCallKeyPriority]
   | [FunctionCallKeyPriority, FullAccessKeyPriority];
@@ -41,7 +41,7 @@ export type TaskId = UUID;
 type TaskBase = {
   taskId: TaskId;
   transactionIntent: TransactionIntent;
-  signingKeyPriority: SigningKeyPriority;
+  accessTypePriority: AccessTypePriority;
 };
 
 type SignTransactionTask = {

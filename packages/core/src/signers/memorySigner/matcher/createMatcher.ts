@@ -44,7 +44,7 @@ export const createMatcher: CreateMatcher = (signerContext) => {
       : result.err(
           createNatError({
             kind: 'MemorySigner.Matcher.NoKeysForTaskFound',
-            context: { signingKeyPriority: task.signingKeyPriority },
+            context: { accessTypePriority: task.accessTypePriority },
           }),
         );
   };

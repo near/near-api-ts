@@ -9,7 +9,7 @@ const SignTransactionArgsSchema = z.object({
   intent: TransactionIntentSchema,
 });
 
-export const createSafeSignTransaction: CreateSafeSignTransaction = (context) =>
+export const createSafeExecuteTransaction: CreateSafeSignTransaction = (context) =>
   wrapInternalError('MemorySigner.SignTransaction.Internal', async (args) => {
     const validArgs = SignTransactionArgsSchema.safeParse(args);
 
