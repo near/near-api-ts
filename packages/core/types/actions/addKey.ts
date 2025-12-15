@@ -1,10 +1,63 @@
 import type { NativePublicKey, PublicKey } from 'nat-types/_common/crypto';
-import type { AccountId, ContractFunctionName } from 'nat-types/_common/common';
+import type {
+  AccountId,
+  ContractFunctionName,
+  Result,
+} from 'nat-types/_common/common';
 import type { NearTokenArgs } from 'nat-types/_common/nearToken';
+import type {
+  InternalErrorContext,
+  InvalidSchemaContext,
+} from 'nat-types/natError';
+import type { NatError } from '@common/natError';
+
+export type CreateAddKeyActionErrorVariant =
+  | {
+      kind: 'CreateAction.AddFullAccessKey.Args.InvalidSchema';
+      context: InvalidSchemaContext;
+    }
+  | {
+      kind: 'CreateAction.AddFullAccessKey.Internal';
+      context: InternalErrorContext;
+    }
+  | {
+      kind: 'CreateAction.AddFunctionCallKey.Args.InvalidSchema';
+      context: InvalidSchemaContext;
+    }
+  | {
+      kind: 'CreateAction.AddFunctionCallKey.Internal';
+      context: InternalErrorContext;
+    };
+
+export type CreateAddKeyActionInternalErrorKind =
+  | 'CreateAction.AddFullAccessKey.Internal'
+  | 'CreateAction.AddFunctionCallKey.Internal';
+
+// AddFullAccessKey
 
 export type CreateAddFullAccessKeyActionArgs = {
   publicKey: PublicKey;
 };
+
+export type AddFullAccessKeyAction = {
+  actionType: 'AddKey';
+  accessType: 'FullAccess';
+  publicKey: PublicKey;
+};
+
+type CreateAddFullAccessKeyActionError =
+  | NatError<'CreateAction.AddFullAccessKey.Args.InvalidSchema'>
+  | NatError<'CreateAction.AddFullAccessKey.Internal'>;
+
+export type SafeCreateAddFullAccessKeyAction = (
+  args: CreateAddFullAccessKeyActionArgs,
+) => Result<AddFullAccessKeyAction, CreateAddFullAccessKeyActionError>;
+
+export type CreateAddFullAccessKeyAction = (
+  args: CreateAddFullAccessKeyActionArgs,
+) => AddFullAccessKeyAction;
+
+// AddFunctionCallKey
 
 export type CreateAddFunctionCallKeyActionArgs = {
   publicKey: PublicKey;
@@ -13,17 +66,26 @@ export type CreateAddFunctionCallKeyActionArgs = {
   allowedFunctions?: ContractFunctionName[];
 };
 
-export type AddFullAccessKeyAction = {
-  actionType: 'AddKey';
-  accessType: 'FullAccess';
-} & CreateAddFullAccessKeyActionArgs;
-
 export type AddFunctionCallKeyAction = {
   actionType: 'AddKey';
   accessType: 'FunctionCall';
-} & CreateAddFunctionCallKeyActionArgs;
+  publicKey: PublicKey;
+  contractAccountId: AccountId;
+  gasBudget?: NearTokenArgs;
+  allowedFunctions?: ContractFunctionName[]; // TODO force user to pass at least 1 name
+};
 
-export type AddKeyAction = AddFullAccessKeyAction | AddFunctionCallKeyAction;
+type CreateAddFunctionCallKeyActionError =
+  | NatError<'CreateAction.AddFunctionCallKey.Args.InvalidSchema'>
+  | NatError<'CreateAction.AddFunctionCallKey.Internal'>;
+
+export type SafeCreateAddFunctionCallKeyAction = (
+  args: CreateAddFunctionCallKeyActionArgs,
+) => Result<AddFunctionCallKeyAction, CreateAddFunctionCallKeyActionError>;
+
+export type CreateAddFunctionCallKeyAction = (
+  args: CreateAddFunctionCallKeyActionArgs,
+) => AddFunctionCallKeyAction;
 
 // ****** NATIVE ********
 

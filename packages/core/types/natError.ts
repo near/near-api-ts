@@ -20,6 +20,18 @@ import type {
   MemorySignerErrorVariant,
   MemorySignerInternalErrorKind,
 } from 'nat-types/signers/memorySigner/memorySigner';
+import type {
+  CreateAddKeyActionErrorVariant,
+  CreateAddKeyActionInternalErrorKind,
+} from 'nat-types/actions/addKey';
+import type {
+  CreateTransferActionErrorVariant,
+  CreateTransferActionInternalErrorKind,
+} from 'nat-types/actions/transfer';
+import type {
+  CreateFunctionCallActionErrorVariant,
+  CreateFunctionCallActionInternalErrorKind,
+} from 'nat-types/actions/functionCall';
 
 export type InternalErrorContext = { cause: unknown };
 export type InvalidSchemaContext = { zodError: $ZodError };
@@ -28,6 +40,9 @@ type NatErrorVariant =
   | ClientErrorVariant
   | MemoryKeyServiceErrorVariant
   | MemorySignerErrorVariant
+  | CreateTransferActionErrorVariant
+  | CreateAddKeyActionErrorVariant
+  | CreateFunctionCallActionErrorVariant
   | NearTokenErrorVariant
   | NearGasErrorVariant
   | KeyPairErrorVariant
@@ -42,6 +57,9 @@ export type NatInternalErrorKind = NatError<
   | 'CreateMemoryKeyService.Internal'
   | 'MemoryKeyService.SignTransaction.Internal'
   | 'MemoryKeyService.FindKeyPair.Internal'
+  | CreateTransferActionInternalErrorKind
+  | CreateAddKeyActionInternalErrorKind
+  | CreateFunctionCallActionInternalErrorKind
   | 'CreateNearToken.Internal'
   | 'CreateNearTokenFromYoctoNear.Internal'
   | 'CreateNearTokenFromNear.Internal'

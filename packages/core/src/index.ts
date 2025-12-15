@@ -21,14 +21,26 @@ export {
 } from './signers/memorySigner/createMemorySigner';
 
 // Action Creators
-export { transfer } from './helpers/actionCreators/transfer';
 export { createAccount } from './helpers/actionCreators/createAccount';
-export { addFullAccessKey } from './helpers/actionCreators/addFullAccessKey';
-export { addFunctionCallKey } from './helpers/actionCreators/addFunctionCallKey';
-export { functionCall } from './helpers/actionCreators/functionCall';
+export {
+  safeTransfer,
+  throwableTransfer as transfer,
+} from './helpers/actionCreators/transfer';
+export {
+  safeAddFullAccessKey,
+  throwableAddFullAccessKey as addFullAccessKey,
+} from './helpers/actionCreators/addFullAccessKey';
+export {
+  safeAddFunctionCallKey,
+  throwableAddFunctionCallKey as addFunctionCallKey,
+} from './helpers/actionCreators/addFunctionCallKey';
+export {
+  safeFunctionCall,
+  throwableFunctionCall as functionCall,
+} from './helpers/actionCreators/functionCall';
+export { deployContract } from './helpers/actionCreators/deployContract';
 export { deleteKey } from './helpers/actionCreators/deleteKey';
 export { deleteAccount } from './helpers/actionCreators/deleteAccount';
-export { deployContract } from './helpers/actionCreators/deployContract';
 
 // Helpers
 // Near Token

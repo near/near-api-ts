@@ -14,7 +14,8 @@ import type {
   TransferAction,
 } from 'nat-types/actions/transfer';
 import type {
-  AddKeyAction,
+  AddFullAccessKeyAction,
+  AddFunctionCallKeyAction,
   NativeAddKeyAction,
 } from 'nat-types/actions/addKey';
 import type {
@@ -37,7 +38,8 @@ import type {
 export type Action =
   | CreateAccountAction
   | TransferAction
-  | AddKeyAction
+  | AddFullAccessKeyAction
+  | AddFunctionCallKeyAction
   | DeployContractAction
   | FunctionCallAction
   | DeleteKeyAction

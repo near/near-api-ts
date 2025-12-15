@@ -1,10 +1,38 @@
 import type {
   ContractFunctionName,
   MaybeJsonLikeValue,
+  Result,
 } from 'nat-types/_common/common';
 import type { KeyIf } from 'nat-types/utils';
 import type { NearTokenArgs } from 'nat-types/_common/nearToken';
 import type { NearGasArgs } from 'nat-types/_common/nearGas';
+import type {
+  InternalErrorContext,
+  InvalidSchemaContext,
+} from 'nat-types/natError';
+import type { NatError } from '@common/natError';
+
+export type CreateFunctionCallActionErrorVariant =
+  | {
+      kind: 'CreateAction.FunctionCall.Args.InvalidSchema';
+      context: InvalidSchemaContext;
+    }
+  | {
+      kind: 'CreateAction.FunctionCall.CustomSerializer.Internal';
+      context: InternalErrorContext;
+    }
+  | {
+      kind: 'CreateAction.FunctionCall.CustomSerializer.InvalidOutput';
+      context: { output: unknown };
+    }
+  | {
+      kind: 'CreateAction.FunctionCall.Internal';
+      context: InternalErrorContext;
+    };
+
+export type CreateFunctionCallActionInternalErrorKind =
+  | 'CreateAction.FunctionCall.Internal'
+  | 'CreateAction.FunctionCall.CustomSerializer.Internal';
 
 type BaseFunctionCallActionArgs = {
   functionName: ContractFunctionName;
@@ -28,6 +56,24 @@ type FunctionArgsOf<SA> = SA extends (args: {
   : undefined;
 
 type FunctionArgs<A> = KeyIf<'functionArgs', A>;
+
+type CreateFunctionCallActionError =
+  | NatError<'CreateAction.FunctionCall.Args.InvalidSchema'>
+  | NatError<'CreateAction.FunctionCall.CustomSerializer.InvalidOutput'>
+  | NatError<'CreateAction.FunctionCall.CustomSerializer.Internal'>
+  | NatError<'CreateAction.FunctionCall.Internal'>;
+
+export type SafeCreateFunctionCallAction = {
+  // #1
+  <A extends MaybeJsonLikeValue = undefined>(
+    args: BaseFunctionCallActionArgs & FunctionArgs<A> & { options?: never },
+  ): Result<FunctionCallAction, CreateFunctionCallActionError>;
+  // #2
+  <SA extends BaseSerializeArgs<A>, A = FunctionArgsOf<SA>>(
+    args: BaseFunctionCallActionArgs &
+      FunctionArgs<A> & { options: { serializeArgs: SA } },
+  ): Result<FunctionCallAction, CreateFunctionCallActionError>;
+};
 
 export type CreateFunctionCallAction = {
   // #1
