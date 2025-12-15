@@ -65,11 +65,14 @@ export const handleResult = (
       }),
     );
 
+  const deserializedResult = deserializeCallResult(args, rpcResult.data.result);
+  if (!deserializedResult.ok) return deserializedResult;
+
   const output = {
     blockHash,
     blockHeight,
     logs,
-    result: deserializeCallResult(args, rpcResult.data.result),
+    result: deserializedResult.value,
     rawResult: rpcResult.data.result,
   };
 
