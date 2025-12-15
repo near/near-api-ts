@@ -1,5 +1,7 @@
 import type { Result } from 'nat-types/_common/common';
 
+// TODO Fix: asThrowable doesn't work fine with overload functions
+
 type AsThrowable = {
   <A extends unknown[], V, E>(
     safeFn: (...args: A) => Result<V, E>,

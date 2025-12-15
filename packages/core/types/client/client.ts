@@ -34,7 +34,13 @@ import type {
   GetBlockInternalErrorKind,
   SafeGetBlock,
 } from 'nat-types/client/methods/block/getBlock';
-import {ClientBrand} from '../../src/client/createClient';
+import { ClientBrand } from '../../src/client/createClient';
+import type {
+  CallContractReadFunction,
+  CallContractReadFunctionErrorVariant,
+  CallContractReadFunctionInternalErrorKind,
+  SafeCallContractReadFunction,
+} from 'nat-types/client/methods/contract/callContractReadFunction';
 
 export type ClientErrorVariant =
   | CreateClientErrorVariant
@@ -42,6 +48,7 @@ export type ClientErrorVariant =
   | GetAccountInfoErrorVariant
   | GetAccountAccessKeyErrorVariant
   | GetAccountAccessKeysErrorVariant
+  | CallContractReadFunctionErrorVariant
   | GetBlockErrorVariant
   | SendSignedTransactionErrorVariant;
 
@@ -50,6 +57,7 @@ export type ClientInternalErrorKind =
   | GetAccountInfoInternalErrorKind
   | GetAccountAccessKeyInternalErrorKind
   | GetAccountAccessKeysInternalErrorKind
+  | CallContractReadFunctionInternalErrorKind
   | GetBlockInternalErrorKind
   | SendSignedTransactionInternalErrorKind;
 
@@ -65,17 +73,18 @@ export type Client = {
   getAccountInfo: GetAccountInfo;
   getAccountAccessKey: GetAccountAccessKey;
   getAccountAccessKeys: GetAccountAccessKeys;
+  callContractReadFunction: CallContractReadFunction;
   getBlock: GetBlock;
   sendSignedTransaction: SendSignedTransaction;
   // safe variants
   safeGetAccountInfo: SafeGetAccountInfo;
   safeGetAccountAccessKey: SafeGetAccountAccessKey;
   safeGetAccountAccessKeys: SafeGetAccountAccessKeys;
+  safeCallContractReadFunction: SafeCallContractReadFunction;
   safeGetBlock: SafeGetBlock;
   safeSendSignedTransaction: SafeSendSignedTransaction;
 
   // getContractState: GetContractState;
-  // callContractReadFunction: CallContractReadFunction;
   // getProtocolConfig: GetProtocolConfig;
   // getGasPrice: GetGasPrice;
 };

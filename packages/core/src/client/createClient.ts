@@ -17,6 +17,7 @@ import { result } from '@common/utils/result';
 import { asThrowable } from '@common/utils/asThrowable';
 import { createNatError } from '@common/natError';
 import type { Client } from 'nat-types/client/client';
+import { createSafeCallContractReadFunction } from './methods/contract/callContractReadFunction/callContractReadFunction';
 
 // NextFeature: add cache for protocol config / blockHash
 
@@ -51,19 +52,25 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
     const safeGetAccountInfo = createSafeGetAccountInfo(context);
     const safeGetAccountAccessKey = createSafeGetAccountAccessKey(context);
     const safeGetAccountAccessKeys = createSafeGetAccountAccessKeys(context);
+    const safeCallContractReadFunction =
+      createSafeCallContractReadFunction(context);
     const safeGetBlock = createSafeGetBlock(context);
     const safeSendSignedTransaction = createSafeSendSignedTransaction(context);
 
     return result.ok({
-      [ClientBrand]: true,
+      [ClientBrand]: true, // TODO hide from console.log
       getAccountInfo: asThrowable(safeGetAccountInfo),
       getAccountAccessKey: asThrowable(safeGetAccountAccessKey),
       getAccountAccessKeys: asThrowable(safeGetAccountAccessKeys),
+      callContractReadFunction: asThrowable(
+        safeCallContractReadFunction as any,
+      ) as any, // TODO Fix: asThrowable doesn't work fine with overloads
       getBlock: asThrowable(safeGetBlock),
       sendSignedTransaction: asThrowable(safeSendSignedTransaction),
       safeGetAccountInfo,
       safeGetAccountAccessKey,
       safeGetAccountAccessKeys,
+      safeCallContractReadFunction,
       safeGetBlock,
       safeSendSignedTransaction,
     });

@@ -21,15 +21,15 @@ const serializeFunctionArgs = (
   args: InnerCreateFunctionCallActionArgs,
 ): Result<
   Uint8Array,
-  | NatError<'CreateAction.FunctionCall.CustomSerializer.InvalidOutput'>
-  | NatError<'CreateAction.FunctionCall.CustomSerializer.Internal'>
+  | NatError<'CreateAction.FunctionCall.SerializeArgs.InvalidOutput'>
+  | NatError<'CreateAction.FunctionCall.SerializeArgs.Internal'>
   | NatError<'CreateAction.FunctionCall.Args.InvalidSchema'>
 > => {
   // If user want to use his own custom serializer;
   if (args.options?.serializeArgs) {
     const serializeArgs = args.options.serializeArgs;
     return wrapInternalError(
-      'CreateAction.FunctionCall.CustomSerializer.Internal',
+      'CreateAction.FunctionCall.SerializeArgs.Internal',
       () => {
         // We can't be sure that serializeArgs will really return Uint8Array;
         const output: unknown = serializeArgs({
@@ -39,7 +39,7 @@ const serializeFunctionArgs = (
         if (!(output instanceof Uint8Array))
           return result.err(
             createNatError({
-              kind: 'CreateAction.FunctionCall.CustomSerializer.InvalidOutput',
+              kind: 'CreateAction.FunctionCall.SerializeArgs.InvalidOutput',
               context: { output },
             }),
           );

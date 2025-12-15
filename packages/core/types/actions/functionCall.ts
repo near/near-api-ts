@@ -18,11 +18,11 @@ export type CreateFunctionCallActionErrorVariant =
       context: InvalidSchemaContext;
     }
   | {
-      kind: 'CreateAction.FunctionCall.CustomSerializer.Internal';
+      kind: 'CreateAction.FunctionCall.SerializeArgs.Internal';
       context: InternalErrorContext;
     }
   | {
-      kind: 'CreateAction.FunctionCall.CustomSerializer.InvalidOutput';
+      kind: 'CreateAction.FunctionCall.SerializeArgs.InvalidOutput';
       context: { output: unknown };
     }
   | {
@@ -32,7 +32,7 @@ export type CreateFunctionCallActionErrorVariant =
 
 export type CreateFunctionCallActionInternalErrorKind =
   | 'CreateAction.FunctionCall.Internal'
-  | 'CreateAction.FunctionCall.CustomSerializer.Internal';
+  | 'CreateAction.FunctionCall.SerializeArgs.Internal';
 
 type BaseFunctionCallActionArgs = {
   functionName: ContractFunctionName;
@@ -59,8 +59,8 @@ type FunctionArgs<A> = KeyIf<'functionArgs', A>;
 
 type CreateFunctionCallActionError =
   | NatError<'CreateAction.FunctionCall.Args.InvalidSchema'>
-  | NatError<'CreateAction.FunctionCall.CustomSerializer.InvalidOutput'>
-  | NatError<'CreateAction.FunctionCall.CustomSerializer.Internal'>
+  | NatError<'CreateAction.FunctionCall.SerializeArgs.InvalidOutput'>
+  | NatError<'CreateAction.FunctionCall.SerializeArgs.Internal'>
   | NatError<'CreateAction.FunctionCall.Internal'>;
 
 export type SafeCreateFunctionCallAction = {

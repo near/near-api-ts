@@ -3,11 +3,11 @@ import type { BlockHash, BlockHeight } from 'nat-types/_common/common';
 
 export type CommonRpcQueryMethodErrorVariant<Prefix extends string> =
   | {
-      kind: `${Prefix}.Rpc.NotSynced`;
+      kind: `${Prefix}.Rpc.NotSynced`; // TODO remove?
       context: null;
     }
   | {
-      kind: `${Prefix}.Rpc.Shard.NotTracked`;
+      kind: `${Prefix}.Rpc.Shard.NotTracked`; // TODO remove?
       context: { shardId: ShardId };
     }
   | {

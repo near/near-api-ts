@@ -26,12 +26,12 @@ const toNativeAction = (action: InnerAction): NativeAction => {
   if (action.actionType === 'DeployContract') return toNativeDeployContractAction(action);
   if (action.actionType === 'FunctionCall') return toNativeFunctionCallAction(action);
   if (action.actionType === 'DeleteKey') return toNativeDeleteKeyAction(action);
-  // the last could only be a DeleteAccount action
+  // the last action type could only be a DeleteAccount
   return toNativeDeleteAccountAction(action);
 };
 
 const toNativeActions = (transaction: InnerTransaction) => {
-  if ('action' in transaction) return [toNativeAction(transaction.action)];
+  if (transaction.action) return [toNativeAction(transaction.action)];
 
   if (transaction.actions)
     return transaction.actions.map((action) => toNativeAction(action));

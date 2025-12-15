@@ -94,7 +94,7 @@ describe('Create FunctionCall action - errors', () => {
     });
     assertNatErrKind(
       res,
-      'CreateAction.FunctionCall.CustomSerializer.InvalidOutput',
+      'CreateAction.FunctionCall.SerializeArgs.InvalidOutput',
     );
   });
 
@@ -111,7 +111,7 @@ describe('Create FunctionCall action - errors', () => {
     });
     assertNatErrKind(
       res,
-      'CreateAction.FunctionCall.CustomSerializer.Internal',
+      'CreateAction.FunctionCall.SerializeArgs.Internal',
     );
   });
 });
