@@ -32,6 +32,18 @@ import type {
   CreateFunctionCallActionErrorVariant,
   CreateFunctionCallActionInternalErrorKind,
 } from 'nat-types/actions/functionCall';
+import type {
+  CreateDeleteAccountActionErrorVariant,
+  CreateDeleteAccountActionInternalErrorKind,
+} from 'nat-types/actions/deleteAccount';
+import type {
+  CreateDeleteKeyActionErrorVariant,
+  CreateDeleteKeyActionInternalErrorKind,
+} from 'nat-types/actions/deleteKey';
+import type {
+  CreateDeployContractActionErrorVariant,
+  CreateDeployContractActionInternalErrorKind,
+} from 'nat-types/actions/deployContract';
 
 export type InternalErrorContext = { cause: unknown };
 export type InvalidSchemaContext = { zodError: $ZodError };
@@ -43,6 +55,9 @@ type NatErrorVariant =
   | CreateTransferActionErrorVariant
   | CreateAddKeyActionErrorVariant
   | CreateFunctionCallActionErrorVariant
+  | CreateDeployContractActionErrorVariant
+  | CreateDeleteKeyActionErrorVariant
+  | CreateDeleteAccountActionErrorVariant
   | NearTokenErrorVariant
   | NearGasErrorVariant
   | KeyPairErrorVariant
@@ -60,6 +75,9 @@ export type NatInternalErrorKind = NatError<
   | CreateTransferActionInternalErrorKind
   | CreateAddKeyActionInternalErrorKind
   | CreateFunctionCallActionInternalErrorKind
+  | CreateDeployContractActionInternalErrorKind
+  | CreateDeleteKeyActionInternalErrorKind
+  | CreateDeleteAccountActionInternalErrorKind
   | 'CreateNearToken.Internal'
   | 'CreateNearTokenFromYoctoNear.Internal'
   | 'CreateNearTokenFromNear.Internal'

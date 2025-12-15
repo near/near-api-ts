@@ -1,4 +1,22 @@
-import type { AccountId } from 'nat-types/_common/common';
+import type { AccountId, Result } from 'nat-types/_common/common';
+import type {
+  InternalErrorContext,
+  InvalidSchemaContext,
+} from 'nat-types/natError';
+import type { NatError } from '@common/natError';
+
+export type CreateDeleteAccountActionErrorVariant =
+  | {
+      kind: 'CreateAction.DeleteAccount.Args.InvalidSchema';
+      context: InvalidSchemaContext;
+    }
+  | {
+      kind: 'CreateAction.DeleteAccount.Internal';
+      context: InternalErrorContext;
+    };
+
+export type CreateDeleteAccountActionInternalErrorKind =
+  'CreateAction.DeleteAccount.Internal';
 
 export type CreateDeleteAccountActionArgs = {
   beneficiaryAccountId: AccountId;
@@ -6,7 +24,20 @@ export type CreateDeleteAccountActionArgs = {
 
 export type DeleteAccountAction = {
   actionType: 'DeleteAccount';
-} & CreateDeleteAccountActionArgs;
+  beneficiaryAccountId: AccountId;
+};
+
+type CreateDeleteAccountActionError =
+  | NatError<'CreateAction.DeleteAccount.Args.InvalidSchema'>
+  | NatError<'CreateAction.DeleteAccount.Internal'>;
+
+export type SafeCreateDeleteAccountAction = (
+  args: CreateDeleteAccountActionArgs,
+) => Result<DeleteAccountAction, CreateDeleteAccountActionError>;
+
+export type CreateDeleteAccountAction = (
+  args: CreateDeleteAccountActionArgs,
+) => DeleteAccountAction;
 
 // ****** NATIVE ********
 

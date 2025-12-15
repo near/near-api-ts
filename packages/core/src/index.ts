@@ -38,11 +38,19 @@ export {
   safeFunctionCall,
   throwableFunctionCall as functionCall,
 } from './helpers/actionCreators/functionCall';
-export { deployContract } from './helpers/actionCreators/deployContract';
-export { deleteKey } from './helpers/actionCreators/deleteKey';
-export { deleteAccount } from './helpers/actionCreators/deleteAccount';
+export {
+  safeDeployContract,
+  throwableDeployContract as deployContract,
+} from './helpers/actionCreators/deployContract';
+export {
+  safeDeleteKey,
+  throwableDeleteKey as deleteKey,
+} from './helpers/actionCreators/deleteKey';
+export {
+  safeDeleteAccount,
+  throwableDeleteAccount as deleteAccount,
+} from './helpers/actionCreators/deleteAccount';
 
-// Helpers
 // Near Token
 export {
   safeNear,
