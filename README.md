@@ -1,5 +1,5 @@
 ## NEAR API TS
-Typescript library for interactions with Near Protocol in the browser or Node.js
+TypeScript library for interactions with Near Protocol in the browser or Node.js
 
 [GitHub Repository](https://github.com/eclipseeer/near-api-ts/tree/main)
 
@@ -16,17 +16,19 @@ import {
   createMemoryKeyService,
   createMemorySigner,
   transfer,
+  near,
+  isNatError,
 } from 'near-api-ts';
 
-// Create a near testnet client
+// Read some data from the chain
 const client = await createTestnetClient();
 
-
-// Read some data from the chain
-await client.getAccountState({
+const { accountInfo } = await client.getAccountInfo({
   accountId: 'testnet',
   atMomentOf: 'LatestFinalBlock',
 })
+console.log(accountInfo.balance.total.near)
+console.log(accountInfo.balance.total.yoctoNear)
 
 // Send some transaction
 const keyService = await createMemoryKeyService({
@@ -40,9 +42,31 @@ const signer = await createMemorySigner({
 });
 
 await signer.executeTransaction({
-  action: transfer({ amount: { yoctoNear: '1' } }),
-  receiverAccountId: 'some-receiver.testnet',
+  intent: {
+    action: transfer({ amount: { yoctoNear: '1' } }),
+    receiverAccountId: 'some-receiver.testnet',
+  }
 });
+
+// Handle transaction errors
+try {
+  const txResult = await signer.executeTransaction({
+    intent: {
+      action: transfer({ amount: near('10000000000') }),
+      receiverAccountId: 'some-receiver.testnet',
+    },
+  });
+} catch (e) {
+  if (isNatError(e, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Signer.Balance.TooLow')) {
+    console.log(e.context.transactionCost)
+  }
+}
+
+// Use library functions in 'safe' mode
+const maybeBlock = await client.safeGetBlock({
+  blockReference: { blockHeight: 10000000000000 },
+});
+console.log(maybeBlock); // { ok: false, error: NatError: <{ kind: 'Client.GetBlock.Rpc.Block.NotFound', context: null }> }
 ```
 
 You may found more examples in the [examples/nodejs/ts-esm](https://github.com/eclipseeer/near-api-ts/tree/main/examples/nodejs/ts-esm)
