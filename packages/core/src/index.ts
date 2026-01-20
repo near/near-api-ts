@@ -98,3 +98,5 @@ export type {
   SafeMemorySignerFactory,
   MemorySignerFactory,
 } from 'nat-types/signers/memorySigner/createMemorySigner';
+export type { AccountId } from 'nat-types/_common/common';
+export type { PublicKey, PrivateKey, Signature } from 'nat-types/_common/crypto';

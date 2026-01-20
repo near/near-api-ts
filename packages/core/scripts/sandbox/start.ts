@@ -1,5 +1,5 @@
-import {GenesisAccount, Sandbox} from 'near-sandbox';
-import {consola} from 'consola';
+import { GenesisAccount, Sandbox } from 'near-sandbox';
+import { consola } from 'consola';
 
 const sandbox = await Sandbox.start({
   version: '2.10.1',
@@ -10,8 +10,8 @@ const sandbox = await Sandbox.start({
       GenesisAccount.createDefault('ft'),
     ],
     additionalGenesis: {
-      'transaction_validity_period': 1000
-    }
+      transaction_validity_period: 1000,
+    },
   },
 });
 
