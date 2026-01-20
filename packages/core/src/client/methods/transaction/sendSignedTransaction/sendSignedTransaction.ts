@@ -37,7 +37,7 @@ export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction =
           signed_tx_base64: base64.encode(
             toBorshSignedTransaction(validArgs.data.signedTransaction),
           ),
-          wait_until: 'EXECUTED_OPTIMISTIC',
+          wait_until: 'FINAL',
         },
         transportPolicy: args.policies?.transport,
         signal: args.options?.signal,

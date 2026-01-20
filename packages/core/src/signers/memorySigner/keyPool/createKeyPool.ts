@@ -21,6 +21,7 @@ const getAllowedSigningKeys = (
 export const createKeyPool: CreateKeyPool = async (signerContext) => {
   const accountKeys = await signerContext.client.safeGetAccountAccessKeys({
     accountId: signerContext.signerAccountId,
+    atMomentOf: 'LatestFinalBlock',
   });
 
   if (!accountKeys.ok)
