@@ -34,12 +34,12 @@
     "test:all": "vitest run"
   },
   "dependencies": {
-    "@near-js/jsonrpc-types": "^1.5.0",
-    "@noble/curves": "^1.9.4",
+    "@near-js/jsonrpc-types": "^1.6.0",
+    "@noble/curves": "^1.9.7",
     "@noble/hashes": "^1.8.0",
     "@scure/base": "^1.2.6",
     "borsh": "^2.0.0",
-    "lodash-es": "^4.17.21",
-    "zod": "^4.1.13"
+    "lodash-es": "^4.17.23",
+    "zod": "^4.3.6"
   }
 }
