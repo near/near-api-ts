@@ -1,12 +1,11 @@
 import * as z from 'zod/mini';
-import { vi, expect, it, describe, beforeAll } from 'vitest';
+import { vi, it, describe, beforeAll } from 'vitest';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 import {
   addFunctionCallKey,
   type Client,
   createAccount,
   createMemoryKeyService,
-  createMemorySigner,
   createMemorySignerFactory,
   type MemoryKeyService,
   type MemorySignerFactory,
@@ -29,7 +28,7 @@ describe('MemorySigner.ExecuteTransaction', async () => {
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
-    client = await createDefaultClient(sandbox);
+    client = createDefaultClient(sandbox);
 
     keyService = await createMemoryKeyService({
       keySources: [

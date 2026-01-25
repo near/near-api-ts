@@ -80,7 +80,7 @@ export type CreateTransportArgs = {
   policy?: PartialTransportPolicy;
 };
 
-type Transport = {
+export type Transport = {
   sendRequest: SendRequest;
 };
 

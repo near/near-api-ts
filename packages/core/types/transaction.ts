@@ -34,6 +34,7 @@ import type {
   DeployContractAction,
   NativeDeployContractAction,
 } from 'nat-types/actions/deployContract';
+import type { NativeStakeAction, StakeAction } from 'nat-types/actions/stake';
 
 export type Action =
   | CreateAccountAction
@@ -42,6 +43,7 @@ export type Action =
   | AddFunctionCallKeyAction
   | DeployContractAction
   | FunctionCallAction
+  | StakeAction
   | DeleteKeyAction
   | DeleteAccountAction;
 
@@ -73,6 +75,7 @@ export type NativeAction =
   | NativeAddKeyAction
   | NativeDeployContractAction
   | NativeFunctionCallAction
+  | NativeStakeAction
   | NativeDeleteKeyAction
   | NativeDeleteAccountAction;
 

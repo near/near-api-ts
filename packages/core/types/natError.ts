@@ -44,6 +44,10 @@ import type {
   CreateDeployContractActionErrorVariant,
   CreateDeployContractActionInternalErrorKind,
 } from 'nat-types/actions/deployContract';
+import type {
+  CreateStakeActionErrorVariant,
+  CreateStakeActionInternalErrorKind,
+} from 'nat-types/actions/stake';
 
 export type InternalErrorContext = { cause: unknown };
 export type InvalidSchemaContext = { zodError: $ZodError };
@@ -56,6 +60,7 @@ type NatErrorVariant =
   | CreateAddKeyActionErrorVariant
   | CreateFunctionCallActionErrorVariant
   | CreateDeployContractActionErrorVariant
+  | CreateStakeActionErrorVariant
   | CreateDeleteKeyActionErrorVariant
   | CreateDeleteAccountActionErrorVariant
   | NearTokenErrorVariant
@@ -76,6 +81,7 @@ export type NatInternalErrorKind = NatError<
   | CreateAddKeyActionInternalErrorKind
   | CreateFunctionCallActionInternalErrorKind
   | CreateDeployContractActionInternalErrorKind
+  | CreateStakeActionInternalErrorKind
   | CreateDeleteKeyActionInternalErrorKind
   | CreateDeleteAccountActionInternalErrorKind
   | 'CreateNearToken.Internal'

@@ -3,6 +3,7 @@ import { createNatError } from '@common/natError';
 import type { RpcResponse } from '@common/schemas/zod/rpc';
 import type { ActionError } from '@near-js/jsonrpc-types';
 import type { SendSignedTransactionArgs } from 'nat-types/client/methods/transaction/sendSignedTransaction';
+import { yoctoNear } from '../../../../../index';
 
 export const handleActionError = (
   actionError: ActionError,
@@ -20,7 +21,7 @@ export const handleActionError = (
         kind: 'Client.SendSignedTransaction.Internal',
         context: {
           cause: createNatError({
-            kind: 'Client.SendSignedTransaction.Rpc.Transaction.Action.InvalidIndex',
+            kind: 'Client.SendSignedTransaction.Rpc.Transaction.Action.InvalidIndex', // TODO: why we return this error?
             context: { rpcResponse },
           }),
         },
@@ -28,6 +29,21 @@ export const handleActionError = (
     );
 
   if (typeof kind === 'object') {
+    // General
+    if ('AccountDoesNotExist' in kind) {
+      return result.err(
+        createNatError({
+          kind: 'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound',
+          context: {
+            receiverAccountId: kind.AccountDoesNotExist.accountId,
+            actionIndex,
+            transactionHash,
+          },
+        }),
+      );
+    }
+
+    // Create Account Action
     if ('AccountAlreadyExists' in kind) {
       return result.err(
         createNatError({
@@ -41,12 +57,50 @@ export const handleActionError = (
       );
     }
 
-    if ('AccountDoesNotExist' in kind) {
+    // Stake Action
+    if ('InsufficientStake' in kind) {
       return result.err(
         createNatError({
-          kind: 'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound',
+          kind: 'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.BelowThreshold',
           context: {
-            receiverAccountId: kind.AccountDoesNotExist.accountId,
+            accountId: kind.InsufficientStake.accountId,
+            proposedStake: yoctoNear(kind.InsufficientStake.stake),
+            minimumStake: yoctoNear(kind.InsufficientStake.minimumStake),
+            actionIndex,
+            transactionHash,
+          },
+        }),
+      );
+    }
+
+    if ('TriesToStake' in kind) {
+      const proposedStake = yoctoNear(kind.TriesToStake.stake);
+      const totalBalance = yoctoNear(kind.TriesToStake.balance).add(
+        yoctoNear(kind.TriesToStake.locked),
+      );
+      const missingAmount = proposedStake.sub(totalBalance);
+
+      return result.err(
+        createNatError({
+          kind: 'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.Balance.TooLow',
+          context: {
+            accountId: kind.TriesToStake.accountId,
+            proposedStake,
+            totalBalance,
+            missingAmount,
+            actionIndex,
+            transactionHash,
+          },
+        }),
+      );
+    }
+
+    if ('TriesToUnstake' in kind) {
+      return result.err(
+        createNatError({
+          kind: 'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.NotFound',
+          context: {
+            accountId: kind.TriesToUnstake.accountId,
             actionIndex,
             transactionHash,
           },

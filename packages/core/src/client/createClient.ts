@@ -18,8 +18,7 @@ import { asThrowable } from '@common/utils/asThrowable';
 import { createNatError } from '@common/natError';
 import type { Client } from 'nat-types/client/client';
 import { createSafeCallContractReadFunction } from './methods/contract/callContractReadFunction/callContractReadFunction';
-
-// NextFeature: add cache for protocol config / blockHash
+import { createCache } from './cache/createCache';
 
 export const ClientBrand = Symbol('Client');
 
@@ -32,7 +31,7 @@ const CreateClientArgsSchema = z.object({
 
 export const safeCreateClient: SafeCreateClient = wrapInternalError(
   'CreateClient.Internal',
-  async (args) => {
+  (args) => {
     const validArgs = CreateClientArgsSchema.safeParse(args);
 
     if (!validArgs.success)
@@ -44,9 +43,11 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
       );
 
     const transport = createTransport(args.transport);
+    const cache = createCache({ transport });
 
     const context = {
       sendRequest: transport.sendRequest,
+      cache,
     };
 
     const safeGetAccountInfo = createSafeGetAccountInfo(context);
@@ -58,7 +59,7 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
     const safeSendSignedTransaction = createSafeSendSignedTransaction(context);
 
     return result.ok({
-      [ClientBrand]: true, // TODO hide from console.log
+      [ClientBrand]: true as const, // TODO hide from console.log
       getAccountInfo: asThrowable(safeGetAccountInfo),
       getAccountAccessKey: asThrowable(safeGetAccountAccessKey),
       getAccountAccessKeys: asThrowable(safeGetAccountAccessKeys),

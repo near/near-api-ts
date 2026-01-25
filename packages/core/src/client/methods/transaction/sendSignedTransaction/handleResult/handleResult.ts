@@ -39,7 +39,7 @@ export const handleResult = (
     );
 
   const output = {
-    rawRpcResult: rpcResult.data, // TODO Return result without errors
+    rawRpcResult: rpcResult.data, // TODO Return result type without errors
   };
 
   return result.ok(output);

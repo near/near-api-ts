@@ -14,6 +14,7 @@ import { DeleteAccountActionSchema } from '@common/schemas/zod/transaction/actio
 import { FunctionCallActionSchema } from '@common/schemas/zod/transaction/actions/functionCall';
 import { SignatureSchema } from '@common/schemas/zod/common/signature';
 import { CryptoHashSchema } from '@common/schemas/zod/common/cryptoHash';
+import { StakeActionSchema } from '@common/schemas/zod/transaction/actions/stake';
 
 const ActionSchema = z.union([
   CreateAccountActionSchema,
@@ -21,6 +22,7 @@ const ActionSchema = z.union([
   AddKeyActionSchema,
   DeployContractActionSchema,
   FunctionCallActionSchema,
+  StakeActionSchema,
   DeleteKeyActionSchema,
   DeleteAccountActionSchema,
 ]);

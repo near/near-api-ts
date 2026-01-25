@@ -41,6 +41,10 @@ import type {
   CallContractReadFunctionInternalErrorKind,
   SafeCallContractReadFunction,
 } from 'nat-types/client/methods/contract/callContractReadFunction';
+import type {
+  Cache,
+  GetStoragePricePerByte,
+} from 'nat-types/client/cache/cache';
 
 export type ClientErrorVariant =
   | CreateClientErrorVariant
@@ -63,12 +67,12 @@ export type ClientInternalErrorKind =
 
 export type ClientContext = {
   sendRequest: SendRequest;
+  cache: Cache;
 };
-
-// NextFeature: add cache / add defaults atMomentOf / logger
 
 export type Client = {
   [ClientBrand]: true;
+  // RPC Methods
   // throwable variants
   getAccountInfo: GetAccountInfo;
   getAccountAccessKey: GetAccountAccessKey;

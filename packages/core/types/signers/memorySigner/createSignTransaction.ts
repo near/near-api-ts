@@ -43,7 +43,7 @@ type SignTransactionIntentArgs = {
 type SignTransactionIntentError =
   | NatError<'MemorySigner.SignTransaction.Args.InvalidSchema'>
   | NatError<'MemorySigner.SignTransaction.KeyForTaskNotFound'>
-  | NatError<'MemorySigner.SignTransaction.MaxTimeInQueueReached'>
+  | NatError<'MemorySigner.SignTransaction.MaxTimeInQueueReached'> // TODO change to .Task.MaxTimeInQueueReached
   | NatError<'MemorySigner.SignTransaction.Internal'>;
 
 export type SafeSignTransactionIntent = (
