@@ -11,7 +11,7 @@ test(
   },
   async () =>
     withSandbox(async ({ rpcUrl }: { rpcUrl: string }) => {
-      const client = await createClient({
+      const client = createClient({
         transport: {
           rpcEndpoints: { archival: [{ url: rpcUrl }] },
         },

@@ -8,7 +8,7 @@ export type SharedTransactionErrorVariant<Prefix extends string> =
   | {
       kind: `${Prefix}.Rpc.Transaction.Signer.Balance.TooLow`;
       context: {
-        balance: NearToken;
+        balance: NearToken; // TODO rename to availableBalance
         transactionCost: NearToken;
         signerAccountId: AccountId;
       };
@@ -27,6 +27,35 @@ export type SharedTransactionErrorVariant<Prefix extends string> =
     }
   | {
       kind: `${Prefix}.Rpc.Transaction.Action.CreateAccount.AlreadyExist`;
+      context: {
+        accountId: AccountId;
+        actionIndex: number;
+        transactionHash: CryptoHash;
+      };
+    }
+  | {
+      kind: `${Prefix}.Rpc.Transaction.Action.Stake.BelowThreshold`;
+      context: {
+        accountId: AccountId;
+        proposedStake: NearToken;
+        minimumStake: NearToken;
+        actionIndex: number;
+        transactionHash: CryptoHash;
+      };
+    }
+  | {
+      kind: `${Prefix}.Rpc.Transaction.Action.Stake.Balance.TooLow`;
+      context: {
+        accountId: AccountId;
+        proposedStake: NearToken;
+        totalBalance: NearToken;
+        missingAmount: NearToken;
+        actionIndex: number;
+        transactionHash: CryptoHash;
+      };
+    }
+  | {
+      kind: `${Prefix}.Rpc.Transaction.Action.Stake.NotFound`;
       context: {
         accountId: AccountId;
         actionIndex: number;

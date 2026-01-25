@@ -17,6 +17,7 @@ import type {
   InnerTransaction,
 } from '@common/schemas/zod/transaction/transaction';
 import { toNativeSignature } from '@common/transformers/toNative/signature';
+import { toNativeStakeAction } from '@common/transformers/toNative/actions/stake';
 
 // biome-ignore format: keep compact
 const toNativeAction = (action: InnerAction): NativeAction => {
@@ -24,6 +25,7 @@ const toNativeAction = (action: InnerAction): NativeAction => {
   if (action.actionType === 'CreateAccount') return toNativeCreateAccountAction();
   if (action.actionType === 'AddKey') return toNativeAddKeyAction(action);
   if (action.actionType === 'DeployContract') return toNativeDeployContractAction(action);
+  if (action.actionType === 'Stake') return toNativeStakeAction(action);
   if (action.actionType === 'FunctionCall') return toNativeFunctionCallAction(action);
   if (action.actionType === 'DeleteKey') return toNativeDeleteKeyAction(action);
   // the last action type could only be a DeleteAccount

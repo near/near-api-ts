@@ -43,6 +43,10 @@ export {
   throwableDeployContract as deployContract,
 } from './helpers/actionCreators/deployContract';
 export {
+  safeStake,
+  throwableStake as stake,
+} from './helpers/actionCreators/stake';
+export {
   safeDeleteKey,
   throwableDeleteKey as deleteKey,
 } from './helpers/actionCreators/deleteKey';
@@ -99,4 +103,8 @@ export type {
   MemorySignerFactory,
 } from 'nat-types/signers/memorySigner/createMemorySigner';
 export type { AccountId } from 'nat-types/_common/common';
-export type { PublicKey, PrivateKey, Signature } from 'nat-types/_common/crypto';
+export type {
+  PublicKey,
+  PrivateKey,
+  Signature,
+} from 'nat-types/_common/crypto';

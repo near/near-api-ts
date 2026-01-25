@@ -29,6 +29,6 @@ type CreateClientError =
 
 export type SafeCreateClient = (
   args: CreateClientArgs,
-) => Promise<Result<Client, CreateClientError>>;
+) => Result<Client, CreateClientError>;
 
-export type CreateClient = (args: CreateClientArgs) => Promise<Client>;
+export type CreateClient = (args: CreateClientArgs) => Client;

@@ -25,7 +25,8 @@ export type CreateTransferActionArgs = {
 
 export type TransferAction = {
   actionType: 'Transfer';
-} & CreateTransferActionArgs;
+  amount: NearTokenArgs;
+};
 
 type CreateTransferActionError =
   | NatError<'CreateAction.Transfer.Args.InvalidSchema'>

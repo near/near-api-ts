@@ -56,6 +56,9 @@ type ExecuteTransactionError =
   | NatError<'MemorySigner.ExecuteTransaction.Rpc.Transaction.Timeout'>
   // Rpc transaction action errors
   | NatError<'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist'>
+  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.Stake.BelowThreshold'>
+  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.Stake.Balance.TooLow'>
+  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.Stake.NotFound'>
   // Stub
   | NatError<'MemorySigner.ExecuteTransaction.Internal'>;
 

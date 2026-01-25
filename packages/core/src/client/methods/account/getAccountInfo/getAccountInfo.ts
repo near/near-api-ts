@@ -13,8 +13,6 @@ import { result } from '@common/utils/result';
 import { createNatError } from '@common/natError';
 import { handleError } from './handleError';
 
-// NextFeature: Add ability to fetch detailed balance with 'available' field
-
 const GetAccountInfoArgsSchema = z.object({
   accountId: AccountIdSchema,
   atMomentOf: z.optional(BlockReferenceSchema),

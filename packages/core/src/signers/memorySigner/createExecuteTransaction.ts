@@ -65,6 +65,9 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (
             'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound',
             'Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow',
             'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist',
+            'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.BelowThreshold',
+            'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.Balance.TooLow',
+            'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.NotFound',
           ])
         ) {
           return repackError({

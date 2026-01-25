@@ -24,8 +24,6 @@ import type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService/me
 import { createSafeSignTransaction } from './createSignTransaction';
 import { createSafeExecuteTransaction } from './createExecuteTransaction';
 
-// NextFeature: move block hash to the client level and make it lazy
-
 const CreateMemorySignerArgsSchema = z.object({
   signerAccountId: AccountIdSchema,
   client: z.custom<Client>((value) => isClient(value)),

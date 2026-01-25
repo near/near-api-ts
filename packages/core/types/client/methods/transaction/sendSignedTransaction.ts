@@ -3,11 +3,7 @@ import type { SignedTransaction } from 'nat-types/transaction';
 import type { RpcTransactionResponse } from '@near-js/jsonrpc-types';
 import type { TransportPolicy } from 'nat-types/client/transport/transport';
 import type { CommonRpcMethodErrorVariant } from 'nat-types/client/methods/_common/common';
-import type {
-  AccountId,
-  Nonce,
-  Result,
-} from 'nat-types/_common/common';
+import type { AccountId, Nonce, Result } from 'nat-types/_common/common';
 import type { NatError } from '@common/natError';
 import type { RpcResponse } from '@common/schemas/zod/rpc';
 import type { SharedTransactionErrorVariant } from 'nat-types/_common/sharedTransactionErrors';
@@ -43,8 +39,7 @@ export type SendSignedTransactionErrorVariant =
   | {
       kind: `Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid`;
       context: null;
-    }
-  ;
+    };
 
 export type SendSignedTransactionInternalErrorKind =
   'Client.SendSignedTransaction.Internal';
@@ -76,6 +71,9 @@ export type SendSignedTransactionError =
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Timeout'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist'>
+  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.BelowThreshold'>
+  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.Balance.TooLow'>
+  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.NotFound'>
   // Stub
   | NatError<'Client.SendSignedTransaction.Internal'>;
 
