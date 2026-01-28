@@ -5,9 +5,10 @@ import type {
   GetAccountInfoArgs,
   GetAccountInfoOutput,
 } from 'nat-types/client/methods/account/getAccountInfo';
-import { throwableYoctoNear } from '../../../../helpers/tokens/nearToken';
 import { result } from '@common/utils/result';
 import { createNatError } from '@common/natError';
+import type { NearToken } from 'nat-types/_common/nearToken';
+import { calculateAccountBalance } from './calculateAccountBalance';
 
 const RpcQueryViewAccountResultSchema = z.object({
   ...AccountViewSchema().shape,
@@ -21,6 +22,7 @@ export type RpcQueryViewAccountResult = z.infer<
 
 export const handleResult = (
   rpcResponse: RpcResponse,
+  storagePricePerByte: NearToken,
   args: GetAccountInfoArgs,
 ) => {
   const rpcResult = RpcQueryViewAccountResultSchema.safeParse(
@@ -42,20 +44,12 @@ export const handleResult = (
 
   const accountInfo = rpcResult.data;
 
-  const lockedBalance = throwableYoctoNear(accountInfo.locked);
-  const totalBalance = throwableYoctoNear(accountInfo.amount).add(
-    lockedBalance,
-  );
-
   const output: GetAccountInfoOutput = {
     blockHash: accountInfo.blockHash,
     blockHeight: accountInfo.blockHeight,
     accountId: args.accountId,
     accountInfo: {
-      balance: {
-        total: totalBalance,
-        locked: lockedBalance,
-      },
+      balance: calculateAccountBalance(accountInfo, storagePricePerByte),
       usedStorageBytes: accountInfo.storageUsage,
     },
     rawRpcResult: accountInfo,

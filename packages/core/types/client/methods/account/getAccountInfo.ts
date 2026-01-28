@@ -12,7 +12,7 @@ import type { NearToken } from 'nat-types/_common/nearToken';
 import type { NatError } from '@common/natError';
 import type { CommonRpcQueryMethodErrorVariant } from 'nat-types/client/methods/_common/query';
 import type { CommonRpcMethodErrorVariant } from 'nat-types/client/methods/_common/common';
-import type { RpcQueryViewAccountResult } from '../../../../src/client/methods/account/getAccountInfo/handleResult';
+import type { RpcQueryViewAccountResult } from '../../../../src/client/methods/account/getAccountInfo/handleResult/handleResult';
 
 export type GetAccountInfoErrorVariant =
   | CommonRpcMethodErrorVariant<'Client.GetAccountInfo'>
@@ -24,6 +24,10 @@ export type GetAccountInfoErrorVariant =
         blockHash: BlockHash;
         blockHeight: BlockHeight;
       };
+    }
+  | {
+      kind: 'Client.GetAccountInfo.StoragePricePerByte.NotLoaded';
+      context: { cause: unknown };
     };
 
 export type GetAccountInfoInternalErrorKind = 'Client.GetAccountInfo.Internal';
@@ -46,7 +50,14 @@ export type GetAccountInfoOutput = {
   accountInfo: {
     balance: {
       total: NearToken;
-      locked: NearToken;
+      available: NearToken;
+      locked: {
+        amount: NearToken;
+        breakdown: {
+          validatorStake: NearToken;
+          storageDeposit: NearToken;
+        };
+      };
     };
     usedStorageBytes: number;
     contractHash?: CryptoHash;
@@ -59,6 +70,7 @@ export type GetAccountInfoOutput = {
 type GetAccountInfoError =
   | NatError<'Client.GetAccountInfo.Args.InvalidSchema'>
   | NatError<'Client.GetAccountInfo.SendRequest.Failed'>
+  | NatError<'Client.GetAccountInfo.StoragePricePerByte.NotLoaded'>
   // Rpc - query
   | NatError<'Client.GetAccountInfo.Rpc.NotSynced'>
   | NatError<'Client.GetAccountInfo.Rpc.Shard.NotTracked'>

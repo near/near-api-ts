@@ -2,7 +2,7 @@ import * as z from 'zod/mini';
 import { toNativeBlockReference } from '@common/transformers/toNative/blockReference';
 import type { CreateSafeGetAccountInfo } from 'nat-types/client/methods/account/getAccountInfo';
 import { wrapInternalError } from '@common/utils/wrapInternalError';
-import { handleResult } from './handleResult';
+import { handleResult } from './handleResult/handleResult';
 import {
   BaseOptionsSchema,
   BlockReferenceSchema,
@@ -34,16 +34,19 @@ export const createSafeGetAccountInfo: CreateSafeGetAccountInfo = (context) =>
 
     const { accountId, policies, options } = validArgs.data;
 
-    const rpcResponse = await context.sendRequest({
-      method: 'query',
-      params: {
-        request_type: 'view_account',
-        account_id: accountId,
-        ...toNativeBlockReference(args.atMomentOf),
-      },
-      transportPolicy: policies?.transport,
-      signal: options?.signal,
-    });
+    const [rpcResponse, storagePricePerByte] = await Promise.all([
+      context.sendRequest({
+        method: 'query',
+        params: {
+          request_type: 'view_account',
+          account_id: accountId,
+          ...toNativeBlockReference(args.atMomentOf),
+        },
+        transportPolicy: policies?.transport,
+        signal: options?.signal,
+      }),
+      context.cache.getStoragePricePerByte(),
+    ]);
 
     if (!rpcResponse.ok)
       return result.err(
@@ -53,7 +56,15 @@ export const createSafeGetAccountInfo: CreateSafeGetAccountInfo = (context) =>
         }),
       );
 
+    if (!storagePricePerByte.ok)
+      return result.err(
+        createNatError({
+          kind: 'Client.GetAccountInfo.StoragePricePerByte.NotLoaded',
+          context: { cause: storagePricePerByte.error },
+        }),
+      );
+
     return rpcResponse.value.error
       ? handleError(rpcResponse.value)
-      : handleResult(rpcResponse.value, args);
+      : handleResult(rpcResponse.value, storagePricePerByte.value, args);
   });

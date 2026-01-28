@@ -20,8 +20,8 @@ export const createGetStoragePricePerByte =
   async () => {
     // 1. If value is in the state already and still valid - return it
     if (
-      state.storagePricePerByte.validUntil > Date.now() &&
-      state.storagePricePerByte.value !== undefined
+      state.storagePricePerByte.value !== undefined &&
+      state.storagePricePerByte.validUntil > Date.now()
     )
       return result.ok(state.storagePricePerByte.value);
 
@@ -51,7 +51,8 @@ export const createGetStoragePricePerByte =
     state.storagePricePerByte.value = yoctoNear(
       rpcResult.data.runtimeConfig.storageAmountPerByte,
     );
-    state.storagePricePerByte.validUntil = Date.now() + 10_000; // TODO 10 seconds
+    // Refetch every 1000ms * 60sec * 60min = 1 hour
+    state.storagePricePerByte.validUntil = Date.now() + 3_600_000;
 
     return result.ok(state.storagePricePerByte.value);
   };
