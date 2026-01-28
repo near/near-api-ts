@@ -77,12 +77,11 @@ export const handleInvalidTransaction = (rpcResponse: RpcResponse) => {
     }
 
     if ('NotEnoughBalance' in InvalidTxError) {
-      const { signerId, balance, cost } = InvalidTxError.NotEnoughBalance;
+      const { signerId, cost } = InvalidTxError.NotEnoughBalance;
       return result.err(
         createNatError({
           kind: 'Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow',
           context: {
-            balance: yoctoNear(balance),
             transactionCost: yoctoNear(cost),
             signerAccountId: signerId,
           },

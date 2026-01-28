@@ -8,7 +8,6 @@ export type SharedTransactionErrorVariant<Prefix extends string> =
   | {
       kind: `${Prefix}.Rpc.Transaction.Signer.Balance.TooLow`;
       context: {
-        balance: NearToken; // TODO rename to availableBalance
         transactionCost: NearToken;
         signerAccountId: AccountId;
       };
