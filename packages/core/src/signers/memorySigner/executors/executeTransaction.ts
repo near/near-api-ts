@@ -29,12 +29,14 @@ export const executeTransaction = async (
   const attempt: Attempt = wrapInternalError(
     'MemorySigner.ExecuteTransaction.Internal',
     async (attemptIndex, newNonce) => {
+      const blockHash = await signerContext.client.getRecentBlockHash();
+
       const transaction: Transaction = {
         ...task.transactionIntent,
         signerAccountId: signerContext.signerAccountId,
         signerPublicKey: key.publicKey,
         nonce: newNonce,
-        blockHash: signerContext.state.getBlockHash(),
+        blockHash,
       };
 
       // This call will never fail

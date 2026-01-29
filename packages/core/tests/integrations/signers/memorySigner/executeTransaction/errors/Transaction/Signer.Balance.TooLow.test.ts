@@ -27,7 +27,7 @@ describe('Signer.Balance.TooLow', () => {
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyService = await createMemoryKeyService({
+    keyService = createMemoryKeyService({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, keyPair1],
     });
     createSigner = createMemorySignerFactory({ client, keyService });
@@ -37,7 +37,7 @@ describe('Signer.Balance.TooLow', () => {
   it('Transfer too many tokens', async () => {
     const nat = await createSigner('nat');
 
-    // 1. Create account with 10 FA keys
+    // 1. Create an account with 10 FA keys
     await nat.executeTransaction({
       intent: {
         actions: [

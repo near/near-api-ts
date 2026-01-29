@@ -4,9 +4,9 @@ import type { BlockHash, Result } from 'nat-types/_common/common';
 import type { SendRequestError } from 'nat-types/client/transport/sendRequest';
 import type { SafeGetRecentBlockHash } from 'nat-types/client/cache/getRecentBlockHash';
 
-export type GetStoragePricePerByte = (args: {
-  refreshCache: boolean;
-  signal: AbortSignal;
+export type GetStoragePricePerByte = (args?: {
+  refreshCache?: boolean;
+  signal?: AbortSignal;
 }) => Promise<Result<NearToken, SendRequestError>>;
 
 export type CacheState = {

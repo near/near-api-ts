@@ -3,7 +3,6 @@ import { createKeyPool } from './keyPool/createKeyPool';
 import { createTaskQueue } from './taskQueue/createTaskQueue';
 import { createMatcher } from './matcher/createMatcher';
 import { createResolver } from './resolver/createResolver';
-import { createState } from './state/createState';
 import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type {
   CreateMemorySigner,
@@ -63,10 +62,7 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
       maxWaitInQueueMs: args.taskQueue?.maxWaitInQueueMs ?? 60_000, // 1 min
     } as MemorySignerContext;
 
-    const [keyPool, state] = await Promise.all([
-      createKeyPool(context),
-      createState(context),
-    ]);
+    const keyPool = await createKeyPool(context);
 
     if (!keyPool.ok) {
       if (keyPool.error.kind === 'CreateMemorySigner.CreateKeyPool.Failed')
@@ -79,16 +75,7 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
       return result.err(keyPool.error);
     }
 
-    if (!state.ok)
-      return result.err(
-        createNatError({
-          kind: 'CreateMemorySigner.Internal',
-          context: { cause: state.error },
-        }),
-      );
-
     context.keyPool = keyPool.value;
-    context.state = state.value;
     context.taskQueue = createTaskQueue(context);
     context.matcher = createMatcher(context);
     context.resolver = createResolver();
@@ -96,18 +83,12 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
     const safeSignTransaction = createSafeSignTransaction(context);
     const safeExecuteTransaction = createSafeExecuteTransaction(context);
 
-    // Should be called before destroying the signer
-    const stop = () => {
-      context.state.clearIntervals();
-    };
-
     return result.ok({
       signerAccountId,
       signTransaction: asThrowable(safeSignTransaction),
       executeTransaction: asThrowable(safeExecuteTransaction),
       safeSignTransaction,
       safeExecuteTransaction,
-      stop,
     });
   },
 );
