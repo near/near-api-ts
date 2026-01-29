@@ -15,8 +15,8 @@ type CreateMemoryKeyServiceError =
 
 export type SafeCreateMemoryKeyService = (
   args: CreateMemoryKeyServiceArgs,
-) => Promise<Result<MemoryKeyService, CreateMemoryKeyServiceError>>;
+) => Result<MemoryKeyService, CreateMemoryKeyServiceError>;
 
 export type CreateMemoryKeyService = (
   args: CreateMemoryKeyServiceArgs,
-) => Promise<MemoryKeyService>;
+) => MemoryKeyService;

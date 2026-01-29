@@ -41,10 +41,13 @@ import type {
   CallContractReadFunctionInternalErrorKind,
   SafeCallContractReadFunction,
 } from 'nat-types/client/methods/contract/callContractReadFunction';
+import type { Cache } from 'nat-types/client/cache/cache';
 import type {
-  Cache,
-  GetStoragePricePerByte,
-} from 'nat-types/client/cache/cache';
+  GetRecentBlockHash,
+  GetRecentBlockHashErrorVariant,
+  GetRecentBlockHashInternalErrorKind,
+  SafeGetRecentBlockHash,
+} from 'nat-types/client/cache/getRecentBlockHash';
 
 export type ClientErrorVariant =
   | CreateClientErrorVariant
@@ -54,6 +57,7 @@ export type ClientErrorVariant =
   | GetAccountAccessKeysErrorVariant
   | CallContractReadFunctionErrorVariant
   | GetBlockErrorVariant
+  | GetRecentBlockHashErrorVariant
   | SendSignedTransactionErrorVariant;
 
 export type ClientInternalErrorKind =
@@ -63,6 +67,7 @@ export type ClientInternalErrorKind =
   | GetAccountAccessKeysInternalErrorKind
   | CallContractReadFunctionInternalErrorKind
   | GetBlockInternalErrorKind
+  | GetRecentBlockHashInternalErrorKind
   | SendSignedTransactionInternalErrorKind;
 
 export type ClientContext = {
@@ -72,13 +77,13 @@ export type ClientContext = {
 
 export type Client = {
   [ClientBrand]: true;
-  // RPC Methods
   // throwable variants
   getAccountInfo: GetAccountInfo;
   getAccountAccessKey: GetAccountAccessKey;
   getAccountAccessKeys: GetAccountAccessKeys;
   callContractReadFunction: CallContractReadFunction;
   getBlock: GetBlock;
+  getRecentBlockHash: GetRecentBlockHash;
   sendSignedTransaction: SendSignedTransaction;
   // safe variants
   safeGetAccountInfo: SafeGetAccountInfo;
@@ -86,6 +91,7 @@ export type Client = {
   safeGetAccountAccessKeys: SafeGetAccountAccessKeys;
   safeCallContractReadFunction: SafeCallContractReadFunction;
   safeGetBlock: SafeGetBlock;
+  safeGetRecentBlockHash: SafeGetRecentBlockHash;
   safeSendSignedTransaction: SafeSendSignedTransaction;
 
   // getContractState: GetContractState;

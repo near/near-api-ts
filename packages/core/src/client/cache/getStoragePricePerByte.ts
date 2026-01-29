@@ -14,12 +14,12 @@ const PartialProtocolConfigResultSchema = z.object({
   }),
 });
 
-// TODO support abort?
 export const createGetStoragePricePerByte =
   (transport: Transport, state: CacheState): GetStoragePricePerByte =>
-  async () => {
-    // 1. If value is in the state already and still valid - return it
+  async ({ signal, refreshCache = false }) => {
+    // 1. If the value is in the state already and still valid - return it
     if (
+      !refreshCache &&
       state.storagePricePerByte.value !== undefined &&
       state.storagePricePerByte.validUntil > Date.now()
     )
@@ -33,17 +33,19 @@ export const createGetStoragePricePerByte =
     // handling breaking changes all the time inside of this fn.
     const protocolConfig = await transport.sendRequest({
       method: 'EXPERIMENTAL_protocol_config',
-      params: { finality: 'optimistic' },
+      params: { finality: 'near-final' },
+      signal,
     });
     if (!protocolConfig.ok) return protocolConfig;
 
     const rpcResult = PartialProtocolConfigResultSchema.safeParse(
       protocolConfig.value.result,
     );
+
     if (!rpcResult.success)
       return result.err(
         createNatError({
-          kind: 'Client.Transport.SendRequest.Response.Result.InvalidSchema', // TODO change type
+          kind: 'Client.Transport.SendRequest.Response.Result.InvalidSchema',
           context: { zodError: rpcResult.error },
         }),
       );
