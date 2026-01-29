@@ -21,8 +21,8 @@ describe('createMemorySigner', async () => {
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
-    client = await createDefaultClient(sandbox);
-    keyService = await createMemoryKeyService({
+    client = createDefaultClient(sandbox);
+    keyService = createMemoryKeyService({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
     });
     return () => sandbox.stop();

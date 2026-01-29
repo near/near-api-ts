@@ -67,12 +67,14 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
         safeCallContractReadFunction as any,
       ) as any, // TODO Fix: asThrowable doesn't work fine with overloads
       getBlock: asThrowable(safeGetBlock),
+      getRecentBlockHash: asThrowable(cache.getRecentBlockHash),
       sendSignedTransaction: asThrowable(safeSendSignedTransaction),
       safeGetAccountInfo,
       safeGetAccountAccessKey,
       safeGetAccountAccessKeys,
       safeCallContractReadFunction,
       safeGetBlock,
+      safeGetRecentBlockHash: cache.getRecentBlockHash,
       safeSendSignedTransaction,
     });
   },

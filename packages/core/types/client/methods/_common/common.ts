@@ -17,7 +17,7 @@ export type CommonRpcMethodErrorVariant<Prefix extends string> =
       context: InvalidSchemaContext;
     }
   | {
-      kind: `${Prefix}.SendRequest.Failed`;
+      kind: `${Prefix}.SendRequest.Failed`; // TODO remove after refactor
       context: { cause: SendRequestError };
     }
   | {

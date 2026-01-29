@@ -68,7 +68,7 @@ export type SendRequestErrorVariant =
       context: InvalidSchemaContext;
     };
 
-// Transport Inner RPC Related Errors
+// Transport Inner RPC Related Errors // TODO rename to Inner
 export type HighLevelRpcErrorVariant =
   | {
       kind: 'Client.Transport.SendRequest.Rpc.MethodNotFound';
@@ -114,6 +114,7 @@ type SendRequestArgs = {
   signal?: AbortSignal;
 };
 
+// TODO Rename and remove
 export type SendRequestError =
   | NatError<'Client.Transport.SendRequest.PreferredRpc.NotFound'>
   | NatError<'Client.Transport.SendRequest.Request.FetchFailed'>
