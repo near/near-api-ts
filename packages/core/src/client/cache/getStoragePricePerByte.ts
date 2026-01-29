@@ -16,10 +16,10 @@ const PartialProtocolConfigResultSchema = z.object({
 
 export const createGetStoragePricePerByte =
   (transport: Transport, state: CacheState): GetStoragePricePerByte =>
-  async ({ signal, refreshCache = false }) => {
+  async (args) => {
     // 1. If the value is in the state already and still valid - return it
     if (
-      !refreshCache &&
+      !args?.refreshCache &&
       state.storagePricePerByte.value !== undefined &&
       state.storagePricePerByte.validUntil > Date.now()
     )
@@ -34,7 +34,7 @@ export const createGetStoragePricePerByte =
     const protocolConfig = await transport.sendRequest({
       method: 'EXPERIMENTAL_protocol_config',
       params: { finality: 'near-final' },
-      signal,
+      signal: args?.signal,
     });
     if (!protocolConfig.ok) return protocolConfig;
 

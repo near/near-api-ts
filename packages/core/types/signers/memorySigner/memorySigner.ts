@@ -8,10 +8,6 @@ import type {
 } from 'nat-types/signers/memorySigner/keyPool';
 import type { Resolver } from 'nat-types/signers/memorySigner/resolver';
 import type {
-  CreateStateErrorVariant,
-  State,
-} from 'nat-types/signers/memorySigner/state';
-import type {
   Matcher,
   MatcherErrorVariant,
 } from 'nat-types/signers/memorySigner/matcher';
@@ -38,7 +34,6 @@ import type {
 
 export type MemorySignerErrorVariant =
   | CreateMemorySignerErrorVariant
-  | CreateStateErrorVariant
   | CreateKeyPoolErrorVariant
   | TaskQueueErrorVariant
   | MatcherErrorVariant
@@ -59,17 +54,14 @@ export type MemorySignerContext = {
   taskQueue: TaskQueue;
   keyPool: KeyPool;
   resolver: Resolver;
-  state: State;
   matcher: Matcher;
 };
 
 // NextFeature: add policies
-
 export type MemorySigner = {
   signerAccountId: AccountId;
   signTransaction: SignTransactionIntent;
   executeTransaction: ExecuteTransaction;
   safeSignTransaction: SafeSignTransactionIntent;
   safeExecuteTransaction: SafeExecuteTransaction;
-  stop: () => void;
 };

@@ -39,7 +39,7 @@ export type InnerCreateMemoryKeyServiceArgs = z.infer<
 >;
 
 export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService =
-  wrapInternalError('CreateMemoryKeyService.Internal', async (args) => {
+  wrapInternalError('CreateMemoryKeyService.Internal', (args) => {
     const validArgs = CreateMemoryKeyServiceArgsSchema.safeParse(args);
 
     if (!validArgs.success)
@@ -60,7 +60,7 @@ export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService =
     context.safeFindKeyPair = safeFindKeyPair;
 
     return result.ok({
-      [MemoryKeyServiceBrand]: true,
+      [MemoryKeyServiceBrand]: true as const,
       signTransaction: asThrowable(safeSignTransaction),
       safeSignTransaction,
       findKeyPair: asThrowable(safeFindKeyPair),

@@ -20,8 +20,8 @@ describe('MemorySigner.executeTransaction', async () => {
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
-    client = await createDefaultClient(sandbox);
-    keyService = await createMemoryKeyService({
+    client = createDefaultClient(sandbox);
+    keyService = createMemoryKeyService({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
     });
     return () => sandbox.stop();
@@ -51,7 +51,7 @@ describe('MemorySigner.executeTransaction', async () => {
     });
     expect(tx1.ok).toBe(true);
 
-    // First try will fail, then it will update the nonce, and resend
+    // The first try will fail, then it will update the nonce and resend
     const tx2 = await nat2.safeExecuteTransaction({
       intent: {
         action: transfer({ amount: { near: '1' } }),

@@ -20,13 +20,14 @@ export const signTransaction = async (
     'MemorySigner.SignTransaction.Internal',
     async () => {
       const nextNonce = key.nonce + 1;
+      const blockHash = await signerContext.client.getRecentBlockHash();
 
       const transaction: Transaction = {
         ...task.transactionIntent,
         signerAccountId: signerContext.signerAccountId,
         signerPublicKey: key.publicKey,
         nonce: nextNonce,
-        blockHash: signerContext.state.getBlockHash(),
+        blockHash,
       };
 
       // This call will never fail
