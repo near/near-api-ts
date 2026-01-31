@@ -16,16 +16,20 @@ export const convertTokensToUnits = (
 ): bigint => {
   // Split integer and fractional parts (fractional may be undefined)
   const [integerPartRaw, fractionalPartRaw = ''] = tokens.split('.');
+  const isNegative = integerPartRaw.startsWith('-');
 
   // Convert integer part: multiply by 10^decimals
   const scale = pow10(decimals);
   const integerUnits = BigInt(integerPartRaw) * scale;
 
   // Convert fractional part: right-pad to exactly `decimals` digits, or zero if empty
-  const fractionalUnits = fractionalPartRaw.length
-    ? BigInt(fractionalPartRaw.padEnd(decimals, '0'))
-    : 0n;
+  const fractionalUnits =
+    fractionalPartRaw.length > 0
+      ? BigInt(fractionalPartRaw.padEnd(decimals, '0'))
+      : 0n;
 
   // Sum and return as an integer string (BigInt.toString() never yields leading zeros)
-  return integerUnits + fractionalUnits;
+  return isNegative
+    ? integerUnits - fractionalUnits
+    : integerUnits + fractionalUnits;
 };

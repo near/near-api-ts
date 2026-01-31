@@ -14,6 +14,11 @@ describe('NearToken', () => {
     expect(v).toBe('3');
   });
 
+  it('1.002N + 2.001N = 3.003N', () => {
+    const v = near('1.002').add(nearToken({ near: '2.001' })).near;
+    expect(v).toBe('3.003');
+  });
+
   it('1yN + 3yN = 4yN', () => {
     const v = yoctoNear(1n).add(nearToken({ yoctoNear: '3' })).yoctoNear;
     expect(v).toBe(4n);
@@ -27,6 +32,16 @@ describe('NearToken', () => {
   it('3N - 10N = -7N', () => {
     const v = nearToken({ near: '3' }).sub(near('10'));
     expect(v.near).toBe('-7');
+  });
+
+  it('1N - 2.05995N = -1.05995N', () => {
+    const v = nearToken({ near: '1' }).sub(near('2.05995'));
+    expect(v.near).toBe('-1.05995');
+  });
+
+  it('2N - 2.05995N = -0.05995N', () => {
+    const v = nearToken({ near: '2' }).sub(near('2.05995'));
+    expect(v.near).toBe('-0.05995');
   });
 
   it('5N > 2yN = true', () => {
