@@ -22,7 +22,7 @@ export type CreateMemorySignerArgs = {
     allowedAccessKeys?: PublicKey[];
   };
   taskQueue?: {
-    maxWaitInQueueMs?: Milliseconds; // TODO rename to timeoutMs
+    timeoutMs?: Milliseconds;
   };
 };
 

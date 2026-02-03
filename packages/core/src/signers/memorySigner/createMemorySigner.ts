@@ -36,7 +36,7 @@ const CreateMemorySignerArgsSchema = z.object({
   ),
   taskQueue: z.optional(
     z.object({
-      maxWaitInQueueMs: z.optional(z.number().check(z.nonnegative())),
+      timeoutMs: z.optional(z.number().check(z.nonnegative())),
     }),
   ),
 });

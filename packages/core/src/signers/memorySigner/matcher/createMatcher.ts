@@ -36,18 +36,6 @@ export const createMatcher: CreateMatcher = (signerContext) => {
     if (task) void executeTask(signerContext, task, key);
   };
 
-  // const canHandleTaskInFuture = async (task: Task) => {
-  //   const canHandle = await signerContext.keyPool.isKeyForTaskExist(task);
-  //   return canHandle
-  //     ? result.ok(true as const)
-  //     : result.err(
-  //         createNatError({
-  //           kind: 'MemorySigner.Matcher.KeyForTaskNotFound',
-  //           context: { accessTypePriority: task.accessTypePriority },
-  //         }),
-  //       );
-  // };
-
   return {
     handleAddTask,
     handleKeyUnlock,

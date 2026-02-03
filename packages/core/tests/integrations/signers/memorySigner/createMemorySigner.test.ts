@@ -45,7 +45,7 @@ describe('createMemorySigner', async () => {
         allowedAccessKeys: [DEFAULT_PUBLIC_KEY],
       },
       taskQueue: {
-        maxWaitInQueueMs: 1000,
+        timeoutMs: 1000,
       },
     });
     expect(signer.ok).toBe(true);
@@ -66,7 +66,7 @@ describe('createMemorySigner', async () => {
         allowedAccessKeys: [],
       },
       taskQueue: {
-        maxWaitInQueueMs: -1000,
+        timeoutMs: -1000,
       },
     });
     assertNatErrKind(signer, 'CreateMemorySigner.Args.InvalidSchema');

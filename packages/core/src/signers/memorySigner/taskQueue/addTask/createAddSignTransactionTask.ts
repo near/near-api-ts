@@ -2,8 +2,8 @@ import { getAccessTypePriority } from './helpers/getAccessTypePriority';
 import type { CreateAddSignTransactionTask } from 'nat-types/signers/memorySigner/taskQueue';
 
 export const createAddSignTransactionTask: CreateAddSignTransactionTask =
-  (context) => async (transactionIntent) => {
-    const { matcher, keyPool, resolver } = context.signerContext;
+  (taskQueueContext) => async (transactionIntent) => {
+    const { matcher, keyPool, resolver } = taskQueueContext.signerContext;
 
     const task = {
       taskType: 'SignTransaction' as const,
@@ -15,7 +15,7 @@ export const createAddSignTransactionTask: CreateAddSignTransactionTask =
     const canHandle = await keyPool.isKeyForTaskExist(task);
     if (!canHandle.ok) return canHandle;
 
-    context.addTask(task);
+    taskQueueContext.addTask(task);
     queueMicrotask(() => matcher.handleAddTask(task));
 
     // TODO Fix types

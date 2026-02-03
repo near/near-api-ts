@@ -26,7 +26,7 @@ export const createTaskQueue: CreateTaskQueue = (
     taskQueueContext.queue.push(task);
 
     const timeoutMs =
-      createMemorySignerArgs.taskQueue?.maxWaitInQueueMs ?? 60_000; // 1 min
+      createMemorySignerArgs.taskQueue?.timeoutMs ?? 60_000; // 1 min
 
     // Cancel the task if it wasn't started during queueTimeout time
     taskQueueContext.cleaners[task.taskId] = setTimeout(() => {
