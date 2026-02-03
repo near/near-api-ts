@@ -41,5 +41,5 @@ export const signTransaction = async (
   );
 
   const transactionResult = await execute();
-  signerContext.resolver.completeTask(task.taskId, transactionResult);
+  signerContext.tasker.completeTask(task.taskId, transactionResult);
 };

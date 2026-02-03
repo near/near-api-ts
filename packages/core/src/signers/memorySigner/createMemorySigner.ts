@@ -1,8 +1,7 @@
 import * as z from 'zod/mini';
 import { createKeyPool } from './keyPool/createKeyPool';
 import { createTaskQueue } from './taskQueue/createTaskQueue';
-import { createMatcher } from './matcher/createMatcher';
-import { createResolver } from './resolver/createResolver';
+import { createTasker } from './tasker/createTasker';
 import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type {
   CreateMemorySigner,
@@ -64,8 +63,7 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
 
     context.keyPool = createKeyPool(context, args);
     context.taskQueue = createTaskQueue(context, args);
-    context.matcher = createMatcher(context);
-    context.resolver = createResolver();
+    context.tasker = createTasker(context);
 
     const safeSignTransaction = createSafeSignTransaction(context);
     const safeExecuteTransaction = createSafeExecuteTransaction(context);

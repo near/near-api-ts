@@ -5,8 +5,7 @@ import type {
   KeyPool,
   KeyPoolErrorVariant,
 } from 'nat-types/signers/memorySigner/keyPool';
-import type { Resolver } from 'nat-types/signers/memorySigner/resolver';
-import type { Matcher } from 'nat-types/signers/memorySigner/matcher';
+import type { Tasker } from 'nat-types/signers/memorySigner/tasker';
 import type {
   TaskQueue,
   TaskQueueErrorVariant,
@@ -46,8 +45,7 @@ export type MemorySignerContext = {
   keyService: MemoryKeyService;
   taskQueue: TaskQueue;
   keyPool: KeyPool;
-  resolver: Resolver;
-  matcher: Matcher;
+  tasker: Tasker;
 };
 
 // NextFeature: add policies

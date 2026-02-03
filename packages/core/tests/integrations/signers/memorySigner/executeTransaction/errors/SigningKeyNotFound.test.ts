@@ -29,20 +29,18 @@ describe('MemorySigner.ExecuteTransaction', async () => {
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-
-    keyService = await createMemoryKeyService({
+    keyService = createMemoryKeyService({
       keySources: [
         { privateKey: DEFAULT_PRIVATE_KEY },
         { privateKey: keyPair1.privateKey },
       ],
     });
     createSigner = createMemorySignerFactory({ client, keyService });
-
     return () => sandbox.stop();
   });
 
-  it('KeyForTaskNotFound', async () => {
-    // Create new user with FC key
+  it('SigningKeyNotFound', async () => {
+    // Create a new user with an FC key
     const nat = await createSigner('nat');
 
     await nat.executeTransaction({
@@ -59,8 +57,8 @@ describe('MemorySigner.ExecuteTransaction', async () => {
       },
     });
 
-    // Try to sign FA transaction with FC key
-    const user = await createSigner('user.nat');
+    // Try to sign FA transaction with an FC key
+    const user = createSigner('user.nat');
 
     const tx2 = await user.safeExecuteTransaction({
       intent: {
@@ -68,6 +66,9 @@ describe('MemorySigner.ExecuteTransaction', async () => {
         receiverAccountId: 'nat',
       },
     });
-    assertNatErrKind(tx2, 'MemorySigner.ExecuteTransaction.KeyForTaskNotFound');
+    assertNatErrKind(
+      tx2,
+      'MemorySigner.ExecuteTransaction.KeyPool.SigningKey.NotFound',
+    );
   });
 });

@@ -64,15 +64,13 @@ type ExecuteTransactionTask = {
 
 export type Task = SignTransactionTask | ExecuteTransactionTask;
 
-export type AddTask = (task: Task) => void;
 export type RemoveTask = (taskId: TaskId) => void;
 
 export type TaskQueueContext = {
   queue: Task[];
   cleaners: Record<TaskId, TimeoutId>;
   signerContext: MemorySignerContext;
-  addTask: AddTask;
-  removeTask: RemoveTask;
+  timeoutMs: Milliseconds;
 };
 
 // ExecuteTransaction

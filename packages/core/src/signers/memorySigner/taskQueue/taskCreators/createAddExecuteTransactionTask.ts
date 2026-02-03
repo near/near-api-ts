@@ -1,9 +1,10 @@
-import { getAccessTypePriority } from './helpers/getAccessTypePriority';
+import { getAccessTypePriority } from './_common/getAccessTypePriority';
 import type { CreateAddExecuteTransactionTask } from 'nat-types/signers/memorySigner/taskQueue';
+import {addTask} from './_common/addTask';
 
 export const createAddExecuteTransactionTask: CreateAddExecuteTransactionTask =
   (taskQueueContext) => async (transactionIntent) => {
-    const { matcher, keyPool, resolver } = taskQueueContext.signerContext;
+    const { keyPool, tasker } = taskQueueContext.signerContext;
 
     const task = {
       taskType: 'ExecuteTransaction' as const,
@@ -15,9 +16,8 @@ export const createAddExecuteTransactionTask: CreateAddExecuteTransactionTask =
     const canHandle = await keyPool.isKeyForTaskExist(task);
     if (!canHandle.ok) return canHandle;
 
-    taskQueueContext.addTask(task);
-    queueMicrotask(() => matcher.handleAddTask(task));
+    addTask(task, taskQueueContext);
 
     // TODO Fix types
-    return await resolver.waitForTask(task.taskId);
+    return await tasker.waitForTask(task.taskId);
   };

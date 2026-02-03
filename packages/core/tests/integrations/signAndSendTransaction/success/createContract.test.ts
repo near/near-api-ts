@@ -22,8 +22,8 @@ describe('Transaction success', () => {
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
-    client = await createDefaultClient(sandbox);
-    keyService = await createMemoryKeyService({
+    client = createDefaultClient(sandbox);
+    keyService = createMemoryKeyService({
       keySources: [
         { privateKey: DEFAULT_PRIVATE_KEY },
         { privateKey: testKeys.fc.forContract.privateKey },
@@ -49,9 +49,7 @@ describe('Transaction success', () => {
           transfer({ amount: { near: '100' } }),
           addFullAccessKey({ publicKey: DEFAULT_PUBLIC_KEY }),
           deployContract({
-            wasmBytes: await getFileBytes(
-              '../integrations/clientWithKeyService/success/example.wasm',
-            ),
+            wasmBytes: await getFileBytes('./wasm/write-get-record.wasm'),
           }),
           functionCall({
             functionName: 'write_record',

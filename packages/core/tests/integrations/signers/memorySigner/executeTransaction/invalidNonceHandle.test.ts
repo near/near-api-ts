@@ -29,19 +29,19 @@ describe('MemorySigner.executeTransaction', async () => {
 
   // Create 2 signers of the same account (don't do it in the prod - for test only)
   it('Invalid nonce handled', async () => {
-    const nat1 = await createMemorySigner({
+    const nat1 = createMemorySigner({
       signerAccountId: 'nat',
       client,
       keyService,
     });
 
-    const nat2 = await createMemorySigner({
+    const nat2 = createMemorySigner({
       signerAccountId: 'nat',
       client,
       keyService,
     });
 
-    // Make sure send another TX - if you will send the same with invalid nonce
+    // Make sure send another TX - if you will send the same with invalid nonce,
     // rpc will just return a prev tx result;
     const tx1 = await nat1.safeExecuteTransaction({
       intent: {

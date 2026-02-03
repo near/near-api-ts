@@ -78,5 +78,6 @@ export const executeTransaction = async (
   );
 
   const executeTransactionResult = await attempt(1, key.nonce + 1);
-  signerContext.resolver.completeTask(task.taskId, executeTransactionResult);
+
+  signerContext.tasker.completeTask(task.taskId, executeTransactionResult);
 };
