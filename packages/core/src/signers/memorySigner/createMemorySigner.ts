@@ -29,7 +29,9 @@ const CreateMemorySignerArgsSchema = z.object({
   keyService: z.custom<MemoryKeyService>((value) => isMemoryKeyService(value)),
   keyPool: z.optional(
     z.object({
-      signingKeys: z.optional(z.array(PublicKeySchema).check(z.minLength(1))),
+      allowedAccessKeys: z.optional(
+        z.array(PublicKeySchema).check(z.minLength(1)),
+      ),
     }),
   ),
   taskQueue: z.optional(
@@ -41,7 +43,7 @@ const CreateMemorySignerArgsSchema = z.object({
 
 export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
   'CreateMemorySigner.Internal',
-  async (args) => {
+  (args) => {
     const validArgs = CreateMemorySignerArgsSchema.safeParse(args);
 
     if (!validArgs.success)
@@ -58,25 +60,10 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
       signerAccountId,
       client,
       keyService,
-      signingKeys: args.keyPool?.signingKeys,
-      maxWaitInQueueMs: args.taskQueue?.maxWaitInQueueMs ?? 60_000, // 1 min
     } as MemorySignerContext;
 
-    const keyPool = await createKeyPool(context);
-
-    if (!keyPool.ok) {
-      if (keyPool.error.kind === 'CreateMemorySigner.CreateKeyPool.Failed')
-        return result.err(
-          createNatError({
-            kind: 'CreateMemorySigner.Internal',
-            context: { cause: keyPool.error },
-          }),
-        );
-      return result.err(keyPool.error);
-    }
-
-    context.keyPool = keyPool.value;
-    context.taskQueue = createTaskQueue(context);
+    context.keyPool = createKeyPool(context, args);
+    context.taskQueue = createTaskQueue(context, args);
     context.matcher = createMatcher(context);
     context.resolver = createResolver();
 
@@ -85,6 +72,8 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
 
     return result.ok({
       signerAccountId,
+      keyService,
+      client,
       signTransaction: asThrowable(safeSignTransaction),
       executeTransaction: asThrowable(safeExecuteTransaction),
       safeSignTransaction,

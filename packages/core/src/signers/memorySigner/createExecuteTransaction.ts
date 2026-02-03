@@ -29,23 +29,19 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (
       const taskResult = await context.taskQueue.addExecuteTransactionTask(
         args.intent,
       );
-
       if (taskResult.ok) return taskResult;
 
-      if (taskResult.error.kind === 'MemorySigner.Matcher.KeyForTaskNotFound')
-        return repackError({
-          error: taskResult.error,
-          originPrefix: 'MemorySigner.Matcher',
-          targetPrefix: 'MemorySigner.ExecuteTransaction',
-        });
-
       if (
-        taskResult.error.kind ===
-        'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached'
+        isNatErrorOf(taskResult.error, [
+          'MemorySigner.KeyPool.AccessKeys.NotLoaded',
+          'MemorySigner.KeyPool.Empty',
+          'MemorySigner.KeyPool.SigningKey.NotFound',
+          'MemorySigner.TaskQueue.Timeout',
+        ])
       )
         return repackError({
           error: taskResult.error,
-          originPrefix: 'MemorySigner.TaskQueue.Task',
+          originPrefix: 'MemorySigner',
           targetPrefix: 'MemorySigner.ExecuteTransaction',
         });
 

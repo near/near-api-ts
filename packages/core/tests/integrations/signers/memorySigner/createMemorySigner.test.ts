@@ -5,7 +5,6 @@ import {
   type Client,
   createMemoryKeyService,
   type MemoryKeyService,
-  randomEd25519KeyPair,
   safeCreateMemorySigner,
 } from '../../../../src';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
@@ -29,7 +28,7 @@ describe('createMemorySigner', async () => {
   });
 
   it('Default Ok', async () => {
-    const signer = await safeCreateMemorySigner({
+    const signer = safeCreateMemorySigner({
       signerAccountId: 'nat',
       client,
       keyService,
@@ -38,12 +37,12 @@ describe('createMemorySigner', async () => {
   });
 
   it('Ok with config', async () => {
-    const signer = await safeCreateMemorySigner({
+    const signer = safeCreateMemorySigner({
       signerAccountId: 'nat',
       client,
       keyService,
       keyPool: {
-        signingKeys: [DEFAULT_PUBLIC_KEY],
+        allowedAccessKeys: [DEFAULT_PUBLIC_KEY],
       },
       taskQueue: {
         maxWaitInQueueMs: 1000,
@@ -53,7 +52,7 @@ describe('createMemorySigner', async () => {
   });
 
   it('CreateMemorySigner.Args.InvalidSchema', async () => {
-    const signer = await safeCreateMemorySigner({
+    const signer = safeCreateMemorySigner({
       signerAccountId: 'nat',
       client: {
         // @ts-ignore
@@ -64,7 +63,7 @@ describe('createMemorySigner', async () => {
         signTransaction: () => {},
       },
       keyPool: {
-        signingKeys: [],
+        allowedAccessKeys: [],
       },
       taskQueue: {
         maxWaitInQueueMs: -1000,
@@ -73,24 +72,25 @@ describe('createMemorySigner', async () => {
     assertNatErrKind(signer, 'CreateMemorySigner.Args.InvalidSchema');
   });
 
-  it('CreateMemorySigner.Signer.AccessKeys.NotFound', async () => {
-    const signer = await safeCreateMemorySigner({
-      signerAccountId: 'nat-123',
-      client,
-      keyService,
-    });
-    assertNatErrKind(signer, 'CreateMemorySigner.Signer.AccessKeys.NotFound');
-  });
-
-  it('CreateMemorySigner.KeyPool.Empty', async () => {
-    const signer = await safeCreateMemorySigner({
-      signerAccountId: 'nat',
-      client,
-      keyService,
-      keyPool: {
-        signingKeys: [randomEd25519KeyPair().publicKey],
-      },
-    });
-    assertNatErrKind(signer, 'CreateMemorySigner.KeyPool.Empty');
-  });
+  // TODO move to executeTransaction
+  // it('CreateMemorySigner.Signer.AccessKeys.NotFound', async () => {
+  //   const signer = safeCreateMemorySigner({
+  //     signerAccountId: 'nat-123',
+  //     client,
+  //     keyService,
+  //   });
+  //   assertNatErrKind(signer, 'CreateMemorySigner.Signer.AccessKeys.NotFound');
+  // });
+  //
+  // it('CreateMemorySigner.KeyPool.Empty', async () => {
+  //   const signer = await safeCreateMemorySigner({
+  //     signerAccountId: 'nat',
+  //     client,
+  //     keyService,
+  //     keyPool: {
+  //       allowedAccessKeys: [randomEd25519KeyPair().publicKey],
+  //     },
+  //   });
+  //   assertNatErrKind(signer, 'CreateMemorySigner.KeyPool.Empty');
+  // });
 });

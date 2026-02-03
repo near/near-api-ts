@@ -1,12 +1,12 @@
-import { createUnlock, createLock, createSetNonce } from './helpers/keyUtils';
+import { createUnlock, createLock, createSetNonce } from './keyUtils';
 import type {
   AccountAccessKey,
   FullAccessKey,
 } from 'nat-types/_common/accountAccessKey';
 import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
-import type { KeyPoolFullAccessKey } from 'nat-types/signers/memorySigner/keyPool';
+import type { PoolFullAccessKey } from 'nat-types/signers/memorySigner/keyPool';
 
-const transformKey = (fullAccessKey: FullAccessKey): KeyPoolFullAccessKey => {
+const transformKey = (fullAccessKey: FullAccessKey): PoolFullAccessKey => {
   const { publicKey, nonce } = fullAccessKey;
 
   const key = {
@@ -14,7 +14,7 @@ const transformKey = (fullAccessKey: FullAccessKey): KeyPoolFullAccessKey => {
     publicKey,
     isLocked: false,
     nonce,
-  } as KeyPoolFullAccessKey;
+  } as PoolFullAccessKey;
 
   key.lock = createLock(key);
   key.unlock = createUnlock(key);
@@ -23,10 +23,10 @@ const transformKey = (fullAccessKey: FullAccessKey): KeyPoolFullAccessKey => {
   return key;
 };
 
-export const getFullAccessKeyList = (
+export const createFullAccessPoolKeys = (
   accountKeys: AccountAccessKey[],
   signerContext: MemorySignerContext,
-): KeyPoolFullAccessKey[] =>
+): PoolFullAccessKey[] =>
   accountKeys
     .filter(
       ({ publicKey, accessType }) =>

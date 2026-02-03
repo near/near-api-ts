@@ -3,7 +3,7 @@ import type { CreateAddSignTransactionTask } from 'nat-types/signers/memorySigne
 
 export const createAddSignTransactionTask: CreateAddSignTransactionTask =
   (context) => async (transactionIntent) => {
-    const { matcher, resolver } = context.signerContext;
+    const { matcher, keyPool, resolver } = context.signerContext;
 
     const task = {
       taskType: 'SignTransaction' as const,
@@ -12,7 +12,7 @@ export const createAddSignTransactionTask: CreateAddSignTransactionTask =
       transactionIntent,
     };
 
-    const canHandle = matcher.canHandleTaskInFuture(task);
+    const canHandle = await keyPool.isKeyForTaskExist(task);
     if (!canHandle.ok) return canHandle;
 
     context.addTask(task);

@@ -1,27 +1,10 @@
-import type {
-  AccessTypePriority,
-  Task,
-} from 'nat-types/signers/memorySigner/taskQueue';
-import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
-import type { Result } from 'nat-types/_common/common';
-import type { NatError } from '@common/natError';
+import type { Task } from 'nat-types/signers/memorySigner/taskQueue';
+import type { PoolKey } from 'nat-types/signers/memorySigner/keyPool';
 import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
-
-export type MatcherErrorVariant = {
-  kind: 'MemorySigner.Matcher.KeyForTaskNotFound';
-  context: {
-    accessTypePriority: AccessTypePriority;
-  };
-};
-
-export type CanHandleTaskInFuture = (
-  task: Task,
-) => Result<true, NatError<'MemorySigner.Matcher.KeyForTaskNotFound'>>;
 
 export type Matcher = {
   handleAddTask: (task: Task) => Promise<void>;
-  handleKeyUnlock: (key: KeyPoolKey) => Promise<void>;
-  canHandleTaskInFuture: CanHandleTaskInFuture;
+  handleKeyUnlock: (key: PoolKey) => Promise<void>;
 };
 
 export type CreateMatcher = (context: MemorySignerContext) => Matcher;

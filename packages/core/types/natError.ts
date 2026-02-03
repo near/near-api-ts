@@ -52,6 +52,16 @@ import type {
 export type InternalErrorContext = { cause: unknown };
 export type InvalidSchemaContext = { zodError: $ZodError };
 
+export type ArgsInvalidSchema<Prefix extends string> = {
+  kind: `${Prefix}.Args.InvalidSchema`;
+  context: { zodError: $ZodError };
+};
+
+export type Internal<Prefix extends string> = {
+  kind: `${Prefix}.Internal`;
+  context: { cause: unknown };
+};
+
 type NatErrorVariant =
   | ClientErrorVariant
   | MemoryKeyServiceErrorVariant

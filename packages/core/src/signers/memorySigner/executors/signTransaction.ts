@@ -1,7 +1,7 @@
 import { result } from '@common/utils/result';
 import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { Task } from 'nat-types/signers/memorySigner/taskQueue';
-import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
+import type { PoolKey } from 'nat-types/signers/memorySigner/keyPool';
 import type { SignedTransaction, Transaction } from 'nat-types/transaction';
 import { wrapInternalError } from '@common/utils/wrapInternalError';
 import type { Result } from 'nat-types/_common/common';
@@ -14,7 +14,7 @@ type Execute = () => Promise<
 export const signTransaction = async (
   signerContext: MemorySignerContext,
   task: Task,
-  key: KeyPoolKey,
+  key: PoolKey,
 ): Promise<void> => {
   const execute: Execute = wrapInternalError(
     'MemorySigner.SignTransaction.Internal',

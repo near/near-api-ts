@@ -1,18 +1,23 @@
-import type { FindKeyForTask, KeyList } from 'nat-types/signers/memorySigner/keyPool';
+import type {
+  FindKeyForTask,
+  KeyPoolContext,
+  PoolKeys,
+} from 'nat-types/signers/memorySigner/keyPool';
 import type {
   FullAccessKeyPriority,
   FunctionCallKeyPriority,
 } from 'nat-types/signers/memorySigner/taskQueue';
+import { result } from '@common/utils/result';
 
 const findSigningKey = (
   keyPriority: FullAccessKeyPriority | FunctionCallKeyPriority,
-  keyList: KeyList,
+  poolKeys: PoolKeys,
 ) => {
   if (keyPriority.accessType === 'FullAccess')
-    return keyList.fullAccess.find((key) => !key.isLocked);
+    return poolKeys.fullAccess.find((key) => !key.isLocked);
 
   // If keyType is FunctionCall - find the key which follows all criteria
-  return keyList.functionCall.find((key) => {
+  return poolKeys.functionCall.find((key) => {
     const isContractIdMatch =
       key.contractAccountId === keyPriority.contractAccountId;
 
@@ -26,10 +31,15 @@ const findSigningKey = (
 };
 
 export const createFindKeyForTask =
-  (keyList: KeyList): FindKeyForTask =>
-  (task) => {
+  (keyPoolContext: KeyPoolContext): FindKeyForTask =>
+  async (task) => {
+    const poolKeys = await keyPoolContext.getPoolKeys();
+    if (!poolKeys.ok) return poolKeys;
+
     for (const keyPriority of task.accessTypePriority) {
-      const key = findSigningKey(keyPriority, keyList);
-      if (key) return key;
+      const key = findSigningKey(keyPriority, poolKeys.value);
+      if (key) return result.ok(key);
     }
+
+    return result.ok(undefined);
   };

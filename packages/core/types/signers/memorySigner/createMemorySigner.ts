@@ -4,30 +4,13 @@ import type { Client } from 'nat-types/client/client';
 import type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 import type { PublicKey } from 'nat-types/_common/crypto';
 import type { NatError } from '@common/natError';
-import type {
-  InvalidSchemaContext,
-  InternalErrorContext,
-} from 'nat-types/natError';
+import type { ArgsInvalidSchema, Internal } from 'nat-types/natError';
+
+type Prefix = 'CreateMemorySigner';
 
 export type CreateMemorySignerErrorVariant =
-  | {
-      kind: 'CreateMemorySigner.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'CreateMemorySigner.Signer.AccessKeys.NotFound';
-      context: {
-        signerAccountId: AccountId;
-      };
-    }
-  | {
-      kind: 'CreateMemorySigner.KeyPool.Empty';
-      context: null;
-    }
-  | {
-      kind: 'CreateMemorySigner.Internal';
-      context: InternalErrorContext;
-    };
+  | ArgsInvalidSchema<Prefix>
+  | Internal<Prefix>;
 
 export type CreateMemorySignerInternalErrorKind = 'CreateMemorySigner.Internal';
 
@@ -36,40 +19,33 @@ export type CreateMemorySignerArgs = {
   client: Client;
   keyService: MemoryKeyService;
   keyPool?: {
-    signingKeys?: PublicKey[];
+    allowedAccessKeys?: PublicKey[];
   };
   taskQueue?: {
-    maxWaitInQueueMs?: Milliseconds;
+    maxWaitInQueueMs?: Milliseconds; // TODO rename to timeoutMs
   };
 };
 
 type CreateMemorySignerError =
   | NatError<'CreateMemorySigner.Args.InvalidSchema'>
-  | NatError<'CreateMemorySigner.Signer.AccessKeys.NotFound'>
-  | NatError<'CreateMemorySigner.KeyPool.Empty'>
   | NatError<'CreateMemorySigner.Internal'>;
 
 export type SafeCreateMemorySigner = (
   args: CreateMemorySignerArgs,
-) => Promise<Result<MemorySigner, CreateMemorySignerError>>;
+) => Result<MemorySigner, CreateMemorySignerError>;
 
-export type CreateMemorySigner = (
-  args: CreateMemorySignerArgs,
-) => Promise<MemorySigner>;
+export type CreateMemorySigner = (args: CreateMemorySignerArgs) => MemorySigner;
 
 // Factory
-
 export type SafeMemorySignerFactory = (
   signerAccountId: AccountId,
-) => Promise<Result<MemorySigner, CreateMemorySignerError>>;
+) => Result<MemorySigner, CreateMemorySignerError>;
 
 export type CreateSafeMemorySignerFactory = (
   args: Omit<CreateMemorySignerArgs, 'signerAccountId'>,
 ) => SafeMemorySignerFactory;
 
-export type MemorySignerFactory = (
-  signerAccountId: AccountId,
-) => Promise<MemorySigner>;
+export type MemorySignerFactory = (signerAccountId: AccountId) => MemorySigner;
 
 export type CreateMemorySignerFactory = (
   args: Omit<CreateMemorySignerArgs, 'signerAccountId'>,

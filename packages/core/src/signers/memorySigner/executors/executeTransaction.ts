@@ -1,7 +1,7 @@
 import type { Nonce, Result } from 'nat-types/_common/common';
 import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type { Task } from 'nat-types/signers/memorySigner/taskQueue';
-import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
+import type { PoolKey } from 'nat-types/signers/memorySigner/keyPool';
 import { result } from '@common/utils/result';
 import type { Transaction } from 'nat-types/transaction';
 import { createNatError, type NatError } from '@common/natError';
@@ -22,7 +22,7 @@ type Attempt = (
 export const executeTransaction = async (
   signerContext: MemorySignerContext,
   task: Task,
-  key: KeyPoolKey,
+  key: PoolKey,
 ): Promise<void> => {
   const maxAttempts = 3; // Maybe we will allow user to configure it in the future
 
@@ -55,7 +55,7 @@ export const executeTransaction = async (
       }
 
       // If it's not a last attempt + it's a nonce error -
-      // re-sign with a new nonce and try to send again;
+      // re-sign with the new nonce and try to send it again;
       if (
         attemptIndex <= maxAttempts &&
         txResult.error.kind ===

@@ -1,42 +1,32 @@
 import type { TransactionIntent } from 'nat-types/transaction';
 import type { NatError } from '@common/natError';
-import type { Milliseconds, Result } from 'nat-types/_common/common';
+import type { Result } from 'nat-types/_common/common';
 import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
-import type {
-  InternalErrorContext,
-  InvalidSchemaContext,
-} from 'nat-types/natError';
-import type { AccessTypePriority } from 'nat-types/signers/memorySigner/taskQueue';
+import type { ArgsInvalidSchema, Internal } from 'nat-types/natError';
+import type { TaskQueueTimeout } from 'nat-types/signers/memorySigner/taskQueue';
 import type { SendSignedTransactionOutput } from 'nat-types/client/methods/transaction/sendSignedTransaction';
 import type { SharedTransactionErrorVariant } from 'nat-types/_common/sharedTransactionErrors';
 import type { SendRequestError } from 'nat-types/client/transport/sendRequest';
+import type {
+  KeyPoolAccessKeysNotLoaded,
+  KeyPoolEmpty,
+  KeyPoolSigningKeyNotFound,
+} from 'nat-types/signers/memorySigner/keyPool';
+
+type Prefix = 'MemorySigner.ExecuteTransaction';
 
 export type ExecuteTransactionErrorVariant =
-  | SharedTransactionErrorVariant<'MemorySigner.ExecuteTransaction'>
+  | SharedTransactionErrorVariant<Prefix>
+  | ArgsInvalidSchema<Prefix>
+  | KeyPoolAccessKeysNotLoaded<Prefix>
+  | KeyPoolEmpty<Prefix>
+  | KeyPoolSigningKeyNotFound<Prefix>
+  | TaskQueueTimeout<Prefix>
   | {
-      kind: `MemorySigner.ExecuteTransaction.Args.InvalidSchema`;
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'MemorySigner.ExecuteTransaction.KeyForTaskNotFound';
-      context: {
-        accessTypePriority: AccessTypePriority;
-      };
-    }
-  | {
-      kind: 'MemorySigner.ExecuteTransaction.MaxTimeInQueueReached';
-      context: {
-        maxWaitInQueueMs: Milliseconds;
-      };
-    }
-  | {
-      kind: `MemorySigner.ExecuteTransaction.SendRequest.Failed`;
+      kind: `MemorySigner.ExecuteTransaction.SendRequest.Failed`; // TODO Unpack
       context: { cause: SendRequestError };
     }
-  | {
-      kind: `MemorySigner.ExecuteTransaction.Internal`;
-      context: InternalErrorContext;
-    };
+  | Internal<Prefix>;
 
 export type ExecuteTransactionInternalErrorKind =
   'MemorySigner.ExecuteTransaction.Internal';
@@ -47,8 +37,10 @@ type ExecuteTransactionArgs = {
 
 type ExecuteTransactionError =
   | NatError<'MemorySigner.ExecuteTransaction.Args.InvalidSchema'>
-  | NatError<'MemorySigner.ExecuteTransaction.KeyForTaskNotFound'>
-  | NatError<'MemorySigner.ExecuteTransaction.MaxTimeInQueueReached'>
+  | NatError<'MemorySigner.ExecuteTransaction.KeyPool.AccessKeys.NotLoaded'>
+  | NatError<'MemorySigner.ExecuteTransaction.KeyPool.Empty'>
+  | NatError<'MemorySigner.ExecuteTransaction.KeyPool.SigningKey.NotFound'>
+  | NatError<'MemorySigner.ExecuteTransaction.TaskQueue.Timeout'>
   | NatError<'MemorySigner.ExecuteTransaction.SendRequest.Failed'>
   // RPC errors
   | NatError<'MemorySigner.ExecuteTransaction.Rpc.Transaction.Signer.Balance.TooLow'>

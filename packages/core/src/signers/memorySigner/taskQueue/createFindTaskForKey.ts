@@ -4,11 +4,11 @@ import type {
   FunctionCallKeyPriority,
   TaskQueueContext,
 } from 'nat-types/signers/memorySigner/taskQueue';
-import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
+import type { PoolKey } from 'nat-types/signers/memorySigner/keyPool';
 
 const checkIfKeyMatchRequirements = (
   keyPriority: FullAccessKeyPriority | FunctionCallKeyPriority,
-  key: KeyPoolKey,
+  key: PoolKey,
 ): boolean => {
   if (key.accessType !== keyPriority.accessType) return false;
   if (key.accessType === 'FullAccess') return true;

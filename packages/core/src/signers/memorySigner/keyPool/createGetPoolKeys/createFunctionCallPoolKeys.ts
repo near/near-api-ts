@@ -1,14 +1,14 @@
-import { createSetNonce, createLock, createUnlock } from './helpers/keyUtils';
+import { createSetNonce, createLock, createUnlock } from './keyUtils';
 import type {
   AccountAccessKey,
   FunctionCallKey,
 } from 'nat-types/_common/accountAccessKey';
 import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
-import type { KeyPoolFunctionCallKey } from 'nat-types/signers/memorySigner/keyPool';
+import type { PoolFunctionCallKey } from 'nat-types/signers/memorySigner/keyPool';
 
 const transformKey = (
   functionCallKey: FunctionCallKey,
-): KeyPoolFunctionCallKey => {
+): PoolFunctionCallKey => {
   const { publicKey, nonce, contractAccountId, allowedFunctions } =
     functionCallKey;
 
@@ -19,7 +19,7 @@ const transformKey = (
     nonce,
     contractAccountId,
     allowedFunctions,
-  } as KeyPoolFunctionCallKey;
+  } as PoolFunctionCallKey;
 
   key.lock = createLock(key);
   key.unlock = createUnlock(key);
@@ -28,10 +28,10 @@ const transformKey = (
   return key;
 };
 
-export const getFunctionCallKeyList = (
+export const createFunctionCallPoolKeys = (
   accountKeys: AccountAccessKey[],
   signerContext: MemorySignerContext,
-): KeyPoolFunctionCallKey[] =>
+): PoolFunctionCallKey[] =>
   accountKeys
     .filter(
       ({ publicKey, accessType }) =>

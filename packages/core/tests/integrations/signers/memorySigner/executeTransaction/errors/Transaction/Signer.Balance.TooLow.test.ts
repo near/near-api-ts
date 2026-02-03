@@ -35,7 +35,7 @@ describe('Signer.Balance.TooLow', () => {
   });
 
   it('Transfer too many tokens', async () => {
-    const nat = await createSigner('nat');
+    const nat = createSigner('nat');
 
     // 1. Create an account with 10 FA keys
     await nat.executeTransaction({
@@ -60,7 +60,7 @@ describe('Signer.Balance.TooLow', () => {
     expect(balance1.locked.amount.near).toBe('0.0092');
 
     // 2. try to send
-    const abc = await createSigner('abc.nat');
+    const abc = createSigner('abc.nat');
 
     const tx = await abc.safeExecuteTransaction({
       intent: {

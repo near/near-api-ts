@@ -3,35 +3,25 @@ import type {
   TransactionIntent,
 } from 'nat-types/transaction';
 import type { NatError } from '@common/natError';
-import type { Milliseconds, Result } from 'nat-types/_common/common';
+import type { Result } from 'nat-types/_common/common';
 import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
+import type { ArgsInvalidSchema, Internal } from 'nat-types/natError';
+import type { TaskQueueTimeout } from 'nat-types/signers/memorySigner/taskQueue';
 import type {
-  InternalErrorContext,
-  InvalidSchemaContext,
-} from 'nat-types/natError';
-import type { AccessTypePriority } from 'nat-types/signers/memorySigner/taskQueue';
+  KeyPoolAccessKeysNotLoaded,
+  KeyPoolEmpty,
+  KeyPoolSigningKeyNotFound,
+} from 'nat-types/signers/memorySigner/keyPool';
+
+type Prefix = 'MemorySigner.SignTransaction';
 
 export type SignTransactionIntentErrorVariant =
-  | {
-      kind: `MemorySigner.SignTransaction.Args.InvalidSchema`;
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'MemorySigner.SignTransaction.KeyForTaskNotFound';
-      context: {
-        accessTypePriority: AccessTypePriority;
-      };
-    }
-  | {
-      kind: 'MemorySigner.SignTransaction.MaxTimeInQueueReached';
-      context: {
-        maxWaitInQueueMs: Milliseconds;
-      };
-    }
-  | {
-      kind: `MemorySigner.SignTransaction.Internal`;
-      context: InternalErrorContext;
-    };
+  | ArgsInvalidSchema<Prefix>
+  | KeyPoolAccessKeysNotLoaded<Prefix>
+  | KeyPoolEmpty<Prefix>
+  | KeyPoolSigningKeyNotFound<Prefix>
+  | TaskQueueTimeout<Prefix>
+  | Internal<Prefix>;
 
 export type SignTransactionIntentInternalErrorKind =
   'MemorySigner.SignTransaction.Internal';
@@ -42,8 +32,10 @@ type SignTransactionIntentArgs = {
 
 type SignTransactionIntentError =
   | NatError<'MemorySigner.SignTransaction.Args.InvalidSchema'>
-  | NatError<'MemorySigner.SignTransaction.KeyForTaskNotFound'>
-  | NatError<'MemorySigner.SignTransaction.MaxTimeInQueueReached'> // TODO change to .Task.MaxTimeInQueueReached
+  | NatError<'MemorySigner.SignTransaction.KeyPool.AccessKeys.NotLoaded'>
+  | NatError<'MemorySigner.SignTransaction.KeyPool.Empty'>
+  | NatError<'MemorySigner.SignTransaction.KeyPool.SigningKey.NotFound'>
+  | NatError<'MemorySigner.SignTransaction.TaskQueue.Timeout'>
   | NatError<'MemorySigner.SignTransaction.Internal'>;
 
 export type SafeSignTransactionIntent = (

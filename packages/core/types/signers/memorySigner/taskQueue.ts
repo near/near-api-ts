@@ -15,16 +15,17 @@ import type {
   SendSignedTransactionError,
   SendSignedTransactionOutput,
 } from 'nat-types/client/methods/transaction/sendSignedTransaction';
-import type { KeyPoolKey } from 'nat-types/signers/memorySigner/keyPool';
+import type { PoolKey } from 'nat-types/signers/memorySigner/keyPool';
 import type { NatError } from '@common/natError';
+import type { CreateMemorySignerArgs } from 'nat-types/signers/memorySigner/createMemorySigner';
+
+export type TaskQueueTimeout<Prefix extends string> = {
+  kind: `${Prefix}.TaskQueue.Timeout`;
+  context: { timeoutMs: Milliseconds };
+};
 
 export type TaskQueueErrorVariant =
-  | {
-      kind: 'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached';
-      context: {
-        maxWaitInQueueMs: Milliseconds;
-      };
-    }
+  | TaskQueueTimeout<'MemorySigner'>
   | {
       kind: 'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction';
       context: {
@@ -76,8 +77,10 @@ export type TaskQueueContext = {
 
 // ExecuteTransaction
 type ExecuteTransactionTaskError =
-  | NatError<'MemorySigner.Matcher.KeyForTaskNotFound'>
-  | NatError<'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached'>
+  | NatError<'MemorySigner.KeyPool.AccessKeys.NotLoaded'>
+  | NatError<'MemorySigner.KeyPool.Empty'>
+  | NatError<'MemorySigner.KeyPool.SigningKey.NotFound'>
+  | NatError<'MemorySigner.TaskQueue.Timeout'>
   | NatError<'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction'>
   | NatError<'MemorySigner.ExecuteTransaction.Internal'>;
 
@@ -91,8 +94,10 @@ export type CreateAddExecuteTransactionTask = (
 
 // SignTransaction
 export type SignTransactionTaskError =
-  | NatError<'MemorySigner.Matcher.KeyForTaskNotFound'>
-  | NatError<'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached'>
+  | NatError<'MemorySigner.KeyPool.AccessKeys.NotLoaded'>
+  | NatError<'MemorySigner.KeyPool.Empty'>
+  | NatError<'MemorySigner.KeyPool.SigningKey.NotFound'>
+  | NatError<'MemorySigner.TaskQueue.Timeout'>
   | NatError<'MemorySigner.SignTransaction.Internal'>;
 
 export type AddSignTransactionTask = (
@@ -103,7 +108,7 @@ export type CreateAddSignTransactionTask = (
   context: TaskQueueContext,
 ) => AddSignTransactionTask;
 
-export type FindTaskForKey = (key: KeyPoolKey) => Task | undefined;
+export type FindTaskForKey = (key: PoolKey) => Task | undefined;
 
 export type TaskQueue = {
   addExecuteTransactionTask: AddExecuteTransactionTask;
@@ -112,24 +117,7 @@ export type TaskQueue = {
   removeTask: RemoveTask;
 };
 
-// TODO Add later
-
-// type ExecuteMultipleTransactionsResult = (
-//   | { status: 'Success'; result: SendSignedTransactionOutput }
-//   | { status: 'Error'; error: unknown }
-//   | { status: 'Canceled' }
-// )[];
-
-// type SignMultipleTransactionsResult = (
-//   | { status: 'Success'; result: Result<SignedTransaction, unknown> }
-//   | { status: 'Error'; error: unknown }
-//   | { status: 'Canceled' }
-// )[];
-
-// export type ExecuteMultipleTransactions = (args: {
-//   transactionIntents: TransactionIntent[];
-// }) => Promise<ExecuteMultipleTransactionsResult>;
-
-// export type SignMultipleTransactions = (args: {
-//   transactionIntents: TransactionIntent[];
-// }) => Promise<SignMultipleTransactionsResult>;
+export type CreateTaskQueue = (
+  signerContext: MemorySignerContext,
+  createMemorySignerArgs: CreateMemorySignerArgs,
+) => TaskQueue;

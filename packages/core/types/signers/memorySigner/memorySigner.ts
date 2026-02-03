@@ -1,16 +1,12 @@
-import type { AccountId, Milliseconds } from 'nat-types/_common/common';
-import type { PublicKey } from 'nat-types/_common/crypto';
+import type { AccountId } from 'nat-types/_common/common';
 import type { Client } from 'nat-types/client/client';
 import type { MemoryKeyService } from 'nat-types/keyServices/memoryKeyService/memoryKeyService';
 import type {
-  CreateKeyPoolErrorVariant,
   KeyPool,
+  KeyPoolErrorVariant,
 } from 'nat-types/signers/memorySigner/keyPool';
 import type { Resolver } from 'nat-types/signers/memorySigner/resolver';
-import type {
-  Matcher,
-  MatcherErrorVariant,
-} from 'nat-types/signers/memorySigner/matcher';
+import type { Matcher } from 'nat-types/signers/memorySigner/matcher';
 import type {
   TaskQueue,
   TaskQueueErrorVariant,
@@ -34,9 +30,8 @@ import type {
 
 export type MemorySignerErrorVariant =
   | CreateMemorySignerErrorVariant
-  | CreateKeyPoolErrorVariant
+  | KeyPoolErrorVariant
   | TaskQueueErrorVariant
-  | MatcherErrorVariant
   | SignTransactionIntentErrorVariant
   | ExecuteTransactionErrorVariant;
 
@@ -49,8 +44,6 @@ export type MemorySignerContext = {
   signerAccountId: AccountId;
   client: Client;
   keyService: MemoryKeyService;
-  signingKeys?: PublicKey[];
-  maxWaitInQueueMs: Milliseconds;
   taskQueue: TaskQueue;
   keyPool: KeyPool;
   resolver: Resolver;
@@ -60,6 +53,8 @@ export type MemorySignerContext = {
 // NextFeature: add policies
 export type MemorySigner = {
   signerAccountId: AccountId;
+  client: Client;
+  keyService: MemoryKeyService;
   signTransaction: SignTransactionIntent;
   executeTransaction: ExecuteTransaction;
   safeSignTransaction: SafeSignTransactionIntent;

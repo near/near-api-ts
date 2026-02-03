@@ -2,18 +2,19 @@ import { createFindTaskForKey } from './createFindTaskForKey';
 import { createAddSignTransactionTask } from './addTask/createAddSignTransactionTask';
 import { createAddExecuteTransactionTask } from './addTask/createAddExecuteTransactionTask';
 import { result } from '@common/utils/result';
-import type { MemorySignerContext } from 'nat-types/signers/memorySigner/memorySigner';
 import type {
+  CreateTaskQueue,
   RemoveTask,
   TaskQueue,
   TaskQueueContext,
 } from 'nat-types/signers/memorySigner/taskQueue';
 import { createNatError } from '@common/natError';
 
-export const createTaskQueue = (
-  signerContext: MemorySignerContext,
+export const createTaskQueue: CreateTaskQueue = (
+  signerContext,
+  createMemorySignerArgs,
 ): TaskQueue => {
-  const context: TaskQueueContext = {
+  const taskQueueContext: TaskQueueContext = {
     queue: [],
     cleaners: {},
     signerContext,
@@ -21,40 +22,45 @@ export const createTaskQueue = (
     removeTask: (_) => {},
   };
 
-  context.addTask = (task) => {
-    context.queue.push(task);
+  taskQueueContext.addTask = (task) => {
+    taskQueueContext.queue.push(task);
+
+    const timeoutMs =
+      createMemorySignerArgs.taskQueue?.maxWaitInQueueMs ?? 60_000; // 1 min
+
     // Cancel the task if it wasn't started during queueTimeout time
-    context.cleaners[task.taskId] = setTimeout(() => {
-      context.queue = context.queue.filter(
+    taskQueueContext.cleaners[task.taskId] = setTimeout(() => {
+      taskQueueContext.queue = taskQueueContext.queue.filter(
         ({ taskId }) => taskId !== task.taskId,
       );
-      delete context.cleaners[task.taskId];
+      delete taskQueueContext.cleaners[task.taskId];
 
-      context.signerContext.resolver.completeTask(
+      taskQueueContext.signerContext.resolver.completeTask(
         task.taskId,
         result.err(
           createNatError({
-            kind: 'MemorySigner.TaskQueue.Task.MaxTimeInQueueReached',
-            context: {
-              maxWaitInQueueMs: context.signerContext.maxWaitInQueueMs,
-            },
+            kind: 'MemorySigner.TaskQueue.Timeout',
+            context: { timeoutMs },
           }),
         ),
       );
-    }, context.signerContext.maxWaitInQueueMs);
+    }, timeoutMs);
   };
 
   // We remove the task from the queue when the task execution starts
   const removeTask: RemoveTask = (taskId) => {
-    context.queue = context.queue.filter((task) => task.taskId !== taskId);
-    clearTimeout(context.cleaners[taskId]);
-    delete context.cleaners[taskId];
+    taskQueueContext.queue = taskQueueContext.queue.filter(
+      (task) => task.taskId !== taskId,
+    );
+    clearTimeout(taskQueueContext.cleaners[taskId]);
+    delete taskQueueContext.cleaners[taskId];
   };
 
   return {
-    addSignTransactionTask: createAddSignTransactionTask(context),
-    addExecuteTransactionTask: createAddExecuteTransactionTask(context),
-    findTaskForKey: createFindTaskForKey(context),
+    addSignTransactionTask: createAddSignTransactionTask(taskQueueContext),
+    addExecuteTransactionTask:
+      createAddExecuteTransactionTask(taskQueueContext),
+    findTaskForKey: createFindTaskForKey(taskQueueContext),
     removeTask,
   };
 };
