@@ -21,21 +21,21 @@ import {
 } from 'near-api-ts';
 
 // Read some data from the chain
-const client = await createTestnetClient();
+const client = createTestnetClient();
 
 const { accountInfo } = await client.getAccountInfo({
   accountId: 'testnet',
   atMomentOf: 'LatestFinalBlock',
-})
-console.log(accountInfo.balance.total.near)
-console.log(accountInfo.balance.total.yoctoNear)
+});
+console.log('Near:', accountInfo.balance.total.near);
+console.log('YoctoNear:', accountInfo.balance.total.yoctoNear);
 
 // Send some transaction
-const keyService = await createMemoryKeyService({
-  keySource: { privateKey: 'ed25519:your-private-key' } ,
+const keyService = createMemoryKeyService({
+  keySource: { privateKey: 'ed25519:your-private-key' },
 });
 
-const signer = await createMemorySigner({
+const signer = createMemorySigner({
   signerAccountId: 'your-account.testnet',
   client,
   keyService,
@@ -45,7 +45,7 @@ await signer.executeTransaction({
   intent: {
     action: transfer({ amount: { yoctoNear: '1' } }),
     receiverAccountId: 'some-receiver.testnet',
-  }
+  },
 });
 
 // Handle transaction errors
@@ -58,7 +58,7 @@ try {
   });
 } catch (e) {
   if (isNatError(e, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Signer.Balance.TooLow')) {
-    console.log(e.context.transactionCost)
+    console.log(e.context.transactionCost);
   }
 }
 
@@ -68,6 +68,3 @@ const maybeBlock = await client.safeGetBlock({
 });
 console.log(maybeBlock); // { ok: false, error: NatError: <{ kind: 'Client.GetBlock.Rpc.Block.NotFound', context: null }> }
 ```
-
-You may found more examples in the [examples/nodejs/ts-esm](https://github.com/eclipseeer/near-api-ts/tree/main/examples/nodejs/ts-esm)
-folder
