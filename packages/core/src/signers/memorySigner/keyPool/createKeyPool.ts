@@ -12,6 +12,7 @@ export const createKeyPool: CreateKeyPool = (
 ) => {
   const state: KeyPoolState = {
     poolKeys: undefined,
+    poolKeysLoadingPromise: undefined,
   };
 
   const keyPoolContext = {

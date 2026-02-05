@@ -71,6 +71,7 @@ export type PoolKeys = {
 
 export type KeyPoolState = {
   poolKeys?: PoolKeys;
+  poolKeysLoadingPromise?: Promise<Result<PoolKeys, GetPoolKeysError>>;
 };
 
 type GetPoolKeysError =

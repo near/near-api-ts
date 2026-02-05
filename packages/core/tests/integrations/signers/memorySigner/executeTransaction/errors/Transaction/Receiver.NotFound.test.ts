@@ -22,9 +22,8 @@ describe('Receiver.NotFound', () => {
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
-
-    client = await createDefaultClient(sandbox);
-    keyService = await createMemoryKeyService({
+    client = createDefaultClient(sandbox);
+    keyService = createMemoryKeyService({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
     });
     createSigner = createMemorySignerFactory({ client, keyService });
@@ -32,7 +31,7 @@ describe('Receiver.NotFound', () => {
   });
 
   it('Transfer', async () => {
-    const nat = await createSigner('nat');
+    const nat = createSigner('nat');
 
     const tx = await nat.safeExecuteTransaction({
       intent: {
@@ -47,7 +46,7 @@ describe('Receiver.NotFound', () => {
   });
 
   it('Delete Account', async () => {
-    const nat = await createSigner('nat');
+    const nat = createSigner('nat');
 
     const tx = await nat.safeExecuteTransaction({
       intent: {

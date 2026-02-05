@@ -26,6 +26,7 @@ export const getAccessTypePriority = ({
 }: TransactionIntent): AccessTypePriority => {
   // If a tx has only 1 FC action - it's possible to sign it with FC
   // (if present/ meet requirements)
+  // TODO check a case with attachedDeposit
   if (action?.actionType === 'FunctionCall')
     return getPriorityForFunctionCallTransaction(action, receiverAccountId);
 

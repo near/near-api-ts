@@ -1,5 +1,0 @@
-{
-  "scripts": {
-    "run": "node src/index.js"
-  }
-}

@@ -1,6 +1,6 @@
 import { getAccessTypePriority } from './_common/getAccessTypePriority';
 import type { CreateAddExecuteTransactionTask } from 'nat-types/signers/memorySigner/taskQueue';
-import {addTask} from './_common/addTask';
+import { addTask } from './_common/addTask';
 
 export const createAddExecuteTransactionTask: CreateAddExecuteTransactionTask =
   (taskQueueContext) => async (transactionIntent) => {
@@ -18,6 +18,5 @@ export const createAddExecuteTransactionTask: CreateAddExecuteTransactionTask =
 
     addTask(task, taskQueueContext);
 
-    // TODO Fix types
     return await tasker.waitForTask(task.taskId);
   };

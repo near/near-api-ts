@@ -38,7 +38,13 @@ export const createFindKeyForTask =
 
     for (const keyPriority of task.accessTypePriority) {
       const key = findSigningKey(keyPriority, poolKeys.value);
-      if (key) return result.ok(key);
+
+      if (key) {
+        // We need to lock the key to prevent it from being used by other tasks
+        // We need to do it synchronously here to avoid race conditions;
+        key.lock();
+        return result.ok(key);
+      }
     }
 
     return result.ok(undefined);

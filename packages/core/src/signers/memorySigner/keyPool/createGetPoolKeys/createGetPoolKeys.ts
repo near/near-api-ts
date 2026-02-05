@@ -28,47 +28,57 @@ export const createGetPoolKeys =
         functionCall: state.poolKeys.functionCall,
       });
 
-    // 2. Fetch account access keys from the network;
-    const accountAccessKeys =
-      await signerContext.client.safeGetAccountAccessKeys({
-        accountId: signerContext.signerAccountId,
-        atMomentOf: 'LatestFinalBlock',
-      });
+    // 2. If we are loading access keys right now - await for the result -
+    // we don't want to create a duplicated list every time;
+    if (state.poolKeysLoadingPromise) return await state.poolKeysLoadingPromise;
 
-    if (!accountAccessKeys.ok)
-      return result.err(
-        createNatError({
-          kind: 'MemorySigner.KeyPool.AccessKeys.NotLoaded',
-          context: { cause: accountAccessKeys.error },
-        }),
+    const loadAccessKeys = async () => {
+      // 3. Fetch account access keys from the network;
+      const accountAccessKeys =
+        await signerContext.client.safeGetAccountAccessKeys({
+          accountId: signerContext.signerAccountId,
+          atMomentOf: 'LatestFinalBlock',
+        });
+
+      if (!accountAccessKeys.ok)
+        return result.err(
+          createNatError({
+            kind: 'MemorySigner.KeyPool.AccessKeys.NotLoaded',
+            context: { cause: accountAccessKeys.error },
+          }),
+        );
+
+      // 4. If a user wants to handle all tasks only by a specific key/s - remove others;
+      const allowedAccessKeys = getAllowedAccessKeys(
+        accountAccessKeys.value.accountAccessKeys,
+        createMemorySignerArgs,
       );
 
-    // 3. If a user wants to handle all tasks only by a specific key/s - remove others;
-    const allowedAccessKeys = getAllowedAccessKeys(
-      accountAccessKeys.value.accountAccessKeys,
-      createMemorySignerArgs,
-    );
+      if (allowedAccessKeys.length === 0)
+        return result.err(
+          createNatError({
+            kind: 'MemorySigner.KeyPool.Empty',
+            context: {
+              accountAccessKeys: accountAccessKeys.value.accountAccessKeys,
+              allowedAccessKeys:
+                createMemorySignerArgs.keyPool?.allowedAccessKeys ?? [],
+            },
+          }),
+        );
 
-    if (allowedAccessKeys.length === 0)
-      return result.err(
-        createNatError({
-          kind: 'MemorySigner.KeyPool.Empty',
-          context: {
-            accountAccessKeys: accountAccessKeys.value.accountAccessKeys,
-            allowedAccessKeys:
-              createMemorySignerArgs.keyPool?.allowedAccessKeys ?? [],
-          },
-        }),
-      );
+      // 5. Create pool keys and return them;
+      state.poolKeys = {
+        fullAccess: createFullAccessPoolKeys(allowedAccessKeys, signerContext),
+        functionCall: createFunctionCallPoolKeys(
+          allowedAccessKeys,
+          signerContext,
+        ),
+      };
+      state.poolKeysLoadingPromise = undefined;
 
-    // 4. Create pool keys and return them;
-    state.poolKeys = {
-      fullAccess: createFullAccessPoolKeys(allowedAccessKeys, signerContext),
-      functionCall: createFunctionCallPoolKeys(
-        allowedAccessKeys,
-        signerContext,
-      ),
+      return result.ok(state.poolKeys);
     };
 
-    return result.ok(state.poolKeys);
+    state.poolKeysLoadingPromise = loadAccessKeys();
+    return await state.poolKeysLoadingPromise;
   };

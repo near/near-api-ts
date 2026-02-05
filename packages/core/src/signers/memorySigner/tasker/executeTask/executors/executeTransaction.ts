@@ -24,7 +24,7 @@ export const executeTransaction = async (
   task: Task,
   key: PoolKey,
 ): Promise<void> => {
-  const maxAttempts = 3; // Maybe we will allow user to configure it in the future
+  const maxAttempts = 1; // Maybe we will allow user to configure it in the future
 
   const attempt: Attempt = wrapInternalError(
     'MemorySigner.ExecuteTransaction.Internal',
