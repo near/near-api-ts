@@ -48,6 +48,10 @@ import type {
   CreateStakeActionErrorVariant,
   CreateStakeActionInternalErrorKind,
 } from 'nat-types/actions/stake';
+import type {
+  FileKeyServiceErrorVariant,
+  FileKeyServiceInternalErrorKind
+} from 'nat-types/keyServices/fileKeyService/fileKeyService';
 
 export type InternalErrorContext = { cause: unknown };
 export type InvalidSchemaContext = { zodError: $ZodError };
@@ -65,6 +69,7 @@ export type Internal<Prefix extends string> = {
 type NatErrorVariant =
   | ClientErrorVariant
   | MemoryKeyServiceErrorVariant
+  | FileKeyServiceErrorVariant
   | MemorySignerErrorVariant
   | CreateTransferActionErrorVariant
   | CreateAddKeyActionErrorVariant
@@ -83,10 +88,11 @@ type NatErrorVariant =
 
 export type NatInternalErrorKind = NatError<
   | ClientInternalErrorKind
-  | MemorySignerInternalErrorKind
   | 'CreateMemoryKeyService.Internal'
   | 'MemoryKeyService.SignTransaction.Internal'
   | 'MemoryKeyService.FindKeyPair.Internal'
+  | FileKeyServiceInternalErrorKind
+  | MemorySignerInternalErrorKind
   | CreateTransferActionInternalErrorKind
   | CreateAddKeyActionInternalErrorKind
   | CreateFunctionCallActionInternalErrorKind
