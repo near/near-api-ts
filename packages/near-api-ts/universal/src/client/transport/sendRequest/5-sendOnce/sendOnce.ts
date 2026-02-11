@@ -1,0 +1,65 @@
+import { snakeToCamelCase } from '../../../../_common/utils/snakeToCamelCase';
+import {
+  type RpcResponse,
+  RpcResponseSchema,
+} from '../../../../_common/schemas/zod/rpc';
+import { fetchData, type FetchDataError } from './fetchData/fetchData';
+import {
+  parseJsonResponse,
+  type ParseJsonResponseError,
+} from './parseJsonResponse';
+import type { InnerRpcEndpoint } from '../../../../../types/client/transport/transport';
+import type { Result } from '../../../../../types/_common/common';
+import { result } from '../../../../_common/utils/result';
+import type { SendRequestContext } from '../../../../../types/client/transport/sendRequest';
+import { createNatError, type NatError } from '../../../../_common/natError';
+import { extractRpcErrors, type HighLevelRpcErrors } from './extractRpcErrors';
+
+type SendOnceError =
+  | FetchDataError
+  | ParseJsonResponseError
+  | NatError<'Client.Transport.SendRequest.Response.InvalidSchema'>
+  | HighLevelRpcErrors;
+
+export type SendOnceResult = Result<RpcResponse, SendOnceError>;
+
+export const sendOnce = async (
+  context: SendRequestContext,
+  rpc: InnerRpcEndpoint,
+): Promise<SendOnceResult> => {
+  const body = {
+    jsonrpc: '2.0',
+    id: 0,
+    method: context.method,
+    params: context.params,
+  };
+
+  // Try to send request to the rpc;
+  const response = await fetchData(context, rpc, body);
+  if (!response.ok) return response;
+
+  // Try to parse response JSON to object;
+  const json = await parseJsonResponse(response.value, rpc);
+  if (!json.ok) return json;
+
+  // We receive data from RPC in snake_case format - but we want to use camelCase in the lib;
+  const camelCased = snakeToCamelCase(json.value);
+
+  // Perform high level check if the RPC response matches the expected format;
+  // We will do a precise check inside each client method (it's better for tree-shaking);
+  const generalRpcResponse = RpcResponseSchema.safeParse(camelCased);
+
+  if (!generalRpcResponse.success) {
+    return result.err(
+      createNatError({
+        kind: 'Client.Transport.SendRequest.Response.InvalidSchema',
+        context: { zodError: generalRpcResponse.error },
+      }),
+    );
+  }
+
+  // If an error happened during the request execution on the RPC side -
+  // we want to extract some top level errors and see if we can try to resend the request
+  // to the current or to the next RPC;
+  return extractRpcErrors(generalRpcResponse.data, rpc);
+};

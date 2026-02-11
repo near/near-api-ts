@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@near-api-ts/core": "workspace:*",
+    "near-api-ts": "workspace:*",
     "zod": "^4.0.11"
   }
 }

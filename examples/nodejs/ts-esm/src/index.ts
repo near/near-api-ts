@@ -5,7 +5,7 @@ import {
   transfer,
   near,
   isNatError,
-} from '@near-api-ts/core';
+} from 'near-api-ts';
 
 // Read some data from the chain
 const client = createTestnetClient();

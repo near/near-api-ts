@@ -1,4 +1,4 @@
-import { createClient, testnet } from '@near-api-ts/core';
+import { createClient, testnet } from 'near-api-ts';
 
 const client = createClient({ network: testnet });
 

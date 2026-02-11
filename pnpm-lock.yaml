@@ -32,9 +32,6 @@ importers:
       '@types/node':
         specifier: ^24.10.9
         version: 24.10.9
-      consola:
-        specifier: ^3.4.2
-        version: 3.4.2
       express:
         specifier: ^5.2.1
         version: 5.2.1
@@ -84,7 +81,7 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/node@24.10.9)(terser@5.46.0)(tsx@4.21.0)
 
-  packages/core:
+  packages/near-api-ts:
     dependencies:
       '@near-js/jsonrpc-types':
         specifier: ^1.6.0
@@ -106,21 +103,6 @@ importers:
         version: 4.17.23
       zod:
         specifier: ^4.3.6
-        version: 4.3.6
-
-  packages/near-api-ts:
-    dependencies:
-      '@near-api-ts/core':
-        specifier: workspace:*
-        version: link:../core
-
-  packages/types:
-    dependencies:
-      '@scure/base':
-        specifier: ^1.2.6
-        version: 1.2.6
-      zod:
-        specifier: ^4.0.11
         version: 4.3.6
 
 packages:

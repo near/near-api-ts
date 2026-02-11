@@ -1,0 +1,100 @@
+import type {
+  CreateClientErrorVariant,
+  CreateClientInternalErrorKind,
+} from './createClient';
+import type { SendRequest } from './transport/sendRequest';
+import type {
+  GetAccountInfo,
+  GetAccountInfoErrorVariant,
+  GetAccountInfoInternalErrorKind,
+  SafeGetAccountInfo,
+} from './methods/account/getAccountInfo';
+import type {
+  GetAccountAccessKey,
+  GetAccountAccessKeyErrorVariant,
+  GetAccountAccessKeyInternalErrorKind,
+  SafeGetAccountAccessKey,
+} from './methods/account/getAccountAccessKey';
+import type { TransportErrorVariant } from './transport/transport';
+import type {
+  SafeSendSignedTransaction,
+  SendSignedTransaction,
+  SendSignedTransactionErrorVariant,
+  SendSignedTransactionInternalErrorKind,
+} from './methods/transaction/sendSignedTransaction';
+import type {
+  GetAccountAccessKeys,
+  GetAccountAccessKeysErrorVariant,
+  GetAccountAccessKeysInternalErrorKind,
+  SafeGetAccountAccessKeys,
+} from './methods/account/getAccountAccessKeys';
+import type {
+  GetBlock,
+  GetBlockErrorVariant,
+  GetBlockInternalErrorKind,
+  SafeGetBlock,
+} from './methods/block/getBlock';
+import { ClientBrand } from '../../src/client/createClient';
+import type {
+  CallContractReadFunction,
+  CallContractReadFunctionErrorVariant,
+  CallContractReadFunctionInternalErrorKind,
+  SafeCallContractReadFunction,
+} from './methods/contract/callContractReadFunction';
+import type { Cache } from './cache/cache';
+import type {
+  GetRecentBlockHash,
+  GetRecentBlockHashErrorVariant,
+  GetRecentBlockHashInternalErrorKind,
+  SafeGetRecentBlockHash,
+} from './cache/getRecentBlockHash';
+
+export type ClientErrorVariant =
+  | CreateClientErrorVariant
+  | TransportErrorVariant
+  | GetAccountInfoErrorVariant
+  | GetAccountAccessKeyErrorVariant
+  | GetAccountAccessKeysErrorVariant
+  | CallContractReadFunctionErrorVariant
+  | GetBlockErrorVariant
+  | GetRecentBlockHashErrorVariant
+  | SendSignedTransactionErrorVariant;
+
+export type ClientInternalErrorKind =
+  | CreateClientInternalErrorKind
+  | GetAccountInfoInternalErrorKind
+  | GetAccountAccessKeyInternalErrorKind
+  | GetAccountAccessKeysInternalErrorKind
+  | CallContractReadFunctionInternalErrorKind
+  | GetBlockInternalErrorKind
+  | GetRecentBlockHashInternalErrorKind
+  | SendSignedTransactionInternalErrorKind;
+
+export type ClientContext = {
+  sendRequest: SendRequest;
+  cache: Cache;
+};
+
+export type Client = {
+  [ClientBrand]: true;
+  // throwable variants
+  getAccountInfo: GetAccountInfo;
+  getAccountAccessKey: GetAccountAccessKey;
+  getAccountAccessKeys: GetAccountAccessKeys;
+  callContractReadFunction: CallContractReadFunction;
+  getBlock: GetBlock;
+  getRecentBlockHash: GetRecentBlockHash;
+  sendSignedTransaction: SendSignedTransaction;
+  // safe variants
+  safeGetAccountInfo: SafeGetAccountInfo;
+  safeGetAccountAccessKey: SafeGetAccountAccessKey;
+  safeGetAccountAccessKeys: SafeGetAccountAccessKeys;
+  safeCallContractReadFunction: SafeCallContractReadFunction;
+  safeGetBlock: SafeGetBlock;
+  safeGetRecentBlockHash: SafeGetRecentBlockHash;
+  safeSendSignedTransaction: SafeSendSignedTransaction;
+
+  // getContractState: GetContractState;
+  // getProtocolConfig: GetProtocolConfig;
+  // getGasPrice: GetGasPrice;
+};
