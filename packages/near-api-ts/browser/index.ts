@@ -1,1 +1,1 @@
-export const browser = 1;
+export * from '../universal/index';

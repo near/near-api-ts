@@ -1,8 +1,4 @@
-import type {
-  PrivateKey,
-  PublicKey,
-  Signature,
-} from '../crypto';
+import type { PrivateKey, PublicKey, Signature } from '../crypto';
 import type { Hex, Result } from '../common';
 import type { NatError } from '../../../src/_common/natError';
 import type {
@@ -47,8 +43,8 @@ export type KeyPair = {
   safeSign: SafeSign;
 };
 
-export type CreateKeyPair = (privateKey: PrivateKey) => KeyPair;
+export type CreateKeyPair = (privateKey: string) => KeyPair;
 
 export type SafeCreateKeyPair = (
-  privateKey: PrivateKey,
+  privateKey: string,
 ) => Result<KeyPair, CreateKeyPairError>;

@@ -6,7 +6,7 @@ describe('KeyService.FindKeyPair', () => {
   it('Ok', async () => {
     const kp1 = randomEd25519KeyPair();
 
-    const keyService = await createMemoryKeyService({
+    const keyService = createMemoryKeyService({
       keySource: { privateKey: kp1.privateKey },
     });
 
@@ -15,7 +15,7 @@ describe('KeyService.FindKeyPair', () => {
   });
 
   it('MemoryKeyService.SignTransaction.SigningKeyPair.NotFound', async () => {
-    const keyService = await createMemoryKeyService({
+    const keyService = createMemoryKeyService({
       keySource: { privateKey: randomEd25519KeyPair().privateKey },
     });
 

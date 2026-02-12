@@ -1,7 +1,7 @@
-import type { KeyPair } from '../../_common/keyPair/keyPair';
-import type { PublicKey } from '../../_common/crypto';
-import type { NatError } from '../../../src/_common/natError';
-import type { Result } from '../../_common/common';
+import type { KeyPair } from '@universal/types/_common/keyPair/keyPair';
+import type { PublicKey } from '@universal/types/_common/crypto';
+import type { NatError } from '@universal/src/_common/natError';
+import type { Result } from '@universal/types/_common/common';
 
 type FindKeyPairArgs = { publicKey: PublicKey };
 

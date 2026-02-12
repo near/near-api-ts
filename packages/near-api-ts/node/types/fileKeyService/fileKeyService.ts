@@ -1,18 +1,17 @@
-import type { PublicKey } from '../../_common/crypto';
-import type { KeyPair } from '../../_common/keyPair/keyPair';
+import type { PublicKey } from '@universal/types/_common/crypto';
+import type { KeyPair } from '@universal/types/_common/keyPair/keyPair';
 import type {
   InvalidSchemaContext,
   InternalErrorContext,
-} from '../../natError';
+} from '@universal/types/natError';
 import type {
   SafeSignTransaction,
   SignTransaction,
-} from './createSignTransaction';
+} from './signTransaction';
 import type {
   FindKeyPair,
   SafeFindKeyPair,
 } from './createFindKeyPair';
-import { FileKeyServiceBrand } from '../../../src/keyServices/fileKeyService/createFileKeyService';
 
 export type FileKeyServiceErrorVariant =
   | {
@@ -61,11 +60,9 @@ export type KeyPairs = Record<PublicKey, KeyPair>;
 
 export type FileKeyServiceContext = {
   keyPairs: KeyPairs;
-  safeFindKeyPair: SafeFindKeyPair;
 };
 
 export type FileKeyService = {
-  [FileKeyServiceBrand]: true;
   signTransaction: SignTransaction;
   safeSignTransaction: SafeSignTransaction;
   findKeyPair: FindKeyPair;

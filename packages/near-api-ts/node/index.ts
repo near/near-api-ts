@@ -1,1 +1,3 @@
-export const node = 2;
+export * from '../universal/index';
+
+export { safeCreateFileKeyService } from './src/fileKeyService/fileKeyService';

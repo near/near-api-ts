@@ -50,8 +50,8 @@ import type {
 } from './actions/stake';
 import type {
   FileKeyServiceErrorVariant,
-  FileKeyServiceInternalErrorKind
-} from './keyServices/fileKeyService/fileKeyService';
+  FileKeyServiceInternalErrorKind,
+} from '../../node/types/fileKeyService/fileKeyService';
 
 export type InternalErrorContext = { cause: unknown };
 export type InvalidSchemaContext = { zodError: $ZodError };

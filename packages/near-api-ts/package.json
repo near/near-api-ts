@@ -39,6 +39,10 @@
     "dist",
     "universal/src",
     "universal/types",
+    "node/src",
+    "node/types",
+    "browser/src",
+    "browser/types",
     "package.json",
     "README.md"
   ],

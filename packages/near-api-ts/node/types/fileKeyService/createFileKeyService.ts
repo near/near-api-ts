@@ -1,6 +1,6 @@
-import type { NatError } from '../../../src/_common/natError';
-import type { PrivateKey } from '../../_common/crypto';
-import type { Result } from '../../_common/common';
+import type { NatError } from '@universal/src/_common/natError';
+import type { PrivateKey } from '@universal/types/_common/crypto';
+import type { Result } from '@universal/types/_common/common';
 import type { FileKeyService } from './fileKeyService';
 
 type KeySource = { privateKey: PrivateKey };
