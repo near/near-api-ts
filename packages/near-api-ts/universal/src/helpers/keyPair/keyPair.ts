@@ -51,7 +51,7 @@ export const safeKeyPair: SafeCreateKeyPair = wrapInternalError(
 
     return result.ok({
       publicKey: getPublicKey(validPrivateKey.data), // TODO use Lazy getter, like NearToken
-      privateKey,
+      privateKey: validPrivateKey.data.privateKey,
       sign: asThrowable(safeSign),
       safeSign,
     });

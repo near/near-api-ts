@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Playwright
+/packages/near-api-ts/browser/playwright-test-results
