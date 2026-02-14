@@ -7,9 +7,9 @@ import cn from './App.module.css';
 
 export const App = () => {
   const keyService = createIdbKeyService();
+  const keyPair = randomEd25519KeyPair();
 
   const addKeyToIdb = async () => {
-    const keyPair = randomEd25519KeyPair();
     const result = await keyService.addKey(keyPair);
     console.log('Result: ', result);
   };
@@ -20,14 +20,10 @@ export const App = () => {
   };
 
   const signTransaction = async () => {
-    const kp1 = randomEd25519KeyPair();
-
-    await keyService.addKey(kp1);
-
     const tx = await keyService.safeSignTransaction({
       transaction: {
         signerAccountId: 'nat',
-        signerPublicKey: kp1.publicKey,
+        signerPublicKey: keyPair.publicKey,
         nonce: 1,
         blockHash: 'UQcU8hMLAG96mBFEW8rwn5hj1icKbgVUE4G3QKUB5gy',
         action: transfer({ amount: { near: '1' } }),
@@ -37,11 +33,23 @@ export const App = () => {
     console.log(tx);
   };
 
+  const hasKey = async () => {
+    const result = await keyService.hasKey(keyPair);
+    console.log('Has key: ', result);
+  };
+
+  const removeKey = async () => {
+    const result = await keyService.removeKey(keyPair);
+    console.log('key removed', result);
+  };
+
   return (
     <div className={cn.app}>
       <button onClick={addKeyToIdb}>Add key to idb</button>
       <button onClick={clearIdb}>Clear idb</button>
       <button onClick={signTransaction}>Sign transaction</button>
+      <button onClick={hasKey}>Has key</button>
+      <button onClick={removeKey}>Remove key</button>
     </div>
   );
 };

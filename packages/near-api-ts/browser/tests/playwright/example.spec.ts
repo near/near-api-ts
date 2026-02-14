@@ -2,7 +2,8 @@ import { test, expect } from '@playwright/test'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
-// заміна __dirname
+// TODO make it works
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 

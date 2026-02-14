@@ -9,15 +9,17 @@ export const createSafeAddKey =
     const kp = keyPair(args.privateKey);
 
     // 2. Put the private key to the Idb
-    const transaction = context.idb.transaction(['keyPairs'], 'readwrite');
-    const keyPairs = transaction.objectStore('keyPairs');
-
-    const request = keyPairs.put(kp.privateKey, kp.publicKey);
+    const request = context.idb
+      .transaction(['keyPairs'], 'readwrite')
+      .objectStore('keyPairs')
+      .put(kp.privateKey, kp.publicKey);
 
     await new Promise((resolve, reject) => {
       request.onsuccess = () => {
         console.log('Key added', request.result);
-        resolve(request.result);
+        context.keyPairs.set(kp.publicKey, kp);
+
+        resolve(result.ok(request.result));
       };
 
       request.onerror = () => {
@@ -26,8 +28,6 @@ export const createSafeAddKey =
       };
     });
 
-    // 4. Add the key to the cache
-    context.keyPairs.set(kp.publicKey, kp);
 
     return result.ok(kp);
   };

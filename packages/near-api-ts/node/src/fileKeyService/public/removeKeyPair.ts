@@ -7,6 +7,8 @@ export const createSafeRemoveKeyPair = (context: any) => async (args: any) => {
 
   try {
     await rm(fullFilePath, { force: true });
+    // todo remove from cache
+
     return result.ok(true);
   } catch (e) {
     return result.err(false);

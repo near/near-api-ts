@@ -1,10 +1,9 @@
 import { result } from '@universal/src/_common/utils/result';
+import type { IdbKeyServiceContext } from '../idbKeyService';
 
-export const createHasKeyPair = (context: any) => async (args: any) => {
-  try {
-    const keyPair = context.getKeyPair(args.publicKey);
-    return result.ok(true);
-  } catch (e) {
-    return result.err(false);
-  }
-};
+export const createSafeHasKey =
+  (context: IdbKeyServiceContext) => async (args: any) => {
+    const keyPair = await context.getKeyPair(args.publicKey);
+    /// TODO rework
+    return result.ok(keyPair.ok);
+  };

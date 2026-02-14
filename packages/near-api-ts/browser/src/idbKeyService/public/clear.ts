@@ -8,6 +8,7 @@ export const createSafeClear = (context: IdbKeyServiceContext) => async () => {
   const keyPairs = transaction.objectStore('keyPairs');
 
   keyPairs.clear();
+  context.keyPairs.clear();
 
   return result.ok(true);
 };

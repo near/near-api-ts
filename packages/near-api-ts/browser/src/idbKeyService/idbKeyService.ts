@@ -10,6 +10,8 @@ import { createSafeClear } from './public/clear';
 import { createGetKeyPair } from './private/getKeyPair';
 import type { Result } from '@universal/types/_common/common';
 import { createSafeSignTransaction } from './public/signTransaction';
+import {createSafeRemoveKey} from './public/removeKey';
+import {createSafeHasKey} from './public/hasKey';
 
 export type IdbKeyServiceContext = {
   idbName: string;
@@ -34,20 +36,20 @@ export const safeCreateIdbKeyService: any = wrapInternalError(
     context.getKeyPair = createGetKeyPair(context);
 
     const safeAddKey = createSafeAddKey(context);
-    // const safeHasKeyPair = createSafeAddKeyPair(context);
-    // const safeRemoveKeyPair = createSafeRemoveKeyPair(context);
+    const safeHasKey = createSafeHasKey(context);
+    const safeRemoveKey = createSafeRemoveKey(context);
     const safeClear = createSafeClear(context);
     const safeSignTransaction = createSafeSignTransaction(context);
 
     return result.ok({
       addKey: asThrowable(safeAddKey),
-      // hasKeyPair: asThrowable(safeHasKeyPair),
-      // removeKeyPair: asThrowable(safeRemoveKeyPair),
+      hasKey: asThrowable(safeHasKey),
+      removeKey: asThrowable(safeRemoveKey),
       clear: asThrowable(safeClear),
       signTransaction: asThrowable(safeSignTransaction),
       safeAddKey,
-      // safeHasKeyPair,
-      // safeRemoveKeyPair,
+      safeHasKey,
+      safeRemoveKey,
       safeClear,
       safeSignTransaction,
     });

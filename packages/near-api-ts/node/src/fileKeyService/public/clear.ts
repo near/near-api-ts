@@ -7,6 +7,8 @@ export const createSafeClear = (context: any) => async () => {
       recursive: true,
       force: true,
     });
+    // todo clear cache
+
     return result.ok(true);
   } catch (e) {
     return result.err(false);
