@@ -1,6 +1,6 @@
+import { RpcEndpointsArgsSchema } from '@universal/src/client/transport/rpcEndpoints';
+import type { RpcEndpoints } from '@universal/types/client/transport/transport';
 import { describe, expect, it } from 'vitest';
-import { RpcEndpointsArgsSchema } from '../../../../../src/client/transport/rpcEndpoints';
-import type { RpcEndpoints } from '../../../../../types/client/transport/transport';
 import * as z from 'zod/mini';
 
 z.config(z.locales.en());

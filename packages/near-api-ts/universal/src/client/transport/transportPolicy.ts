@@ -1,7 +1,7 @@
+import { cloneDeep, mergeWith } from 'lodash-es'; // TODO replace with embedded fn
+import type { PartialDeep } from 'type-fest';
 import * as z from 'zod/mini';
 import type { TransportPolicy } from '../../../types/client/transport/transport';
-import type { PartialDeep } from 'type-fest';
-import { cloneDeep, mergeWith } from 'lodash-es'; // TODO replace with embedded fn
 
 const Regular = z.literal('Regular');
 const Archival = z.literal('Archival');

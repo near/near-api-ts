@@ -1,7 +1,7 @@
-import type { Transport } from '../transport/transport';
-import type { NearToken } from '../../_common/nearToken';
 import type { BlockHash, Result } from '../../_common/common';
+import type { NearToken } from '../../_common/nearToken';
 import type { SendRequestError } from '../transport/sendRequest';
+import type { Transport } from '../transport/transport';
 import type { SafeGetRecentBlockHash } from './getRecentBlockHash';
 
 export type GetStoragePricePerByte = (args?: {

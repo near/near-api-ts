@@ -1,15 +1,11 @@
-import type {
-  AccountAccessKey,
-  FunctionCallKey,
-} from '../../../_common/accountAccessKey';
-import type { PublicKey } from '../../../_common/crypto';
+import type { NatError } from '@universal/src/_common/natError';
+import type { MemorySignerErrorContext } from '@universal/types/signers/memorySigner/_common/errorContext';
+import type { FunctionCallKey } from '../../../_common/accountAccessKey';
 import type { AccountId, Nonce, Result } from '../../../_common/common';
-import type { AccessTypePriority, Task } from './taskQueue';
-import type { NatError } from '../../../../src/_common/natError';
+import type { PublicKey } from '../../../_common/crypto';
 import type { MemorySignerContext } from '../memorySigner';
 import type { CreateMemorySignerArgs } from '../public/createMemorySigner';
-import type { GetAccountAccessKeysError } from '../../../client/methods/account/getAccountAccessKeys';
-import type { MemorySignerErrorContext } from '@universal/types/signers/memorySigner/_common/errorContext';
+import type { Task } from './taskQueue';
 
 export interface KeyPoolInnerErrorRegistry {
   'MemorySigner.KeyPool.AccessKeys.NotLoaded': MemorySignerErrorContext['KeyPool']['AccessKeys']['NotLoaded'];

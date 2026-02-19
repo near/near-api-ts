@@ -1,13 +1,10 @@
 import { ed25519 } from '@noble/curves/ed25519';
+import type { Hex } from '../../../types/_common/common';
+import type { CreateRandomEd25519KeyPair, SafeCreateRandomEd25519KeyPair } from '../../../types/_common/keyPair/randomEd25519KeyPair';
 import { toEd25519CurveString } from '../../_common/transformers/toCurveString';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
-import type { Hex } from '../../../types/_common/common';
-import type {
-  CreateRandomEd25519KeyPair,
-  SafeCreateRandomEd25519KeyPair,
-} from '../../../types/_common/keyPair/randomEd25519KeyPair';
 import { signByEd25519Key } from './_common/signByEd25519Key';
 
 const createSafeSignByEd25519Key = (u8PrivateKey: Uint8Array) =>

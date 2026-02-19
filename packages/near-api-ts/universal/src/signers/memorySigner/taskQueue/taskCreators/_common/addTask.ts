@@ -1,9 +1,6 @@
-import { result } from '../../../../../_common/utils/result';
+import type { Task, TaskQueueContext } from '@universal/types/signers/memorySigner/inner/taskQueue';
 import { createNatError } from '../../../../../_common/natError';
-import type {
-  Task,
-  TaskQueueContext,
-} from '../../../../../../types/signers/memorySigner/inner/taskQueue';
+import { result } from '../../../../../_common/utils/result';
 
 export const addTask = (task: Task, taskQueueContext: TaskQueueContext) => {
   const { timeoutMs, signerContext, cleaners } = taskQueueContext;

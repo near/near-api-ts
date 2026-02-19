@@ -1,6 +1,6 @@
 import type { CacheState, CreateCache } from '../../../types/client/cache/cache';
-import { createGetStoragePricePerByte } from './getStoragePricePerByte';
 import { createGetRecentBlockHash } from './getRecentBlockHash';
+import { createGetStoragePricePerByte } from './getStoragePricePerByte';
 
 export const createCache: CreateCache = (args) => {
   const state: CacheState = {

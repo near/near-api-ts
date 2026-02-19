@@ -1,13 +1,9 @@
-import type {
-  ContractFunctionName,
-  MaybeJsonLikeValue,
-  Result,
-} from '../_common/common';
-import type { KeyIf } from '../utils';
-import type { NearTokenArgs } from '../_common/nearToken';
-import type { NearGasArgs } from '../_common/nearGas';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
 import type { NatError } from '../../src/_common/natError';
+import type { ContractFunctionName, MaybeJsonLikeValue, Result } from '../_common/common';
+import type { NearGasArgs } from '../_common/nearGas';
+import type { NearTokenArgs } from '../_common/nearToken';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
+import type { KeyIf } from '../utils';
 
 export interface CreateFunctionCallActionPublicErrorRegistry {
   'CreateAction.FunctionCall.Args.InvalidSchema': InvalidSchemaErrorContext;

@@ -1,6 +1,6 @@
-import type { SignedTransaction, Transaction } from '../../_common/transaction/transaction';
 import type { NatError } from '../../../src/_common/natError';
 import type { Result } from '../../_common/common';
+import type { SignedTransaction, Transaction } from '../../_common/transaction/transaction';
 
 type SignTransactionArgs = {
   transaction: Transaction;

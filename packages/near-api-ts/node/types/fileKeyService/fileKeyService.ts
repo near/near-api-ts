@@ -1,7 +1,4 @@
-import type {
-  InternalErrorContext,
-  InvalidSchemaErrorContext,
-} from '@universal/types/natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '@universal/types/natError';
 
 export interface FileKeyServicePublicErrorRegister {
   'CreateFileKeyService.Internal': InternalErrorContext;

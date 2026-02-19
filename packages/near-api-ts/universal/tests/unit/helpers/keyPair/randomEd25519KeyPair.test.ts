@@ -1,4 +1,4 @@
-import { expect, describe, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { keyPair, randomEd25519KeyPair } from '../../../../index';
 
 describe('randomEd25519KeyPair', () => {

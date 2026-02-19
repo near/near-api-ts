@@ -1,8 +1,8 @@
 import * as z from 'zod/mini';
-import { PublicKeySchema } from '../../common/publicKey';
 import { AccountIdSchema } from '../../common/accountId';
 import { ContractFunctionNameSchema } from '../../common/common';
 import { NearTokenArgsSchema } from '../../common/nearToken';
+import { PublicKeySchema } from '../../common/publicKey';
 
 const AddFullAccessKeyActionSchema = z.object({
   actionType: z.literal('AddKey'),

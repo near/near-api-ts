@@ -1,20 +1,12 @@
-import type { TransactionIntent } from '../../../_common/transaction/transaction';
-import type { NatError } from '../../../../src/_common/natError';
-import type { Result } from '../../../_common/common';
-import type { MemorySignerContext } from '../memorySigner';
-import type {
-  InternalErrorContext,
-  InvalidSchemaErrorContext,
-} from '../../../natError';
-import type { SendSignedTransactionOutput } from '../../../client/methods/transaction/sendSignedTransaction';
-import type { MemorySignerErrorContext } from '@universal/types/signers/memorySigner/_common/errorContext';
-import type {
-  AbortedErrorContext,
-  ExhaustedErrorContext,
-  PreferredRpcNotFoundErrorContext,
-  TimeoutErrorContext,
-} from '@universal/types/client/transport/sendRequest';
+import type { NatError } from '@universal/src/_common/natError';
 import type { TransactionErrorContext } from '@universal/types/_common/transaction/rpcTransactionErrorContext';
+import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '@universal/types/client/transport/sendRequest';
+import type { MemorySignerErrorContext } from '@universal/types/signers/memorySigner/_common/errorContext';
+import type { Result } from '../../../_common/common';
+import type { TransactionIntent } from '../../../_common/transaction/transaction';
+import type { SendSignedTransactionOutput } from '../../../client/methods/transaction/sendSignedTransaction';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';
+import type { MemorySignerContext } from '../memorySigner';
 
 export interface ExecuteTransactionPublicErrorRegistry {
   'MemorySigner.ExecuteTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;

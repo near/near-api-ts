@@ -1,14 +1,11 @@
 import { secp256k1 } from '@noble/curves/secp256k1';
+import type { Hex } from '../../../types/_common/common';
+import type { CreateRandomSecp256k1KeyPair, SafeCreateRandomSecp256k1KeyPair } from '../../../types/_common/keyPair/randomSecp256k1KeyPair';
 import { toSecp256k1CurveString } from '../../_common/transformers/toCurveString';
-import { signBySecp256k1Key } from './_common/signBySecp256k1Key';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
-import type {
-  CreateRandomSecp256k1KeyPair,
-  SafeCreateRandomSecp256k1KeyPair,
-} from '../../../types/_common/keyPair/randomSecp256k1KeyPair';
-import type { Hex } from '../../../types/_common/common';
+import { signBySecp256k1Key } from './_common/signBySecp256k1Key';
 
 const createSafeSignBySecp256k1Key = (u8PrivateKey: Uint8Array) =>
   wrapInternalError('Secp256k1KeyPair.Sign.Internal', (message: Hex) =>

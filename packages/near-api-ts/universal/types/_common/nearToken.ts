@@ -1,6 +1,6 @@
-import type { Result, Tokens, Units } from './common';
-import type { InvalidSchemaErrorContext, InternalErrorContext } from '../natError';
 import type { NatError } from '../../src/_common/natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
+import type { Result, Tokens, Units } from './common';
 
 export interface NearTokenPublicErrorRegistry {
   'CreateNearToken.Args.InvalidSchema': InvalidSchemaErrorContext;

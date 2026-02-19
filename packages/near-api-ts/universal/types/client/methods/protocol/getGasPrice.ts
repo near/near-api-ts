@@ -1,7 +1,7 @@
 import type { BlockId } from '../../../_common/common';
+import type { NearToken } from '../../../_common/nearToken';
 import type { ClientContext } from '../../client';
 import type { PartialTransportPolicy } from '../../transport/transport';
-import type {NearToken} from '../../../_common/nearToken';
 
 export type GetGasPriceArgs = {
   atMomentOf?: 'LatestOptimisticBlock' | BlockId;

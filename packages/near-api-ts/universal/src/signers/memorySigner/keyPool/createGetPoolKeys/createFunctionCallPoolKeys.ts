@@ -1,10 +1,7 @@
-import { createSetNonce, createLock, createUnlock } from './keyUtils';
-import type {
-  AccountAccessKey,
-  FunctionCallKey,
-} from '../../../../../types/_common/accountAccessKey';
-import type { MemorySignerContext } from '../../../../../types/signers/memorySigner/memorySigner';
-import type { PoolFunctionCallKey } from '../../../../../types/signers/memorySigner/inner/keyPool';
+import type { AccountAccessKey, FunctionCallKey } from '@universal/types/_common/accountAccessKey';
+import type { PoolFunctionCallKey } from '@universal/types/signers/memorySigner/inner/keyPool';
+import type { MemorySignerContext } from '@universal/types/signers/memorySigner/memorySigner';
+import { createLock, createSetNonce, createUnlock } from './keyUtils';
 
 const transformKey = (
   functionCallKey: FunctionCallKey,

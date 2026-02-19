@@ -1,14 +1,11 @@
-import type { MemorySignerContext } from '../../../../../types/signers/memorySigner/memorySigner';
-import type { CreateMemorySignerArgs } from '../../../../../types/signers/memorySigner/public/createMemorySigner';
-import type {
-  GetPoolKeys,
-  KeyPoolState,
-} from '../../../../../types/signers/memorySigner/inner/keyPool';
-import { result } from '../../../../_common/utils/result';
+import type { GetPoolKeys, KeyPoolState } from '@universal/types/signers/memorySigner/inner/keyPool';
+import type { MemorySignerContext } from '@universal/types/signers/memorySigner/memorySigner';
+import type { CreateMemorySignerArgs } from '@universal/types/signers/memorySigner/public/createMemorySigner';
 import { createNatError } from '../../../../_common/natError';
-import { getAllowedAccessKeys } from './getAllowedAccessKeys';
+import { result } from '../../../../_common/utils/result';
 import { createFullAccessPoolKeys } from './createFullAccessPoolKeys';
 import { createFunctionCallPoolKeys } from './createFunctionCallPoolKeys';
+import { getAllowedAccessKeys } from './getAllowedAccessKeys';
 
 // We use this function to create a pool only once and then reuse it for all tasks;
 // We want to avoid unnecessary network requests;

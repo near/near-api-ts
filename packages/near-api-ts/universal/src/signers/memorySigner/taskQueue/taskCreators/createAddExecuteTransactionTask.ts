@@ -1,6 +1,6 @@
-import { getAccessTypePriority } from './_common/getAccessTypePriority';
-import type { CreateAddExecuteTransactionTask } from '../../../../../types/signers/memorySigner/inner/taskQueue';
+import type { CreateAddExecuteTransactionTask } from '@universal/types/signers/memorySigner/inner/taskQueue';
 import { addTask } from './_common/addTask';
+import { getAccessTypePriority } from './_common/getAccessTypePriority';
 
 export const createAddExecuteTransactionTask: CreateAddExecuteTransactionTask =
   (taskQueueContext) => async (transactionIntent) => {

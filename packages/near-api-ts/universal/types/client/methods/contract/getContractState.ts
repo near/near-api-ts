@@ -1,10 +1,4 @@
-import type {
-  AccountId,
-  Base64String,
-  BlockHash,
-  BlockHeight,
-  BlockReference,
-} from '../../../_common/common';
+import type { AccountId, Base64String, BlockHash, BlockHeight, BlockReference } from '../../../_common/common';
 import type { ClientContext } from '../../client';
 import type { PartialTransportPolicy } from '../../transport/transport';
 

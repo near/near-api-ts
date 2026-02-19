@@ -1,5 +1,5 @@
-import type { InvalidSchemaErrorContext, InternalErrorContext } from '../natError';
 import type { NatError } from '../../src/_common/natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
 import type { Result } from './common';
 
 export interface NearGasPublicErrorRegistry {

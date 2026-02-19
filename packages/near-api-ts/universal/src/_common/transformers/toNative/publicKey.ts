@@ -1,4 +1,4 @@
-import type { NativePublicKey } from '../../../../types/_common/crypto';
+import type { NativePublicKey } from '@universal/types/_common/crypto';
 import type { InnerPublicKey } from '../../schemas/zod/common/publicKey';
 
 export const toNativePublicKey = ({

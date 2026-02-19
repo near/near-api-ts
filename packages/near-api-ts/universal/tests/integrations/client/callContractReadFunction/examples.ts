@@ -1,5 +1,5 @@
-import { createTestnetClient } from '../../../../index';
 import * as z from 'zod/mini';
+import { createTestnetClient } from '../../../../index';
 
 const contractAccountId = 'usdl.lantstool.testnet';
 const functionName = 'ft_balance_of';

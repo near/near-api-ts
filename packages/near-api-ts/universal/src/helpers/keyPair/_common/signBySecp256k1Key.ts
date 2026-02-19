@@ -1,8 +1,8 @@
-import type { Hex } from '../../../../types/_common/common';
-import { BinaryLengths } from '../../../_common/configs/constants';
 import { secp256k1 } from '@noble/curves/secp256k1';
-import { result } from '../../../_common/utils/result';
+import type { Hex } from '@universal/types/_common/common';
+import { BinaryLengths } from '../../../_common/configs/constants';
 import { toSecp256k1CurveString } from '../../../_common/transformers/toCurveString';
+import { result } from '../../../_common/utils/result';
 
 export const signBySecp256k1Key = (u8PrivateKey: Uint8Array, message: Hex) => {
   const u8SecretKey = u8PrivateKey.slice(0, BinaryLengths.Secp256k1.SecretKey);

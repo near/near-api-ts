@@ -1,6 +1,6 @@
 import type { NatError } from '../../../src/_common/natError';
-import type { PrivateKey } from '../../_common/crypto';
 import type { Result } from '../../_common/common';
+import type { PrivateKey } from '../../_common/crypto';
 import type { MemoryKeyService } from './memoryKeyService';
 
 type KeySource = { privateKey: PrivateKey };

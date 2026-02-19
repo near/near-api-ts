@@ -1,13 +1,10 @@
 import * as z from 'zod/mini';
-import type {
-  CreateTransferAction,
-  SafeCreateTransferAction,
-} from '../../../types/actions/transfer';
+import type { CreateTransferAction, SafeCreateTransferAction } from '../../../types/actions/transfer';
+import { createNatError } from '../../_common/natError';
 import { NearTokenArgsSchema } from '../../_common/schemas/zod/common/nearToken';
+import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
-import { asThrowable } from '../../_common/utils/asThrowable';
-import { createNatError } from '../../_common/natError';
 
 export const CreateTransferActionArgsSchema = z.object({
   amount: NearTokenArgsSchema,

@@ -1,8 +1,7 @@
-import { readFile } from 'node:fs/promises';
-import type { Result } from '@universal/types/_common/common';
-import path from 'path';
 import { keyPair } from '@universal/index';
 import { result } from '@universal/src/_common/utils/result';
+import { readFile } from 'node:fs/promises';
+import path from 'path';
 
 export const createGetKeyPair = (context: any) => async (publicKey: any) => {
   // 1. If the key pair is already in the cache, return it

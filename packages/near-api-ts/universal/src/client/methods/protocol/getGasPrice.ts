@@ -1,13 +1,7 @@
-import * as z from 'zod/mini';
 import { RpcGasPriceResponseSchema } from '@near-js/jsonrpc-types';
+import type { BlockHash, BlockHeight } from '@universal/types/_common/common';
+import type { CreateGetGasPrice, GetGasPriceArgs, GetGasPriceResult } from '@universal/types/client/methods/protocol/getGasPrice';
 import { throwableYoctoNear } from '../../../helpers/tokens/nearToken';
-import type {
-  CreateGetGasPrice,
-  GetGasPriceResult,
-  GetGasPriceArgs,
-} from '../../../../types/client/methods/protocol/getGasPrice';
-import { BlockIdSchema } from '../../../_common/schemas/zod/common/common';
-import type { BlockHash, BlockHeight } from '../../../../types/_common/common';
 
 const transformResult = (result: unknown): GetGasPriceResult => {
   const valid = RpcGasPriceResponseSchema().parse(result);

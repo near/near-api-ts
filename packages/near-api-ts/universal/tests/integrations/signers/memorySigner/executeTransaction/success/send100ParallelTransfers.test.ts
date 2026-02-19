@@ -1,15 +1,8 @@
+import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it, vi } from 'vitest';
-import {
-  createMemoryKeyService,
-  type Client,
-  transfer,
-  randomEd25519KeyPair,
-  addFullAccessKey,
-  createMemorySigner,
-} from '../../../../../../index';
+import { addFullAccessKey, type Client, createMemoryKeyService, createMemorySigner, randomEd25519KeyPair, transfer } from '../../../../../../index';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
-import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 
 vi.setConfig({ testTimeout: 60000 });
 

@@ -1,11 +1,5 @@
-import { expect, describe, it } from 'vitest';
-import {
-  nearToken,
-  near,
-  safeNear,
-  yoctoNear,
-  isNearToken,
-} from '../../../index';
+import { describe, expect, it } from 'vitest';
+import { isNearToken, near, nearToken, safeNear, yoctoNear } from '../../../index';
 import { assertNatErrKind } from '../../utils/assertNatErrKind';
 
 describe('NearToken', () => {

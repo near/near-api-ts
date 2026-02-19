@@ -1,4 +1,4 @@
-import type { BlockReference, NativeBlockReference } from '../../../../types/_common/common';
+import type { BlockReference, NativeBlockReference } from '@universal/types/_common/common';
 
 export const toNativeBlockReference = (
   blockReference?: BlockReference,

@@ -1,32 +1,11 @@
-import type {
-  AccountId,
-  BlockHash,
-  BlockHeight,
-  BlockReference,
-  ContractFunctionName,
-  MaybeJsonLikeValue,
-  Result,
-} from '../../../_common/common';
-import type { ClientContext } from '../../client';
+import type { NatError } from '@universal/src/_common/natError';
+import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '@universal/types/client/transport/sendRequest';
+import type { AccountId, BlockHash, BlockHeight, BlockReference, ContractFunctionName, MaybeJsonLikeValue, Result } from '../../../_common/common';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';
 import type { KeyIf } from '../../../utils';
+import type { ClientContext } from '../../client';
 import type { PartialTransportPolicy } from '../../transport/transport';
-import type {
-  RpcQueryBlockGarbageCollectedErrorContext,
-  RpcQueryBlockNotFoundErrorContext,
-  RpcQueryNotSyncedErrorContext,
-  RpcQueryShardNotTrackedErrorContext,
-} from '../_common/common';
-import type { NatError } from '../../../../src/_common/natError';
-import type {
-  InternalErrorContext,
-  InvalidSchemaErrorContext,
-} from '../../../natError';
-import type {
-  AbortedErrorContext,
-  ExhaustedErrorContext,
-  PreferredRpcNotFoundErrorContext,
-  TimeoutErrorContext,
-} from '@universal/types/client/transport/sendRequest';
+import type { RpcQueryBlockGarbageCollectedErrorContext, RpcQueryBlockNotFoundErrorContext, RpcQueryNotSyncedErrorContext, RpcQueryShardNotTrackedErrorContext } from '../_common/common';
 
 export interface CallContractReadFunctionPublicErrorRegistry {
   'Client.CallContractReadFunction.Args.InvalidSchema': InvalidSchemaErrorContext;

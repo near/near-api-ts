@@ -1,6 +1,6 @@
-import { result } from './result';
-import { createNatError, NatError } from '../natError';
 import type { NatErrorKind } from '@universal/types/natError';
+import { createNatError, NatError } from '../natError';
+import { result } from './result';
 
 /**
  * We use it when we want to change the error kind, and return a new error with

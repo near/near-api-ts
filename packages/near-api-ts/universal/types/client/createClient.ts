@@ -1,11 +1,8 @@
-import type { CreateTransportArgs } from './transport/transport';
-import type { Result } from '../_common/common';
-import type { Client } from './client';
-import type {
-  InvalidSchemaErrorContext,
-  InternalErrorContext,
-} from '../natError';
 import type { NatError } from '../../src/_common/natError';
+import type { Result } from '../_common/common';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
+import type { Client } from './client';
+import type { CreateTransportArgs } from './transport/transport';
 
 export interface CreateClientPublicErrorRegistry {
   'CreateClient.Args.InvalidSchema': InvalidSchemaErrorContext;

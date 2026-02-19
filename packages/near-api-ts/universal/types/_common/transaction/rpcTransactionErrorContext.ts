@@ -1,6 +1,6 @@
+import type { RpcResponse } from '@universal/src/_common/schemas/zod/rpc';
 import type { AccountId, CryptoHash, Nonce } from '../common';
 import type { NearToken } from '../nearToken';
-import type { RpcResponse } from '@universal/src/_common/schemas/zod/rpc';
 
 export type TransactionErrorContext = {
   Nonce: {

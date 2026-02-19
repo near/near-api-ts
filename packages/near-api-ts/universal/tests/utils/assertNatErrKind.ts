@@ -1,5 +1,5 @@
-import type { Result, ResultErr } from '../../types/_common/common';
 import { expect } from 'vitest';
+import type { Result, ResultErr } from '../../types/_common/common';
 
 export function assertNatErrKind<T, E extends { kind: string }>(
   res: Result<T, E>,

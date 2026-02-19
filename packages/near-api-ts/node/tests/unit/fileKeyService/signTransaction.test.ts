@@ -1,9 +1,7 @@
-import { describe, expect, it, vi } from 'vitest';
-import { throwableCreateFileKeyService } from '../../../src/fileKeyService/fileKeyService';
 import { randomEd25519KeyPair, transfer } from '@universal/index';
-import { assertNatErrKind } from '@universal/tests/utils/assertNatErrKind';
 import { log } from '@universal/tests/utils/common';
-import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
+import { throwableCreateFileKeyService } from 'node/src/fileKeyService/fileKeyService';
+import { it } from 'vitest';
 
 it('FileKeyService:Sign transaction', async () => {
   try {

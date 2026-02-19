@@ -1,9 +1,9 @@
-import * as z from 'zod/mini';
+import { createNatError } from '@universal/src/_common/natError';
+import { TransactionSchema } from '@universal/src/_common/schemas/zod/transaction/transaction';
 import { getTransactionHash } from '@universal/src/_common/utils/getTransactionHash';
 import { result } from '@universal/src/_common/utils/result';
 import { wrapInternalError } from '@universal/src/_common/utils/wrapInternalError';
-import { createNatError } from '@universal/src/_common/natError';
-import { TransactionSchema } from '@universal/src/_common/schemas/zod/transaction/transaction';
+import * as z from 'zod/mini';
 import type { IdbKeyServiceContext } from '../idbKeyService';
 
 const SignTransactionArgsSchema = z.object({

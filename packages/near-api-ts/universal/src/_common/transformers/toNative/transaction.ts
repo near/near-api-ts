@@ -1,23 +1,15 @@
-import { toNativePublicKey } from './publicKey';
-import { toNativeTransferAction } from './actions/transfer';
-import { toNativeCreateAccountAction } from './actions/createAccount';
+import type { NativeAction, NativeSignedTransaction, NativeTransaction } from '@universal/types/_common/transaction/transaction';
+import type { InnerAction, InnerSignedTransaction, InnerTransaction } from '../../schemas/zod/transaction/transaction';
 import { toNativeAddKeyAction } from './actions/addKey';
+import { toNativeCreateAccountAction } from './actions/createAccount';
+import { toNativeDeleteAccountAction } from './actions/deleteAccount';
+import { toNativeDeleteKeyAction } from './actions/deleteKey';
 import { toNativeDeployContractAction } from './actions/deployContract';
 import { toNativeFunctionCallAction } from './actions/functionCall';
-import { toNativeDeleteKeyAction } from './actions/deleteKey';
-import { toNativeDeleteAccountAction } from './actions/deleteAccount';
-import type {
-  NativeAction,
-  NativeSignedTransaction,
-  NativeTransaction,
-} from '../../../../types/_common/transaction/transaction';
-import type {
-  InnerAction,
-  InnerSignedTransaction,
-  InnerTransaction,
-} from '../../schemas/zod/transaction/transaction';
-import { toNativeSignature } from './signature';
 import { toNativeStakeAction } from './actions/stake';
+import { toNativeTransferAction } from './actions/transfer';
+import { toNativePublicKey } from './publicKey';
+import { toNativeSignature } from './signature';
 
 // biome-ignore format: keep compact
 const toNativeAction = (action: InnerAction): NativeAction => {

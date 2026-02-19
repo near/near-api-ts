@@ -1,5 +1,5 @@
+import type { Tokens } from '@universal/types/_common/common';
 import { pow10 } from './helpers';
-import type { Tokens } from '../../../../types/_common/common';
 
 /**
  * Convert token amount (decimal string) to minimal units (integer string).

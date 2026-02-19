@@ -1,11 +1,5 @@
-import { test, expect } from 'vitest';
+import { test } from 'vitest';
 import { createClient } from '../../../../index';
-import { createMockRpc } from '../../../utils/mockRpc';
-
-const log = (data: unknown) =>
-  console.dir(data, { depth: null, customInspect: true });
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 test(
   'test',
@@ -35,7 +29,7 @@ test(
       //   accountId: 'eclipseeer.near',
       //   publicKey: 'ed25519:3Dhkm2g9gKHQNeinRA1eH9ModH9aK3iJaw1uuKsRUuR1',
       // })
-       const controller = new AbortController();
+      const controller = new AbortController();
 
       setTimeout(() => {
         controller.abort(new Error('aborted by user'));

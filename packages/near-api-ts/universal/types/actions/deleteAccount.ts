@@ -1,6 +1,6 @@
+import type { NatError } from '../../src/_common/natError';
 import type { AccountId, Result } from '../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
-import type { NatError } from '../../src/_common/natError';
 
 export interface CreateDeleteActionPublicErrorRegistry {
   'CreateAction.DeleteAccount.Args.InvalidSchema': InvalidSchemaErrorContext;

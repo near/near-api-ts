@@ -1,9 +1,11 @@
 ## NEAR API TS
+
 TypeScript library for interactions with Near Protocol in the browser or Node.js
 
 [GitHub Repository](https://github.com/eclipseeer/near-api-ts/tree/main)
 
 **Installation**
+
 ```text
 pnpm add near-api-ts
 ```

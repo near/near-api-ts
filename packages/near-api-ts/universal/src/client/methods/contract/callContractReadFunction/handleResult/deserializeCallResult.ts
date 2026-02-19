@@ -1,9 +1,9 @@
-import type { InnerCallContractReadFunctionArgs } from '../../../../../../types/client/methods/contract/callContractReadFunction';
-import { wrapInternalError } from '../../../../../_common/utils/wrapInternalError';
-import { result } from '../../../../../_common/utils/result';
-import { fromJsonBytes } from '../../../../../_common/utils/common';
-import type { Result } from '../../../../../../types/_common/common';
+import type { Result } from '@universal/types/_common/common';
+import type { InnerCallContractReadFunctionArgs } from '@universal/types/client/methods/contract/callContractReadFunction';
 import type { NatError } from '../../../../../_common/natError';
+import { fromJsonBytes } from '../../../../../_common/utils/common';
+import { result } from '../../../../../_common/utils/result';
+import { wrapInternalError } from '../../../../../_common/utils/wrapInternalError';
 
 export const deserializeCallResult = (
   args: InnerCallContractReadFunctionArgs,

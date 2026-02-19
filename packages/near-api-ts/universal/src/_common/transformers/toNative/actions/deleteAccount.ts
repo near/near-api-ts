@@ -1,4 +1,4 @@
-import type { NativeDeleteAccountAction } from '../../../../../types/actions/deleteAccount';
+import type { NativeDeleteAccountAction } from '@universal/types/actions/deleteAccount';
 import type { InnerDeleteAccountAction } from '../../../schemas/zod/transaction/actions/deleteAccount';
 
 export const toNativeDeleteAccountAction = (

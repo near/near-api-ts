@@ -1,14 +1,7 @@
-import type {
-  IsKeyForTaskExist,
-  KeyPoolContext,
-  PoolKeys,
-} from '../../../../types/signers/memorySigner/inner/keyPool';
-import type {
-  FullAccessKeyPriority,
-  FunctionCallKeyPriority,
-} from '../../../../types/signers/memorySigner/inner/taskQueue';
-import { result } from '../../../_common/utils/result';
+import type { IsKeyForTaskExist, KeyPoolContext, PoolKeys } from '@universal/types/signers/memorySigner/inner/keyPool';
+import type { FullAccessKeyPriority, FunctionCallKeyPriority } from '@universal/types/signers/memorySigner/inner/taskQueue';
 import { createNatError } from '../../../_common/natError';
+import { result } from '../../../_common/utils/result';
 
 const isKeyExist = async (
   keyPriority: FullAccessKeyPriority | FunctionCallKeyPriority,

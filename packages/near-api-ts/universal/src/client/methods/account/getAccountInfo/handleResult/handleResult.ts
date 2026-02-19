@@ -1,13 +1,10 @@
-import * as z from 'zod/mini';
 import { AccountViewSchema } from '@near-js/jsonrpc-types';
-import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc';
-import type {
-  GetAccountInfoArgs,
-  GetAccountInfoOutput,
-} from '../../../../../../types/client/methods/account/getAccountInfo';
-import { result } from '../../../../../_common/utils/result';
+import type { NearToken } from '@universal/types/_common/nearToken';
+import type { GetAccountInfoArgs, GetAccountInfoOutput } from '@universal/types/client/methods/account/getAccountInfo';
+import * as z from 'zod/mini';
 import { createNatError } from '../../../../../_common/natError';
-import type { NearToken } from '../../../../../../types/_common/nearToken';
+import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc';
+import { result } from '../../../../../_common/utils/result';
 import { calculateAccountBalance } from './calculateAccountBalance';
 
 const RpcQueryViewAccountResultSchema = z.object({

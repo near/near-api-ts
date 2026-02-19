@@ -1,10 +1,7 @@
-import type { PrivateKey, PublicKey, Signature } from '../crypto';
-import type { Hex, Result } from '../common';
 import type { NatError } from '../../../src/_common/natError';
-import type {
-  InvalidSchemaErrorContext,
-  InternalErrorContext,
-} from '../../natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../natError';
+import type { Hex, Result } from '../common';
+import type { PrivateKey, PublicKey, Signature } from '../crypto';
 import type { Curve } from '../curveString';
 
 export interface KeyPairPublicErrorRegistry {

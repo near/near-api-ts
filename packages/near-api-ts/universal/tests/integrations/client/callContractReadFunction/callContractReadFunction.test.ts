@@ -1,19 +1,10 @@
-import { vi, expect, it, describe, beforeAll } from 'vitest';
-import { startSandbox } from '../../../utils/sandbox/startSandbox';
-import {
-  type Client,
-  createAccount,
-  createMemoryKeyService,
-  createMemorySigner,
-  deployContract,
-  functionCall,
-  near,
-  transfer,
-} from '../../../../index';
-import { assertNatErrKind } from '../../../utils/assertNatErrKind';
+import { toJsonBytes } from '@universal/src/_common/utils/common';
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { type Client, createAccount, createMemoryKeyService, createMemorySigner, deployContract, functionCall, near, transfer } from '../../../../index';
+import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 import { createDefaultClient, getFileBytes } from '../../../utils/common';
-import { toJsonBytes } from '../../../../src/_common/utils/common';
+import { startSandbox } from '../../../utils/sandbox/startSandbox';
 
 vi.setConfig({ testTimeout: 60000 });
 

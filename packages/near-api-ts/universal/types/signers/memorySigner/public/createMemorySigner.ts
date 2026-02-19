@@ -1,15 +1,10 @@
-import type { MemorySigner } from '../memorySigner';
+import type { NatError } from '@universal/src/_common/natError';
 import type { AccountId, Milliseconds, Result } from '../../../_common/common';
+import type { PublicKey } from '../../../_common/crypto';
 import type { Client } from '../../../client/client';
 import type { MemoryKeyService } from '../../../keyServices/memoryKeyService/memoryKeyService';
-import type { PublicKey } from '../../../_common/crypto';
-import type { NatError } from '../../../../src/_common/natError';
-import type {
-  ArgsInvalidSchema,
-  Internal,
-  InternalErrorContext,
-  InvalidSchemaErrorContext,
-} from '../../../natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';
+import type { MemorySigner } from '../memorySigner';
 
 export interface CreateMemorySignerPublicErrorRegistry {
   'CreateMemorySigner.Args.InvalidSchema': InvalidSchemaErrorContext;

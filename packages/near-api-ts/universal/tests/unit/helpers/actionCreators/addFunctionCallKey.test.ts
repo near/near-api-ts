@@ -1,9 +1,5 @@
 import { describe, it } from 'vitest';
-import {
-  addFunctionCallKey,
-  randomEd25519KeyPair,
-  safeAddFunctionCallKey,
-} from '../../../../index';
+import { addFunctionCallKey, randomEd25519KeyPair, safeAddFunctionCallKey } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
 describe('addFunctionCallKey action', () => {

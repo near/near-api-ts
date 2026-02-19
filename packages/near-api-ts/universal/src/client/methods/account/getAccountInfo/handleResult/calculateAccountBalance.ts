@@ -1,4 +1,4 @@
-import type { NearToken } from '../../../../../../types/_common/nearToken';
+import type { NearToken } from '@universal/types/_common/nearToken';
 import { yoctoNear } from '../../../../../../index';
 import type { RpcQueryViewAccountResult } from './handleResult';
 

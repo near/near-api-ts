@@ -1,6 +1,6 @@
-import type { Task, TaskId } from './taskQueue';
-import type { MemorySignerContext } from '../memorySigner';
 import type { Result } from '../../../_common/common';
+import type { MemorySignerContext } from '../memorySigner';
+import type { Task, TaskId } from './taskQueue';
 
 export type ActiveTasks = Record<
   TaskId,

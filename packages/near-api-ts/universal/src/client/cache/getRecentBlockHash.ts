@@ -1,10 +1,10 @@
 import * as z from 'zod/mini';
-import { result } from '../../_common/utils/result';
+import type { CreateSafeGetRecentBlockHash } from '../../../types/client/cache/getRecentBlockHash';
 import { createNatError } from '../../_common/natError';
 import { BlockHashSchema } from '../../_common/schemas/zod/common/common';
-import type { CreateSafeGetRecentBlockHash } from '../../../types/client/cache/getRecentBlockHash';
-import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 import { repackError } from '../../_common/utils/repackError';
+import { result } from '../../_common/utils/result';
+import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 
 const PartialBlockResultSchema = z.object({
   header: z.object({

@@ -1,20 +1,12 @@
+import type { CreateMemorySignerPublicErrorRegistry } from '@universal/types/signers/memorySigner/public/createMemorySigner';
 import type { AccountId } from '../../_common/common';
 import type { Client } from '../../client/client';
 import type { MemoryKeyService } from '../../keyServices/memoryKeyService/memoryKeyService';
 import type { KeyPool, KeyPoolInnerErrorRegistry } from './inner/keyPool';
 import type { Tasker } from './inner/tasker';
 import type { TaskQueue, TaskQueueInnerErrorRegistry } from './inner/taskQueue';
-import type {
-  SafeSignTransactionIntent,
-  SignTransactionIntent,
-  SignTransactionPublicErrorRegistry,
-} from './public/createSignTransaction';
-import type {
-  ExecuteTransaction,
-  ExecuteTransactionPublicErrorRegistry,
-  SafeExecuteTransaction,
-} from './public/createExecuteTransaction';
-import type { CreateMemorySignerPublicErrorRegistry } from '@universal/types/signers/memorySigner/public/createMemorySigner';
+import type { ExecuteTransaction, ExecuteTransactionPublicErrorRegistry, SafeExecuteTransaction } from './public/createExecuteTransaction';
+import type { SafeSignTransactionIntent, SignTransactionIntent, SignTransactionPublicErrorRegistry } from './public/createSignTransaction';
 
 export interface MemorySignerInnerErrorRegistry
   extends KeyPoolInnerErrorRegistry,

@@ -1,10 +1,10 @@
-import { tryOneRound } from '../3-tryOneRound/tryOneRound';
-import { safeSleep } from '../../../../_common/utils/sleep';
+import type { SendRequestContext } from '@universal/types/client/transport/sendRequest';
+import type { InnerRpcEndpoint } from '@universal/types/client/transport/transport';
+import { isNatErrorOf, type NatError } from '../../../../_common/natError';
 import { combineAbortSignals } from '../../../../_common/utils/common';
-import type { InnerRpcEndpoint } from '../../../../../types/client/transport/transport';
-import type { SendRequestContext } from '../../../../../types/client/transport/sendRequest';
+import { safeSleep } from '../../../../_common/utils/sleep';
+import { tryOneRound } from '../3-tryOneRound/tryOneRound';
 import type { SendOnceResult } from '../5-sendOnce/sendOnce';
-import { type NatError, isNatErrorOf } from '../../../../_common/natError';
 
 const shouldTryAnotherRound = (sendOnceResult: SendOnceResult): boolean =>
   !sendOnceResult.ok &&

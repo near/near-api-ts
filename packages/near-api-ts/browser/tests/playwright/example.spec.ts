@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test'
-import path from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { expect, test } from '@playwright/test';
+import path from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 // TODO make it works
 

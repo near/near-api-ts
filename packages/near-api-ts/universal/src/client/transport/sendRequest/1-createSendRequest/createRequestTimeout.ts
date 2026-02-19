@@ -1,4 +1,4 @@
-import type { Milliseconds } from '../../../../../types/_common/common';
+import type { Milliseconds } from '@universal/types/_common/common';
 import { createNatError } from '../../../../_common/natError';
 
 export const createRequestTimeout = (requestTimeoutMs: Milliseconds) => {

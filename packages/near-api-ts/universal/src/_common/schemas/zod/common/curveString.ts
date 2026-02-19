@@ -1,7 +1,7 @@
+import { base58 } from '@scure/base';
+import type { Curve, CurveString } from '@universal/types/_common/curveString';
 import * as z from 'zod/mini';
 import { oneLine } from '../../../utils/common';
-import type { Curve, CurveString } from '../../../../../types/_common/curveString';
-import { base58 } from '@scure/base';
 
 export const CurveStringSchema = z.pipe(
   z.string().check(

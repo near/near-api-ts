@@ -1,12 +1,7 @@
+import type { CreateTaskQueue, RemoveTask, TaskQueue, TaskQueueContext } from '@universal/types/signers/memorySigner/inner/taskQueue';
 import { createFindTaskForKey } from './createFindTaskForKey';
-import { createAddSignTransactionTask } from './taskCreators/createAddSignTransactionTask';
 import { createAddExecuteTransactionTask } from './taskCreators/createAddExecuteTransactionTask';
-import type {
-  CreateTaskQueue,
-  RemoveTask,
-  TaskQueue,
-  TaskQueueContext,
-} from '../../../../types/signers/memorySigner/inner/taskQueue';
+import { createAddSignTransactionTask } from './taskCreators/createAddSignTransactionTask';
 
 export const createTaskQueue: CreateTaskQueue = (
   signerContext,

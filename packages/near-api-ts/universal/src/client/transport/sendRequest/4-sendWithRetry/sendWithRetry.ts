@@ -1,12 +1,9 @@
-import { sendOnce, type SendOnceResult } from '../5-sendOnce/sendOnce';
-import { safeSleep } from '../../../../_common/utils/sleep';
-import {
-  combineAbortSignals,
-  randomBetween,
-} from '../../../../_common/utils/common';
-import type { InnerRpcEndpoint } from '../../../../../types/client/transport/transport';
-import type { SendRequestContext } from '../../../../../types/client/transport/sendRequest';
+import type { SendRequestContext } from '@universal/types/client/transport/sendRequest';
+import type { InnerRpcEndpoint } from '@universal/types/client/transport/transport';
 import { isNatErrorOf, NatError } from '../../../../_common/natError';
+import { combineAbortSignals, randomBetween } from '../../../../_common/utils/common';
+import { safeSleep } from '../../../../_common/utils/sleep';
+import { sendOnce, type SendOnceResult } from '../5-sendOnce/sendOnce';
 
 // Decorrelated Jitter - https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/
 const getBackoffDelay = (

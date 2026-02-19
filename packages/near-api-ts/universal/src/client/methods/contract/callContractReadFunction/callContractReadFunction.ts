@@ -1,24 +1,17 @@
 import { base64 } from '@scure/base';
+import { repackError } from '@universal/src/_common/utils/repackError';
+import type { CreateSafeCallContractReadFunction, InnerCallContractReadFunctionArgs, SafeCallContractReadFunction } from '@universal/types/client/methods/contract/callContractReadFunction';
 import * as z from 'zod/mini';
-import { toNativeBlockReference } from '../../../../_common/transformers/toNative/blockReference';
-import type {
-  CreateSafeCallContractReadFunction,
-  InnerCallContractReadFunctionArgs,
-  SafeCallContractReadFunction,
-} from '../../../../../types/client/methods/contract/callContractReadFunction';
-import { AccountIdSchema } from '../../../../_common/schemas/zod/common/accountId';
-import {
-  BlockReferenceSchema,
-  PoliciesSchema,
-} from '../../../../_common/schemas/zod/client';
-import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
-import { result } from '../../../../_common/utils/result';
 import { createNatError } from '../../../../_common/natError';
+import { BlockReferenceSchema, PoliciesSchema } from '../../../../_common/schemas/zod/client';
+import { AccountIdSchema } from '../../../../_common/schemas/zod/common/accountId';
+import { ContractFunctionNameSchema } from '../../../../_common/schemas/zod/common/common';
+import { toNativeBlockReference } from '../../../../_common/transformers/toNative/blockReference';
+import { result } from '../../../../_common/utils/result';
+import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
 import { handleError } from './handleError';
 import { handleResult } from './handleResult/handleResult';
 import { serializeFunctionArgs } from './serializeFunctionArgs';
-import { ContractFunctionNameSchema } from '../../../../_common/schemas/zod/common/common';
-import { repackError } from '@universal/src/_common/utils/repackError';
 
 const GetAccountAccessKeyArgsSchema = z.object({
   contractAccountId: AccountIdSchema,

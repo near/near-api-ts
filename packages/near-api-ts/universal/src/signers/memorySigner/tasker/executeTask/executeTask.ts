@@ -1,9 +1,6 @@
-import { signTransaction } from './executors/signTransaction';
+import type { CreateExecuteTask, ExecuteTask } from '@universal/types/signers/memorySigner/inner/tasker';
 import { executeTransaction } from './executors/executeTransaction';
-import type {
-  CreateExecuteTask,
-  ExecuteTask,
-} from '../../../../../types/signers/memorySigner/inner/tasker';
+import { signTransaction } from './executors/signTransaction';
 
 export const createExecuteTask: CreateExecuteTask = (signerContext) => {
   const executeTask: ExecuteTask = async (task) => {

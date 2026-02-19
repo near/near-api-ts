@@ -1,9 +1,5 @@
 import { describe, it } from 'vitest';
-import {
-  deleteKey,
-  randomEd25519KeyPair,
-  safeDeleteKey,
-} from '../../../../index';
+import { deleteKey, randomEd25519KeyPair, safeDeleteKey } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
 describe('Delete Key action', () => {

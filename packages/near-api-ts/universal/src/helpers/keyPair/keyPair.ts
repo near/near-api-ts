@@ -1,24 +1,14 @@
+import type { PublicKey } from '../../../types/_common/crypto';
+import type { CreateKeyPair, SafeCreateKeyPair, SafeSign } from '../../../types/_common/keyPair/keyPair';
+import { BinaryLengths } from '../../_common/configs/constants';
+import { createResultNatError } from '../../_common/natError';
+import { type InnerPrivateKey, PrivateKeySchema } from '../../_common/schemas/zod/common/privateKey';
+import { toEd25519CurveString, toSecp256k1CurveString } from '../../_common/transformers/toCurveString';
+import { asThrowable } from '../../_common/utils/asThrowable';
+import { result } from '../../_common/utils/result';
+import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 import { signByEd25519Key } from './_common/signByEd25519Key';
 import { signBySecp256k1Key } from './_common/signBySecp256k1Key';
-import { result } from '../../_common/utils/result';
-import {
-  toEd25519CurveString,
-  toSecp256k1CurveString,
-} from '../../_common/transformers/toCurveString';
-import { BinaryLengths } from '../../_common/configs/constants';
-import { wrapInternalError } from '../../_common/utils/wrapInternalError';
-import { asThrowable } from '../../_common/utils/asThrowable';
-import type { PublicKey } from '../../../types/_common/crypto';
-import type {
-  CreateKeyPair,
-  SafeCreateKeyPair,
-  SafeSign,
-} from '../../../types/_common/keyPair/keyPair';
-import { createResultNatError } from '../../_common/natError';
-import {
-  type InnerPrivateKey,
-  PrivateKeySchema,
-} from '../../_common/schemas/zod/common/privateKey';
 
 const { Ed25519, Secp256k1 } = BinaryLengths;
 

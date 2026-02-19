@@ -1,19 +1,11 @@
-import type { BlockReference, Result } from '../../../_common/common';
 import type { RpcBlockResponse } from '@near-js/jsonrpc-types';
+import type { NatError } from '@universal/src/_common/natError';
+import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '@universal/types/client/transport/sendRequest';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '@universal/types/natError';
+import type { BlockReference, Result } from '../../../_common/common';
 import type { ClientContext } from '../../client';
 import type { PartialTransportPolicy } from '../../transport/transport';
-import type { NatError } from '../../../../src/_common/natError';
 import type { RpcQueryNotSyncedErrorContext } from '../_common/common';
-import type {
-  InternalErrorContext,
-  InvalidSchemaErrorContext,
-} from '@universal/types/natError';
-import type {
-  AbortedErrorContext,
-  ExhaustedErrorContext,
-  PreferredRpcNotFoundErrorContext,
-  TimeoutErrorContext,
-} from '@universal/types/client/transport/sendRequest';
 
 export interface GetBlockPublicErrorRegistry {
   'Client.GetBlock.Args.InvalidSchema': InvalidSchemaErrorContext;

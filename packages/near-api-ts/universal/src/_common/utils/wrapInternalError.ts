@@ -1,7 +1,7 @@
-import { result } from './result';
-import { createNatError, type NatError } from '../natError';
-import type { NatInternalErrorKind } from '../../../types/natError';
 import type { ResultErr } from '../../../types/_common/common';
+import type { NatInternalErrorKind } from '../../../types/natError';
+import { createNatError, type NatError } from '../natError';
+import { result } from './result';
 
 export type WrapInternalError = {
   // #1

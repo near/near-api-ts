@@ -1,8 +1,8 @@
-import { vi, expect, it, describe, beforeAll } from 'vitest';
-import { startSandbox } from '../../../utils/sandbox/startSandbox';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { type Client } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../utils/common';
+import { startSandbox } from '../../../utils/sandbox/startSandbox';
 
 vi.setConfig({ testTimeout: 60000 });
 

@@ -1,9 +1,5 @@
+import type { AccountId, ContractFunctionName, Nonce } from './common';
 import type { PublicKey } from './crypto';
-import type {
-  AccountId,
-  ContractFunctionName,
-  Nonce,
-} from './common';
 import type { NearToken } from './nearToken';
 
 export type FullAccessKey = {

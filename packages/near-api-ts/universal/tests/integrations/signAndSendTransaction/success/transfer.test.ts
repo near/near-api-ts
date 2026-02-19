@@ -1,13 +1,8 @@
+import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
-import {
-  createMemoryKeyService,
-  type Client,
-  type MemoryKeyService,
-  transfer,
-} from '../../../../index';
+import { type Client, createMemoryKeyService, type MemoryKeyService, transfer } from '../../../../index';
 import { createDefaultClient } from '../../../utils/common';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
-import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { testKeys } from '../../../utils/testKeys';
 
 vi.setConfig({ testTimeout: 60000 });

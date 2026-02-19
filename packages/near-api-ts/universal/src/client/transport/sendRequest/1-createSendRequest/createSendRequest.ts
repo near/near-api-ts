@@ -1,16 +1,13 @@
-import { mergeTransportPolicy } from '../../transportPolicy';
-import type { TransportContext } from '../../../../../types/client/transport/transport';
-import { tryMultipleRounds } from '../2-tryMultipleRounds/tryMultipleRounds';
-import { createExternalAbortSignal } from './createExternalAbortSignal';
-import { createRequestTimeout } from './createRequestTimeout';
-import { getAvailableRpcs } from './_common/getAvailableRpcs';
-import { handleMaybeUnknownBlock } from './handleMaybeUnknownBlock';
-import type {
-  SendRequest,
-  SendRequestContext,
-} from '../../../../../types/client/transport/sendRequest';
+import type { SendRequest, SendRequestContext } from '@universal/types/client/transport/sendRequest';
+import type { TransportContext } from '@universal/types/client/transport/transport';
 import { createNatError, isNatErrorOf } from '../../../../_common/natError';
 import { result } from '../../../../_common/utils/result';
+import { mergeTransportPolicy } from '../../transportPolicy';
+import { tryMultipleRounds } from '../2-tryMultipleRounds/tryMultipleRounds';
+import { getAvailableRpcs } from './_common/getAvailableRpcs';
+import { createExternalAbortSignal } from './createExternalAbortSignal';
+import { createRequestTimeout } from './createRequestTimeout';
+import { handleMaybeUnknownBlock } from './handleMaybeUnknownBlock';
 
 export const createSendRequest =
   (transportContext: TransportContext): SendRequest =>

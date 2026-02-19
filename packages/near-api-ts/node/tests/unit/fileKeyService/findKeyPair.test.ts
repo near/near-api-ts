@@ -1,10 +1,8 @@
-import { describe, expect, it, vi } from 'vitest';
-
-import { throwableCreateFileKeyService } from '../../../src/fileKeyService/fileKeyService';
 import { randomEd25519KeyPair } from '@universal/index';
-import { assertNatErrKind } from '@universal/tests/utils/assertNatErrKind';
 import { log } from '@universal/tests/utils/common';
-import {safeSleep} from '@universal/src/_common/utils/sleep';
+
+import { throwableCreateFileKeyService } from 'node/src/fileKeyService/fileKeyService';
+import { describe, it, vi } from 'vitest';
 
 vi.setConfig({ testTimeout: 60000 });
 

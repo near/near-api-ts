@@ -1,10 +1,5 @@
-import type {
-  FindTaskForKey,
-  FullAccessKeyPriority,
-  FunctionCallKeyPriority,
-  TaskQueueContext,
-} from '../../../../types/signers/memorySigner/inner/taskQueue';
-import type { PoolKey } from '../../../../types/signers/memorySigner/inner/keyPool';
+import type { PoolKey } from '@universal/types/signers/memorySigner/inner/keyPool';
+import type { FindTaskForKey, FullAccessKeyPriority, FunctionCallKeyPriority, TaskQueueContext } from '@universal/types/signers/memorySigner/inner/taskQueue';
 
 const checkIfKeyMatchRequirements = (
   keyPriority: FullAccessKeyPriority | FunctionCallKeyPriority,

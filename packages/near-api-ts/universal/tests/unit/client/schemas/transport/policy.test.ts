@@ -1,9 +1,6 @@
+import { defaultTransportPolicy, PartialTransportPolicySchema } from '@universal/src/client/transport/transportPolicy';
+import type { PartialTransportPolicy } from '@universal/types/client/transport/transport';
 import { describe, expect, it } from 'vitest';
-import {
-  defaultTransportPolicy,
-  PartialTransportPolicySchema,
-} from '../../../../../src/client/transport/transportPolicy';
-import type { PartialTransportPolicy } from '../../../../../types/client/transport/transport';
 import * as z from 'zod/mini';
 
 z.config(z.locales.en());

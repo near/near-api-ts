@@ -1,32 +1,12 @@
-import type {
-  AccountId,
-  CryptoHash,
-  BlockHash,
-  BlockHeight,
-  BlockReference,
-  Result,
-} from '../../../_common/common';
+import type { NatError } from '@universal/src/_common/natError';
+import type { RpcQueryViewAccountResult } from '@universal/src/client/methods/account/getAccountInfo/handleResult/handleResult';
+import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '@universal/types/client/transport/sendRequest';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '@universal/types/natError';
+import type { AccountId, BlockHash, BlockHeight, BlockReference, CryptoHash, Result } from '../../../_common/common';
+import type { NearToken } from '../../../_common/nearToken';
 import type { ClientContext } from '../../client';
 import type { PartialTransportPolicy } from '../../transport/transport';
-import type { NearToken } from '../../../_common/nearToken';
-import type { NatError } from '../../../../src/_common/natError';
-import type {
-  RpcQueryBlockGarbageCollectedErrorContext,
-  RpcQueryBlockNotFoundErrorContext,
-  RpcQueryNotSyncedErrorContext,
-  RpcQueryShardNotTrackedErrorContext,
-} from '../_common/common';
-import type { RpcQueryViewAccountResult } from '../../../../src/client/methods/account/getAccountInfo/handleResult/handleResult';
-import type {
-  InternalErrorContext,
-  InvalidSchemaErrorContext,
-} from '@universal/types/natError';
-import type {
-  PreferredRpcNotFoundErrorContext,
-  TimeoutErrorContext,
-  AbortedErrorContext,
-  ExhaustedErrorContext,
-} from '@universal/types/client/transport/sendRequest';
+import type { RpcQueryBlockGarbageCollectedErrorContext, RpcQueryBlockNotFoundErrorContext, RpcQueryNotSyncedErrorContext, RpcQueryShardNotTrackedErrorContext } from '../_common/common';
 
 export interface GetAccountInfoPublicErrorRegistry {
   'Client.GetAccountInfo.Args.InvalidSchema': InvalidSchemaErrorContext;

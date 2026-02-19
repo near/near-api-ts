@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
-import { withSandbox } from '../../../../utils/sandbox/startSandbox';
 import { createClient } from '../../../../../index';
 import { assertNatErrKind } from '../../../../utils/assertNatErrKind';
+import { withSandbox } from '../../../../utils/sandbox/startSandbox';
 
 // TODO Separate between different tests
 test(

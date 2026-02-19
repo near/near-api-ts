@@ -1,10 +1,7 @@
-import { createUnlock, createLock, createSetNonce } from './keyUtils';
-import type {
-  AccountAccessKey,
-  FullAccessKey,
-} from '../../../../../types/_common/accountAccessKey';
-import type { MemorySignerContext } from '../../../../../types/signers/memorySigner/memorySigner';
-import type { PoolFullAccessKey } from '../../../../../types/signers/memorySigner/inner/keyPool';
+import type { AccountAccessKey, FullAccessKey } from '@universal/types/_common/accountAccessKey';
+import type { PoolFullAccessKey } from '@universal/types/signers/memorySigner/inner/keyPool';
+import type { MemorySignerContext } from '@universal/types/signers/memorySigner/memorySigner';
+import { createLock, createSetNonce, createUnlock } from './keyUtils';
 
 const transformKey = (fullAccessKey: FullAccessKey): PoolFullAccessKey => {
   const { publicKey, nonce } = fullAccessKey;

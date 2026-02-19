@@ -1,9 +1,5 @@
 import { describe, it } from 'vitest';
-import {
-  addFullAccessKey,
-  randomEd25519KeyPair,
-  safeAddFullAccessKey,
-} from '../../../../index';
+import { addFullAccessKey, randomEd25519KeyPair, safeAddFullAccessKey } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
 describe('Add Full Access key action', () => {

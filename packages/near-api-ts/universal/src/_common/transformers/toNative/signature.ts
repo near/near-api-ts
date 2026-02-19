@@ -1,4 +1,4 @@
-import type { NativeSignature } from '../../../../types/_common/crypto';
+import type { NativeSignature } from '@universal/types/_common/crypto';
 import type { InnerSignature } from '../../schemas/zod/common/signature';
 
 export const toNativeSignature = ({

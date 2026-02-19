@@ -1,16 +1,13 @@
+import type { Result } from '@universal/types/_common/common';
+import type { SendRequestContext } from '@universal/types/client/transport/sendRequest';
+import type { InnerRpcEndpoint } from '@universal/types/client/transport/transport';
+import { createNatError, type NatError } from '../../../../_common/natError';
+import { type RpcResponse, RpcResponseSchema } from '../../../../_common/schemas/zod/rpc';
+import { result } from '../../../../_common/utils/result';
 import { snakeToCamelCase } from '../../../../_common/utils/snakeToCamelCase';
-import {
-  type RpcResponse,
-  RpcResponseSchema,
-} from '../../../../_common/schemas/zod/rpc';
+import { extractRpcErrors } from './extractRpcErrors';
 import { fetchData } from './fetchData/fetchData';
 import { parseJsonResponse } from './parseJsonResponse';
-import type { InnerRpcEndpoint } from '../../../../../types/client/transport/transport';
-import type { Result } from '../../../../../types/_common/common';
-import { result } from '../../../../_common/utils/result';
-import type { SendRequestContext } from '../../../../../types/client/transport/sendRequest';
-import { createNatError, type NatError } from '../../../../_common/natError';
-import { extractRpcErrors } from './extractRpcErrors';
 
 type SendOnceError =
   | NatError<'SendRequest.Timeout'>

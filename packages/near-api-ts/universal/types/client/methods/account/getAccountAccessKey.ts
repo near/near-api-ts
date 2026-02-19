@@ -1,32 +1,13 @@
-import type { PublicKey } from '../../../_common/crypto';
+import type { NatError } from '@universal/src/_common/natError';
+import type { RpcQueryViewAccessKeyOkResult } from '@universal/src/client/methods/account/getAccountAccessKey/handleResult';
+import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '@universal/types/client/transport/sendRequest';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '@universal/types/natError';
 import type { AccountAccessKey } from '../../../_common/accountAccessKey';
-import type {
-  AccountId,
-  BlockHash,
-  BlockHeight,
-  BlockReference,
-  Result,
-} from '../../../_common/common';
+import type { AccountId, BlockHash, BlockHeight, BlockReference, Result } from '../../../_common/common';
+import type { PublicKey } from '../../../_common/crypto';
 import type { ClientContext } from '../../client';
 import type { PartialTransportPolicy } from '../../transport/transport';
-import type { NatError } from '../../../../src/_common/natError';
-import type {
-  RpcQueryBlockGarbageCollectedErrorContext,
-  RpcQueryBlockNotFoundErrorContext,
-  RpcQueryNotSyncedErrorContext,
-  RpcQueryShardNotTrackedErrorContext,
-} from '../_common/common';
-import type { RpcQueryViewAccessKeyOkResult } from '../../../../src/client/methods/account/getAccountAccessKey/handleResult';
-import type {
-  InternalErrorContext,
-  InvalidSchemaErrorContext,
-} from '@universal/types/natError';
-import type {
-  AbortedErrorContext,
-  ExhaustedErrorContext,
-  PreferredRpcNotFoundErrorContext,
-  TimeoutErrorContext,
-} from '@universal/types/client/transport/sendRequest';
+import type { RpcQueryBlockGarbageCollectedErrorContext, RpcQueryBlockNotFoundErrorContext, RpcQueryNotSyncedErrorContext, RpcQueryShardNotTrackedErrorContext } from '../_common/common';
 
 export interface GetAccountAccessKeyPublicErrorRegistry {
   'Client.GetAccountAccessKey.Args.InvalidSchema': InvalidSchemaErrorContext;

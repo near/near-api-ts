@@ -1,4 +1,4 @@
-import type { NativeTransferAction } from '../../../../../types/actions/transfer';
+import type { NativeTransferAction } from '@universal/types/actions/transfer';
 import { throwableNearToken } from '../../../../helpers/tokens/nearToken';
 import type { InnerTransferAction } from '../../../schemas/zod/transaction/actions/transfer';
 

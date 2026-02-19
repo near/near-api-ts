@@ -1,6 +1,6 @@
+import type { NatError } from '../../src/_common/natError';
 import type { Base64String, Result } from '../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
-import type { NatError } from '../../src/_common/natError';
 
 export interface CreateDeployContractActionPublicErrorRegistry {
   'CreateAction.DeployContract.Args.InvalidSchema': InvalidSchemaErrorContext;

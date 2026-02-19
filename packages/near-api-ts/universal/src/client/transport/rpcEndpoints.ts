@@ -1,8 +1,5 @@
 import * as z from 'zod/mini';
-import type {
-  InnerRpcEndpoint,
-  RpcEndpoint,
-} from '../../../types/client/transport/transport';
+import type { InnerRpcEndpoint, RpcEndpoint } from '../../../types/client/transport/transport';
 
 const RpcEndpointSchema = z.object({
   url: z.url(),

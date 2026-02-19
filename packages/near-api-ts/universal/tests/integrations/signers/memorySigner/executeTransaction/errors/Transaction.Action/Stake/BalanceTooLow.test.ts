@@ -1,18 +1,9 @@
-import { beforeAll, describe, it, vi } from 'vitest';
-import {
-  createMemoryKeyService,
-  type Client,
-  type MemoryKeyService,
-  type MemorySignerFactory,
-  createMemorySignerFactory,
-  stake,
-  randomEd25519KeyPair,
-  near,
-} from '../../../../../../../../index';
-import { createDefaultClient } from '../../../../../../../utils/common';
-import { startSandbox } from '../../../../../../../utils/sandbox/startSandbox';
+import { assertNatErrKind } from '@universal/tests/utils/assertNatErrKind';
+import { createDefaultClient } from '@universal/tests/utils/common';
+import { startSandbox } from '@universal/tests/utils/sandbox/startSandbox';
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
+import { beforeAll, describe, it, vi } from 'vitest';
+import { type Client, createMemoryKeyService, createMemorySignerFactory, type MemoryKeyService, type MemorySignerFactory, near, randomEd25519KeyPair, stake } from '../../../../../../../../index';
 
 vi.setConfig({ testTimeout: 60000 });
 

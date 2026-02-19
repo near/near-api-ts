@@ -1,10 +1,10 @@
-import * as z from 'zod/mini';
 import { AccessKeyListSchema } from '@near-js/jsonrpc-types';
+import type { GetAccountAccessKeysArgs } from '@universal/types/client/methods/account/getAccountAccessKeys';
+import * as z from 'zod/mini';
+import { createNatError } from '../../../../_common/natError';
 import type { RpcResponse } from '../../../../_common/schemas/zod/rpc';
 import { result } from '../../../../_common/utils/result';
-import { createNatError } from '../../../../_common/natError';
 import { transformAccessKey } from '../_common/transformAccessKey';
-import type { GetAccountAccessKeysArgs } from '../../../../../types/client/methods/account/getAccountAccessKeys';
 
 const RpcQueryAccessKeyListResultSchema = z.object({
   ...AccessKeyListSchema().shape,

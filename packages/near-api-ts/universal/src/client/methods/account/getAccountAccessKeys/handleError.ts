@@ -1,6 +1,6 @@
-import type { RpcResponse } from '../../../../_common/schemas/zod/rpc';
-import { createNatError } from '../../../../_common/natError';
 import { ErrorWrapperFor_RpcQueryErrorSchema } from '@near-js/jsonrpc-types';
+import { createNatError } from '../../../../_common/natError';
+import type { RpcResponse } from '../../../../_common/schemas/zod/rpc';
 import { result } from '../../../../_common/utils/result';
 
 // TODO Think how to reuse some errors and reduce the amount of code

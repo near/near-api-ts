@@ -1,11 +1,7 @@
+import { RpcProtocolConfigResponseSchema, RuntimeConfigViewSchema, VMConfigViewSchema } from '@near-js/jsonrpc-types';
+import type { CreateGetProtocolConfig } from '@universal/types/client/methods/protocol/getProtocolConfig';
 import * as z from 'zod/mini';
 import { toNativeBlockReference } from '../../../_common/transformers/toNative/blockReference';
-import {
-  RpcProtocolConfigResponseSchema,
-  RuntimeConfigViewSchema,
-  VMConfigViewSchema,
-} from '@near-js/jsonrpc-types';
-import type { CreateGetProtocolConfig } from '../../../../types/client/methods/protocol/getProtocolConfig';
 
 // TODO Use jsonrpc-types RpcProtocolConfigResponseSchema after 2.8.0
 const TemporaryProtocolConfigShema = z.object({

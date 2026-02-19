@@ -1,11 +1,11 @@
-import type { Nonce, Result } from '../../../../../../types/_common/common';
-import type { MemorySignerContext } from '../../../../../../types/signers/memorySigner/memorySigner';
-import type { Task } from '../../../../../../types/signers/memorySigner/inner/taskQueue';
-import type { PoolKey } from '../../../../../../types/signers/memorySigner/inner/keyPool';
-import { result } from '../../../../../_common/utils/result';
-import type { Transaction } from '../../../../../../types/_common/transaction/transaction';
+import type { Nonce, Result } from '@universal/types/_common/common';
+import type { Transaction } from '@universal/types/_common/transaction/transaction';
+import type { SendSignedTransactionOutput } from '@universal/types/client/methods/transaction/sendSignedTransaction';
+import type { PoolKey } from '@universal/types/signers/memorySigner/inner/keyPool';
+import type { Task } from '@universal/types/signers/memorySigner/inner/taskQueue';
+import type { MemorySignerContext } from '@universal/types/signers/memorySigner/memorySigner';
 import { createNatError, type NatError } from '../../../../../_common/natError';
-import type { SendSignedTransactionOutput } from '../../../../../../types/client/methods/transaction/sendSignedTransaction';
+import { result } from '../../../../../_common/utils/result';
 import { wrapInternalError } from '../../../../../_common/utils/wrapInternalError';
 
 type Attempt = (

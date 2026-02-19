@@ -1,8 +1,8 @@
+import type { InnerCallContractReadFunctionArgs } from '@universal/types/client/methods/contract/callContractReadFunction';
 import * as z from 'zod/mini';
+import { createNatError } from '../../../../../_common/natError';
 import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc';
 import { result } from '../../../../../_common/utils/result';
-import { createNatError } from '../../../../../_common/natError';
-import type { InnerCallContractReadFunctionArgs } from '../../../../../../types/client/methods/contract/callContractReadFunction';
 import { deserializeCallResult } from './deserializeCallResult';
 
 // For legacy reasons, nearcore returns result.error string field when

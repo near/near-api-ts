@@ -1,7 +1,7 @@
+import type { Transaction } from '@universal/types/_common/transaction/transaction';
 import { describe, expect, it } from 'vitest';
 import { createMemoryKeyService, randomEd25519KeyPair } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
-import type { Transaction } from '../../../../types/_common/transaction/transaction';
 
 const privateKey =
   'ed25519:3kDMsPd8EsgPNV2yarJFtKMvCtV4fN4MkwhaW5BXcNx4a2NhMjE8ycVb3Vu1yrhqZc31dCPHNNUYJV3UK9GbFFd6';

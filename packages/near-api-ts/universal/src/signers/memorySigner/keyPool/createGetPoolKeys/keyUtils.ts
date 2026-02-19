@@ -1,5 +1,5 @@
-import type { Nonce } from '../../../../../types/_common/common';
-import type { PoolKey } from '../../../../../types/signers/memorySigner/inner/keyPool';
+import type { Nonce } from '@universal/types/_common/common';
+import type { PoolKey } from '@universal/types/signers/memorySigner/inner/keyPool';
 
 export const createLock = (key: PoolKey) => () => {
   key.isLocked = true;

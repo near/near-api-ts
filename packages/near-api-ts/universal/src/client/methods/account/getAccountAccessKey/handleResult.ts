@@ -1,10 +1,10 @@
-import * as z from 'zod/mini';
 import { AccessKeyViewSchema } from '@near-js/jsonrpc-types';
+import type { GetAccountAccessKeyArgs } from '@universal/types/client/methods/account/getAccountAccessKey';
+import * as z from 'zod/mini';
+import { createNatError } from '../../../../_common/natError';
 import type { RpcResponse } from '../../../../_common/schemas/zod/rpc';
 import { result } from '../../../../_common/utils/result';
-import { createNatError } from '../../../../_common/natError';
 import { transformAccessKey } from '../_common/transformAccessKey';
-import type { GetAccountAccessKeyArgs } from '../../../../../types/client/methods/account/getAccountAccessKey';
 
 // For legacy reasons, nearcore returns result.error string field when
 // RpcQueryError::UnknownAccessKey error happen;

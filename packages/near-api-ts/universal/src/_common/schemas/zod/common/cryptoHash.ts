@@ -1,5 +1,5 @@
-import * as z from 'zod/mini';
 import { base58 } from '@scure/base';
+import * as z from 'zod/mini';
 import { oneLine } from '../../../utils/common';
 
 const Base58StringSchema = z.string().check(

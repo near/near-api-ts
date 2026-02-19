@@ -1,10 +1,5 @@
-import type {
-  NatErrorKind,
-  CreateNatErrorArgs,
-  ContextFor,
-  CreateResultNatError,
-} from '../../types/natError';
 import { result } from '@universal/src/_common/utils/result';
+import type { ContextFor, CreateNatErrorArgs, CreateResultNatError, NatErrorKind } from '../../types/natError';
 
 export const NatErrorBrand = Symbol('NatError');
 

@@ -1,7 +1,7 @@
-import { throwableYoctoNear } from '../../../../helpers/tokens/nearToken';
 import type { AccessKeyInfoView } from '@near-js/jsonrpc-types';
-import type { AccountAccessKey, FunctionCallKey } from '../../../../../types/_common/accountAccessKey';
-import type { PublicKey } from '../../../../../types/_common/crypto';
+import type { AccountAccessKey, FunctionCallKey } from '@universal/types/_common/accountAccessKey';
+import type { PublicKey } from '@universal/types/_common/crypto';
+import { throwableYoctoNear } from '../../../../helpers/tokens/nearToken';
 
 export const transformAccessKey = (key: AccessKeyInfoView): AccountAccessKey => {
   const publicKey = key.publicKey as PublicKey;

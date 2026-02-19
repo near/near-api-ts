@@ -1,15 +1,9 @@
+import { MemoryKeyServiceBrand } from '../../../src/keyServices/memoryKeyService/createMemoryKeyService';
 import type { PublicKey } from '../../_common/crypto';
 import type { KeyPair } from '../../_common/keyPair/keyPair';
-import type {
-  InvalidSchemaErrorContext,
-  InternalErrorContext,
-} from '../../natError';
-import type {
-  SafeSignTransaction,
-  SignTransaction,
-} from './createSignTransaction';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../natError';
 import type { FindKeyPair, SafeFindKeyPair } from './createFindKeyPair';
-import { MemoryKeyServiceBrand } from '../../../src/keyServices/memoryKeyService/createMemoryKeyService';
+import type { SafeSignTransaction, SignTransaction } from './createSignTransaction';
 
 export interface MemoryKeyServicePublicErrorRegistry {
   'CreateMemoryKeyService.Args.InvalidSchema': InvalidSchemaErrorContext;

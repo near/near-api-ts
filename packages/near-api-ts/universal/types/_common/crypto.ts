@@ -1,7 +1,4 @@
-import type {
-  Ed25519CurveString,
-  Secp256k1CurveString,
-} from './curveString';
+import type { Ed25519CurveString, Secp256k1CurveString } from './curveString';
 
 export type Ed25519PublicKey = Ed25519CurveString;
 export type Secp256k1PublicKey = Secp256k1CurveString;

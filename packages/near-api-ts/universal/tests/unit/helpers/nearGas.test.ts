@@ -1,12 +1,5 @@
-import { expect, describe, it } from 'vitest';
-import {
-  gas,
-  nearGas,
-  teraGas,
-  isNearGas,
-  safeTeraGas,
-  safeNearGas,
-} from '../../../index';
+import { describe, expect, it } from 'vitest';
+import { gas, isNearGas, nearGas, safeNearGas, safeTeraGas, teraGas } from '../../../index';
 import { assertNatErrKind } from '../../utils/assertNatErrKind';
 
 const TeraCoefficient = 1_000_000_000_000n;

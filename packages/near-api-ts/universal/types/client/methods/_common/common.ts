@@ -1,9 +1,3 @@
-import type {
-  InvalidSchemaErrorContext,
-  InternalErrorContext,
-} from '../../../natError';
-import type { SendRequestError } from '../../transport/sendRequest';
-import type { RpcResponse } from '../../../../src/_common/schemas/zod/rpc';
 import type { ShardId } from '@near-js/jsonrpc-types';
 import type { BlockHash, BlockHeight } from '@universal/types/_common/common';
 

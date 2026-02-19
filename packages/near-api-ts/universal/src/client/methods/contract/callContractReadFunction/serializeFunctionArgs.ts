@@ -1,10 +1,10 @@
-import type { Result } from '../../../../../types/_common/common';
+import type { Result } from '@universal/types/_common/common';
+import type { InnerCallContractReadFunctionArgs } from '@universal/types/client/methods/contract/callContractReadFunction';
 import { createNatError, NatError } from '../../../../_common/natError';
-import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
-import { result } from '../../../../_common/utils/result';
 import { JsonSchema } from '../../../../_common/schemas/zod/common/common';
 import { toJsonBytes } from '../../../../_common/utils/common';
-import type { InnerCallContractReadFunctionArgs } from '../../../../../types/client/methods/contract/callContractReadFunction';
+import { result } from '../../../../_common/utils/result';
+import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
 
 // TODO maybe we can unite it with functionCall action creator?
 
@@ -16,7 +16,7 @@ export const serializeFunctionArgs = (
   | NatError<'Client.CallContractReadFunction.SerializeArgs.Internal'>
   | NatError<'Client.CallContractReadFunction.Args.InvalidSchema'>
 > => {
-  // If user wants to use his own custom serializer;
+  // If a user wants to use his own custom serializer;
   if (args.options?.serializeArgs) {
     const serializeArgs = args.options.serializeArgs;
     return wrapInternalError(

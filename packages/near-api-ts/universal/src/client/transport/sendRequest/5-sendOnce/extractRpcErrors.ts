@@ -1,11 +1,8 @@
-import type { Result } from '../../../../../types/_common/common';
-import type {
-  RpcError,
-  RpcResponse,
-} from '../../../../_common/schemas/zod/rpc';
+import type { Result } from '@universal/types/_common/common';
+import type { InnerRpcEndpoint } from '@universal/types/client/transport/transport';
 import { createNatError, type NatError } from '../../../../_common/natError';
+import type { RpcError, RpcResponse } from '../../../../_common/schemas/zod/rpc';
 import { result } from '../../../../_common/utils/result';
-import type { InnerRpcEndpoint } from '../../../../../types/client/transport/transport';
 
 export type HighLevelRpcErrors =
   | NatError<'SendRequest.InnerRpc.MethodNotFound'>
@@ -35,7 +32,8 @@ const getErrorKind = ({
     if (cause.name === 'NO_SYNCED_BLOCKS') return `${prefix}.NotSynced`; // 'query'
     if (cause.name === 'NOT_SYNCED_YET') return `${prefix}.NotSynced`; // 'block'
     if (cause.name === 'TIMEOUT_ERROR') return `${prefix}.Transaction.Timeout`; // 'send_tx' / 'tx'
-    if (cause.name === 'GARBAGE_COLLECTED_BLOCK') return `${prefix}.Block.GarbageCollected`; // 'query'
+    if (cause.name === 'GARBAGE_COLLECTED_BLOCK')
+      return `${prefix}.Block.GarbageCollected`; // 'query'
     if (cause.name === 'UNKNOWN_BLOCK') return `${prefix}.Block.NotFound`; // 'query' / 'block'
     if (cause.name === 'INTERNAL_ERROR') return `${prefix}.Internal`; // all
   }

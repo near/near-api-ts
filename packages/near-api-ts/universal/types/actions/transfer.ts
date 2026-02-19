@@ -1,7 +1,7 @@
-import type { NearTokenArgs } from '../_common/nearToken';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
 import type { NatError } from '../../src/_common/natError';
 import type { Result } from '../_common/common';
+import type { NearTokenArgs } from '../_common/nearToken';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
 
 export interface CreateTransferActionPublicErrorRegistry {
   'CreateAction.Transfer.Args.InvalidSchema': InvalidSchemaErrorContext;

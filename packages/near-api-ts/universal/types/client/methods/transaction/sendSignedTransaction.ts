@@ -1,20 +1,12 @@
-import type { ClientContext } from '../../client';
-import type { SignedTransaction } from '../../../_common/transaction/transaction';
 import type { RpcTransactionResponse } from '@near-js/jsonrpc-types';
-import type { TransportPolicy } from '../../transport/transport';
-import type { Result } from '../../../_common/common';
-import type { NatError } from '../../../../src/_common/natError';
-import type {
-  InternalErrorContext,
-  InvalidSchemaErrorContext,
-} from '@universal/types/natError';
-import type {
-  AbortedErrorContext,
-  ExhaustedErrorContext,
-  PreferredRpcNotFoundErrorContext,
-  TimeoutErrorContext,
-} from '@universal/types/client/transport/sendRequest';
+import type { NatError } from '@universal/src/_common/natError';
 import type { TransactionErrorContext } from '@universal/types/_common/transaction/rpcTransactionErrorContext';
+import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '@universal/types/client/transport/sendRequest';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '@universal/types/natError';
+import type { Result } from '../../../_common/common';
+import type { SignedTransaction } from '../../../_common/transaction/transaction';
+import type { ClientContext } from '../../client';
+import type { TransportPolicy } from '../../transport/transport';
 
 export interface SendSignedTransactionPublicErrorRegistry {
   'Client.SendSignedTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;

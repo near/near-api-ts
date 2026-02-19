@@ -1,12 +1,8 @@
+import type { NatError } from '../../src/_common/natError';
+import type { AccountId, ContractFunctionName, Result } from '../_common/common';
 import type { NativePublicKey, PublicKey } from '../_common/crypto';
-import type {
-  AccountId,
-  ContractFunctionName,
-  Result,
-} from '../_common/common';
 import type { NearTokenArgs } from '../_common/nearToken';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
-import type { NatError } from '../../src/_common/natError';
 
 export interface CreateAddKeyActionPublicErrorRegistry {
   'CreateAction.AddFullAccessKey.Args.InvalidSchema': InvalidSchemaErrorContext;

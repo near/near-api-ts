@@ -1,12 +1,9 @@
 import * as z from 'zod/mini';
-import { result } from '../../_common/utils/result';
-import type {
-  CacheState,
-  GetStoragePricePerByte,
-} from '../../../types/client/cache/cache';
-import type { Transport } from '../../../types/client/transport/transport';
 import { yoctoNear } from '../../../index';
+import type { CacheState, GetStoragePricePerByte } from '../../../types/client/cache/cache';
+import type { Transport } from '../../../types/client/transport/transport';
 import { createNatError } from '../../_common/natError';
+import { result } from '../../_common/utils/result';
 
 const PartialProtocolConfigResultSchema = z.object({
   runtimeConfig: z.object({

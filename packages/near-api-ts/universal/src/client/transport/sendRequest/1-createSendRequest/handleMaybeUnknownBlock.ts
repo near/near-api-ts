@@ -1,10 +1,10 @@
-import type { TransportContext } from '../../../../../types/client/transport/transport';
-import { tryOneRound } from '../3-tryOneRound/tryOneRound';
-import { mergeTransportPolicy } from '../../transportPolicy';
-import { getAvailableRpcs } from './_common/getAvailableRpcs';
-import type { SendRequestContext } from '../../../../../types/client/transport/sendRequest';
-import type { SendOnceResult } from '../5-sendOnce/sendOnce';
+import type { SendRequestContext } from '@universal/types/client/transport/sendRequest';
+import type { TransportContext } from '@universal/types/client/transport/transport';
 import { isNatErrorOf } from '../../../../_common/natError';
+import { mergeTransportPolicy } from '../../transportPolicy';
+import { tryOneRound } from '../3-tryOneRound/tryOneRound';
+import type { SendOnceResult } from '../5-sendOnce/sendOnce';
+import { getAvailableRpcs } from './_common/getAvailableRpcs';
 
 type HandleMaybeUnknownBlock = (args: {
   requestResult: SendOnceResult;

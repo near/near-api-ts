@@ -1,8 +1,5 @@
 import { base58 } from '@scure/base';
-import type {
-  Ed25519CurveString,
-  Secp256k1CurveString,
-} from '../../../types/_common/curveString';
+import type { Ed25519CurveString, Secp256k1CurveString } from '../../../types/_common/curveString';
 
 export const toEd25519CurveString = (u8Data: Uint8Array): Ed25519CurveString =>
   `ed25519:${base58.encode(u8Data)}`;
