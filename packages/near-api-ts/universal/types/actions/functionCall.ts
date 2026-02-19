@@ -6,33 +6,15 @@ import type {
 import type { KeyIf } from '../utils';
 import type { NearTokenArgs } from '../_common/nearToken';
 import type { NearGasArgs } from '../_common/nearGas';
-import type {
-  InternalErrorContext,
-  InvalidSchemaContext,
-} from '../natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
 import type { NatError } from '../../src/_common/natError';
 
-export type CreateFunctionCallActionErrorVariant =
-  | {
-      kind: 'CreateAction.FunctionCall.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'CreateAction.FunctionCall.SerializeArgs.Internal';
-      context: InternalErrorContext;
-    }
-  | {
-      kind: 'CreateAction.FunctionCall.SerializeArgs.InvalidOutput';
-      context: { output: unknown };
-    }
-  | {
-      kind: 'CreateAction.FunctionCall.Internal';
-      context: InternalErrorContext;
-    };
-
-export type CreateFunctionCallActionInternalErrorKind =
-  | 'CreateAction.FunctionCall.Internal'
-  | 'CreateAction.FunctionCall.SerializeArgs.Internal';
+export interface CreateFunctionCallActionPublicErrorRegistry {
+  'CreateAction.FunctionCall.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateAction.FunctionCall.SerializeArgs.Internal': InternalErrorContext;
+  'CreateAction.FunctionCall.SerializeArgs.InvalidOutput': { output: unknown };
+  'CreateAction.FunctionCall.Internal': InternalErrorContext;
+}
 
 type BaseFunctionCallActionArgs = {
   functionName: ContractFunctionName;

@@ -1,5 +1,6 @@
 import { result } from './result';
 import { createNatError, NatError } from '../natError';
+import type { NatErrorKind } from '@universal/types/natError';
 
 /**
  * We use it when we want to change the error kind, and return a new error with
@@ -20,7 +21,7 @@ export const repackError = ({
   originPrefix,
   targetPrefix,
 }: {
-  error: NatError<any>; // TODO fix any!
+  error: NatError<NatErrorKind>;
   originPrefix: string;
   targetPrefix: string;
 }) => {

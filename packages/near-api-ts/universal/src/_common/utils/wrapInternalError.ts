@@ -32,12 +32,12 @@ const returnError = <K extends NatInternalErrorKind>(e: unknown, kind: K) =>
  * This is useful inside the library where we want total safety:
  * regardless of what the original function does — throws synchronously,
  * rejects a Promise, or produces any unknown failure — the wrapper
- * normalizes it into `ResultErr<string>`.
+ * normalizes it into `ResultErr<unknown>`.
  *
  * After wrapping, the function is guaranteed to have a stable,
  * non-throwing contract:
- *   - sync  functions: R              → R | ResultErr<string>
- *   - async functions: Promise<R>     → Promise<R | ResultErr<string>>
+ *   - sync  functions: R              → R | ResultErr<unknown>
+ *   - async functions: Promise<R>     → Promise<R | ResultErr<unknown>>
  *
  * This creates a fully predictable and type-safe execution model,
  * ensuring that all internal "safe" functions behave consistently,

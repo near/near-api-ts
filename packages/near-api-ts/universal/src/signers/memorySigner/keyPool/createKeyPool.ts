@@ -3,7 +3,7 @@ import { createIsKeyForTaskExist } from './createIsKeyForTaskExist';
 import type {
   CreateKeyPool,
   KeyPoolState,
-} from '../../../../types/signers/memorySigner/keyPool';
+} from '../../../../types/signers/memorySigner/inner/keyPool';
 import { createGetPoolKeys } from './createGetPoolKeys/createGetPoolKeys';
 
 export const createKeyPool: CreateKeyPool = (

@@ -1,47 +1,21 @@
 import type {
   AccountAccessKey,
   FunctionCallKey,
-} from '../../_common/accountAccessKey';
-import type { PublicKey } from '../../_common/crypto';
-import type { AccountId, Nonce, Result } from '../../_common/common';
-import type {
-  AccessTypePriority,
-  Task,
-} from './taskQueue';
-import type { NatError } from '../../../src/_common/natError';
-import type { MemorySignerContext } from './memorySigner';
-import type { CreateMemorySignerArgs } from './createMemorySigner';
-import type { GetAccountAccessKeysError } from '../../client/methods/account/getAccountAccessKeys';
+} from '../../../_common/accountAccessKey';
+import type { PublicKey } from '../../../_common/crypto';
+import type { AccountId, Nonce, Result } from '../../../_common/common';
+import type { AccessTypePriority, Task } from './taskQueue';
+import type { NatError } from '../../../../src/_common/natError';
+import type { MemorySignerContext } from '../memorySigner';
+import type { CreateMemorySignerArgs } from '../public/createMemorySigner';
+import type { GetAccountAccessKeysError } from '../../../client/methods/account/getAccountAccessKeys';
+import type { MemorySignerErrorContext } from '@universal/types/signers/memorySigner/_common/errorContext';
 
-export type KeyPoolAccessKeysNotLoaded<Prefix extends string> = {
-  kind: `${Prefix}.KeyPool.AccessKeys.NotLoaded`;
-  context: {
-    cause: GetAccountAccessKeysError;
-  };
-};
-
-export type KeyPoolEmpty<Prefix extends string> = {
-  kind: `${Prefix}.KeyPool.Empty`;
-  context: {
-    accountAccessKeys: AccountAccessKey[];
-    allowedAccessKeys: PublicKey[];
-  };
-};
-
-export type KeyPoolSigningKeyNotFound<Prefix extends string> = {
-  kind: `${Prefix}.KeyPool.SigningKey.NotFound`;
-  context: {
-    poolKeys: PoolKeys;
-    accessTypePriority: AccessTypePriority;
-  };
-};
-
-type Prefix = 'MemorySigner';
-
-export type KeyPoolErrorVariant =
-  | KeyPoolAccessKeysNotLoaded<Prefix>
-  | KeyPoolEmpty<Prefix>
-  | KeyPoolSigningKeyNotFound<Prefix>;
+export interface KeyPoolInnerErrorRegistry {
+  'MemorySigner.KeyPool.AccessKeys.NotLoaded': MemorySignerErrorContext['KeyPool']['AccessKeys']['NotLoaded'];
+  'MemorySigner.KeyPool.Empty': MemorySignerErrorContext['KeyPool']['Empty'];
+  'MemorySigner.KeyPool.SigningKey.NotFound': MemorySignerErrorContext['KeyPool']['SigningKey']['NotFound'];
+}
 
 type KeyPoolKeyBase = {
   publicKey: PublicKey;

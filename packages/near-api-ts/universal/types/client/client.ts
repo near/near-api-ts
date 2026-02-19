@@ -1,74 +1,58 @@
+import type { CreateClientPublicErrorRegistry } from './createClient';
 import type {
-  CreateClientErrorVariant,
-  CreateClientInternalErrorKind,
-} from './createClient';
-import type { SendRequest } from './transport/sendRequest';
+  SendRequest,
+  SendRequestInnerErrorRegistry,
+} from './transport/sendRequest';
 import type {
   GetAccountInfo,
-  GetAccountInfoErrorVariant,
-  GetAccountInfoInternalErrorKind,
+  GetAccountInfoPublicErrorRegistry,
   SafeGetAccountInfo,
 } from './methods/account/getAccountInfo';
 import type {
   GetAccountAccessKey,
-  GetAccountAccessKeyErrorVariant,
-  GetAccountAccessKeyInternalErrorKind,
+  GetAccountAccessKeyPublicErrorRegistry,
   SafeGetAccountAccessKey,
 } from './methods/account/getAccountAccessKey';
-import type { TransportErrorVariant } from './transport/transport';
 import type {
   SafeSendSignedTransaction,
   SendSignedTransaction,
-  SendSignedTransactionErrorVariant,
-  SendSignedTransactionInternalErrorKind,
+  SendSignedTransactionPublicErrorRegistry,
 } from './methods/transaction/sendSignedTransaction';
 import type {
   GetAccountAccessKeys,
-  GetAccountAccessKeysErrorVariant,
-  GetAccountAccessKeysInternalErrorKind,
+  GetAccountAccessKeysPublicErrorRegistry,
   SafeGetAccountAccessKeys,
 } from './methods/account/getAccountAccessKeys';
 import type {
   GetBlock,
-  GetBlockErrorVariant,
-  GetBlockInternalErrorKind,
+  GetBlockPublicErrorRegistry,
   SafeGetBlock,
 } from './methods/block/getBlock';
 import { ClientBrand } from '../../src/client/createClient';
 import type {
   CallContractReadFunction,
-  CallContractReadFunctionErrorVariant,
-  CallContractReadFunctionInternalErrorKind,
+  CallContractReadFunctionPublicErrorRegistry,
   SafeCallContractReadFunction,
 } from './methods/contract/callContractReadFunction';
 import type { Cache } from './cache/cache';
 import type {
   GetRecentBlockHash,
-  GetRecentBlockHashErrorVariant,
-  GetRecentBlockHashInternalErrorKind,
+  GetRecentBlockHashPublicErrorRegistry,
   SafeGetRecentBlockHash,
 } from './cache/getRecentBlockHash';
 
-export type ClientErrorVariant =
-  | CreateClientErrorVariant
-  | TransportErrorVariant
-  | GetAccountInfoErrorVariant
-  | GetAccountAccessKeyErrorVariant
-  | GetAccountAccessKeysErrorVariant
-  | CallContractReadFunctionErrorVariant
-  | GetBlockErrorVariant
-  | GetRecentBlockHashErrorVariant
-  | SendSignedTransactionErrorVariant;
+export interface ClientInnerErrorRegistry
+  extends SendRequestInnerErrorRegistry {}
 
-export type ClientInternalErrorKind =
-  | CreateClientInternalErrorKind
-  | GetAccountInfoInternalErrorKind
-  | GetAccountAccessKeyInternalErrorKind
-  | GetAccountAccessKeysInternalErrorKind
-  | CallContractReadFunctionInternalErrorKind
-  | GetBlockInternalErrorKind
-  | GetRecentBlockHashInternalErrorKind
-  | SendSignedTransactionInternalErrorKind;
+export interface ClientPublicErrorRegistry
+  extends CreateClientPublicErrorRegistry,
+    GetAccountInfoPublicErrorRegistry,
+    GetAccountAccessKeyPublicErrorRegistry,
+    GetAccountAccessKeysPublicErrorRegistry,
+    CallContractReadFunctionPublicErrorRegistry,
+    GetBlockPublicErrorRegistry,
+    GetRecentBlockHashPublicErrorRegistry,
+    SendSignedTransactionPublicErrorRegistry {}
 
 export type ClientContext = {
   sendRequest: SendRequest;
@@ -76,7 +60,7 @@ export type ClientContext = {
 };
 
 export type Client = {
-  [ClientBrand]: true;
+  [ClientBrand]: true; // TODO Remove
   // throwable variants
   getAccountInfo: GetAccountInfo;
   getAccountAccessKey: GetAccountAccessKey;

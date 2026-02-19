@@ -13,10 +13,10 @@ export const handleError = (rpcResponse: RpcResponse) => {
   if (!rpcError.success)
     return result.err(
       createNatError({
-        kind: 'Client.GetAccountInfo.SendRequest.Failed',
+        kind: 'Client.GetAccountInfo.Exhausted',
         context: {
-          cause: createNatError({
-            kind: 'Client.Transport.SendRequest.Response.Error.InvalidSchema',
+          lastError: createNatError({
+            kind: 'SendRequest.Attempt.Response.InvalidSchema',
             context: { zodError: rpcError.error },
           }),
         },
@@ -71,7 +71,6 @@ export const handleError = (rpcResponse: RpcResponse) => {
   }
 
   // Account specific errors
-
   if (cause.name === 'UNKNOWN_ACCOUNT')
     return result.err(
       createNatError({
@@ -89,12 +88,7 @@ export const handleError = (rpcResponse: RpcResponse) => {
   return result.err(
     createNatError({
       kind: 'Client.GetAccountInfo.Internal',
-      context: {
-        cause: createNatError({
-          kind: 'Client.GetAccountInfo.Rpc.Unclassified',
-          context: { rpcResponse },
-        }),
-      },
+      context: { cause: rpcResponse },
     }),
   );
 };

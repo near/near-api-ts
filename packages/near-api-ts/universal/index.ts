@@ -101,7 +101,7 @@ export type { MemorySigner } from './types/signers/memorySigner/memorySigner';
 export type {
   SafeMemorySignerFactory,
   MemorySignerFactory,
-} from './types/signers/memorySigner/createMemorySigner';
+} from './types/signers/memorySigner/public/createMemorySigner';
 export type { AccountId } from './types/_common/common';
 export type {
   PublicKey,

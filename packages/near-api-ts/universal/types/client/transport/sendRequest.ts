@@ -1,8 +1,4 @@
-import type {
-  JsonLikeValue,
-  Milliseconds,
-  Result,
-} from '../../_common/common';
+import type { JsonLikeValue, Milliseconds, Result } from '../../_common/common';
 import type {
   InnerRpcEndpoint,
   PartialTransportPolicy,
@@ -12,92 +8,60 @@ import type {
 } from './transport';
 import type { NatError } from '../../../src/_common/natError';
 import type { RpcResponse } from '../../../src/_common/schemas/zod/rpc';
-import type { InvalidSchemaContext } from '../../natError';
+import type { InvalidSchemaErrorContext } from '../../natError';
 
 type RpcErrorContext = {
   rawRpcResponse: RpcResponse;
   rpc: InnerRpcEndpoint;
 };
 
-export type SendRequestErrorVariant =
-  | {
-      kind: `Client.Transport.SendRequest.PreferredRpc.NotFound`;
-      context: {
-        rpcEndpoints: TransportContext['rpcEndpoints'];
-        rpcTypePreferences: RpcTypePreferences;
-      };
-    }
-  | {
-      kind: `Client.Transport.SendRequest.Request.FetchFailed`;
-      context: {
-        cause: unknown;
-        rpc: InnerRpcEndpoint;
-        requestBody: JsonLikeValue;
-      };
-    }
-  | {
-      kind: `Client.Transport.SendRequest.Request.Attempt.Timeout`;
-      context: { allowedMs: Milliseconds };
-    }
-  | {
-      kind: `Client.Transport.SendRequest.Request.Timeout`;
-      context: { allowedMs: Milliseconds };
-    }
-  | {
-      kind: `Client.Transport.SendRequest.Request.Aborted`;
-      context: { reason: unknown };
-    }
-  | {
-      kind: `Client.Transport.SendRequest.Response.JsonParseFailed`;
-      context: {
-        cause: unknown;
-        rpc: InnerRpcEndpoint;
-        response: Response;
-      };
-    }
-  | {
-      kind: `Client.Transport.SendRequest.Response.InvalidSchema`;
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: `Client.Transport.SendRequest.Response.Result.InvalidSchema`;
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: `Client.Transport.SendRequest.Response.Error.InvalidSchema`;
-      context: InvalidSchemaContext;
-    };
+export type PreferredRpcNotFoundErrorContext = {
+  rpcEndpoints: TransportContext['rpcEndpoints'];
+  rpcTypePreferences: RpcTypePreferences;
+};
 
-// Transport Inner RPC Related Errors // TODO rename to Inner
-export type HighLevelRpcErrorVariant =
-  | {
-      kind: 'Client.Transport.SendRequest.Rpc.MethodNotFound';
-      context: RpcErrorContext;
-    }
-  | {
-      kind: 'Client.Transport.SendRequest.Rpc.ParseFailed';
-      context: RpcErrorContext;
-    }
-  | {
-      kind: 'Client.Transport.SendRequest.Rpc.NotSynced';
-      context: RpcErrorContext;
-    }
-  | {
-      kind: 'Client.Transport.SendRequest.Rpc.Transaction.Timeout';
-      context: RpcErrorContext;
-    }
-  | {
-      kind: 'Client.Transport.SendRequest.Rpc.Block.GarbageCollected';
-      context: RpcErrorContext;
-    }
-  | {
-      kind: 'Client.Transport.SendRequest.Rpc.Block.NotFound';
-      context: RpcErrorContext;
-    }
-  | {
-      kind: 'Client.Transport.SendRequest.Rpc.Internal';
-      context: RpcErrorContext;
-    };
+export type TimeoutErrorContext = { timeoutMs: Milliseconds };
+export type AbortedErrorContext = { reason: unknown };
+
+export type ExhaustedErrors =
+  | NatError<'SendRequest.Attempt.Request.FetchFailed'>
+  | NatError<'SendRequest.Attempt.Request.Timeout'>
+  | NatError<'SendRequest.Attempt.Response.JsonParseFailed'>
+  | NatError<'SendRequest.Attempt.Response.InvalidSchema'>;
+
+// TODO move to _common
+export type ExhaustedErrorContext = {
+  lastError: ExhaustedErrors;
+  // TODO add policy? add errors list?
+};
+
+export interface SendRequestInnerErrorRegistry {
+  'SendRequest.PreferredRpc.NotFound': PreferredRpcNotFoundErrorContext;
+  'SendRequest.Timeout': TimeoutErrorContext;
+  'SendRequest.Aborted': AbortedErrorContext;
+  'SendRequest.Exhausted': ExhaustedErrorContext;
+  // SendRequest.Exhausted cause options (SendRequest.Attempt.*)
+  'SendRequest.Attempt.Request.FetchFailed': {
+    cause: unknown;
+    rpc: InnerRpcEndpoint;
+    requestBody: JsonLikeValue;
+  };
+  'SendRequest.Attempt.Request.Timeout': { timeoutMs: Milliseconds };
+  'SendRequest.Attempt.Response.JsonParseFailed': {
+    cause: unknown;
+    rpc: InnerRpcEndpoint;
+    response: Response;
+  };
+  'SendRequest.Attempt.Response.InvalidSchema': InvalidSchemaErrorContext;
+  // Inner RPC Errors - we use it only inside sendRequest
+  'SendRequest.InnerRpc.MethodNotFound': RpcErrorContext;
+  'SendRequest.InnerRpc.ParseFailed': RpcErrorContext;
+  'SendRequest.InnerRpc.NotSynced': RpcErrorContext;
+  'SendRequest.InnerRpc.Transaction.Timeout': RpcErrorContext;
+  'SendRequest.InnerRpc.Block.GarbageCollected': RpcErrorContext;
+  'SendRequest.InnerRpc.Block.NotFound': RpcErrorContext;
+  'SendRequest.InnerRpc.Internal': RpcErrorContext;
+}
 
 export type SendRequestContext = {
   transportPolicy: TransportPolicy;
@@ -114,17 +78,11 @@ type SendRequestArgs = {
   signal?: AbortSignal;
 };
 
-// TODO Rename and remove
 export type SendRequestError =
-  | NatError<'Client.Transport.SendRequest.PreferredRpc.NotFound'>
-  | NatError<'Client.Transport.SendRequest.Request.FetchFailed'>
-  | NatError<'Client.Transport.SendRequest.Request.Attempt.Timeout'>
-  | NatError<'Client.Transport.SendRequest.Request.Timeout'>
-  | NatError<'Client.Transport.SendRequest.Request.Aborted'>
-  | NatError<'Client.Transport.SendRequest.Response.JsonParseFailed'>
-  | NatError<'Client.Transport.SendRequest.Response.InvalidSchema'>
-  | NatError<'Client.Transport.SendRequest.Response.Result.InvalidSchema'>
-  | NatError<'Client.Transport.SendRequest.Response.Error.InvalidSchema'>;
+  | NatError<'SendRequest.PreferredRpc.NotFound'>
+  | NatError<'SendRequest.Timeout'>
+  | NatError<'SendRequest.Aborted'>
+  | NatError<'SendRequest.Exhausted'>;
 
 export type SendRequest = (
   args: SendRequestArgs,

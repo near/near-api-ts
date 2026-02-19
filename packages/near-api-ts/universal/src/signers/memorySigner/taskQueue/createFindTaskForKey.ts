@@ -3,8 +3,8 @@ import type {
   FullAccessKeyPriority,
   FunctionCallKeyPriority,
   TaskQueueContext,
-} from '../../../../types/signers/memorySigner/taskQueue';
-import type { PoolKey } from '../../../../types/signers/memorySigner/keyPool';
+} from '../../../../types/signers/memorySigner/inner/taskQueue';
+import type { PoolKey } from '../../../../types/signers/memorySigner/inner/keyPool';
 
 const checkIfKeyMatchRequirements = (
   keyPriority: FullAccessKeyPriority | FunctionCallKeyPriority,

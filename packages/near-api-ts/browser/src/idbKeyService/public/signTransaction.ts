@@ -12,14 +12,14 @@ const SignTransactionArgsSchema = z.object({
 
 export const createSafeSignTransaction: any = (context: IdbKeyServiceContext) =>
   wrapInternalError(
-    `FileKeyService.SignTransaction.Internal`,
+    `IdbKeyService.SignTransaction.Internal`,
     async (args: any) => {
       const validArgs = SignTransactionArgsSchema.safeParse(args);
 
       if (!validArgs.success)
         return result.err(
           createNatError({
-            kind: `FileKeyService.SignTransaction.Args.InvalidSchema`,
+            kind: `IdbKeyService.SignTransaction.Args.InvalidSchema`,
             context: { zodError: validArgs.error },
           }),
         );

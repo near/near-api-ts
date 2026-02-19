@@ -1,5 +1,5 @@
 import { getAccessTypePriority } from './_common/getAccessTypePriority';
-import type { CreateAddExecuteTransactionTask } from '../../../../../types/signers/memorySigner/taskQueue';
+import type { CreateAddExecuteTransactionTask } from '../../../../../types/signers/memorySigner/inner/taskQueue';
 import { addTask } from './_common/addTask';
 
 export const createAddExecuteTransactionTask: CreateAddExecuteTransactionTask =

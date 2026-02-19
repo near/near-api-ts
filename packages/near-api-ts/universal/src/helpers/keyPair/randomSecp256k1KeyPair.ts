@@ -18,7 +18,7 @@ const createSafeSignBySecp256k1Key = (u8PrivateKey: Uint8Array) =>
 export const safeRandomSecp256k1KeyPair: SafeCreateRandomSecp256k1KeyPair =
   wrapInternalError('CreateRandomSecp256k1KeyPair.Internal', () => {
     const u8SecretKey = secp256k1.utils.randomSecretKey();
-    // nearcore expects uncompressed public key without header 0x04
+    // nearcore expects an uncompressed public key without header 0x04
     const u8PublicKey = secp256k1.getPublicKey(u8SecretKey, false);
     const u8PublicKeyWithoutHeader = u8PublicKey.slice(1);
 

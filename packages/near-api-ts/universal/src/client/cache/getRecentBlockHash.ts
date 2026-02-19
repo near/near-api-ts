@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
 import { result } from '../../_common/utils/result';
-import { createNatError, isNatErrorOf } from '../../_common/natError';
+import { createNatError } from '../../_common/natError';
 import { BlockHashSchema } from '../../_common/schemas/zod/common/common';
 import type { CreateSafeGetRecentBlockHash } from '../../../types/client/cache/getRecentBlockHash';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
@@ -57,20 +57,18 @@ export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (
       signal: args?.options?.signal,
     });
 
+    // This error should never happen because we don't allow configuring transport policy
+    if (
+      !rpcResponse.ok &&
+      rpcResponse.error.kind === 'SendRequest.PreferredRpc.NotFound'
+    )
+      throw rpcResponse.error;
+
     // If the request failed
     if (!rpcResponse.ok) {
-      if (
-        isNatErrorOf(rpcResponse.error, [
-          'Client.Transport.SendRequest.Response.Result.InvalidSchema',
-          'Client.Transport.SendRequest.Response.Error.InvalidSchema',
-        ])
-      )
-        // TODO remove after fix sendRequest error types (remove Result.InvalidSchema + Error.InvalidSchema)
-        throw rpcResponse.error;
-
       return repackError({
         error: rpcResponse.error,
-        originPrefix: 'Client.Transport.SendRequest',
+        originPrefix: 'SendRequest',
         targetPrefix: 'Client.GetRecentBlockHash',
       });
     }
@@ -80,12 +78,7 @@ export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (
       return result.err(
         createNatError({
           kind: 'Client.GetRecentBlockHash.Internal',
-          context: {
-            cause: createNatError({
-              kind: 'Client.GetRecentBlockHash.Rpc.Unclassified',
-              context: { rpcResponse: rpcResponse.value },
-            }),
-          },
+          context: { cause: rpcResponse.value },
         }),
       );
 
@@ -97,8 +90,13 @@ export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (
     if (!rpcResult.success)
       return result.err(
         createNatError({
-          kind: 'Client.GetRecentBlockHash.Response.InvalidSchema',
-          context: { zodError: rpcResult.error },
+          kind: 'Client.GetRecentBlockHash.Exhausted',
+          context: {
+            lastError: createNatError({
+              kind: 'SendRequest.Attempt.Response.InvalidSchema',
+              context: { zodError: rpcResult.error },
+            }),
+          },
         }),
       );
 

@@ -3,7 +3,8 @@ import { result } from '@universal/src/_common/utils/result';
 import type { IdbKeyServiceContext } from '../idbKeyService';
 
 export const createGetKeyPair =
-  (context: IdbKeyServiceContext) => async (publicKey: any): Promise<any> => {
+  (context: IdbKeyServiceContext) =>
+  async (publicKey: any): Promise<any> => {
     // 1. If the key pair is already in the cache, return it
     if (context.keyPairs.has(publicKey))
       return result.ok(context.keyPairs.get(publicKey));

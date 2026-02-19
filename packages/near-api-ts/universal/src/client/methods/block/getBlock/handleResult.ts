@@ -9,10 +9,10 @@ export const handleResult = (rpcResponse: RpcResponse) => {
   if (!rpcResult.success)
     return result.err(
       createNatError({
-        kind: 'Client.GetBlock.SendRequest.Failed',
+        kind: 'Client.GetBlock.Exhausted',
         context: {
-          cause: createNatError({
-            kind: 'Client.Transport.SendRequest.Response.Result.InvalidSchema',
+          lastError: createNatError({
+            kind: 'SendRequest.Attempt.Response.InvalidSchema',
             context: { zodError: rpcResult.error },
           }),
         },

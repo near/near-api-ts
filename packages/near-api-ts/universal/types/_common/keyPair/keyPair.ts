@@ -2,24 +2,20 @@ import type { PrivateKey, PublicKey, Signature } from '../crypto';
 import type { Hex, Result } from '../common';
 import type { NatError } from '../../../src/_common/natError';
 import type {
-  InvalidSchemaContext,
+  InvalidSchemaErrorContext,
   InternalErrorContext,
 } from '../../natError';
 import type { Curve } from '../curveString';
 
-export type KeyPairErrorVariant =
-  | {
-      kind: 'CreateKeyPair.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'CreateKeyPair.Internal';
-      context: InternalErrorContext;
-    }
-  | {
-      kind: 'KeyPair.Sign.Internal';
-      context: InternalErrorContext;
-    };
+export interface KeyPairPublicErrorRegistry {
+  'CreateKeyPair.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateKeyPair.Internal': InternalErrorContext;
+  'KeyPair.Sign.Internal': InternalErrorContext;
+  'CreateRandomEd25519KeyPair.Internal': InternalErrorContext;
+  'Ed25519KeyPair.Sign.Internal': InternalErrorContext;
+  'CreateRandomSecp256k1KeyPair.Internal': InternalErrorContext;
+  'Secp256k1KeyPair.Sign.Internal': InternalErrorContext;
+}
 
 export type SignOutput = {
   signature: Signature;

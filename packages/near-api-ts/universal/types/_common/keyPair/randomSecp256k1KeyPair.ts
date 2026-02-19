@@ -1,4 +1,3 @@
-import type { InternalErrorContext } from '../../natError';
 import type {
   Secp256k1PrivateKey,
   Secp256k1PublicKey,
@@ -7,11 +6,6 @@ import type {
 import type { NatError } from '../../../src/_common/natError';
 import type { Hex, Result } from '../common';
 import type { Secp256k1Curve } from '../curveString';
-
-export type RandomSecp256k1KeyPairErrorVariant = {
-  kind: 'Secp256k1KeyPair.Sign.Internal';
-  context: InternalErrorContext;
-};
 
 // *********** Sign *****
 
@@ -30,11 +24,6 @@ export type SafeSignBySecp256k1Key = (
 ) => Result<SignBySecp256k1KeyOutput, SignBySecp256k1KeyError>;
 
 // ***********  CreateRandomSecp256k1KeyPair *****
-
-export type CreateRandomSecp256k1KeyPairErrorVariant = {
-  kind: 'CreateRandomSecp256k1KeyPair.Internal';
-  context: InternalErrorContext;
-};
 
 type CreateRandomSecp256k1Error =
   NatError<'CreateRandomSecp256k1KeyPair.Internal'>;

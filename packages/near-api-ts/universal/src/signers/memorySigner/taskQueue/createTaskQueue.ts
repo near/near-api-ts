@@ -6,7 +6,7 @@ import type {
   RemoveTask,
   TaskQueue,
   TaskQueueContext,
-} from '../../../../types/signers/memorySigner/taskQueue';
+} from '../../../../types/signers/memorySigner/inner/taskQueue';
 
 export const createTaskQueue: CreateTaskQueue = (
   signerContext,

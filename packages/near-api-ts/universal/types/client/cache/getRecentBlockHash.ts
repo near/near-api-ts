@@ -1,16 +1,25 @@
 import type { BlockHash, Result } from '../../_common/common';
-import type { SendRequestErrorVariant } from '../_common/sendRequestErrorVariant';
 import type { NatError } from '../../../src/_common/natError';
 import type { Transport } from '../transport/transport';
 import type { CacheState } from './cache';
-import type { CommonRpcMethodErrorVariant } from '../methods/_common/common';
+import type {
+  InternalErrorContext,
+  InvalidSchemaErrorContext,
+} from '@universal/types/natError';
+import type {
+  AbortedErrorContext,
+  ExhaustedErrorContext,
+  PreferredRpcNotFoundErrorContext,
+  TimeoutErrorContext,
+} from '@universal/types/client/transport/sendRequest';
 
-export type GetRecentBlockHashErrorVariant =
-  | CommonRpcMethodErrorVariant<'Client.GetRecentBlockHash'>
-  | SendRequestErrorVariant<'Client.GetRecentBlockHash'>;
-
-export type GetRecentBlockHashInternalErrorKind =
-  'Client.GetRecentBlockHash.Internal';
+export interface GetRecentBlockHashPublicErrorRegistry {
+  'Client.GetRecentBlockHash.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'Client.GetRecentBlockHash.Timeout': TimeoutErrorContext;
+  'Client.GetRecentBlockHash.Aborted': AbortedErrorContext;
+  'Client.GetRecentBlockHash.Exhausted': ExhaustedErrorContext;
+  'Client.GetRecentBlockHash.Internal': InternalErrorContext;
+}
 
 export type GetRecentBlockHashArgs = {
   options?: {
@@ -21,13 +30,9 @@ export type GetRecentBlockHashArgs = {
 
 type GetRecentBlockHashError =
   | NatError<'Client.GetRecentBlockHash.Args.InvalidSchema'>
-  | NatError<`Client.GetRecentBlockHash.PreferredRpc.NotFound`>
-  | NatError<`Client.GetRecentBlockHash.Request.FetchFailed`>
-  | NatError<`Client.GetRecentBlockHash.Request.Attempt.Timeout`>
-  | NatError<`Client.GetRecentBlockHash.Request.Timeout`>
-  | NatError<`Client.GetRecentBlockHash.Request.Aborted`>
-  | NatError<`Client.GetRecentBlockHash.Response.JsonParseFailed`>
-  | NatError<`Client.GetRecentBlockHash.Response.InvalidSchema`>
+  | NatError<'Client.GetRecentBlockHash.Timeout'>
+  | NatError<'Client.GetRecentBlockHash.Aborted'>
+  | NatError<'Client.GetRecentBlockHash.Exhausted'>
   | NatError<'Client.GetRecentBlockHash.Internal'>;
 
 export type SafeGetRecentBlockHash = (

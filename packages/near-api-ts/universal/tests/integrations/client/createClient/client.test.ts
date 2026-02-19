@@ -14,7 +14,7 @@ test(
   },
   async () => {
     // const server1 = await createMockRpc({ port: 4561 });
-    const client = await createClient({
+    const client = createClient({
       transport: {
         rpcEndpoints: {
           regular: [
@@ -49,7 +49,7 @@ test(
           transport: {
             // rpcTypePreferences: ['Archival'],
             timeouts: {
-              requestMs: 100,
+              // requestMs: 100,
               // attemptMs: 1000,
             },
             rpc: {

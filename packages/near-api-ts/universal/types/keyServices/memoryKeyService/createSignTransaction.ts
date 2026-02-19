@@ -1,4 +1,4 @@
-import type { SignedTransaction, Transaction } from '../../transaction';
+import type { SignedTransaction, Transaction } from '../../_common/transaction/transaction';
 import type { NatError } from '../../../src/_common/natError';
 import type { Result } from '../../_common/common';
 

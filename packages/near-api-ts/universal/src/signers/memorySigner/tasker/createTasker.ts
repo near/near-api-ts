@@ -1,11 +1,11 @@
-import type { CreateTasker } from '../../../../types/signers/memorySigner/tasker';
+import type { CreateTasker } from '../../../../types/signers/memorySigner/inner/tasker';
 import { createExecuteTask } from './executeTask/executeTask';
 import type {
   ActiveTasks,
   CompleteTask,
   WaitForTask,
-} from '../../../../types/signers/memorySigner/tasker';
-import type { TaskId } from '../../../../types/signers/memorySigner/taskQueue';
+} from '../../../../types/signers/memorySigner/inner/tasker';
+import type { TaskId } from '../../../../types/signers/memorySigner/inner/taskQueue';
 import type { Result } from '../../../../types/_common/common';
 
 export const createTasker: CreateTasker = (signerContext) => {

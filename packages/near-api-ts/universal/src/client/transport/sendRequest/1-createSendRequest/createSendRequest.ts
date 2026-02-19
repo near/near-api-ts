@@ -9,7 +9,7 @@ import type {
   SendRequest,
   SendRequestContext,
 } from '../../../../../types/client/transport/sendRequest';
-import { isNatErrorOf } from '../../../../_common/natError';
+import { createNatError, isNatErrorOf } from '../../../../_common/natError';
 import { result } from '../../../../_common/utils/result';
 
 export const createSendRequest =
@@ -20,7 +20,7 @@ export const createSendRequest =
       args.transportPolicy,
     );
 
-    // Get rpc list based on the policy rpc preferences;
+    // 1. Get rpc list based on the policy rpc preferences;
     const rpcs = getAvailableRpcs(
       transportContext.rpcEndpoints,
       transportPolicy.rpcTypePreferences,
@@ -43,10 +43,10 @@ export const createSendRequest =
       requestTimeoutSignal: requestTimeout.signal,
     };
 
-    // Try to execute the request with fallback;
+    // 2. Try to execute the request with fallback and retries;
     let requestResult = await tryMultipleRounds(context, rpcs.value);
 
-    // Try to use archival rpc if it's Block.NotFound/GarbageCollected error;
+    // 3. Try to use archival rpc if it's a Block.NotFound/GarbageCollected error;
     requestResult = await handleMaybeUnknownBlock({
       requestResult,
       context,
@@ -61,23 +61,35 @@ export const createSendRequest =
     // Return only transport own errors as ResultErr;
     if (
       isNatErrorOf(requestResult.error, [
-        'Client.Transport.SendRequest.PreferredRpc.NotFound',
-        'Client.Transport.SendRequest.Request.FetchFailed',
-        'Client.Transport.SendRequest.Request.Attempt.Timeout',
-        'Client.Transport.SendRequest.Request.Timeout',
-        'Client.Transport.SendRequest.Request.Aborted',
-        'Client.Transport.SendRequest.Response.JsonParseFailed',
-        'Client.Transport.SendRequest.Response.InvalidSchema',
+        'SendRequest.PreferredRpc.NotFound',
+        'SendRequest.Timeout',
+        'SendRequest.Aborted',
       ])
     )
-      // We repack error cuz TS compiler can't figure out the type
+      // We repack the error cuz TS compiler can't figure out the type
       return result.err(requestResult.error);
+
+    // if it's an attempt error - pack it into Exhausted error;
+    if (
+      isNatErrorOf(requestResult.error, [
+        'SendRequest.Attempt.Request.FetchFailed',
+        'SendRequest.Attempt.Request.Timeout',
+        'SendRequest.Attempt.Response.JsonParseFailed',
+        'SendRequest.Attempt.Response.InvalidSchema',
+      ])
+    )
+      return result.err(
+        createNatError({
+          kind: 'SendRequest.Exhausted',
+          context: { lastError: requestResult.error },
+        }),
+      );
 
     // Don't return high-level rpc errors - we will extract them in every client method again.
     // This will help us to avoid binding transport and client methods and should
-    // simplify further integrations of a new client transports.
+    // simplify further integrations of a new client transport.
     //
-    // For example: some transport may don't need to retry at all - and it will be
+    // For example, some transport may don't need to retry at all - and it will be
     // useless to force its author to implement partial rpc error handling;
     //
     // Instead return the original rpc response;

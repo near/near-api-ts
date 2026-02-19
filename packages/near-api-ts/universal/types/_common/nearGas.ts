@@ -1,35 +1,15 @@
-import type {
-  InvalidSchemaContext,
-  InternalErrorContext,
-} from '../natError';
+import type { InvalidSchemaErrorContext, InternalErrorContext } from '../natError';
 import type { NatError } from '../../src/_common/natError';
 import type { Result } from './common';
 
-export type NearGasErrorVariant =
-  | {
-      kind: 'CreateNearGas.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'CreateNearGas.Internal';
-      context: InternalErrorContext;
-    }
-  | {
-      kind: 'CreateNearGasFromGas.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'CreateNearGasFromGas.Internal';
-      context: InternalErrorContext;
-    }
-  | {
-      kind: 'CreateNearGasFromTeraGas.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'CreateNearGasFromTeraGas.Internal';
-      context: InternalErrorContext;
-    };
+export interface NearGasPublicErrorRegistry {
+  'CreateNearGas.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateNearGas.Internal': InternalErrorContext;
+  'CreateNearGasFromGas.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateNearGasFromGas.Internal': InternalErrorContext;
+  'CreateNearGasFromTeraGas.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateNearGasFromTeraGas.Internal': InternalErrorContext;
+}
 
 export type GasInput = bigint | number;
 export type TeraGasInput = string;

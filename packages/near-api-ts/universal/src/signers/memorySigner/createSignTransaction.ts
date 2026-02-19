@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
-import type { CreateSafeSignTransaction } from '../../../types/signers/memorySigner/createSignTransaction';
+import type { CreateSafeSignTransaction } from '../../../types/signers/memorySigner/public/createSignTransaction';
 import { TransactionIntentSchema } from '../../_common/schemas/zod/transaction/transaction';
 import { result } from '../../_common/utils/result';
 import { createNatError, isNatErrorOf } from '../../_common/natError';

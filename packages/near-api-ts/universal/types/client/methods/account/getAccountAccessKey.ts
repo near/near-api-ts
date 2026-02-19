@@ -10,25 +10,42 @@ import type {
 import type { ClientContext } from '../../client';
 import type { PartialTransportPolicy } from '../../transport/transport';
 import type { NatError } from '../../../../src/_common/natError';
-import type { CommonRpcMethodErrorVariant } from '../_common/common';
-import type { CommonRpcQueryMethodErrorVariant } from '../_common/query';
+import type {
+  RpcQueryBlockGarbageCollectedErrorContext,
+  RpcQueryBlockNotFoundErrorContext,
+  RpcQueryNotSyncedErrorContext,
+  RpcQueryShardNotTrackedErrorContext,
+} from '../_common/common';
 import type { RpcQueryViewAccessKeyOkResult } from '../../../../src/client/methods/account/getAccountAccessKey/handleResult';
+import type {
+  InternalErrorContext,
+  InvalidSchemaErrorContext,
+} from '@universal/types/natError';
+import type {
+  AbortedErrorContext,
+  ExhaustedErrorContext,
+  PreferredRpcNotFoundErrorContext,
+  TimeoutErrorContext,
+} from '@universal/types/client/transport/sendRequest';
 
-export type GetAccountAccessKeyErrorVariant =
-  | CommonRpcMethodErrorVariant<'Client.GetAccountAccessKey'>
-  | CommonRpcQueryMethodErrorVariant<'Client.GetAccountAccessKey'>
-  | {
-      kind: 'Client.GetAccountAccessKey.Rpc.AccountAccessKey.NotFound';
-      context: {
-        accountId: AccountId;
-        publicKey: PublicKey;
-        blockHash: BlockHash;
-        blockHeight: BlockHeight;
-      };
-    };
-
-export type GetAccountAccessKeyInternalErrorKind =
-  'Client.GetAccountAccessKey.Internal';
+export interface GetAccountAccessKeyPublicErrorRegistry {
+  'Client.GetAccountAccessKey.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'Client.GetAccountAccessKey.PreferredRpc.NotFound': PreferredRpcNotFoundErrorContext;
+  'Client.GetAccountAccessKey.Timeout': TimeoutErrorContext;
+  'Client.GetAccountAccessKey.Aborted': AbortedErrorContext;
+  'Client.GetAccountAccessKey.Exhausted': ExhaustedErrorContext;
+  'Client.GetAccountAccessKey.Rpc.AccountAccessKey.NotFound': {
+    accountId: AccountId;
+    publicKey: PublicKey;
+    blockHash: BlockHash;
+    blockHeight: BlockHeight;
+  };
+  'Client.GetAccountAccessKey.Rpc.NotSynced': RpcQueryNotSyncedErrorContext;
+  'Client.GetAccountAccessKey.Rpc.Shard.NotTracked': RpcQueryShardNotTrackedErrorContext;
+  'Client.GetAccountAccessKey.Rpc.Block.GarbageCollected': RpcQueryBlockGarbageCollectedErrorContext;
+  'Client.GetAccountAccessKey.Rpc.Block.NotFound': RpcQueryBlockNotFoundErrorContext;
+  'Client.GetAccountAccessKey.Internal': InternalErrorContext;
+}
 
 export type GetAccountAccessKeyArgs = {
   accountId: AccountId;
@@ -52,7 +69,10 @@ export type GetAccountAccessKeyOutput = {
 
 type GetAccountAccessKeyError =
   | NatError<'Client.GetAccountAccessKey.Args.InvalidSchema'>
-  | NatError<'Client.GetAccountAccessKey.SendRequest.Failed'>
+  | NatError<'Client.GetAccountAccessKey.PreferredRpc.NotFound'>
+  | NatError<'Client.GetAccountAccessKey.Timeout'>
+  | NatError<'Client.GetAccountAccessKey.Aborted'>
+  | NatError<'Client.GetAccountAccessKey.Exhausted'>
   // Rpc - query
   | NatError<'Client.GetAccountAccessKey.Rpc.NotSynced'>
   | NatError<'Client.GetAccountAccessKey.Rpc.Shard.NotTracked'>

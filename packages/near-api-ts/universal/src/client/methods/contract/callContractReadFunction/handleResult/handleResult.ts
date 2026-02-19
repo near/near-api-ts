@@ -6,7 +6,7 @@ import type { InnerCallContractReadFunctionArgs } from '../../../../../../types/
 import { deserializeCallResult } from './deserializeCallResult';
 
 // For legacy reasons, nearcore returns result.error string field when
-// RpcQueryError::ContractExecutionError error happen;
+// RpcQueryError::ContractExecutionError error happens;
 const ContractExecutionErrorSchema = z.object({
   blockHash: z.string(),
   blockHeight: z.number(),
@@ -37,10 +37,10 @@ export const handleResult = (
   if (!rpcResult.success)
     return result.err(
       createNatError({
-        kind: 'Client.CallContractReadFunction.SendRequest.Failed',
+        kind: 'Client.CallContractReadFunction.Exhausted',
         context: {
-          cause: createNatError({
-            kind: 'Client.Transport.SendRequest.Response.Result.InvalidSchema',
+          lastError: createNatError({
+            kind: 'SendRequest.Attempt.Response.InvalidSchema',
             context: { zodError: rpcResult.error },
           }),
         },

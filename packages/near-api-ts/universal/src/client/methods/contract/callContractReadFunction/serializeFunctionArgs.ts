@@ -16,7 +16,7 @@ export const serializeFunctionArgs = (
   | NatError<'Client.CallContractReadFunction.SerializeArgs.Internal'>
   | NatError<'Client.CallContractReadFunction.Args.InvalidSchema'>
 > => {
-  // If user want to use his own custom serializer;
+  // If user wants to use his own custom serializer;
   if (args.options?.serializeArgs) {
     const serializeArgs = args.options.serializeArgs;
     return wrapInternalError(

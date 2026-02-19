@@ -27,10 +27,10 @@ export const handleResult = (
   if (!rpcResult.success)
     return result.err(
       createNatError({
-        kind: 'Client.GetAccountAccessKeys.SendRequest.Failed',
+        kind: 'Client.GetAccountAccessKeys.Exhausted',
         context: {
-          cause: createNatError({
-            kind: 'Client.Transport.SendRequest.Response.Result.InvalidSchema',
+          lastError: createNatError({
+            kind: 'SendRequest.Attempt.Response.InvalidSchema',
             context: { zodError: rpcResult.error },
           }),
         },

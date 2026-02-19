@@ -3,7 +3,7 @@ import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 import { TransactionIntentSchema } from '../../_common/schemas/zod/transaction/transaction';
 import { result } from '../../_common/utils/result';
 import { createNatError, isNatErrorOf } from '../../_common/natError';
-import type { CreateSafeExecuteTransaction } from '../../../types/signers/memorySigner/createExecuteTransaction';
+import type { CreateSafeExecuteTransaction } from '../../../types/signers/memorySigner/public/createExecuteTransaction';
 import { repackError } from '../../_common/utils/repackError';
 
 const SignTransactionArgsSchema = z.object({
@@ -47,7 +47,7 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (
 
       // When we get some errors from the RPC, we want to repack particular errors
       // (which ones can actually happen) and return everything else as .Internal
-      // The main goal is - return the only errors, which can actually happen during
+      // The main goal here - return only errors, which can actually happen during
       // .executeTransaction call;
       // And return everything else under .Internal
       if (
@@ -56,7 +56,10 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (
       ) {
         if (
           isNatErrorOf(taskResult.error.context.cause, [
-            'Client.SendSignedTransaction.SendRequest.Failed',
+            'Client.SendSignedTransaction.PreferredRpc.NotFound',
+            'Client.SendSignedTransaction.Aborted',
+            'Client.SendSignedTransaction.Timeout',
+            'Client.SendSignedTransaction.Exhausted',
             'Client.SendSignedTransaction.Rpc.Transaction.Timeout',
             'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound',
             'Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow',

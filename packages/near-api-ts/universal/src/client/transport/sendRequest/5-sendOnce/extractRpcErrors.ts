@@ -1,19 +1,22 @@
 import type { Result } from '../../../../../types/_common/common';
-import type { RpcError, RpcResponse } from '../../../../_common/schemas/zod/rpc';
+import type {
+  RpcError,
+  RpcResponse,
+} from '../../../../_common/schemas/zod/rpc';
 import { createNatError, type NatError } from '../../../../_common/natError';
 import { result } from '../../../../_common/utils/result';
 import type { InnerRpcEndpoint } from '../../../../../types/client/transport/transport';
 
 export type HighLevelRpcErrors =
-  | NatError<'Client.Transport.SendRequest.Rpc.MethodNotFound'>
-  | NatError<'Client.Transport.SendRequest.Rpc.ParseFailed'>
-  | NatError<'Client.Transport.SendRequest.Rpc.NotSynced'>
-  | NatError<'Client.Transport.SendRequest.Rpc.Transaction.Timeout'>
-  | NatError<'Client.Transport.SendRequest.Rpc.Block.GarbageCollected'>
-  | NatError<'Client.Transport.SendRequest.Rpc.Block.NotFound'>
-  | NatError<'Client.Transport.SendRequest.Rpc.Internal'>;
+  | NatError<'SendRequest.InnerRpc.MethodNotFound'>
+  | NatError<'SendRequest.InnerRpc.ParseFailed'>
+  | NatError<'SendRequest.InnerRpc.NotSynced'>
+  | NatError<'SendRequest.InnerRpc.Transaction.Timeout'>
+  | NatError<'SendRequest.InnerRpc.Block.GarbageCollected'>
+  | NatError<'SendRequest.InnerRpc.Block.NotFound'>
+  | NatError<'SendRequest.InnerRpc.Internal'>;
 
-const prefix = 'Client.Transport.SendRequest.Rpc';
+const prefix = 'SendRequest.InnerRpc';
 
 const getErrorKind = ({
   name,

@@ -22,13 +22,12 @@ describe('CallContractReadFunction', () => {
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
+    client = createDefaultClient(sandbox);
 
-    client = await createDefaultClient(sandbox);
-
-    const keyService = await createMemoryKeyService({
+    const keyService = createMemoryKeyService({
       keySource: { privateKey: DEFAULT_PRIVATE_KEY },
     });
-    const nat = await createMemorySigner({
+    const nat = createMemorySigner({
       signerAccountId: 'nat',
       client,
       keyService,

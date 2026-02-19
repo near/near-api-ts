@@ -3,20 +3,28 @@ import type { RpcBlockResponse } from '@near-js/jsonrpc-types';
 import type { ClientContext } from '../../client';
 import type { PartialTransportPolicy } from '../../transport/transport';
 import type { NatError } from '../../../../src/_common/natError';
-import type { CommonRpcMethodErrorVariant } from '../_common/common';
+import type { RpcQueryNotSyncedErrorContext } from '../_common/common';
+import type {
+  InternalErrorContext,
+  InvalidSchemaErrorContext,
+} from '@universal/types/natError';
+import type {
+  AbortedErrorContext,
+  ExhaustedErrorContext,
+  PreferredRpcNotFoundErrorContext,
+  TimeoutErrorContext,
+} from '@universal/types/client/transport/sendRequest';
 
-export type GetBlockErrorVariant =
-  | CommonRpcMethodErrorVariant<'Client.GetBlock'>
-  | {
-      kind: `Client.GetBlock.Rpc.NotSynced`;
-      context: null;
-    }
-  | {
-      kind: 'Client.GetBlock.Rpc.Block.NotFound';
-      context: null;
-    };
-
-export type GetBlockInternalErrorKind = 'Client.GetBlock.Internal';
+export interface GetBlockPublicErrorRegistry {
+  'Client.GetBlock.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'Client.GetBlock.PreferredRpc.NotFound': PreferredRpcNotFoundErrorContext;
+  'Client.GetBlock.Timeout': TimeoutErrorContext;
+  'Client.GetBlock.Aborted': AbortedErrorContext;
+  'Client.GetBlock.Exhausted': ExhaustedErrorContext;
+  'Client.GetBlock.Rpc.NotSynced': RpcQueryNotSyncedErrorContext;
+  'Client.GetBlock.Rpc.Block.NotFound': null;
+  'Client.GetBlock.Internal': InternalErrorContext;
+}
 
 export type GetBlockArgs = {
   blockReference?: BlockReference;
@@ -34,7 +42,10 @@ export type GetBlockOutcome = {
 
 export type GetBlockError =
   | NatError<'Client.GetBlock.Args.InvalidSchema'>
-  | NatError<'Client.GetBlock.SendRequest.Failed'>
+  | NatError<'Client.GetBlock.PreferredRpc.NotFound'>
+  | NatError<'Client.GetBlock.Timeout'>
+  | NatError<'Client.GetBlock.Aborted'>
+  | NatError<'Client.GetBlock.Exhausted'>
   | NatError<'Client.GetBlock.Rpc.NotSynced'>
   | NatError<'Client.GetBlock.Rpc.Block.NotFound'>
   | NatError<'Client.GetBlock.Internal'>;

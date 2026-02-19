@@ -1,48 +1,46 @@
 import type { ClientContext } from '../../client';
-import type { SignedTransaction } from '../../../transaction';
+import type { SignedTransaction } from '../../../_common/transaction/transaction';
 import type { RpcTransactionResponse } from '@near-js/jsonrpc-types';
 import type { TransportPolicy } from '../../transport/transport';
-import type { CommonRpcMethodErrorVariant } from '../_common/common';
-import type { AccountId, Nonce, Result } from '../../../_common/common';
+import type { Result } from '../../../_common/common';
 import type { NatError } from '../../../../src/_common/natError';
-import type { RpcResponse } from '../../../../src/_common/schemas/zod/rpc';
-import type { SharedTransactionErrorVariant } from '../../../_common/sharedTransactionErrors';
+import type {
+  InternalErrorContext,
+  InvalidSchemaErrorContext,
+} from '@universal/types/natError';
+import type {
+  AbortedErrorContext,
+  ExhaustedErrorContext,
+  PreferredRpcNotFoundErrorContext,
+  TimeoutErrorContext,
+} from '@universal/types/client/transport/sendRequest';
+import type { TransactionErrorContext } from '@universal/types/_common/transaction/rpcTransactionErrorContext';
 
-export type SendSignedTransactionErrorVariant =
-  // Internal
-  | {
-      kind: `Client.SendSignedTransaction.Rpc.Transaction.Action.InvalidIndex`;
-      context: {
-        rpcResponse: RpcResponse;
-      };
-    }
-  // Public
-  | CommonRpcMethodErrorVariant<'Client.SendSignedTransaction'>
-  | SharedTransactionErrorVariant<'Client.SendSignedTransaction'>
-  | {
-      kind: `Client.SendSignedTransaction.Rpc.Transaction.Expired`;
-      context: null;
-    }
-  | {
-      kind: `Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid`;
-      context: {
-        transactionNonce: Nonce; // transactionNonce must be > than accessKeyNonce
-        accessKeyNonce: Nonce;
-      };
-    }
-  | {
-      kind: `Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound`;
-      context: {
-        signerAccountId: AccountId;
-      };
-    }
-  | {
-      kind: `Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid`;
-      context: null;
-    };
-
-export type SendSignedTransactionInternalErrorKind =
-  'Client.SendSignedTransaction.Internal';
+export interface SendSignedTransactionPublicErrorRegistry {
+  'Client.SendSignedTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
+  //
+  'Client.SendSignedTransaction.PreferredRpc.NotFound': PreferredRpcNotFoundErrorContext;
+  'Client.SendSignedTransaction.Timeout': TimeoutErrorContext;
+  'Client.SendSignedTransaction.Aborted': AbortedErrorContext;
+  'Client.SendSignedTransaction.Exhausted': ExhaustedErrorContext;
+  // TODO move to Inner?
+  'Client.SendSignedTransaction.Rpc.Transaction.Action.InvalidIndex': TransactionErrorContext['Action']['InvalidIndex'];
+  //
+  'Client.SendSignedTransaction.Rpc.Transaction.Expired': TransactionErrorContext['Expired'];
+  'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid': TransactionErrorContext['Nonce']['Invalid'];
+  'Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow': TransactionErrorContext['Signer']['Balance']['TooLow'];
+  'Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound': TransactionErrorContext['Signer']['NotFound'];
+  'Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid': TransactionErrorContext['Signature']['Invalid'];
+  'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound': TransactionErrorContext['Receiver']['NotFound'];
+  'Client.SendSignedTransaction.Rpc.Transaction.Timeout': TransactionErrorContext['Timeout'];
+  //
+  'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist': TransactionErrorContext['Action']['CreateAccount']['AlreadyExist'];
+  'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.BelowThreshold': TransactionErrorContext['Action']['Stake']['BelowThreshold'];
+  'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.Balance.TooLow': TransactionErrorContext['Action']['Stake']['Balance']['TooLow'];
+  'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.NotFound': TransactionErrorContext['Action']['Stake']['NotFound'];
+  //
+  'Client.SendSignedTransaction.Internal': InternalErrorContext;
+}
 
 export type SendSignedTransactionArgs = {
   signedTransaction: SignedTransaction;
@@ -60,7 +58,11 @@ export type SendSignedTransactionOutput = {
 
 export type SendSignedTransactionError =
   | NatError<'Client.SendSignedTransaction.Args.InvalidSchema'>
-  | NatError<'Client.SendSignedTransaction.SendRequest.Failed'>
+  // SendRequest
+  | NatError<'Client.SendSignedTransaction.PreferredRpc.NotFound'>
+  | NatError<'Client.SendSignedTransaction.Timeout'>
+  | NatError<'Client.SendSignedTransaction.Aborted'>
+  | NatError<'Client.SendSignedTransaction.Exhausted'>
   // RPC - transaction
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Expired'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid'>

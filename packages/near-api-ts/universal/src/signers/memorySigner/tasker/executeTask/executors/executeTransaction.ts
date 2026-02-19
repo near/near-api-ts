@@ -1,9 +1,9 @@
 import type { Nonce, Result } from '../../../../../../types/_common/common';
 import type { MemorySignerContext } from '../../../../../../types/signers/memorySigner/memorySigner';
-import type { Task } from '../../../../../../types/signers/memorySigner/taskQueue';
-import type { PoolKey } from '../../../../../../types/signers/memorySigner/keyPool';
+import type { Task } from '../../../../../../types/signers/memorySigner/inner/taskQueue';
+import type { PoolKey } from '../../../../../../types/signers/memorySigner/inner/keyPool';
 import { result } from '../../../../../_common/utils/result';
-import type { Transaction } from '../../../../../../types/transaction';
+import type { Transaction } from '../../../../../../types/_common/transaction/transaction';
 import { createNatError, type NatError } from '../../../../../_common/natError';
 import type { SendSignedTransactionOutput } from '../../../../../../types/client/methods/transaction/sendSignedTransaction';
 import { wrapInternalError } from '../../../../../_common/utils/wrapInternalError';
@@ -24,7 +24,7 @@ export const executeTransaction = async (
   task: Task,
   key: PoolKey,
 ): Promise<void> => {
-  const maxAttempts = 1; // Maybe we will allow user to configure it in the future
+  const maxAttempts = 3; // Maybe we will allow user to configure it in the future
 
   const attempt: Attempt = wrapInternalError(
     'MemorySigner.ExecuteTransaction.Internal',

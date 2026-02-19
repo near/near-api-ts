@@ -1,4 +1,4 @@
-import type { MemorySignerContext } from './memorySigner';
+import type { MemorySignerContext } from '../memorySigner';
 import type { UUID } from 'crypto';
 import type {
   AccountId,
@@ -6,32 +6,26 @@ import type {
   TimeoutId,
   Result,
   Milliseconds,
-} from '../../_common/common';
+} from '../../../_common/common';
 import type {
   SignedTransaction,
   TransactionIntent,
-} from '../../transaction';
+} from '../../../_common/transaction/transaction';
 import type {
   SendSignedTransactionError,
   SendSignedTransactionOutput,
-} from '../../client/methods/transaction/sendSignedTransaction';
+} from '../../../client/methods/transaction/sendSignedTransaction';
 import type { PoolKey } from './keyPool';
-import type { NatError } from '../../../src/_common/natError';
-import type { CreateMemorySignerArgs } from './createMemorySigner';
+import type { NatError } from '../../../../src/_common/natError';
+import type { CreateMemorySignerArgs } from '../public/createMemorySigner';
+import type { MemorySignerErrorContext } from '@universal/types/signers/memorySigner/_common/errorContext';
 
-export type TaskQueueTimeout<Prefix extends string> = {
-  kind: `${Prefix}.TaskQueue.Timeout`;
-  context: { timeoutMs: Milliseconds };
-};
-
-export type TaskQueueErrorVariant =
-  | TaskQueueTimeout<'MemorySigner'>
-  | {
-      kind: 'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction';
-      context: {
-        cause: SendSignedTransactionError;
-      };
-    };
+export interface TaskQueueInnerErrorRegistry {
+  'MemorySigner.TaskQueue.Timeout': MemorySignerErrorContext['TaskQueue']['Timeout'];
+  'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction': {
+    cause: SendSignedTransactionError;
+  };
+}
 
 export type FullAccessKeyPriority = { accessType: 'FullAccess' };
 

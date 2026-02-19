@@ -10,7 +10,7 @@ import type {
   NativeAction,
   NativeSignedTransaction,
   NativeTransaction,
-} from '../../../../types/transaction';
+} from '../../../../types/_common/transaction/transaction';
 import type {
   InnerAction,
   InnerSignedTransaction,

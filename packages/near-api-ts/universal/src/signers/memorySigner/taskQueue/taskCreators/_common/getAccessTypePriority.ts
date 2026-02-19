@@ -1,7 +1,7 @@
-import type { TransactionIntent } from '../../../../../../types/transaction';
+import type { TransactionIntent } from '../../../../../../types/_common/transaction/transaction';
 import type { FunctionCallAction } from '../../../../../../types/actions/functionCall';
 import type { AccountId } from '../../../../../../types/_common/common';
-import type { AccessTypePriority } from '../../../../../../types/signers/memorySigner/taskQueue';
+import type { AccessTypePriority } from '../../../../../../types/signers/memorySigner/inner/taskQueue';
 
 /**
  * We always want to sign txns with FA key when possible and use FC only if all

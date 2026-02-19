@@ -3,15 +3,14 @@ import { getTransactionHash } from '@universal/src/_common/utils/getTransactionH
 import { result } from '@universal/src/_common/utils/result';
 import { wrapInternalError } from '@universal/src/_common/utils/wrapInternalError';
 import { createNatError } from '@universal/src/_common/natError';
-import type { CreateSafeSignTransaction } from '../../../types/fileKeyService/signTransaction';
 import { TransactionSchema } from '@universal/src/_common/schemas/zod/transaction/transaction';
 
 const SignTransactionArgsSchema = z.object({
   transaction: TransactionSchema,
 });
 
-export const createSafeSignTransaction: CreateSafeSignTransaction = (context) =>
-  wrapInternalError(`FileKeyService.SignTransaction.Internal`, async (args) => {
+export const createSafeSignTransaction: any = (context: any) =>
+  wrapInternalError(`FileKeyService.SignTransaction.Internal`, async (args: any) => {
     const validArgs = SignTransactionArgsSchema.safeParse(args);
 
     if (!validArgs.success)

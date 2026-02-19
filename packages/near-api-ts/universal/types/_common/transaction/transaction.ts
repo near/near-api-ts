@@ -1,40 +1,40 @@
-import type { AccountId, BlockHash, CryptoHash, Nonce } from './_common/common';
+import type { AccountId, BlockHash, CryptoHash, Nonce } from '../common';
 import type {
   NativePublicKey,
   NativeSignature,
   PublicKey,
   Signature,
-} from './_common/crypto';
+} from '../crypto';
 import type {
   CreateAccountAction,
   NativeCreateAccountAction,
-} from './actions/createAccount';
+} from '../../actions/createAccount';
 import type {
   NativeTransferAction,
   TransferAction,
-} from './actions/transfer';
+} from '../../actions/transfer';
 import type {
   AddFullAccessKeyAction,
   AddFunctionCallKeyAction,
   NativeAddKeyAction,
-} from './actions/addKey';
+} from '../../actions/addKey';
 import type {
   FunctionCallAction,
   NativeFunctionCallAction,
-} from './actions/functionCall';
+} from '../../actions/functionCall';
 import type {
   DeleteKeyAction,
   NativeDeleteKeyAction,
-} from './actions/deleteKey';
+} from '../../actions/deleteKey';
 import type {
   DeleteAccountAction,
   NativeDeleteAccountAction,
-} from './actions/deleteAccount';
+} from '../../actions/deleteAccount';
 import type {
   DeployContractAction,
   NativeDeployContractAction,
-} from './actions/deployContract';
-import type { NativeStakeAction, StakeAction } from './actions/stake';
+} from '../../actions/deployContract';
+import type { NativeStakeAction, StakeAction } from '../../actions/stake';
 
 export type Action =
   | CreateAccountAction

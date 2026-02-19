@@ -9,15 +9,15 @@ import type { SendOnceResult } from '../5-sendOnce/sendOnce';
 const shouldTryAnotherRpc = (sendOnceResult: SendOnceResult): boolean =>
   !sendOnceResult.ok &&
   isNatErrorOf(sendOnceResult.error, [
-    'Client.Transport.SendRequest.Request.FetchFailed',
-    'Client.Transport.SendRequest.Request.Attempt.Timeout',
-    'Client.Transport.SendRequest.Response.JsonParseFailed',
-    'Client.Transport.SendRequest.Response.InvalidSchema',
-    'Client.Transport.SendRequest.Rpc.MethodNotFound',
-    'Client.Transport.SendRequest.Rpc.ParseFailed',
-    'Client.Transport.SendRequest.Rpc.Transaction.Timeout',
-    'Client.Transport.SendRequest.Rpc.NotSynced',
-    'Client.Transport.SendRequest.Rpc.Internal',
+    'SendRequest.Attempt.Request.FetchFailed',
+    'SendRequest.Attempt.Request.Timeout',
+    'SendRequest.Attempt.Response.JsonParseFailed',
+    'SendRequest.Attempt.Response.InvalidSchema',
+    'SendRequest.InnerRpc.MethodNotFound',
+    'SendRequest.InnerRpc.ParseFailed',
+    'SendRequest.InnerRpc.Transaction.Timeout',
+    'SendRequest.InnerRpc.NotSynced',
+    'SendRequest.InnerRpc.Internal',
   ]);
 
 export const tryOneRound = async (
@@ -36,8 +36,7 @@ export const tryOneRound = async (
       return sendWithRetryResult;
 
     const sleepResult = await safeSleep<
-      | NatError<'Client.Transport.SendRequest.Request.Aborted'>
-      | NatError<'Client.Transport.SendRequest.Request.Timeout'>
+      NatError<'SendRequest.Aborted'> | NatError<'SendRequest.Timeout'>
     >(
       nextRpcDelayMs,
       combineAbortSignals([

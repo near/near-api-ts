@@ -1,8 +1,8 @@
 import { result } from '../../../../../_common/utils/result';
 import type { MemorySignerContext } from '../../../../../../types/signers/memorySigner/memorySigner';
-import type { Task } from '../../../../../../types/signers/memorySigner/taskQueue';
-import type { PoolKey } from '../../../../../../types/signers/memorySigner/keyPool';
-import type { SignedTransaction, Transaction } from '../../../../../../types/transaction';
+import type { Task } from '../../../../../../types/signers/memorySigner/inner/taskQueue';
+import type { PoolKey } from '../../../../../../types/signers/memorySigner/inner/keyPool';
+import type { SignedTransaction, Transaction } from '../../../../../../types/_common/transaction/transaction';
 import { wrapInternalError } from '../../../../../_common/utils/wrapInternalError';
 import type { Result } from '../../../../../../types/_common/common';
 import type { NatError } from '../../../../../_common/natError';

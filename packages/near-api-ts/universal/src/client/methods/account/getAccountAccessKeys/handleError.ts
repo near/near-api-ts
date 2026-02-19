@@ -15,10 +15,10 @@ export const handleError = (rpcResponse: RpcResponse) => {
   if (!rpcError.success)
     return result.err(
       createNatError({
-        kind: 'Client.GetAccountAccessKeys.SendRequest.Failed',
+        kind: 'Client.GetAccountAccessKeys.Exhausted',
         context: {
-          cause: createNatError({
-            kind: 'Client.Transport.SendRequest.Response.Error.InvalidSchema',
+          lastError: createNatError({
+            kind: 'SendRequest.Attempt.Response.InvalidSchema',
             context: { zodError: rpcError.error },
           }),
         },
@@ -77,12 +77,7 @@ export const handleError = (rpcResponse: RpcResponse) => {
   return result.err(
     createNatError({
       kind: 'Client.GetAccountAccessKeys.Internal',
-      context: {
-        cause: createNatError({
-          kind: 'Client.GetAccountAccessKeys.Rpc.Unclassified',
-          context: { rpcResponse },
-        }),
-      },
+      context: { cause: rpcResponse },
     }),
   );
 };

@@ -1,4 +1,3 @@
-import type { InternalErrorContext } from '../../natError';
 import type {
   Ed25519PrivateKey,
   Ed25519PublicKey,
@@ -7,11 +6,6 @@ import type {
 import type { NatError } from '../../../src/_common/natError';
 import type { Hex, Result } from '../common';
 import type { Ed25519Curve } from '../curveString';
-
-export type RandomEd25519KeyPairErrorVariant = {
-  kind: 'Ed25519KeyPair.Sign.Internal';
-  context: InternalErrorContext;
-};
 
 // *********** Sign *****
 
@@ -30,11 +24,6 @@ export type SafeSignByEd25519Key = (
 ) => Result<SignByEd25519KeyOutput, SignByEd25519KeyError>;
 
 // ***********  CreateRandomEd25519KeyPair *****
-
-export type CreateRandomEd25519KeyPairErrorVariant = {
-  kind: 'CreateRandomEd25519KeyPair.Internal';
-  context: InternalErrorContext;
-};
 
 type CreateRandomEd25519KeyPairError =
   NatError<'CreateRandomEd25519KeyPair.Internal'>;

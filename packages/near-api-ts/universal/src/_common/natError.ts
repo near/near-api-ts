@@ -2,7 +2,9 @@ import type {
   NatErrorKind,
   CreateNatErrorArgs,
   ContextFor,
+  CreateResultNatError,
 } from '../../types/natError';
+import { result } from '@universal/src/_common/utils/result';
 
 export const NatErrorBrand = Symbol('NatError');
 
@@ -22,6 +24,9 @@ export class NatError<K extends NatErrorKind> extends Error {
 export const createNatError = <K extends NatErrorKind>(
   args: CreateNatErrorArgs<K>,
 ): NatError<K> => new NatError(args);
+
+export const createResultNatError: CreateResultNatError = (kind, context) =>
+  result.err(new NatError({ kind, context }));
 
 export const isNatError = <K extends NatErrorKind>(
   error: unknown,

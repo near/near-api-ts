@@ -3,7 +3,7 @@ import { executeTransaction } from './executors/executeTransaction';
 import type {
   CreateExecuteTask,
   ExecuteTask,
-} from '../../../../../types/signers/memorySigner/tasker';
+} from '../../../../../types/signers/memorySigner/inner/tasker';
 
 export const createExecuteTask: CreateExecuteTask = (signerContext) => {
   const executeTask: ExecuteTask = async (task) => {

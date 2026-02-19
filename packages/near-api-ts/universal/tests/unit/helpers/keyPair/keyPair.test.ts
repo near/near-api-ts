@@ -18,11 +18,9 @@ describe('KeyPair', () => {
   });
 
   it('CreateKeyPair.Args.InvalidSchema', () => {
-    //@ts-expect-error
     const kp1 = safeKeyPair('123');
     assertNatErrKind(kp1, 'CreateKeyPair.Args.InvalidSchema');
 
-    //@ts-expect-error
     const kp2 = safeKeyPair('ed225519:AkTn58AmaJcF7L15WqKUUfm8fv5gwzSymHXg3EDRpC44',);
     assertNatErrKind(kp2, 'CreateKeyPair.Args.InvalidSchema');
 

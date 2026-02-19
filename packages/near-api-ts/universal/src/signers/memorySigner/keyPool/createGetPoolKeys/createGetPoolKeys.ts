@@ -1,9 +1,9 @@
 import type { MemorySignerContext } from '../../../../../types/signers/memorySigner/memorySigner';
-import type { CreateMemorySignerArgs } from '../../../../../types/signers/memorySigner/createMemorySigner';
+import type { CreateMemorySignerArgs } from '../../../../../types/signers/memorySigner/public/createMemorySigner';
 import type {
   GetPoolKeys,
   KeyPoolState,
-} from '../../../../../types/signers/memorySigner/keyPool';
+} from '../../../../../types/signers/memorySigner/inner/keyPool';
 import { result } from '../../../../_common/utils/result';
 import { createNatError } from '../../../../_common/natError';
 import { getAllowedAccessKeys } from './getAllowedAccessKeys';

@@ -22,7 +22,7 @@ export const createExternalAbortSignal = (inputSignal?: AbortSignal) => {
     () => {
       controller.abort(
         createNatError({
-          kind: 'Client.Transport.SendRequest.Request.Aborted',
+          kind: 'SendRequest.Aborted',
           context: { reason: inputSignal.reason },
         }),
       );

@@ -4,7 +4,7 @@ import type {
   FunctionCallKey,
 } from '../../../../../types/_common/accountAccessKey';
 import type { MemorySignerContext } from '../../../../../types/signers/memorySigner/memorySigner';
-import type { PoolFunctionCallKey } from '../../../../../types/signers/memorySigner/keyPool';
+import type { PoolFunctionCallKey } from '../../../../../types/signers/memorySigner/inner/keyPool';
 
 const transformKey = (
   functionCallKey: FunctionCallKey,

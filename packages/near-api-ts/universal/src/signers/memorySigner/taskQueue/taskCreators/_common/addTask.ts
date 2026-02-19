@@ -3,7 +3,7 @@ import { createNatError } from '../../../../../_common/natError';
 import type {
   Task,
   TaskQueueContext,
-} from '../../../../../../types/signers/memorySigner/taskQueue';
+} from '../../../../../../types/signers/memorySigner/inner/taskQueue';
 
 export const addTask = (task: Task, taskQueueContext: TaskQueueContext) => {
   const { timeoutMs, signerContext, cleaners } = taskQueueContext;

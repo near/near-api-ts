@@ -1,24 +1,14 @@
 import type { NearTokenArgs } from '../_common/nearToken';
-import type {
-  InternalErrorContext,
-  InvalidSchemaContext,
-} from '../natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
 import type { NatError } from '../../src/_common/natError';
 import type { Result } from '../_common/common';
 import type { PublicKey } from '@near-js/jsonrpc-types';
 import type { NativePublicKey } from '../_common/crypto';
 
-export type CreateStakeActionErrorVariant =
-  | {
-      kind: 'CreateAction.Stake.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'CreateAction.Stake.Internal';
-      context: InternalErrorContext;
-    };
-
-export type CreateStakeActionInternalErrorKind = 'CreateAction.Stake.Internal';
+export interface CreateStakeActionPublicErrorRegistry {
+  'CreateAction.Stake.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateAction.Stake.Internal': InternalErrorContext;
+}
 
 export type CreateStakeActionArgs = {
   amount: NearTokenArgs;

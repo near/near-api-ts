@@ -2,22 +2,27 @@ import type { CreateTransportArgs } from './transport/transport';
 import type { Result } from '../_common/common';
 import type { Client } from './client';
 import type {
-  InvalidSchemaContext,
+  InvalidSchemaErrorContext,
   InternalErrorContext,
 } from '../natError';
 import type { NatError } from '../../src/_common/natError';
 
-export type CreateClientErrorVariant =
-  | {
-      kind: 'CreateClient.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'CreateClient.Internal';
-      context: InternalErrorContext;
-    };
+export interface CreateClientPublicErrorRegistry {
+  'CreateClient.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateClient.Internal': InternalErrorContext;
+}
 
-export type CreateClientInternalErrorKind = 'CreateClient.Internal';
+// export type CreateClientErrorVariant =
+//   | {
+//       kind: 'CreateClient.Args.InvalidSchema';
+//       context: InvalidSchemaErrorContext;
+//     }
+//   | {
+//       kind: 'CreateClient.Internal';
+//       context: InternalErrorContext;
+//     };
+//
+// export type CreateClientInternalErrorKind = 'CreateClient.Internal';
 
 type CreateClientArgs = {
   transport: CreateTransportArgs;

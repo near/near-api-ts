@@ -1,23 +1,12 @@
 import type { NearTokenArgs } from '../_common/nearToken';
-import type {
-  InternalErrorContext,
-  InvalidSchemaContext,
-} from '../natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
 import type { NatError } from '../../src/_common/natError';
 import type { Result } from '../_common/common';
 
-export type CreateTransferActionErrorVariant =
-  | {
-      kind: 'CreateAction.Transfer.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'CreateAction.Transfer.Internal';
-      context: InternalErrorContext;
-    };
-
-export type CreateTransferActionInternalErrorKind =
-  'CreateAction.Transfer.Internal';
+export interface CreateTransferActionPublicErrorRegistry {
+  'CreateAction.Transfer.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateAction.Transfer.Internal': InternalErrorContext;
+}
 
 export type CreateTransferActionArgs = {
   amount: NearTokenArgs;

@@ -30,7 +30,7 @@ export const createGetStoragePricePerByte =
     // a situation, when user will use a CustomClient without this method, but it's
     // required;
     // Also, full protocol config shema may change a lot, and we want to avoid
-    // handling breaking changes all the time inside of this fn.
+    // handling breaking changes all the time inside this fn.
     const protocolConfig = await transport.sendRequest({
       method: 'EXPERIMENTAL_protocol_config',
       params: { finality: 'near-final' },
@@ -45,8 +45,13 @@ export const createGetStoragePricePerByte =
     if (!rpcResult.success)
       return result.err(
         createNatError({
-          kind: 'Client.Transport.SendRequest.Response.Result.InvalidSchema',
-          context: { zodError: rpcResult.error },
+          kind: 'SendRequest.Exhausted',
+          context: {
+            lastError: createNatError({
+              kind: 'SendRequest.Attempt.Response.InvalidSchema',
+              context: { zodError: rpcResult.error },
+            }),
+          },
         }),
       );
 

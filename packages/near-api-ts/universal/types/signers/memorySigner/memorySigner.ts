@@ -1,43 +1,29 @@
 import type { AccountId } from '../../_common/common';
 import type { Client } from '../../client/client';
 import type { MemoryKeyService } from '../../keyServices/memoryKeyService/memoryKeyService';
-import type {
-  KeyPool,
-  KeyPoolErrorVariant,
-} from './keyPool';
-import type { Tasker } from './tasker';
-import type {
-  TaskQueue,
-  TaskQueueErrorVariant,
-} from './taskQueue';
-import type {
-  CreateMemorySignerErrorVariant,
-  CreateMemorySignerInternalErrorKind,
-} from './createMemorySigner';
+import type { KeyPool, KeyPoolInnerErrorRegistry } from './inner/keyPool';
+import type { Tasker } from './inner/tasker';
+import type { TaskQueue, TaskQueueInnerErrorRegistry } from './inner/taskQueue';
 import type {
   SafeSignTransactionIntent,
   SignTransactionIntent,
-  SignTransactionIntentErrorVariant,
-  SignTransactionIntentInternalErrorKind,
-} from './createSignTransaction';
+  SignTransactionPublicErrorRegistry,
+} from './public/createSignTransaction';
 import type {
   ExecuteTransaction,
-  ExecuteTransactionErrorVariant,
-  ExecuteTransactionInternalErrorKind,
+  ExecuteTransactionPublicErrorRegistry,
   SafeExecuteTransaction,
-} from './createExecuteTransaction';
+} from './public/createExecuteTransaction';
+import type { CreateMemorySignerPublicErrorRegistry } from '@universal/types/signers/memorySigner/public/createMemorySigner';
 
-export type MemorySignerErrorVariant =
-  | CreateMemorySignerErrorVariant
-  | KeyPoolErrorVariant
-  | TaskQueueErrorVariant
-  | SignTransactionIntentErrorVariant
-  | ExecuteTransactionErrorVariant;
+export interface MemorySignerInnerErrorRegistry
+  extends KeyPoolInnerErrorRegistry,
+    TaskQueueInnerErrorRegistry {}
 
-export type MemorySignerInternalErrorKind =
-  | CreateMemorySignerInternalErrorKind
-  | SignTransactionIntentInternalErrorKind
-  | ExecuteTransactionInternalErrorKind;
+export interface MemorySignerPublicErrorRegistry
+  extends CreateMemorySignerPublicErrorRegistry,
+    ExecuteTransactionPublicErrorRegistry,
+    SignTransactionPublicErrorRegistry {}
 
 export type MemorySignerContext = {
   signerAccountId: AccountId;

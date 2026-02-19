@@ -5,33 +5,15 @@ import type {
   Result,
 } from '../_common/common';
 import type { NearTokenArgs } from '../_common/nearToken';
-import type {
-  InternalErrorContext,
-  InvalidSchemaContext,
-} from '../natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
 import type { NatError } from '../../src/_common/natError';
 
-export type CreateAddKeyActionErrorVariant =
-  | {
-      kind: 'CreateAction.AddFullAccessKey.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'CreateAction.AddFullAccessKey.Internal';
-      context: InternalErrorContext;
-    }
-  | {
-      kind: 'CreateAction.AddFunctionCallKey.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'CreateAction.AddFunctionCallKey.Internal';
-      context: InternalErrorContext;
-    };
-
-export type CreateAddKeyActionInternalErrorKind =
-  | 'CreateAction.AddFullAccessKey.Internal'
-  | 'CreateAction.AddFunctionCallKey.Internal';
+export interface CreateAddKeyActionPublicErrorRegistry {
+  'CreateAction.AddFullAccessKey.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateAction.AddFullAccessKey.Internal': InternalErrorContext;
+  'CreateAction.AddFunctionCallKey.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateAction.AddFunctionCallKey.Internal': InternalErrorContext;
+}
 
 // AddFullAccessKey
 

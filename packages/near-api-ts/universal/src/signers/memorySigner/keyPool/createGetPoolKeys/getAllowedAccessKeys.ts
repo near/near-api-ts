@@ -1,4 +1,4 @@
-import type { CreateMemorySignerArgs } from '../../../../../types/signers/memorySigner/createMemorySigner';
+import type { CreateMemorySignerArgs } from '../../../../../types/signers/memorySigner/public/createMemorySigner';
 import type { AccountAccessKey } from '../../../../../types/_common/accountAccessKey';
 
 export const getAllowedAccessKeys = (

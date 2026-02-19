@@ -13,10 +13,10 @@ export const handleError = (rpcResponse: RpcResponse) => {
   if (!rpcError.success)
     return result.err(
       createNatError({
-        kind: 'Client.CallContractReadFunction.SendRequest.Failed',
+        kind: 'Client.CallContractReadFunction.Exhausted',
         context: {
-          cause: createNatError({
-            kind: 'Client.Transport.SendRequest.Response.Error.InvalidSchema',
+          lastError: createNatError({
+            kind: 'SendRequest.Attempt.Response.InvalidSchema',
             context: { zodError: rpcError.error },
           }),
         },
@@ -71,16 +71,10 @@ export const handleError = (rpcResponse: RpcResponse) => {
   }
 
   // Stub
-
   return result.err(
     createNatError({
       kind: 'Client.CallContractReadFunction.Internal',
-      context: {
-        cause: createNatError({
-          kind: 'Client.CallContractReadFunction.Rpc.Unclassified',
-          context: { rpcResponse },
-        }),
-      },
+      context: { cause: rpcResponse },
     }),
   );
 };

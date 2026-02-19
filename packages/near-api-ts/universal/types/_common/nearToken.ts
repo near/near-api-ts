@@ -1,35 +1,15 @@
 import type { Result, Tokens, Units } from './common';
-import type {
-  InvalidSchemaContext,
-  InternalErrorContext,
-} from '../natError';
+import type { InvalidSchemaErrorContext, InternalErrorContext } from '../natError';
 import type { NatError } from '../../src/_common/natError';
 
-export type NearTokenErrorVariant =
-  | {
-      kind: 'CreateNearToken.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'CreateNearToken.Internal';
-      context: InternalErrorContext;
-    }
-  | {
-      kind: 'CreateNearTokenFromYoctoNear.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'CreateNearTokenFromYoctoNear.Internal';
-      context: InternalErrorContext;
-    }
-  | {
-      kind: 'CreateNearTokenFromNear.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'CreateNearTokenFromNear.Internal';
-      context: InternalErrorContext;
-    };
+export interface NearTokenPublicErrorRegistry {
+  'CreateNearToken.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateNearToken.Internal': InternalErrorContext;
+  'CreateNearTokenFromYoctoNear.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateNearTokenFromYoctoNear.Internal': InternalErrorContext;
+  'CreateNearTokenFromNear.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateNearTokenFromNear.Internal': InternalErrorContext;
+}
 
 export type YoctoNearInput = Units;
 export type NearInput = Tokens;

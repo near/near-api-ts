@@ -12,7 +12,7 @@ describe('Get Account Access Keys', () => {
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
-    client = await createDefaultClient(sandbox);
+    client = createDefaultClient(sandbox);
     return () => sandbox.stop();
   });
 
@@ -34,8 +34,8 @@ describe('Get Account Access Keys', () => {
     assertNatErrKind(res, 'Client.GetAccountAccessKeys.Args.InvalidSchema');
   });
 
-  it(`Cant' fetch`, async () => {
-    const brokenClient = await createClient({
+  it(`Fetch failed`, async () => {
+    const brokenClient = createClient({
       transport: {
         rpcEndpoints: { regular: [{ url: 'http://localhost:0000' }] },
       },
@@ -43,12 +43,12 @@ describe('Get Account Access Keys', () => {
     const res = await brokenClient.safeGetAccountAccessKeys({
       accountId: 'nat',
     });
-    assertNatErrKind(res, 'Client.GetAccountAccessKeys.SendRequest.Failed');
+    assertNatErrKind(res, 'Client.GetAccountAccessKeys.Exhausted');
 
     expect(
-      isNatError(res.error, 'Client.GetAccountAccessKeys.SendRequest.Failed') &&
-        res.error.context.cause.kind ===
-          'Client.Transport.SendRequest.Request.FetchFailed',
+      isNatError(res.error, 'Client.GetAccountAccessKeys.Exhausted') &&
+        res.error.context.lastError.kind ===
+          'SendRequest.Attempt.Request.FetchFailed',
     ).toBe(true);
   });
 

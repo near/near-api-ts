@@ -1,14 +1,6 @@
 import type { PartialDeep } from 'type-fest';
 import type { Milliseconds } from '../../_common/common';
-import type {
-  HighLevelRpcErrorVariant,
-  SendRequest,
-  SendRequestErrorVariant,
-} from './sendRequest';
-
-export type TransportErrorVariant =
-  | SendRequestErrorVariant
-  | HighLevelRpcErrorVariant;
+import type { SendRequest } from './sendRequest';
 
 export type RpcType = 'Regular' | 'Archival';
 type RegularFirst = ['Regular', 'Archival'];

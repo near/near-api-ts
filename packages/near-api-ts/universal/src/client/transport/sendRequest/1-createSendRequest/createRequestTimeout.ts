@@ -8,8 +8,8 @@ export const createRequestTimeout = (requestTimeoutMs: Milliseconds) => {
     () =>
       controller.abort(
         createNatError({
-          kind: 'Client.Transport.SendRequest.Request.Timeout',
-          context: { allowedMs: requestTimeoutMs },
+          kind: 'SendRequest.Timeout',
+          context: { timeoutMs: requestTimeoutMs },
         }),
       ),
     requestTimeoutMs,

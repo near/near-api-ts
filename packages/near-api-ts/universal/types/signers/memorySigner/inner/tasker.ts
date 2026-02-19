@@ -1,10 +1,10 @@
 import type { Task, TaskId } from './taskQueue';
-import type { MemorySignerContext } from './memorySigner';
-import type { Result } from '../../_common/common';
+import type { MemorySignerContext } from '../memorySigner';
+import type { Result } from '../../../_common/common';
 
 export type ActiveTasks = Record<
   TaskId,
-  (taskResult: Result<any, any>) => void // TODO Fix it
+  (taskResult: Result<any, any>) => void // TODO Fix any
 >;
 
 // TODO Fix types

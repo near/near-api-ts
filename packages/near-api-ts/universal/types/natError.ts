@@ -1,128 +1,74 @@
-import type { KeyPairErrorVariant } from './_common/keyPair/keyPair';
-import type { NatError } from '../src/_common/natError';
-import type {
-  CreateRandomSecp256k1KeyPairErrorVariant,
-  RandomSecp256k1KeyPairErrorVariant,
-} from './_common/keyPair/randomSecp256k1KeyPair';
-import type {
-  CreateRandomEd25519KeyPairErrorVariant,
-  RandomEd25519KeyPairErrorVariant,
-} from './_common/keyPair/randomEd25519KeyPair';
-import type { MemoryKeyServiceErrorVariant } from './keyServices/memoryKeyService/memoryKeyService';
 import type { $ZodError } from 'zod/v4/core';
-import type { NearTokenErrorVariant } from './_common/nearToken';
-import type { NearGasErrorVariant } from './_common/nearGas';
+import type { KeyPairPublicErrorRegistry } from './_common/keyPair/keyPair';
+import type { ResultErr } from '@universal/types/_common/common';
+import type { NatError } from '@universal/src/_common/natError';
+import type { NearGasPublicErrorRegistry } from '@universal/types/_common/nearGas';
+import type { NearTokenPublicErrorRegistry } from '@universal/types/_common/nearToken';
 import type {
-  ClientErrorVariant,
-  ClientInternalErrorKind,
-} from './client/client';
+  ClientInnerErrorRegistry,
+  ClientPublicErrorRegistry,
+} from '@universal/types/client/client';
+import type { ActionsPublicErrorRegistry } from '@universal/types/actions/actions';
+import type { MemoryKeyServicePublicErrorRegistry } from '@universal/types/keyServices/memoryKeyService/memoryKeyService';
 import type {
-  MemorySignerErrorVariant,
-  MemorySignerInternalErrorKind,
-} from './signers/memorySigner/memorySigner';
-import type {
-  CreateAddKeyActionErrorVariant,
-  CreateAddKeyActionInternalErrorKind,
-} from './actions/addKey';
-import type {
-  CreateTransferActionErrorVariant,
-  CreateTransferActionInternalErrorKind,
-} from './actions/transfer';
-import type {
-  CreateFunctionCallActionErrorVariant,
-  CreateFunctionCallActionInternalErrorKind,
-} from './actions/functionCall';
-import type {
-  CreateDeleteAccountActionErrorVariant,
-  CreateDeleteAccountActionInternalErrorKind,
-} from './actions/deleteAccount';
-import type {
-  CreateDeleteKeyActionErrorVariant,
-  CreateDeleteKeyActionInternalErrorKind,
-} from './actions/deleteKey';
-import type {
-  CreateDeployContractActionErrorVariant,
-  CreateDeployContractActionInternalErrorKind,
-} from './actions/deployContract';
-import type {
-  CreateStakeActionErrorVariant,
-  CreateStakeActionInternalErrorKind,
-} from './actions/stake';
-import type {
-  FileKeyServiceErrorVariant,
-  FileKeyServiceInternalErrorKind,
-} from '../../node/types/fileKeyService/fileKeyService';
+  MemorySignerInnerErrorRegistry,
+  MemorySignerPublicErrorRegistry,
+} from '@universal/types/signers/memorySigner/memorySigner';
 
 export type InternalErrorContext = { cause: unknown };
-export type InvalidSchemaContext = { zodError: $ZodError };
+export type InvalidSchemaErrorContext = { zodError: $ZodError };
 
+// TODO remove
 export type ArgsInvalidSchema<Prefix extends string> = {
   kind: `${Prefix}.Args.InvalidSchema`;
   context: { zodError: $ZodError };
 };
-
+// TODO remove
 export type Internal<Prefix extends string> = {
   kind: `${Prefix}.Internal`;
   context: { cause: unknown };
 };
 
-type NatErrorVariant =
-  | ClientErrorVariant
-  | MemoryKeyServiceErrorVariant
-  | FileKeyServiceErrorVariant
-  | MemorySignerErrorVariant
-  | CreateTransferActionErrorVariant
-  | CreateAddKeyActionErrorVariant
-  | CreateFunctionCallActionErrorVariant
-  | CreateDeployContractActionErrorVariant
-  | CreateStakeActionErrorVariant
-  | CreateDeleteKeyActionErrorVariant
-  | CreateDeleteAccountActionErrorVariant
-  | NearTokenErrorVariant
-  | NearGasErrorVariant
-  | KeyPairErrorVariant
-  | CreateRandomEd25519KeyPairErrorVariant
-  | RandomEd25519KeyPairErrorVariant
-  | CreateRandomSecp256k1KeyPairErrorVariant
-  | RandomSecp256k1KeyPairErrorVariant;
+// InnerError means that the error is only a part of inner library code and
+// the end user will never see it
+export interface NatInnerErrorRegistry
+  extends ClientInnerErrorRegistry,
+    MemorySignerInnerErrorRegistry {}
 
-export type NatInternalErrorKind = NatError<
-  | ClientInternalErrorKind
-  | 'CreateMemoryKeyService.Internal'
-  | 'MemoryKeyService.SignTransaction.Internal'
-  | 'MemoryKeyService.FindKeyPair.Internal'
-  | FileKeyServiceInternalErrorKind
-  | MemorySignerInternalErrorKind
-  | CreateTransferActionInternalErrorKind
-  | CreateAddKeyActionInternalErrorKind
-  | CreateFunctionCallActionInternalErrorKind
-  | CreateDeployContractActionInternalErrorKind
-  | CreateStakeActionInternalErrorKind
-  | CreateDeleteKeyActionInternalErrorKind
-  | CreateDeleteAccountActionInternalErrorKind
-  | 'CreateNearToken.Internal'
-  | 'CreateNearTokenFromYoctoNear.Internal'
-  | 'CreateNearTokenFromNear.Internal'
-  | 'CreateNearGas.Internal'
-  | 'CreateNearGasFromGas.Internal'
-  | 'CreateNearGasFromTeraGas.Internal'
-  | 'CreateKeyPair.Internal'
-  | 'KeyPair.Sign.Internal'
-  | 'CreateRandomEd25519KeyPair.Internal'
-  | 'Ed25519KeyPair.Sign.Internal'
-  | 'CreateRandomSecp256k1KeyPair.Internal'
-  | 'Secp256k1KeyPair.Sign.Internal'
->['kind'];
+// PublicError means that error can be shown to the end user, e.g., it returns from the public API
+export interface NatPublicErrorRegistry
+  extends ClientPublicErrorRegistry,
+    MemoryKeyServicePublicErrorRegistry,
+    MemorySignerPublicErrorRegistry,
+    ActionsPublicErrorRegistry,
+    KeyPairPublicErrorRegistry,
+    NearTokenPublicErrorRegistry,
+    NearGasPublicErrorRegistry {}
 
-// TODO split on inner/public errors
-export type NatErrorKind = NatErrorVariant['kind'];
+interface NatErrorRegistry
+  extends NatInnerErrorRegistry,
+    NatPublicErrorRegistry {}
 
-export type ContextFor<K extends NatErrorKind> = Extract<
-  NatErrorVariant,
-  { kind: K }
->['context'];
+// type NatErrorVariant =
+//   | ClientErrorVariant
+//   | MemoryKeyServiceErrorVariant
+//   | MemorySignerErrorVariant
+
+export type NatInternalErrorKind = Extract<
+  keyof NatErrorRegistry,
+  `${string}.Internal`
+>;
+
+// TODO split on inner/public errors - we want to show only public errors in isNatError
+export type NatErrorKind = keyof NatErrorRegistry;
+export type ContextFor<K extends NatErrorKind> = NatErrorRegistry[K];
 
 export type CreateNatErrorArgs<K extends NatErrorKind> = {
   kind: K;
   context: ContextFor<K>;
 };
+
+export type CreateResultNatError = <K extends NatErrorKind>(
+  kind: K,
+  context: ContextFor<K>,
+) => ResultErr<NatError<K>>;

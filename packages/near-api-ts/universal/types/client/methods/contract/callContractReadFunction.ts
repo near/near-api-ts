@@ -10,40 +10,47 @@ import type {
 import type { ClientContext } from '../../client';
 import type { KeyIf } from '../../../utils';
 import type { PartialTransportPolicy } from '../../transport/transport';
-import type { CommonRpcMethodErrorVariant } from '../_common/common';
-import type { CommonRpcQueryMethodErrorVariant } from '../_common/query';
+import type {
+  RpcQueryBlockGarbageCollectedErrorContext,
+  RpcQueryBlockNotFoundErrorContext,
+  RpcQueryNotSyncedErrorContext,
+  RpcQueryShardNotTrackedErrorContext,
+} from '../_common/common';
 import type { NatError } from '../../../../src/_common/natError';
-import type { InternalErrorContext } from '../../../natError';
+import type {
+  InternalErrorContext,
+  InvalidSchemaErrorContext,
+} from '../../../natError';
+import type {
+  AbortedErrorContext,
+  ExhaustedErrorContext,
+  PreferredRpcNotFoundErrorContext,
+  TimeoutErrorContext,
+} from '@universal/types/client/transport/sendRequest';
 
-export type CallContractReadFunctionErrorVariant =
-  | CommonRpcMethodErrorVariant<'Client.CallContractReadFunction'>
-  | CommonRpcQueryMethodErrorVariant<'Client.CallContractReadFunction'>
-  | {
-      kind: 'Client.CallContractReadFunction.SerializeArgs.Internal';
-      context: InternalErrorContext;
-    }
-  | {
-      kind: 'Client.CallContractReadFunction.SerializeArgs.InvalidOutput';
-      context: { output: unknown };
-    }
-  | {
-      kind: 'Client.CallContractReadFunction.Rpc.Execution.Failed';
-      context: {
-        contractAccountId: AccountId;
-        message: string;
-        blockHash: BlockHash;
-        blockHeight: BlockHeight;
-      };
-    }
-  | {
-      kind: 'Client.CallContractReadFunction.DeserializeResult.Internal';
-      context: InternalErrorContext;
-    };
-
-export type CallContractReadFunctionInternalErrorKind =
-  | 'Client.CallContractReadFunction.SerializeArgs.Internal'
-  | 'Client.CallContractReadFunction.DeserializeResult.Internal'
-  | 'Client.CallContractReadFunction.Internal';
+export interface CallContractReadFunctionPublicErrorRegistry {
+  'Client.CallContractReadFunction.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'Client.CallContractReadFunction.SerializeArgs.Internal': InternalErrorContext;
+  'Client.CallContractReadFunction.SerializeArgs.InvalidOutput': {
+    output: unknown;
+  };
+  'Client.CallContractReadFunction.PreferredRpc.NotFound': PreferredRpcNotFoundErrorContext;
+  'Client.CallContractReadFunction.Timeout': TimeoutErrorContext;
+  'Client.CallContractReadFunction.Aborted': AbortedErrorContext;
+  'Client.CallContractReadFunction.Exhausted': ExhaustedErrorContext;
+  'Client.CallContractReadFunction.Rpc.NotSynced': RpcQueryNotSyncedErrorContext;
+  'Client.CallContractReadFunction.Rpc.Shard.NotTracked': RpcQueryShardNotTrackedErrorContext;
+  'Client.CallContractReadFunction.Rpc.Block.GarbageCollected': RpcQueryBlockGarbageCollectedErrorContext;
+  'Client.CallContractReadFunction.Rpc.Block.NotFound': RpcQueryBlockNotFoundErrorContext;
+  'Client.CallContractReadFunction.Rpc.Execution.Failed': {
+    contractAccountId: AccountId;
+    message: string;
+    blockHash: BlockHash;
+    blockHeight: BlockHeight;
+  };
+  'Client.CallContractReadFunction.DeserializeResult.Internal': InternalErrorContext;
+  'Client.CallContractReadFunction.Internal': InternalErrorContext;
+}
 
 export type RawCallResult = number[];
 export type RawCallLogs = string[];
@@ -113,14 +120,20 @@ type FunctionArgsOf<SA> = SA extends (args: {
 
 type CallContractReadFunctionError =
   | NatError<'Client.CallContractReadFunction.Args.InvalidSchema'>
+  // SerializeArgs
   | NatError<'Client.CallContractReadFunction.SerializeArgs.InvalidOutput'>
   | NatError<'Client.CallContractReadFunction.SerializeArgs.Internal'>
-  | NatError<'Client.CallContractReadFunction.SendRequest.Failed'>
+  // Send request
+  | NatError<'Client.CallContractReadFunction.PreferredRpc.NotFound'>
+  | NatError<'Client.CallContractReadFunction.Timeout'>
+  | NatError<'Client.CallContractReadFunction.Aborted'>
+  | NatError<'Client.CallContractReadFunction.Exhausted'>
   // RPC
   | NatError<'Client.CallContractReadFunction.Rpc.NotSynced'>
   | NatError<'Client.CallContractReadFunction.Rpc.Shard.NotTracked'>
   | NatError<'Client.CallContractReadFunction.Rpc.Block.GarbageCollected'>
   | NatError<'Client.CallContractReadFunction.Rpc.Block.NotFound'>
+  // TODO add contract not found
   | NatError<'Client.CallContractReadFunction.Rpc.Execution.Failed'>
   //
   | NatError<'Client.CallContractReadFunction.DeserializeResult.Internal'>

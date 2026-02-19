@@ -1,17 +1,21 @@
 // import * as z from 'zod/mini';
+import { asThrowable } from '@universal/src/_common/utils/asThrowable';
 import { result } from '@universal/src/_common/utils/result';
 import { wrapInternalError } from '@universal/src/_common/utils/wrapInternalError';
-import { openIdbConnection } from './private/openIdbConnection';
-import type { KeyPair } from '@universal/types/_common/keyPair/keyPair';
-import type { PublicKey } from '@universal/types/_common/crypto';
-import { createSafeAddKey } from './public/addKey';
-import { asThrowable } from '@universal/src/_common/utils/asThrowable';
-import { createSafeClear } from './public/clear';
-import { createGetKeyPair } from './private/getKeyPair';
 import type { Result } from '@universal/types/_common/common';
+import type { PublicKey } from '@universal/types/_common/crypto';
+import type { KeyPair } from '@universal/types/_common/keyPair/keyPair';
+import { createGetKeyPair } from './private/getKeyPair';
+import { openIdbConnection } from './private/openIdbConnection';
+import { createSafeAddKey } from './public/addKey';
+import { createSafeClear } from './public/clear';
+import { createSafeHasKey } from './public/hasKey';
+import { createSafeRemoveKey } from './public/removeKey';
 import { createSafeSignTransaction } from './public/signTransaction';
-import {createSafeRemoveKey} from './public/removeKey';
-import {createSafeHasKey} from './public/hasKey';
+import { safeKeyPair, isNatError } from '@universal/index';
+
+const e = new Error('test');
+isNatError(e, 'CreateIdbKeyService.Internal');
 
 export type IdbKeyServiceContext = {
   idbName: string;
@@ -21,7 +25,7 @@ export type IdbKeyServiceContext = {
 };
 
 export const safeCreateIdbKeyService: any = wrapInternalError(
-  'CreateFileKeyService.Internal',
+  'CreateIdbKeyService.Internal',
   (args?: any) => {
     // validate
 

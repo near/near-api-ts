@@ -1,16 +1,23 @@
 import { createAttemptTimeout } from './createAttemptTimeout';
 import { combineAbortSignals } from '../../../../../_common/utils/common';
 import type { InnerRpcEndpoint } from '../../../../../../types/client/transport/transport';
-import type { JsonLikeValue, Result } from '../../../../../../types/_common/common';
+import type {
+  JsonLikeValue,
+  Result,
+} from '../../../../../../types/_common/common';
 import { result } from '../../../../../_common/utils/result';
 import type { SendRequestContext } from '../../../../../../types/client/transport/sendRequest';
-import { createNatError, isNatErrorOf, type NatError } from '../../../../../_common/natError';
+import {
+  createNatError,
+  isNatErrorOf,
+  type NatError,
+} from '../../../../../_common/natError';
 
 export type FetchDataError =
-  | NatError<'Client.Transport.SendRequest.Request.FetchFailed'>
-  | NatError<'Client.Transport.SendRequest.Request.Attempt.Timeout'>
-  | NatError<'Client.Transport.SendRequest.Request.Timeout'>
-  | NatError<'Client.Transport.SendRequest.Request.Aborted'>;
+  | NatError<'SendRequest.Attempt.Request.FetchFailed'>
+  | NatError<'SendRequest.Attempt.Request.Timeout'>
+  | NatError<'SendRequest.Timeout'>
+  | NatError<'SendRequest.Aborted'>;
 
 export const fetchData = async (
   context: SendRequestContext,
@@ -37,16 +44,16 @@ export const fetchData = async (
   } catch (e) {
     if (
       isNatErrorOf(e, [
-        'Client.Transport.SendRequest.Request.Attempt.Timeout',
-        'Client.Transport.SendRequest.Request.Timeout',
-        'Client.Transport.SendRequest.Request.Aborted',
+        'SendRequest.Attempt.Request.Timeout',
+        'SendRequest.Timeout',
+        'SendRequest.Aborted',
       ])
     )
       return result.err(e);
 
     return result.err(
       createNatError({
-        kind: 'Client.Transport.SendRequest.Request.FetchFailed',
+        kind: 'SendRequest.Attempt.Request.FetchFailed',
         context: {
           cause: e,
           rpc,

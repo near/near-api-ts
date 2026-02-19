@@ -28,6 +28,5 @@ export const createSafeAddKey =
       };
     });
 
-
     return result.ok(kp);
   };

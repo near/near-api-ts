@@ -26,8 +26,8 @@ export const handleMaybeUnknownBlock: HandleMaybeUnknownBlock = async ({
     previousResult.ok ||
     !(
       isNatErrorOf(previousResult.error, [
-        'Client.Transport.SendRequest.Rpc.Block.GarbageCollected',
-        'Client.Transport.SendRequest.Rpc.Block.NotFound',
+        'SendRequest.InnerRpc.Block.GarbageCollected',
+        'SendRequest.InnerRpc.Block.NotFound',
       ]) &&
       previousResult.error.context.rpc.type === 'regular' &&
       context.transportPolicy.rpcTypePreferences.includes('Archival')

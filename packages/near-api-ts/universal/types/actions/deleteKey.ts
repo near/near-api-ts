@@ -1,23 +1,12 @@
 import type { PublicKey, NativePublicKey } from '../_common/crypto';
-import type {
-  InternalErrorContext,
-  InvalidSchemaContext,
-} from '../natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
 import type { NatError } from '../../src/_common/natError';
 import type { Result } from '../_common/common';
 
-export type CreateDeleteKeyActionErrorVariant =
-  | {
-      kind: 'CreateAction.DeleteKey.Args.InvalidSchema';
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: 'CreateAction.DeleteKey.Internal';
-      context: InternalErrorContext;
-    };
-
-export type CreateDeleteKeyActionInternalErrorKind =
-  'CreateAction.DeleteKey.Internal';
+export interface CreateDeleteKeyActionPublicErrorRegistry {
+  'CreateAction.DeleteKey.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateAction.DeleteKey.Internal': InternalErrorContext;
+}
 
 export type CreateDeleteKeyActionArgs = {
   publicKey: PublicKey;

@@ -4,7 +4,7 @@ import type {
   FullAccessKey,
 } from '../../../../../types/_common/accountAccessKey';
 import type { MemorySignerContext } from '../../../../../types/signers/memorySigner/memorySigner';
-import type { PoolFullAccessKey } from '../../../../../types/signers/memorySigner/keyPool';
+import type { PoolFullAccessKey } from '../../../../../types/signers/memorySigner/inner/keyPool';
 
 const transformKey = (fullAccessKey: FullAccessKey): PoolFullAccessKey => {
   const { publicKey, nonce } = fullAccessKey;

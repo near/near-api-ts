@@ -4,6 +4,7 @@ import { toNativeBlockReference } from '../../../../_common/transformers/toNativ
 import type {
   CreateSafeCallContractReadFunction,
   InnerCallContractReadFunctionArgs,
+  SafeCallContractReadFunction,
 } from '../../../../../types/client/methods/contract/callContractReadFunction';
 import { AccountIdSchema } from '../../../../_common/schemas/zod/common/accountId';
 import {
@@ -17,6 +18,7 @@ import { handleError } from './handleError';
 import { handleResult } from './handleResult/handleResult';
 import { serializeFunctionArgs } from './serializeFunctionArgs';
 import { ContractFunctionNameSchema } from '../../../../_common/schemas/zod/common/common';
+import { repackError } from '@universal/src/_common/utils/repackError';
 
 const GetAccountAccessKeyArgsSchema = z.object({
   contractAccountId: AccountIdSchema,
@@ -37,7 +39,9 @@ export const createSafeCallContractReadFunction: CreateSafeCallContractReadFunct
   (context) =>
     wrapInternalError(
       'Client.CallContractReadFunction.Internal',
-      async (args: InnerCallContractReadFunctionArgs) => {
+      async (
+        args: InnerCallContractReadFunctionArgs,
+      ): ReturnType<SafeCallContractReadFunction> => {
         const validArgs = GetAccountAccessKeyArgsSchema.safeParse(args);
 
         if (!validArgs.success)
@@ -66,12 +70,11 @@ export const createSafeCallContractReadFunction: CreateSafeCallContractReadFunct
         });
 
         if (!rpcResponse.ok)
-          return result.err(
-            createNatError({
-              kind: 'Client.CallContractReadFunction.SendRequest.Failed',
-              context: { cause: rpcResponse.error },
-            }),
-          );
+          return repackError({
+            error: rpcResponse.error,
+            originPrefix: 'SendRequest',
+            targetPrefix: 'Client.CallContractReadFunction',
+          });
 
         return rpcResponse.value.error
           ? handleError(rpcResponse.value)

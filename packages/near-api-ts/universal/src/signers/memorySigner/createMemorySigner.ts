@@ -8,7 +8,7 @@ import type {
   CreateMemorySignerFactory,
   CreateSafeMemorySignerFactory,
   SafeCreateMemorySigner,
-} from '../../../types/signers/memorySigner/createMemorySigner';
+} from '../../../types/signers/memorySigner/public/createMemorySigner';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 import { result } from '../../_common/utils/result';
 import { asThrowable } from '../../_common/utils/asThrowable';

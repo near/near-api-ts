@@ -112,12 +112,7 @@ export const handleActionError = (
   return result.err(
     createNatError({
       kind: 'Client.SendSignedTransaction.Internal',
-      context: {
-        cause: createNatError({
-          kind: 'Client.SendSignedTransaction.Rpc.Unclassified',
-          context: { rpcResponse },
-        }),
-      },
+      context: { cause: rpcResponse },
     }),
   );
 };

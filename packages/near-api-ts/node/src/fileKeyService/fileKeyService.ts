@@ -1,25 +1,15 @@
 import * as z from 'zod/mini';
 import { createSafeSignTransaction } from './public/signTransaction';
 import { createGetKeyPair } from './private/getKeyPair';
-import { createHasKeyPair } from './public/hasKeyPair';
 import { asThrowable } from '@universal/src/_common/utils/asThrowable';
 import { result } from '@universal/src/_common/utils/result';
 import { wrapInternalError } from '@universal/src/_common/utils/wrapInternalError';
-import { PrivateKeySchema } from '@universal/src/_common/schemas/zod/common/privateKey';
-import { createNatError } from '@universal/src/_common/natError';
 import path from 'node:path';
 import process from 'node:process';
-import type {
-  FileKeyService,
-  FileKeyServiceContext,
-} from '../../types/fileKeyService/fileKeyService';
-import type {
-  CreateFileKeyService,
-  SafeCreateFileKeyService,
-} from '../../types/fileKeyService/createFileKeyService';
 import { createSafeAddKeyPair } from './public/addKeyPair';
 import { createSafeClear } from './public/clear';
 import { createSafeRemoveKeyPair } from './public/removeKeyPair';
+import { createHasKeyPair } from './public/hasKeyPair';
 
 // const KeySourceSchema = z.object({
 //   privateKey: PrivateKeySchema,
@@ -61,7 +51,7 @@ export const safeCreateFileKeyService: any = wrapInternalError(
     context.getKeyPair = createGetKeyPair(context);
 
     const safeAddKeyPair = createSafeAddKeyPair(context);
-    const safeHasKeyPair = createSafeAddKeyPair(context);
+    const safeHasKeyPair = createHasKeyPair(context);
     const safeRemoveKeyPair = createSafeRemoveKeyPair(context);
     const safeClear = createSafeClear(context);
     const safeSignTransaction = createSafeSignTransaction(context);

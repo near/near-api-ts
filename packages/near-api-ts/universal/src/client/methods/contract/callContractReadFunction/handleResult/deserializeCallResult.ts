@@ -12,7 +12,7 @@ export const deserializeCallResult = (
   unknown,
   NatError<'Client.CallContractReadFunction.DeserializeResult.Internal'>
 > => {
-  // If user want to use his own custom deserializer;
+  // If a user wants to use his own custom deserializer;
   if (args.options?.deserializeResult) {
     const deserializeResult = args.options.deserializeResult;
     return wrapInternalError(

@@ -1,18 +1,20 @@
-import type { MemorySigner } from './memorySigner';
-import type { AccountId, Milliseconds, Result } from '../../_common/common';
-import type { Client } from '../../client/client';
-import type { MemoryKeyService } from '../../keyServices/memoryKeyService/memoryKeyService';
-import type { PublicKey } from '../../_common/crypto';
-import type { NatError } from '../../../src/_common/natError';
-import type { ArgsInvalidSchema, Internal } from '../../natError';
+import type { MemorySigner } from '../memorySigner';
+import type { AccountId, Milliseconds, Result } from '../../../_common/common';
+import type { Client } from '../../../client/client';
+import type { MemoryKeyService } from '../../../keyServices/memoryKeyService/memoryKeyService';
+import type { PublicKey } from '../../../_common/crypto';
+import type { NatError } from '../../../../src/_common/natError';
+import type {
+  ArgsInvalidSchema,
+  Internal,
+  InternalErrorContext,
+  InvalidSchemaErrorContext,
+} from '../../../natError';
 
-type Prefix = 'CreateMemorySigner';
-
-export type CreateMemorySignerErrorVariant =
-  | ArgsInvalidSchema<Prefix>
-  | Internal<Prefix>;
-
-export type CreateMemorySignerInternalErrorKind = 'CreateMemorySigner.Internal';
+export interface CreateMemorySignerPublicErrorRegistry {
+  'CreateMemorySigner.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateMemorySigner.Internal': InternalErrorContext;
+}
 
 export type CreateMemorySignerArgs = {
   signerAccountId: AccountId;

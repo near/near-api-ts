@@ -1,26 +1,20 @@
 import type {
-  InvalidSchemaContext,
+  InvalidSchemaErrorContext,
   InternalErrorContext,
 } from '../../../natError';
 import type { SendRequestError } from '../../transport/sendRequest';
 import type { RpcResponse } from '../../../../src/_common/schemas/zod/rpc';
+import type { ShardId } from '@near-js/jsonrpc-types';
+import type { BlockHash, BlockHeight } from '@universal/types/_common/common';
 
-export type CommonRpcMethodErrorVariant<Prefix extends string> =
-  // Internal
-  | {
-      kind: `${Prefix}.Rpc.Unclassified`;
-      context: { rpcResponse: RpcResponse };
-    }
-  // Public
-  | {
-      kind: `${Prefix}.Args.InvalidSchema`;
-      context: InvalidSchemaContext;
-    }
-  | {
-      kind: `${Prefix}.SendRequest.Failed`; // TODO remove after refactor
-      context: { cause: SendRequestError };
-    }
-  | {
-      kind: `${Prefix}.Internal`;
-      context: InternalErrorContext;
-    };
+export type RpcQueryNotSyncedErrorContext = null;
+export type RpcQueryShardNotTrackedErrorContext = { shardId: ShardId };
+
+export type RpcQueryBlockGarbageCollectedErrorContext = {
+  blockHash: BlockHash;
+  blockHeight: BlockHeight;
+};
+
+export type RpcQueryBlockNotFoundErrorContext = {
+  blockId: BlockHash | BlockHeight;
+};

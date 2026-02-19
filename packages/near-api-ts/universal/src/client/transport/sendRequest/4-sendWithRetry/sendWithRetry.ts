@@ -1,6 +1,9 @@
 import { sendOnce, type SendOnceResult } from '../5-sendOnce/sendOnce';
 import { safeSleep } from '../../../../_common/utils/sleep';
-import { combineAbortSignals, randomBetween } from '../../../../_common/utils/common';
+import {
+  combineAbortSignals,
+  randomBetween,
+} from '../../../../_common/utils/common';
 import type { InnerRpcEndpoint } from '../../../../../types/client/transport/transport';
 import type { SendRequestContext } from '../../../../../types/client/transport/sendRequest';
 import { isNatErrorOf, NatError } from '../../../../_common/natError';
@@ -16,11 +19,11 @@ const getBackoffDelay = (
 const shouldRetry = (sendOnceResult: SendOnceResult): boolean =>
   !sendOnceResult.ok &&
   isNatErrorOf(sendOnceResult.error, [
-    'Client.Transport.SendRequest.Request.FetchFailed',
-    'Client.Transport.SendRequest.Request.Attempt.Timeout',
-    'Client.Transport.SendRequest.Rpc.Transaction.Timeout',
-    'Client.Transport.SendRequest.Rpc.NotSynced',
-    'Client.Transport.SendRequest.Rpc.Internal',
+    'SendRequest.Attempt.Request.FetchFailed',
+    'SendRequest.Attempt.Request.Timeout',
+    'SendRequest.InnerRpc.Transaction.Timeout',
+    'SendRequest.InnerRpc.NotSynced',
+    'SendRequest.InnerRpc.Internal',
   ]);
 
 export const sendWithRetry = async (
@@ -45,8 +48,7 @@ export const sendWithRetry = async (
     );
 
     const sleepResult = await safeSleep<
-      | NatError<'Client.Transport.SendRequest.Request.Aborted'>
-      | NatError<'Client.Transport.SendRequest.Request.Timeout'>
+      NatError<'SendRequest.Aborted'> | NatError<'SendRequest.Timeout'>
     >(
       backoffDelay,
       combineAbortSignals([

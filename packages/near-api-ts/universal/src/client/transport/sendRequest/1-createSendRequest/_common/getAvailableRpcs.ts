@@ -12,7 +12,7 @@ export const getAvailableRpcs = (
   rpcTypePreferences: RpcTypePreferences,
 ): Result<
   InnerRpcEndpoint[],
-  NatError<'Client.Transport.SendRequest.PreferredRpc.NotFound'>
+  NatError<'SendRequest.PreferredRpc.NotFound'>
 > => {
   const sortedList = rpcTypePreferences.reduce(
     (acc: InnerRpcEndpoint[], type) => {
@@ -28,7 +28,7 @@ export const getAvailableRpcs = (
     ? result.ok(sortedList)
     : result.err(
         createNatError({
-          kind: 'Client.Transport.SendRequest.PreferredRpc.NotFound',
+          kind: 'SendRequest.PreferredRpc.NotFound',
           context: {
             rpcEndpoints,
             rpcTypePreferences,

@@ -14,7 +14,7 @@ import type {
   SafeCreateKeyPair,
   SafeSign,
 } from '../../../types/_common/keyPair/keyPair';
-import { createNatError } from '../../_common/natError';
+import { createResultNatError } from '../../_common/natError';
 import {
   type InnerPrivateKey,
   PrivateKeySchema,
@@ -40,12 +40,9 @@ export const safeKeyPair: SafeCreateKeyPair = wrapInternalError(
     const validPrivateKey = PrivateKeySchema.safeParse(privateKey);
 
     if (!validPrivateKey.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateKeyPair.Args.InvalidSchema',
-          context: { zodError: validPrivateKey.error },
-        }),
-      );
+      return createResultNatError('CreateKeyPair.Args.InvalidSchema', {
+        zodError: validPrivateKey.error,
+      });
 
     const safeSign = createSafeSign(validPrivateKey.data);
 
