@@ -12,17 +12,6 @@ import type { KeyPairPublicErrorRegistry } from './_common/keyPair/keyPair';
 export type InternalErrorContext = { cause: unknown };
 export type InvalidSchemaErrorContext = { zodError: $ZodError };
 
-// TODO remove
-export type ArgsInvalidSchema<Prefix extends string> = {
-  kind: `${Prefix}.Args.InvalidSchema`;
-  context: { zodError: $ZodError };
-};
-// TODO remove
-export type Internal<Prefix extends string> = {
-  kind: `${Prefix}.Internal`;
-  context: { cause: unknown };
-};
-
 // InnerError means that the error is only a part of inner library code and
 // the end user will never see it
 export interface NatInnerErrorRegistry
@@ -42,11 +31,6 @@ export interface NatPublicErrorRegistry
 interface NatErrorRegistry
   extends NatInnerErrorRegistry,
     NatPublicErrorRegistry {}
-
-// type NatErrorVariant =
-//   | ClientErrorVariant
-//   | MemoryKeyServiceErrorVariant
-//   | MemorySignerErrorVariant
 
 export type NatInternalErrorKind = Extract<
   keyof NatErrorRegistry,

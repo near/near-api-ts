@@ -1,5 +1,4 @@
 // import * as z from 'zod/mini';
-import { isNatError } from '@universal/index';
 import { asThrowable } from '@universal/src/_common/utils/asThrowable';
 import { result } from '@universal/src/_common/utils/result';
 import { wrapInternalError } from '@universal/src/_common/utils/wrapInternalError';
@@ -13,9 +12,6 @@ import { createSafeClear } from './public/clear';
 import { createSafeHasKey } from './public/hasKey';
 import { createSafeRemoveKey } from './public/removeKey';
 import { createSafeSignTransaction } from './public/signTransaction';
-
-const e = new Error('test');
-isNatError(e, 'CreateIdbKeyService.Internal');
 
 export type IdbKeyServiceContext = {
   idbName: string;

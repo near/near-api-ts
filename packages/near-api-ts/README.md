@@ -10,7 +10,7 @@ TypeScript library for interactions with Near Protocol in the browser or Node.js
 pnpm add near-api-ts
 ```
 
-**Node.js (esm, 22+) / Browser**
+**Node.js (esm, 24+) / Browser**
 
 ```ts
 import {
