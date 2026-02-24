@@ -1,19 +1,43 @@
 {
   "name": "near-api-ts",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Typescript library for interactions with Near Protocol in the browser or Node.js",
   "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@near-js/jsonrpc-types": "^1.6.0",
+    "@noble/curves": "^1.9.7",
+    "@noble/hashes": "^1.8.0",
+    "@scure/base": "^1.2.6",
+    "borsh": "^2.0.0",
+    "lodash-es": "^4.17.23",
+    "zod": "^4.3.6"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "run": "tsx universal/index.ts",
+    "typecheck": "tsc --noEmit",
+    "sandbox:start": "tsx scripts/sandbox/start.ts",
+    "sandbox:stop": "kill-port 4560",
+    "test:all": "vitest run"
+  },
   "exports": {
     ".": {
-      "node": {
-        "types": "./dist/node/index.d.ts",
-        "import": "./dist/node/index.js",
-        "default": "./dist/index.js"
-      },
       "browser": {
         "types": "./dist/browser/index.d.ts",
         "import": "./dist/browser/index.js",
         "default": "./dist/browser/index.js"
+      },
+      "node": {
+        "types": "./dist/node/index.d.ts",
+        "import": "./dist/node/index.js",
+        "default": "./dist/node/index.js"
       },
       "default": {
         "types": "./dist/universal/index.d.ts",
@@ -21,19 +45,16 @@
         "default": "./dist/universal/index.js"
       }
     },
-    "./node": {
-      "types": "./dist/node/index.d.ts",
-      "import": "./dist/node/index.js",
-      "default": "./dist/index.js"
-    },
     "./browser": {
       "types": "./dist/browser/index.d.ts",
       "import": "./dist/browser/index.js",
       "default": "./dist/browser/index.js"
+    },
+    "./node": {
+      "types": "./dist/node/index.d.ts",
+      "import": "./dist/node/index.js",
+      "default": "./dist/node/index.js"
     }
-  },
-  "engines": {
-    "node": ">=24"
   },
   "files": [
     "dist",
@@ -46,26 +67,5 @@
     "package.json",
     "README.md",
     "LICENSE.md"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
-    "run": "tsx universal/index.ts",
-    "typecheck": "tsc --noEmit",
-    "sandbox:start": "tsx scripts/sandbox/start.ts",
-    "sandbox:stop": "kill-port 4560",
-    "test:all": "vitest run"
-  },
-  "dependencies": {
-    "@near-js/jsonrpc-types": "^1.6.0",
-    "@noble/curves": "^1.9.7",
-    "@noble/hashes": "^1.8.0",
-    "@scure/base": "^1.2.6",
-    "borsh": "^2.0.0",
-    "lodash-es": "^4.17.23",
-    "zod": "^4.3.6"
-  }
+  ]
 }

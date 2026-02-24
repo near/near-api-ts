@@ -22,6 +22,8 @@ export const createGetStoragePricePerByte =
     )
       return result.ok(state.storagePricePerByte.value);
 
+    // TODO wait a promise result if there is 2 or more subsequent requests
+
     // 2. If the cache is empty (first call) or is expired - fetch and set;
     // We don't use getProtocolConfig method to avoid
     // a situation, when user will use a CustomClient without this method, but it's

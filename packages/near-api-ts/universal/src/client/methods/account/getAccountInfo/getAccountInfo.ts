@@ -44,7 +44,9 @@ export const createSafeGetAccountInfo: CreateSafeGetAccountInfo = (context) =>
           transportPolicy: policies?.transport,
           signal: options?.signal,
         }),
-        context.cache.getStoragePricePerByte(),
+        context.cache.getStoragePricePerByte({
+          signal: options?.signal,
+        }),
       ]);
 
       if (!rpcResponse.ok)
