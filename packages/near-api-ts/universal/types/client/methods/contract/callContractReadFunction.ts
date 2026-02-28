@@ -97,7 +97,7 @@ type FunctionArgsOf<SA> = SA extends (args: {
   ? T
   : undefined;
 
-type CallContractReadFunctionError =
+export type CallContractReadFunctionError =
   | NatError<'Client.CallContractReadFunction.Args.InvalidSchema'>
   // SerializeArgs
   | NatError<'Client.CallContractReadFunction.SerializeArgs.InvalidOutput'>

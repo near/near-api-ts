@@ -95,7 +95,22 @@ export {
 export { isNatError } from './src/_common/natError';
 
 // Types
+
+// Client
 export type { Client } from './types/client/client';
+export type {
+  GetAccountInfo,
+  SafeGetAccountInfo,
+  GetAccountInfoOutput,
+  GetAccountInfoError,
+} from './types/client/methods/account/getAccountInfo';
+
+export type {
+  CallContractReadFunction,
+  SafeCallContractReadFunction,
+  CallContractReadFunctionError,
+} from './types/client/methods/contract/callContractReadFunction';
+
 export type { MemoryKeyService } from './types/keyServices/memoryKeyService/memoryKeyService';
 export type { MemorySigner } from './types/signers/memorySigner/memorySigner';
 export type {
@@ -108,3 +123,10 @@ export type {
   PrivateKey,
   Signature,
 } from './types/_common/crypto';
+
+export type {
+  TransactionIntent
+} from '@universal/types/_common/transaction/transaction';
+
+export type { TransferAction } from '@universal/types/actions/transfer';
+export type { FunctionCallAction } from '@universal/types/actions/functionCall';

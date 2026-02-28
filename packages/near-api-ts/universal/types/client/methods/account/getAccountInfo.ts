@@ -62,7 +62,7 @@ export type GetAccountInfoOutput = {
   rawRpcResult: RpcQueryViewAccountResult;
 };
 
-type GetAccountInfoError =
+export type GetAccountInfoError =
   | NatError<'Client.GetAccountInfo.Args.InvalidSchema'>
   | NatError<'Client.GetAccountInfo.StoragePricePerByte.NotLoaded'>
   | NatError<'Client.GetAccountInfo.PreferredRpc.NotFound'>

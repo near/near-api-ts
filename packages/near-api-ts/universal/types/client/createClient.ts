@@ -9,18 +9,6 @@ export interface CreateClientPublicErrorRegistry {
   'CreateClient.Internal': InternalErrorContext;
 }
 
-// export type CreateClientErrorVariant =
-//   | {
-//       kind: 'CreateClient.Args.InvalidSchema';
-//       context: InvalidSchemaErrorContext;
-//     }
-//   | {
-//       kind: 'CreateClient.Internal';
-//       context: InternalErrorContext;
-//     };
-//
-// export type CreateClientInternalErrorKind = 'CreateClient.Internal';
-
 type CreateClientArgs = {
   transport: CreateTransportArgs;
 };

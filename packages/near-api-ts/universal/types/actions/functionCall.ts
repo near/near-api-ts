@@ -1,8 +1,15 @@
 import type { NatError } from '../../src/_common/natError';
-import type { ContractFunctionName, MaybeJsonLikeValue, Result } from '../_common/common';
+import type {
+  ContractFunctionName,
+  MaybeJsonLikeValue,
+  Result,
+} from '../_common/common';
 import type { NearGasArgs } from '../_common/nearGas';
 import type { NearTokenArgs } from '../_common/nearToken';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
+import type {
+  InternalErrorContext,
+  InvalidSchemaErrorContext,
+} from '../natError';
 import type { KeyIf } from '../utils';
 
 export interface CreateFunctionCallActionPublicErrorRegistry {
@@ -18,9 +25,12 @@ type BaseFunctionCallActionArgs = {
   attachedDeposit?: NearTokenArgs;
 };
 
-export type FunctionCallAction = BaseFunctionCallActionArgs & {
+export type FunctionCallAction = {
   actionType: 'FunctionCall';
+  functionName: ContractFunctionName;
   functionArgs: Uint8Array;
+  gasLimit: NearGasArgs;
+  attachedDeposit?: NearTokenArgs;
 };
 
 // ******* Function Call Action Creator *********
