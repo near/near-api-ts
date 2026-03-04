@@ -6,8 +6,6 @@ import { toJsonBytes } from '../../../../_common/utils/common';
 import { result } from '../../../../_common/utils/result';
 import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
 
-// TODO maybe we can unite it with functionCall action creator?
-
 export const serializeFunctionArgs = (
   args: InnerCallContractReadFunctionArgs,
 ): Result<
@@ -39,7 +37,7 @@ export const serializeFunctionArgs = (
     )();
   }
 
-  // If a user use a default serializer and pass some functionArgs -
+  // If a user uses a default serializer and passes some functionArgs -
   // functionArgs should be a valid JSON object;
   if (args.functionArgs) {
     const jsonArgs = JsonSchema.safeParse(args.functionArgs);

@@ -26,6 +26,6 @@ export const deserializeCallResult = (
     const res = fromJsonBytes(rawResult);
     return result.ok(res);
   } catch (e) {
-    return result.ok(undefined);
+    return result.ok(undefined); // TODO not ok - remove it - add new error DeserializeResult.JsonParseFailed
   }
 };

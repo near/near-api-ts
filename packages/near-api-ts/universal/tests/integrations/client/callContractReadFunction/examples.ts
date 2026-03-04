@@ -4,7 +4,7 @@ import { createTestnetClient } from '../../../../index';
 const contractAccountId = 'usdl.lantstool.testnet';
 const functionName = 'ft_balance_of';
 
-const client = await createTestnetClient();
+const client = createTestnetClient();
 
 /// ----------------
 const responseZodSchema = z.object({ decimals: z.number() });

@@ -5,7 +5,7 @@ import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc';
 import { result } from '../../../../../_common/utils/result';
 import { deserializeCallResult } from './deserializeCallResult';
 
-// For legacy reasons, nearcore returns result.error string field when
+// For legacy reasons, nearcore returns the result.error string field when
 // RpcQueryError::ContractExecutionError error happens;
 const ContractExecutionErrorSchema = z.object({
   blockHash: z.string(),
