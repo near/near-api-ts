@@ -25,5 +25,7 @@
       "near-api-ts": ["../../packages/near-api-ts/browser/index.ts"]
     }
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

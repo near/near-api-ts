@@ -1,0 +1,18 @@
+.info {
+  margin-top: 24px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.addRecord {
+  margin-top: 24px;
+}
+
+.addRecord input {
+  margin-right: 8px;
+}

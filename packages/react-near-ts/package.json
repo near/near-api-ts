@@ -1,0 +1,48 @@
+{
+  "name": "react-near-ts",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": ">=5.90.21 <6",
+    "react": ">=19.2.0 <20",
+    "react-dom": ">=19.2.0 <20",
+    "zod": ">=4.3.0 <5"
+  },
+  "dependencies": {
+    "@hot-labs/near-connect": "^0.10.0",
+    "near-api-ts": "workspace:*",
+    "zustand": "^5.0.11"
+  },
+  "devDependencies": {
+    "@tanstack/react-query": "^5.90.21",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tsdown": "0.20.3",
+    "zod": "^4.3.6"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "types",
+    "package.json",
+    "README.md"
+  ]
+}

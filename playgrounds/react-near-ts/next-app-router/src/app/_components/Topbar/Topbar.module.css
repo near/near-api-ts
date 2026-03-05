@@ -1,0 +1,52 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 48px 24px 64px;
+  font-family: var(--font-body);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.header {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.kicker {
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--ink-soft);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.subtitle {
+  color: var(--ink-soft);
+  max-width: 380px;
+}
+
+
+.recordInput {
+  flex: 1;
+}
