@@ -93,6 +93,7 @@ export {
 
 // Errors
 export { isNatError } from './src/_common/natError';
+export { toJsonBytes, fromJsonBytes } from '@universal/src/_common/utils/common';
 
 // Types
 
@@ -108,7 +109,13 @@ export type {
 export type {
   CallContractReadFunction,
   SafeCallContractReadFunction,
+  CallContractReadFunctionOutput,
   CallContractReadFunctionError,
+  BaseSerializeArgsFn,
+  MaybeBaseSerializeArgsFn,
+  BaseDeserializeResultFn,
+  DeserializeResultFnArgs,
+  MaybeBaseDeserializeResultFn,
 } from './types/client/methods/contract/callContractReadFunction';
 
 export type { MemoryKeyService } from './types/keyServices/memoryKeyService/memoryKeyService';
@@ -124,9 +131,11 @@ export type {
   Signature,
 } from './types/_common/crypto';
 
-export type {
-  TransactionIntent
-} from '@universal/types/_common/transaction/transaction';
+export type { TransactionIntent } from '@universal/types/_common/transaction/transaction';
 
 export type { TransferAction } from '@universal/types/actions/transfer';
 export type { FunctionCallAction } from '@universal/types/actions/functionCall';
+
+export type { JsonLikeValue, MaybeJsonLikeValue } from '@universal/types/_common/common';
+export type { BlockReference } from '@universal/types/_common/common';
+export type { PartialTransportPolicy } from '@universal/types/client/transport/transport';

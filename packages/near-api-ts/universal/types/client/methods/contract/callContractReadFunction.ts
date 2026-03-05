@@ -14,10 +14,7 @@ import type {
   MaybeJsonLikeValue,
   Result,
 } from '../../../_common/common';
-import type {
-  InternalErrorContext,
-  InvalidSchemaErrorContext,
-} from '../../../natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';
 import type { KeyIf } from '../../../utils';
 import type { ClientContext } from '../../client';
 import type { PartialTransportPolicy } from '../../transport/transport';
@@ -31,9 +28,7 @@ import type {
 export interface CallContractReadFunctionPublicErrorRegistry {
   'Client.CallContractReadFunction.Args.InvalidSchema': InvalidSchemaErrorContext;
   'Client.CallContractReadFunction.SerializeArgs.Internal': InternalErrorContext;
-  'Client.CallContractReadFunction.SerializeArgs.InvalidOutput': {
-    output: unknown;
-  };
+  'Client.CallContractReadFunction.SerializeArgs.InvalidOutput': { output: unknown };
   'Client.CallContractReadFunction.PreferredRpc.NotFound': PreferredRpcNotFoundErrorContext;
   'Client.CallContractReadFunction.Timeout': TimeoutErrorContext;
   'Client.CallContractReadFunction.Aborted': AbortedErrorContext;
@@ -55,15 +50,12 @@ export interface CallContractReadFunctionPublicErrorRegistry {
 export type RawCallResult = number[];
 export type RawCallLogs = string[];
 
-export type BaseDeserializeResult = ({
-  rawResult,
-}: {
-  rawResult: RawCallResult;
-}) => unknown;
+export type DeserializeResultFnArgs = { rawResult: RawCallResult };
+export type BaseDeserializeResultFn = (args: DeserializeResultFnArgs) => unknown;
+export type MaybeBaseDeserializeResultFn = BaseDeserializeResultFn | undefined;
 
-type MaybeBaseDeserializeResult = BaseDeserializeResult | undefined;
-
-type BaseSerializeArgs<A> = (args: { functionArgs: A }) => Uint8Array;
+export type BaseSerializeArgsFn<A> = (args: { functionArgs: A }) => Uint8Array;
+export type MaybeBaseSerializeArgsFn<A> = BaseSerializeArgsFn<A> | undefined;
 
 type BaseFnCallArgs = {
   contractAccountId: AccountId;
@@ -78,8 +70,8 @@ export type InnerCallContractReadFunctionArgs = BaseFnCallArgs & {
   functionArgs?: unknown;
   options?: {
     signal?: AbortSignal;
-    serializeArgs?: BaseSerializeArgs<unknown>;
-    deserializeResult?: BaseDeserializeResult;
+    serializeArgs?: BaseSerializeArgsFn<unknown>;
+    deserializeResult?: BaseDeserializeResultFn;
   };
 };
 
@@ -87,23 +79,20 @@ type BaseOptions = {
   signal?: AbortSignal;
 };
 
-type Options<
-  A,
-  SR extends BaseSerializeArgs<A> | undefined,
-  DR extends MaybeBaseDeserializeResult,
-> = [SR, DR] extends [undefined, undefined]
+type Options<A, SR extends MaybeBaseSerializeArgsFn<A>, DR extends MaybeBaseDeserializeResultFn> = [
+  SR,
+  DR,
+] extends [undefined, undefined]
   ? {
       options?: BaseOptions;
     }
   : {
-      options: BaseOptions &
-        KeyIf<'serializeArgs', SR> &
-        KeyIf<'deserializeResult', DR>;
+      options: BaseOptions & KeyIf<'serializeArgs', SR> & KeyIf<'deserializeResult', DR>;
     };
 
 type FunctionArgs<A> = KeyIf<'functionArgs', A>;
 
-export type Output<R> = {
+export type CallContractReadFunctionOutput<R> = {
   blockHash: BlockHash;
   blockHeight: BlockHeight;
   result: R;
@@ -112,9 +101,7 @@ export type Output<R> = {
 };
 
 // Return type of functionArgs or undefined
-type FunctionArgsOf<SA> = SA extends (args: {
-  functionArgs: infer T;
-}) => Uint8Array
+type FunctionArgsOf<SA> = SA extends (args: { functionArgs: infer T }) => Uint8Array
   ? T
   : undefined;
 
@@ -140,27 +127,25 @@ export type CallContractReadFunctionError =
   | NatError<'Client.CallContractReadFunction.Internal'>;
 
 // Safe method
-type SafeCallOutput<DR extends MaybeBaseDeserializeResult> = [DR] extends [
-  BaseDeserializeResult,
+type SafeCallOutput<DR extends MaybeBaseDeserializeResultFn> = [DR] extends [
+  BaseDeserializeResultFn,
 ]
-  ? Promise<Result<Output<ReturnType<DR>>, CallContractReadFunctionError>>
-  : Promise<Result<Output<unknown>, CallContractReadFunctionError>>;
+  ? Promise<Result<CallContractReadFunctionOutput<ReturnType<DR>>, CallContractReadFunctionError>>
+  : Promise<Result<CallContractReadFunctionOutput<unknown>, CallContractReadFunctionError>>;
 
 export type SafeCallContractReadFunction = {
   // #1
   <A extends MaybeJsonLikeValue = undefined>(
-    args: BaseFnCallArgs &
-      FunctionArgs<A> &
-      Options<undefined, undefined, undefined>,
+    args: BaseFnCallArgs & FunctionArgs<A> & Options<undefined, undefined, undefined>,
   ): SafeCallOutput<undefined>;
   // #2
-  <DR extends BaseDeserializeResult, A extends MaybeJsonLikeValue = undefined>(
+  <DR extends BaseDeserializeResultFn, A extends MaybeJsonLikeValue = undefined>(
     args: BaseFnCallArgs & FunctionArgs<A> & Options<undefined, undefined, DR>,
   ): SafeCallOutput<DR>;
   // #3
   <
-    SA extends BaseSerializeArgs<A>,
-    DR extends MaybeBaseDeserializeResult = undefined,
+    SA extends BaseSerializeArgsFn<A>,
+    DR extends MaybeBaseDeserializeResultFn = undefined,
     A = FunctionArgsOf<SA>,
   >(
     args: BaseFnCallArgs & FunctionArgs<A> & Options<A, SA, DR>,
@@ -168,27 +153,23 @@ export type SafeCallContractReadFunction = {
 };
 
 // Throwable method
-type CallOutput<DR extends MaybeBaseDeserializeResult> = [DR] extends [
-  BaseDeserializeResult,
-]
-  ? Promise<Output<ReturnType<DR>>>
-  : Promise<Output<unknown>>;
+type CallOutput<DR extends MaybeBaseDeserializeResultFn> = [DR] extends [BaseDeserializeResultFn]
+  ? Promise<CallContractReadFunctionOutput<ReturnType<DR>>>
+  : Promise<CallContractReadFunctionOutput<unknown>>;
 
 export type CallContractReadFunction = {
   // #1
   <A extends MaybeJsonLikeValue = undefined>(
-    args: BaseFnCallArgs &
-      FunctionArgs<A> &
-      Options<undefined, undefined, undefined>,
+    args: BaseFnCallArgs & FunctionArgs<A> & Options<undefined, undefined, undefined>,
   ): CallOutput<undefined>;
   // #2
-  <DR extends BaseDeserializeResult, A extends MaybeJsonLikeValue = undefined>(
+  <DR extends BaseDeserializeResultFn, A extends MaybeJsonLikeValue = undefined>(
     args: BaseFnCallArgs & FunctionArgs<A> & Options<undefined, undefined, DR>,
   ): CallOutput<DR>;
   // #3
   <
-    SA extends BaseSerializeArgs<A>,
-    DR extends MaybeBaseDeserializeResult = undefined,
+    SA extends BaseSerializeArgsFn<A>,
+    DR extends MaybeBaseDeserializeResultFn = undefined,
     A = FunctionArgsOf<SA>,
   >(
     args: BaseFnCallArgs & FunctionArgs<A> & Options<A, SA, DR>,
