@@ -1,5 +1,4 @@
 packages:
   - 'packages/*'
   - 'playgrounds/near-api-ts/*'
-  - 'playgrounds/react-near-ts/next-app-router'
-  - 'playgrounds/react-near-ts/vite'
+  - 'playgrounds/react-near-ts/*'

@@ -136,6 +136,10 @@ export type { TransactionIntent } from '@universal/types/_common/transaction/tra
 export type { TransferAction } from '@universal/types/actions/transfer';
 export type { FunctionCallAction } from '@universal/types/actions/functionCall';
 
-export type { JsonLikeValue, MaybeJsonLikeValue } from '@universal/types/_common/common';
+export type {
+  JsonLikeValue,
+  MaybeJsonLikeValue,
+  ContractFunctionName,
+} from '@universal/types/_common/common';
 export type { BlockReference } from '@universal/types/_common/common';
 export type { PartialTransportPolicy } from '@universal/types/client/transport/transport';

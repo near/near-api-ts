@@ -1,27 +1,23 @@
 import { useQuery, skipToken } from '@tanstack/react-query';
-import {
-  type GetAccountInfoOutput,
-  type GetAccountInfoError,
-  type AccountId,
-} from 'near-api-ts';
 import { useNearStore } from '../store/NearStoreProvider.tsx';
+import type { UseAccountInfo } from '../../types/hooks/useAccountInfo.ts';
 
-type UseAccountInfoArgs = {
-  accountId?: AccountId;
-};
-
-export const useAccountInfo = ({ accountId }: UseAccountInfoArgs) => {
+export const useAccountInfo: UseAccountInfo = (args) => {
   const getContext = useNearStore((store) => store.getContext);
   const context = getContext();
 
-  return useQuery<GetAccountInfoOutput, GetAccountInfoError>({
-    queryKey: ['accountInfo', accountId],
+  const { accountId, query, ...rest } = args;
+
+  return useQuery({
+    queryKey: ['getAccountInfo', accountId],
     queryFn: accountId
       ? (args) =>
           context.client.getAccountInfo({
+            ...rest,
             accountId,
             options: { signal: args.signal },
           })
       : skipToken,
+    enabled: query?.enabled ?? true,
   });
 };

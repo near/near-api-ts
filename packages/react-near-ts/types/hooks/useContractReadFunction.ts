@@ -10,12 +10,13 @@ import type {
   MaybeBaseSerializeArgsFn,
   MaybeJsonLikeValue,
   PartialTransportPolicy,
+  ContractFunctionName,
 } from 'near-api-ts';
 import type { KeyIf } from '../common.ts';
 
 export type BaseUseContractReadFunctionArgs = {
-  contractAccountId: AccountId;
-  functionName: string;
+  contractAccountId?: AccountId;
+  functionName?: ContractFunctionName;
   withStateAt?: BlockReference;
   policies?: {
     transport?: PartialTransportPolicy;
@@ -28,14 +29,9 @@ export type BaseUseContractReadFunctionArgs = {
 export type InnerUseContractReadFunctionArgs = BaseUseContractReadFunctionArgs & {
   functionArgs?: any;
   options?: {
-    signal?: AbortSignal;
     serializeArgs?: BaseSerializeArgsFn<any>;
     deserializeResult?: BaseDeserializeResultFn;
   };
-};
-
-type BaseOptions = {
-  signal?: AbortSignal;
 };
 
 type Options<A, SR extends MaybeBaseSerializeArgsFn<A>, DR extends MaybeBaseDeserializeResultFn> = [
@@ -43,10 +39,10 @@ type Options<A, SR extends MaybeBaseSerializeArgsFn<A>, DR extends MaybeBaseDese
   DR,
 ] extends [undefined, undefined]
   ? {
-      options?: BaseOptions;
+      options?: { serializeArgs?: never; deserializeResult?: never };
     }
   : {
-      options: BaseOptions & KeyIf<'serializeArgs', SR> & KeyIf<'deserializeResult', DR>;
+      options: KeyIf<'serializeArgs', SR> & KeyIf<'deserializeResult', DR>;
     };
 
 // Return type of functionArgs or undefined
