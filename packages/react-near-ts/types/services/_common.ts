@@ -1,4 +1,5 @@
 import type { TransactionIntent, AccountId, Client } from 'near-api-ts';
+import type { Result } from '../_common.ts';
 
 export type ServiceId = string;
 
@@ -10,9 +11,15 @@ export type Service<
   serviceBox: ServiceBox;
 };
 
+type ExecuteTransactionOutput = {
+  rawRpcResult: unknown;
+};
+
 export type Signer<ServiceId extends string = string> = {
   serviceId: ServiceId;
-  safeExecuteTransaction: (args: { intent: TransactionIntent }) => Promise<any>;
+  safeExecuteTransaction: (args: {
+    intent: TransactionIntent;
+  }) => Promise<Result<ExecuteTransactionOutput, unknown>>;
 };
 
 export type ServiceCreator<

@@ -10,9 +10,13 @@ export { MainnetNearProvider } from './providers/MainnetNearProvider.tsx';
 export { NearProvider } from './providers/NearProvider.tsx';
 export { TestnetNearProvider } from './providers/TestnetNearProdiver.tsx';
 export { createNearStore } from './store/nearStore.ts';
+export { createNearConnectorService } from './services/nearConnector/nearConnector.ts';
 
 // near-api-ts reexports
 export {
+  createTestnetClient,
+  createMainnetClient,
+  createClient,
   // actionCreators
   createAccount,
   transfer,
