@@ -12,7 +12,7 @@ import type {
   PartialTransportPolicy,
   ContractFunctionName,
 } from 'near-api-ts';
-import type { KeyIf } from '../common.ts';
+import type { KeyIf } from '../_common.ts';
 
 export type BaseUseContractReadFunctionArgs = {
   contractAccountId?: AccountId;

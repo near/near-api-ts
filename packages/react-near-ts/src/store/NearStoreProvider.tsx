@@ -1,5 +1,5 @@
 import { createContext, useContext, type ReactNode } from 'react';
-import type { NearStore, NearState } from './nearStore.ts';
+import type { NearStore, NearState } from '../../types/store.ts';
 import { useStore } from 'zustand/react';
 
 const NearStoreContext = createContext<NearStore | null>(null);

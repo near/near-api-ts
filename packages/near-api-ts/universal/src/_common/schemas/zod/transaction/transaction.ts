@@ -34,16 +34,24 @@ const TransactionBaseSchema = z.object({
   blockHash: BlockHashSchema,
 });
 
-export const SingleActionTransactionSchema = z.object({
-  ...TransactionBaseSchema.shape,
+export const TransactionSingleActionSchema = z.object({
   action: ActionSchema,
   actions: z.optional(z.never()),
 });
 
-export const MultiActionsTransactionSchema = z.object({
+export const SingleActionTransactionSchema = z.object({
   ...TransactionBaseSchema.shape,
+  ...TransactionSingleActionSchema.shape,
+});
+
+export const TransactionMultiActionsSchema = z.object({
   action: z.optional(z.never()),
   actions: z.array(ActionSchema).check(z.minLength(1)),
+});
+
+export const MultiActionsTransactionSchema = z.object({
+  ...TransactionBaseSchema.shape,
+  ...TransactionMultiActionsSchema.shape,
 });
 
 export const TransactionSchema = z.union([
@@ -54,14 +62,12 @@ export const TransactionSchema = z.union([
 export type InnerTransaction = z.infer<typeof TransactionSchema>;
 
 export const SingleActionTransactionIntentSchema = z.object({
-  action: ActionSchema,
-  actions: z.optional(z.never()),
+  ...TransactionSingleActionSchema.shape,
   receiverAccountId: AccountIdSchema,
 });
 
 export const MultiActionsTransactionIntentSchema = z.object({
-  action: z.optional(z.never()),
-  actions: z.array(ActionSchema).check(z.minLength(1)),
+  ...TransactionMultiActionsSchema.shape,
   receiverAccountId: AccountIdSchema,
 });
 

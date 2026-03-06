@@ -93,7 +93,7 @@ export {
 
 // Errors
 export { isNatError } from './src/_common/natError';
-export { toJsonBytes, fromJsonBytes } from '@universal/src/_common/utils/common';
+export { toJsonBytes, fromJsonBytes } from './src/_common/utils/common';
 
 // Types
 
@@ -131,15 +131,20 @@ export type {
   Signature,
 } from './types/_common/crypto';
 
-export type { TransactionIntent } from '@universal/types/_common/transaction/transaction';
+export type {
+  Transaction,
+  TransactionIntent,
+  Action,
+  SignedTransaction,
+} from './types/_common/transaction/transaction';
 
-export type { TransferAction } from '@universal/types/actions/transfer';
-export type { FunctionCallAction } from '@universal/types/actions/functionCall';
+export type { TransferAction } from './types/actions/transfer';
+export type { FunctionCallAction } from './types/actions/functionCall';
 
 export type {
   JsonLikeValue,
   MaybeJsonLikeValue,
   ContractFunctionName,
-} from '@universal/types/_common/common';
-export type { BlockReference } from '@universal/types/_common/common';
-export type { PartialTransportPolicy } from '@universal/types/client/transport/transport';
+} from './types/_common/common';
+export type { BlockReference } from './types/_common/common';
+export type { PartialTransportPolicy } from './types/client/transport/transport';

@@ -5,6 +5,7 @@ import {
   useContractReadFunction,
 } from 'react-near-ts';
 import * as z from 'zod/mini';
+import { ContractAccountId } from '@/app/contract-records/config';
 
 const ResultSchema = z.array(z.string());
 
@@ -15,7 +16,7 @@ export const useReadRecords = () => {
   const { connectedAccountId, isConnectedAccount } = useConnectedAccount();
 
   return useContractReadFunction({
-    contractAccountId: 'react-near-ts.lantstool.testnet',
+    contractAccountId: ContractAccountId,
     functionName: 'get_records',
     functionArgs: { author_id: connectedAccountId },
     withStateAt: 'LatestOptimisticBlock',

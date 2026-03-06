@@ -1,8 +1,5 @@
 'use client';
 
-export type { DeserializeResultFnArgs } from 'near-api-ts';
-// near-api-ts reexports
-export { fromJsonBytes, functionCall, toJsonBytes, transfer } from 'near-api-ts';
 // Lib
 export { useAccountInfo } from './hooks/useAccountInfo.ts';
 export { useConnectedAccount } from './hooks/useConnectedAccount.ts';
@@ -13,3 +10,31 @@ export { MainnetNearProvider } from './providers/MainnetNearProvider.tsx';
 export { NearProvider } from './providers/NearProvider.tsx';
 export { TestnetNearProvider } from './providers/TestnetNearProdiver.tsx';
 export { createNearStore } from './store/nearStore.ts';
+
+// near-api-ts reexports
+export {
+  // actionCreators
+  createAccount,
+  transfer,
+  addFullAccessKey,
+  addFunctionCallKey,
+  functionCall,
+  deployContract,
+  stake,
+  deleteKey,
+  deleteAccount,
+  //utils
+  keyPair,
+  randomEd25519KeyPair,
+  randomSecp256k1KeyPair,
+  nearToken,
+  near,
+  yoctoNear,
+  nearGas,
+  gas,
+  teraGas,
+  fromJsonBytes,
+  toJsonBytes,
+} from 'near-api-ts';
+
+export type { DeserializeResultFnArgs } from 'near-api-ts';

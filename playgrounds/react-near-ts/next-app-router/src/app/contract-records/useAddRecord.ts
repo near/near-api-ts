@@ -1,11 +1,12 @@
 import { functionCall, useExecuteTransaction } from 'react-near-ts';
+import { ContractAccountId } from '@/app/contract-records/config';
 
 export const useAddRecord = (setRecordInput: any) => {
-  const addRecordMutation = useExecuteTransaction();
+  const executeTransaction = useExecuteTransaction();
 
   return {
     addRecord: (record: string) => {
-      addRecordMutation.mutate(
+      executeTransaction.mutate(
         {
           intent: {
             action: functionCall({
@@ -13,17 +14,19 @@ export const useAddRecord = (setRecordInput: any) => {
               functionArgs: { record },
               gasLimit: { teraGas: '10' },
             }),
-            receiverAccountId: 'react-near-ts.lantstool.testnet',
-          },
-          query: {
-            invalidateKeys: ['callContractReadFunction'],
+            receiverAccountId: ContractAccountId,
           },
         },
         {
-          onSuccess: () => setRecordInput(''),
+          onSuccess: (_data, _variables, _onMutateResult, context) => {
+            setRecordInput('');
+            context.client.invalidateQueries({
+              queryKey: ['callContractReadFunction', ContractAccountId, 'get_records'],
+            });
+          },
         },
       );
     },
-    addRecordMutation,
+    addRecordMutation: executeTransaction,
   };
 };
