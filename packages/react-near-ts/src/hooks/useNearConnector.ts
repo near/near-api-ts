@@ -1,6 +1,8 @@
 import * as z from 'zod/mini';
 import { NearConnector } from '@hot-labs/near-connect';
 import { useNearStore } from '../store/NearStoreProvider.tsx';
+import { useMutation } from '@tanstack/react-query';
+import type { UseNearConnect } from '../../types/hooks/useNearConnect.ts';
 
 const NearConnectorServiceSchema = z.object({
   nearConnector: z.object({
@@ -10,48 +12,37 @@ const NearConnectorServiceSchema = z.object({
   }),
 });
 
-export const useNearConnector = () => {
-  const networkId = useNearStore((store) => store.networkId);
+export const useNearConnector: UseNearConnect = () => {
   const getContext = useNearStore((store) => store.getContext);
   const setSigners = useNearStore((store) => store.setSigners);
   const clearSigners = useNearStore((store) => store.clearSigners);
-  const setConnectedAccountId = useNearStore(
-    (store) => store.setConnectedAccountId,
-  );
+  const setConnectedAccountId = useNearStore((store) => store.setConnectedAccountId);
   const context = getContext();
 
-  const connect = async () => {
-    // TODO Return proper error
-    const services = NearConnectorServiceSchema.parse(context.services);
-    const connector = services.nearConnector.serviceBox.connector;
+  const connect = useMutation<void, unknown, void, unknown>({
+    mutationFn: async () => {
+      const services = NearConnectorServiceSchema.parse(context.services);
+      const connector = services.nearConnector.serviceBox.connector;
 
-    try {
       const wallet = await connector.connect();
-      const accounts = await wallet.getAccounts({ network: networkId as any }); // TODO validate networkId
+      const accounts = await wallet.getAccounts();
       const connectedAccountId = accounts[0].accountId;
 
       setSigners(connectedAccountId);
       setConnectedAccountId(connectedAccountId);
-    } catch (e) {
-      console.log(e);
-      return e;
-    }
-  };
+    },
+  });
 
-  const disconnect = async () => {
-    // TODO Return proper error
-    const services = NearConnectorServiceSchema.parse(context.services);
-    const connector = services.nearConnector.serviceBox.connector;
+  const disconnect = useMutation<void, unknown, void, unknown>({
+    mutationFn: async () => {
+      const services = NearConnectorServiceSchema.parse(context.services);
+      const connector = services.nearConnector.serviceBox.connector;
 
-    try {
       await connector.disconnect();
       clearSigners();
       setConnectedAccountId(undefined);
-    } catch (e) {
-      console.log(e);
-      return e;
-    }
-  };
+    },
+  });
 
   return {
     connect,

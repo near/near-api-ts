@@ -21,7 +21,7 @@ export const Topbar = () => {
     <Paper className={styles.header} radius="md" p="lg" withBorder>
       <Grid>
         <Grid.Col span={6}>
-          <Text className={styles.kicker}>Near React TS</Text>
+          <Text className={styles.kicker}>React-Near-TS</Text>
           <Title order={2} className={styles.title}>
             Next.js Playground
           </Title>
@@ -59,11 +59,11 @@ export const Topbar = () => {
                 </Paper>
               </Menu.Target>
               <Menu.Dropdown>
-                <Menu.Item onClick={disconnect}>Disconnect</Menu.Item>
+                <Menu.Item onClick={() => disconnect.mutate()}>Disconnect</Menu.Item>
               </Menu.Dropdown>
             </Menu>
           ) : (
-            <Button size="sm" radius="md" onClick={connect} color="#12b886">
+            <Button size="sm" radius="md" onClick={() => connect.mutate()} color="#12b886">
               Connect Wallet
             </Button>
           )}
