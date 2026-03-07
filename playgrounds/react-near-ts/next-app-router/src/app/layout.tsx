@@ -2,11 +2,11 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { Playfair_Display, Source_Sans_3 } from 'next/font/google';
 import { MantineProvider, Space, Container } from '@mantine/core';
-import { Topbar } from '@/app/_components/Topbar/Topbar';
+import { Topbar } from './_components/Topbar/Topbar';
 import './globals.css';
 import '@mantine/core/styles.css';
 import { TestnetNearProvider } from 'react-near-ts';
-import { Navigation } from '@/app/_components/Navigation/Navigation';
+import { Navigation } from './_components/Navigation/Navigation';
 
 const displayFont = Playfair_Display({
   subsets: ['latin'],

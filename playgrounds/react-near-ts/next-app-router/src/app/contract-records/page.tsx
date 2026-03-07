@@ -15,10 +15,10 @@ import {
 } from '@mantine/core';
 import { useState } from 'react';
 import { useConnectedAccount } from 'react-near-ts';
-import styles from '@/app/_components/Topbar/Topbar.module.css';
-import { useAddRecord } from '@/app/contract-records/useAddRecord';
-import { useReadRecords } from '@/app/contract-records/useReadRecords';
-import { useRemoveRecord } from '@/app/contract-records/useRemoveRecord';
+import styles from '../_components/Topbar/Topbar.module.css';
+import { useAddRecord } from './useAddRecord';
+import { useReadRecords } from './useReadRecords';
+import { useRemoveRecord } from './useRemoveRecord';
 
 const ContractRecords = () => {
   const { isConnectedAccount } = useConnectedAccount();

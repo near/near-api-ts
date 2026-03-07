@@ -5,7 +5,7 @@ import {
   useContractReadFunction,
 } from 'react-near-ts';
 import * as z from 'zod/mini';
-import { ContractAccountId } from '@/app/contract-records/config';
+import { ContractAccountId } from './config';
 
 const ResultSchema = z.array(z.string());
 

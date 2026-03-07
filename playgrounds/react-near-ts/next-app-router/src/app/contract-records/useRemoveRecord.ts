@@ -1,5 +1,5 @@
 import { functionCall, useExecuteTransaction } from 'react-near-ts';
-import { ContractAccountId } from '@/app/contract-records/config';
+import { ContractAccountId } from './config';
 
 export const useRemoveRecord = () => {
   const removeRecordMutation = useExecuteTransaction();

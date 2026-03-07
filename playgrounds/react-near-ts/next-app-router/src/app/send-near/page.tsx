@@ -12,11 +12,7 @@ import {
   Title,
 } from '@mantine/core';
 import { useState } from 'react';
-import {
-  transfer,
-  useConnectedAccount,
-  useExecuteTransaction,
-} from 'react-near-ts';
+import { transfer, useConnectedAccount, useExecuteTransaction } from 'react-near-ts';
 import styles from './page.module.css';
 
 const SendNear = () => {
@@ -79,9 +75,7 @@ const SendNear = () => {
             label="Receiver"
             placeholder="receiver.testnet"
             value={receiverAccountId}
-            onChange={(event) =>
-              setReceiverAccountId(event.currentTarget.value)
-            }
+            onChange={(event) => setReceiverAccountId(event.currentTarget.value)}
           />
         </Stack>
 
@@ -101,7 +95,7 @@ const SendNear = () => {
           <Paper radius="md" p="md" className={styles.success}>
             <Text size="sm">Transaction executed successfully.</Text>
             <Text size="xs" c="dimmed">
-              Hash: {executeTransaction.data.rawRpcResult.transaction.hash}
+              Hash: {(executeTransaction.data as any).rawRpcResult.transaction.hash}
             </Text>
           </Paper>
         )}
