@@ -89,6 +89,11 @@ export type CreateSafeExecuteTransaction = (
 
 export type NearConnectNetworkId = 'mainnet' | 'testnet';
 
+export type NearConnectServiceCreator = ServiceCreator<
+  'nearConnector',
+  { connector: NearConnector }
+>;
+
 export type CreateNearConnectorService = (args: {
   networkId: NearConnectNetworkId;
-}) => ServiceCreator<'nearConnector', { connector: NearConnector }>;
+}) => NearConnectServiceCreator;

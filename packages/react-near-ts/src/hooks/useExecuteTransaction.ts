@@ -1,34 +1,34 @@
 import { useMutation } from '@tanstack/react-query';
-import type { TransactionIntent } from 'near-api-ts';
 import { useNearStore } from '../store/NearStoreProvider.tsx';
-import type { Signer } from '../../types/services/_common.ts';
+import type { StoreContext } from '../../types/store.ts';
+import type {
+  UseExecuteTransaction,
+  ExecuteTransactionArgs,
+} from '../../types/hooks/useExecuteTransaction.ts';
 
-type ExecuteTxArgs = {
-  intent: TransactionIntent;
-};
+const tryOnManySigners = async (args: ExecuteTransactionArgs, context: StoreContext) => {
+  const signers = context.signers;
+  if (signers.length === 0) throw new Error('No signers available');
 
-const execute = async (intent: TransactionIntent, signers: Signer[]) => {
-  if (signers.length === 0) {
-    throw new Error('No signers found'); // TODO throw rntError
-  }
+  const executeTransaction = async (signerIndex: number) => {
+    const signer = signers[signerIndex];
 
-  for (let i = 0; i < signers.length; i++) {
-    const signer = signers[i];
-    if (!signer) continue;
-
-    const result = await signer.safeExecuteTransaction({ intent });
+    const result = await signer.safeExecuteTransaction({ intent: args.intent });
     if (result.ok) return result.value;
-    throw result.error;
-  }
 
-  throw new Error('No usable signer found');
+    // TODO right now we only support one signer - we will support multiple signers after adding
+    // canExecuteTransaction method to all signers
+    throw result.error;
+  };
+
+  return executeTransaction(0);
 };
 
-export function useExecuteTransaction() {
+export const useExecuteTransaction: UseExecuteTransaction = () => {
   const getContext = useNearStore((s) => s.getContext);
   const context = getContext();
 
   return useMutation({
-    mutationFn: ({ intent }: ExecuteTxArgs) => execute(intent, context.signers),
+    mutationFn: (args) => tryOnManySigners(args, context),
   });
-}
+};

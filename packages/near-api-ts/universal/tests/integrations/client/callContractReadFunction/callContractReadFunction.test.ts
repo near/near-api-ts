@@ -1,7 +1,16 @@
 import { toJsonBytes } from '@universal/src/_common/utils/common';
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
-import { type Client, createAccount, createMemoryKeyService, createMemorySigner, deployContract, functionCall, near, transfer } from '../../../../index';
+import {
+  type Client,
+  createAccount,
+  createMemoryKeyService,
+  createMemorySigner,
+  deployContract,
+  functionCall,
+  near,
+  transfer,
+} from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 import { createDefaultClient, getFileBytes } from '../../../utils/common';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
@@ -63,8 +72,7 @@ describe('CallContractReadFunction', () => {
       functionName: 'get_record',
       functionArgs: { recordId: 0 },
       options: {
-        serializeArgs: (args) =>
-          toJsonBytes({ record_id: args.functionArgs.recordId }),
+        serializeArgs: (args) => toJsonBytes({ record_id: args.functionArgs.recordId }),
       },
     });
     expect(res.result).toBe('Hello');
@@ -76,10 +84,7 @@ describe('CallContractReadFunction', () => {
       functionName: 'get_record',
       functionArgs: { record: 1 },
     });
-    assertNatErrKind(
-      res,
-      'Client.CallContractReadFunction.Rpc.Execution.Failed',
-    );
+    assertNatErrKind(res, 'Client.CallContractReadFunction.Rpc.Execution.Failed');
   });
 
   it('Args.InvalidSchema - invalid json args', async () => {
@@ -92,7 +97,7 @@ describe('CallContractReadFunction', () => {
     assertNatErrKind(res, 'Client.CallContractReadFunction.Args.InvalidSchema');
   });
 
-  it('CustomSerializer.InvalidOutput', async () => {
+  it('SerializeArgs.InvalidOutput', async () => {
     // @ts-expect-error
     const res = await client.safeCallContractReadFunction({
       contractAccountId: 'c.nat',
@@ -101,13 +106,10 @@ describe('CallContractReadFunction', () => {
         serializeArgs: () => 1,
       },
     });
-    assertNatErrKind(
-      res,
-      'Client.CallContractReadFunction.SerializeArgs.InvalidOutput',
-    );
+    assertNatErrKind(res, 'Client.CallContractReadFunction.SerializeArgs.InvalidOutput');
   });
 
-  it('CustomSerializer.Internal', async () => {
+  it('CustomSerializer.Failed', async () => {
     const res = await client.safeCallContractReadFunction({
       contractAccountId: 'c.nat',
       functionName: 'get_record',
@@ -118,13 +120,10 @@ describe('CallContractReadFunction', () => {
         },
       },
     });
-    assertNatErrKind(
-      res,
-      'Client.CallContractReadFunction.SerializeArgs.Internal',
-    );
+    assertNatErrKind(res, 'Client.CallContractReadFunction.SerializeArgs.Failed');
   });
 
-  it('DeserializeResult.Internal', async () => {
+  it('DeserializeResult.Failed', async () => {
     const res = await client.safeCallContractReadFunction({
       contractAccountId: 'c.nat',
       functionName: 'get_record',
@@ -135,9 +134,6 @@ describe('CallContractReadFunction', () => {
         },
       },
     });
-    assertNatErrKind(
-      res,
-      'Client.CallContractReadFunction.DeserializeResult.Internal',
-    );
+    assertNatErrKind(res, 'Client.CallContractReadFunction.DeserializeResult.Failed');
   });
 });

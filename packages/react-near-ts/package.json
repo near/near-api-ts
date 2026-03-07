@@ -1,14 +1,15 @@
 {
   "name": "react-near-ts",
   "version": "0.1.0",
+  "description": "TypeScript-first toolkit for integrating NEAR Protocol with your React application",
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
     "typecheck": "tsc --noEmit"
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "peerDependencies": {
     "@tanstack/react-query": ">=5.90.21 <6",
@@ -31,6 +32,9 @@
     "tsdown": "0.20.3",
     "zod": "^4.3.6"
   },
+  "types": "./dist/index.d.mts",
+  "module": "./dist/index.mjs",
+  "main": "./dist/index.mjs",
   "exports": {
     ".": {
       "types": "./dist/index.d.mts",
@@ -43,6 +47,27 @@
     "src",
     "types",
     "package.json",
+    "LICENSE.md",
     "README.md"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/near/near-api-ts.git",
+    "directory": "packages/react-near-ts"
+  },
+  "keywords": [
+    "near",
+    "near-protocol",
+    "near-api",
+    "react",
+    "react-query",
+    "typescript",
+    "web3",
+    "blockchain"
+  ],
+  "author": {
+    "name": "Volodymyr <eclipseeer> Bilyk",
+    "email": "volodymyr@lantstool.dev"
+  },
+  "license": "MIT"
 }

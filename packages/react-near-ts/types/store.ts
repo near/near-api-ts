@@ -1,6 +1,7 @@
 import type { Client, AccountId } from 'near-api-ts';
 import type { Service, ServiceCreator, Signer, ServiceId } from './services/_common';
 import type { StoreApi } from 'zustand';
+import type { NearConnectServiceCreator } from './services/nearConnect.ts';
 
 export type StoreContext = {
   serviceCreators: ServiceCreator[];
@@ -21,7 +22,7 @@ export type NearState = {
 export type CreateNearStoreArgs = {
   networkId: string;
   clientCreator: () => Client;
-  serviceCreators: ServiceCreator[];
+  serviceCreator: NearConnectServiceCreator;
   storeName?: string;
 };
 

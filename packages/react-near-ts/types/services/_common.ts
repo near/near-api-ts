@@ -11,7 +11,7 @@ export type Service<
   serviceBox: ServiceBox;
 };
 
-type ExecuteTransactionOutput = {
+export type ExecuteTransactionOutput = {
   rawRpcResult: unknown;
 };
 

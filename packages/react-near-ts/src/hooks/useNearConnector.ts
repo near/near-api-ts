@@ -19,7 +19,7 @@ export const useNearConnector: UseNearConnect = () => {
   const setConnectedAccountId = useNearStore((store) => store.setConnectedAccountId);
   const context = getContext();
 
-  const connect = useMutation<void, unknown, void, unknown>({
+  const connect = useMutation<void, Error, void, unknown>({
     mutationFn: async () => {
       const services = NearConnectorServiceSchema.parse(context.services);
       const connector = services.nearConnector.serviceBox.connector;
@@ -33,7 +33,7 @@ export const useNearConnector: UseNearConnect = () => {
     },
   });
 
-  const disconnect = useMutation<void, unknown, void, unknown>({
+  const disconnect = useMutation<void, Error, void, unknown>({
     mutationFn: async () => {
       const services = NearConnectorServiceSchema.parse(context.services);
       const connector = services.nearConnector.serviceBox.connector;

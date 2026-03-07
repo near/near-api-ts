@@ -1,7 +1,8 @@
 import { functionCall, useExecuteTransaction } from 'react-near-ts';
 import { ContractAccountId } from '@/app/contract-records/config';
+import { Dispatch, SetStateAction } from 'react';
 
-export const useAddRecord = (setRecordInput: any) => {
+export const useAddRecord = (setRecordInput: Dispatch<SetStateAction<string>>) => {
   const executeTransaction = useExecuteTransaction();
 
   return {

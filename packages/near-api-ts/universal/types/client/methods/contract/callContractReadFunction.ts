@@ -27,7 +27,10 @@ import type {
 
 export interface CallContractReadFunctionPublicErrorRegistry {
   'Client.CallContractReadFunction.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'Client.CallContractReadFunction.SerializeArgs.Internal': InternalErrorContext;
+  'Client.CallContractReadFunction.SerializeArgs.Failed': {
+    cause: unknown;
+    functionArgs: unknown;
+  };
   'Client.CallContractReadFunction.SerializeArgs.InvalidOutput': { output: unknown };
   'Client.CallContractReadFunction.PreferredRpc.NotFound': PreferredRpcNotFoundErrorContext;
   'Client.CallContractReadFunction.Timeout': TimeoutErrorContext;
@@ -43,7 +46,14 @@ export interface CallContractReadFunctionPublicErrorRegistry {
     blockHash: BlockHash;
     blockHeight: BlockHeight;
   };
-  'Client.CallContractReadFunction.DeserializeResult.Internal': InternalErrorContext;
+  'Client.CallContractReadFunction.ResultDeserialization.JsonParseFailed': {
+    cause: unknown;
+    rawResult: RawCallResult;
+  };
+  'Client.CallContractReadFunction.DeserializeResult.Failed': {
+    cause: unknown;
+    rawResult: RawCallResult;
+  };
   'Client.CallContractReadFunction.Internal': InternalErrorContext;
 }
 
@@ -109,7 +119,7 @@ export type CallContractReadFunctionError =
   | NatError<'Client.CallContractReadFunction.Args.InvalidSchema'>
   // SerializeArgs
   | NatError<'Client.CallContractReadFunction.SerializeArgs.InvalidOutput'>
-  | NatError<'Client.CallContractReadFunction.SerializeArgs.Internal'>
+  | NatError<'Client.CallContractReadFunction.SerializeArgs.Failed'>
   // Send request
   | NatError<'Client.CallContractReadFunction.PreferredRpc.NotFound'>
   | NatError<'Client.CallContractReadFunction.Timeout'>
@@ -123,7 +133,8 @@ export type CallContractReadFunctionError =
   // TODO add contract not found
   | NatError<'Client.CallContractReadFunction.Rpc.Execution.Failed'>
   //
-  | NatError<'Client.CallContractReadFunction.DeserializeResult.Internal'>
+  | NatError<'Client.CallContractReadFunction.ResultDeserialization.JsonParseFailed'>
+  | NatError<'Client.CallContractReadFunction.DeserializeResult.Failed'>
   | NatError<'Client.CallContractReadFunction.Internal'>;
 
 // Safe method

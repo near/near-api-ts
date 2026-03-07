@@ -98,7 +98,7 @@ describe('Create FunctionCall action - errors', () => {
     );
   });
 
-  it('CustomSerializer.Internal', () => {
+  it('CustomSerializer.Failed', () => {
     const res = safeFunctionCall({
       functionName: 'x',
       gasLimit: teraGas('10'),
@@ -111,7 +111,7 @@ describe('Create FunctionCall action - errors', () => {
     });
     assertNatErrKind(
       res,
-      'CreateAction.FunctionCall.SerializeArgs.Internal',
+      'CreateAction.FunctionCall.SerializeArgs.Failed',
     );
   });
 });

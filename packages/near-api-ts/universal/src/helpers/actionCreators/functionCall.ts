@@ -1,6 +1,10 @@
 import * as z from 'zod/mini';
 import type { Result } from '../../../types/_common/common';
-import type { CreateFunctionCallAction, InnerCreateFunctionCallActionArgs, SafeCreateFunctionCallAction } from '../../../types/actions/functionCall';
+import type {
+  CreateFunctionCallAction,
+  InnerCreateFunctionCallActionArgs,
+  SafeCreateFunctionCallAction,
+} from '../../../types/actions/functionCall';
 import { createNatError, NatError } from '../../_common/natError';
 import { ContractFunctionNameSchema, JsonSchema } from '../../_common/schemas/zod/common/common';
 import { NearGasArgsSchema } from '../../_common/schemas/zod/common/nearGas';
@@ -15,33 +19,39 @@ const serializeFunctionArgs = (
 ): Result<
   Uint8Array,
   | NatError<'CreateAction.FunctionCall.SerializeArgs.InvalidOutput'>
-  | NatError<'CreateAction.FunctionCall.SerializeArgs.Internal'>
+  | NatError<'CreateAction.FunctionCall.SerializeArgs.Failed'>
   | NatError<'CreateAction.FunctionCall.Args.InvalidSchema'>
 > => {
-  // If user want to use his own custom serializer;
+  // If a user wants to use his own custom serializer;
   if (args.options?.serializeArgs) {
-    const serializeArgs = args.options.serializeArgs;
-    return wrapInternalError(
-      'CreateAction.FunctionCall.SerializeArgs.Internal',
-      () => {
-        // We can't be sure that serializeArgs will really return Uint8Array;
-        const output: unknown = serializeArgs({
-          functionArgs: args.functionArgs,
-        });
-        // If users serializer returns not a valid Uint8Array args;
-        if (!(output instanceof Uint8Array))
-          return result.err(
-            createNatError({
-              kind: 'CreateAction.FunctionCall.SerializeArgs.InvalidOutput',
-              context: { output },
-            }),
-          );
-        return result.ok(output);
-      },
-    )();
+    try {
+      // We can't be sure that serializeArgs will really return Uint8Array;
+      const output: unknown = args.options.serializeArgs({
+        functionArgs: args.functionArgs,
+      });
+
+      // If users serializer returns not a valid Uint8Array args;
+      if (!(output instanceof Uint8Array))
+        return result.err(
+          createNatError({
+            kind: 'CreateAction.FunctionCall.SerializeArgs.InvalidOutput',
+            context: { output },
+          }),
+        );
+
+      // If all ok - return Uint8Array;
+      return result.ok(output);
+    } catch (e) {
+      return result.err(
+        createNatError({
+          kind: 'CreateAction.FunctionCall.SerializeArgs.Failed',
+          context: { cause: e, functionArgs: args.functionArgs },
+        }),
+      );
+    }
   }
 
-  // If a user use a default serializer and pass some functionArgs -
+  // If a user uses a default serializer and passes some functionArgs -
   // functionArgs should be a valid JSON object;
   if (args?.functionArgs) {
     const jsonArgs = JsonSchema.safeParse(args.functionArgs);

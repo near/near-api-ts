@@ -4,37 +4,41 @@ import { createNatError, NatError } from '../../../../_common/natError';
 import { JsonSchema } from '../../../../_common/schemas/zod/common/common';
 import { toJsonBytes } from '../../../../_common/utils/common';
 import { result } from '../../../../_common/utils/result';
-import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
 
 export const serializeFunctionArgs = (
   args: InnerCallContractReadFunctionArgs,
 ): Result<
   Uint8Array,
   | NatError<'Client.CallContractReadFunction.SerializeArgs.InvalidOutput'>
-  | NatError<'Client.CallContractReadFunction.SerializeArgs.Internal'>
+  | NatError<'Client.CallContractReadFunction.SerializeArgs.Failed'>
   | NatError<'Client.CallContractReadFunction.Args.InvalidSchema'>
 > => {
   // If a user wants to use his own custom serializer;
   if (args.options?.serializeArgs) {
-    const serializeArgs = args.options.serializeArgs;
-    return wrapInternalError(
-      'Client.CallContractReadFunction.SerializeArgs.Internal',
-      () => {
-        // We can't be sure that serializeArgs will really return Uint8Array;
-        const output: unknown = serializeArgs({
-          functionArgs: args.functionArgs,
-        });
-        // If users serializer returns not a valid Uint8Array args;
-        if (!(output instanceof Uint8Array))
-          return result.err(
-            createNatError({
-              kind: 'Client.CallContractReadFunction.SerializeArgs.InvalidOutput',
-              context: { output },
-            }),
-          );
-        return result.ok(output);
-      },
-    )();
+    try {
+      // We can't be sure that users serializeArgs will really return Uint8Array;
+      const output: unknown = args.options.serializeArgs({
+        functionArgs: args.functionArgs,
+      });
+
+      // If users serializer returns not a valid Uint8Array args - throw an error;
+      if (!(output instanceof Uint8Array))
+        return result.err(
+          createNatError({
+            kind: 'Client.CallContractReadFunction.SerializeArgs.InvalidOutput',
+            context: { output },
+          }),
+        );
+
+      return result.ok(output);
+    } catch (e) {
+      return result.err(
+        createNatError({
+          kind: 'Client.CallContractReadFunction.SerializeArgs.Failed',
+          context: { cause: e, functionArgs: args.functionArgs },
+        }),
+      );
+    }
   }
 
   // If a user uses a default serializer and passes some functionArgs -

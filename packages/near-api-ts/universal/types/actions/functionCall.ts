@@ -14,7 +14,10 @@ import type { KeyIf } from '../utils';
 
 export interface CreateFunctionCallActionPublicErrorRegistry {
   'CreateAction.FunctionCall.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'CreateAction.FunctionCall.SerializeArgs.Internal': InternalErrorContext;
+  'CreateAction.FunctionCall.SerializeArgs.Failed': {
+    cause: unknown;
+    functionArgs: unknown;
+  };
   'CreateAction.FunctionCall.SerializeArgs.InvalidOutput': { output: unknown };
   'CreateAction.FunctionCall.Internal': InternalErrorContext;
 }
@@ -48,7 +51,7 @@ type FunctionArgs<A> = KeyIf<'functionArgs', A>;
 type CreateFunctionCallActionError =
   | NatError<'CreateAction.FunctionCall.Args.InvalidSchema'>
   | NatError<'CreateAction.FunctionCall.SerializeArgs.InvalidOutput'>
-  | NatError<'CreateAction.FunctionCall.SerializeArgs.Internal'>
+  | NatError<'CreateAction.FunctionCall.SerializeArgs.Failed'>
   | NatError<'CreateAction.FunctionCall.Internal'>;
 
 export type SafeCreateFunctionCallAction = {

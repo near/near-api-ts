@@ -1,31 +1,40 @@
 import type { Result } from '@universal/types/_common/common';
 import type { InnerCallContractReadFunctionArgs } from '@universal/types/client/methods/contract/callContractReadFunction';
-import type { NatError } from '../../../../../_common/natError';
+import { type NatError, createNatError } from '../../../../../_common/natError';
 import { fromJsonBytes } from '../../../../../_common/utils/common';
 import { result } from '../../../../../_common/utils/result';
-import { wrapInternalError } from '../../../../../_common/utils/wrapInternalError';
 
 export const deserializeCallResult = (
   args: InnerCallContractReadFunctionArgs,
   rawResult: number[],
 ): Result<
   unknown,
-  NatError<'Client.CallContractReadFunction.DeserializeResult.Internal'>
+  | NatError<'Client.CallContractReadFunction.ResultDeserialization.JsonParseFailed'>
+  | NatError<'Client.CallContractReadFunction.DeserializeResult.Failed'>
 > => {
   // If a user wants to use his own custom deserializer;
   if (args.options?.deserializeResult) {
-    const deserializeResult = args.options.deserializeResult;
-    return wrapInternalError(
-      'Client.CallContractReadFunction.DeserializeResult.Internal',
-      () => result.ok(deserializeResult({ rawResult })),
-    )();
+    try {
+      result.ok(args.options.deserializeResult({ rawResult }));
+    } catch (e) {
+      return result.err(
+        createNatError({
+          kind: 'Client.CallContractReadFunction.DeserializeResult.Failed',
+          context: { cause: e, rawResult },
+        }),
+      );
+    }
   }
 
-  // If bytes are JSON - parse it and return;
+  // If bytes are JSON - try to parse it;
   try {
-    const res = fromJsonBytes(rawResult);
-    return result.ok(res);
+    return result.ok(fromJsonBytes(rawResult));
   } catch (e) {
-    return result.ok(undefined); // TODO not ok - remove it - add new error DeserializeResult.JsonParseFailed
+    return result.err(
+      createNatError({
+        kind: 'Client.CallContractReadFunction.ResultDeserialization.JsonParseFailed',
+        context: { cause: e, rawResult },
+      }),
+    );
   }
 };

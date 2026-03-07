@@ -1,6 +1,6 @@
 {
   "name": "near-api-ts",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Typescript library for interactions with Near Protocol in the browser or Node.js",
   "type": "module",
   "engines": {
@@ -9,23 +9,27 @@
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "run": "tsx universal/index.ts",
+    "typecheck": "tsc --noEmit",
+    "sandbox:stop": "kill-port 4560",
+    "test:all": "vitest run"
+  },
+  "peerDependencies": {
+    "zod": ">=4.3.0 <5"
+  },
   "dependencies": {
     "@near-js/jsonrpc-types": "^1.6.0",
     "@noble/curves": "^1.9.7",
     "@noble/hashes": "^1.8.0",
     "@scure/base": "^1.2.6",
     "borsh": "^2.0.0",
-    "lodash-es": "^4.17.23",
-    "zod": "^4.3.6"
+    "lodash-es": "^4.17.23"
   },
-  "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
-    "run": "tsx universal/index.ts",
-    "typecheck": "tsc --noEmit",
-    "sandbox:start": "tsx scripts/sandbox/start.ts",
-    "sandbox:stop": "kill-port 4560",
-    "test:all": "vitest run"
+  "devDependencies": {
+    "zod": "^4.3.6"
   },
   "exports": {
     ".": {
@@ -67,5 +71,23 @@
     "package.json",
     "README.md",
     "LICENSE.md"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/near/near-api-ts.git",
+    "directory": "packages/near-api-ts"
+  },
+  "keywords": [
+    "near",
+    "near-protocol",
+    "near-api",
+    "typescript",
+    "web3",
+    "blockchain"
+  ],
+  "author": {
+    "name": "Volodymyr <eclipseeer> Bilyk",
+    "email": "volodymyr@lantstool.dev"
+  },
+  "license": "MIT"
 }

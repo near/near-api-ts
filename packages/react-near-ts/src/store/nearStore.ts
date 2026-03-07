@@ -6,7 +6,9 @@ import type { ServiceId, Service } from '../../types/services/_common.ts';
 
 export const createNearStore: CreateNearStore = (args) => {
   // TODO Validate args
-  const { storeName = 'react-near-ts', networkId, clientCreator, serviceCreators } = args;
+  const { storeName = 'react-near-ts', networkId, clientCreator, serviceCreator } = args;
+  // Temporary until we will support multiple services
+  const serviceCreators = [serviceCreator];
 
   // TODO check if service already exists; If so - throw an error
   const services = serviceCreators.reduce(
