@@ -210,8 +210,8 @@ importers:
         specifier: 19.2.3
         version: 19.2.3(react@19.2.3)
       react-near-ts:
-        specifier: workspace:*
-        version: link:../../../packages/react-near-ts
+        specifier: 0.1.0
+        version: 0.1.0(@tanstack/react-query@5.90.21(react@19.2.3))(@types/react@19.2.14)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(zod@4.3.6)
       zod:
         specifier: ^4.3.6
         version: 4.3.6
@@ -2334,6 +2334,12 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
+  near-api-ts@0.8.0:
+    resolution: {integrity: sha512-pXxM8KRHbRTJoWc3tjRigY6xhDqGyiRi4Feq/35giTpvVpZ58+BrO+SEhfA+xNxdyuyuTFNosfjCDrcEiahk0g==}
+    engines: {node: '>=24'}
+    peerDependencies:
+      zod: '>=4.3.0 <5'
+
   near-sandbox@0.2.0:
     resolution: {integrity: sha512-v87Bh19YN5uPdpB/leIn2/3LHFVGOCQVTvCufJcv/5Q4X832owbCxVj2TW5a8gd+jBbPKWnlbzJ16IPqF6KQhg==}
     engines: {node: '>=16.9'}
@@ -2540,6 +2546,14 @@ packages:
     resolution: {integrity: sha512-AXJdLo8kgMbimY95O2aKQqsz2iWi9jMgKJhRBAxECE4IFxfcazB2LmzloIoibJI3C12IlY20+KFaLv+71bUJeQ==}
     peerDependencies:
       react: ^19.2.4
+
+  react-near-ts@0.1.0:
+    resolution: {integrity: sha512-sFy1FRytYsL7f+5iIefIQ9j8aNSOpA4dAY2b37KUaR2kc8q0qYnBCYb27VNe9hUvNBf4GtrlEbds9Xpgqxr9aA==}
+    peerDependencies:
+      '@tanstack/react-query': '>=5.90.21 <6'
+      react: '>=19.2.0 <20'
+      react-dom: '>=19.2.0 <20'
+      zod: '>=4.3.0 <5'
 
   react-number-format@5.4.4:
     resolution: {integrity: sha512-wOmoNZoOpvMminhifQYiYSTCLUDOiUbBunrMrMjA+dV52sY+vck1S4UhR6PkgnoCquvvMSeJjErXZ4qSaWCliA==}
@@ -4935,6 +4949,16 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
+  near-api-ts@0.8.0(zod@4.3.6):
+    dependencies:
+      '@near-js/jsonrpc-types': 1.6.0
+      '@noble/curves': 1.9.7
+      '@noble/hashes': 1.8.0
+      '@scure/base': 1.2.6
+      borsh: 2.0.0
+      lodash-es: 4.17.23
+      zod: 4.3.6
+
   near-sandbox@0.2.0:
     dependencies:
       '@near-js/tokens': 2.5.1
@@ -5127,6 +5151,20 @@ snapshots:
     dependencies:
       react: 19.2.4
       scheduler: 0.27.0
+
+  react-near-ts@0.1.0(@tanstack/react-query@5.90.21(react@19.2.3))(@types/react@19.2.14)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(zod@4.3.6):
+    dependencies:
+      '@hot-labs/near-connect': 0.10.0
+      '@tanstack/react-query': 5.90.21(react@19.2.3)
+      near-api-ts: 0.8.0(zod@4.3.6)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+      zod: 4.3.6
+      zustand: 5.0.11(@types/react@19.2.14)(react@19.2.3)
+    transitivePeerDependencies:
+      - '@types/react'
+      - immer
+      - use-sync-external-store
 
   react-number-format@5.4.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
@@ -5836,6 +5874,11 @@ snapshots:
       zod: 4.3.6
 
   zod@4.3.6: {}
+
+  zustand@5.0.11(@types/react@19.2.14)(react@19.2.3):
+    optionalDependencies:
+      '@types/react': 19.2.14
+      react: 19.2.3
 
   zustand@5.0.11(@types/react@19.2.14)(react@19.2.4):
     optionalDependencies:
