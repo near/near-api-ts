@@ -3,6 +3,8 @@
 TypeScript-first React wrapper for `near-api-ts` with built-in wallet connection
 via `@hot-labs/near-connect`.
 
+#### Live demo: https://react-near-ts-next-playground.vercel.app
+
 ## Installation
 
 ```bash
