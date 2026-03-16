@@ -1,6 +1,8 @@
-import { base64 } from '@scure/base';
 import * as z from 'zod/mini';
-import type { CreateDeployContractAction, SafeCreateDeployContractAction } from '../../../types/actions/deployContract';
+import type {
+  CreateDeployContractAction,
+  SafeCreateDeployContractAction,
+} from '../../../types/actions/deployContract';
 import { createNatError } from '../../_common/natError';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
@@ -17,8 +19,9 @@ export const CreateDeployContractActionArgsSchema = z.union([
   }),
 ]);
 
-export const safeDeployContract: SafeCreateDeployContractAction =
-  wrapInternalError('CreateAction.DeployContract.Internal', (args) => {
+export const safeDeployContract: SafeCreateDeployContractAction = wrapInternalError(
+  'CreateAction.DeployContract.Internal',
+  (args) => {
     const validArgs = CreateDeployContractActionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
@@ -31,13 +34,13 @@ export const safeDeployContract: SafeCreateDeployContractAction =
 
     const u8Wasm = validArgs.data.wasmBytes
       ? validArgs.data.wasmBytes
-      : base64.decode(validArgs.data.wasmBase64);
+      : Uint8Array.fromBase64(validArgs.data.wasmBase64);
 
     return result.ok({
       actionType: 'DeployContract' as const,
       wasmBytes: u8Wasm,
     });
-  });
+  },
+);
 
-export const throwableDeployContract: CreateDeployContractAction =
-  asThrowable(safeDeployContract);
+export const throwableDeployContract: CreateDeployContractAction = asThrowable(safeDeployContract);

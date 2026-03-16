@@ -1,6 +1,13 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it, vi } from 'vitest';
-import { addFullAccessKey, type Client, createMemoryKeyService, createMemorySigner, randomEd25519KeyPair, transfer } from '../../../../../../index';
+import {
+  addFullAccessKey,
+  type Client,
+  createMemoryKeyService,
+  createMemorySigner,
+  randomEd25519KeyPair,
+  transfer,
+} from '../../../../../../index';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 
@@ -58,10 +65,7 @@ describe('100 native transfers', () => {
     // log(sendNearTokensResults);
 
     sendNearTokensResults.forEach((result) =>
-      console.log(
-        result.rawRpcResult.transaction.hash,
-        result.rawRpcResult.status,
-      ),
+      console.log(result.rawRpcResult.transaction.hash, result.rawRpcResult.status),
     );
   });
 });

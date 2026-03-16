@@ -1,6 +1,9 @@
-import { base64 } from '@scure/base';
 import { repackError } from '@universal/src/_common/utils/repackError';
-import type { CreateSafeCallContractReadFunction, InnerCallContractReadFunctionArgs, SafeCallContractReadFunction } from '@universal/types/client/methods/contract/callContractReadFunction';
+import type {
+  CreateSafeCallContractReadFunction,
+  InnerCallContractReadFunctionArgs,
+  SafeCallContractReadFunction,
+} from '@universal/types/client/methods/contract/callContractReadFunction';
 import * as z from 'zod/mini';
 import { createNatError } from '../../../../_common/natError';
 import { BlockReferenceSchema, PoliciesSchema } from '../../../../_common/schemas/zod/client';
@@ -28,49 +31,46 @@ const GetAccountAccessKeyArgsSchema = z.object({
   ),
 });
 
-export const createSafeCallContractReadFunction: CreateSafeCallContractReadFunction =
-  (context) =>
-    wrapInternalError(
-      'Client.CallContractReadFunction.Internal',
-      async (
-        args: InnerCallContractReadFunctionArgs,
-      ): ReturnType<SafeCallContractReadFunction> => {
-        const validArgs = GetAccountAccessKeyArgsSchema.safeParse(args);
+export const createSafeCallContractReadFunction: CreateSafeCallContractReadFunction = (context) =>
+  wrapInternalError(
+    'Client.CallContractReadFunction.Internal',
+    async (args: InnerCallContractReadFunctionArgs): ReturnType<SafeCallContractReadFunction> => {
+      const validArgs = GetAccountAccessKeyArgsSchema.safeParse(args);
 
-        if (!validArgs.success)
-          return result.err(
-            createNatError({
-              kind: 'Client.CallContractReadFunction.Args.InvalidSchema',
-              context: { zodError: validArgs.error },
-            }),
-          );
+      if (!validArgs.success)
+        return result.err(
+          createNatError({
+            kind: 'Client.CallContractReadFunction.Args.InvalidSchema',
+            context: { zodError: validArgs.error },
+          }),
+        );
 
-        // Try to serialize args to bytes;
-        const functionArgs = serializeFunctionArgs(args);
-        if (!functionArgs.ok) return functionArgs;
+      // Try to serialize args to bytes;
+      const functionArgs = serializeFunctionArgs(args);
+      if (!functionArgs.ok) return functionArgs;
 
-        const rpcResponse = await context.sendRequest({
-          method: 'query',
-          params: {
-            request_type: 'call_function',
-            account_id: args.contractAccountId,
-            method_name: args.functionName,
-            args_base64: base64.encode(functionArgs.value),
-            ...toNativeBlockReference(args.withStateAt),
-          },
-          transportPolicy: args.policies?.transport,
-          signal: args.options?.signal,
+      const rpcResponse = await context.sendRequest({
+        method: 'query',
+        params: {
+          request_type: 'call_function',
+          account_id: args.contractAccountId,
+          method_name: args.functionName,
+          args_base64: functionArgs.value.toBase64(),
+          ...toNativeBlockReference(args.withStateAt),
+        },
+        transportPolicy: args.policies?.transport,
+        signal: args.options?.signal,
+      });
+
+      if (!rpcResponse.ok)
+        return repackError({
+          error: rpcResponse.error,
+          originPrefix: 'SendRequest',
+          targetPrefix: 'Client.CallContractReadFunction',
         });
 
-        if (!rpcResponse.ok)
-          return repackError({
-            error: rpcResponse.error,
-            originPrefix: 'SendRequest',
-            targetPrefix: 'Client.CallContractReadFunction',
-          });
-
-        return rpcResponse.value.error
-          ? handleError(rpcResponse.value)
-          : handleResult(rpcResponse.value, args);
-      },
-    );
+      return rpcResponse.value.error
+        ? handleError(rpcResponse.value)
+        : handleResult(rpcResponse.value, args);
+    },
+  );

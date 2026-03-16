@@ -1,5 +1,4 @@
 import { CryptoHashSchema, ViewStateResultSchema } from '@near-js/jsonrpc-types';
-import { base64 } from '@scure/base';
 import type {
   CreateGetContractState,
   GetContractStateArgs,
@@ -32,7 +31,7 @@ const transformResult = (result: unknown, args: GetContractStateArgs): GetContra
 export const createGetContractState: CreateGetContractState =
   ({ sendRequest }) =>
   async (args) => {
-    const base64KeyPrefix = args.keyPrefix ? base64.encode(Uint8Array.from(args.keyPrefix)) : '';
+    const base64KeyPrefix = args.keyPrefix ? Uint8Array.from(args.keyPrefix).toBase64() : '';
 
     const result = await sendRequest({
       method: 'query',

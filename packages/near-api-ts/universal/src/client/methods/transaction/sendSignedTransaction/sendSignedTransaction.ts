@@ -1,6 +1,8 @@
-import { base64 } from '@scure/base';
 import { repackError } from '@universal/src/_common/utils/repackError';
-import type { CreateSafeSendSignedTransaction, SafeSendSignedTransaction } from '@universal/types/client/methods/transaction/sendSignedTransaction';
+import type {
+  CreateSafeSendSignedTransaction,
+  SafeSendSignedTransaction,
+} from '@universal/types/client/methods/transaction/sendSignedTransaction';
 import * as z from 'zod/mini';
 import { createNatError } from '../../../../_common/natError';
 import { BaseOptionsSchema, PoliciesSchema } from '../../../../_common/schemas/zod/client';
@@ -19,42 +21,39 @@ const SendSignedTransactionArgsShema = z.object({
   options: BaseOptionsSchema,
 });
 
-export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction =
-  (context) =>
-    wrapInternalError(
-      'Client.SendSignedTransaction.Internal',
-      async (args): ReturnType<SafeSendSignedTransaction> => {
-        const validArgs = SendSignedTransactionArgsShema.safeParse(args);
+export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction = (context) =>
+  wrapInternalError(
+    'Client.SendSignedTransaction.Internal',
+    async (args): ReturnType<SafeSendSignedTransaction> => {
+      const validArgs = SendSignedTransactionArgsShema.safeParse(args);
 
-        if (!validArgs.success)
-          return result.err(
-            createNatError({
-              kind: 'Client.SendSignedTransaction.Args.InvalidSchema',
-              context: { zodError: validArgs.error },
-            }),
-          );
+      if (!validArgs.success)
+        return result.err(
+          createNatError({
+            kind: 'Client.SendSignedTransaction.Args.InvalidSchema',
+            context: { zodError: validArgs.error },
+          }),
+        );
 
-        const rpcResponse = await context.sendRequest({
-          method: 'send_tx',
-          params: {
-            signed_tx_base64: base64.encode(
-              toBorshSignedTransaction(validArgs.data.signedTransaction),
-            ),
-            wait_until: 'FINAL',
-          },
-          transportPolicy: args.policies?.transport,
-          signal: args.options?.signal,
+      const rpcResponse = await context.sendRequest({
+        method: 'send_tx',
+        params: {
+          signed_tx_base64: toBorshSignedTransaction(validArgs.data.signedTransaction).toBase64(),
+          wait_until: 'EXECUTED_OPTIMISTIC',
+        },
+        transportPolicy: args.policies?.transport,
+        signal: args.options?.signal,
+      });
+
+      if (!rpcResponse.ok)
+        return repackError({
+          error: rpcResponse.error,
+          originPrefix: 'SendRequest',
+          targetPrefix: 'Client.SendSignedTransaction',
         });
 
-        if (!rpcResponse.ok)
-          return repackError({
-            error: rpcResponse.error,
-            originPrefix: 'SendRequest',
-            targetPrefix: 'Client.SendSignedTransaction',
-          });
-
-        return rpcResponse.value.error
-          ? handleError(rpcResponse.value)
-          : handleResult(rpcResponse.value, args);
-      },
-    );
+      return rpcResponse.value.error
+        ? handleError(rpcResponse.value)
+        : handleResult(rpcResponse.value, args);
+    },
+  );
