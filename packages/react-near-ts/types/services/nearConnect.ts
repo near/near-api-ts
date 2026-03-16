@@ -1,7 +1,7 @@
 import type { NearConnector } from '@hot-labs/near-connect';
 import type { TransactionIntent, PublicKey, AccountId } from 'near-api-ts';
 import type { Result } from '../_common.ts';
-import type { ServiceCreator } from './_common.ts';
+import type { ServiceCreator, ExecuteTransactionArgs, SafeExecuteTransaction, SafeSignMessage } from './_common.ts';
 
 type CreateAccountAction = {
   createAccount: {};
@@ -75,17 +75,8 @@ export type NearConnectAction =
   | DeleteKeyAction
   | DeleteAccountAction;
 
-type ExecuteTransactionArgs = {
-  intent: TransactionIntent;
-};
-
-type ExecuteTransactionOutput = {
-  rawRpcResult: unknown;
-};
-
-export type CreateSafeExecuteTransaction = (
-  connector: NearConnector,
-) => (args: ExecuteTransactionArgs) => Promise<Result<ExecuteTransactionOutput, unknown>>;
+export type CreateSafeExecuteTransaction = (connector: NearConnector) => SafeExecuteTransaction;
+export type CreateSafeSignMessage = (connector: NearConnector) => SafeSignMessage;
 
 export type NearConnectNetworkId = 'mainnet' | 'testnet';
 

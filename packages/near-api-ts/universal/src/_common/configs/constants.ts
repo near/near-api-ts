@@ -14,3 +14,8 @@ export const BinaryLengths = {
 } as const;
 
 export const NearDecimals = 24;
+
+export const Nep413Message = {
+  Tag: 2147484061, // 2**31 + 413
+  NonceLength: 32, // 2**31 + 413
+};

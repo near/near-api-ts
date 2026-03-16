@@ -9,6 +9,7 @@ const items = [
   { href: '/account-info', label: 'Account Info' },
   { href: '/send-near', label: 'Send Near' },
   { href: '/contract-records', label: 'Contract Records' },
+  { href: '/sign-message', label: 'Sign Message' },
 ];
 
 export const Navigation = () => {

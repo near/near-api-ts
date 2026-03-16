@@ -8,6 +8,8 @@ import type { MemoryKeyServicePublicErrorRegistry } from '@universal/types/keySe
 import type { MemorySignerInnerErrorRegistry, MemorySignerPublicErrorRegistry } from '@universal/types/signers/memorySigner/memorySigner';
 import type { $ZodError } from 'zod/v4/core';
 import type { KeyPairPublicErrorRegistry } from './_common/keyPair/keyPair';
+import type { VerifySignaturePublicErrorRegistry } from '@universal/types/_common/verifySignature';
+import type { MessagePublicErrorRegistry } from '@universal/types/_common/message';
 
 export type InternalErrorContext = { cause: unknown };
 export type InvalidSchemaErrorContext = { zodError: $ZodError };
@@ -25,6 +27,8 @@ export interface NatPublicErrorRegistry
     MemorySignerPublicErrorRegistry,
     ActionsPublicErrorRegistry,
     KeyPairPublicErrorRegistry,
+    VerifySignaturePublicErrorRegistry,
+    MessagePublicErrorRegistry,
     NearTokenPublicErrorRegistry,
     NearGasPublicErrorRegistry {}
 

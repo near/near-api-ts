@@ -1,5 +1,5 @@
 import type { NatError } from '../../../src/_common/natError';
-import type { Hex, Result } from '../common';
+import type { Result } from '../common';
 import type { Secp256k1PrivateKey, Secp256k1PublicKey, Secp256k1Signature } from '../crypto';
 import type { Secp256k1Curve } from '../curveString';
 
@@ -13,16 +13,15 @@ export type SignBySecp256k1KeyOutput = {
 
 type SignBySecp256k1KeyError = NatError<'Secp256k1KeyPair.Sign.Internal'>;
 
-export type SignBySecp256k1Key = (message: Hex) => SignBySecp256k1KeyOutput;
+export type SignBySecp256k1Key = (u8Message: Uint8Array) => SignBySecp256k1KeyOutput;
 
 export type SafeSignBySecp256k1Key = (
-  message: Hex,
+  u8Message: Uint8Array,
 ) => Result<SignBySecp256k1KeyOutput, SignBySecp256k1KeyError>;
 
 // ***********  CreateRandomSecp256k1KeyPair *****
 
-type CreateRandomSecp256k1Error =
-  NatError<'CreateRandomSecp256k1KeyPair.Internal'>;
+type CreateRandomSecp256k1Error = NatError<'CreateRandomSecp256k1KeyPair.Internal'>;
 
 export type Secp256k1KeyPair = {
   publicKey: Secp256k1PublicKey;

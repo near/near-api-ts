@@ -1,4 +1,4 @@
-import type { JsonLikeValue, Result } from '@universal/types/_common/common';
+import type { JsonValue, Result } from '@universal/types/_common/common';
 import type { InnerRpcEndpoint } from '@universal/types/client/transport/transport';
 import { createNatError, type NatError } from '../../../../_common/natError';
 import { result } from '../../../../_common/utils/result';
@@ -9,7 +9,7 @@ export type ParseJsonResponseError =
 export const parseJsonResponse = async (
   response: Response,
   rpc: InnerRpcEndpoint,
-): Promise<Result<JsonLikeValue, ParseJsonResponseError>> => {
+): Promise<Result<JsonValue, ParseJsonResponseError>> => {
   try {
     return result.ok(await response.json());
   } catch (e) {

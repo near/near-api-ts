@@ -10,7 +10,7 @@ describe('randomEd25519KeyPair', () => {
 
     expect(fromRandom.publicKey).toBe(randomKey.publicKey);
 
-    const x = randomKey.sign('48656c6c6f20776f726c6421');
+    const x = randomKey.sign(Uint8Array.from('48656c6c6f20776f726c6421'));
     console.log(x);
   });
 });

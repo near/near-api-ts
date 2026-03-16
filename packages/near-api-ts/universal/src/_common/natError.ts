@@ -20,7 +20,7 @@ export const createNatError = <K extends NatErrorKind>(
   args: CreateNatErrorArgs<K>,
 ): NatError<K> => new NatError(args);
 
-export const createResultNatError: CreateResultNatError = (kind, context) =>
+export const resultNatError: CreateResultNatError = (kind, context) =>
   result.err(new NatError({ kind, context }));
 
 export const isNatError = <K extends NatErrorKind>(

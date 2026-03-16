@@ -1,6 +1,10 @@
 import { CryptoHashSchema, ViewStateResultSchema } from '@near-js/jsonrpc-types';
 import { base64 } from '@scure/base';
-import type { CreateGetContractState, GetContractStateArgs, GetContractStateResult } from '@universal/types/client/methods/contract/getContractState';
+import type {
+  CreateGetContractState,
+  GetContractStateArgs,
+  GetContractStateResult,
+} from '@universal/types/client/methods/contract/getContractState';
 import * as z from 'zod/mini';
 import { toNativeBlockReference } from '../../../_common/transformers/toNative/blockReference';
 
@@ -10,10 +14,7 @@ const RpcQueryViewStateResponseSchema = z.object({
   blockHeight: z.number(),
 });
 
-const transformResult = (
-  result: unknown,
-  args: GetContractStateArgs,
-): GetContractStateResult => {
+const transformResult = (result: unknown, args: GetContractStateArgs): GetContractStateResult => {
   const valid = RpcQueryViewStateResponseSchema.parse(result);
 
   const final = {
@@ -31,9 +32,7 @@ const transformResult = (
 export const createGetContractState: CreateGetContractState =
   ({ sendRequest }) =>
   async (args) => {
-    const base64KeyPrefix = args.keyPrefix
-      ? base64.encode(Uint8Array.from(args.keyPrefix))
-      : '';
+    const base64KeyPrefix = args.keyPrefix ? base64.encode(Uint8Array.from(args.keyPrefix)) : '';
 
     const result = await sendRequest({
       method: 'query',
@@ -41,7 +40,7 @@ export const createGetContractState: CreateGetContractState =
         request_type: 'view_state',
         account_id: args.contractAccountId,
         prefix_base64: base64KeyPrefix,
-        include_proof: args.includeProof,
+        include_proof: args.includeProof ?? false,
         ...toNativeBlockReference(args.atMomentOf),
       },
       transportPolicy: args.policies?.transport,

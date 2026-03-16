@@ -1,14 +1,6 @@
 import { base58 } from '@scure/base';
 import * as z from 'zod/mini';
-import { oneLine } from '../../../utils/common';
-
-const Base58StringSchema = z.string().check(
-  z.regex(
-    /^[1-9A-HJ-NP-Za-km-z]+$/,
-    oneLine(`Base58 string contains invalid characters. Allowed characters:
-    123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz`),
-  ),
-);
+import { Base58StringSchema } from '@universal/src/_common/schemas/zod/common/base58String';
 
 export const CryptoHashSchema = z
   .pipe(

@@ -1,6 +1,6 @@
 import type { NatError } from '../../../src/_common/natError';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../natError';
-import type { Hex, Result } from '../common';
+import type { Result } from '../common';
 import type { PrivateKey, PublicKey, Signature } from '../crypto';
 import type { Curve } from '../curveString';
 
@@ -22,8 +22,8 @@ export type SignOutput = {
 
 type SignError = NatError<'KeyPair.Sign.Internal'>;
 
-export type Sign = (message: Hex) => SignOutput;
-export type SafeSign = (message: Hex) => Result<SignOutput, SignError>;
+export type Sign = (u8Message: Uint8Array) => SignOutput;
+export type SafeSign = (u8Message: Uint8Array) => Result<SignOutput, SignError>;
 
 type CreateKeyPairError =
   | NatError<'CreateKeyPair.Args.InvalidSchema'>
@@ -38,6 +38,4 @@ export type KeyPair = {
 
 export type CreateKeyPair = (privateKey: string) => KeyPair;
 
-export type SafeCreateKeyPair = (
-  privateKey: string,
-) => Result<KeyPair, CreateKeyPairError>;
+export type SafeCreateKeyPair = (privateKey: string) => Result<KeyPair, CreateKeyPairError>;

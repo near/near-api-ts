@@ -1,21 +1,19 @@
-import type { PublicKey } from '../../../types/_common/crypto';
-import type { CreateKeyPair, SafeCreateKeyPair, SafeSign } from '../../../types/_common/keyPair/keyPair';
-import { BinaryLengths } from '../../_common/configs/constants';
-import { createResultNatError } from '../../_common/natError';
-import { type InnerPrivateKey, PrivateKeySchema } from '../../_common/schemas/zod/common/privateKey';
-import { toEd25519CurveString, toSecp256k1CurveString } from '../../_common/transformers/toCurveString';
+import type {
+  CreateKeyPair,
+  SafeCreateKeyPair,
+  SafeSign,
+} from '../../../types/_common/keyPair/keyPair';
+import { resultNatError } from '../../_common/natError';
+import {
+  type InnerPrivateKey,
+  PrivateKeySchema,
+} from '../../_common/schemas/zod/common/privateKey';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 import { signByEd25519Key } from './_common/signByEd25519Key';
 import { signBySecp256k1Key } from './_common/signBySecp256k1Key';
-
-const { Ed25519, Secp256k1 } = BinaryLengths;
-
-const getPublicKey = ({ curve, u8PrivateKey }: InnerPrivateKey): PublicKey =>
-  curve === 'ed25519'
-    ? toEd25519CurveString(u8PrivateKey.slice(Ed25519.SecretKey))
-    : toSecp256k1CurveString(u8PrivateKey.slice(Secp256k1.SecretKey));
+import { getInnerPublicKey } from '@universal/src/helpers/keyPair/getInnerPublicKey';
 
 const createSafeSign = ({ curve, u8PrivateKey }: InnerPrivateKey): SafeSign =>
   wrapInternalError('KeyPair.Sign.Internal', (message) =>
@@ -30,14 +28,17 @@ export const safeKeyPair: SafeCreateKeyPair = wrapInternalError(
     const validPrivateKey = PrivateKeySchema.safeParse(privateKey);
 
     if (!validPrivateKey.success)
-      return createResultNatError('CreateKeyPair.Args.InvalidSchema', {
+      return resultNatError('CreateKeyPair.Args.InvalidSchema', {
         zodError: validPrivateKey.error,
       });
+
+    // TODO maybe use Lazy getter, like NearToken
+    const innerPublicKey = getInnerPublicKey(validPrivateKey.data);
 
     const safeSign = createSafeSign(validPrivateKey.data);
 
     return result.ok({
-      publicKey: getPublicKey(validPrivateKey.data), // TODO use Lazy getter, like NearToken
+      publicKey: innerPublicKey.publicKey,
       privateKey: validPrivateKey.data.privateKey,
       sign: asThrowable(safeSign),
       safeSign,

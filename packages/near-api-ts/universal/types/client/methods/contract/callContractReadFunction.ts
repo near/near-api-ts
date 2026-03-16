@@ -11,7 +11,7 @@ import type {
   BlockHeight,
   BlockReference,
   ContractFunctionName,
-  MaybeJsonLikeValue,
+  MaybeJsonValue,
   Result,
 } from '../../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';
@@ -146,11 +146,11 @@ type SafeCallOutput<DR extends MaybeBaseDeserializeResultFn> = [DR] extends [
 
 export type SafeCallContractReadFunction = {
   // #1
-  <A extends MaybeJsonLikeValue = undefined>(
+  <A extends MaybeJsonValue = undefined>(
     args: BaseFnCallArgs & FunctionArgs<A> & Options<undefined, undefined, undefined>,
   ): SafeCallOutput<undefined>;
   // #2
-  <DR extends BaseDeserializeResultFn, A extends MaybeJsonLikeValue = undefined>(
+  <DR extends BaseDeserializeResultFn, A extends MaybeJsonValue = undefined>(
     args: BaseFnCallArgs & FunctionArgs<A> & Options<undefined, undefined, DR>,
   ): SafeCallOutput<DR>;
   // #3
@@ -170,11 +170,11 @@ type CallOutput<DR extends MaybeBaseDeserializeResultFn> = [DR] extends [BaseDes
 
 export type CallContractReadFunction = {
   // #1
-  <A extends MaybeJsonLikeValue = undefined>(
+  <A extends MaybeJsonValue = undefined>(
     args: BaseFnCallArgs & FunctionArgs<A> & Options<undefined, undefined, undefined>,
   ): CallOutput<undefined>;
   // #2
-  <DR extends BaseDeserializeResultFn, A extends MaybeJsonLikeValue = undefined>(
+  <DR extends BaseDeserializeResultFn, A extends MaybeJsonValue = undefined>(
     args: BaseFnCallArgs & FunctionArgs<A> & Options<undefined, undefined, DR>,
   ): CallOutput<DR>;
   // #3

@@ -1,5 +1,5 @@
 import type { NatError } from '../../../src/_common/natError';
-import type { Hex, Result } from '../common';
+import type { Result } from '../common';
 import type { Ed25519PrivateKey, Ed25519PublicKey, Ed25519Signature } from '../crypto';
 import type { Ed25519Curve } from '../curveString';
 
@@ -13,16 +13,15 @@ export type SignByEd25519KeyOutput = {
 
 type SignByEd25519KeyError = NatError<'Ed25519KeyPair.Sign.Internal'>;
 
-export type SignByEd25519Key = (message: Hex) => SignByEd25519KeyOutput;
+export type SignByEd25519Key = (u8Message: Uint8Array) => SignByEd25519KeyOutput;
 
 export type SafeSignByEd25519Key = (
-  message: Hex,
+  u8Message: Uint8Array,
 ) => Result<SignByEd25519KeyOutput, SignByEd25519KeyError>;
 
 // ***********  CreateRandomEd25519KeyPair *****
 
-type CreateRandomEd25519KeyPairError =
-  NatError<'CreateRandomEd25519KeyPair.Internal'>;
+type CreateRandomEd25519KeyPairError = NatError<'CreateRandomEd25519KeyPair.Internal'>;
 
 export type Ed25519KeyPair = {
   publicKey: Ed25519PublicKey;

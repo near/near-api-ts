@@ -6,7 +6,7 @@ import type {
   SafeCreateFunctionCallAction,
 } from '../../../types/actions/functionCall';
 import { createNatError, NatError } from '../../_common/natError';
-import { ContractFunctionNameSchema, JsonSchema } from '../../_common/schemas/zod/common/common';
+import { ContractFunctionNameSchema, JsonValueSchema } from '../../_common/schemas/zod/common/common';
 import { NearGasArgsSchema } from '../../_common/schemas/zod/common/nearGas';
 import { NearTokenArgsSchema } from '../../_common/schemas/zod/common/nearToken';
 import { asThrowable } from '../../_common/utils/asThrowable';
@@ -54,7 +54,7 @@ const serializeFunctionArgs = (
   // If a user uses a default serializer and passes some functionArgs -
   // functionArgs should be a valid JSON object;
   if (args?.functionArgs) {
-    const jsonArgs = JsonSchema.safeParse(args.functionArgs);
+    const jsonArgs = JsonValueSchema.safeParse(args.functionArgs);
 
     if (!jsonArgs.success)
       return result.err(

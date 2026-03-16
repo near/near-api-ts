@@ -1,10 +1,10 @@
 {
   "name": "near-api-ts",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Typescript library for interactions with Near Protocol in the browser or Node.js",
   "type": "module",
   "engines": {
-    "node": ">=24"
+    "node": ">=25"
   },
   "publishConfig": {
     "access": "public"

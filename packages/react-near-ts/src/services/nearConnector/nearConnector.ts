@@ -1,6 +1,7 @@
 import { NearConnector } from '@hot-labs/near-connect';
 import { createSafeExecuteTransaction } from './executeTransaction/executeTransaction.ts';
 import type { CreateNearConnectorService } from '../../../types/services/nearConnect.ts';
+import { createSafeSignMessage } from './signMessage.ts';
 
 const serviceId = 'nearConnector';
 
@@ -19,6 +20,7 @@ export const createNearConnectorService: CreateNearConnectorService = (args) => 
     return {
       serviceId,
       safeExecuteTransaction: createSafeExecuteTransaction(args.serviceBox.connector),
+      safeSignMessage: createSafeSignMessage(args.serviceBox.connector),
     };
   },
 });

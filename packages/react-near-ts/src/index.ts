@@ -1,10 +1,10 @@
 'use client';
-
 // Lib
 export { useAccountInfo } from './hooks/useAccountInfo.ts';
 export { useConnectedAccount } from './hooks/useConnectedAccount.ts';
 export { useContractReadFunction } from './hooks/useContractReadFunction.ts';
 export { useExecuteTransaction } from './hooks/useExecuteTransaction.ts';
+export { useSignMessage } from './hooks/useSignMessage.ts';
 export { useNearConnector } from './hooks/useNearConnector.ts';
 export { MainnetNearProvider } from './providers/MainnetNearProvider.tsx';
 export { NearProvider } from './providers/NearProvider.tsx';

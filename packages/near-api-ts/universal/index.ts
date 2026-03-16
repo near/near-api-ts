@@ -1,3 +1,5 @@
+import './types/_common/Uint8Array';
+
 // Clients
 export {
   safeCreateClient,
@@ -55,6 +57,10 @@ export {
   throwableDeleteAccount as deleteAccount,
 } from './src/helpers/actionCreators/deleteAccount';
 
+export { safeCreateMessage, createMessage } from '@universal/src/helpers/message/createMessage';
+export { safeVerifyMessage, verifyMessage } from '@universal/src/helpers/message/verifyMessage';
+export { safeVerifySignature, verifySignature } from '@universal/src/helpers/verifySignature';
+
 // Near Token
 export {
   safeNear,
@@ -99,6 +105,7 @@ export { toJsonBytes, fromJsonBytes } from './src/_common/utils/common';
 
 // Client
 export type { Client } from './types/client/client';
+
 export type {
   GetAccountInfo,
   SafeGetAccountInfo,
@@ -124,7 +131,7 @@ export type {
   SafeMemorySignerFactory,
   MemorySignerFactory,
 } from './types/signers/memorySigner/public/createMemorySigner';
-export type { AccountId } from './types/_common/common';
+
 export type {
   PublicKey,
   PrivateKey,
@@ -141,10 +148,14 @@ export type {
 export type { TransferAction } from './types/actions/transfer';
 export type { FunctionCallAction } from './types/actions/functionCall';
 
+export type { Message, SignedMessage } from '@universal/types/_common/message';
+
 export type {
-  JsonLikeValue,
-  MaybeJsonLikeValue,
+  AccountId,
+  BlockReference,
+  JsonValue,
+  MaybeJsonValue,
   ContractFunctionName,
 } from './types/_common/common';
-export type { BlockReference } from './types/_common/common';
+
 export type { PartialTransportPolicy } from './types/client/transport/transport';

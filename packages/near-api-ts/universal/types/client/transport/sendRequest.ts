@@ -1,6 +1,6 @@
 import type { NatError } from '../../../src/_common/natError';
 import type { RpcResponse } from '../../../src/_common/schemas/zod/rpc';
-import type { JsonLikeValue, Milliseconds, Result } from '../../_common/common';
+import type { JsonValue, Milliseconds, Result } from '../../_common/common';
 import type { InvalidSchemaErrorContext } from '../../natError';
 import type { InnerRpcEndpoint, PartialTransportPolicy, RpcTypePreferences, TransportContext, TransportPolicy } from './transport';
 
@@ -38,7 +38,7 @@ export interface SendRequestInnerErrorRegistry {
   'SendRequest.Attempt.Request.FetchFailed': {
     cause: unknown;
     rpc: InnerRpcEndpoint;
-    requestBody: JsonLikeValue;
+    requestBody: JsonValue;
   };
   'SendRequest.Attempt.Request.Timeout': { timeoutMs: Milliseconds };
   'SendRequest.Attempt.Response.JsonParseFailed': {
@@ -60,14 +60,14 @@ export interface SendRequestInnerErrorRegistry {
 export type SendRequestContext = {
   transportPolicy: TransportPolicy;
   method: string;
-  params: JsonLikeValue;
+  params: JsonValue;
   requestTimeoutSignal: AbortSignal;
   externalAbortSignal?: AbortSignal;
 };
 
 type SendRequestArgs = {
   method: string;
-  params: JsonLikeValue;
+  params: JsonValue;
   transportPolicy?: PartialTransportPolicy;
   signal?: AbortSignal;
 };

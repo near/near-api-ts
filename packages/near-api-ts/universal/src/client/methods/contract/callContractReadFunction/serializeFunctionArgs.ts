@@ -1,7 +1,7 @@
 import type { Result } from '@universal/types/_common/common';
 import type { InnerCallContractReadFunctionArgs } from '@universal/types/client/methods/contract/callContractReadFunction';
 import { createNatError, NatError } from '../../../../_common/natError';
-import { JsonSchema } from '../../../../_common/schemas/zod/common/common';
+import { JsonValueSchema } from '../../../../_common/schemas/zod/common/common';
 import { toJsonBytes } from '../../../../_common/utils/common';
 import { result } from '../../../../_common/utils/result';
 
@@ -44,7 +44,7 @@ export const serializeFunctionArgs = (
   // If a user uses a default serializer and passes some functionArgs -
   // functionArgs should be a valid JSON object;
   if (args.functionArgs) {
-    const jsonArgs = JsonSchema.safeParse(args.functionArgs);
+    const jsonArgs = JsonValueSchema.safeParse(args.functionArgs);
 
     if (!jsonArgs.success)
       return result.err(

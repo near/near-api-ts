@@ -1,4 +1,4 @@
-import type { JsonLikeValue, Result } from '@universal/types/_common/common';
+import type { JsonValue, Result } from '@universal/types/_common/common';
 import type { SendRequestContext } from '@universal/types/client/transport/sendRequest';
 import type { InnerRpcEndpoint } from '@universal/types/client/transport/transport';
 import { createNatError, isNatErrorOf, type NatError } from '../../../../../_common/natError';
@@ -15,7 +15,7 @@ export type FetchDataError =
 export const fetchData = async (
   context: SendRequestContext,
   rpc: InnerRpcEndpoint,
-  body: JsonLikeValue,
+  body: JsonValue,
 ): Promise<Result<Response, FetchDataError>> => {
   const attemptTimeout = createAttemptTimeout(
     context.transportPolicy.timeouts.attemptMs,

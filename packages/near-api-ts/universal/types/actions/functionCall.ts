@@ -1,15 +1,8 @@
 import type { NatError } from '../../src/_common/natError';
-import type {
-  ContractFunctionName,
-  MaybeJsonLikeValue,
-  Result,
-} from '../_common/common';
+import type { ContractFunctionName, MaybeJsonValue, Result } from '../_common/common';
 import type { NearGasArgs } from '../_common/nearGas';
 import type { NearTokenArgs } from '../_common/nearToken';
-import type {
-  InternalErrorContext,
-  InvalidSchemaErrorContext,
-} from '../natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
 import type { KeyIf } from '../utils';
 
 export interface CreateFunctionCallActionPublicErrorRegistry {
@@ -40,9 +33,7 @@ export type FunctionCallAction = {
 
 type BaseSerializeArgs<A> = (args: { functionArgs: A }) => Uint8Array;
 
-type FunctionArgsOf<SA> = SA extends (args: {
-  functionArgs: infer T;
-}) => Uint8Array
+type FunctionArgsOf<SA> = SA extends (args: { functionArgs: infer T }) => Uint8Array
   ? T
   : undefined;
 
@@ -56,25 +47,23 @@ type CreateFunctionCallActionError =
 
 export type SafeCreateFunctionCallAction = {
   // #1
-  <A extends MaybeJsonLikeValue = undefined>(
+  <A extends MaybeJsonValue = undefined>(
     args: BaseFunctionCallActionArgs & FunctionArgs<A> & { options?: never },
   ): Result<FunctionCallAction, CreateFunctionCallActionError>;
   // #2
   <SA extends BaseSerializeArgs<A>, A = FunctionArgsOf<SA>>(
-    args: BaseFunctionCallActionArgs &
-      FunctionArgs<A> & { options: { serializeArgs: SA } },
+    args: BaseFunctionCallActionArgs & FunctionArgs<A> & { options: { serializeArgs: SA } },
   ): Result<FunctionCallAction, CreateFunctionCallActionError>;
 };
 
 export type CreateFunctionCallAction = {
   // #1
-  <A extends MaybeJsonLikeValue = undefined>(
+  <A extends MaybeJsonValue = undefined>(
     args: BaseFunctionCallActionArgs & FunctionArgs<A> & { options?: never },
   ): FunctionCallAction;
   // #2
   <SA extends BaseSerializeArgs<A>, A = FunctionArgsOf<SA>>(
-    args: BaseFunctionCallActionArgs &
-      FunctionArgs<A> & { options: { serializeArgs: SA } },
+    args: BaseFunctionCallActionArgs & FunctionArgs<A> & { options: { serializeArgs: SA } },
   ): FunctionCallAction;
 };
 

@@ -8,10 +8,7 @@ export type BlockHeight = number;
 
 export type BlockId = { blockHash: BlockHash } | { blockHeight: BlockHeight };
 
-export type LatestBlock =
-  | 'LatestOptimisticBlock'
-  | 'LatestNearFinalBlock'
-  | 'LatestFinalBlock';
+export type LatestBlock = 'LatestOptimisticBlock' | 'LatestNearFinalBlock' | 'LatestFinalBlock';
 
 export type SyncCheckpoint = 'EarliestAvailableBlock' | 'GenesisBlock';
 
@@ -22,11 +19,6 @@ export type NativeBlockReference =
   | { finality: 'optimistic' | 'near-final' | 'final' }
   | { sync_checkpoint: 'genesis' | 'earliest_available' };
 
-/**
- * Data for signing can be either a raw byte array (Uint8Array) or a hexadecimal string
- * (e.g., "Hello world!" -> "48656c6c6f20776f726c6421").
- */
-export type Hex = Uint8Array | string;
 export type Base58String = string;
 export type Base64String = string;
 
@@ -49,15 +41,11 @@ export type Units = bigint | string;
  */
 export type Tokens = string;
 
-export type JsonLikeValue =
-  | string
-  | number
-  | boolean
-  | null
-  | JsonLikeValue[]
-  | { [key: string]: JsonLikeValue | undefined };
+type JsonObject = { [key: string]: JsonValue };
+type JsonArray = JsonValue[];
+export type JsonValue = string | number | boolean | null | JsonArray | JsonObject;
 
-export type MaybeJsonLikeValue = JsonLikeValue | undefined;
+export type MaybeJsonValue = JsonValue | undefined;
 
 export type Milliseconds = number;
 export type TimeoutId = ReturnType<typeof setTimeout>;

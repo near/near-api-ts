@@ -8,7 +8,7 @@ import type {
   CallContractReadFunctionOutput,
   MaybeBaseDeserializeResultFn,
   MaybeBaseSerializeArgsFn,
-  MaybeJsonLikeValue,
+  MaybeJsonValue,
   PartialTransportPolicy,
   ContractFunctionName,
 } from 'near-api-ts';
@@ -58,13 +58,13 @@ type FunctionArgs<A> = KeyIf<'functionArgs', A>;
 
 export type UseContractReadFunction = {
   // #1
-  <A extends MaybeJsonLikeValue = undefined>(
+  <A extends MaybeJsonValue = undefined>(
     args: BaseUseContractReadFunctionArgs &
       FunctionArgs<A> &
       Options<undefined, undefined, undefined>,
   ): UseQueryResult<CallOutput<undefined>, CallContractReadFunctionError>;
   // #2
-  <DR extends BaseDeserializeResultFn, A extends MaybeJsonLikeValue = undefined>(
+  <DR extends BaseDeserializeResultFn, A extends MaybeJsonValue = undefined>(
     args: BaseUseContractReadFunctionArgs & FunctionArgs<A> & Options<undefined, undefined, DR>,
   ): UseQueryResult<CallOutput<DR>, CallContractReadFunctionError>;
   // #3
