@@ -1,21 +1,16 @@
 'use client';
 
-import {
-  Badge,
-  Button,
-  Group,
-  Menu,
-  Paper,
-  Text,
-  Title,
-  Grid,
-} from '@mantine/core';
+import { Badge, Button, Group, Menu, Paper, Text, Title, Grid } from '@mantine/core';
 import { useConnectedAccount, useNearConnector } from 'react-near-ts';
 import styles from './Topbar.module.css';
 
 export const Topbar = () => {
   const { connectedAccountId, isConnectedAccount } = useConnectedAccount();
   const { connect, disconnect } = useNearConnector();
+
+  const connectWallet = async () => {
+    connect.mutate();
+  };
 
   return (
     <Paper className={styles.header} radius="md" p="lg" withBorder>
@@ -41,15 +36,8 @@ export const Topbar = () => {
             <Menu position="bottom-end" width={150} withinPortal>
               <Menu.Target>
                 <Paper radius="md" withBorder>
-                  <Group
-                    style={{ padding: '6px', gap: '6px', cursor: 'pointer' }}
-                  >
-                    <Badge
-                      color="teal"
-                      variant="light"
-                      radius="sm"
-                      style={{ cursor: 'pointer' }}
-                    >
+                  <Group style={{ padding: '6px', gap: '6px', cursor: 'pointer' }}>
+                    <Badge color="teal" variant="light" radius="sm" style={{ cursor: 'pointer' }}>
                       {connectedAccountId}
                     </Badge>
                     <Text size="xs" c="dimmed">
@@ -63,7 +51,7 @@ export const Topbar = () => {
               </Menu.Dropdown>
             </Menu>
           ) : (
-            <Button size="sm" radius="md" onClick={() => connect.mutate()} color="#12b886">
+            <Button size="sm" radius="md" onClick={connectWallet} color="#12b886">
               Connect Wallet
             </Button>
           )}

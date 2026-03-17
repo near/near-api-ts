@@ -20,7 +20,11 @@
     "noUnusedParameters": false,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    "paths": {
+      "near-api-ts": ["../near-api-ts/browser/index.ts"]
+    }
   },
   "include": ["src", "types", "tests"]
 }

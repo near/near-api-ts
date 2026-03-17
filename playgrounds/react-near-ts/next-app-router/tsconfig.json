@@ -20,7 +20,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "react-near-ts": ["../../../packages/react-near-ts/src/index.ts"]
     }
   },
   "include": [

@@ -26,22 +26,22 @@ const SignMessage = () => {
   const { isConnectedAccount } = useConnectedAccount();
   const signMessageMutation = useSignMessage();
 
-  // if (!isConnectedAccount) {
-  //   return (
-  //     <Card padding="xl" radius="md" withBorder>
-  //       <Stack gap="xs">
-  //         <Title order={3}>Account Info</Title>
-  //         <Text c="dimmed">Connect your wallet to see balances and storage usage.</Text>
-  //       </Stack>
-  //     </Card>
-  //   );
-  // }
+  if (!isConnectedAccount) {
+    return (
+      <Card padding="xl" radius="md" withBorder>
+        <Stack gap="xs">
+          <Title order={3}>Account Info</Title>
+          <Text c="dimmed">Connect your wallet to see balances and storage usage.</Text>
+        </Stack>
+      </Card>
+    );
+  }
 
   const signMessage = async () => {
     const message = createMessage({
       data: 'Login',
       requester: 'abc',
-      nonce: new Uint8Array(32).fill(0),
+      // nonce: new Uint8Array(32).fill(0),
     });
 
     const signedMessage = await signMessageMutation.mutateAsync({ message });

@@ -57,9 +57,9 @@ export {
   throwableDeleteAccount as deleteAccount,
 } from './src/helpers/actionCreators/deleteAccount';
 
-export { safeCreateMessage, createMessage } from '@universal/src/helpers/message/createMessage';
-export { safeVerifyMessage, verifyMessage } from '@universal/src/helpers/message/verifyMessage';
-export { safeVerifySignature, verifySignature } from '@universal/src/helpers/verifySignature';
+export { safeCreateMessage, createMessage } from './src/helpers/message/createMessage';
+export { safeVerifyMessage, verifyMessage } from './src/helpers/message/verifyMessage';
+export { safeVerifySignature, verifySignature } from './src/helpers/verifySignature';
 
 // Near Token
 export {
@@ -169,4 +169,4 @@ export type { PartialTransportPolicy } from './types/client/transport/transport'
 // Zod Schemas
 export { AccountIdSchema } from './src/_common/schemas/zod/common/accountId';
 export { PublicKeySchema } from './src/_common/schemas/zod/common/publicKey';
-export { Base64StringSchema } from '@universal/src/_common/schemas/zod/common/base64String';
+export { Base64StringSchema } from './src/_common/schemas/zod/common/base64String';
