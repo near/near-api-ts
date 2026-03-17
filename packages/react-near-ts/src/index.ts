@@ -13,32 +13,34 @@ export { createNearStore } from './store/nearStore.ts';
 export { createNearConnectorService } from './services/nearConnector/nearConnector.ts';
 
 // near-api-ts reexports
-export {
-  createTestnetClient,
-  createMainnetClient,
-  createClient,
-  // actionCreators
-  createAccount,
-  transfer,
-  addFullAccessKey,
-  addFunctionCallKey,
-  functionCall,
-  deployContract,
-  stake,
-  deleteKey,
-  deleteAccount,
-  //utils
-  keyPair,
-  randomEd25519KeyPair,
-  randomSecp256k1KeyPair,
-  nearToken,
-  near,
-  yoctoNear,
-  nearGas,
-  gas,
-  teraGas,
-  fromJsonBytes,
-  toJsonBytes,
-} from 'near-api-ts';
+export * from 'near-api-ts';
 
-export type { DeserializeResultFnArgs } from 'near-api-ts';
+// export {
+//   createTestnetClient,
+//   createMainnetClient,
+//   createClient,
+//   // actionCreators
+//   createAccount,
+//   transfer,
+//   addFullAccessKey,
+//   addFunctionCallKey,
+//   functionCall,
+//   deployContract,
+//   stake,
+//   deleteKey,
+//   deleteAccount,
+//   //utils
+//   keyPair,
+//   randomEd25519KeyPair,
+//   randomSecp256k1KeyPair,
+//   nearToken,
+//   near,
+//   yoctoNear,
+//   nearGas,
+//   gas,
+//   teraGas,
+//   fromJsonBytes,
+//   toJsonBytes,
+// } from 'near-api-ts';
+
+// export type { DeserializeResultFnArgs } from 'near-api-ts';

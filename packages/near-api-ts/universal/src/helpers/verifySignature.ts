@@ -33,6 +33,8 @@ export const safeVerifySignature: SafeVerifySignature = wrapInternalError(
       return result.ok(ed25519.verify(signature.u8Signature, message, publicKey.u8PublicKey));
     }
 
+    // TODO add support for secp256k1
+
     return result.ok(false);
   },
 );

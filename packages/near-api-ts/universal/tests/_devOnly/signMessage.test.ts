@@ -9,7 +9,7 @@ import { verifyMessage } from '@universal/src/helpers/message/verifyMessage';
 
 const signMessage = async (args: { message: Message }): Promise<SignedMessage> => {
   const kp = keyPair(
-    'ed25519:5sAGQFD878c7MRoy9ACfgtTzejubjm76FPxUQpBPqUG26H9XMayZn36244vwkTuxrYFcFBE4YMXNcna1jXC6RxqU',
+    'secp256k1:2AA1S7ExeLZWJPd6CuBD37vFtkbyAXdkmHbXd7CVzm3A4VZhzEBenkGr9nJkn2Dhcf5QEkdoDwH1DbQ6V8iEPsDwbheqhiHS7G467xQugVyscLvrAmyFJDfZY5QkRErwxxQ6',
   );
   const signerAccountId = 'eclipseer.testnet';
 

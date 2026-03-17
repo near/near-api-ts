@@ -99,7 +99,13 @@ export {
 
 // Errors
 export { isNatError } from './src/_common/natError';
+
+// Utils
 export { toJsonBytes, fromJsonBytes } from './src/_common/utils/common';
+export {
+  toEd25519CurveString,
+  toSecp256k1CurveString,
+} from './src/_common/transformers/toCurveString';
 
 // Types
 
@@ -148,7 +154,7 @@ export type {
 export type { TransferAction } from './types/actions/transfer';
 export type { FunctionCallAction } from './types/actions/functionCall';
 
-export type { Message, SignedMessage } from '@universal/types/_common/message';
+export type { Message, SignedMessage } from './types/_common/message';
 
 export type {
   AccountId,
@@ -159,3 +165,8 @@ export type {
 } from './types/_common/common';
 
 export type { PartialTransportPolicy } from './types/client/transport/transport';
+
+// Zod Schemas
+export { AccountIdSchema } from './src/_common/schemas/zod/common/accountId';
+export { PublicKeySchema } from './src/_common/schemas/zod/common/publicKey';
+export { Base64StringSchema } from '@universal/src/_common/schemas/zod/common/base64String';

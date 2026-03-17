@@ -1,21 +1,51 @@
 import type { CreateSafeSignMessage } from '../../../types/services/nearConnect.ts';
 import { result } from '../../_common/utils/result.ts';
+import {
+  AccountIdSchema,
+  PublicKeySchema,
+  toEd25519CurveString,
+  toSecp256k1CurveString,
+  Base64StringSchema,
+} from 'near-api-ts';
+import * as z from 'zod';
+
+const NearConnectSignedMessageSchema = z.object({
+  accountId: AccountIdSchema,
+  publicKey: PublicKeySchema,
+  signature: Base64StringSchema,
+});
 
 export const createSafeSignMessage: CreateSafeSignMessage = (connector) => async (args) => {
+  // TODO Validate args
   try {
-    const wallet = await connector.wallet('meteor-wallet');
+    const wallet = await connector.wallet();
+    const { data, requester, nonce } = args.message;
 
-    const signedMessage = await wallet.signMessage({
-      message: args.message.data,
-      recipient: args.message.recipient,
-      nonce: args.message.nonce,
-      signerId: 'lantstool.near',
-      network: 'mainnet',
+    // We can't be 100% sure that wallets return the valid response;
+    // So we will validate it ourselves;
+    const nearConnectSignedMessage: unknown = await wallet.signMessage({
+      message: data,
+      recipient: requester,
+      nonce: Uint8Array.fromBase64(nonce),
     });
-    console.log('signedMessage', signedMessage);
-    return result.ok(signedMessage);
+
+    // Validate + transform wallet response
+    const validNearConnectSignedMessage =
+      NearConnectSignedMessageSchema.parse(nearConnectSignedMessage);
+
+    const { publicKey, curve } = validNearConnectSignedMessage.publicKey;
+    const u8Signature = Uint8Array.fromBase64(validNearConnectSignedMessage.signature);
+
+    const base58Signature =
+      curve === 'ed25519' ? toEd25519CurveString(u8Signature) : toSecp256k1CurveString(u8Signature);
+
+    return result.ok({
+      signerAccountId: validNearConnectSignedMessage.accountId,
+      signerPublicKey: publicKey,
+      message: args.message,
+      signature: base58Signature,
+    });
   } catch (e) {
-    console.log(e);
     return result.err(e);
   }
 };
