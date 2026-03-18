@@ -90,11 +90,11 @@ export {
 } from './src/helpers/keyPair/keyPair';
 export {
   safeRandomEd25519KeyPair,
-  throwableRandomEd25519KeyPair as randomEd25519KeyPair,
+  randomEd25519KeyPair,
 } from './src/helpers/keyPair/randomEd25519KeyPair';
 export {
   safeRandomSecp256k1KeyPair,
-  throwableRandomSecp256k1KeyPair as randomSecp256k1KeyPair,
+  randomSecp256k1KeyPair,
 } from './src/helpers/keyPair/randomSecp256k1KeyPair';
 
 // Errors

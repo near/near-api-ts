@@ -14,7 +14,7 @@ describe('Transaction success', () => {
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyService = await createMemoryKeyService({
+    keyService = createMemoryKeyService({
       keySources: [
         { privateKey: DEFAULT_PRIVATE_KEY },
         { privateKey: testKeys.fc.forContract.privateKey },

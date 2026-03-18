@@ -33,5 +33,5 @@ export const safeRandomEd25519KeyPair: SafeCreateRandomEd25519KeyPair = wrapInte
   },
 );
 
-export const throwableRandomEd25519KeyPair: CreateRandomEd25519KeyPair =
+export const randomEd25519KeyPair: CreateRandomEd25519KeyPair =
   asThrowable(safeRandomEd25519KeyPair);

@@ -38,6 +38,6 @@ export const safeRandomSecp256k1KeyPair: SafeCreateRandomSecp256k1KeyPair = wrap
   },
 );
 
-export const throwableRandomSecp256k1KeyPair: CreateRandomSecp256k1KeyPair = asThrowable(
+export const randomSecp256k1KeyPair: CreateRandomSecp256k1KeyPair = asThrowable(
   safeRandomSecp256k1KeyPair,
 );
