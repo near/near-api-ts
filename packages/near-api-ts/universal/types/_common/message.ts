@@ -2,10 +2,7 @@ import type { JsonValue, Base64String, AccountId, Result } from './common';
 import type { Signature, PublicKey } from './crypto';
 import type { InvalidSchemaErrorContext, InternalErrorContext } from './natError';
 import type { NatError } from '../../src/_common/natError';
-import type {
-  SafeGetAccountAccessKeys,
-  GetAccountAccessKeysError,
-} from '../client/methods/account/getAccountAccessKeys';
+import type { SafeGetAccountAccessKeys, GetAccountAccessKeysError } from '../client/methods/account/getAccountAccessKeys';
 
 export interface MessagePublicErrorRegistry {
   'CreateMessage.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -16,8 +13,8 @@ export interface MessagePublicErrorRegistry {
 }
 
 export type Message = {
-  data: string;
-  requester: string;
+  message: string;
+  recipient: string;
   nonce: Base64String;
 };
 
@@ -32,8 +29,8 @@ export type SignedMessage = {
 // Create Message
 
 type CreateMessageArgs = {
-  data: JsonValue;
-  requester: string;
+  message: JsonValue;
+  recipient: string;
   nonce?: Uint8Array;
 };
 
@@ -54,7 +51,7 @@ export type CreateMessage = (args: CreateMessageArgs) => CreateMessageOutput;
 
 type VerifyMessageArgs = {
   signedMessage: SignedMessage;
-  originMessage: Message;
+  message: Message;
   client: {
     safeGetAccountAccessKeys: SafeGetAccountAccessKeys;
   };

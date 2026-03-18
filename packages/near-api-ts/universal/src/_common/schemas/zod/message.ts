@@ -19,8 +19,8 @@ export const NonceSchema = z
   );
 
 export const MessageSchema = z.object({
-  data: z.string(),
-  requester: z.string(),
+  message: z.string(),
+  recipient: z.string(),
   nonce: NonceSchema,
 });
 

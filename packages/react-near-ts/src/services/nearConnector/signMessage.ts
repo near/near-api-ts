@@ -19,13 +19,13 @@ export const createSafeSignMessage: CreateSafeSignMessage = (connector) => async
   // TODO Validate args
   try {
     const wallet = await connector.wallet();
-    const { data, requester, nonce } = args.message;
+    const { message, recipient, nonce } = args.message;
 
     // We can't be 100% sure that wallets return the valid response;
     // So we will validate it ourselves;
     const nearConnectSignedMessage: unknown = await wallet.signMessage({
-      message: data,
-      recipient: requester,
+      message: message,
+      recipient: recipient,
       nonce: Uint8Array.fromBase64(nonce),
     });
 

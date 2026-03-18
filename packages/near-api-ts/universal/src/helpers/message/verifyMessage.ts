@@ -12,7 +12,7 @@ import { asThrowable } from '../../_common/utils/asThrowable';
 
 export const VerifyMessageArgsSchema = z.object({
   signedMessage: SignedMessageSchema,
-  originMessage: MessageSchema,
+  message: MessageSchema,
   client: z.object({
     safeGetAccountAccessKeys: z.custom<SafeGetAccountAccessKeys>(
       (val) => typeof val === 'function',
@@ -50,7 +50,7 @@ export const safeVerifyMessage: SafeVerifyMessage = wrapInternalError(
 
     // 2. Verify the message signature - we want to make sure that the user
     // really signed the original message by a provided key
-    const borshNep413Message = toBorshNep413Message(args.originMessage);
+    const borshNep413Message = toBorshNep413Message(args.message);
     const u8MessageHash = sha256(borshNep413Message);
 
     // We sure that verifySignature will never throw an error

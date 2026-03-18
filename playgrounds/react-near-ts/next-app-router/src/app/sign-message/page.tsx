@@ -14,8 +14,8 @@ import {
   signerAccountId: 'eclipseer.testnet',
   signerPublicKey: 'ed25519:6RrvkTQKSo1DwW23rv3TWLhZZw5jySeW1AEVrLSfAhka',
   message: {
-    data: 'Login',
-    requester: 'abc',
+    message: 'Login',
+    recipient: 'abc',
     nonce: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA='
   },
   signature: 'ed25519:2nMMjTCcptnHifxT5vT3QNdBXTx3No7iVYo4MiEJS6moSEf1coEtPUNhyR1DStccN7r2fpZhuxNT8hzpi9zrL56j'
@@ -39,8 +39,8 @@ const SignMessage = () => {
 
   const signMessageAsync = async () => {
     const message = createMessage({
-      data: 'Login',
-      requester: 'abc',
+      message: 'Login',
+      recipient: 'abc',
       // nonce: new Uint8Array(32).fill(0),
     });
 
@@ -49,7 +49,7 @@ const SignMessage = () => {
 
     const isValid = await verifyMessage({
       signedMessage,
-      originMessage: message,
+      message,
       client: createTestnetClient(),
     });
     console.log('IsValid', isValid);

@@ -8,8 +8,8 @@ import { asThrowable } from '../../_common/utils/asThrowable';
 import { Nep413Message } from '../../_common/configs/constants';
 
 export const CreateMessageArgsSchema = z.object({
-  data: JsonValueSchema,
-  requester: z.string(),
+  message: JsonValueSchema,
+  recipient: z.string(),
   nonce: z.optional(z.instanceof(Uint8Array).check(z.length(Nep413Message.NonceLength))),
 });
 
@@ -28,13 +28,13 @@ export const safeCreateMessage: SafeCreateMessage = wrapInternalError(
     const base64Nonce = nonce.toBase64();
 
     const stringifiedData =
-      typeof validArgs.data.data === 'string'
-        ? validArgs.data.data
-        : JSON.stringify(validArgs.data.data);
+      typeof validArgs.data.message === 'string'
+        ? validArgs.data.message
+        : JSON.stringify(validArgs.data.message);
 
     return result.ok({
-      data: stringifiedData,
-      requester: args.requester,
+      message: stringifiedData,
+      recipient: args.recipient,
       nonce: base64Nonce,
     });
   },

@@ -29,8 +29,8 @@ describe('Sign Message - Ok', () => {
   it('Sign', async () => {
     // #1
     const message = createMessage({
-      data: 'Login',
-      requester: 'abc',
+      message: 'Login',
+      recipient: 'abc',
       nonce: new Uint8Array(32).fill(0),
     });
 
@@ -41,7 +41,7 @@ describe('Sign Message - Ok', () => {
     // #3
     const isValid = await verifyMessage({
       signedMessage,
-      originMessage: message,
+      message,
       client: createTestnetClient(),
     });
     console.log('isValid', isValid);
