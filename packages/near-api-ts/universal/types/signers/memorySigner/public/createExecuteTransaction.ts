@@ -1,7 +1,7 @@
-import type { NatError } from '@universal/src/_common/natError';
-import type { TransactionErrorContext } from '@universal/types/_common/transaction/rpcTransactionErrorContext';
-import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '@universal/types/client/transport/sendRequest';
-import type { MemorySignerErrorContext } from '@universal/types/signers/memorySigner/_common/errorContext';
+import type { NatError } from '../../../../src/_common/natError';
+import type { TransactionErrorContext } from '../../../_common/transaction/rpcTransactionErrorContext';
+import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '../../../client/transport/sendRequest';
+import type { MemorySignerErrorContext } from '../_common/errorContext';
 import type { Result } from '../../../_common/common';
 import type { TransactionIntent } from '../../../_common/transaction/transaction';
 import type { SendSignedTransactionOutput } from '../../../client/methods/transaction/sendSignedTransaction';

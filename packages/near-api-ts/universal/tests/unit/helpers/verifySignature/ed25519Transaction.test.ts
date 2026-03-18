@@ -1,7 +1,7 @@
 import { test, expect } from 'vitest';
-import { createMemoryKeyService, verifySignature, randomEd25519KeyPair } from '@universal/index';
-import { getTransactionHash } from '@universal/src/_common/utils/getTransactionHash';
-import { TransactionSchema } from '@universal/src/_common/schemas/zod/transaction/transaction';
+import { createMemoryKeyService, verifySignature, randomEd25519KeyPair } from '../../../../index';
+import { getTransactionHash } from '../../../../src/_common/utils/getTransactionHash';
+import { TransactionSchema } from '../../../../src/_common/schemas/zod/transaction/transaction';
 
 test('ed25519 transaction verification', async () => {
   const keyPair = randomEd25519KeyPair()

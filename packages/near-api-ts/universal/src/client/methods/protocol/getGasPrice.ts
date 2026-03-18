@@ -1,6 +1,6 @@
 import { RpcGasPriceResponseSchema } from '@near-js/jsonrpc-types';
-import type { BlockHash, BlockHeight } from '@universal/types/_common/common';
-import type { CreateGetGasPrice, GetGasPriceArgs, GetGasPriceResult } from '@universal/types/client/methods/protocol/getGasPrice';
+import type { BlockHash, BlockHeight } from '../../../../types/_common/common';
+import type { CreateGetGasPrice, GetGasPriceArgs, GetGasPriceResult } from '../../../../types/client/methods/protocol/getGasPrice';
 import { throwableYoctoNear } from '../../../helpers/tokens/nearToken';
 
 const transformResult = (result: unknown): GetGasPriceResult => {

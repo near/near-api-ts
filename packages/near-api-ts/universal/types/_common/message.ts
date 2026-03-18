@@ -1,11 +1,11 @@
-import type { JsonValue, Base64String, AccountId, Result } from '../../types/_common/common';
-import type { Signature, PublicKey } from '../../types/_common/crypto';
+import type { JsonValue, Base64String, AccountId, Result } from './common';
+import type { Signature, PublicKey } from './crypto';
 import type { InvalidSchemaErrorContext, InternalErrorContext } from './natError';
 import type { NatError } from '../../src/_common/natError';
 import type {
   SafeGetAccountAccessKeys,
   GetAccountAccessKeysError,
-} from '@universal/types/client/methods/account/getAccountAccessKeys';
+} from '../client/methods/account/getAccountAccessKeys';
 
 export interface MessagePublicErrorRegistry {
   'CreateMessage.Args.InvalidSchema': InvalidSchemaErrorContext;

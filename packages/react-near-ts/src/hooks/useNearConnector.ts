@@ -13,7 +13,7 @@ const NearConnectorServiceSchema = z.object({
   }),
 });
 
-// useNearConnector({ withWalletAction: 'SignMessage' })
+// useNearConnector({ connectMode: 'SignMessage' })
 // useNearConnector({ withWalletAction: 'AddFunctionCallKey' })
 
 export const useNearConnector: UseNearConnect = () => {

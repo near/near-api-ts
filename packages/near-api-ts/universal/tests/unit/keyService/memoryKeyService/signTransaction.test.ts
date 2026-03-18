@@ -1,4 +1,4 @@
-import type { Transaction } from '@universal/types/_common/transaction/transaction';
+import type { Transaction } from '../../../../types/_common/transaction/transaction';
 import { describe, expect, it } from 'vitest';
 import { createMemoryKeyService, randomEd25519KeyPair } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';

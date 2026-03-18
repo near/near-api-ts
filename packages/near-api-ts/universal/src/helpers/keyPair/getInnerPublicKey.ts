@@ -4,7 +4,7 @@ import {
   toEd25519CurveString,
   toSecp256k1CurveString,
 } from '../../_common/transformers/toCurveString';
-import type { InnerPublicKey } from '@universal/src/_common/schemas/zod/common/publicKey';
+import type { InnerPublicKey } from '../../_common/schemas/zod/common/publicKey';
 
 const { Ed25519, Secp256k1 } = BinaryLengths;
 

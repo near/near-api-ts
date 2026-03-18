@@ -1,4 +1,4 @@
-import { result } from '@universal/src/_common/utils/result';
+import { result } from '../../../../universal/src/_common/utils/result';
 import type { IdbKeyServiceContext } from '../idbKeyService';
 
 export const createSafeRemoveKey =

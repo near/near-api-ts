@@ -1,4 +1,4 @@
-import type { CreateMemorySignerPublicErrorRegistry } from '@universal/types/signers/memorySigner/public/createMemorySigner';
+import type { CreateMemorySignerPublicErrorRegistry } from './public/createMemorySigner';
 import type { AccountId } from '../../_common/common';
 import type { Client } from '../../client/client';
 import type { MemoryKeyService } from '../../keyServices/memoryKeyService/memoryKeyService';

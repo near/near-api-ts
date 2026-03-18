@@ -1,4 +1,4 @@
-import type { Tokens } from '@universal/types/_common/common';
+import type { Tokens } from '../../../../types/_common/common';
 import { pow10 } from './helpers';
 
 /**

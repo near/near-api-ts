@@ -1,4 +1,4 @@
-import type { Task, TaskQueueContext } from '@universal/types/signers/memorySigner/inner/taskQueue';
+import type { Task, TaskQueueContext } from '../../../../../../types/signers/memorySigner/inner/taskQueue';
 import { createNatError } from '../../../../../_common/natError';
 import { result } from '../../../../../_common/utils/result';
 

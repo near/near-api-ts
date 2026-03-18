@@ -1,4 +1,4 @@
-import type { CreateExecuteTask, ExecuteTask } from '@universal/types/signers/memorySigner/inner/tasker';
+import type { CreateExecuteTask, ExecuteTask } from '../../../../../types/signers/memorySigner/inner/tasker';
 import { executeTransaction } from './executors/executeTransaction';
 import { signTransaction } from './executors/signTransaction';
 

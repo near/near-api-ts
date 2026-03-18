@@ -1,8 +1,5 @@
-import {
-  createIdbKeyService,
-  randomEd25519KeyPair,
-  transfer,
-} from 'near-api-ts';
+import { randomEd25519KeyPair, transfer } from 'near-api-ts';
+import { createIdbKeyService } from 'near-api-ts/browser';
 import cn from './App.module.css';
 
 export const App = () => {

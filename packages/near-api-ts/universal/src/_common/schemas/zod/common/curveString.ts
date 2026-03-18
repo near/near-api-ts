@@ -1,5 +1,5 @@
 import { base58 } from '@scure/base';
-import type { Curve, CurveString } from '@universal/types/_common/curveString';
+import type { Curve, CurveString } from '../../../../../types/_common/curveString';
 import * as z from 'zod/mini';
 import { oneLine } from '../../../utils/common';
 

@@ -13,7 +13,7 @@ import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 import { signByEd25519Key } from './_common/signByEd25519Key';
 import { signBySecp256k1Key } from './_common/signBySecp256k1Key';
-import { getInnerPublicKey } from '@universal/src/helpers/keyPair/getInnerPublicKey';
+import { getInnerPublicKey } from './getInnerPublicKey';
 
 const createSafeSign = ({ curve, u8PrivateKey }: InnerPrivateKey): SafeSign =>
   wrapInternalError('KeyPair.Sign.Internal', (message) =>

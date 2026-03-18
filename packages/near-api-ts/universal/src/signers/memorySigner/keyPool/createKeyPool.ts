@@ -1,4 +1,4 @@
-import type { CreateKeyPool, KeyPoolState } from '@universal/types/signers/memorySigner/inner/keyPool';
+import type { CreateKeyPool, KeyPoolState } from '../../../../types/signers/memorySigner/inner/keyPool';
 import { createFindKeyForTask } from './createFindKeyForTask';
 import { createGetPoolKeys } from './createGetPoolKeys/createGetPoolKeys';
 import { createIsKeyForTaskExist } from './createIsKeyForTaskExist';

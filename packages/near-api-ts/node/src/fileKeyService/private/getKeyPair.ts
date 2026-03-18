@@ -1,5 +1,5 @@
-import { keyPair } from '@universal/index';
-import { result } from '@universal/src/_common/utils/result';
+import { keyPair } from '../../../../universal/index';
+import { result } from '../../../../universal/src/_common/utils/result';
 import { readFile } from 'node:fs/promises';
 import path from 'path';
 

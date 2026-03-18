@@ -1,7 +1,7 @@
-import type { NatError } from '@universal/src/_common/natError';
-import type { RpcQueryViewAccountResult } from '@universal/src/client/methods/account/getAccountInfo/handleResult/handleResult';
-import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '@universal/types/client/transport/sendRequest';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '@universal/types/_common/natError';
+import type { NatError } from '../../../../src/_common/natError';
+import type { RpcQueryViewAccountResult } from '../../../../src/client/methods/account/getAccountInfo/handleResult/handleResult';
+import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '../../transport/sendRequest';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { AccountId, BlockHash, BlockHeight, BlockReference, CryptoHash, Result } from '../../../_common/common';
 import type { NearToken } from '../../../_common/nearToken';
 import type { ClientContext } from '../../client';

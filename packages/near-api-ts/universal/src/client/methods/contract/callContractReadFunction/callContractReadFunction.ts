@@ -1,9 +1,9 @@
-import { repackError } from '@universal/src/_common/utils/repackError';
+import { repackError } from '../../../../_common/utils/repackError';
 import type {
   CreateSafeCallContractReadFunction,
   InnerCallContractReadFunctionArgs,
   SafeCallContractReadFunction,
-} from '@universal/types/client/methods/contract/callContractReadFunction';
+} from '../../../../../types/client/methods/contract/callContractReadFunction';
 import * as z from 'zod/mini';
 import { createNatError } from '../../../../_common/natError';
 import { BlockReferenceSchema, PoliciesSchema } from '../../../../_common/schemas/zod/client';

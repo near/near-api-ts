@@ -1,8 +1,8 @@
 import * as z from 'zod/mini';
-import { Base64StringSchema } from '@universal/src/_common/schemas/zod/common/base64String';
-import { SignatureSchema } from '@universal/src/_common/schemas/zod/common/signature';
-import { AccountIdSchema } from '@universal/src/_common/schemas/zod/common/accountId';
-import { PublicKeySchema } from '@universal/src/_common/schemas/zod/common/publicKey';
+import { Base64StringSchema } from './common/base64String';
+import { SignatureSchema } from './common/signature';
+import { AccountIdSchema } from './common/accountId';
+import { PublicKeySchema } from './common/publicKey';
 
 export const NonceSchema = z
   .pipe(

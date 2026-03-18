@@ -3,7 +3,7 @@ import type {
   CreateGetContractState,
   GetContractStateArgs,
   GetContractStateResult,
-} from '@universal/types/client/methods/contract/getContractState';
+} from '../../../../types/client/methods/contract/getContractState';
 import * as z from 'zod/mini';
 import { toNativeBlockReference } from '../../../_common/transformers/toNative/blockReference';
 

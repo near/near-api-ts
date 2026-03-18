@@ -1,4 +1,4 @@
-import { toJsonBytes } from '@universal/src/_common/utils/common';
+import { toJsonBytes } from '../../../../src/_common/utils/common';
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import {

@@ -1,5 +1,5 @@
-import { safeKeyPair } from '@universal/index';
-import { result } from '@universal/src/_common/utils/result';
+import { safeKeyPair } from '../../../../universal';
+import { result } from '../../../../universal/src/_common/utils/result';
 import type { IdbKeyServiceContext } from '../idbKeyService';
 
 export const createGetKeyPair =

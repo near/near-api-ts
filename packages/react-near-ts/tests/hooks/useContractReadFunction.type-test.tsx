@@ -1,5 +1,5 @@
 import * as z from 'zod/mini';
-import { useContractReadFunction } from '../../src/hooks/useContractReadFunction.ts';
+import { useContractReadFunction } from '../../src';
 
 type Equal<A, B> =
   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;

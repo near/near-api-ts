@@ -1,6 +1,6 @@
-import { randomEd25519KeyPair, transfer } from '@universal/index';
-import { log } from '@universal/tests/utils/common';
-import { throwableCreateFileKeyService } from 'node/src/fileKeyService/fileKeyService';
+import { randomEd25519KeyPair, transfer } from '../../../../universal/index';
+import { log } from '../../../../universal/tests/utils/common';
+import { throwableCreateFileKeyService } from '../../../src/fileKeyService/fileKeyService';
 import { it } from 'vitest';
 
 it('FileKeyService:Sign transaction', async () => {
@@ -28,5 +28,4 @@ it('FileKeyService:Sign transaction', async () => {
   } catch (e) {
     log(e);
   }
-
 });

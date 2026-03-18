@@ -1,4 +1,4 @@
-import type { NatError } from '@universal/src/_common/natError';
+import type { NatError } from '../../../../src/_common/natError';
 import type { AccountId, Milliseconds, Result } from '../../../_common/common';
 import type { PublicKey } from '../../../_common/crypto';
 import type { Client } from '../../../client/client';

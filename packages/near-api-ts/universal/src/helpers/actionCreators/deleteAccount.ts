@@ -1,5 +1,5 @@
 import * as z from 'zod/mini';
-import type { CreateDeleteAccountAction, SafeCreateDeleteAccountAction } from '@universal/types/_common/transaction/actions/deleteAccount';
+import type { CreateDeleteAccountAction, SafeCreateDeleteAccountAction } from '../../../types/_common/transaction/actions/deleteAccount';
 import { createNatError } from '../../_common/natError';
 import { AccountIdSchema } from '../../_common/schemas/zod/common/accountId';
 import { asThrowable } from '../../_common/utils/asThrowable';

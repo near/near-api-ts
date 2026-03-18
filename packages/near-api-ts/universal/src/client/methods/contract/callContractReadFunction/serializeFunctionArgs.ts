@@ -1,5 +1,5 @@
-import type { Result } from '@universal/types/_common/common';
-import type { InnerCallContractReadFunctionArgs } from '@universal/types/client/methods/contract/callContractReadFunction';
+import type { Result } from '../../../../../types/_common/common';
+import type { InnerCallContractReadFunctionArgs } from '../../../../../types/client/methods/contract/callContractReadFunction';
 import { createNatError, NatError } from '../../../../_common/natError';
 import { JsonValueSchema } from '../../../../_common/schemas/zod/common/common';
 import { toJsonBytes } from '../../../../_common/utils/common';

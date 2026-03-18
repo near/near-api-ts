@@ -1,8 +1,8 @@
-import type { Result } from '@universal/types/_common/common';
-import type { SignedTransaction, Transaction } from '@universal/types/_common/transaction/transaction';
-import type { PoolKey } from '@universal/types/signers/memorySigner/inner/keyPool';
-import type { Task } from '@universal/types/signers/memorySigner/inner/taskQueue';
-import type { MemorySignerContext } from '@universal/types/signers/memorySigner/memorySigner';
+import type { Result } from '../../../../../../types/_common/common';
+import type { SignedTransaction, Transaction } from '../../../../../../types/_common/transaction/transaction';
+import type { PoolKey } from '../../../../../../types/signers/memorySigner/inner/keyPool';
+import type { Task } from '../../../../../../types/signers/memorySigner/inner/taskQueue';
+import type { MemorySignerContext } from '../../../../../../types/signers/memorySigner/memorySigner';
 import type { NatError } from '../../../../../_common/natError';
 import { result } from '../../../../../_common/utils/result';
 import { wrapInternalError } from '../../../../../_common/utils/wrapInternalError';

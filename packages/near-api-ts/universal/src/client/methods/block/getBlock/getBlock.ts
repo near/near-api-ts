@@ -1,5 +1,5 @@
-import { repackError } from '@universal/src/_common/utils/repackError';
-import type { CreateSafeGetBlock, SafeGetBlock } from '@universal/types/client/methods/block/getBlock';
+import { repackError } from '../../../../_common/utils/repackError';
+import type { CreateSafeGetBlock, SafeGetBlock } from '../../../../../types/client/methods/block/getBlock';
 import * as z from 'zod/mini';
 import { createNatError } from '../../../../_common/natError';
 import { BaseOptionsSchema, BlockReferenceSchema, PoliciesSchema } from '../../../../_common/schemas/zod/client';

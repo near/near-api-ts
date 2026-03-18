@@ -1,10 +1,10 @@
 // import * as z from 'zod/mini';
-import { asThrowable } from '@universal/src/_common/utils/asThrowable';
-import { result } from '@universal/src/_common/utils/result';
-import { wrapInternalError } from '@universal/src/_common/utils/wrapInternalError';
-import type { Result } from '@universal/types/_common/common';
-import type { PublicKey } from '@universal/types/_common/crypto';
-import type { KeyPair } from '@universal/types/_common/keyPair/keyPair';
+import { asThrowable } from '../../../universal/src/_common/utils/asThrowable';
+import { result } from '../../../universal/src/_common/utils/result';
+import { wrapInternalError } from '../../../universal/src/_common/utils/wrapInternalError';
+import type { Result } from '../../../universal/types/_common/common';
+import type { PublicKey } from '../../../universal';
+import type { KeyPair } from '../../../universal/types/_common/keyPair/keyPair';
 import { createGetKeyPair } from './private/getKeyPair';
 import { openIdbConnection } from './private/openIdbConnection';
 import { createSafeAddKey } from './public/addKey';

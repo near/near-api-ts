@@ -1,4 +1,4 @@
-import type { CreateTaskQueue, RemoveTask, TaskQueue, TaskQueueContext } from '@universal/types/signers/memorySigner/inner/taskQueue';
+import type { CreateTaskQueue, RemoveTask, TaskQueue, TaskQueueContext } from '../../../../types/signers/memorySigner/inner/taskQueue';
 import { createFindTaskForKey } from './createFindTaskForKey';
 import { createAddExecuteTransactionTask } from './taskCreators/createAddExecuteTransactionTask';
 import { createAddSignTransactionTask } from './taskCreators/createAddSignTransactionTask';

@@ -1,4 +1,4 @@
-import type { CreateAddSignTransactionTask } from '@universal/types/signers/memorySigner/inner/taskQueue';
+import type { CreateAddSignTransactionTask } from '../../../../../types/signers/memorySigner/inner/taskQueue';
 import { addTask } from './_common/addTask';
 import { getAccessTypePriority } from './_common/getAccessTypePriority';
 

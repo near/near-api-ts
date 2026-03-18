@@ -1,5 +1,5 @@
-import type { Result } from '@universal/types/_common/common';
-import type { InnerRpcEndpoint, RpcTypePreferences, TransportContext } from '@universal/types/client/transport/transport';
+import type { Result } from '../../../../../../types/_common/common';
+import type { InnerRpcEndpoint, RpcTypePreferences, TransportContext } from '../../../../../../types/client/transport/transport';
 import { createNatError, type NatError } from '../../../../../_common/natError';
 import { result } from '../../../../../_common/utils/result';
 

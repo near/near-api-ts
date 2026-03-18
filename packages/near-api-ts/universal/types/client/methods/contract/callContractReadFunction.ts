@@ -1,10 +1,10 @@
-import type { NatError } from '@universal/src/_common/natError';
+import type { NatError } from '../../../../src/_common/natError';
 import type {
   AbortedErrorContext,
   ExhaustedErrorContext,
   PreferredRpcNotFoundErrorContext,
   TimeoutErrorContext,
-} from '@universal/types/client/transport/sendRequest';
+} from '../../transport/sendRequest';
 import type {
   AccountId,
   BlockHash,

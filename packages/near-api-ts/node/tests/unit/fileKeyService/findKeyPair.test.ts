@@ -1,7 +1,7 @@
-import { randomEd25519KeyPair } from '@universal/index';
-import { log } from '@universal/tests/utils/common';
+import { randomEd25519KeyPair } from '../../../../universal';
+import { log } from '../../../../universal/tests/utils/common';
 
-import { throwableCreateFileKeyService } from 'node/src/fileKeyService/fileKeyService';
+import { throwableCreateFileKeyService } from '../../../src/fileKeyService/fileKeyService';
 import { describe, it, vi } from 'vitest';
 
 vi.setConfig({ testTimeout: 60000 });

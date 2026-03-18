@@ -1,4 +1,4 @@
-import type { BorshBytes } from '@universal/types/_common/common';
+import type { BorshBytes } from '../../../../types/_common/common';
 import { serialize } from 'borsh';
 import { signedTransactionBorshSchema, transactionBorshSchema } from '../../schemas/borsh';
 import type { InnerSignedTransaction, InnerTransaction } from '../../schemas/zod/transaction/transaction';

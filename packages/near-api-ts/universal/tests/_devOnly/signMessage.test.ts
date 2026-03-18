@@ -1,11 +1,11 @@
 import { describe, it } from 'vitest';
-import { createTestnetClient } from '@universal/index';
-import { keyPair } from '@universal/index';
+import { createTestnetClient } from '../../index';
+import { keyPair } from '../../index';
 import { sha256 } from '@noble/hashes/sha2';
-import { createMessage } from '@universal/src/helpers/message/createMessage';
-import type { Message, SignedMessage } from '@universal/types/_common/message';
-import { toBorshNep413Message } from '@universal/src/_common/transformers/toBorshBytes/message';
-import { verifyMessage } from '@universal/src/helpers/message/verifyMessage';
+import { createMessage } from '../../src/helpers/message/createMessage';
+import type { Message, SignedMessage } from '../../types/_common/message';
+import { toBorshNep413Message } from '../../src/_common/transformers/toBorshBytes/message';
+import { verifyMessage } from '../../src/helpers/message/verifyMessage';
 
 const signMessage = async (args: { message: Message }): Promise<SignedMessage> => {
   const kp = keyPair(

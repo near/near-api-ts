@@ -1,5 +1,5 @@
-import type { SendRequest, SendRequestContext } from '@universal/types/client/transport/sendRequest';
-import type { TransportContext } from '@universal/types/client/transport/transport';
+import type { SendRequest, SendRequestContext } from '../../../../../types/client/transport/sendRequest';
+import type { TransportContext } from '../../../../../types/client/transport/transport';
 import { createNatError, isNatErrorOf } from '../../../../_common/natError';
 import { result } from '../../../../_common/utils/result';
 import { mergeTransportPolicy } from '../../transportPolicy';

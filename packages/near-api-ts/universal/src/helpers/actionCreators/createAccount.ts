@@ -1,4 +1,4 @@
-import type { CreateAccountAction } from '@universal/types/_common/transaction/actions/createAccount';
+import type { CreateAccountAction } from '../../../types/_common/transaction/actions/createAccount';
 
 export const createAccount = (): CreateAccountAction => ({
   actionType: 'CreateAccount',

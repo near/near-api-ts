@@ -1,9 +1,9 @@
-import type { AccountAccessKey } from '@universal/types/_common/accountAccessKey';
-import type { Milliseconds } from '@universal/types/_common/common';
-import type { PublicKey } from '@universal/types/_common/crypto';
-import type { GetAccountAccessKeysError } from '@universal/types/client/methods/account/getAccountAccessKeys';
-import type { PoolKeys } from '@universal/types/signers/memorySigner/inner/keyPool';
-import type { AccessTypePriority } from '@universal/types/signers/memorySigner/inner/taskQueue';
+import type { AccountAccessKey } from '../../../_common/accountAccessKey';
+import type { Milliseconds } from '../../../_common/common';
+import type { PublicKey } from '../../../_common/crypto';
+import type { GetAccountAccessKeysError } from '../../../client/methods/account/getAccountAccessKeys';
+import type { PoolKeys } from '../inner/keyPool';
+import type { AccessTypePriority } from '../inner/taskQueue';
 
 export type MemorySignerErrorContext = {
   KeyPool: {

@@ -1,8 +1,8 @@
-import { repackError } from '@universal/src/_common/utils/repackError';
+import { repackError } from '../../../../_common/utils/repackError';
 import type {
   CreateSafeSendSignedTransaction,
   SafeSendSignedTransaction,
-} from '@universal/types/client/methods/transaction/sendSignedTransaction';
+} from '../../../../../types/client/methods/transaction/sendSignedTransaction';
 import * as z from 'zod/mini';
 import { createNatError } from '../../../../_common/natError';
 import { BaseOptionsSchema, PoliciesSchema } from '../../../../_common/schemas/zod/client';

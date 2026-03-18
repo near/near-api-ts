@@ -1,7 +1,7 @@
-import type { NatError } from '@universal/src/_common/natError';
-import type { RpcQueryViewAccessKeyOkResult } from '@universal/src/client/methods/account/getAccountAccessKey/handleResult';
-import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '@universal/types/client/transport/sendRequest';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '@universal/types/_common/natError';
+import type { NatError } from '../../../../src/_common/natError';
+import type { RpcQueryViewAccessKeyOkResult } from '../../../../src/client/methods/account/getAccountAccessKey/handleResult';
+import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '../../transport/sendRequest';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { AccountAccessKey } from '../../../_common/accountAccessKey';
 import type { AccountId, BlockHash, BlockHeight, BlockReference, Result } from '../../../_common/common';
 import type { PublicKey } from '../../../_common/crypto';

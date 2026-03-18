@@ -1,6 +1,6 @@
 import { base58 } from '@scure/base';
 import * as z from 'zod/mini';
-import { Base58StringSchema } from '@universal/src/_common/schemas/zod/common/base58String';
+import { Base58StringSchema } from './base58String';
 
 export const CryptoHashSchema = z
   .pipe(

@@ -1,15 +1,15 @@
 import * as z from 'zod/mini';
-import { PublicKeySchema } from '@universal/src/_common/schemas/zod/common/publicKey';
+import { PublicKeySchema } from '../_common/schemas/zod/common/publicKey';
 import { ed25519 } from '@noble/curves/ed25519';
-import { SignatureSchema } from '@universal/src/_common/schemas/zod/common/signature';
+import { SignatureSchema } from '../_common/schemas/zod/common/signature';
 import type {
   SafeVerifySignature,
   VerifySignature,
-} from '@universal/types/_common/verifySignature';
-import { result } from '@universal/src/_common/utils/result';
-import { resultNatError } from '@universal/src/_common/natError';
-import { wrapInternalError } from '@universal/src/_common/utils/wrapInternalError';
-import { asThrowable } from '@universal/src/_common/utils/asThrowable';
+} from '../../types/_common/verifySignature';
+import { result } from '../_common/utils/result';
+import { resultNatError } from '../_common/natError';
+import { wrapInternalError } from '../_common/utils/wrapInternalError';
+import { asThrowable } from '../_common/utils/asThrowable';
 import { secp256k1 } from '@noble/curves/secp256k1';
 
 export const VerifySignatureArgsSchema = z.object({

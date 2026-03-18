@@ -1,4 +1,4 @@
-import { result } from '@universal/src/_common/utils/result';
+import { result } from '../../../../universal/src/_common/utils/result';
 
 export const createHasKeyPair = (context: any) => async (args: any) => {
   try {

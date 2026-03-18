@@ -1,14 +1,14 @@
 import * as z from 'zod/mini';
-import type { SafeVerifyMessage, VerifyMessage } from '@universal/types/_common/message';
-import { SignedMessageSchema, MessageSchema } from '@universal/src/_common/schemas/zod/message';
-import type { SafeGetAccountAccessKeys } from '@universal/types/client/methods/account/getAccountAccessKeys';
-import { wrapInternalError } from '@universal/src/_common/utils/wrapInternalError';
-import { resultNatError } from '@universal/src/_common/natError';
-import { toBorshNep413Message } from '@universal/src/_common/transformers/toBorshBytes/message';
+import type { SafeVerifyMessage, VerifyMessage } from '../../../types/_common/message';
+import { SignedMessageSchema, MessageSchema } from '../../_common/schemas/zod/message';
+import type { SafeGetAccountAccessKeys } from '../../../types/client/methods/account/getAccountAccessKeys';
+import { wrapInternalError } from '../../_common/utils/wrapInternalError';
+import { resultNatError } from '../../_common/natError';
+import { toBorshNep413Message } from '../../_common/transformers/toBorshBytes/message';
 import { sha256 } from '@noble/hashes/sha2';
-import { verifySignature } from '@universal/src/helpers/verifySignature';
-import { result } from '@universal/src/_common/utils/result';
-import { asThrowable } from '@universal/src/_common/utils/asThrowable';
+import { verifySignature } from '../verifySignature';
+import { result } from '../../_common/utils/result';
+import { asThrowable } from '../../_common/utils/asThrowable';
 
 export const VerifyMessageArgsSchema = z.object({
   signedMessage: SignedMessageSchema,

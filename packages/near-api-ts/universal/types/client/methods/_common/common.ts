@@ -1,5 +1,5 @@
 import type { ShardId } from '@near-js/jsonrpc-types';
-import type { BlockHash, BlockHeight } from '@universal/types/_common/common';
+import type { BlockHash, BlockHeight } from '../../../_common/common';
 
 export type RpcQueryNotSyncedErrorContext = null;
 export type RpcQueryShardNotTrackedErrorContext = { shardId: ShardId };

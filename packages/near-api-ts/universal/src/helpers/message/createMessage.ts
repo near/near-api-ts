@@ -1,11 +1,11 @@
 import * as z from 'zod/mini';
-import type { SafeCreateMessage, CreateMessage } from '@universal/types/_common/message';
-import { wrapInternalError } from '@universal/src/_common/utils/wrapInternalError';
-import { resultNatError } from '@universal/src/_common/natError';
-import { result } from '@universal/src/_common/utils/result';
-import { JsonValueSchema } from '@universal/src/_common/schemas/zod/common/common';
-import { asThrowable } from '@universal/src/_common/utils/asThrowable';
-import { Nep413Message } from '@universal/src/_common/configs/constants';
+import type { SafeCreateMessage, CreateMessage } from '../../../types/_common/message';
+import { wrapInternalError } from '../../_common/utils/wrapInternalError';
+import { resultNatError } from '../../_common/natError';
+import { result } from '../../_common/utils/result';
+import { JsonValueSchema } from '../../_common/schemas/zod/common/common';
+import { asThrowable } from '../../_common/utils/asThrowable';
+import { Nep413Message } from '../../_common/configs/constants';
 
 export const CreateMessageArgsSchema = z.object({
   data: JsonValueSchema,

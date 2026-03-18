@@ -1,4 +1,4 @@
-import { result } from '@universal/src/_common/utils/result';
+import { result } from '../../../../universal/src/_common/utils/result';
 import { rm } from 'fs/promises';
 import path from 'path';
 

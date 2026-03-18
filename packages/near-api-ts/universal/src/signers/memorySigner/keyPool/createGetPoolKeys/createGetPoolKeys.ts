@@ -1,6 +1,6 @@
-import type { GetPoolKeys, KeyPoolState } from '@universal/types/signers/memorySigner/inner/keyPool';
-import type { MemorySignerContext } from '@universal/types/signers/memorySigner/memorySigner';
-import type { CreateMemorySignerArgs } from '@universal/types/signers/memorySigner/public/createMemorySigner';
+import type { GetPoolKeys, KeyPoolState } from '../../../../../types/signers/memorySigner/inner/keyPool';
+import type { MemorySignerContext } from '../../../../../types/signers/memorySigner/memorySigner';
+import type { CreateMemorySignerArgs } from '../../../../../types/signers/memorySigner/public/createMemorySigner';
 import { createNatError } from '../../../../_common/natError';
 import { result } from '../../../../_common/utils/result';
 import { createFullAccessPoolKeys } from './createFullAccessPoolKeys';

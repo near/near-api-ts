@@ -1,5 +1,5 @@
-import type { AbortedErrorContext, ExhaustedErrorContext, TimeoutErrorContext } from '@universal/types/client/transport/sendRequest';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '@universal/types/_common/natError';
+import type { AbortedErrorContext, ExhaustedErrorContext, TimeoutErrorContext } from '../transport/sendRequest';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../_common/natError';
 import type { NatError } from '../../../src/_common/natError';
 import type { BlockHash, Result } from '../../_common/common';
 import type { Transport } from '../transport/transport';

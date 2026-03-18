@@ -1,5 +1,5 @@
-import { repackError } from '@universal/src/_common/utils/repackError';
-import type { CreateSafeGetAccountInfo, SafeGetAccountInfo } from '@universal/types/client/methods/account/getAccountInfo';
+import { repackError } from '../../../../_common/utils/repackError';
+import type { CreateSafeGetAccountInfo, SafeGetAccountInfo } from '../../../../../types/client/methods/account/getAccountInfo';
 import * as z from 'zod/mini';
 import { createNatError } from '../../../../_common/natError';
 import { BaseOptionsSchema, BlockReferenceSchema, PoliciesSchema } from '../../../../_common/schemas/zod/client';

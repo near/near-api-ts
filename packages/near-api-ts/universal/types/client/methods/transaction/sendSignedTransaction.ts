@@ -1,8 +1,8 @@
 import type { RpcTransactionResponse } from '@near-js/jsonrpc-types';
-import type { NatError } from '@universal/src/_common/natError';
-import type { TransactionErrorContext } from '@universal/types/_common/transaction/rpcTransactionErrorContext';
-import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '@universal/types/client/transport/sendRequest';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '@universal/types/_common/natError';
+import type { NatError } from '../../../../src/_common/natError';
+import type { TransactionErrorContext } from '../../../_common/transaction/rpcTransactionErrorContext';
+import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '../../transport/sendRequest';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { Result } from '../../../_common/common';
 import type { SignedTransaction } from '../../../_common/transaction/transaction';
 import type { ClientContext } from '../../client';

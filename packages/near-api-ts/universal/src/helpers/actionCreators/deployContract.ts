@@ -2,7 +2,7 @@ import * as z from 'zod/mini';
 import type {
   CreateDeployContractAction,
   SafeCreateDeployContractAction,
-} from '@universal/types/_common/transaction/actions/deployContract';
+} from '../../../types/_common/transaction/actions/deployContract';
 import { createNatError } from '../../_common/natError';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';

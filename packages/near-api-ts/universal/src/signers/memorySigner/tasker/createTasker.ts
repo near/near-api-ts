@@ -1,6 +1,6 @@
-import type { Result } from '@universal/types/_common/common';
-import type { ActiveTasks, CompleteTask, CreateTasker, WaitForTask } from '@universal/types/signers/memorySigner/inner/tasker';
-import type { TaskId } from '@universal/types/signers/memorySigner/inner/taskQueue';
+import type { Result } from '../../../../types/_common/common';
+import type { ActiveTasks, CompleteTask, CreateTasker, WaitForTask } from '../../../../types/signers/memorySigner/inner/tasker';
+import type { TaskId } from '../../../../types/signers/memorySigner/inner/taskQueue';
 import { createExecuteTask } from './executeTask/executeTask';
 
 export const createTasker: CreateTasker = (signerContext) => {

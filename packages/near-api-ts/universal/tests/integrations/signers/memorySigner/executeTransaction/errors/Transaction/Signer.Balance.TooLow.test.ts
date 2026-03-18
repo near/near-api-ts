@@ -1,6 +1,6 @@
-import { assertNatErrKind } from '@universal/tests/utils/assertNatErrKind';
-import { createDefaultClient } from '@universal/tests/utils/common';
-import { startSandbox } from '@universal/tests/utils/sandbox/startSandbox';
+import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import { createDefaultClient } from '../../../../../../utils/common';
+import { startSandbox } from '../../../../../../utils/sandbox/startSandbox';
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { addFullAccessKey, type Client, createAccount, createMemoryKeyService, createMemorySignerFactory, type MemoryKeyService, type MemorySignerFactory, near, randomEd25519KeyPair, transfer } from '../../../../../../../index';

@@ -1,6 +1,6 @@
-import type { JsonValue, Result } from '@universal/types/_common/common';
-import type { SendRequestContext } from '@universal/types/client/transport/sendRequest';
-import type { InnerRpcEndpoint } from '@universal/types/client/transport/transport';
+import type { JsonValue, Result } from '../../../../../../types/_common/common';
+import type { SendRequestContext } from '../../../../../../types/client/transport/sendRequest';
+import type { InnerRpcEndpoint } from '../../../../../../types/client/transport/transport';
 import { createNatError, isNatErrorOf, type NatError } from '../../../../../_common/natError';
 import { combineAbortSignals } from '../../../../../_common/utils/common';
 import { result } from '../../../../../_common/utils/result';
