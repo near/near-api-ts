@@ -1,5 +1,5 @@
 import * as z from 'zod/mini';
-import type { CreateAddFullAccessKeyAction, SafeCreateAddFullAccessKeyAction } from '../../../types/actions/addKey';
+import type { CreateAddFullAccessKeyAction, SafeCreateAddFullAccessKeyAction } from '@universal/types/_common/transaction/actions/addKey';
 import { createNatError } from '../../_common/natError';
 import { PublicKeySchema } from '../../_common/schemas/zod/common/publicKey';
 import { asThrowable } from '../../_common/utils/asThrowable';

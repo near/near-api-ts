@@ -2,12 +2,12 @@ import type { NatError } from '@universal/src/_common/natError';
 import type { ResultErr } from '@universal/types/_common/common';
 import type { NearGasPublicErrorRegistry } from '@universal/types/_common/nearGas';
 import type { NearTokenPublicErrorRegistry } from '@universal/types/_common/nearToken';
-import type { ActionsPublicErrorRegistry } from '@universal/types/actions/actions';
+import type { ActionsPublicErrorRegistry } from '@universal/types/_common/transaction/actions/actions';
 import type { ClientInnerErrorRegistry, ClientPublicErrorRegistry } from '@universal/types/client/client';
 import type { MemoryKeyServicePublicErrorRegistry } from '@universal/types/keyServices/memoryKeyService/memoryKeyService';
 import type { MemorySignerInnerErrorRegistry, MemorySignerPublicErrorRegistry } from '@universal/types/signers/memorySigner/memorySigner';
 import type { $ZodError } from 'zod/v4/core';
-import type { KeyPairPublicErrorRegistry } from './_common/keyPair/keyPair';
+import type { KeyPairPublicErrorRegistry } from './keyPair/keyPair';
 import type { VerifySignaturePublicErrorRegistry } from '@universal/types/_common/verifySignature';
 import type { MessagePublicErrorRegistry } from '@universal/types/_common/message';
 

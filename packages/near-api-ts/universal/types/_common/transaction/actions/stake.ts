@@ -1,9 +1,9 @@
-import type { PublicKey } from '../_common/crypto';
-import type { NatError } from '../../src/_common/natError';
-import type { Result } from '../_common/common';
-import type { NativePublicKey } from '../_common/crypto';
-import type { NearTokenArgs } from '../_common/nearToken';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
+import type { PublicKey } from '../../crypto';
+import type { NatError } from '../../../../src/_common/natError';
+import type { Result } from '../../common';
+import type { NativePublicKey } from '../../crypto';
+import type { NearTokenArgs } from '../../nearToken';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../natError';
 
 export interface CreateStakeActionPublicErrorRegistry {
   'CreateAction.Stake.Args.InvalidSchema': InvalidSchemaErrorContext;

@@ -1,7 +1,7 @@
 import type { NatError } from '@universal/src/_common/natError';
 import type { RpcQueryAccessKeyListResult } from '@universal/src/client/methods/account/getAccountAccessKeys/handleResult';
 import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '@universal/types/client/transport/sendRequest';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '@universal/types/natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '@universal/types/_common/natError';
 import type { AccountAccessKey } from '../../../_common/accountAccessKey';
 import type { AccountId, BlockHash, BlockHeight, BlockReference, Result } from '../../../_common/common';
 import type { ClientContext } from '../../client';

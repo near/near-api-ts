@@ -1,6 +1,6 @@
 import type { NatError } from '../../src/_common/natError';
 import type { Result } from '../_common/common';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../_common/natError';
 import type { Client } from './client';
 import type { CreateTransportArgs } from './transport/transport';
 

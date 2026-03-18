@@ -1,7 +1,7 @@
 import type { NatError } from '../../../src/_common/natError';
 import type { RpcResponse } from '../../../src/_common/schemas/zod/rpc';
 import type { JsonValue, Milliseconds, Result } from '../../_common/common';
-import type { InvalidSchemaErrorContext } from '../../natError';
+import type { InvalidSchemaErrorContext } from '../../_common/natError';
 import type { InnerRpcEndpoint, PartialTransportPolicy, RpcTypePreferences, TransportContext, TransportPolicy } from './transport';
 
 type RpcErrorContext = {

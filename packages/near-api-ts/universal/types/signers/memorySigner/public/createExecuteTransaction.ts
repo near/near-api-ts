@@ -5,7 +5,7 @@ import type { MemorySignerErrorContext } from '@universal/types/signers/memorySi
 import type { Result } from '../../../_common/common';
 import type { TransactionIntent } from '../../../_common/transaction/transaction';
 import type { SendSignedTransactionOutput } from '../../../client/methods/transaction/sendSignedTransaction';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { MemorySignerContext } from '../memorySigner';
 
 export interface ExecuteTransactionPublicErrorRegistry {

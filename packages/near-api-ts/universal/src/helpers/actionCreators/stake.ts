@@ -1,5 +1,5 @@
 import * as z from 'zod/mini';
-import type { CreateStakeAction, SafeCreateStakeAction } from '../../../types/actions/stake';
+import type { CreateStakeAction, SafeCreateStakeAction } from '@universal/types/_common/transaction/actions/stake';
 import { createNatError } from '../../_common/natError';
 import { NearTokenArgsSchema } from '../../_common/schemas/zod/common/nearToken';
 import { PublicKeySchema } from '../../_common/schemas/zod/common/publicKey';

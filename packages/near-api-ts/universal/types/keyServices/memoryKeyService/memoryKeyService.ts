@@ -1,7 +1,7 @@
 import { MemoryKeyServiceBrand } from '../../../src/keyServices/memoryKeyService/createMemoryKeyService';
 import type { PublicKey } from '../../_common/crypto';
 import type { KeyPair } from '../../_common/keyPair/keyPair';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../_common/natError';
 import type { FindKeyPair, SafeFindKeyPair } from './createFindKeyPair';
 import type { SafeSignTransaction, SignTransaction } from './createSignTransaction';
 

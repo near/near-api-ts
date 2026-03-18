@@ -151,8 +151,8 @@ export type {
   SignedTransaction,
 } from './types/_common/transaction/transaction';
 
-export type { TransferAction } from './types/actions/transfer';
-export type { FunctionCallAction } from './types/actions/functionCall';
+export type { TransferAction } from '@universal/types/_common/transaction/actions/transfer';
+export type { FunctionCallAction } from '@universal/types/_common/transaction/actions/functionCall';
 
 export type { Message, SignedMessage } from './types/_common/message';
 

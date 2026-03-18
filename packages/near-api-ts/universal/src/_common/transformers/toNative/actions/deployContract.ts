@@ -1,4 +1,4 @@
-import type { NativeDeployContractAction } from '@universal/types/actions/deployContract';
+import type { NativeDeployContractAction } from '@universal/types/_common/transaction/actions/deployContract';
 import type { InnerDeployContractAction } from '../../../schemas/zod/transaction/actions/deployContract';
 
 export const toNativeDeployContractAction = (

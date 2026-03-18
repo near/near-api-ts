@@ -1,5 +1,5 @@
 import type { NatError } from '../../../src/_common/natError';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
 import type { Result } from '../common';
 import type { PrivateKey, PublicKey, Signature } from '../crypto';
 import type { Curve } from '../curveString';

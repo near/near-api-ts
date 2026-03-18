@@ -1,5 +1,5 @@
 import * as z from 'zod/mini';
-import type { CreateAddFunctionCallKeyAction, SafeCreateAddFunctionCallKeyAction } from '../../../types/actions/addKey';
+import type { CreateAddFunctionCallKeyAction, SafeCreateAddFunctionCallKeyAction } from '@universal/types/_common/transaction/actions/addKey';
 import { createNatError } from '../../_common/natError';
 import { AccountIdSchema } from '../../_common/schemas/zod/common/accountId';
 import { ContractFunctionNameSchema } from '../../_common/schemas/zod/common/common';

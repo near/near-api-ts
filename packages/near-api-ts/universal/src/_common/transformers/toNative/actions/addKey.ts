@@ -1,4 +1,4 @@
-import type { NativeAddKeyAction } from '@universal/types/actions/addKey';
+import type { NativeAddKeyAction } from '@universal/types/_common/transaction/actions/addKey';
 import { throwableNearToken } from '../../../../helpers/tokens/nearToken';
 import type { InnerAddKeyAction } from '../../../schemas/zod/transaction/actions/addKey';
 import { toNativePublicKey } from '../publicKey';

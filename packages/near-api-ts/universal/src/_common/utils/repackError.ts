@@ -1,4 +1,4 @@
-import type { NatErrorKind } from '@universal/types/natError';
+import type { NatErrorKind } from '@universal/types/_common/natError';
 import { createNatError, NatError } from '../natError';
 import { result } from './result';
 

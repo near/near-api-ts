@@ -1,11 +1,11 @@
-import type { AddFullAccessKeyAction, AddFunctionCallKeyAction, NativeAddKeyAction } from '../../actions/addKey';
-import type { CreateAccountAction, NativeCreateAccountAction } from '../../actions/createAccount';
-import type { DeleteAccountAction, NativeDeleteAccountAction } from '../../actions/deleteAccount';
-import type { DeleteKeyAction, NativeDeleteKeyAction } from '../../actions/deleteKey';
-import type { DeployContractAction, NativeDeployContractAction } from '../../actions/deployContract';
-import type { FunctionCallAction, NativeFunctionCallAction } from '../../actions/functionCall';
-import type { NativeStakeAction, StakeAction } from '../../actions/stake';
-import type { NativeTransferAction, TransferAction } from '../../actions/transfer';
+import type { AddFullAccessKeyAction, AddFunctionCallKeyAction, NativeAddKeyAction } from '@universal/types/_common/transaction/actions/addKey';
+import type { CreateAccountAction, NativeCreateAccountAction } from '@universal/types/_common/transaction/actions/createAccount';
+import type { DeleteAccountAction, NativeDeleteAccountAction } from '@universal/types/_common/transaction/actions/deleteAccount';
+import type { DeleteKeyAction, NativeDeleteKeyAction } from '@universal/types/_common/transaction/actions/deleteKey';
+import type { DeployContractAction, NativeDeployContractAction } from '@universal/types/_common/transaction/actions/deployContract';
+import type { FunctionCallAction, NativeFunctionCallAction } from '@universal/types/_common/transaction/actions/functionCall';
+import type { NativeStakeAction, StakeAction } from '@universal/types/_common/transaction/actions/stake';
+import type { NativeTransferAction, TransferAction } from '@universal/types/_common/transaction/actions/transfer';
 import type { AccountId, BlockHash, CryptoHash, Nonce } from '../common';
 import type { NativePublicKey, NativeSignature, PublicKey, Signature } from '../crypto';
 

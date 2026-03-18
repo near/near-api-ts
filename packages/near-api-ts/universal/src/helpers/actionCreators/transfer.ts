@@ -1,5 +1,5 @@
 import * as z from 'zod/mini';
-import type { CreateTransferAction, SafeCreateTransferAction } from '../../../types/actions/transfer';
+import type { CreateTransferAction, SafeCreateTransferAction } from '@universal/types/_common/transaction/actions/transfer';
 import { createNatError } from '../../_common/natError';
 import { NearTokenArgsSchema } from '../../_common/schemas/zod/common/nearToken';
 import { asThrowable } from '../../_common/utils/asThrowable';

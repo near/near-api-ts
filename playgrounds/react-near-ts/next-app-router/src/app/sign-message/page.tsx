@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Button, Stack, Text, Title, Space } from '@mantine/core';
+import { Card, Button, Stack, Text, Title } from '@mantine/core';
 import {
   useConnectedAccount,
   useSignMessage,
@@ -24,7 +24,7 @@ import {
 
 const SignMessage = () => {
   const { isConnectedAccount } = useConnectedAccount();
-  const signMessageMutation = useSignMessage();
+  const signMessage = useSignMessage();
 
   if (!isConnectedAccount) {
     return (
@@ -37,14 +37,14 @@ const SignMessage = () => {
     );
   }
 
-  const signMessage = async () => {
+  const signMessageAsync = async () => {
     const message = createMessage({
       data: 'Login',
       requester: 'abc',
       // nonce: new Uint8Array(32).fill(0),
     });
 
-    const signedMessage = await signMessageMutation.mutateAsync({ message });
+    const signedMessage = await signMessage.mutateAsync({ message });
     console.log('Signed message:', signedMessage);
 
     const isValid = await verifyMessage({
@@ -58,7 +58,7 @@ const SignMessage = () => {
   return (
     <Card padding="xl" radius="md" withBorder>
       <Title order={3}>Sign Message</Title>
-      <Button radius="md" color="#12b886" onClick={signMessage}>
+      <Button radius="md" color="#12b886" onClick={signMessageAsync}>
         Sign Message
       </Button>
     </Card>

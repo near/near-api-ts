@@ -1,5 +1,5 @@
 import type { ResultErr } from '../../../types/_common/common';
-import type { NatInternalErrorKind } from '../../../types/natError';
+import type { NatInternalErrorKind } from '../../../types/_common/natError';
 import { createNatError, type NatError } from '../natError';
 import { result } from './result';
 

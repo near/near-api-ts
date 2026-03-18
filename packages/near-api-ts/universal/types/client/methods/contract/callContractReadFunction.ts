@@ -14,7 +14,7 @@ import type {
   MaybeJsonValue,
   Result,
 } from '../../../_common/common';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { KeyIf } from '../../../utils';
 import type { ClientContext } from '../../client';
 import type { PartialTransportPolicy } from '../../transport/transport';

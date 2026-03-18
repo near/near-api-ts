@@ -1,5 +1,5 @@
 import type { PublicKey, Signature } from '@universal/types/_common/crypto';
-import type { InvalidSchemaErrorContext, InternalErrorContext } from '@universal/types/natError';
+import type { InvalidSchemaErrorContext, InternalErrorContext } from '@universal/types/_common/natError';
 import type { Result } from '@universal/types/_common/common';
 import type { NatError } from '@universal/src/_common/natError';
 
