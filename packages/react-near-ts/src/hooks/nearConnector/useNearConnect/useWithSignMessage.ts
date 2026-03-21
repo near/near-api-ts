@@ -91,6 +91,8 @@ export const useWithSignMessage = (
 
         setSigners(signedMessage.signerAccountId);
         setConnectedAccountId(signedMessage.signerAccountId);
+
+        return signedMessage;
       } catch (e) {
         throw e;
       } finally {

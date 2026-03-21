@@ -28,6 +28,8 @@ export const createSafeSignMessage: CreateSafeSignMessage = (connector) => async
       NearConnectSignedMessageSchema.parse(nearConnectSignedMessage);
 
     const { publicKey, curve } = validNearConnectSignedMessage.publicKey;
+
+    // TODO Use createNep413MessageSignatureSchema
     const u8Signature = Uint8Array.fromBase64(validNearConnectSignedMessage.signature);
 
     const base58Signature =
