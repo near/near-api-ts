@@ -10,13 +10,18 @@ export type StoreContext = {
   signers: Signer[];
 };
 
+export type GetContext = () => StoreContext;
+export type SetSigners = (connectedAccountId: AccountId) => void;
+export type ClearSigners = () => void;
+export type SetConnectedAccountId = (connectedAccountId?: AccountId) => void;
+
 export type NearState = {
   networkId: string;
   connectedAccountId?: AccountId;
-  getContext: () => StoreContext;
-  setSigners: (connectedAccountId: AccountId) => void;
-  clearSigners: () => void;
-  setConnectedAccountId: (connectedAccountId?: AccountId) => void;
+  getContext: GetContext;
+  setSigners: SetSigners;
+  clearSigners: ClearSigners;
+  setConnectedAccountId: SetConnectedAccountId;
 };
 
 export type CreateNearStoreArgs = {

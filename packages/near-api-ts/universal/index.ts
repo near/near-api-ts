@@ -163,6 +163,7 @@ export type {
   MaybeJsonValue,
   ContractFunctionName,
 } from './types/_common/common';
+export type { Curve } from './types/_common/curveString';
 
 export type { PartialTransportPolicy } from './types/client/transport/transport';
 
@@ -170,3 +171,7 @@ export type { PartialTransportPolicy } from './types/client/transport/transport'
 export { AccountIdSchema } from './src/_common/schemas/zod/common/accountId';
 export { PublicKeySchema } from './src/_common/schemas/zod/common/publicKey';
 export { Base64StringSchema } from './src/_common/schemas/zod/common/base64String';
+export { MessageSchema } from './src/_common/schemas/zod/message';
+
+// Configs
+export { constants } from './src/_common/configs/constants';

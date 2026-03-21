@@ -1,15 +1,21 @@
 'use client';
 
 import { Badge, Button, Group, Menu, Paper, Text, Title, Grid } from '@mantine/core';
-import { useConnectedAccount, useNearConnector } from 'react-near-ts';
+import { useConnectedAccount, useNearConnect, useNearDisconnect, createMessage } from 'react-near-ts';
 import styles from './Topbar.module.css';
 
 export const Topbar = () => {
   const { connectedAccountId, isConnectedAccount } = useConnectedAccount();
-  const { connect, disconnect } = useNearConnector();
+  const { connectAsync } = useNearConnect({ additionalAction: 'SignMessage' });
+  // const { connect } = useNearConnect();
+  const { disconnect } = useNearDisconnect();
 
   const connectWallet = async () => {
-    connect.mutate();
+    const res = await connectAsync({
+      onSuccess: () => {},
+      message: createMessage({ message: '123', recipient: 'test' }),
+    });
+    console.log(res);
   };
 
   return (
@@ -47,7 +53,7 @@ export const Topbar = () => {
                 </Paper>
               </Menu.Target>
               <Menu.Dropdown>
-                <Menu.Item onClick={() => disconnect.mutate()}>Disconnect</Menu.Item>
+                <Menu.Item onClick={() => disconnect()}>Disconnect</Menu.Item>
               </Menu.Dropdown>
             </Menu>
           ) : (

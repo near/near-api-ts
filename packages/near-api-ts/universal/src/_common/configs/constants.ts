@@ -19,3 +19,5 @@ export const Nep413Message = {
   Tag: 2147484061, // 2**31 + 413
   NonceLength: 32, // 2**31 + 413
 };
+
+export const constants = { NearDecimals, Nep413Message, BinaryLengths };

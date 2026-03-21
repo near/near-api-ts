@@ -1,4 +1,4 @@
-import type { MutationFunctionContext, NetworkMode, MutationMeta, MutationScope } from '@tanstack/react-query';
+import type { MutationFunctionContext, NetworkMode, MutationMeta, MutationScope, MutationObserverResult } from '@tanstack/react-query';
 
 export type MutationOptions<TData, TError, TVariables, TOnMutateResult> = {
   onMutate?: (
@@ -29,3 +29,8 @@ export type MutationOptions<TData, TError, TVariables, TOnMutateResult> = {
   meta?: MutationMeta;
   scope?: MutationScope;
 };
+
+export type BaseUseMutationResult<TData, TError, TVariables, TOnMutateResult> = Omit<
+  MutationObserverResult<TData, TError, TVariables, TOnMutateResult>,
+  'mutate'
+>;
