@@ -23,11 +23,18 @@ const tryOnManySigners = async (args: SignMessageArgs, context: StoreContext) =>
   return signMessage(0);
 };
 
-export const useSignMessage: UseSignMessage = () => {
+export const useSignMessage: UseSignMessage = (args) => {
   const getContext = useNearStore((s) => s.getContext);
   const context = getContext();
 
-  return useMutation({
+  const { mutate, mutateAsync, ...rest } = useMutation({
+    ...args?.mutation,
     mutationFn: (args) => tryOnManySigners(args, context),
   });
+
+  return {
+    ...rest,
+    signMessage: mutate,
+    signMessageAsync: mutateAsync,
+  };
 };

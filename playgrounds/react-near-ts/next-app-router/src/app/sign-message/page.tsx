@@ -1,13 +1,7 @@
 'use client';
 
 import { Card, Button, Stack, Text, Title } from '@mantine/core';
-import {
-  useConnectedAccount,
-  useSignMessage,
-  createMessage,
-  verifyMessage,
-  createTestnetClient,
-} from 'react-near-ts';
+import { useConnectedAccount, useSignMessage, createMessage, verifyMessage, createTestnetClient } from 'react-near-ts';
 
 /*
 {
@@ -24,7 +18,7 @@ import {
 
 const SignMessage = () => {
   const { isConnectedAccount } = useConnectedAccount();
-  const signMessage = useSignMessage();
+  const { signMessageAsync } = useSignMessage();
 
   if (!isConnectedAccount) {
     return (
@@ -37,14 +31,13 @@ const SignMessage = () => {
     );
   }
 
-  const signMessageAsync = async () => {
+  const signMessage = async () => {
     const message = createMessage({
       message: 'Login',
       recipient: 'abc',
-      // nonce: new Uint8Array(32).fill(0),
     });
 
-    const signedMessage = await signMessage.mutateAsync({ message });
+    const signedMessage = await signMessageAsync({ message });
     console.log('Signed message:', signedMessage);
 
     const isValid = await verifyMessage({
@@ -58,7 +51,7 @@ const SignMessage = () => {
   return (
     <Card padding="xl" radius="md" withBorder>
       <Title order={3}>Sign Message</Title>
-      <Button radius="md" color="#12b886" onClick={signMessageAsync}>
+      <Button radius="md" color="#12b886" onClick={signMessage}>
         Sign Message
       </Button>
     </Card>
