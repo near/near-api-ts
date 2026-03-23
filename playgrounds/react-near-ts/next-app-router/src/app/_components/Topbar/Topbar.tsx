@@ -11,16 +11,18 @@ import styles from './Topbar.module.css';
 
 export const Topbar = () => {
   const { connectedAccountId, isConnectedAccount } = useConnectedAccount();
-  const { connect } = useNearConnect({ additionalAction: 'AddFunctionCallKey' });
+  const { connect } = useNearConnect();
   const { disconnect } = useNearDisconnect();
 
   const connectWallet = async () => {
-    connect({
-      publicKey: randomEd25519KeyPair().publicKey,
-      contractAccountId: 'testnet',
-      gasBudget: { near: '1000' },
-      allowedFunctions: 'AllNonPayable',
-    });
+    connect();
+
+    // connect({
+    //   publicKey: randomEd25519KeyPair().publicKey,
+    //   contractAccountId: 'testnet',
+    //   gasBudget: { near: '1000' },
+    //   allowedFunctions: 'AllNonPayable',
+    // });
   };
 
   // const connectWallet = async () => {
