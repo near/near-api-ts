@@ -3,22 +3,20 @@ import { ContractAccountId } from './config';
 import { Dispatch, SetStateAction } from 'react';
 
 export const useAddRecord = (setRecordInput: Dispatch<SetStateAction<string>>) => {
-  const executeTransaction = useExecuteTransaction();
+  const mutation = useExecuteTransaction();
 
   return {
     addRecord: (record: string) => {
-      executeTransaction.mutate(
-        {
-          intent: {
-            action: functionCall({
-              functionName: 'add_record',
-              functionArgs: { record },
-              gasLimit: { teraGas: '10' },
-            }),
-            receiverAccountId: ContractAccountId,
-          },
+      mutation.executeTransaction({
+        intent: {
+          action: functionCall({
+            functionName: 'add_record',
+            functionArgs: { record },
+            gasLimit: { teraGas: '10' },
+          }),
+          receiverAccountId: ContractAccountId,
         },
-        {
+        mutate: {
           onSuccess: (_data, _variables, _onMutateResult, context) => {
             setRecordInput('');
             context.client.invalidateQueries({
@@ -26,8 +24,8 @@ export const useAddRecord = (setRecordInput: Dispatch<SetStateAction<string>>) =
             });
           },
         },
-      );
+      });
     },
-    addRecordMutation: executeTransaction,
+    addRecordMutation: mutation,
   };
 };

@@ -17,7 +17,7 @@ import styles from './page.module.css';
 
 const SendNear = () => {
   const { isConnectedAccount } = useConnectedAccount();
-  const executeTransaction = useExecuteTransaction();
+  const sendNearMutation = useExecuteTransaction();
   const [amount, setAmount] = useState('');
   const [unit, setUnit] = useState<'near' | 'yoctoNear'>('near');
   const [receiverAccountId, setReceiverAccountId] = useState('');
@@ -25,7 +25,7 @@ const SendNear = () => {
   const sendTokens = () => {
     const tokens = unit === 'near' ? { near: amount } : { yoctoNear: amount };
 
-    executeTransaction.mutate({
+    sendNearMutation.executeTransaction({
       intent: {
         action: transfer({ amount: tokens }),
         receiverAccountId: receiverAccountId.trim(),
@@ -85,24 +85,24 @@ const SendNear = () => {
             color="#12b886"
             onClick={sendTokens}
             disabled={!isConnectedAccount}
-            loading={executeTransaction.isPending}
+            loading={sendNearMutation.isPending}
           >
             Send Tokens
           </Button>
         </Group>
 
-        {executeTransaction.isSuccess && (
+        {sendNearMutation.isSuccess && (
           <Paper radius="md" p="md" className={styles.success}>
             <Text size="sm">Transaction executed successfully.</Text>
             <Text size="xs" c="dimmed">
-              Hash: {(executeTransaction.data as any).rawRpcResult.transaction.hash}
+              Hash: {(sendNearMutation.data as any).rawRpcResult.transaction.hash}
             </Text>
           </Paper>
         )}
 
-        {executeTransaction.isError && (
+        {sendNearMutation.isError && (
           <Paper radius="md" p="md" className={styles.error}>
-            <Text size="sm">{executeTransaction.error.message}</Text>
+            <Text size="sm">{sendNearMutation.error.message}</Text>
           </Paper>
         )}
       </Stack>

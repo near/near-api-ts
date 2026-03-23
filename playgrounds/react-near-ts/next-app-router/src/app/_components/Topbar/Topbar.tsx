@@ -1,12 +1,7 @@
 'use client';
 
 import { Badge, Button, Group, Menu, Paper, Text, Title, Grid } from '@mantine/core';
-import {
-  useConnectedAccount,
-  useNearConnect,
-  useNearDisconnect,
-  randomEd25519KeyPair,
-} from 'react-near-ts';
+import { useConnectedAccount, useNearConnect, useNearDisconnect } from 'react-near-ts';
 import styles from './Topbar.module.css';
 
 export const Topbar = () => {

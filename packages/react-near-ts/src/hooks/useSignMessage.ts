@@ -29,7 +29,7 @@ export const useSignMessage: UseSignMessage = (args) => {
 
   const { mutate, mutateAsync, ...rest } = useMutation({
     ...args?.mutation,
-    mutationFn: async (args) => tryOnManySigners(args, context),
+    mutationFn: async (variables) => tryOnManySigners(variables, context),
   });
 
   return {

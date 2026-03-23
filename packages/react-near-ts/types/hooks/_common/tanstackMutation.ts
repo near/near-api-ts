@@ -1,4 +1,11 @@
-import type { MutationFunctionContext, NetworkMode, MutationMeta, MutationScope, MutationObserverResult } from '@tanstack/react-query';
+import type {
+  MutationFunctionContext,
+  NetworkMode,
+  MutationMeta,
+  MutationScope,
+  MutationObserverResult,
+} from '@tanstack/react-query';
+import type { DistributiveOmit } from '../../_common/common.ts';
 
 export type MutationOptions<TData, TError, TVariables, TOnMutateResult> = {
   onMutate?: (
@@ -30,7 +37,7 @@ export type MutationOptions<TData, TError, TVariables, TOnMutateResult> = {
   scope?: MutationScope;
 };
 
-export type BaseUseMutationResult<TData, TError, TVariables, TOnMutateResult> = Omit<
+export type BaseUseMutationResult<TData, TError, TVariables, TOnMutateResult> = DistributiveOmit<
   MutationObserverResult<TData, TError, TVariables, TOnMutateResult>,
   'mutate'
 >;
