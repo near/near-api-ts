@@ -1,6 +1,6 @@
 import type {
-  InnerUseNearConnectArgs, WithSignMessage
-} from '../../../../types/hooks/nearConnector/useNearConnect.ts';
+  InnerUseNearConnectArgs
+} from '../../../../types/hooks/nearConnector/useNearConnect/useNearConnect.ts';
 import type { StoreContext, SetSigners, SetConnectedAccountId } from '../../../../types/store.ts';
 import { useMutation } from '@tanstack/react-query';
 import { NearConnectorServiceSchema } from '../_common.ts';
@@ -12,6 +12,9 @@ import type {
   EventMap, SignedMessage as NearConnectSignedMessage
 } from '@hot-labs/near-connect/build/types';
 import * as z from 'zod/mini';
+import type {
+  WithSignMessageOutput, Variables
+} from '../../../../types/hooks/nearConnector/useNearConnect/withSignMessage.ts';
 
 export const createNep413MessageSignatureSchema = (curve: Curve) =>
   z
@@ -56,15 +59,15 @@ const transformSignedMessage = (
   };
 };
 
-export const useWithSignMessage = (
+export const withSignMessage = (
   args: InnerUseNearConnectArgs,
   context: StoreContext,
   setSigners: SetSigners,
   setConnectedAccountId: SetConnectedAccountId,
-): WithSignMessage['output'] => {
+): WithSignMessageOutput<unknown> => {
   const { mutate, mutateAsync, ...rest } = useMutation({
     ...args?.mutation,
-    mutationFn: async (mutArgs: { message: Message }) => {
+    mutationFn: async (variables: Variables) => {
       const services = NearConnectorServiceSchema.parse(context.services);
       const connector = services.nearConnector.serviceBox.connector;
 
@@ -80,14 +83,14 @@ export const useWithSignMessage = (
 
         await connector.connect({
           signMessageParams: {
-            message: mutArgs.message.message,
-            recipient: mutArgs.message.recipient,
-            nonce: Uint8Array.fromBase64(mutArgs.message.nonce),
+            message: variables.message.message,
+            recipient: variables.message.recipient,
+            nonce: Uint8Array.fromBase64(variables.message.nonce),
           },
         });
 
         const nearConnectSignedMessage = await promise;
-        const signedMessage = transformSignedMessage(nearConnectSignedMessage, mutArgs.message);
+        const signedMessage = transformSignedMessage(nearConnectSignedMessage, variables.message);
 
         setSigners(signedMessage.signerAccountId);
         setConnectedAccountId(signedMessage.signerAccountId);
@@ -103,7 +106,7 @@ export const useWithSignMessage = (
 
   return {
     ...rest,
-    connect: ({ message, ...options }) => mutate({ message }, options),
-    connectAsync: ({ message, ...options }) => mutateAsync({ message }, options),
+    connect: (args) => mutate(args, args?.mutate),
+    connectAsync: (args) => mutateAsync(args, args?.mutate),
   };
 };

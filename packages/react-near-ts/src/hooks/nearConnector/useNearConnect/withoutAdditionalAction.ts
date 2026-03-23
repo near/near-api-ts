@@ -1,14 +1,19 @@
-import type { InnerUseNearConnectArgs, NoAdditionalAction } from '../../../../types/hooks/nearConnector/useNearConnect.ts';
+import type {
+  InnerUseNearConnectArgs
+} from '../../../../types/hooks/nearConnector/useNearConnect/useNearConnect.ts';
 import type { StoreContext, SetSigners, SetConnectedAccountId } from '../../../../types/store.ts';
 import { useMutation } from '@tanstack/react-query';
 import { NearConnectorServiceSchema } from '../_common.ts';
+import type {
+  WithoutAdditionalActionOutput
+} from '../../../../types/hooks/nearConnector/useNearConnect/withoutAdditionalAction.ts';
 
-export const useWithoutAdditionalAction = (
+export const withoutAdditionalAction = (
   args: InnerUseNearConnectArgs,
   context: StoreContext,
   setSigners: SetSigners,
   setConnectedAccountId: SetConnectedAccountId,
-): NoAdditionalAction['output'] => {
+): WithoutAdditionalActionOutput<unknown> => {
   const { mutate, mutateAsync, ...rest } = useMutation({
     ...args?.mutation,
     mutationFn: async () => {
@@ -26,7 +31,7 @@ export const useWithoutAdditionalAction = (
 
   return {
     ...rest,
-    connect: (args) => mutate(undefined, args),
-    connectAsync: (args) => mutateAsync(undefined, args),
+    connect: (args) => mutate(undefined, args?.mutate),
+    connectAsync: (args) => mutateAsync(undefined, args?.mutate),
   };
 };

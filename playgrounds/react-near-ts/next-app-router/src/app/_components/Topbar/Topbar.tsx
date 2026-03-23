@@ -2,21 +2,33 @@
 
 import { Badge, Button, Group, Menu, Paper, Text, Title, Grid } from '@mantine/core';
 import {
-  useConnectedAccount, useNearConnect, useNearDisconnect, createMessage
+  useConnectedAccount,
+  useNearConnect,
+  useNearDisconnect,
+  randomEd25519KeyPair,
 } from 'react-near-ts';
 import styles from './Topbar.module.css';
 
 export const Topbar = () => {
   const { connectedAccountId, isConnectedAccount } = useConnectedAccount();
-  const { connectAsync } = useNearConnect({ additionalAction: 'SignMessage' });
+  const { connect } = useNearConnect({ additionalAction: 'AddFunctionCallKey' });
   const { disconnect } = useNearDisconnect();
 
   const connectWallet = async () => {
-    const res = await connectAsync({
-      message: createMessage({ message: '123', recipient: 'test' }),
+    connect({
+      publicKey: randomEd25519KeyPair().publicKey,
+      contractAccountId: 'testnet',
+      gasBudget: { near: '1000' },
+      allowedFunctions: 'AllNonPayable',
     });
-    console.log('Connect + signedMessage: ', res);
   };
+
+  // const connectWallet = async () => {
+  //   const res = await connectAsync({
+  //     message: createMessage({ message: '123', recipient: 'test' }),
+  //   });
+  //   console.log('Connect + signedMessage: ', res);
+  // };
 
   return (
     <Paper className={styles.header} radius="md" p="lg" withBorder>

@@ -1,4 +1,6 @@
-import type { AddFullAccessKeyAction, AddFunctionCallKeyAction, NativeAddKeyAction } from './actions/addKey';
+import type {
+  AddFullAccessKeyAction, AddFunctionCallKeyAction, NativeAddKeyAction
+} from './actions/addKey';
 import type { CreateAccountAction, NativeCreateAccountAction } from './actions/createAccount';
 import type { DeleteAccountAction, NativeDeleteAccountAction } from './actions/deleteAccount';
 import type { DeleteKeyAction, NativeDeleteKeyAction } from './actions/deleteKey';
@@ -8,6 +10,7 @@ import type { NativeStakeAction, StakeAction } from './actions/stake';
 import type { NativeTransferAction, TransferAction } from './actions/transfer';
 import type { AccountId, BlockHash, CryptoHash, Nonce } from '../common';
 import type { NativePublicKey, NativeSignature, PublicKey, Signature } from '../crypto';
+import type { Prettify } from '../../utils';
 
 export type Action =
   | CreateAccountAction
@@ -36,9 +39,11 @@ type MultiActionsTransaction = TransactionBase & MultiActions;
 
 export type Transaction = SingleActionTransaction | MultiActionsTransaction;
 
-export type TransactionIntent = {
-  receiverAccountId: AccountId;
-} & (SingleAction | MultiActions);
+export type TransactionIntent = Prettify<
+  {
+    receiverAccountId: AccountId;
+  } & (SingleAction | MultiActions)
+>;
 
 // Native Transaction
 

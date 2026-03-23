@@ -72,6 +72,11 @@ export {
   isNearToken,
 } from './src/helpers/tokens/nearToken';
 
+export type {
+  NearToken,
+  NearTokenArgs,
+} from './types/_common/nearToken';
+
 // NearGas
 export {
   safeTeraGas,

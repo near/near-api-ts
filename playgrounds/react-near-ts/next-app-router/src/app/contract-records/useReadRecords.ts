@@ -19,7 +19,6 @@ export const useReadRecords = () => {
     contractAccountId: ContractAccountId,
     functionName: 'get_records',
     functionArgs: { author_id: connectedAccountId ?? '' },
-    withStateAt: 'LatestOptimisticBlock',
     options: {
       deserializeResult,
     },
