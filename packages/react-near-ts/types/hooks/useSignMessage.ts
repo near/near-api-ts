@@ -1,25 +1,28 @@
-import type { MutationObserverResult, MutateOptions } from '@tanstack/react-query';
-import type { SignMessageArgs, SignMessageOutput } from '../services/_common.ts';
-import type { MutationOptions } from './_common/tanstackMutation.ts';
+import type { MutateOptions } from '@tanstack/react-query';
+import type { MutationOptions, BaseUseMutationResult } from './_common/tanstackMutation.ts';
+import type { Message, SignedMessage } from 'near-api-ts';
+import type { Prettify } from '../_common/common.ts';
 
-type UseSignMessageResult<TOnMutateResult> = Omit<
-  MutationObserverResult<SignMessageOutput, Error, SignMessageArgs, TOnMutateResult>,
-  'mutate'
-> & {
-  signMessage: (
-    args: SignMessageArgs &
-      MutateOptions<SignMessageOutput, Error, SignMessageArgs, TOnMutateResult>,
-  ) => void;
-  signMessageAsync: (
-    args: SignMessageArgs &
-      MutateOptions<SignMessageOutput, Error, SignMessageArgs, TOnMutateResult>,
-  ) => Promise<SignMessageOutput>;
+type Variables = {
+  message: Message;
 };
 
-type UseSignMessageArgs<TOnMutateResult> = {
-  mutation?: MutationOptions<SignMessageOutput, Error, SignMessageArgs, TOnMutateResult>;
+type Data = SignedMessage;
+type Err = Error;
+
+type UseSignMessageArgs<OnMutateResult> = {
+  mutation?: MutationOptions<Data, Err, Variables, OnMutateResult>;
 };
 
-export type UseSignMessage = <TOnMutateResult = unknown>(
-  args?: UseSignMessageArgs<TOnMutateResult>,
-) => UseSignMessageResult<TOnMutateResult>;
+type SignMessageArgs<OnMutateResult> = Prettify<
+  Variables & { mutate?: MutateOptions<Data, Err, Variables, OnMutateResult> }
+>;
+
+type UseSignMessageOutput<OnMutateResult> = {
+  signMessage: (args: SignMessageArgs<OnMutateResult>) => void;
+  signMessageAsync: (args: SignMessageArgs<OnMutateResult>) => Promise<Data>;
+} & BaseUseMutationResult<Data, Err, Variables, OnMutateResult>;
+
+export type UseSignMessage = <OnMutateResult = unknown>(
+  args?: UseSignMessageArgs<OnMutateResult>,
+) => UseSignMessageOutput<OnMutateResult>;

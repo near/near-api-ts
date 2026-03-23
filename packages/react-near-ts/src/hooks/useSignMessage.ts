@@ -34,7 +34,7 @@ export const useSignMessage: UseSignMessage = (args) => {
 
   return {
     ...rest,
-    signMessage: ({ message, ...options }) => mutate({ message }, options),
-    signMessageAsync: ({ message, ...options }) => mutateAsync({ message }, options),
+    signMessage: (args) => mutate(args, args?.mutate),
+    signMessageAsync: (args) => mutateAsync(args, args?.mutate),
   };
 };
