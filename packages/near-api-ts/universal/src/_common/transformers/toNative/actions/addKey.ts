@@ -13,15 +13,13 @@ const getPermission = (
   return {
     functionCall: {
       receiverId: contractAccountId,
-      allowance: gasBudget && throwableNearToken(gasBudget).yoctoNear,
-      methodNames: allowedFunctions ?? [],
+      allowance: gasBudget === 'Unlimited' ? null : throwableNearToken(gasBudget).yoctoNear,
+      methodNames: allowedFunctions === 'AllNonPayable' ? [] : allowedFunctions,
     },
   };
 };
 
-export const toNativeAddKeyAction = (
-  action: InnerAddKeyAction,
-): NativeAddKeyAction => ({
+export const toNativeAddKeyAction = (action: InnerAddKeyAction): NativeAddKeyAction => ({
   addKey: {
     publicKey: toNativePublicKey(action.publicKey),
     accessKey: {

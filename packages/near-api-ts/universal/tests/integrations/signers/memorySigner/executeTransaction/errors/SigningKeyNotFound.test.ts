@@ -29,9 +29,9 @@ describe('MemorySigner.ExecuteTransaction', async () => {
     return () => sandbox.stop();
   });
 
-  it('SigningKeyNotFound', async () => {
+  it('SigningKey.NotFound', async () => {
     // Create a new user with an FC key
-    const nat = await createSigner('nat');
+    const nat = createSigner('nat');
 
     await nat.executeTransaction({
       intent: {
@@ -40,6 +40,8 @@ describe('MemorySigner.ExecuteTransaction', async () => {
           addFunctionCallKey({
             publicKey: keyPair1.publicKey,
             contractAccountId: 'abc',
+            gasBudget: 'Unlimited',
+            allowedFunctions: 'AllNonPayable',
           }),
           transfer({ amount: { near: '10' } }),
         ],
@@ -49,6 +51,9 @@ describe('MemorySigner.ExecuteTransaction', async () => {
 
     // Try to sign FA transaction with an FC key
     const user = createSigner('user.nat');
+
+    // const keys = await client.getAccountAccessKeys({ accountId: 'user.nat' });
+    // console.log(keys);
 
     const tx2 = await user.safeExecuteTransaction({
       intent: {

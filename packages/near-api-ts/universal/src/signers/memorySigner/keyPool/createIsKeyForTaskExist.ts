@@ -1,5 +1,12 @@
-import type { IsKeyForTaskExist, KeyPoolContext, PoolKeys } from '../../../../types/signers/memorySigner/inner/keyPool';
-import type { FullAccessKeyPriority, FunctionCallKeyPriority } from '../../../../types/signers/memorySigner/inner/taskQueue';
+import type {
+  IsKeyForTaskExist,
+  KeyPoolContext,
+  PoolKeys,
+} from '../../../../types/signers/memorySigner/inner/keyPool';
+import type {
+  FullAccessKeyPriority,
+  FunctionCallKeyPriority,
+} from '../../../../types/signers/memorySigner/inner/taskQueue';
 import { createNatError } from '../../../_common/natError';
 import { result } from '../../../_common/utils/result';
 
@@ -8,17 +15,15 @@ const isKeyExist = async (
   poolKeys: PoolKeys,
 ) => {
   // If there exists at least 1 FA key - return true
-  if (keyPriority.accessType === 'FullAccess')
-    return poolKeys.fullAccess.length > 0;
+  if (keyPriority.accessType === 'FullAccess') return poolKeys.fullAccess.length > 0;
 
   // If keyType is FunctionCall - find the key which follows all criteria
   return poolKeys.functionCall.some((key) => {
-    const isContractIdMatch =
-      key.contractAccountId === keyPriority.contractAccountId;
+    const isContractIdMatch = key.contractAccountId === keyPriority.contractAccountId;
 
     // No allowedFunctions means that the key can call every contract function
     const isFnCallAllowed =
-      key.allowedFunctions === undefined ||
+      key.allowedFunctions === 'AllNonPayable' ||
       key.allowedFunctions.includes(keyPriority.calledFnName);
 
     return isContractIdMatch && isFnCallAllowed;

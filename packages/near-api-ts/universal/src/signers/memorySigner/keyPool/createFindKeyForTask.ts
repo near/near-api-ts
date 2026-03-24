@@ -1,5 +1,12 @@
-import type { FindKeyForTask, KeyPoolContext, PoolKeys } from '../../../../types/signers/memorySigner/inner/keyPool';
-import type { FullAccessKeyPriority, FunctionCallKeyPriority } from '../../../../types/signers/memorySigner/inner/taskQueue';
+import type {
+  FindKeyForTask,
+  KeyPoolContext,
+  PoolKeys,
+} from '../../../../types/signers/memorySigner/inner/keyPool';
+import type {
+  FullAccessKeyPriority,
+  FunctionCallKeyPriority,
+} from '../../../../types/signers/memorySigner/inner/taskQueue';
 import { result } from '../../../_common/utils/result';
 
 const findSigningKey = (
@@ -11,12 +18,11 @@ const findSigningKey = (
 
   // If keyType is FunctionCall - find the key which follows all criteria
   return poolKeys.functionCall.find((key) => {
-    const isContractIdMatch =
-      key.contractAccountId === keyPriority.contractAccountId;
+    const isContractIdMatch = key.contractAccountId === keyPriority.contractAccountId;
 
     // No allowedFunctions means that the key can call every contract function
     const isFnCallAllowed =
-      key.allowedFunctions === undefined ||
+      key.allowedFunctions === 'AllNonPayable' ||
       key.allowedFunctions.includes(keyPriority.calledFnName);
 
     return !key.isLocked && isContractIdMatch && isFnCallAllowed;

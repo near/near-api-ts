@@ -1,23 +1,19 @@
-import type { CreateKeyPool, KeyPoolState } from '../../../../types/signers/memorySigner/inner/keyPool';
+import type {
+  CreateKeyPool,
+  KeyPoolState,
+} from '../../../../types/signers/memorySigner/inner/keyPool';
 import { createFindKeyForTask } from './createFindKeyForTask';
 import { createGetPoolKeys } from './createGetPoolKeys/createGetPoolKeys';
 import { createIsKeyForTaskExist } from './createIsKeyForTaskExist';
 
-export const createKeyPool: CreateKeyPool = (
-  signerContext,
-  createMemorySignerArgs,
-) => {
+export const createKeyPool: CreateKeyPool = (signerContext, createMemorySignerArgs) => {
   const state: KeyPoolState = {
     poolKeys: undefined,
     poolKeysLoadingPromise: undefined,
   };
 
   const keyPoolContext = {
-    getPoolKeys: createGetPoolKeys(
-      state,
-      signerContext,
-      createMemorySignerArgs,
-    ),
+    getPoolKeys: createGetPoolKeys(state, signerContext, createMemorySignerArgs),
   };
 
   return {

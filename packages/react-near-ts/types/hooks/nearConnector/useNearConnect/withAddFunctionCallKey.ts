@@ -1,4 +1,4 @@
-import type { PublicKey, AccountId, ContractFunctionName, NearTokenArgs } from 'near-api-ts';
+import type { PublicKey, AccountId, GasBudget, AllowedFunctions } from 'near-api-ts';
 import type { MutateOptions } from '@tanstack/react-query';
 import type { BaseUseMutationResult, MutationOptions } from '../../_common/tanstackMutation.ts';
 import type { Prettify } from '../../../_common/common.ts';
@@ -6,8 +6,8 @@ import type { Prettify } from '../../../_common/common.ts';
 export type Variables = {
   publicKey: PublicKey;
   contractAccountId: AccountId;
-  gasBudget: 'Unlimited' | NearTokenArgs;
-  allowedFunctions: 'AllNonPayable' | ContractFunctionName[];
+  gasBudget: GasBudget;
+  allowedFunctions: AllowedFunctions;
 };
 
 type Data = void;

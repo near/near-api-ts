@@ -1,25 +1,29 @@
 import * as z from 'zod/mini';
-import type { CreateAddFunctionCallKeyAction, SafeCreateAddFunctionCallKeyAction } from '../../../types/_common/transaction/actions/addKey';
+import type {
+  CreateAddFunctionCallKeyAction,
+  SafeCreateAddFunctionCallKeyAction,
+} from '../../../types/_common/transaction/actions/addKey';
 import { createNatError } from '../../_common/natError';
 import { AccountIdSchema } from '../../_common/schemas/zod/common/accountId';
-import { ContractFunctionNameSchema } from '../../_common/schemas/zod/common/common';
-import { NearTokenArgsSchema } from '../../_common/schemas/zod/common/nearToken';
 import { PublicKeySchema } from '../../_common/schemas/zod/common/publicKey';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
+import {
+  GasBudgetSchema,
+  AllowedFunctionsSchema,
+} from '../../_common/schemas/zod/common/accessKey';
 
 export const CreateAddFunctionCallKeyActionArgsSchema = z.object({
   publicKey: PublicKeySchema,
   contractAccountId: AccountIdSchema,
-  gasBudget: z.optional(NearTokenArgsSchema),
-  allowedFunctions: z.optional(
-    z.array(ContractFunctionNameSchema).check(z.minLength(1)),
-  ),
+  gasBudget: GasBudgetSchema,
+  allowedFunctions: AllowedFunctionsSchema,
 });
 
-export const safeAddFunctionCallKey: SafeCreateAddFunctionCallKeyAction =
-  wrapInternalError('CreateAction.AddFunctionCallKey.Internal', (args) => {
+export const safeAddFunctionCallKey: SafeCreateAddFunctionCallKeyAction = wrapInternalError(
+  'CreateAction.AddFunctionCallKey.Internal',
+  (args) => {
     const validArgs = CreateAddFunctionCallKeyActionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
@@ -38,7 +42,8 @@ export const safeAddFunctionCallKey: SafeCreateAddFunctionCallKeyAction =
       gasBudget: args.gasBudget,
       allowedFunctions: args.allowedFunctions,
     });
-  });
+  },
+);
 
 export const throwableAddFunctionCallKey: CreateAddFunctionCallKeyAction =
   asThrowable(safeAddFunctionCallKey);

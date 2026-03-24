@@ -149,6 +149,15 @@ export type {
   Signature,
 } from './types/_common/crypto';
 
+// Account Access Key
+export type {
+  FunctionCallKey,
+  FullAccessKey,
+  AccountAccessKey,
+  AllowedFunctions,
+  GasBudget,
+} from './types/_common/accountAccessKey';
+
 export type {
   Transaction,
   TransactionIntent,

@@ -7,6 +7,8 @@ describe('addFunctionCallKey action', () => {
     addFunctionCallKey({
       publicKey: randomEd25519KeyPair().publicKey,
       contractAccountId: 'nat',
+      gasBudget: 'Unlimited',
+      allowedFunctions: 'AllNonPayable',
     });
 
     addFunctionCallKey({
@@ -33,6 +35,7 @@ describe('addFunctionCallKey action', () => {
     const res = safeAddFunctionCallKey({
       publicKey: randomEd25519KeyPair().publicKey,
       contractAccountId: 'nat',
+      gasBudget: 'Unlimited',
       allowedFunctions: [],
     });
     assertNatErrKind(res, 'CreateAction.AddFunctionCallKey.Args.InvalidSchema');

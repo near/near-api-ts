@@ -1,4 +1,7 @@
-import type { GetPoolKeys, KeyPoolState } from '../../../../../types/signers/memorySigner/inner/keyPool';
+import type {
+  GetPoolKeys,
+  KeyPoolState,
+} from '../../../../../types/signers/memorySigner/inner/keyPool';
 import type { MemorySignerContext } from '../../../../../types/signers/memorySigner/memorySigner';
 import type { CreateMemorySignerArgs } from '../../../../../types/signers/memorySigner/public/createMemorySigner';
 import { createNatError } from '../../../../_common/natError';
@@ -31,11 +34,10 @@ export const createGetPoolKeys =
 
     const loadAccessKeys = async () => {
       // 3. Fetch account access keys from the network;
-      const accountAccessKeys =
-        await signerContext.client.safeGetAccountAccessKeys({
-          accountId: signerContext.signerAccountId,
-          atMomentOf: 'LatestFinalBlock',
-        });
+      const accountAccessKeys = await signerContext.client.safeGetAccountAccessKeys({
+        accountId: signerContext.signerAccountId,
+        atMomentOf: 'LatestOptimisticBlock',
+      });
 
       if (!accountAccessKeys.ok)
         return result.err(
@@ -57,8 +59,7 @@ export const createGetPoolKeys =
             kind: 'MemorySigner.KeyPool.Empty',
             context: {
               accountAccessKeys: accountAccessKeys.value.accountAccessKeys,
-              allowedAccessKeys:
-                createMemorySignerArgs.keyPool?.allowedAccessKeys ?? [],
+              allowedAccessKeys: createMemorySignerArgs.keyPool?.allowedAccessKeys ?? [],
             },
           }),
         );
@@ -66,10 +67,7 @@ export const createGetPoolKeys =
       // 5. Create pool keys and return them;
       state.poolKeys = {
         fullAccess: createFullAccessPoolKeys(allowedAccessKeys, signerContext),
-        functionCall: createFunctionCallPoolKeys(
-          allowedAccessKeys,
-          signerContext,
-        ),
+        functionCall: createFunctionCallPoolKeys(allowedAccessKeys, signerContext),
       };
       state.poolKeysLoadingPromise = undefined;
 

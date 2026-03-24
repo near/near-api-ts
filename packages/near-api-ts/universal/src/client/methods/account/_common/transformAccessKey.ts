@@ -1,5 +1,5 @@
 import type { AccessKeyInfoView } from '@near-js/jsonrpc-types';
-import type { AccountAccessKey, FunctionCallKey } from '../../../../../types/_common/accountAccessKey';
+import type { AccountAccessKey } from '../../../../../types/_common/accountAccessKey';
 import type { PublicKey } from '../../../../../types/_common/crypto';
 import { throwableYoctoNear } from '../../../../helpers/tokens/nearToken';
 
@@ -14,23 +14,17 @@ export const transformAccessKey = (key: AccessKeyInfoView): AccountAccessKey => 
       nonce,
     };
 
-  const { receiverId, methodNames, allowance } =
-    key.accessKey.permission.FunctionCall;
+  const { receiverId, methodNames, allowance } = key.accessKey.permission.FunctionCall;
 
-  const functionCallKey = {
+  const gasBudget = typeof allowance === 'string' ? throwableYoctoNear(allowance) : 'Unlimited';
+  const allowedFunctions = methodNames.length > 0 ? methodNames : 'AllNonPayable';
+
+  return {
     accessType: 'FunctionCall',
     publicKey,
     nonce,
     contractAccountId: receiverId,
-  } as FunctionCallKey;
-
-  if (typeof allowance === 'string') {
-    functionCallKey.gasBudget = throwableYoctoNear(allowance);
-  }
-
-  if (methodNames.length > 0) {
-    functionCallKey.allowedFunctions = methodNames;
-  }
-
-  return functionCallKey;
+    gasBudget,
+    allowedFunctions,
+  };
 };

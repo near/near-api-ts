@@ -1,5 +1,10 @@
 import type { PoolKey } from '../../../../types/signers/memorySigner/inner/keyPool';
-import type { FindTaskForKey, FullAccessKeyPriority, FunctionCallKeyPriority, TaskQueueContext } from '../../../../types/signers/memorySigner/inner/taskQueue';
+import type {
+  FindTaskForKey,
+  FullAccessKeyPriority,
+  FunctionCallKeyPriority,
+  TaskQueueContext,
+} from '../../../../types/signers/memorySigner/inner/taskQueue';
 
 const checkIfKeyMatchRequirements = (
   keyPriority: FullAccessKeyPriority | FunctionCallKeyPriority,
@@ -10,15 +15,12 @@ const checkIfKeyMatchRequirements = (
 
   // If keyType is FunctionCall - find the key which follows all criteria
   const isContractIdMatch =
-    key.contractAccountId ===
-    (keyPriority as FunctionCallKeyPriority).contractAccountId;
+    key.contractAccountId === (keyPriority as FunctionCallKeyPriority).contractAccountId;
 
   // No allowedFunctions means that the key can call every contract function
   const isFnCallAllowed =
-    key.allowedFunctions === undefined ||
-    key.allowedFunctions.includes(
-      (keyPriority as FunctionCallKeyPriority).calledFnName,
-    );
+    key.allowedFunctions === 'AllNonPayable' ||
+    key.allowedFunctions.includes((keyPriority as FunctionCallKeyPriority).calledFnName);
 
   return isContractIdMatch && isFnCallAllowed;
 };
@@ -27,7 +29,5 @@ export const createFindTaskForKey =
   (context: TaskQueueContext): FindTaskForKey =>
   (key) =>
     context.queue.find((task) =>
-      task.accessTypePriority.some((keyPriority) =>
-        checkIfKeyMatchRequirements(keyPriority, key),
-      ),
+      task.accessTypePriority.some((keyPriority) => checkIfKeyMatchRequirements(keyPriority, key)),
     );

@@ -113,7 +113,7 @@ describe('Get Account Balance', () => {
     expect(balance1.locked.amount.near).toBe('0.0092');
 
     // 2. Stake 1500
-    const abc = await createSigner('abc3.nat');
+    const abc = createSigner('abc3.nat');
 
     await abc.executeTransaction({
       intent: {
@@ -152,7 +152,7 @@ describe('Get Account Balance', () => {
 
   // Test#4 ---------------------
   it('Account become a zero cost again after deleting state', async () => {
-    const nat = await createSigner('nat');
+    const nat = createSigner('nat');
     // 1. Create a new account with 10 FA keys
     const keyPairs = Array(9)
       .fill(0)
@@ -178,7 +178,7 @@ describe('Get Account Balance', () => {
     expect(balance1.locked.amount.near).toBe('0.0092');
 
     // 2. Delete 2 FA keys
-    const abc = await createSigner('abc4.nat');
+    const abc = createSigner('abc4.nat');
 
     await abc.executeTransaction({
       intent: {

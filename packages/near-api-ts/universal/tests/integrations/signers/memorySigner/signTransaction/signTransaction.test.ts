@@ -61,6 +61,8 @@ describe('MemorySigner.signTransaction', async () => {
           addFunctionCallKey({
             publicKey: keyPair1.publicKey,
             contractAccountId: 'abc',
+            gasBudget: 'Unlimited',
+            allowedFunctions: 'AllNonPayable',
           }),
           transfer({ amount: { near: '10' } }),
         ],

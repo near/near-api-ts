@@ -1,8 +1,8 @@
 import type { NatError } from '../../../../src/_common/natError';
 import type { AccountId, ContractFunctionName, Result } from '../../common';
 import type { NativePublicKey, PublicKey } from '../../crypto';
-import type { NearTokenArgs } from '../../nearToken';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../natError';
+import type { GasBudget, AllowedFunctions } from '../../accountAccessKey';
 
 export interface CreateAddKeyActionPublicErrorRegistry {
   'CreateAction.AddFullAccessKey.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -40,8 +40,8 @@ export type CreateAddFullAccessKeyAction = (
 export type CreateAddFunctionCallKeyActionArgs = {
   publicKey: PublicKey;
   contractAccountId: AccountId;
-  gasBudget?: NearTokenArgs;
-  allowedFunctions?: ContractFunctionName[];
+  gasBudget: GasBudget;
+  allowedFunctions: AllowedFunctions;
 };
 
 export type AddFunctionCallKeyAction = {
@@ -49,8 +49,8 @@ export type AddFunctionCallKeyAction = {
   accessType: 'FunctionCall';
   publicKey: PublicKey;
   contractAccountId: AccountId;
-  gasBudget?: NearTokenArgs;
-  allowedFunctions?: ContractFunctionName[]; // TODO force user to pass at least 1 name
+  gasBudget: GasBudget;
+  allowedFunctions: AllowedFunctions;
 };
 
 type CreateAddFunctionCallKeyActionError =
@@ -74,8 +74,8 @@ type NativeFullAccessPermission = {
 type NativeFunctionCallPermission = {
   functionCall: {
     receiverId: AccountId;
-    allowance?: bigint;
-    methodNames?: ContractFunctionName[];
+    allowance: bigint | null;
+    methodNames: ContractFunctionName[];
   };
 };
 
