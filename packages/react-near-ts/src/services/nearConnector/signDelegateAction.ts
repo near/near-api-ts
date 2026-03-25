@@ -6,7 +6,7 @@ import {
   toSecp256k1CurveString,
 } from 'near-api-ts';
 import * as z from 'zod/mini';
-import type { CreateSafeSignMessage } from '../../../types/services/nearConnect.ts';
+import type { CreateSafeSignMessage } from '../../../types/services/nearConnector.ts';
 import { result } from '../../_common/utils/result.ts';
 import type { NearConnector } from '@hot-labs/near-connect';
 

@@ -1,8 +1,8 @@
 import type { Action as NatAction, TransactionIntent } from 'near-api-ts';
 import { nearGas, nearToken } from 'near-api-ts';
-import type { NearConnectAction } from '../../../../types/services/nearConnect.ts';
+import type { NearConnectorAction } from '../../../../types/services/nearConnector.ts';
 
-const toNearConnectAction = (action: NatAction): NearConnectAction => {
+const toNearConnectAction = (action: NatAction): NearConnectorAction => {
   if (action.actionType === 'CreateAccount')
     return {
       createAccount: {},
@@ -82,7 +82,7 @@ const toNearConnectAction = (action: NatAction): NearConnectAction => {
   throw new Error(`Unsupported action type: ${action}`);
 };
 
-export const toNearConnectActions = (intent: TransactionIntent): NearConnectAction[] => {
+export const toNearConnectActions = (intent: TransactionIntent): NearConnectorAction[] => {
   if (intent.action) return [toNearConnectAction(intent.action)];
   if (intent.actions) return intent.actions.map((action) => toNearConnectAction(action));
   return [];

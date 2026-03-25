@@ -1,4 +1,4 @@
-import type { CreateSafeExecuteTransaction } from '../../../../types/services/nearConnect.ts';
+import type { CreateSafeExecuteTransaction } from '../../../../types/services/nearConnector.ts';
 import { result } from '../../../_common/utils/result.ts';
 import { toNearConnectActions } from './toNearConnectActions.ts';
 

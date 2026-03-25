@@ -64,7 +64,7 @@ type DeleteAccountAction = {
   };
 };
 
-export type NearConnectAction =
+export type NearConnectorAction =
   | CreateAccountAction
   | TransferAction
   | AddKeyAction
@@ -77,13 +77,13 @@ export type NearConnectAction =
 export type CreateSafeExecuteTransaction = (connector: NearConnector) => SafeExecuteTransaction;
 export type CreateSafeSignMessage = (connector: NearConnector) => SafeSignMessage;
 
-export type NearConnectNetworkId = 'mainnet' | 'testnet';
+export type NearConnectorNetworkId = 'mainnet' | 'testnet';
 
-export type NearConnectServiceCreator = ServiceCreator<
+export type NearConnectorServiceCreator = ServiceCreator<
   'nearConnector',
   { connector: NearConnector }
 >;
 
 export type CreateNearConnectorService = (args: {
-  networkId: NearConnectNetworkId;
-}) => NearConnectServiceCreator;
+  networkId: NearConnectorNetworkId;
+}) => NearConnectorServiceCreator;
