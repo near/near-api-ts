@@ -25,8 +25,14 @@ const toNearConnectAction = (action: NatAction): NearConnectAction => {
               : {
                   functionCall: {
                     receiverId: action.contractAccountId,
-                    methodNames: action.allowedFunctions,
-                    allowance: action.gasBudget ? nearToken(action.gasBudget).yoctoNear : undefined,
+                    methodNames:
+                      action.allowedFunctions === 'AllNonPayable'
+                        ? undefined
+                        : action.allowedFunctions,
+                    allowance:
+                      action.gasBudget === 'Unlimited'
+                        ? undefined
+                        : nearToken(action.gasBudget).yoctoNear,
                   },
                 },
         },
