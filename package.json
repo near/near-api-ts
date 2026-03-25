@@ -6,8 +6,7 @@
     "build": "pnpm -r build",
     "dev": "pnpm -r --parallel dev",
     "typecheck": "pnpm -r typecheck",
-    "biome-format": "biome format ./packages --write",
-    "lint:fix": "biome check ./packages --write ."
+    "lint:fix": "biome check --write ."
   },
   "engines": {
     "node": ">=25"
