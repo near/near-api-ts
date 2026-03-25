@@ -1,10 +1,11 @@
 import { Button, Title } from '@mantine/core';
-import { useConnectedAccount, useNearConnector } from 'react-near-ts';
+import { useConnectedAccount, useNearSignIn, useNearSignOut } from 'react-near-ts';
 import cn from './Topbar.module.css';
 
 export const Topbar = () => {
   const { connectedAccountId, isConnectedAccount } = useConnectedAccount();
-  const { connect, disconnect } = useNearConnector();
+  const { signIn } = useNearSignIn();
+  const { signOut } = useNearSignOut();
 
   return (
     <div className={cn.topbar}>
@@ -13,10 +14,10 @@ export const Topbar = () => {
         {isConnectedAccount ? (
           <>
             <p>{connectedAccountId}</p>
-            <Button onClick={disconnect}>Disconnect</Button>
+            <Button onClick={() => signOut()}>Disconnect</Button>
           </>
         ) : (
-          <Button onClick={connect}>Connect Wallet</Button>
+          <Button onClick={() => signIn()}>Connect Wallet</Button>
         )}
       </div>
     </div>
