@@ -1,9 +1,9 @@
 import type {
   MutationFunctionContext,
-  NetworkMode,
   MutationMeta,
-  MutationScope,
   MutationObserverResult,
+  MutationScope,
+  NetworkMode,
 } from '@tanstack/react-query';
 import type { DistributiveOmit } from '../../_common/common.ts';
 

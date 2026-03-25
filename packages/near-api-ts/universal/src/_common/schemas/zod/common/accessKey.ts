@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
-import { NearTokenArgsSchema } from './nearToken';
 import { ContractFunctionNameSchema } from './common';
+import { NearTokenArgsSchema } from './nearToken';
 
 export const GasBudgetSchema = z.union([z.literal('Unlimited'), NearTokenArgsSchema]);
 

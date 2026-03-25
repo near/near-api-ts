@@ -1,7 +1,7 @@
 import type { NatError } from '../../../../src/_common/natError';
 import type { Result } from '../../common';
-import type { NearTokenArgs } from '../../nearToken';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../natError';
+import type { NearTokenArgs } from '../../nearToken';
 
 export interface CreateTransferActionPublicErrorRegistry {
   'CreateAction.Transfer.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -25,9 +25,7 @@ export type SafeCreateTransferAction = (
   args: CreateTransferActionArgs,
 ) => Result<TransferAction, CreateTransferActionError>;
 
-export type CreateTransferAction = (
-  args: CreateTransferActionArgs,
-) => TransferAction;
+export type CreateTransferAction = (args: CreateTransferActionArgs) => TransferAction;
 
 // ****** NATIVE ********
 

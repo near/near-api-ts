@@ -3,15 +3,11 @@ import type { InnerRpcEndpoint } from '../../../../../types/client/transport/tra
 import { isNatErrorOf, NatError } from '../../../../_common/natError';
 import { combineAbortSignals, randomBetween } from '../../../../_common/utils/common';
 import { safeSleep } from '../../../../_common/utils/sleep';
-import { sendOnce, type SendOnceResult } from '../5-sendOnce/sendOnce';
+import { type SendOnceResult, sendOnce } from '../5-sendOnce/sendOnce';
 
 // Decorrelated Jitter - https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/
-const getBackoffDelay = (
-  cap: number,
-  base: number,
-  sleep: number,
-  multiplier: number,
-) => Math.min(cap, Math.round(randomBetween(base, sleep * multiplier)));
+const getBackoffDelay = (cap: number, base: number, sleep: number, multiplier: number) =>
+  Math.min(cap, Math.round(randomBetween(base, sleep * multiplier)));
 
 const shouldRetry = (sendOnceResult: SendOnceResult): boolean =>
   !sendOnceResult.ok &&
@@ -48,10 +44,7 @@ export const sendWithRetry = async (
       NatError<'SendRequest.Aborted'> | NatError<'SendRequest.Timeout'>
     >(
       backoffDelay,
-      combineAbortSignals([
-        context.externalAbortSignal,
-        context.requestTimeoutSignal,
-      ]),
+      combineAbortSignals([context.externalAbortSignal, context.requestTimeoutSignal]),
     );
 
     return sleepResult.ok ? attempt(attemptIndex + 1) : sleepResult;

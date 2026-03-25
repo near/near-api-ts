@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import { useNearStore } from '../store/NearStoreProvider.tsx';
-import type { StoreContext } from '../../types/store.ts';
 import type { UseSignMessage } from '../../types/hooks/useSignMessage.ts';
 import type { SignMessageArgs } from '../../types/services/_common.ts';
+import type { StoreContext } from '../../types/store.ts';
+import { useNearStore } from '../store/NearStoreProvider.tsx';
 
 const tryOnManySigners = async (args: SignMessageArgs, context: StoreContext) => {
   const signers = context.signers;

@@ -1,4 +1,7 @@
-import type { CreateExecuteTask, ExecuteTask } from '../../../../../types/signers/memorySigner/inner/tasker';
+import type {
+  CreateExecuteTask,
+  ExecuteTask,
+} from '../../../../../types/signers/memorySigner/inner/tasker';
 import { executeTransaction } from './executors/executeTransaction';
 import { signTransaction } from './executors/signTransaction';
 
@@ -21,10 +24,7 @@ export const createExecuteTask: CreateExecuteTask = (signerContext) => {
     const key = maybeKey.value;
     signerContext.taskQueue.removeTask(task.taskId);
 
-    const execute =
-      task.taskType === 'ExecuteTransaction'
-        ? executeTransaction
-        : signTransaction;
+    const execute = task.taskType === 'ExecuteTransaction' ? executeTransaction : signTransaction;
 
     // Execute the task; It will resolve the promise we returned to the task creator;
     await execute(signerContext, task, key);

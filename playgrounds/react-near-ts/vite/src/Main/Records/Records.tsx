@@ -1,7 +1,7 @@
-import { Title, Text, Button, TextInput, Group } from '@mantine/core';
+import { Button, Group, Text, TextInput, Title } from '@mantine/core';
 import { useState } from 'react';
+import { useConnectedAccount, useContractReadFunction } from 'react-near-ts';
 import cn from './Records.module.css';
-import { useContractReadFunction, useConnectedAccount } from 'react-near-ts';
 import { useAddRecord } from './useAddRecord.ts';
 import { useRemoveRecord } from './useRemoveRecord.ts';
 
@@ -22,8 +22,7 @@ export const Records = () => {
 
   if (records.isPending) return <Text>Loading...</Text>;
 
-  if (records.isError)
-    return <Text>Error during calling the get_records method...</Text>;
+  if (records.isError) return <Text>Error during calling the get_records method...</Text>;
 
   return (
     <>
@@ -35,11 +34,7 @@ export const Records = () => {
               #{index + 1}: {record}
             </Text>
             {isConnectedAccount && (
-              <Button
-                variant="light"
-                color="red"
-                onClick={() => removeRecord(index)}
-              >
+              <Button variant="light" color="red" onClick={() => removeRecord(index)}>
                 Remove
               </Button>
             )}

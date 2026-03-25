@@ -1,5 +1,5 @@
-import type { MutationOptions, BaseUseMutationResult } from '../../_common/tanstackMutation.ts';
 import type { MutateOptions } from '@tanstack/react-query';
+import type { BaseUseMutationResult, MutationOptions } from '../../_common/tanstackMutation.ts';
 
 type Variables = void;
 type Data = void;

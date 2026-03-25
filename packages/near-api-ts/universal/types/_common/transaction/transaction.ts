@@ -1,5 +1,10 @@
+import type { Prettify } from '../../utils';
+import type { AccountId, BlockHash, CryptoHash, Nonce } from '../common';
+import type { NativePublicKey, NativeSignature, PublicKey, Signature } from '../crypto';
 import type {
-  AddFullAccessKeyAction, AddFunctionCallKeyAction, NativeAddKeyAction
+  AddFullAccessKeyAction,
+  AddFunctionCallKeyAction,
+  NativeAddKeyAction,
 } from './actions/addKey';
 import type { CreateAccountAction, NativeCreateAccountAction } from './actions/createAccount';
 import type { DeleteAccountAction, NativeDeleteAccountAction } from './actions/deleteAccount';
@@ -8,9 +13,6 @@ import type { DeployContractAction, NativeDeployContractAction } from './actions
 import type { FunctionCallAction, NativeFunctionCallAction } from './actions/functionCall';
 import type { NativeStakeAction, StakeAction } from './actions/stake';
 import type { NativeTransferAction, TransferAction } from './actions/transfer';
-import type { AccountId, BlockHash, CryptoHash, Nonce } from '../common';
-import type { NativePublicKey, NativeSignature, PublicKey, Signature } from '../crypto';
-import type { Prettify } from '../../utils';
 
 export type Action =
   | CreateAccountAction

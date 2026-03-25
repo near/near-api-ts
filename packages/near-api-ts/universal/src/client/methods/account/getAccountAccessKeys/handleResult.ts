@@ -1,6 +1,6 @@
 import { AccessKeyListSchema } from '@near-js/jsonrpc-types';
-import type { GetAccountAccessKeysArgs } from '../../../../../types/client/methods/account/getAccountAccessKeys';
 import * as z from 'zod/mini';
+import type { GetAccountAccessKeysArgs } from '../../../../../types/client/methods/account/getAccountAccessKeys';
 import { createNatError } from '../../../../_common/natError';
 import type { RpcResponse } from '../../../../_common/schemas/zod/rpc';
 import { result } from '../../../../_common/utils/result';
@@ -12,17 +12,10 @@ const RpcQueryAccessKeyListResultSchema = z.object({
   blockHeight: z.number(),
 });
 
-export type RpcQueryAccessKeyListResult = z.infer<
-  typeof RpcQueryAccessKeyListResultSchema
->;
+export type RpcQueryAccessKeyListResult = z.infer<typeof RpcQueryAccessKeyListResultSchema>;
 
-export const handleResult = (
-  rpcResponse: RpcResponse,
-  args: GetAccountAccessKeysArgs,
-) => {
-  const rpcResult = RpcQueryAccessKeyListResultSchema.safeParse(
-    rpcResponse.result,
-  );
+export const handleResult = (rpcResponse: RpcResponse, args: GetAccountAccessKeysArgs) => {
+  const rpcResult = RpcQueryAccessKeyListResultSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)
     return result.err(

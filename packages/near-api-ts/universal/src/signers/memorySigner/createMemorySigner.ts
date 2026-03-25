@@ -2,7 +2,12 @@ import * as z from 'zod/mini';
 import type { Client } from '../../../types/client/client';
 import type { MemoryKeyService } from '../../../types/keyServices/memoryKeyService/memoryKeyService';
 import type { MemorySignerContext } from '../../../types/signers/memorySigner/memorySigner';
-import type { CreateMemorySigner, CreateMemorySignerFactory, CreateSafeMemorySignerFactory, SafeCreateMemorySigner } from '../../../types/signers/memorySigner/public/createMemorySigner';
+import type {
+  CreateMemorySigner,
+  CreateMemorySignerFactory,
+  CreateSafeMemorySignerFactory,
+  SafeCreateMemorySigner,
+} from '../../../types/signers/memorySigner/public/createMemorySigner';
 import { createNatError } from '../../_common/natError';
 import { AccountIdSchema } from '../../_common/schemas/zod/common/accountId';
 import { PublicKeySchema } from '../../_common/schemas/zod/common/publicKey';
@@ -23,9 +28,7 @@ const CreateMemorySignerArgsSchema = z.object({
   keyService: z.custom<MemoryKeyService>((value) => isMemoryKeyService(value)),
   keyPool: z.optional(
     z.object({
-      allowedAccessKeys: z.optional(
-        z.array(PublicKeySchema).check(z.minLength(1)),
-      ),
+      allowedAccessKeys: z.optional(z.array(PublicKeySchema).check(z.minLength(1))),
     }),
   ),
   taskQueue: z.optional(
@@ -75,9 +78,7 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
   },
 );
 
-export const throwableCreateMemorySigner: CreateMemorySigner = asThrowable(
-  safeCreateMemorySigner,
-);
+export const throwableCreateMemorySigner: CreateMemorySigner = asThrowable(safeCreateMemorySigner);
 
 export const createSafeMemorySignerFactory: CreateSafeMemorySignerFactory =
   (args) => (signerAccountId) =>

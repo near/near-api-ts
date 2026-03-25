@@ -1,9 +1,14 @@
 import type { RpcBlockResponse } from '@near-js/jsonrpc-types';
 import type { NatError } from '../../../../src/_common/natError';
-import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '../../transport/sendRequest';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { BlockReference, Result } from '../../../_common/common';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { ClientContext } from '../../client';
+import type {
+  AbortedErrorContext,
+  ExhaustedErrorContext,
+  PreferredRpcNotFoundErrorContext,
+  TimeoutErrorContext,
+} from '../../transport/sendRequest';
 import type { PartialTransportPolicy } from '../../transport/transport';
 import type { RpcQueryNotSyncedErrorContext } from '../_common/common';
 
@@ -42,9 +47,7 @@ export type GetBlockError =
   | NatError<'Client.GetBlock.Rpc.Block.NotFound'>
   | NatError<'Client.GetBlock.Internal'>;
 
-export type SafeGetBlock = (
-  args?: GetBlockArgs,
-) => Promise<Result<GetBlockOutcome, GetBlockError>>;
+export type SafeGetBlock = (args?: GetBlockArgs) => Promise<Result<GetBlockOutcome, GetBlockError>>;
 
 export type GetBlock = (args?: GetBlockArgs) => Promise<GetBlockOutcome>;
 

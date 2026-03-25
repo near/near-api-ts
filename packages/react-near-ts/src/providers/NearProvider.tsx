@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { NearStoreProvider } from '../store/NearStoreProvider.tsx';
 import type { ReactNode } from 'react';
 import type { NearStore } from '../../types/store.ts';
+import { NearStoreProvider } from '../store/NearStoreProvider.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,8 +17,6 @@ type NearProviderProps = {
 
 export const NearProvider = (props: NearProviderProps) => (
   <NearStoreProvider nearStore={props.nearStore}>
-    <QueryClientProvider client={queryClient}>
-      {props.children}
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{props.children}</QueryClientProvider>
   </NearStoreProvider>
 );

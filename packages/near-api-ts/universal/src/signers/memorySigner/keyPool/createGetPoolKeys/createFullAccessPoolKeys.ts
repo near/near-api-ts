@@ -1,4 +1,7 @@
-import type { AccountAccessKey, FullAccessKey } from '../../../../../types/_common/accountAccessKey';
+import type {
+  AccountAccessKey,
+  FullAccessKey,
+} from '../../../../../types/_common/accountAccessKey';
 import type { PoolFullAccessKey } from '../../../../../types/signers/memorySigner/inner/keyPool';
 import type { MemorySignerContext } from '../../../../../types/signers/memorySigner/memorySigner';
 import { createLock, createSetNonce, createUnlock } from './keyUtils';
@@ -27,7 +30,6 @@ export const createFullAccessPoolKeys = (
   accountKeys
     .filter(
       ({ publicKey, accessType }) =>
-        signerContext.keyService.safeFindKeyPair({ publicKey }).ok &&
-        accessType === 'FullAccess',
+        signerContext.keyService.safeFindKeyPair({ publicKey }).ok && accessType === 'FullAccess',
     )
     .map((key) => transformKey(key as FullAccessKey));

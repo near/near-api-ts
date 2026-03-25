@@ -1,7 +1,7 @@
 import resolve from '@rollup/plugin-node-resolve';
-import { visualizer } from 'rollup-plugin-visualizer';
 import terser from '@rollup/plugin-terser';
-import gzipPlugin from 'rollup-plugin-gzip'
+import gzipPlugin from 'rollup-plugin-gzip';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 export default {
   input: 'src/index.js',

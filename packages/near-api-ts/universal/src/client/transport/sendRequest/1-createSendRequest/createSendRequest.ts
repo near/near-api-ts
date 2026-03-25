@@ -1,4 +1,7 @@
-import type { SendRequest, SendRequestContext } from '../../../../../types/client/transport/sendRequest';
+import type {
+  SendRequest,
+  SendRequestContext,
+} from '../../../../../types/client/transport/sendRequest';
 import type { TransportContext } from '../../../../../types/client/transport/transport';
 import { createNatError, isNatErrorOf } from '../../../../_common/natError';
 import { result } from '../../../../_common/utils/result';
@@ -28,9 +31,7 @@ export const createSendRequest =
     const maybeExternalAbortSignal = createExternalAbortSignal(args.signal);
 
     // Start general timeout - how much time we can try to execute a request;
-    const requestTimeout = createRequestTimeout(
-      transportPolicy.timeouts.requestMs,
-    );
+    const requestTimeout = createRequestTimeout(transportPolicy.timeouts.requestMs);
 
     const context: SendRequestContext = {
       transportPolicy,

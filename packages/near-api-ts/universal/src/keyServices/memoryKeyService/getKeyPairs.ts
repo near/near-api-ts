@@ -2,9 +2,7 @@ import type { KeyPairs } from '../../../types/keyServices/memoryKeyService/memor
 import { throwableKeyPair } from '../../helpers/keyPair/keyPair';
 import type { InnerCreateMemoryKeyServiceArgs } from './createMemoryKeyService';
 
-export const getKeyPairs = (
-  args: InnerCreateMemoryKeyServiceArgs,
-): KeyPairs => {
+export const getKeyPairs = (args: InnerCreateMemoryKeyServiceArgs): KeyPairs => {
   if ('keySource' in args) {
     const keyPair = throwableKeyPair(args.keySource.privateKey.privateKey);
     return { [keyPair.publicKey]: keyPair };

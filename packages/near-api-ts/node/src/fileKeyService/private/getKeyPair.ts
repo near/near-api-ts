@@ -1,12 +1,11 @@
-import { keyPair } from '../../../../universal/index';
-import { result } from '../../../../universal/src/_common/utils/result';
 import { readFile } from 'node:fs/promises';
 import path from 'path';
+import { keyPair } from '../../../../universal/index';
+import { result } from '../../../../universal/src/_common/utils/result';
 
 export const createGetKeyPair = (context: any) => async (publicKey: any) => {
   // 1. If the key pair is already in the cache, return it
-  if (context.keyPairs.has(publicKey))
-    return result.ok(context.keyPairs.get(publicKey));
+  if (context.keyPairs.has(publicKey)) return result.ok(context.keyPairs.get(publicKey));
 
   // 2. Read the private key from the file
   const fullFilePath = path.join(context.rootDirPath, publicKey);

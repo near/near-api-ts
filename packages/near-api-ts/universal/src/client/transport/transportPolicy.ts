@@ -44,9 +44,7 @@ const TransportPolicySchema = z.object({
   ),
 });
 
-export const PartialTransportPolicySchema = z.optional(
-  z.partial(TransportPolicySchema),
-);
+export const PartialTransportPolicySchema = z.optional(z.partial(TransportPolicySchema));
 
 export const defaultTransportPolicy: TransportPolicy = {
   rpcTypePreferences: ['Regular', 'Archival'],
@@ -73,13 +71,8 @@ export const mergeTransportPolicy = (
   base: TransportPolicy,
   next: PartialDeep<TransportPolicy> = {},
 ): TransportPolicy =>
-  mergeWith(
-    {},
-    cloneDeep(base),
-    cloneDeep(next),
-    (_objValue, srcValue, key) => {
-      if (key === 'rpcTypePreferences' && Array.isArray(srcValue)) {
-        return srcValue;
-      }
-    },
-  );
+  mergeWith({}, cloneDeep(base), cloneDeep(next), (_objValue, srcValue, key) => {
+    if (key === 'rpcTypePreferences' && Array.isArray(srcValue)) {
+      return srcValue;
+    }
+  });

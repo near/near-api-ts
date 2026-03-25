@@ -1,8 +1,8 @@
-import { createNearStore } from '../store/nearStore.ts';
 import { createTestnetClient } from 'near-api-ts';
-import { createNearConnectorService } from '../services/nearConnector/nearConnector.ts';
-import { NearProvider } from './NearProvider.tsx';
 import type { ReactNode } from 'react';
+import { createNearConnectorService } from '../services/nearConnector/nearConnector.ts';
+import { createNearStore } from '../store/nearStore.ts';
+import { NearProvider } from './NearProvider.tsx';
 
 const createTestnetNearStore = () =>
   createNearStore({

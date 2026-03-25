@@ -1,10 +1,17 @@
-import { repackError } from '../../../../_common/utils/repackError';
-import type { CreateSafeGetAccountAccessKeys, SafeGetAccountAccessKeys } from '../../../../../types/client/methods/account/getAccountAccessKeys';
 import * as z from 'zod/mini';
+import type {
+  CreateSafeGetAccountAccessKeys,
+  SafeGetAccountAccessKeys,
+} from '../../../../../types/client/methods/account/getAccountAccessKeys';
 import { createNatError } from '../../../../_common/natError';
-import { BaseOptionsSchema, BlockReferenceSchema, PoliciesSchema } from '../../../../_common/schemas/zod/client';
+import {
+  BaseOptionsSchema,
+  BlockReferenceSchema,
+  PoliciesSchema,
+} from '../../../../_common/schemas/zod/client';
 import { AccountIdSchema } from '../../../../_common/schemas/zod/common/accountId';
 import { toNativeBlockReference } from '../../../../_common/transformers/toNative/blockReference';
+import { repackError } from '../../../../_common/utils/repackError';
 import { result } from '../../../../_common/utils/result';
 import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
 import { handleError } from './handleError';
@@ -17,9 +24,7 @@ const GetAccountAccessKeysArgsSchema = z.object({
   options: BaseOptionsSchema,
 });
 
-export const createSafeGetAccountAccessKeys: CreateSafeGetAccountAccessKeys = (
-  context,
-) =>
+export const createSafeGetAccountAccessKeys: CreateSafeGetAccountAccessKeys = (context) =>
   wrapInternalError(
     'Client.GetAccountAccessKeys.Internal',
     async (args): ReturnType<SafeGetAccountAccessKeys> => {

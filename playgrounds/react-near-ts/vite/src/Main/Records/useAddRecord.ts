@@ -1,4 +1,4 @@
-import { useExecuteTransaction, functionCall } from 'react-near-ts';
+import { functionCall, useExecuteTransaction } from 'react-near-ts';
 
 export const useAddRecord = (setRecordInput: any) => {
   const addRecordMutation = useExecuteTransaction();

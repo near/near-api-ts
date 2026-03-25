@@ -1,7 +1,7 @@
 import type { MutateOptions } from '@tanstack/react-query';
-import type { MutationOptions, BaseUseMutationResult } from './_common/tanstackMutation.ts';
 import type { Message, SignedMessage } from 'near-api-ts';
 import type { Prettify } from '../_common/common.ts';
+import type { BaseUseMutationResult, MutationOptions } from './_common/tanstackMutation.ts';
 
 type Variables = {
   message: Message;

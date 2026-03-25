@@ -1,9 +1,20 @@
+import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
+import {
+  addFullAccessKey,
+  type Client,
+  createAccount,
+  createMemoryKeyService,
+  createMemorySignerFactory,
+  type MemoryKeyService,
+  type MemorySignerFactory,
+  near,
+  randomEd25519KeyPair,
+  transfer,
+} from '../../../../../../../index';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../../../../utils/common';
 import { startSandbox } from '../../../../../../utils/sandbox/startSandbox';
-import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
-import { addFullAccessKey, type Client, createAccount, createMemoryKeyService, createMemorySignerFactory, type MemoryKeyService, type MemorySignerFactory, near, randomEd25519KeyPair, transfer } from '../../../../../../../index';
 
 vi.setConfig({ testTimeout: 60000 });
 
@@ -60,9 +71,6 @@ describe('Signer.Balance.TooLow', () => {
       },
     });
 
-    assertNatErrKind(
-      tx,
-      'MemorySigner.ExecuteTransaction.Rpc.Transaction.Signer.Balance.TooLow',
-    );
+    assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Signer.Balance.TooLow');
   });
 });

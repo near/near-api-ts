@@ -6,11 +6,9 @@ export const ConnectedAccount = () => {
   const { connectedAccountId } = useConnectedAccount();
   const accountInfo = useAccountInfo({ accountId: connectedAccountId });
 
-  if (accountInfo.isPending)
-    return <Text>Waiting for connected account...</Text>;
+  if (accountInfo.isPending) return <Text>Waiting for connected account...</Text>;
 
-  if (accountInfo.isError)
-    return <Text>Error during loading the account info...</Text>;
+  if (accountInfo.isError) return <Text>Error during loading the account info...</Text>;
 
   const { balance, usedStorageBytes } = accountInfo.data.accountInfo;
 

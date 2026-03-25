@@ -1,4 +1,9 @@
-import type { CreateTaskQueue, RemoveTask, TaskQueue, TaskQueueContext } from '../../../../types/signers/memorySigner/inner/taskQueue';
+import type {
+  CreateTaskQueue,
+  RemoveTask,
+  TaskQueue,
+  TaskQueueContext,
+} from '../../../../types/signers/memorySigner/inner/taskQueue';
 import { createFindTaskForKey } from './createFindTaskForKey';
 import { createAddExecuteTransactionTask } from './taskCreators/createAddExecuteTransactionTask';
 import { createAddSignTransactionTask } from './taskCreators/createAddSignTransactionTask';
@@ -16,17 +21,14 @@ export const createTaskQueue: CreateTaskQueue = (
 
   // We remove the task from the queue when the task execution starts
   const removeTask: RemoveTask = (taskId) => {
-    taskQueueContext.queue = taskQueueContext.queue.filter(
-      (task) => task.taskId !== taskId,
-    );
+    taskQueueContext.queue = taskQueueContext.queue.filter((task) => task.taskId !== taskId);
     clearTimeout(taskQueueContext.cleaners[taskId]);
     delete taskQueueContext.cleaners[taskId];
   };
 
   return {
     addSignTransactionTask: createAddSignTransactionTask(taskQueueContext),
-    addExecuteTransactionTask:
-      createAddExecuteTransactionTask(taskQueueContext),
+    addExecuteTransactionTask: createAddExecuteTransactionTask(taskQueueContext),
     findTaskForKey: createFindTaskForKey(taskQueueContext),
     removeTask,
   };

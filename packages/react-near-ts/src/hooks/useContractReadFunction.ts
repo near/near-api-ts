@@ -1,4 +1,4 @@
-import { useQuery, skipToken } from '@tanstack/react-query';
+import { skipToken, useQuery } from '@tanstack/react-query';
 import type {
   InnerUseContractReadFunctionArgs,
   UseContractReadFunction,

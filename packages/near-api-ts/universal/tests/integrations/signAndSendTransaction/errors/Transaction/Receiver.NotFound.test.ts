@@ -1,6 +1,12 @@
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, it, vi } from 'vitest';
-import { type Client, createMemoryKeyService, deleteAccount, type MemoryKeyService, transfer } from '../../../../../index';
+import {
+  type Client,
+  createMemoryKeyService,
+  deleteAccount,
+  type MemoryKeyService,
+  transfer,
+} from '../../../../../index';
 import { assertNatErrKind } from '../../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../../utils/common';
 import { startSandbox } from '../../../../utils/sandbox/startSandbox';
@@ -45,10 +51,7 @@ describe('Execute transaction', () => {
       signedTransaction,
     });
 
-    assertNatErrKind(
-      res,
-      'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound',
-    );
+    assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound');
   });
 
   it('Delete account of non-exist account', async () => {
@@ -72,9 +75,6 @@ describe('Execute transaction', () => {
       signedTransaction,
     });
 
-    assertNatErrKind(
-      res,
-      'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound',
-    );
+    assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound');
   });
 });

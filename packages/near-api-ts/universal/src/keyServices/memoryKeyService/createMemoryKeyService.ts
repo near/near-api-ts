@@ -1,6 +1,12 @@
 import * as z from 'zod/mini';
-import type { CreateMemoryKeyService, SafeCreateMemoryKeyService } from '../../../types/keyServices/memoryKeyService/createMemoryKeyService';
-import type { MemoryKeyService, MemoryKeyServiceContext } from '../../../types/keyServices/memoryKeyService/memoryKeyService';
+import type {
+  CreateMemoryKeyService,
+  SafeCreateMemoryKeyService,
+} from '../../../types/keyServices/memoryKeyService/createMemoryKeyService';
+import type {
+  MemoryKeyService,
+  MemoryKeyServiceContext,
+} from '../../../types/keyServices/memoryKeyService/memoryKeyService';
 import { createNatError } from '../../_common/natError';
 import { PrivateKeySchema } from '../../_common/schemas/zod/common/privateKey';
 import { asThrowable } from '../../_common/utils/asThrowable';
@@ -28,12 +34,11 @@ const CreateMemoryKeyServiceArgsSchema = z.union([
   }),
 ]);
 
-export type InnerCreateMemoryKeyServiceArgs = z.infer<
-  typeof CreateMemoryKeyServiceArgsSchema
->;
+export type InnerCreateMemoryKeyServiceArgs = z.infer<typeof CreateMemoryKeyServiceArgsSchema>;
 
-export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService =
-  wrapInternalError('CreateMemoryKeyService.Internal', (args) => {
+export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService = wrapInternalError(
+  'CreateMemoryKeyService.Internal',
+  (args) => {
     const validArgs = CreateMemoryKeyServiceArgsSchema.safeParse(args);
 
     if (!validArgs.success)
@@ -60,7 +65,9 @@ export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService =
       findKeyPair: asThrowable(safeFindKeyPair),
       safeFindKeyPair,
     });
-  });
+  },
+);
 
-export const throwableCreateMemoryKeyService: CreateMemoryKeyService =
-  asThrowable(safeCreateMemoryKeyService);
+export const throwableCreateMemoryKeyService: CreateMemoryKeyService = asThrowable(
+  safeCreateMemoryKeyService,
+);

@@ -23,10 +23,7 @@ const GetRecentBlockHashArgsSchema = z.optional(
   }),
 );
 
-export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (
-  transport,
-  state,
-) =>
+export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (transport, state) =>
   wrapInternalError('Client.GetRecentBlockHash.Internal', async (args) => {
     // 1. Validate arguments
     const validArgs = GetRecentBlockHashArgsSchema.safeParse(args);
@@ -58,10 +55,7 @@ export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (
     });
 
     // This error should never happen because we don't allow configuring transport policy
-    if (
-      !rpcResponse.ok &&
-      rpcResponse.error.kind === 'SendRequest.PreferredRpc.NotFound'
-    )
+    if (!rpcResponse.ok && rpcResponse.error.kind === 'SendRequest.PreferredRpc.NotFound')
       throw rpcResponse.error;
 
     // If the request failed
@@ -83,9 +77,7 @@ export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (
       );
 
     // Check if a result is valid
-    const rpcResult = PartialBlockResultSchema.safeParse(
-      rpcResponse.value.result,
-    );
+    const rpcResult = PartialBlockResultSchema.safeParse(rpcResponse.value.result);
 
     if (!rpcResult.success)
       return result.err(

@@ -1,6 +1,6 @@
 import type { AccountId } from '../../../../../../types/_common/common';
-import type { TransactionIntent } from '../../../../../../types/_common/transaction/transaction';
 import type { FunctionCallAction } from '../../../../../../types/_common/transaction/actions/functionCall';
+import type { TransactionIntent } from '../../../../../../types/_common/transaction/transaction';
 import type { AccessTypePriority } from '../../../../../../types/signers/memorySigner/inner/taskQueue';
 
 /**

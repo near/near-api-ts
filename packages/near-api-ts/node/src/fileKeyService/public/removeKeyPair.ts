@@ -1,6 +1,6 @@
-import { result } from '../../../../universal/src/_common/utils/result';
 import { rm } from 'fs/promises';
 import path from 'path';
+import { result } from '../../../../universal/src/_common/utils/result';
 
 export const createSafeRemoveKeyPair = (context: any) => async (args: any) => {
   const fullFilePath = path.join(context.rootDirPath, args.publicKey);

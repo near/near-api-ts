@@ -1,17 +1,40 @@
 import { ClientBrand } from '../../src/client/createClient';
 import type { Cache } from './cache/cache';
-import type { GetRecentBlockHash, GetRecentBlockHashPublicErrorRegistry, SafeGetRecentBlockHash } from './cache/getRecentBlockHash';
+import type {
+  GetRecentBlockHash,
+  GetRecentBlockHashPublicErrorRegistry,
+  SafeGetRecentBlockHash,
+} from './cache/getRecentBlockHash';
 import type { CreateClientPublicErrorRegistry } from './createClient';
-import type { GetAccountAccessKey, GetAccountAccessKeyPublicErrorRegistry, SafeGetAccountAccessKey } from './methods/account/getAccountAccessKey';
-import type { GetAccountAccessKeys, GetAccountAccessKeysPublicErrorRegistry, SafeGetAccountAccessKeys } from './methods/account/getAccountAccessKeys';
-import type { GetAccountInfo, GetAccountInfoPublicErrorRegistry, SafeGetAccountInfo } from './methods/account/getAccountInfo';
+import type {
+  GetAccountAccessKey,
+  GetAccountAccessKeyPublicErrorRegistry,
+  SafeGetAccountAccessKey,
+} from './methods/account/getAccountAccessKey';
+import type {
+  GetAccountAccessKeys,
+  GetAccountAccessKeysPublicErrorRegistry,
+  SafeGetAccountAccessKeys,
+} from './methods/account/getAccountAccessKeys';
+import type {
+  GetAccountInfo,
+  GetAccountInfoPublicErrorRegistry,
+  SafeGetAccountInfo,
+} from './methods/account/getAccountInfo';
 import type { GetBlock, GetBlockPublicErrorRegistry, SafeGetBlock } from './methods/block/getBlock';
-import type { CallContractReadFunction, CallContractReadFunctionPublicErrorRegistry, SafeCallContractReadFunction } from './methods/contract/callContractReadFunction';
-import type { SafeSendSignedTransaction, SendSignedTransaction, SendSignedTransactionPublicErrorRegistry } from './methods/transaction/sendSignedTransaction';
+import type {
+  CallContractReadFunction,
+  CallContractReadFunctionPublicErrorRegistry,
+  SafeCallContractReadFunction,
+} from './methods/contract/callContractReadFunction';
+import type {
+  SafeSendSignedTransaction,
+  SendSignedTransaction,
+  SendSignedTransactionPublicErrorRegistry,
+} from './methods/transaction/sendSignedTransaction';
 import type { SendRequest, SendRequestInnerErrorRegistry } from './transport/sendRequest';
 
-export interface ClientInnerErrorRegistry
-  extends SendRequestInnerErrorRegistry {}
+export interface ClientInnerErrorRegistry extends SendRequestInnerErrorRegistry {}
 
 export interface ClientPublicErrorRegistry
   extends CreateClientPublicErrorRegistry,

@@ -2,7 +2,13 @@ import type { NatError } from '../../../src/_common/natError';
 import type { RpcResponse } from '../../../src/_common/schemas/zod/rpc';
 import type { JsonValue, Milliseconds, Result } from '../../_common/common';
 import type { InvalidSchemaErrorContext } from '../../_common/natError';
-import type { InnerRpcEndpoint, PartialTransportPolicy, RpcTypePreferences, TransportContext, TransportPolicy } from './transport';
+import type {
+  InnerRpcEndpoint,
+  PartialTransportPolicy,
+  RpcTypePreferences,
+  TransportContext,
+  TransportPolicy,
+} from './transport';
 
 type RpcErrorContext = {
   rawRpcResponse: RpcResponse;
@@ -78,6 +84,4 @@ export type SendRequestError =
   | NatError<'SendRequest.Aborted'>
   | NatError<'SendRequest.Exhausted'>;
 
-export type SendRequest = (
-  args: SendRequestArgs,
-) => Promise<Result<RpcResponse, SendRequestError>>;
+export type SendRequest = (args: SendRequestArgs) => Promise<Result<RpcResponse, SendRequestError>>;

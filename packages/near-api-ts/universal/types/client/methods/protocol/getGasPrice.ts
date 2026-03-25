@@ -17,8 +17,6 @@ export type GetGasPriceResult = {
   gasPrice: NearToken;
 };
 
-export type GetGasPrice = (
-  args?: GetGasPriceArgs,
-) => Promise<GetGasPriceResult>;
+export type GetGasPrice = (args?: GetGasPriceArgs) => Promise<GetGasPriceResult>;
 
 export type CreateGetGasPrice = (clientContext: ClientContext) => GetGasPrice;

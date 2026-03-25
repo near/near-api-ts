@@ -1,9 +1,17 @@
+import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
+import { beforeAll, describe, it, vi } from 'vitest';
+import {
+  type Client,
+  createMemoryKeyService,
+  createMemorySignerFactory,
+  deleteAccount,
+  type MemoryKeyService,
+  type MemorySignerFactory,
+  transfer,
+} from '../../../../../../../index';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../../../../utils/common';
 import { startSandbox } from '../../../../../../utils/sandbox/startSandbox';
-import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { beforeAll, describe, it, vi } from 'vitest';
-import { type Client, createMemoryKeyService, createMemorySignerFactory, deleteAccount, type MemoryKeyService, type MemorySignerFactory, transfer } from '../../../../../../../index';
 
 vi.setConfig({ testTimeout: 60000 });
 
@@ -31,10 +39,7 @@ describe('Receiver.NotFound', () => {
         receiverAccountId: 'not-bob',
       },
     });
-    assertNatErrKind(
-      tx,
-      'MemorySigner.ExecuteTransaction.Rpc.Transaction.Receiver.NotFound',
-    );
+    assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Receiver.NotFound');
   });
 
   it('Delete Account', async () => {
@@ -46,9 +51,6 @@ describe('Receiver.NotFound', () => {
         receiverAccountId: 'not-bob',
       },
     });
-    assertNatErrKind(
-      tx,
-      'MemorySigner.ExecuteTransaction.Rpc.Transaction.Receiver.NotFound',
-    );
+    assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Receiver.NotFound');
   });
 });

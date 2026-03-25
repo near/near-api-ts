@@ -1,10 +1,10 @@
 import { BinaryLengths } from '../../_common/configs/constants';
 import { type InnerPrivateKey } from '../../_common/schemas/zod/common/privateKey';
+import type { InnerPublicKey } from '../../_common/schemas/zod/common/publicKey';
 import {
   toEd25519CurveString,
   toSecp256k1CurveString,
 } from '../../_common/transformers/toCurveString';
-import type { InnerPublicKey } from '../../_common/schemas/zod/common/publicKey';
 
 const { Ed25519, Secp256k1 } = BinaryLengths;
 

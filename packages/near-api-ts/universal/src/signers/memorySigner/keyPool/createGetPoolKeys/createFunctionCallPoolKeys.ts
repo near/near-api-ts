@@ -1,13 +1,13 @@
-import type { AccountAccessKey, FunctionCallKey } from '../../../../../types/_common/accountAccessKey';
+import type {
+  AccountAccessKey,
+  FunctionCallKey,
+} from '../../../../../types/_common/accountAccessKey';
 import type { PoolFunctionCallKey } from '../../../../../types/signers/memorySigner/inner/keyPool';
 import type { MemorySignerContext } from '../../../../../types/signers/memorySigner/memorySigner';
 import { createLock, createSetNonce, createUnlock } from './keyUtils';
 
-const transformKey = (
-  functionCallKey: FunctionCallKey,
-): PoolFunctionCallKey => {
-  const { publicKey, nonce, contractAccountId, allowedFunctions } =
-    functionCallKey;
+const transformKey = (functionCallKey: FunctionCallKey): PoolFunctionCallKey => {
+  const { publicKey, nonce, contractAccountId, allowedFunctions } = functionCallKey;
 
   const key = {
     accessType: 'FunctionCall',
@@ -32,7 +32,6 @@ export const createFunctionCallPoolKeys = (
   accountKeys
     .filter(
       ({ publicKey, accessType }) =>
-        signerContext.keyService.safeFindKeyPair({ publicKey }).ok &&
-        accessType === 'FunctionCall',
+        signerContext.keyService.safeFindKeyPair({ publicKey }).ok && accessType === 'FunctionCall',
     )
     .map((key) => transformKey(key as FunctionCallKey));

@@ -6,9 +6,7 @@ import { result } from '../../../../_common/utils/result';
 export const handleError = (rpcResponse: RpcResponse) => {
   // We use QueryErrorSchema cuz there is no separate 'view_access_key' method -
   // it's part of 'query'
-  const rpcError = ErrorWrapperFor_RpcQueryErrorSchema().safeParse(
-    rpcResponse.error,
-  );
+  const rpcError = ErrorWrapperFor_RpcQueryErrorSchema().safeParse(rpcResponse.error);
 
   if (!rpcError.success)
     return result.err(
@@ -56,10 +54,7 @@ export const handleError = (rpcResponse: RpcResponse) => {
 
     // Most likely it's not really possible to get UNKNOWN_BLOCK error when trying to
     // fetch data from relative block like 'LatestFinalBlock' or 'EarliestAvailableBlock'
-    if (
-      cause.name === 'UNKNOWN_BLOCK' &&
-      'blockId' in cause.info.blockReference
-    )
+    if (cause.name === 'UNKNOWN_BLOCK' && 'blockId' in cause.info.blockReference)
       return result.err(
         createNatError({
           kind: `Client.CallContractReadFunction.Rpc.Block.NotFound`,

@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import { useNearStore } from '../store/NearStoreProvider.tsx';
-import type { StoreContext } from '../../types/store.ts';
-import type { UseExecuteTransaction } from '../../types/hooks/useExecuteTransaction.ts';
 import type { TransactionIntent } from 'near-api-ts';
+import type { UseExecuteTransaction } from '../../types/hooks/useExecuteTransaction.ts';
+import type { StoreContext } from '../../types/store.ts';
+import { useNearStore } from '../store/NearStoreProvider.tsx';
 
 const tryOnManySigners = async (intent: TransactionIntent, context: StoreContext) => {
   const signers = context.signers;

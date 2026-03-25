@@ -1,14 +1,13 @@
-import type {
-  InnerUseNearConnectArgs
-} from '../../../../types/hooks/nearConnector/useNearConnect/useNearConnect.ts';
-import type { StoreContext, SetSigners, SetConnectedAccountId } from '../../../../types/store.ts';
-import { useMutation } from '@tanstack/react-query';
-import { NearConnectorServiceSchema } from '../_common.ts';
-import { type AccountId, nearToken } from 'near-api-ts';
 import type { EventMap } from '@hot-labs/near-connect/build/types';
+import { useMutation } from '@tanstack/react-query';
+import { type AccountId, nearToken } from 'near-api-ts';
+import type { InnerUseNearConnectArgs } from '../../../../types/hooks/nearConnector/useNearConnect/useNearConnect.ts';
 import type {
-  WithAddFunctionCallKeyOutput, Variables
+  Variables,
+  WithAddFunctionCallKeyOutput,
 } from '../../../../types/hooks/nearConnector/useNearConnect/withAddFunctionCallKey.ts';
+import type { SetConnectedAccountId, SetSigners, StoreContext } from '../../../../types/store.ts';
+import { NearConnectorServiceSchema } from '../_common.ts';
 
 export const withAddFunctionCallKey = (
   args: InnerUseNearConnectArgs,

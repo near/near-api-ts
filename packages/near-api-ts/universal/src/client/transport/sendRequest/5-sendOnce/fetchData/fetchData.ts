@@ -17,9 +17,7 @@ export const fetchData = async (
   rpc: InnerRpcEndpoint,
   body: JsonValue,
 ): Promise<Result<Response, FetchDataError>> => {
-  const attemptTimeout = createAttemptTimeout(
-    context.transportPolicy.timeouts.attemptMs,
-  );
+  const attemptTimeout = createAttemptTimeout(context.transportPolicy.timeouts.attemptMs);
 
   try {
     const response = await fetch(rpc.url, {

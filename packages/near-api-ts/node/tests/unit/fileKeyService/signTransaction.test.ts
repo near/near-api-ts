@@ -1,7 +1,7 @@
+import { it } from 'vitest';
 import { randomEd25519KeyPair, transfer } from '../../../../universal/index';
 import { log } from '../../../../universal/tests/utils/common';
 import { throwableCreateFileKeyService } from '../../../src/fileKeyService/fileKeyService';
-import { it } from 'vitest';
 
 it('FileKeyService:Sign transaction', async () => {
   try {

@@ -10,8 +10,6 @@ type FindKeyPairError =
   | NatError<'MemoryKeyService.FindKeyPair.NotFound'>
   | NatError<'MemoryKeyService.FindKeyPair.Internal'>;
 
-export type SafeFindKeyPair = (
-  args: FindKeyPairArgs,
-) => Result<KeyPair, FindKeyPairError>;
+export type SafeFindKeyPair = (args: FindKeyPairArgs) => Result<KeyPair, FindKeyPairError>;
 
 export type FindKeyPair = (args: FindKeyPairArgs) => KeyPair;

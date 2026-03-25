@@ -1,6 +1,19 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
-import { addFullAccessKey, type Client, createAccount, createMemoryKeyService, createMemorySignerFactory, deleteKey, type MemoryKeyService, type MemorySignerFactory, near, randomEd25519KeyPair, stake, transfer } from '../../../../../index';
+import {
+  addFullAccessKey,
+  type Client,
+  createAccount,
+  createMemoryKeyService,
+  createMemorySignerFactory,
+  deleteKey,
+  type MemoryKeyService,
+  type MemorySignerFactory,
+  near,
+  randomEd25519KeyPair,
+  stake,
+  transfer,
+} from '../../../../../index';
 import { createDefaultClient } from '../../../../utils/common';
 import { startSandbox } from '../../../../utils/sandbox/startSandbox';
 
@@ -17,10 +30,7 @@ describe('Get Account Balance', () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
     keyService = createMemoryKeyService({
-      keySources: [
-        { privateKey: DEFAULT_PRIVATE_KEY },
-        { privateKey: keyPair1.privateKey },
-      ],
+      keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, { privateKey: keyPair1.privateKey }],
     });
     createSigner = createMemorySignerFactory({ client, keyService });
     return () => sandbox.stop();
@@ -51,11 +61,7 @@ describe('Get Account Balance', () => {
     // 1. Create new account
     await nat.executeTransaction({
       intent: {
-        actions: [
-          createAccount(),
-          addFullAccessKey(keyPair1),
-          transfer({ amount: { near: '1' } }),
-        ],
+        actions: [createAccount(), addFullAccessKey(keyPair1), transfer({ amount: { near: '1' } })],
         receiverAccountId: 'abc2.nat',
       },
     });

@@ -1,8 +1,8 @@
 import type { NatError } from '../../../../src/_common/natError';
-import type { MemorySignerErrorContext } from '../_common/errorContext';
 import type { FunctionCallKey } from '../../../_common/accountAccessKey';
 import type { AccountId, Nonce, Result } from '../../../_common/common';
 import type { PublicKey } from '../../../_common/crypto';
+import type { MemorySignerErrorContext } from '../_common/errorContext';
 import type { MemorySignerContext } from '../memorySigner';
 import type { CreateMemorySignerArgs } from '../public/createMemorySigner';
 import type { Task } from './taskQueue';
@@ -67,9 +67,7 @@ type IsKeyForTaskExistError =
   | NatError<'MemorySigner.KeyPool.Empty'>
   | NatError<'MemorySigner.KeyPool.SigningKey.NotFound'>;
 
-export type IsKeyForTaskExist = (
-  task: Task,
-) => Promise<Result<true, IsKeyForTaskExistError>>;
+export type IsKeyForTaskExist = (task: Task) => Promise<Result<true, IsKeyForTaskExistError>>;
 
 export type KeyPool = {
   findKeyForTask: FindKeyForTask;

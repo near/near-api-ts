@@ -1,5 +1,5 @@
 import type { MutateOptions } from '@tanstack/react-query';
-import type { MutationOptions, BaseUseMutationResult } from '../_common/tanstackMutation.ts';
+import type { BaseUseMutationResult, MutationOptions } from '../_common/tanstackMutation.ts';
 
 type UseNearDisconnectArgs<OMR, D = void, E = Error, V = void> = {
   mutation?: MutationOptions<D, E, V, OMR>;

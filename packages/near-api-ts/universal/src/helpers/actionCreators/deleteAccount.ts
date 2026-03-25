@@ -1,5 +1,8 @@
 import * as z from 'zod/mini';
-import type { CreateDeleteAccountAction, SafeCreateDeleteAccountAction } from '../../../types/_common/transaction/actions/deleteAccount';
+import type {
+  CreateDeleteAccountAction,
+  SafeCreateDeleteAccountAction,
+} from '../../../types/_common/transaction/actions/deleteAccount';
 import { createNatError } from '../../_common/natError';
 import { AccountIdSchema } from '../../_common/schemas/zod/common/accountId';
 import { asThrowable } from '../../_common/utils/asThrowable';
@@ -10,8 +13,9 @@ export const CreateDeleteAccountActionArgsSchema = z.object({
   beneficiaryAccountId: AccountIdSchema,
 });
 
-export const safeDeleteAccount: SafeCreateDeleteAccountAction =
-  wrapInternalError('CreateAction.DeleteAccount.Internal', (args) => {
+export const safeDeleteAccount: SafeCreateDeleteAccountAction = wrapInternalError(
+  'CreateAction.DeleteAccount.Internal',
+  (args) => {
     const validArgs = CreateDeleteAccountActionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
@@ -26,7 +30,7 @@ export const safeDeleteAccount: SafeCreateDeleteAccountAction =
       actionType: 'DeleteAccount' as const,
       beneficiaryAccountId: args.beneficiaryAccountId,
     });
-  });
+  },
+);
 
-export const throwableDeleteAccount: CreateDeleteAccountAction =
-  asThrowable(safeDeleteAccount);
+export const throwableDeleteAccount: CreateDeleteAccountAction = asThrowable(safeDeleteAccount);

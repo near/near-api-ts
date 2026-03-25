@@ -1,7 +1,11 @@
-import type { AbortedErrorContext, ExhaustedErrorContext, TimeoutErrorContext } from '../transport/sendRequest';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../_common/natError';
 import type { NatError } from '../../../src/_common/natError';
 import type { BlockHash, Result } from '../../_common/common';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../_common/natError';
+import type {
+  AbortedErrorContext,
+  ExhaustedErrorContext,
+  TimeoutErrorContext,
+} from '../transport/sendRequest';
 import type { Transport } from '../transport/transport';
 import type { CacheState } from './cache';
 
@@ -31,9 +35,7 @@ export type SafeGetRecentBlockHash = (
   args?: GetRecentBlockHashArgs,
 ) => Promise<Result<BlockHash, GetRecentBlockHashError>>;
 
-export type GetRecentBlockHash = (
-  args?: GetRecentBlockHashArgs,
-) => Promise<BlockHash>;
+export type GetRecentBlockHash = (args?: GetRecentBlockHashArgs) => Promise<BlockHash>;
 
 export type CreateSafeGetRecentBlockHash = (
   transport: Transport,

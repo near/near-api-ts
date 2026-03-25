@@ -3,8 +3,7 @@ import type { InnerRpcEndpoint } from '../../../../../types/client/transport/tra
 import { createNatError, type NatError } from '../../../../_common/natError';
 import { result } from '../../../../_common/utils/result';
 
-export type ParseJsonResponseError =
-  NatError<'SendRequest.Attempt.Response.JsonParseFailed'>;
+export type ParseJsonResponseError = NatError<'SendRequest.Attempt.Response.JsonParseFailed'>;
 
 export const parseJsonResponse = async (
   response: Response,

@@ -1,6 +1,6 @@
 import type { NatError } from '../../src/_common/natError';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from './natError';
 import type { Result } from './common';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from './natError';
 
 export interface NearGasPublicErrorRegistry {
   'CreateNearGas.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -42,9 +42,7 @@ export type NearGas = Readonly<{
   lt: (value: NearGasMethodArgs) => boolean;
 }>;
 
-export type SafeCreateNearGas = (
-  args: NearGasArgs,
-) => Result<NearGas, CreateNearGasError>;
+export type SafeCreateNearGas = (args: NearGasArgs) => Result<NearGas, CreateNearGasError>;
 
 export type CreateNearGas = (args: NearGasArgs) => NearGas;
 

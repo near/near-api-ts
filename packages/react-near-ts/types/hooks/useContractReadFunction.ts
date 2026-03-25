@@ -6,11 +6,11 @@ import type {
   BlockReference,
   CallContractReadFunctionError,
   CallContractReadFunctionOutput,
+  ContractFunctionName,
   MaybeBaseDeserializeResultFn,
   MaybeBaseSerializeArgsFn,
   MaybeJsonValue,
   PartialTransportPolicy,
-  ContractFunctionName,
 } from 'near-api-ts';
 import type { KeyIf } from '../_common.ts';
 

@@ -1,10 +1,10 @@
 import {
-  createTestnetClient,
   createMemoryKeyService,
   createMemorySigner,
-  transfer,
-  near,
+  createTestnetClient,
   isNatError,
+  near,
+  transfer,
 } from 'near-api-ts';
 
 // Read some data from the chain
@@ -44,12 +44,7 @@ try {
     },
   });
 } catch (e) {
-  if (
-    isNatError(
-      e,
-      'MemorySigner.ExecuteTransaction.Rpc.Transaction.Signer.Balance.TooLow',
-    )
-  ) {
+  if (isNatError(e, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Signer.Balance.TooLow')) {
     console.log(e.context.transactionCost);
   }
 }

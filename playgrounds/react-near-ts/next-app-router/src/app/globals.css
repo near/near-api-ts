@@ -24,11 +24,8 @@ body {
 
 body {
   color: var(--ink);
-  background: radial-gradient(
-      circle at top,
-      rgba(15, 118, 110, 0.12),
-      transparent 45%
-    ),
+  background:
+    radial-gradient(circle at top, rgba(15, 118, 110, 0.12), transparent 45%),
     linear-gradient(135deg, var(--shell-bg), var(--shell-bg-soft));
   font-family: var(--font-body), "Source Sans 3", sans-serif;
   -webkit-font-smoothing: antialiased;

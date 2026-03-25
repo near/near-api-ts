@@ -15,6 +15,4 @@ export type SafeSignTransaction = (
   args: SignTransactionArgs,
 ) => Promise<Result<SignedTransaction, SignTransactionError>>;
 
-export type SignTransaction = (
-  args: SignTransactionArgs,
-) => Promise<SignedTransaction>;
+export type SignTransaction = (args: SignTransactionArgs) => Promise<SignedTransaction>;

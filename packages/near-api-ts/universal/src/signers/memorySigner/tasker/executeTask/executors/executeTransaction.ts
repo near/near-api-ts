@@ -58,13 +58,9 @@ export const executeTransaction = async (
       // re-sign with the new nonce and try to send it again;
       if (
         attemptIndex <= maxAttempts &&
-        txResult.error.kind ===
-          'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid'
+        txResult.error.kind === 'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid'
       ) {
-        return await attempt(
-          attemptIndex + 1,
-          txResult.error.context.accessKeyNonce + 1,
-        );
+        return await attempt(attemptIndex + 1, txResult.error.context.accessKeyNonce + 1);
       }
 
       // Pack sendSignedTransaction error and return;

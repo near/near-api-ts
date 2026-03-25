@@ -1,8 +1,11 @@
 import type { NatError } from '../../../../src/_common/natError';
-import type { MemorySignerErrorContext } from '../_common/errorContext';
 import type { Result } from '../../../_common/common';
-import type { SignedTransaction, TransactionIntent } from '../../../_common/transaction/transaction';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
+import type {
+  SignedTransaction,
+  TransactionIntent,
+} from '../../../_common/transaction/transaction';
+import type { MemorySignerErrorContext } from '../_common/errorContext';
 import type { MemorySignerContext } from '../memorySigner';
 
 export interface SignTransactionPublicErrorRegistry {
@@ -30,10 +33,6 @@ export type SafeSignTransactionIntent = (
   args: SignTransactionIntentArgs,
 ) => Promise<Result<SignedTransaction, SignTransactionIntentError>>;
 
-export type SignTransactionIntent = (
-  args: SignTransactionIntentArgs,
-) => Promise<SignedTransaction>;
+export type SignTransactionIntent = (args: SignTransactionIntentArgs) => Promise<SignedTransaction>;
 
-export type CreateSafeSignTransaction = (
-  context: MemorySignerContext,
-) => SafeSignTransactionIntent;
+export type CreateSafeSignTransaction = (context: MemorySignerContext) => SafeSignTransactionIntent;

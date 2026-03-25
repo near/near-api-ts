@@ -1,7 +1,7 @@
-import type { PublicKey, Signature } from './crypto';
-import type { InvalidSchemaErrorContext, InternalErrorContext } from './natError';
-import type { Result } from './common';
 import type { NatError } from '../../src/_common/natError';
+import type { Result } from './common';
+import type { PublicKey, Signature } from './crypto';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from './natError';
 
 export interface VerifySignaturePublicErrorRegistry {
   'VerifySignature.Args.InvalidSchema': InvalidSchemaErrorContext;

@@ -1,7 +1,12 @@
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import * as z from 'zod/mini';
-import { type Client, createMemoryKeyService, type MemoryKeyService, safeCreateMemorySigner } from '../../../../index';
+import {
+  type Client,
+  createMemoryKeyService,
+  type MemoryKeyService,
+  safeCreateMemorySigner,
+} from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../utils/common';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';

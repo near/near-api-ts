@@ -6,8 +6,7 @@ export const createGetKeyPair =
   (context: IdbKeyServiceContext) =>
   async (publicKey: any): Promise<any> => {
     // 1. If the key pair is already in the cache, return it
-    if (context.keyPairs.has(publicKey))
-      return result.ok(context.keyPairs.get(publicKey));
+    if (context.keyPairs.has(publicKey)) return result.ok(context.keyPairs.get(publicKey));
 
     if (!context.idb) return result.err(false); // TODO wait until idb is ready
 

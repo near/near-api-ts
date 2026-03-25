@@ -9,10 +9,7 @@ import { pow10 } from './helpers';
  * @param decimals     Fractional digits count (1..100)
  * @returns            Decimal string with up to `decimals` digits after the dot
  */
-export const convertUnitsToTokens = (
-  units: bigint,
-  decimals: number,
-): string => {
+export const convertUnitsToTokens = (units: bigint, decimals: number): string => {
   const scale = pow10(decimals);
   const isNegative = units < 0n;
   const sign = isNegative ? '-' : '';

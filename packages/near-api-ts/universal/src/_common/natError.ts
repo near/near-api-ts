@@ -1,5 +1,10 @@
+import type {
+  ContextFor,
+  CreateNatErrorArgs,
+  CreateResultNatError,
+  NatErrorKind,
+} from '../../types/_common/natError';
 import { result } from './utils/result';
-import type { ContextFor, CreateNatErrorArgs, CreateResultNatError, NatErrorKind } from '../../types/_common/natError';
 
 export const NatErrorBrand = Symbol('NatError');
 
@@ -16,9 +21,8 @@ export class NatError<K extends NatErrorKind> extends Error {
   }
 }
 
-export const createNatError = <K extends NatErrorKind>(
-  args: CreateNatErrorArgs<K>,
-): NatError<K> => new NatError(args);
+export const createNatError = <K extends NatErrorKind>(args: CreateNatErrorArgs<K>): NatError<K> =>
+  new NatError(args);
 
 export const resultNatError: CreateResultNatError = (kind, context) =>
   result.err(new NatError({ kind, context }));
@@ -27,8 +31,7 @@ export const isNatError = <K extends NatErrorKind>(
   error: unknown,
   kind?: K,
 ): error is NatError<K> => {
-  const isNatErr =
-    typeof error === 'object' && error !== null && NatErrorBrand in error;
+  const isNatErr = typeof error === 'object' && error !== null && NatErrorBrand in error;
 
   if (kind === undefined) return isNatErr;
   return isNatErr && (error as NatError<K>)?.kind === kind;
@@ -42,8 +45,7 @@ export const isNatErrorOf = <const K extends readonly NatErrorKind[]>(
   error: unknown,
   kinds: K,
 ): error is NatErrorUnion<K> => {
-  const isNatErr =
-    typeof error === 'object' && error !== null && NatErrorBrand in error;
+  const isNatErr = typeof error === 'object' && error !== null && NatErrorBrand in error;
 
   if (!isNatErr) return false;
   return kinds.includes((error as NatError<any>).kind);

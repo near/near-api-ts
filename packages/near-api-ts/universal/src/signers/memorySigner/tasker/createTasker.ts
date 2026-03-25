@@ -1,5 +1,10 @@
 import type { Result } from '../../../../types/_common/common';
-import type { ActiveTasks, CompleteTask, CreateTasker, WaitForTask } from '../../../../types/signers/memorySigner/inner/tasker';
+import type {
+  ActiveTasks,
+  CompleteTask,
+  CreateTasker,
+  WaitForTask,
+} from '../../../../types/signers/memorySigner/inner/tasker';
 import type { TaskId } from '../../../../types/signers/memorySigner/inner/taskQueue';
 import { createExecuteTask } from './executeTask/executeTask';
 
@@ -7,9 +12,7 @@ export const createTasker: CreateTasker = (signerContext) => {
   const activeTasks: ActiveTasks = {};
 
   // It returns Promise which callback will resolve, stored in the state
-  const waitForTask: WaitForTask = <T, E>(
-    taskId: TaskId,
-  ): Promise<Result<T, E>> =>
+  const waitForTask: WaitForTask = <T, E>(taskId: TaskId): Promise<Result<T, E>> =>
     new Promise((resolve) => {
       activeTasks[taskId] = (taskResult: Result<T, E>) => {
         resolve(taskResult);

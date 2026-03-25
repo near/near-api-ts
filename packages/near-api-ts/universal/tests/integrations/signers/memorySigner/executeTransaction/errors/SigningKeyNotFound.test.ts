@@ -1,7 +1,17 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it, vi } from 'vitest';
 import * as z from 'zod/mini';
-import { addFunctionCallKey, type Client, createAccount, createMemoryKeyService, createMemorySignerFactory, type MemoryKeyService, type MemorySignerFactory, randomEd25519KeyPair, transfer } from '../../../../../../index';
+import {
+  addFunctionCallKey,
+  type Client,
+  createAccount,
+  createMemoryKeyService,
+  createMemorySignerFactory,
+  type MemoryKeyService,
+  type MemorySignerFactory,
+  randomEd25519KeyPair,
+  transfer,
+} from '../../../../../../index';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
@@ -20,10 +30,7 @@ describe('MemorySigner.ExecuteTransaction', async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
     keyService = createMemoryKeyService({
-      keySources: [
-        { privateKey: DEFAULT_PRIVATE_KEY },
-        { privateKey: keyPair1.privateKey },
-      ],
+      keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, { privateKey: keyPair1.privateKey }],
     });
     createSigner = createMemorySignerFactory({ client, keyService });
     return () => sandbox.stop();
@@ -61,9 +68,6 @@ describe('MemorySigner.ExecuteTransaction', async () => {
         receiverAccountId: 'nat',
       },
     });
-    assertNatErrKind(
-      tx2,
-      'MemorySigner.ExecuteTransaction.KeyPool.SigningKey.NotFound',
-    );
+    assertNatErrKind(tx2, 'MemorySigner.ExecuteTransaction.KeyPool.SigningKey.NotFound');
   });
 });

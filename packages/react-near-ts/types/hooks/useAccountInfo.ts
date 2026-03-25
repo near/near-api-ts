@@ -1,11 +1,11 @@
+import type { UseQueryResult } from '@tanstack/react-query';
 import type {
   AccountId,
-  GetAccountInfoOutput,
-  GetAccountInfoError,
   BlockReference,
+  GetAccountInfoError,
+  GetAccountInfoOutput,
   PartialTransportPolicy,
 } from 'near-api-ts';
-import type { UseQueryResult } from '@tanstack/react-query';
 
 type UseAccountInfoArgs = {
   accountId?: AccountId;

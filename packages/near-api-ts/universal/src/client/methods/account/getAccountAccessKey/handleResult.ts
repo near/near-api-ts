@@ -1,6 +1,6 @@
 import { AccessKeyViewSchema } from '@near-js/jsonrpc-types';
-import type { GetAccountAccessKeyArgs } from '../../../../../types/client/methods/account/getAccountAccessKey';
 import * as z from 'zod/mini';
+import type { GetAccountAccessKeyArgs } from '../../../../../types/client/methods/account/getAccountAccessKey';
 import { createNatError } from '../../../../_common/natError';
 import type { RpcResponse } from '../../../../_common/schemas/zod/rpc';
 import { result } from '../../../../_common/utils/result';
@@ -21,22 +21,15 @@ const RpcQueryViewAccessKeyOkResultSchema = z.object({
   ...AccessKeyViewSchema().shape,
 });
 
-export type RpcQueryViewAccessKeyOkResult = z.infer<
-  typeof RpcQueryViewAccessKeyOkResultSchema
->;
+export type RpcQueryViewAccessKeyOkResult = z.infer<typeof RpcQueryViewAccessKeyOkResultSchema>;
 
 const RpcQueryViewAccessKeyResultSchema = z.union([
   RpcQueryViewAccessKeyOkResultSchema,
   UnknownKeySchema,
 ]);
 
-export const handleResult = (
-  rpcResponse: RpcResponse,
-  args: GetAccountAccessKeyArgs,
-) => {
-  const rpcResult = RpcQueryViewAccessKeyResultSchema.safeParse(
-    rpcResponse.result,
-  );
+export const handleResult = (rpcResponse: RpcResponse, args: GetAccountAccessKeyArgs) => {
+  const rpcResult = RpcQueryViewAccessKeyResultSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)
     return result.err(

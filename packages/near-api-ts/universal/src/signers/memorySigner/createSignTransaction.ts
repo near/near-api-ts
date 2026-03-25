@@ -22,9 +22,7 @@ export const createSafeSignTransaction: CreateSafeSignTransaction = (context) =>
         }),
       );
 
-    const signedTransaction = await context.taskQueue.addSignTransactionTask(
-      args.intent,
-    );
+    const signedTransaction = await context.taskQueue.addSignTransactionTask(args.intent);
 
     if (signedTransaction.ok) return signedTransaction;
 

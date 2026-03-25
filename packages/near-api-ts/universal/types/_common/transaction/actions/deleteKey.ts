@@ -25,9 +25,7 @@ export type SafeCreateDeleteKeyAction = (
   args: CreateDeleteKeyActionArgs,
 ) => Result<DeleteKeyAction, CreateDeleteKeyActionError>;
 
-export type CreateDeleteKeyAction = (
-  args: CreateDeleteKeyActionArgs,
-) => DeleteKeyAction;
+export type CreateDeleteKeyAction = (args: CreateDeleteKeyActionArgs) => DeleteKeyAction;
 
 // ****** NATIVE ********
 

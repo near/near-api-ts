@@ -10,9 +10,7 @@ const FindKeyPairArgsSchema = z.object({
   publicKey: PublicKeySchema,
 });
 
-export const createSafeFindKeyPair = (
-  context: MemoryKeyServiceContext,
-): SafeFindKeyPair =>
+export const createSafeFindKeyPair = (context: MemoryKeyServiceContext): SafeFindKeyPair =>
   wrapInternalError('MemoryKeyService.FindKeyPair.Internal', (args) => {
     const validArgs = FindKeyPairArgsSchema.safeParse(args);
 

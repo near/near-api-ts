@@ -1,14 +1,14 @@
+import { sha256 } from '@noble/hashes/sha2';
 import * as z from 'zod/mini';
 import type { SafeVerifyMessage, VerifyMessage } from '../../../types/_common/message';
-import { SignedMessageSchema, MessageSchema } from '../../_common/schemas/zod/message';
 import type { SafeGetAccountAccessKeys } from '../../../types/client/methods/account/getAccountAccessKeys';
-import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 import { resultNatError } from '../../_common/natError';
+import { MessageSchema, SignedMessageSchema } from '../../_common/schemas/zod/message';
 import { toBorshNep413Message } from '../../_common/transformers/toBorshBytes/message';
-import { sha256 } from '@noble/hashes/sha2';
-import { verifySignature } from '../verifySignature';
-import { result } from '../../_common/utils/result';
 import { asThrowable } from '../../_common/utils/asThrowable';
+import { result } from '../../_common/utils/result';
+import { wrapInternalError } from '../../_common/utils/wrapInternalError';
+import { verifySignature } from '../verifySignature';
 
 export const VerifyMessageArgsSchema = z.object({
   signedMessage: SignedMessageSchema,

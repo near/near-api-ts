@@ -1,5 +1,5 @@
-import { test } from 'vitest';
 import { serialize } from 'borsh';
+import { test } from 'vitest';
 
 const TestSchema = {
   struct: {

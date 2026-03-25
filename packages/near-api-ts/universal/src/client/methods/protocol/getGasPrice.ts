@@ -1,6 +1,10 @@
 import { RpcGasPriceResponseSchema } from '@near-js/jsonrpc-types';
 import type { BlockHash, BlockHeight } from '../../../../types/_common/common';
-import type { CreateGetGasPrice, GetGasPriceArgs, GetGasPriceResult } from '../../../../types/client/methods/protocol/getGasPrice';
+import type {
+  CreateGetGasPrice,
+  GetGasPriceArgs,
+  GetGasPriceResult,
+} from '../../../../types/client/methods/protocol/getGasPrice';
 import { throwableYoctoNear } from '../../../helpers/tokens/nearToken';
 
 const transformResult = (result: unknown): GetGasPriceResult => {
@@ -17,9 +21,7 @@ const transformResult = (result: unknown): GetGasPriceResult => {
 //   }),
 // );
 
-const getBlockId = (
-  atMomentOf?: GetGasPriceArgs['atMomentOf'],
-): BlockHeight | BlockHash | null => {
+const getBlockId = (atMomentOf?: GetGasPriceArgs['atMomentOf']): BlockHeight | BlockHash | null => {
   if (atMomentOf === 'LatestOptimisticBlock') return null;
   if (atMomentOf && 'blockHash' in atMomentOf) return atMomentOf.blockHash;
   if (atMomentOf && 'blockHeight' in atMomentOf) return atMomentOf.blockHeight;

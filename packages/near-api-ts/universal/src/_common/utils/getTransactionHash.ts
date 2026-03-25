@@ -9,9 +9,7 @@ type GetTransactionHashOutput = {
   u8TransactionHash: Uint8Array;
 };
 
-export const getTransactionHash = (
-  transaction: InnerTransaction,
-): GetTransactionHashOutput => {
+export const getTransactionHash = (transaction: InnerTransaction): GetTransactionHashOutput => {
   const transactionBorshBytes = toBorshTransaction(transaction);
   const u8TransactionHash = sha256(transactionBorshBytes);
   return {

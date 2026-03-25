@@ -17,6 +17,4 @@ export type SafeCreateMemoryKeyService = (
   args: CreateMemoryKeyServiceArgs,
 ) => Result<MemoryKeyService, CreateMemoryKeyServiceError>;
 
-export type CreateMemoryKeyService = (
-  args: CreateMemoryKeyServiceArgs,
-) => MemoryKeyService;
+export type CreateMemoryKeyService = (args: CreateMemoryKeyServiceArgs) => MemoryKeyService;

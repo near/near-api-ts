@@ -1,5 +1,5 @@
-import type { NearToken } from '../../../../../../types/_common/nearToken';
 import { yoctoNear } from '../../../../../../index';
+import type { NearToken } from '../../../../../../types/_common/nearToken';
 import type { RpcQueryViewAccountResult } from './handleResult';
 
 /**
@@ -76,9 +76,7 @@ export const calculateAccountBalance = (
   const storageDeposit = yoctoNear(
     storagePricePerByte.yoctoNear * BigInt(accountInfo.storageUsage),
   );
-  const lockedAmount = validatorStake.gt(storageDeposit)
-    ? validatorStake
-    : storageDeposit;
+  const lockedAmount = validatorStake.gt(storageDeposit) ? validatorStake : storageDeposit;
 
   return {
     total,

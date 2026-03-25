@@ -17,8 +17,6 @@ type CreateClientError =
   | NatError<'CreateClient.Args.InvalidSchema'>
   | NatError<'CreateClient.Internal'>;
 
-export type SafeCreateClient = (
-  args: CreateClientArgs,
-) => Result<Client, CreateClientError>;
+export type SafeCreateClient = (args: CreateClientArgs) => Result<Client, CreateClientError>;
 
 export type CreateClient = (args: CreateClientArgs) => Client;

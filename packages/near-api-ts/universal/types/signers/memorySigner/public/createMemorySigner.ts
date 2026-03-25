@@ -1,9 +1,9 @@
 import type { NatError } from '../../../../src/_common/natError';
 import type { AccountId, Milliseconds, Result } from '../../../_common/common';
 import type { PublicKey } from '../../../_common/crypto';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { Client } from '../../../client/client';
 import type { MemoryKeyService } from '../../../keyServices/memoryKeyService/memoryKeyService';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { MemorySigner } from '../memorySigner';
 
 export interface CreateMemorySignerPublicErrorRegistry {

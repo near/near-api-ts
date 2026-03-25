@@ -15,10 +15,6 @@ type GetProtocolConfigArgs = {
 
 export type GetProtocolConfigResult = TemporaryProtocolConfig;
 
-export type GetProtocolConfig = (
-  args?: GetProtocolConfigArgs,
-) => Promise<GetProtocolConfigResult>;
+export type GetProtocolConfig = (args?: GetProtocolConfigArgs) => Promise<GetProtocolConfigResult>;
 
-export type CreateGetProtocolConfig = (
-  clientContext: ClientContext,
-) => GetProtocolConfig;
+export type CreateGetProtocolConfig = (clientContext: ClientContext) => GetProtocolConfig;

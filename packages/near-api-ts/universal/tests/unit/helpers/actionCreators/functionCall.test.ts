@@ -44,8 +44,7 @@ describe('Create FunctionCall action - ok', () => {
       gasLimit: teraGas('10'),
       functionArgs: { a: 1n },
       options: {
-        serializeArgs: (args) =>
-          Uint8Array.from([args.functionArgs.a.toString()]),
+        serializeArgs: (args) => Uint8Array.from([args.functionArgs.a.toString()]),
       },
     });
     expect(res.functionName).toBe('create');
@@ -92,10 +91,7 @@ describe('Create FunctionCall action - errors', () => {
         serializeArgs: () => 1,
       },
     });
-    assertNatErrKind(
-      res,
-      'CreateAction.FunctionCall.SerializeArgs.InvalidOutput',
-    );
+    assertNatErrKind(res, 'CreateAction.FunctionCall.SerializeArgs.InvalidOutput');
   });
 
   it('CustomSerializer.Failed', () => {
@@ -109,9 +105,6 @@ describe('Create FunctionCall action - errors', () => {
         },
       },
     });
-    assertNatErrKind(
-      res,
-      'CreateAction.FunctionCall.SerializeArgs.Failed',
-    );
+    assertNatErrKind(res, 'CreateAction.FunctionCall.SerializeArgs.Failed');
   });
 });

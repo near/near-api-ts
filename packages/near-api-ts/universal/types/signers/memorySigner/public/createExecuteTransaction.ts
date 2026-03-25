@@ -1,11 +1,16 @@
 import type { NatError } from '../../../../src/_common/natError';
-import type { TransactionErrorContext } from '../../../_common/transaction/rpcTransactionErrorContext';
-import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '../../../client/transport/sendRequest';
-import type { MemorySignerErrorContext } from '../_common/errorContext';
 import type { Result } from '../../../_common/common';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
+import type { TransactionErrorContext } from '../../../_common/transaction/rpcTransactionErrorContext';
 import type { TransactionIntent } from '../../../_common/transaction/transaction';
 import type { SendSignedTransactionOutput } from '../../../client/methods/transaction/sendSignedTransaction';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
+import type {
+  AbortedErrorContext,
+  ExhaustedErrorContext,
+  PreferredRpcNotFoundErrorContext,
+  TimeoutErrorContext,
+} from '../../../client/transport/sendRequest';
+import type { MemorySignerErrorContext } from '../_common/errorContext';
 import type { MemorySignerContext } from '../memorySigner';
 
 export interface ExecuteTransactionPublicErrorRegistry {
@@ -67,6 +72,4 @@ export type ExecuteTransaction = (
   args: ExecuteTransactionArgs,
 ) => Promise<SendSignedTransactionOutput>;
 
-export type CreateSafeExecuteTransaction = (
-  context: MemorySignerContext,
-) => SafeExecuteTransaction;
+export type CreateSafeExecuteTransaction = (context: MemorySignerContext) => SafeExecuteTransaction;

@@ -5,9 +5,7 @@ import { result } from '../../../../../_common/utils/result';
 import { handleInvalidTransaction } from './handleInvalidTransaction';
 
 export const handleError = (rpcResponse: RpcResponse) => {
-  const rpcError = ErrorWrapperFor_RpcTransactionErrorSchema().safeParse(
-    rpcResponse.error,
-  );
+  const rpcError = ErrorWrapperFor_RpcTransactionErrorSchema().safeParse(rpcResponse.error);
 
   if (!rpcError.success)
     return result.err(
@@ -33,8 +31,7 @@ export const handleError = (rpcResponse: RpcResponse) => {
         }),
       );
 
-    if (cause.name === 'INVALID_TRANSACTION')
-      return handleInvalidTransaction(rpcResponse);
+    if (cause.name === 'INVALID_TRANSACTION') return handleInvalidTransaction(rpcResponse);
   }
 
   // Stub

@@ -1,20 +1,27 @@
 import type {
-  InnerUseNearConnectArgs
-} from '../../../../types/hooks/nearConnector/useNearConnect/useNearConnect.ts';
-import type { StoreContext, SetSigners, SetConnectedAccountId } from '../../../../types/store.ts';
-import { useMutation } from '@tanstack/react-query';
-import { NearConnectorServiceSchema } from '../_common.ts';
-import {
-  type Message, type SignedMessage, AccountIdSchema, PublicKeySchema, Base64StringSchema, constants,
-  type Curve, toEd25519CurveString, toSecp256k1CurveString
-} from 'near-api-ts';
-import type {
-  EventMap, SignedMessage as NearConnectSignedMessage
+  EventMap,
+  SignedMessage as NearConnectSignedMessage,
 } from '@hot-labs/near-connect/build/types';
+import { useMutation } from '@tanstack/react-query';
+import {
+  AccountIdSchema,
+  Base64StringSchema,
+  type Curve,
+  constants,
+  type Message,
+  PublicKeySchema,
+  type SignedMessage,
+  toEd25519CurveString,
+  toSecp256k1CurveString,
+} from 'near-api-ts';
 import * as z from 'zod/mini';
+import type { InnerUseNearConnectArgs } from '../../../../types/hooks/nearConnector/useNearConnect/useNearConnect.ts';
 import type {
-  WithSignMessageOutput, Variables
+  Variables,
+  WithSignMessageOutput,
 } from '../../../../types/hooks/nearConnector/useNearConnect/withSignMessage.ts';
+import type { SetConnectedAccountId, SetSigners, StoreContext } from '../../../../types/store.ts';
+import { NearConnectorServiceSchema } from '../_common.ts';
 
 export const createNep413MessageSignatureSchema = (curve: Curve) =>
   z

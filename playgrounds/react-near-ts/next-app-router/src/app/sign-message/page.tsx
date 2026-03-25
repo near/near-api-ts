@@ -1,7 +1,13 @@
 'use client';
 
-import { Card, Button, Stack, Text, Title } from '@mantine/core';
-import { useConnectedAccount, useSignMessage, createMessage, verifyMessage, createTestnetClient } from 'react-near-ts';
+import { Button, Card, Stack, Text, Title } from '@mantine/core';
+import {
+  createMessage,
+  createTestnetClient,
+  useConnectedAccount,
+  useSignMessage,
+  verifyMessage,
+} from 'react-near-ts';
 
 /*
 {

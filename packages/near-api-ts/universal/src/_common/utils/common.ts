@@ -5,13 +5,9 @@
 export const oneLine = (msg: string): string => msg.replace(/\s+/g, ' ').trim();
 
 export const isNodeJs =
-  typeof process !== 'undefined' &&
-  process.versions != null &&
-  process.versions.node != null;
+  typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
 
-export const nodeInspectSymbol = isNodeJs
-  ? Symbol.for('nodejs.util.inspect.custom')
-  : undefined;
+export const nodeInspectSymbol = isNodeJs ? Symbol.for('nodejs.util.inspect.custom') : undefined;
 
 export const toJsonBytes = (value: unknown): Uint8Array =>
   new TextEncoder().encode(JSON.stringify(value));
@@ -26,9 +22,7 @@ export const fromJsonBytes = (bytes: Uint8Array | number[]): unknown => {
  * The output signal will be aborted as soon as any of the input signals is aborted.
  * The output signal reason will be taken from the first aborted input signal.
  */
-export const combineAbortSignals = (
-  signals: (AbortSignal | undefined)[],
-): AbortSignal =>
+export const combineAbortSignals = (signals: (AbortSignal | undefined)[]): AbortSignal =>
   AbortSignal.any(signals.filter((signal) => typeof signal !== 'undefined'));
 
 /**

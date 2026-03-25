@@ -1,8 +1,8 @@
 'use client';
 
-import { Group, Card } from '@mantine/core';
-import { usePathname } from 'next/navigation';
+import { Card, Group } from '@mantine/core';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import cn from './Navigation.module.css';
 
 const items = [
@@ -23,9 +23,7 @@ export const Navigation = () => {
           return (
             <div
               key={it.href}
-              className={
-                active ? cn.activeLinkContainer : cn.inactiveLinkContainer
-              }
+              className={active ? cn.activeLinkContainer : cn.inactiveLinkContainer}
             >
               <Link href={it.href}>{it.label}</Link>
             </div>

@@ -1,9 +1,21 @@
-import type { NatError } from '../../../../src/_common/natError';
-import type { MemorySignerErrorContext } from '../_common/errorContext';
 import type { UUID } from 'crypto';
-import type { AccountId, ContractFunctionName, Milliseconds, Result, TimeoutId } from '../../../_common/common';
-import type { SignedTransaction, TransactionIntent } from '../../../_common/transaction/transaction';
-import type { SendSignedTransactionError, SendSignedTransactionOutput } from '../../../client/methods/transaction/sendSignedTransaction';
+import type { NatError } from '../../../../src/_common/natError';
+import type {
+  AccountId,
+  ContractFunctionName,
+  Milliseconds,
+  Result,
+  TimeoutId,
+} from '../../../_common/common';
+import type {
+  SignedTransaction,
+  TransactionIntent,
+} from '../../../_common/transaction/transaction';
+import type {
+  SendSignedTransactionError,
+  SendSignedTransactionOutput,
+} from '../../../client/methods/transaction/sendSignedTransaction';
+import type { MemorySignerErrorContext } from '../_common/errorContext';
 import type { MemorySignerContext } from '../memorySigner';
 import type { CreateMemorySignerArgs } from '../public/createMemorySigner';
 import type { PoolKey } from './keyPool';
@@ -84,9 +96,7 @@ export type AddSignTransactionTask = (
   intent: TransactionIntent,
 ) => Promise<Result<SignedTransaction, SignTransactionTaskError>>;
 
-export type CreateAddSignTransactionTask = (
-  context: TaskQueueContext,
-) => AddSignTransactionTask;
+export type CreateAddSignTransactionTask = (context: TaskQueueContext) => AddSignTransactionTask;
 
 export type FindTaskForKey = (key: PoolKey) => Task | undefined;
 

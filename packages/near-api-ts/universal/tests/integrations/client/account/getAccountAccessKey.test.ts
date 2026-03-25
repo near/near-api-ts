@@ -46,10 +46,7 @@ describe('Get Account Access Key', () => {
       accountId: 'nat-non-found',
       publicKey: 'ed25519:5BGSaf6YjVm7565VzWQHNxoyEjwr3jUpRJSGjREvU9dB',
     });
-    assertNatErrKind(
-      res,
-      'Client.GetAccountAccessKey.Rpc.AccountAccessKey.NotFound',
-    );
+    assertNatErrKind(res, 'Client.GetAccountAccessKey.Rpc.AccountAccessKey.NotFound');
   });
 
   it('Non-existing access key', async () => {
@@ -57,9 +54,6 @@ describe('Get Account Access Key', () => {
       accountId: 'nat',
       publicKey: 'ed25519:5BGSaf6YjVm7565VzWQHNxoyEjwr3jUpRJSGjREvU9d',
     });
-    assertNatErrKind(
-      res,
-      'Client.GetAccountAccessKey.Rpc.AccountAccessKey.NotFound',
-    );
+    assertNatErrKind(res, 'Client.GetAccountAccessKey.Rpc.AccountAccessKey.NotFound');
   });
 });

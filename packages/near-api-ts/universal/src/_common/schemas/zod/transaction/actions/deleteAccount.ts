@@ -6,6 +6,4 @@ export const DeleteAccountActionSchema = z.object({
   beneficiaryAccountId: AccountIdSchema,
 });
 
-export type InnerDeleteAccountAction = z.infer<
-  typeof DeleteAccountActionSchema
->;
+export type InnerDeleteAccountAction = z.infer<typeof DeleteAccountActionSchema>;

@@ -1,20 +1,20 @@
 'use client';
+
+// near-api-ts reexports
+export * from 'near-api-ts';
+export { useNearConnect } from './hooks/nearConnector/useNearConnect/useNearConnect.ts';
+export { useNearDisconnect } from './hooks/nearConnector/useNearDisconnect.ts';
 // Lib
 export { useAccountInfo } from './hooks/useAccountInfo.ts';
 export { useConnectedAccount } from './hooks/useConnectedAccount.ts';
 export { useContractReadFunction } from './hooks/useContractReadFunction.ts';
 export { useExecuteTransaction } from './hooks/useExecuteTransaction.ts';
 export { useSignMessage } from './hooks/useSignMessage.ts';
-export { useNearConnect } from './hooks/nearConnector/useNearConnect/useNearConnect.ts';
-export { useNearDisconnect } from './hooks/nearConnector/useNearDisconnect.ts';
 export { MainnetNearProvider } from './providers/MainnetNearProvider.tsx';
 export { NearProvider } from './providers/NearProvider.tsx';
 export { TestnetNearProvider } from './providers/TestnetNearProdiver.tsx';
-export { createNearStore } from './store/nearStore.ts';
 export { createNearConnectorService } from './services/nearConnector/nearConnector.ts';
-
-// near-api-ts reexports
-export * from 'near-api-ts';
+export { createNearStore } from './store/nearStore.ts';
 
 // export {
 //   createTestnetClient,

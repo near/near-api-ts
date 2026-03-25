@@ -12,7 +12,7 @@ import { createSafeGetAccountInfo } from './methods/account/getAccountInfo/getAc
 import { createSafeGetBlock } from './methods/block/getBlock/getBlock';
 import { createSafeCallContractReadFunction } from './methods/contract/callContractReadFunction/callContractReadFunction';
 import { createSafeSendSignedTransaction } from './methods/transaction/sendSignedTransaction/sendSignedTransaction';
-import { createTransport, CreateTransportArgsSchema } from './transport/createTransport';
+import { CreateTransportArgsSchema, createTransport } from './transport/createTransport';
 
 export const ClientBrand = Symbol('Client');
 
@@ -47,8 +47,7 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
     const safeGetAccountInfo = createSafeGetAccountInfo(context);
     const safeGetAccountAccessKey = createSafeGetAccountAccessKey(context);
     const safeGetAccountAccessKeys = createSafeGetAccountAccessKeys(context);
-    const safeCallContractReadFunction =
-      createSafeCallContractReadFunction(context);
+    const safeCallContractReadFunction = createSafeCallContractReadFunction(context);
     const safeGetBlock = createSafeGetBlock(context);
     const safeSendSignedTransaction = createSafeSendSignedTransaction(context);
 
@@ -57,9 +56,7 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
       getAccountInfo: asThrowable(safeGetAccountInfo),
       getAccountAccessKey: asThrowable(safeGetAccountAccessKey),
       getAccountAccessKeys: asThrowable(safeGetAccountAccessKeys),
-      callContractReadFunction: asThrowable(
-        safeCallContractReadFunction as any,
-      ) as any, // TODO Fix: asThrowable doesn't work fine with overloads
+      callContractReadFunction: asThrowable(safeCallContractReadFunction as any) as any, // TODO Fix: asThrowable doesn't work fine with overloads
       getBlock: asThrowable(safeGetBlock),
       getRecentBlockHash: asThrowable(cache.getRecentBlockHash),
       sendSignedTransaction: asThrowable(safeSendSignedTransaction),
@@ -74,5 +71,4 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
   },
 );
 
-export const throwableCreateClient: CreateClient =
-  asThrowable(safeCreateClient);
+export const throwableCreateClient: CreateClient = asThrowable(safeCreateClient);

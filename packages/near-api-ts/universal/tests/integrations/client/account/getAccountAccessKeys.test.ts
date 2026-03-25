@@ -47,8 +47,7 @@ describe('Get Account Access Keys', () => {
 
     expect(
       isNatError(res.error, 'Client.GetAccountAccessKeys.Exhausted') &&
-        res.error.context.lastError.kind ===
-          'SendRequest.Attempt.Request.FetchFailed',
+        res.error.context.lastError.kind === 'SendRequest.Attempt.Request.FetchFailed',
     ).toBe(true);
   });
 

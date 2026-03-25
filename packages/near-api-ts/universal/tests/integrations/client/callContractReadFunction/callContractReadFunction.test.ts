@@ -1,4 +1,3 @@
-import { toJsonBytes } from '../../../../src/_common/utils/common';
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import {
@@ -11,6 +10,7 @@ import {
   near,
   transfer,
 } from '../../../../index';
+import { toJsonBytes } from '../../../../src/_common/utils/common';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 import { createDefaultClient, getFileBytes } from '../../../utils/common';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';

@@ -5,8 +5,8 @@ import {
   type Client,
   createMemoryKeyService,
   createMemorySigner,
-  transfer,
   randomSecp256k1KeyPair,
+  transfer,
 } from '../../../../../../index';
 import { createDefaultClient, log } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';

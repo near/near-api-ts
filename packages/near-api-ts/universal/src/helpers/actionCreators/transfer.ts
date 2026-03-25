@@ -1,5 +1,8 @@
 import * as z from 'zod/mini';
-import type { CreateTransferAction, SafeCreateTransferAction } from '../../../types/_common/transaction/actions/transfer';
+import type {
+  CreateTransferAction,
+  SafeCreateTransferAction,
+} from '../../../types/_common/transaction/actions/transfer';
 import { createNatError } from '../../_common/natError';
 import { NearTokenArgsSchema } from '../../_common/schemas/zod/common/nearToken';
 import { asThrowable } from '../../_common/utils/asThrowable';
@@ -30,5 +33,4 @@ export const safeTransfer: SafeCreateTransferAction = wrapInternalError(
   },
 );
 
-export const throwableTransfer: CreateTransferAction =
-  asThrowable(safeTransfer);
+export const throwableTransfer: CreateTransferAction = asThrowable(safeTransfer);

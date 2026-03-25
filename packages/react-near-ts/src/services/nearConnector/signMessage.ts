@@ -1,7 +1,13 @@
+import {
+  AccountIdSchema,
+  Base64StringSchema,
+  PublicKeySchema,
+  toEd25519CurveString,
+  toSecp256k1CurveString,
+} from 'near-api-ts';
+import * as z from 'zod/mini';
 import type { CreateSafeSignMessage } from '../../../types/services/nearConnect.ts';
 import { result } from '../../_common/utils/result.ts';
-import { AccountIdSchema, PublicKeySchema, toEd25519CurveString, toSecp256k1CurveString, Base64StringSchema } from 'near-api-ts';
-import * as z from 'zod/mini';
 
 const NearConnectSignedMessageSchema = z.object({
   accountId: AccountIdSchema,

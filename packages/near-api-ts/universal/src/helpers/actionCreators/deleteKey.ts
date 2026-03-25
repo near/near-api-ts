@@ -1,5 +1,8 @@
 import * as z from 'zod/mini';
-import type { CreateDeleteKeyAction, SafeCreateDeleteKeyAction } from '../../../types/_common/transaction/actions/deleteKey';
+import type {
+  CreateDeleteKeyAction,
+  SafeCreateDeleteKeyAction,
+} from '../../../types/_common/transaction/actions/deleteKey';
 import { createNatError } from '../../_common/natError';
 import { PublicKeySchema } from '../../_common/schemas/zod/common/publicKey';
 import { asThrowable } from '../../_common/utils/asThrowable';
@@ -30,5 +33,4 @@ export const safeDeleteKey: SafeCreateDeleteKeyAction = wrapInternalError(
   },
 );
 
-export const throwableDeleteKey: CreateDeleteKeyAction =
-  asThrowable(safeDeleteKey);
+export const throwableDeleteKey: CreateDeleteKeyAction = asThrowable(safeDeleteKey);

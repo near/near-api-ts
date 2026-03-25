@@ -1,6 +1,15 @@
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, it, vi } from 'vitest';
-import { addFullAccessKey, type Client, createAccount, createMemoryKeyService, deployContract, functionCall, type MemoryKeyService, transfer } from '../../../../index';
+import {
+  addFullAccessKey,
+  type Client,
+  createAccount,
+  createMemoryKeyService,
+  deployContract,
+  functionCall,
+  type MemoryKeyService,
+  transfer,
+} from '../../../../index';
 import { createDefaultClient, getFileBytes, log } from '../../../utils/common';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
 import { testKeys } from '../../../utils/testKeys';

@@ -1,10 +1,10 @@
-import { test, expect } from 'vitest';
-import { createMemoryKeyService, verifySignature, randomEd25519KeyPair } from '../../../../index';
-import { getTransactionHash } from '../../../../src/_common/utils/getTransactionHash';
+import { expect, test } from 'vitest';
+import { createMemoryKeyService, randomEd25519KeyPair, verifySignature } from '../../../../index';
 import { TransactionSchema } from '../../../../src/_common/schemas/zod/transaction/transaction';
+import { getTransactionHash } from '../../../../src/_common/utils/getTransactionHash';
 
 test('ed25519 transaction verification', async () => {
-  const keyPair = randomEd25519KeyPair()
+  const keyPair = randomEd25519KeyPair();
   const keyService = createMemoryKeyService({ keySource: keyPair });
 
   const signedTransaction = await keyService.signTransaction({

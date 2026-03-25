@@ -1,8 +1,24 @@
 import type { InspectOptionsStylized } from 'node:util';
 import type { Result } from '../../types/_common/common';
-import type { CreateNearGas, CreateNearGasError, CreateNearGasFromGas, CreateNearGasFromTeraGas, Gas, NearGas, NearGasMethodArgs, SafeCreateNearGas, SafeCreateNearGasFromGas, SafeCreateNearGasFromTeraGas, TeraGas } from '../../types/_common/nearGas';
+import type {
+  CreateNearGas,
+  CreateNearGasError,
+  CreateNearGasFromGas,
+  CreateNearGasFromTeraGas,
+  Gas,
+  NearGas,
+  NearGasMethodArgs,
+  SafeCreateNearGas,
+  SafeCreateNearGasFromGas,
+  SafeCreateNearGasFromTeraGas,
+  TeraGas,
+} from '../../types/_common/nearGas';
 import { createNatError } from '../_common/natError';
-import { GasInputSchema, NearGasArgsSchema, TeraGasInputSchema } from '../_common/schemas/zod/common/nearGas';
+import {
+  GasInputSchema,
+  NearGasArgsSchema,
+  TeraGasInputSchema,
+} from '../_common/schemas/zod/common/nearGas';
 import { asThrowable } from '../_common/utils/asThrowable';
 import { nodeInspectSymbol } from '../_common/utils/common';
 import { result } from '../_common/utils/result';
@@ -112,11 +128,7 @@ const nearGasProto: ThisType<NearGas> = {
   // This does not work in the browser — there you can only see a getter’s value
   // by explicitly expanding/clicking on it.
   ...(nodeInspectSymbol && {
-    [nodeInspectSymbol as symbol](
-      this: NearGas,
-      _depth: number,
-      _opts: InspectOptionsStylized,
-    ) {
+    [nodeInspectSymbol as symbol](this: NearGas, _depth: number, _opts: InspectOptionsStylized) {
       return { teraGas: this.teraGas, gas: this.gas };
     },
   }),
@@ -176,8 +188,7 @@ export const safeTeraGas: SafeCreateNearGasFromTeraGas = wrapInternalError(
   },
 );
 
-export const throwableTeraGas: CreateNearGasFromTeraGas =
-  asThrowable(safeTeraGas);
+export const throwableTeraGas: CreateNearGasFromTeraGas = asThrowable(safeTeraGas);
 
 // NearGas
 

@@ -1,4 +1,4 @@
-import type { TransactionIntent, AccountId, Client, Message, SignedMessage } from 'near-api-ts';
+import type { AccountId, Client, Message, SignedMessage, TransactionIntent } from 'near-api-ts';
 import type { Result } from '../_common.ts';
 
 // ------------------------------------------------------------------------------------------------

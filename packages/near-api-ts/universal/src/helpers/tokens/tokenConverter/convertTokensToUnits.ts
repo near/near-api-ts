@@ -10,10 +10,7 @@ import { pow10 } from './helpers';
  * @param decimals      Fractional digits count (1..100)
  * @returns             Positive integer string in minimal units
  */
-export const convertTokensToUnits = (
-  tokens: Tokens,
-  decimals: number,
-): bigint => {
+export const convertTokensToUnits = (tokens: Tokens, decimals: number): bigint => {
   // Split integer and fractional parts (fractional may be undefined)
   const [integerPartRaw, fractionalPartRaw = ''] = tokens.split('.');
   const isNegative = integerPartRaw.startsWith('-');
@@ -24,12 +21,8 @@ export const convertTokensToUnits = (
 
   // Convert fractional part: right-pad to exactly `decimals` digits, or zero if empty
   const fractionalUnits =
-    fractionalPartRaw.length > 0
-      ? BigInt(fractionalPartRaw.padEnd(decimals, '0'))
-      : 0n;
+    fractionalPartRaw.length > 0 ? BigInt(fractionalPartRaw.padEnd(decimals, '0')) : 0n;
 
   // Sum and return as an integer string (BigInt.toString() never yields leading zeros)
-  return isNegative
-    ? integerUnits - fractionalUnits
-    : integerUnits + fractionalUnits;
+  return isNegative ? integerUnits - fractionalUnits : integerUnits + fractionalUnits;
 };

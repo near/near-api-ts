@@ -15,10 +15,7 @@ export type HighLevelRpcErrors =
 
 const prefix = 'SendRequest.InnerRpc';
 
-const getErrorKind = ({
-  name,
-  cause,
-}: RpcError): HighLevelRpcErrors['kind'] | undefined => {
+const getErrorKind = ({ name, cause }: RpcError): HighLevelRpcErrors['kind'] | undefined => {
   // Request Validation Errors
   if (name === 'REQUEST_VALIDATION_ERROR') {
     if (cause.name === 'METHOD_NOT_FOUND') return `${prefix}.MethodNotFound`;
@@ -32,8 +29,7 @@ const getErrorKind = ({
     if (cause.name === 'NO_SYNCED_BLOCKS') return `${prefix}.NotSynced`; // 'query'
     if (cause.name === 'NOT_SYNCED_YET') return `${prefix}.NotSynced`; // 'block'
     if (cause.name === 'TIMEOUT_ERROR') return `${prefix}.Transaction.Timeout`; // 'send_tx' / 'tx'
-    if (cause.name === 'GARBAGE_COLLECTED_BLOCK')
-      return `${prefix}.Block.GarbageCollected`; // 'query'
+    if (cause.name === 'GARBAGE_COLLECTED_BLOCK') return `${prefix}.Block.GarbageCollected`; // 'query'
     if (cause.name === 'UNKNOWN_BLOCK') return `${prefix}.Block.NotFound`; // 'query' / 'block'
     if (cause.name === 'INTERNAL_ERROR') return `${prefix}.Internal`; // all
   }

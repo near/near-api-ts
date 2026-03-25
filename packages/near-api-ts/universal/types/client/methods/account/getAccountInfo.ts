@@ -1,12 +1,29 @@
 import type { NatError } from '../../../../src/_common/natError';
 import type { RpcQueryViewAccountResult } from '../../../../src/client/methods/account/getAccountInfo/handleResult/handleResult';
-import type { AbortedErrorContext, ExhaustedErrorContext, PreferredRpcNotFoundErrorContext, TimeoutErrorContext } from '../../transport/sendRequest';
+import type {
+  AccountId,
+  BlockHash,
+  BlockHeight,
+  BlockReference,
+  CryptoHash,
+  Result,
+} from '../../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
-import type { AccountId, BlockHash, BlockHeight, BlockReference, CryptoHash, Result } from '../../../_common/common';
 import type { NearToken } from '../../../_common/nearToken';
 import type { ClientContext } from '../../client';
+import type {
+  AbortedErrorContext,
+  ExhaustedErrorContext,
+  PreferredRpcNotFoundErrorContext,
+  TimeoutErrorContext,
+} from '../../transport/sendRequest';
 import type { PartialTransportPolicy } from '../../transport/transport';
-import type { RpcQueryBlockGarbageCollectedErrorContext, RpcQueryBlockNotFoundErrorContext, RpcQueryNotSyncedErrorContext, RpcQueryShardNotTrackedErrorContext } from '../_common/common';
+import type {
+  RpcQueryBlockGarbageCollectedErrorContext,
+  RpcQueryBlockNotFoundErrorContext,
+  RpcQueryNotSyncedErrorContext,
+  RpcQueryShardNotTrackedErrorContext,
+} from '../_common/common';
 
 export interface GetAccountInfoPublicErrorRegistry {
   'Client.GetAccountInfo.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -80,10 +97,6 @@ export type SafeGetAccountInfo = (
   args: GetAccountInfoArgs,
 ) => Promise<Result<GetAccountInfoOutput, GetAccountInfoError>>;
 
-export type GetAccountInfo = (
-  args: GetAccountInfoArgs,
-) => Promise<GetAccountInfoOutput>;
+export type GetAccountInfo = (args: GetAccountInfoArgs) => Promise<GetAccountInfoOutput>;
 
-export type CreateSafeGetAccountInfo = (
-  clientContext: ClientContext,
-) => SafeGetAccountInfo;
+export type CreateSafeGetAccountInfo = (clientContext: ClientContext) => SafeGetAccountInfo;

@@ -1,4 +1,7 @@
-import type { Task, TaskQueueContext } from '../../../../../../types/signers/memorySigner/inner/taskQueue';
+import type {
+  Task,
+  TaskQueueContext,
+} from '../../../../../../types/signers/memorySigner/inner/taskQueue';
 import { createNatError } from '../../../../../_common/natError';
 import { result } from '../../../../../_common/utils/result';
 
@@ -9,9 +12,7 @@ export const addTask = (task: Task, taskQueueContext: TaskQueueContext) => {
 
   // Cancel the task if it wasn't started before the task timeout
   cleaners[task.taskId] = setTimeout(() => {
-    taskQueueContext.queue = taskQueueContext.queue.filter(
-      ({ taskId }) => taskId !== task.taskId,
-    );
+    taskQueueContext.queue = taskQueueContext.queue.filter(({ taskId }) => taskId !== task.taskId);
     delete cleaners[task.taskId];
 
     signerContext.tasker.completeTask(

@@ -1,8 +1,7 @@
+import { describe, it, vi } from 'vitest';
 import { randomEd25519KeyPair } from '../../../../universal';
 import { log } from '../../../../universal/tests/utils/common';
-
 import { throwableCreateFileKeyService } from '../../../src/fileKeyService/fileKeyService';
-import { describe, it, vi } from 'vitest';
 
 vi.setConfig({ testTimeout: 60000 });
 

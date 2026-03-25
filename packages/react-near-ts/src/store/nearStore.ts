@@ -1,8 +1,8 @@
-import { createStore } from 'zustand/vanilla';
-import { persist } from 'zustand/middleware';
 import type { AccountId } from 'near-api-ts';
-import type { CreateNearStore, StoreContext, NearState } from '../../types/store.ts';
-import type { ServiceId, Service } from '../../types/services/_common.ts';
+import { persist } from 'zustand/middleware';
+import { createStore } from 'zustand/vanilla';
+import type { Service, ServiceId } from '../../types/services/_common.ts';
+import type { CreateNearStore, NearState, StoreContext } from '../../types/store.ts';
 
 export const createNearStore: CreateNearStore = (args) => {
   // TODO Validate args

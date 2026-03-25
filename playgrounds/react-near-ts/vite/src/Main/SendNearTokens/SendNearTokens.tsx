@@ -1,5 +1,5 @@
-import { Title, Text, Button } from '@mantine/core';
-import { useExecuteTransaction, transfer } from 'react-near-ts';
+import { Button, Text, Title } from '@mantine/core';
+import { transfer, useExecuteTransaction } from 'react-near-ts';
 import cn from './SendNearTokens.module.css';
 
 export const SendNearTokens = () => {
@@ -23,10 +23,7 @@ export const SendNearTokens = () => {
       {executeTransaction.isSuccess && (
         <div>
           <Title order={5}>Success!</Title>
-          <Text>
-            Transaction Hash:{' '}
-            {executeTransaction.data.rawRpcResult.transaction.hash}
-          </Text>
+          <Text>Transaction Hash: {executeTransaction.data.rawRpcResult.transaction.hash}</Text>
         </div>
       )}
       {executeTransaction.isError && (

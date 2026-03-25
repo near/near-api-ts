@@ -1,8 +1,8 @@
 import type { NatError } from '../../../../src/_common/natError';
+import type { AllowedFunctions, GasBudget } from '../../accountAccessKey';
 import type { AccountId, ContractFunctionName, Result } from '../../common';
 import type { NativePublicKey, PublicKey } from '../../crypto';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../natError';
-import type { GasBudget, AllowedFunctions } from '../../accountAccessKey';
 
 export interface CreateAddKeyActionPublicErrorRegistry {
   'CreateAction.AddFullAccessKey.Args.InvalidSchema': InvalidSchemaErrorContext;

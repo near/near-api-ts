@@ -1,15 +1,6 @@
 'use client';
 
-import {
-  Card,
-  Group,
-  Loader,
-  Paper,
-  Stack,
-  Text,
-  Title,
-  Space,
-} from '@mantine/core';
+import { Card, Group, Loader, Paper, Space, Stack, Text, Title } from '@mantine/core';
 import { useAccountInfo, useConnectedAccount } from 'react-near-ts';
 
 const AccountInfo = () => {
@@ -21,9 +12,7 @@ const AccountInfo = () => {
       <Card padding="xl" radius="md" withBorder>
         <Stack gap="xs">
           <Title order={3}>Account Info</Title>
-          <Text c="dimmed">
-            Connect your wallet to see balances and storage usage.
-          </Text>
+          <Text c="dimmed">Connect your wallet to see balances and storage usage.</Text>
         </Stack>
       </Card>
     );

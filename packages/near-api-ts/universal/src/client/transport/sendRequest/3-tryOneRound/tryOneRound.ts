@@ -32,17 +32,13 @@ export const tryOneRound = async (
     const sendWithRetryResult = await sendWithRetry(context, rpc);
     const isLastRpc = rpcIndex >= rpcs.length - 1;
 
-    if (isLastRpc || !shouldTryAnotherRpc(sendWithRetryResult))
-      return sendWithRetryResult;
+    if (isLastRpc || !shouldTryAnotherRpc(sendWithRetryResult)) return sendWithRetryResult;
 
     const sleepResult = await safeSleep<
       NatError<'SendRequest.Aborted'> | NatError<'SendRequest.Timeout'>
     >(
       nextRpcDelayMs,
-      combineAbortSignals([
-        context.externalAbortSignal,
-        context.requestTimeoutSignal,
-      ]),
+      combineAbortSignals([context.externalAbortSignal, context.requestTimeoutSignal]),
     );
 
     return sleepResult.ok ? roundOnRpc(rpcIndex + 1) : sleepResult;

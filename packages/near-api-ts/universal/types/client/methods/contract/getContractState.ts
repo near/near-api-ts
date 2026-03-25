@@ -1,4 +1,10 @@
-import type { AccountId, Base64String, BlockHash, BlockHeight, BlockReference } from '../../../_common/common';
+import type {
+  AccountId,
+  Base64String,
+  BlockHash,
+  BlockHeight,
+  BlockReference,
+} from '../../../_common/common';
 import type { ClientContext } from '../../client';
 import type { PartialTransportPolicy } from '../../transport/transport';
 
@@ -25,10 +31,6 @@ export type GetContractStateResult = {
   contractState: StateRecord[];
 };
 
-export type GetContractState = (
-  args: GetContractStateArgs,
-) => Promise<GetContractStateResult>;
+export type GetContractState = (args: GetContractStateArgs) => Promise<GetContractStateResult>;
 
-export type CreateGetContractState = (
-  clientContext: ClientContext,
-) => GetContractState;
+export type CreateGetContractState = (clientContext: ClientContext) => GetContractState;

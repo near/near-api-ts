@@ -37,9 +37,7 @@ export const createGetStoragePricePerByte =
     });
     if (!protocolConfig.ok) return protocolConfig;
 
-    const rpcResult = PartialProtocolConfigResultSchema.safeParse(
-      protocolConfig.value.result,
-    );
+    const rpcResult = PartialProtocolConfigResultSchema.safeParse(protocolConfig.value.result);
 
     if (!rpcResult.success)
       return result.err(
@@ -54,9 +52,7 @@ export const createGetStoragePricePerByte =
         }),
       );
 
-    state.storagePricePerByte.value = yoctoNear(
-      rpcResult.data.runtimeConfig.storageAmountPerByte,
-    );
+    state.storagePricePerByte.value = yoctoNear(rpcResult.data.runtimeConfig.storageAmountPerByte);
     // Refetch every 1000ms * 60sec * 60min = 1 hour
     state.storagePricePerByte.validUntil = Date.now() + 3_600_000;
 

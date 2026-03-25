@@ -1,5 +1,8 @@
 import * as z from 'zod/mini';
-import type { CreateAddFullAccessKeyAction, SafeCreateAddFullAccessKeyAction } from '../../../types/_common/transaction/actions/addKey';
+import type {
+  CreateAddFullAccessKeyAction,
+  SafeCreateAddFullAccessKeyAction,
+} from '../../../types/_common/transaction/actions/addKey';
 import { createNatError } from '../../_common/natError';
 import { PublicKeySchema } from '../../_common/schemas/zod/common/publicKey';
 import { asThrowable } from '../../_common/utils/asThrowable';
@@ -10,8 +13,9 @@ export const CreateAddFullAccessKeyActionArgsSchema = z.object({
   publicKey: PublicKeySchema,
 });
 
-export const safeAddFullAccessKey: SafeCreateAddFullAccessKeyAction =
-  wrapInternalError('CreateAction.AddFullAccessKey.Internal', (args) => {
+export const safeAddFullAccessKey: SafeCreateAddFullAccessKeyAction = wrapInternalError(
+  'CreateAction.AddFullAccessKey.Internal',
+  (args) => {
     const validArgs = CreateAddFullAccessKeyActionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
@@ -27,7 +31,8 @@ export const safeAddFullAccessKey: SafeCreateAddFullAccessKeyAction =
       accessType: 'FullAccess' as const,
       publicKey: args.publicKey,
     });
-  });
+  },
+);
 
 export const throwableAddFullAccessKey: CreateAddFullAccessKeyAction =
   asThrowable(safeAddFullAccessKey);

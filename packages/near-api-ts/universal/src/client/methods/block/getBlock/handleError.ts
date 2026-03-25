@@ -4,9 +4,7 @@ import type { RpcResponse } from '../../../../_common/schemas/zod/rpc';
 import { result } from '../../../../_common/utils/result';
 
 export const handleError = (rpcResponse: RpcResponse) => {
-  const rpcError = ErrorWrapperFor_RpcBlockErrorSchema().safeParse(
-    rpcResponse.error,
-  );
+  const rpcError = ErrorWrapperFor_RpcBlockErrorSchema().safeParse(rpcResponse.error);
 
   if (!rpcError.success)
     return result.err(

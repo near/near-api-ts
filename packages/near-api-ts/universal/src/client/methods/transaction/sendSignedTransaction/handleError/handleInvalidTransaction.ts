@@ -12,9 +12,7 @@ const InvalidTransactionErrorSchema = z.object({
 });
 
 export const handleInvalidTransaction = (rpcResponse: RpcResponse) => {
-  const invalidTransactionError = InvalidTransactionErrorSchema.safeParse(
-    rpcResponse.error?.data,
-  );
+  const invalidTransactionError = InvalidTransactionErrorSchema.safeParse(rpcResponse.error?.data);
 
   if (!invalidTransactionError.success)
     return result.err(

@@ -30,17 +30,13 @@ export const tryMultipleRounds = async (
     const tryOneRoundResult = await tryOneRound(context, rpcs);
     const isLastRound = roundIndex >= maxRounds - 1;
 
-    if (isLastRound || !shouldTryAnotherRound(tryOneRoundResult))
-      return tryOneRoundResult;
+    if (isLastRound || !shouldTryAnotherRound(tryOneRoundResult)) return tryOneRoundResult;
 
     const sleepResult = await safeSleep<
       NatError<'SendRequest.Aborted'> | NatError<'SendRequest.Timeout'>
     >(
       nextRoundDelayMs,
-      combineAbortSignals([
-        context.externalAbortSignal,
-        context.requestTimeoutSignal,
-      ]),
+      combineAbortSignals([context.externalAbortSignal, context.requestTimeoutSignal]),
     );
 
     return sleepResult.ok ? round(roundIndex + 1) : sleepResult;

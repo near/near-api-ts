@@ -1,11 +1,5 @@
 import type { NatError } from '../../../../src/_common/natError';
 import type {
-  AbortedErrorContext,
-  ExhaustedErrorContext,
-  PreferredRpcNotFoundErrorContext,
-  TimeoutErrorContext,
-} from '../../transport/sendRequest';
-import type {
   AccountId,
   BlockHash,
   BlockHeight,
@@ -17,6 +11,12 @@ import type {
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { KeyIf } from '../../../utils';
 import type { ClientContext } from '../../client';
+import type {
+  AbortedErrorContext,
+  ExhaustedErrorContext,
+  PreferredRpcNotFoundErrorContext,
+  TimeoutErrorContext,
+} from '../../transport/sendRequest';
 import type { PartialTransportPolicy } from '../../transport/transport';
 import type {
   RpcQueryBlockGarbageCollectedErrorContext,

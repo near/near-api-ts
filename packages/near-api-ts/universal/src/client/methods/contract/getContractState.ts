@@ -1,10 +1,10 @@
 import { CryptoHashSchema, ViewStateResultSchema } from '@near-js/jsonrpc-types';
+import * as z from 'zod/mini';
 import type {
   CreateGetContractState,
   GetContractStateArgs,
   GetContractStateResult,
 } from '../../../../types/client/methods/contract/getContractState';
-import * as z from 'zod/mini';
 import { toNativeBlockReference } from '../../../_common/transformers/toNative/blockReference';
 
 const RpcQueryViewStateResponseSchema = z.object({

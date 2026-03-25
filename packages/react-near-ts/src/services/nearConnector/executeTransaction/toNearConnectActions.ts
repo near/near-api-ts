@@ -1,5 +1,5 @@
-import { nearToken, nearGas } from 'near-api-ts';
 import type { Action as NatAction, TransactionIntent } from 'near-api-ts';
+import { nearGas, nearToken } from 'near-api-ts';
 import type { NearConnectAction } from '../../../../types/services/nearConnect.ts';
 
 const toNearConnectAction = (action: NatAction): NearConnectAction => {

@@ -1,9 +1,10 @@
 // import * as z from 'zod/mini';
+
+import type { PublicKey } from '../../../universal';
 import { asThrowable } from '../../../universal/src/_common/utils/asThrowable';
 import { result } from '../../../universal/src/_common/utils/result';
 import { wrapInternalError } from '../../../universal/src/_common/utils/wrapInternalError';
 import type { Result } from '../../../universal/types/_common/common';
-import type { PublicKey } from '../../../universal';
 import type { KeyPair } from '../../../universal/types/_common/keyPair/keyPair';
 import { createGetKeyPair } from './private/getKeyPair';
 import { openIdbConnection } from './private/openIdbConnection';
@@ -56,6 +57,4 @@ export const safeCreateIdbKeyService: any = wrapInternalError(
   },
 );
 
-export const throwableCreateIdbKeyService: any = asThrowable(
-  safeCreateIdbKeyService,
-);
+export const throwableCreateIdbKeyService: any = asThrowable(safeCreateIdbKeyService);

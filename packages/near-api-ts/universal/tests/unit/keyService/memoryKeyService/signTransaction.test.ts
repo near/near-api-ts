@@ -1,6 +1,6 @@
-import type { Transaction } from '../../../../types/_common/transaction/transaction';
 import { describe, expect, it } from 'vitest';
 import { createMemoryKeyService, randomEd25519KeyPair } from '../../../../index';
+import type { Transaction } from '../../../../types/_common/transaction/transaction';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
 const privateKey =
@@ -27,9 +27,7 @@ describe('KeyService', () => {
 
     const res = await keyService.signTransaction({ transaction });
 
-    expect(res.transactionHash).toBe(
-      'HFdRehqc88853UQQZtFibmPAn77i9X64SwvxVSJjFpAa',
-    );
+    expect(res.transactionHash).toBe('HFdRehqc88853UQQZtFibmPAn77i9X64SwvxVSJjFpAa');
     expect(res.signature).toBe(
       'ed25519:4j3z7rpKJLeyugziu8oKE9wZJBWXoakhdSUHRt8PHK5wuAdUkyuf3T36tMDF8RrWoiF5MG8Mc3PuAaqcpGAJtFAd',
     );
@@ -47,9 +45,6 @@ describe('KeyService', () => {
       },
     });
 
-    assertNatErrKind(
-      res,
-      'MemoryKeyService.SignTransaction.SigningKeyPair.NotFound',
-    );
+    assertNatErrKind(res, 'MemoryKeyService.SignTransaction.SigningKeyPair.NotFound');
   });
 });

@@ -6,7 +6,10 @@ import type {
   SafeCreateFunctionCallAction,
 } from '../../../types/_common/transaction/actions/functionCall';
 import { createNatError, NatError } from '../../_common/natError';
-import { ContractFunctionNameSchema, JsonValueSchema } from '../../_common/schemas/zod/common/common';
+import {
+  ContractFunctionNameSchema,
+  JsonValueSchema,
+} from '../../_common/schemas/zod/common/common';
 import { NearGasArgsSchema } from '../../_common/schemas/zod/common/nearGas';
 import { NearTokenArgsSchema } from '../../_common/schemas/zod/common/nearToken';
 import { asThrowable } from '../../_common/utils/asThrowable';

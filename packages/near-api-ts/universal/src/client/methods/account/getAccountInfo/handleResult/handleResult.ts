@@ -1,7 +1,10 @@
 import { AccountViewSchema } from '@near-js/jsonrpc-types';
-import type { NearToken } from '../../../../../../types/_common/nearToken';
-import type { GetAccountInfoArgs, GetAccountInfoOutput } from '../../../../../../types/client/methods/account/getAccountInfo';
 import * as z from 'zod/mini';
+import type { NearToken } from '../../../../../../types/_common/nearToken';
+import type {
+  GetAccountInfoArgs,
+  GetAccountInfoOutput,
+} from '../../../../../../types/client/methods/account/getAccountInfo';
 import { createNatError } from '../../../../../_common/natError';
 import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc';
 import { result } from '../../../../../_common/utils/result';
@@ -13,18 +16,14 @@ const RpcQueryViewAccountResultSchema = z.object({
   blockHeight: z.number(),
 });
 
-export type RpcQueryViewAccountResult = z.infer<
-  typeof RpcQueryViewAccountResultSchema
->;
+export type RpcQueryViewAccountResult = z.infer<typeof RpcQueryViewAccountResultSchema>;
 
 export const handleResult = (
   rpcResponse: RpcResponse,
   storagePricePerByte: NearToken,
   args: GetAccountInfoArgs,
 ) => {
-  const rpcResult = RpcQueryViewAccountResultSchema.safeParse(
-    rpcResponse.result,
-  );
+  const rpcResult = RpcQueryViewAccountResultSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)
     return result.err(
@@ -63,8 +62,7 @@ export const handleResult = (
   }
 
   if (typeof accountInfo.globalContractAccountId === 'string') {
-    output.accountInfo.globalContractAccountId =
-      accountInfo.globalContractAccountId;
+    output.accountInfo.globalContractAccountId = accountInfo.globalContractAccountId;
   }
 
   // storage_paid_at - deprecated since March 18, 2020:

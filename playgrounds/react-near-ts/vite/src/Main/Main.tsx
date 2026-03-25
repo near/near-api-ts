@@ -1,9 +1,9 @@
 import { Button } from '@mantine/core';
-import cn from './Main.module.css';
 import { useState } from 'react';
 import { ConnectedAccount } from './ConnectedAccount/ConnectedAccount.tsx';
-import { SendNearTokens } from './SendNearTokens/SendNearTokens.tsx';
+import cn from './Main.module.css';
 import { Records } from './Records/Records.tsx';
+import { SendNearTokens } from './SendNearTokens/SendNearTokens.tsx';
 
 const NavButton = ({ title, value, setActiveTab, activeTab }: any) => {
   const isActive = activeTab === value;

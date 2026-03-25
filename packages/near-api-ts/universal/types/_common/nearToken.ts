@@ -1,6 +1,6 @@
 import type { NatError } from '../../src/_common/natError';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from './natError';
 import type { Result, Tokens, Units } from './common';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from './natError';
 
 export interface NearTokenPublicErrorRegistry {
   'CreateNearToken.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -29,30 +29,20 @@ export type NearToken = Readonly<{
   yoctoNear: YoctoNear;
   near: Near;
 
-  safeAdd: (
-    value: NearTokenArgs | NearToken,
-  ) => Result<NearToken, CreateNearTokenError>;
+  safeAdd: (value: NearTokenArgs | NearToken) => Result<NearToken, CreateNearTokenError>;
   add: (value: NearTokenArgs | NearToken) => NearToken;
 
-  safeSub: (
-    value: NearTokenArgs | NearToken,
-  ) => Result<NearToken, CreateNearTokenError>;
+  safeSub: (value: NearTokenArgs | NearToken) => Result<NearToken, CreateNearTokenError>;
   sub: (value: NearTokenArgs | NearToken) => NearToken;
 
-  safeGt: (
-    value: NearTokenArgs | NearToken,
-  ) => Result<boolean, CreateNearTokenError>;
+  safeGt: (value: NearTokenArgs | NearToken) => Result<boolean, CreateNearTokenError>;
   gt: (value: NearTokenArgs | NearToken) => boolean;
 
-  safeLt: (
-    value: NearTokenArgs | NearToken,
-  ) => Result<boolean, CreateNearTokenError>;
+  safeLt: (value: NearTokenArgs | NearToken) => Result<boolean, CreateNearTokenError>;
   lt: (value: NearTokenArgs | NearToken) => boolean;
 }>;
 
-export type SafeCreateNearToken = (
-  args: NearTokenArgs,
-) => Result<NearToken, CreateNearTokenError>;
+export type SafeCreateNearToken = (args: NearTokenArgs) => Result<NearToken, CreateNearTokenError>;
 
 export type CreateNearToken = (args: NearTokenArgs) => NearToken;
 
@@ -66,9 +56,7 @@ export type SafeCreateNearTokenFromYoctoNear = (
   yoctoNear: YoctoNearInput,
 ) => Result<NearToken, CreateNearTokenFromYoctoNearError>;
 
-export type CreateNearTokenFromYoctoNear = (
-  yoctoNear: YoctoNearInput,
-) => NearToken;
+export type CreateNearTokenFromYoctoNear = (yoctoNear: YoctoNearInput) => NearToken;
 
 // FromNear --------------------------------------------------------
 

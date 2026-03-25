@@ -1,7 +1,7 @@
 import * as z from 'zod/mini';
+import { AllowedFunctionsSchema, GasBudgetSchema } from '../../common/accessKey';
 import { AccountIdSchema } from '../../common/accountId';
 import { PublicKeySchema } from '../../common/publicKey';
-import { GasBudgetSchema, AllowedFunctionsSchema } from '../../common/accessKey';
 
 const AddFullAccessKeyActionSchema = z.object({
   actionType: z.literal('AddKey'),

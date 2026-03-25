@@ -1,11 +1,13 @@
 import type { MutationOptions } from '../../_common/tanstackMutation.ts';
 import type {
-  WithAddFunctionCallKeyArgs, WithAddFunctionCallKeyOutput
+  WithAddFunctionCallKeyArgs,
+  WithAddFunctionCallKeyOutput,
 } from './withAddFunctionCallKey.ts';
-import type { WithSignMessageArgs, WithSignMessageOutput } from './withSignMessage.ts';
 import type {
-  WithoutAdditionalActionArgs, WithoutAdditionalActionOutput
+  WithoutAdditionalActionArgs,
+  WithoutAdditionalActionOutput,
 } from './withoutAdditionalAction.ts';
+import type { WithSignMessageArgs, WithSignMessageOutput } from './withSignMessage.ts';
 
 export type InnerUseNearConnectArgs = {
   additionalAction?: 'SignMessage' | 'AddFunctionCallKey';

@@ -1,16 +1,12 @@
 import * as z from 'zod/mini';
 import { createTestnetClient } from '../../../../index';
 
-type Equal<A, B> = (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B
-  ? 1
-  : 2
-  ? true
-  : false;
+type Equal<A, B> =
+  (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;
 
 type Assert<T extends true> = T;
 
-type OutputResult<TPromise extends Promise<{ result: unknown }>> =
-  Awaited<TPromise>['result'];
+type OutputResult<TPromise extends Promise<{ result: unknown }>> = Awaited<TPromise>['result'];
 
 const contractAccountId = 'usdl.lantstool.testnet';
 const functionName = 'ft_balance_of';
@@ -19,21 +15,16 @@ const client = createTestnetClient();
 
 const responseZodSchema = z.object({ decimals: z.number() });
 
-const deserializeResult = (args: {
-  rawResult: number[];
-}): z.output<typeof responseZodSchema> =>
+const deserializeResult = (args: { rawResult: number[] }): z.output<typeof responseZodSchema> =>
   responseZodSchema.parse(args.rawResult);
 
 type CustomDeserializeResult = (args: { rawResult: number[] }) => {
   decimals: number;
 };
 
-const serializeBigintArgs = (_args: { functionArgs: { b: bigint } }) =>
-  new Uint8Array(1);
+const serializeBigintArgs = (_args: { functionArgs: { b: bigint } }) => new Uint8Array(1);
 
-type SerializeBigintArgs = (args: {
-  functionArgs: { b: bigint };
-}) => Uint8Array;
+type SerializeBigintArgs = (args: { functionArgs: { b: bigint } }) => Uint8Array;
 
 const serializeEmptyArgs = () => new Uint8Array(1);
 type SerializeEmptyArgs = (_args: { functionArgs?: never }) => Uint8Array;
@@ -87,30 +78,21 @@ const knownResult20 = client.callContractReadFunction({
   functionName,
   options: { deserializeResult },
 });
-type T20 = Assert<
-  Equal<OutputResult<typeof knownResult20>, { decimals: number }>
->;
+type T20 = Assert<Equal<OutputResult<typeof knownResult20>, { decimals: number }>>;
 
 const knownResult21 = client.callContractReadFunction<CustomDeserializeResult>({
   contractAccountId,
   functionName,
   options: { deserializeResult },
 });
-type T21 = Assert<
-  Equal<OutputResult<typeof knownResult21>, { decimals: number }>
->;
+type T21 = Assert<Equal<OutputResult<typeof knownResult21>, { decimals: number }>>;
 
-const knownResult22 = client.callContractReadFunction<
-  CustomDeserializeResult,
-  undefined
->({
+const knownResult22 = client.callContractReadFunction<CustomDeserializeResult, undefined>({
   contractAccountId,
   functionName,
   options: { deserializeResult },
 });
-type T22 = Assert<
-  Equal<OutputResult<typeof knownResult22>, { decimals: number }>
->;
+type T22 = Assert<Equal<OutputResult<typeof knownResult22>, { decimals: number }>>;
 
 const knownResult23 = client.callContractReadFunction({
   contractAccountId,
@@ -118,9 +100,7 @@ const knownResult23 = client.callContractReadFunction({
   functionArgs: { a: 1 },
   options: { deserializeResult },
 });
-type T23 = Assert<
-  Equal<OutputResult<typeof knownResult23>, { decimals: number }>
->;
+type T23 = Assert<Equal<OutputResult<typeof knownResult23>, { decimals: number }>>;
 
 const knownResult24 = client.callContractReadFunction<
   (args: { rawResult: number[] }) => { decimals: number },
@@ -131,9 +111,7 @@ const knownResult24 = client.callContractReadFunction<
   functionArgs: { a: 1 },
   options: { deserializeResult },
 });
-type T24 = Assert<
-  Equal<OutputResult<typeof knownResult24>, { decimals: number }>
->;
+type T24 = Assert<Equal<OutputResult<typeof knownResult24>, { decimals: number }>>;
 
 // OVERLOAD #3 - custom serializeArgs
 
@@ -156,9 +134,7 @@ const r31 = client.callContractReadFunction({
 });
 type T31 = Assert<Equal<OutputResult<typeof r31>, unknown>>;
 
-const r32 = client.callContractReadFunction<
-  (args: { functionArgs: never }) => Uint8Array
->({
+const r32 = client.callContractReadFunction<(args: { functionArgs: never }) => Uint8Array>({
   contractAccountId,
   functionName,
   options: {
@@ -187,9 +163,7 @@ const r34 = client.callContractReadFunction({
 });
 type T34 = Assert<Equal<OutputResult<typeof r34>, unknown>>;
 
-const r35 = client.callContractReadFunction<
-  (args: { functionArgs: { b: bigint } }) => Uint8Array
->({
+const r35 = client.callContractReadFunction<(args: { functionArgs: { b: bigint } }) => Uint8Array>({
   contractAccountId,
   functionName,
   functionArgs: { b: 1n },
@@ -222,9 +196,7 @@ const knownResult31 = client.callContractReadFunction({
     deserializeResult,
   },
 });
-type TKnown31 = Assert<
-  Equal<OutputResult<typeof knownResult31>, { decimals: number }>
->;
+type TKnown31 = Assert<Equal<OutputResult<typeof knownResult31>, { decimals: number }>>;
 
 const knownResult32 = client.callContractReadFunction<
   (args: { functionArgs: number[] }) => Uint8Array,
@@ -239,14 +211,9 @@ const knownResult32 = client.callContractReadFunction<
     deserializeResult,
   },
 });
-type TKnown32 = Assert<
-  Equal<OutputResult<typeof knownResult32>, { decimals: number }>
->;
+type TKnown32 = Assert<Equal<OutputResult<typeof knownResult32>, { decimals: number }>>;
 
-const knownResult33 = client.callContractReadFunction<
-  SerializeEmptyArgs,
-  CustomDeserializeResult
->({
+const knownResult33 = client.callContractReadFunction<SerializeEmptyArgs, CustomDeserializeResult>({
   contractAccountId,
   functionName,
   options: {
@@ -254,9 +221,7 @@ const knownResult33 = client.callContractReadFunction<
     deserializeResult,
   },
 });
-type TKnown33 = Assert<
-  Equal<OutputResult<typeof knownResult33>, { decimals: number }>
->;
+type TKnown33 = Assert<Equal<OutputResult<typeof knownResult33>, { decimals: number }>>;
 
 // Additional negative cases
 

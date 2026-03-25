@@ -24,10 +24,7 @@ const accessKeyBorshSchema = {
   struct: {
     nonce: 'u64',
     permission: {
-      enum: [
-        functionCallPermissionBorshSchema,
-        fullAccessPermissionBorshSchema,
-      ],
+      enum: [functionCallPermissionBorshSchema, fullAccessPermissionBorshSchema],
     },
   },
 };

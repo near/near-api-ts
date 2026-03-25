@@ -1,9 +1,9 @@
-import { asThrowable } from '../../../universal/src/_common/utils/asThrowable';
-import { result } from '../../../universal/src/_common/utils/result';
-import { wrapInternalError } from '../../../universal/src/_common/utils/wrapInternalError';
 import path from 'node:path';
 import process from 'node:process';
 import * as z from 'zod/mini';
+import { asThrowable } from '../../../universal/src/_common/utils/asThrowable';
+import { result } from '../../../universal/src/_common/utils/result';
+import { wrapInternalError } from '../../../universal/src/_common/utils/wrapInternalError';
 import { createGetKeyPair } from './private/getKeyPair';
 import { createSafeAddKeyPair } from './public/addKeyPair';
 import { createSafeClear } from './public/clear';
@@ -21,9 +21,7 @@ const CreateFileKeyServiceArgsSchema = z.optional(
   }),
 );
 
-export type InnerCreateFileKeyServiceArgs = z.infer<
-  typeof CreateFileKeyServiceArgsSchema
->;
+export type InnerCreateFileKeyServiceArgs = z.infer<typeof CreateFileKeyServiceArgsSchema>;
 
 export const safeCreateFileKeyService: any = wrapInternalError(
   'CreateFileKeyService.Internal',
@@ -38,10 +36,7 @@ export const safeCreateFileKeyService: any = wrapInternalError(
     //     }),
     //   );
 
-    const rootDirPath = path.resolve(
-      process.cwd(),
-      args?.path ?? '.near-api-ts:key-vault',
-    );
+    const rootDirPath = path.resolve(process.cwd(), args?.path ?? '.near-api-ts:key-vault');
 
     const context = {
       rootDirPath,
@@ -71,6 +66,4 @@ export const safeCreateFileKeyService: any = wrapInternalError(
   },
 );
 
-export const throwableCreateFileKeyService: any = asThrowable(
-  safeCreateFileKeyService,
-);
+export const throwableCreateFileKeyService: any = asThrowable(safeCreateFileKeyService);

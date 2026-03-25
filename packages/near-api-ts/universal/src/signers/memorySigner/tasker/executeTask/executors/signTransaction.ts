@@ -1,5 +1,8 @@
 import type { Result } from '../../../../../../types/_common/common';
-import type { SignedTransaction, Transaction } from '../../../../../../types/_common/transaction/transaction';
+import type {
+  SignedTransaction,
+  Transaction,
+} from '../../../../../../types/_common/transaction/transaction';
 import type { PoolKey } from '../../../../../../types/signers/memorySigner/inner/keyPool';
 import type { Task } from '../../../../../../types/signers/memorySigner/inner/taskQueue';
 import type { MemorySignerContext } from '../../../../../../types/signers/memorySigner/memorySigner';
@@ -16,29 +19,26 @@ export const signTransaction = async (
   task: Task,
   key: PoolKey,
 ): Promise<void> => {
-  const execute: Execute = wrapInternalError(
-    'MemorySigner.SignTransaction.Internal',
-    async () => {
-      const nextNonce = key.nonce + 1;
-      const blockHash = await signerContext.client.getRecentBlockHash();
+  const execute: Execute = wrapInternalError('MemorySigner.SignTransaction.Internal', async () => {
+    const nextNonce = key.nonce + 1;
+    const blockHash = await signerContext.client.getRecentBlockHash();
 
-      const transaction: Transaction = {
-        ...task.transactionIntent,
-        signerAccountId: signerContext.signerAccountId,
-        signerPublicKey: key.publicKey,
-        nonce: nextNonce,
-        blockHash,
-      };
+    const transaction: Transaction = {
+      ...task.transactionIntent,
+      signerAccountId: signerContext.signerAccountId,
+      signerPublicKey: key.publicKey,
+      nonce: nextNonce,
+      blockHash,
+    };
 
-      // This call will never fail
-      const signedTransaction = await signerContext.keyService.signTransaction({
-        transaction,
-      });
+    // This call will never fail
+    const signedTransaction = await signerContext.keyService.signTransaction({
+      transaction,
+    });
 
-      key.setNonce(nextNonce);
-      return result.ok(signedTransaction);
-    },
-  );
+    key.setNonce(nextNonce);
+    return result.ok(signedTransaction);
+  });
 
   const transactionResult = await execute();
   signerContext.tasker.completeTask(task.taskId, transactionResult);

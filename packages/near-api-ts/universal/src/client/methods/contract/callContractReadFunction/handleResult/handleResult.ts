@@ -1,5 +1,5 @@
-import type { InnerCallContractReadFunctionArgs } from '../../../../../../types/client/methods/contract/callContractReadFunction';
 import * as z from 'zod/mini';
+import type { InnerCallContractReadFunctionArgs } from '../../../../../../types/client/methods/contract/callContractReadFunction';
 import { createNatError } from '../../../../../_common/natError';
 import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc';
 import { result } from '../../../../../_common/utils/result';
@@ -26,13 +26,8 @@ const RpcQueryCallReadFunctionResultSchema = z.union([
   ContractExecutionErrorSchema,
 ]);
 
-export const handleResult = (
-  rpcResponse: RpcResponse,
-  args: InnerCallContractReadFunctionArgs,
-) => {
-  const rpcResult = RpcQueryCallReadFunctionResultSchema.safeParse(
-    rpcResponse.result,
-  );
+export const handleResult = (rpcResponse: RpcResponse, args: InnerCallContractReadFunctionArgs) => {
+  const rpcResult = RpcQueryCallReadFunctionResultSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)
     return result.err(

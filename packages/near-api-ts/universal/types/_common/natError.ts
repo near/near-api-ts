@@ -1,15 +1,18 @@
+import type { $ZodError } from 'zod/v4/core';
 import type { NatError } from '../../src/_common/natError';
+import type { ClientInnerErrorRegistry, ClientPublicErrorRegistry } from '../client/client';
+import type { MemoryKeyServicePublicErrorRegistry } from '../keyServices/memoryKeyService/memoryKeyService';
+import type {
+  MemorySignerInnerErrorRegistry,
+  MemorySignerPublicErrorRegistry,
+} from '../signers/memorySigner/memorySigner';
 import type { ResultErr } from './common';
+import type { KeyPairPublicErrorRegistry } from './keyPair/keyPair';
+import type { MessagePublicErrorRegistry } from './message';
 import type { NearGasPublicErrorRegistry } from './nearGas';
 import type { NearTokenPublicErrorRegistry } from './nearToken';
 import type { ActionsPublicErrorRegistry } from './transaction/actions/actions';
-import type { ClientInnerErrorRegistry, ClientPublicErrorRegistry } from '../client/client';
-import type { MemoryKeyServicePublicErrorRegistry } from '../keyServices/memoryKeyService/memoryKeyService';
-import type { MemorySignerInnerErrorRegistry, MemorySignerPublicErrorRegistry } from '../signers/memorySigner/memorySigner';
-import type { $ZodError } from 'zod/v4/core';
-import type { KeyPairPublicErrorRegistry } from './keyPair/keyPair';
 import type { VerifySignaturePublicErrorRegistry } from './verifySignature';
-import type { MessagePublicErrorRegistry } from './message';
 
 export type InternalErrorContext = { cause: unknown };
 export type InvalidSchemaErrorContext = { zodError: $ZodError };

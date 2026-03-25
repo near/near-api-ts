@@ -1,9 +1,25 @@
 import type { InspectOptionsStylized } from 'node:util';
 import type { Result } from '../../../types/_common/common';
-import type { CreateNearToken, CreateNearTokenError, CreateNearTokenFromNear, CreateNearTokenFromYoctoNear, Near, NearToken, NearTokenArgs, SafeCreateNearToken, SafeCreateNearTokenFromNear, SafeCreateNearTokenFromYoctoNear, YoctoNear } from '../../../types/_common/nearToken';
+import type {
+  CreateNearToken,
+  CreateNearTokenError,
+  CreateNearTokenFromNear,
+  CreateNearTokenFromYoctoNear,
+  Near,
+  NearToken,
+  NearTokenArgs,
+  SafeCreateNearToken,
+  SafeCreateNearTokenFromNear,
+  SafeCreateNearTokenFromYoctoNear,
+  YoctoNear,
+} from '../../../types/_common/nearToken';
 import { NearDecimals } from '../../_common/configs/constants';
 import { createNatError } from '../../_common/natError';
-import { NearInputSchema, NearTokenArgsSchema, YoctoNearInputSchema } from '../../_common/schemas/zod/common/nearToken';
+import {
+  NearInputSchema,
+  NearTokenArgsSchema,
+  YoctoNearInputSchema,
+} from '../../_common/schemas/zod/common/nearToken';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { nodeInspectSymbol } from '../../_common/utils/common';
 import { result } from '../../_common/utils/result';
@@ -21,9 +37,7 @@ const cache = {
 export const isNearToken = (value: unknown): value is NearToken =>
   typeof value === 'object' && value !== null && NearTokenBrand in value;
 
-const toYoctoNear = (
-  x: NearTokenArgs | NearToken,
-): Result<YoctoNear, CreateNearTokenError> => {
+const toYoctoNear = (x: NearTokenArgs | NearToken): Result<YoctoNear, CreateNearTokenError> => {
   if (isNearToken(x)) return result.ok(x.yoctoNear);
   const nearToken = safeNearToken(x);
   return nearToken.ok ? result.ok(nearToken.value.yoctoNear) : nearToken;
@@ -58,9 +72,7 @@ const nearTokenProto: ThisType<NearToken> = {
 
   // TODO Need to reuse method code and reduce boilerplate code, and reduce useless
   // transformations
-  safeAdd(
-    value: NearTokenArgs | NearToken,
-  ): Result<NearToken, CreateNearTokenError> {
+  safeAdd(value: NearTokenArgs | NearToken): Result<NearToken, CreateNearTokenError> {
     return wrapInternalError('CreateNearToken.Internal', () => {
       const yoctoNear = toYoctoNear(value);
       return yoctoNear.ok
@@ -73,9 +85,7 @@ const nearTokenProto: ThisType<NearToken> = {
     return asThrowable(this.safeAdd.bind(this))(value);
   },
 
-  safeSub(
-    value: NearTokenArgs | NearToken,
-  ): Result<NearToken, CreateNearTokenError> {
+  safeSub(value: NearTokenArgs | NearToken): Result<NearToken, CreateNearTokenError> {
     return wrapInternalError('CreateNearToken.Internal', () => {
       const yoctoNear = toYoctoNear(value);
       return yoctoNear.ok
@@ -88,14 +98,10 @@ const nearTokenProto: ThisType<NearToken> = {
     return asThrowable(this.safeSub.bind(this))(value);
   },
 
-  safeGt(
-    value: NearTokenArgs | NearToken,
-  ): Result<boolean, CreateNearTokenError> {
+  safeGt(value: NearTokenArgs | NearToken): Result<boolean, CreateNearTokenError> {
     return wrapInternalError('CreateNearToken.Internal', () => {
       const yoctoNear = toYoctoNear(value);
-      return yoctoNear.ok
-        ? result.ok(this.yoctoNear > yoctoNear.value)
-        : yoctoNear;
+      return yoctoNear.ok ? result.ok(this.yoctoNear > yoctoNear.value) : yoctoNear;
     })();
   },
 
@@ -103,14 +109,10 @@ const nearTokenProto: ThisType<NearToken> = {
     return asThrowable(this.safeGt.bind(this))(value);
   },
 
-  safeLt(
-    value: NearTokenArgs | NearToken,
-  ): Result<boolean, CreateNearTokenError> {
+  safeLt(value: NearTokenArgs | NearToken): Result<boolean, CreateNearTokenError> {
     return wrapInternalError('CreateNearToken.Internal', () => {
       const yoctoNear = toYoctoNear(value);
-      return yoctoNear.ok
-        ? result.ok(this.yoctoNear < yoctoNear.value)
-        : yoctoNear;
+      return yoctoNear.ok ? result.ok(this.yoctoNear < yoctoNear.value) : yoctoNear;
     })();
   },
 
@@ -130,11 +132,7 @@ const nearTokenProto: ThisType<NearToken> = {
   // This does not work in the browser — there you can only see a getter’s value
   // by explicitly expanding/clicking on it.
   ...(nodeInspectSymbol && {
-    [nodeInspectSymbol as symbol](
-      this: NearToken,
-      _depth: number,
-      _opts: InspectOptionsStylized,
-    ) {
+    [nodeInspectSymbol as symbol](this: NearToken, _depth: number, _opts: InspectOptionsStylized) {
       return { near: this.near, yoctoNear: this.yoctoNear };
     },
   }),
@@ -166,8 +164,7 @@ export const safeYoctoNear: SafeCreateNearTokenFromYoctoNear = wrapInternalError
   },
 );
 
-export const throwableYoctoNear: CreateNearTokenFromYoctoNear =
-  asThrowable(safeYoctoNear);
+export const throwableYoctoNear: CreateNearTokenFromYoctoNear = asThrowable(safeYoctoNear);
 
 // FromNear
 
