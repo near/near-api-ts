@@ -1,16 +1,16 @@
 import type { EventMap } from '@hot-labs/near-connect/build/types';
 import { useMutation } from '@tanstack/react-query';
 import { type AccountId, nearToken } from 'near-api-ts';
-import type { InnerUseNearConnectArgs } from '../../../../types/hooks/nearConnector/useNearConnect/useNearConnect.ts';
+import type { InnerUseNearSignInArgs } from '../../../../types/hooks/nearConnector/useNearSignIn/useNearSignIn.ts';
 import type {
   Variables,
   WithAddFunctionCallKeyOutput,
-} from '../../../../types/hooks/nearConnector/useNearConnect/withAddFunctionCallKey.ts';
+} from '../../../../types/hooks/nearConnector/useNearSignIn/withAddFunctionCallKey.ts';
 import type { SetConnectedAccountId, SetSigners, StoreContext } from '../../../../types/store.ts';
 import { NearConnectorServiceSchema } from '../_common.ts';
 
 export const withAddFunctionCallKey = (
-  args: InnerUseNearConnectArgs,
+  args: InnerUseNearSignInArgs,
   context: StoreContext,
   setSigners: SetSigners,
   setConnectedAccountId: SetConnectedAccountId,
@@ -70,7 +70,7 @@ export const withAddFunctionCallKey = (
 
   return {
     ...rest,
-    connect: (args) => mutate(args, args?.mutate),
-    connectAsync: (args) => mutateAsync(args, args?.mutate),
+    signIn: (args) => mutate(args, args?.mutate),
+    signInAsync: (args) => mutateAsync(args, args?.mutate),
   };
 };

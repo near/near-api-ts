@@ -15,6 +15,6 @@ type ConnectArgs<OnMutateResult> = {
 };
 
 export type WithoutAdditionalActionOutput<OnMutateResult> = {
-  connect: (args?: ConnectArgs<OnMutateResult>) => void;
-  connectAsync: (args?: ConnectArgs<OnMutateResult>) => Promise<Data>;
+  signIn: (args?: ConnectArgs<OnMutateResult>) => void;
+  signInAsync: (args?: ConnectArgs<OnMutateResult>) => Promise<Data>;
 } & BaseUseMutationResult<Data, Err, Variables, OnMutateResult>;

@@ -9,12 +9,12 @@ import type {
 } from './withoutAdditionalAction.ts';
 import type { WithSignMessageArgs, WithSignMessageOutput } from './withSignMessage.ts';
 
-export type InnerUseNearConnectArgs = {
+export type InnerUseNearSignInArgs = {
   additionalAction?: 'SignMessage' | 'AddFunctionCallKey';
   mutation?: MutationOptions<any, any, any, any>;
 };
 
-export type UseNearConnect<OnMutateResult = unknown> = {
+export type UseNearSignIn<OnMutateResult = unknown> = {
   (args: WithSignMessageArgs<OnMutateResult>): WithSignMessageOutput<OnMutateResult>;
   (args: WithAddFunctionCallKeyArgs<OnMutateResult>): WithAddFunctionCallKeyOutput<OnMutateResult>;
   (

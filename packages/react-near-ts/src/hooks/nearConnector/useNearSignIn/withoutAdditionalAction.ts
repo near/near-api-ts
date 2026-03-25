@@ -1,8 +1,8 @@
 import type { EventMap } from '@hot-labs/near-connect/build/types';
 import { useMutation } from '@tanstack/react-query';
 import type { AccountId } from 'near-api-ts';
-import type { InnerUseNearConnectArgs } from '../../../../types/hooks/nearConnector/useNearConnect/useNearConnect.ts';
-import type { WithoutAdditionalActionOutput } from '../../../../types/hooks/nearConnector/useNearConnect/withoutAdditionalAction.ts';
+import type { InnerUseNearSignInArgs } from '../../../../types/hooks/nearConnector/useNearSignIn/useNearSignIn.ts';
+import type { WithoutAdditionalActionOutput } from '../../../../types/hooks/nearConnector/useNearSignIn/withoutAdditionalAction.ts';
 import type { SetConnectedAccountId, SetSigners, StoreContext } from '../../../../types/store.ts';
 import { NearConnectorServiceSchema } from '../_common.ts';
 
@@ -10,7 +10,7 @@ export const withoutAdditionalAction = (
   context: StoreContext,
   setSigners: SetSigners,
   setConnectedAccountId: SetConnectedAccountId,
-  args?: InnerUseNearConnectArgs,
+  args?: InnerUseNearSignInArgs,
 ): WithoutAdditionalActionOutput<unknown> => {
   const { mutate, mutateAsync, ...rest } = useMutation({
     ...args?.mutation,
@@ -43,7 +43,7 @@ export const withoutAdditionalAction = (
 
   return {
     ...rest,
-    connect: (args) => mutate(undefined, args?.mutate),
-    connectAsync: (args) => mutateAsync(undefined, args?.mutate),
+    signIn: (args) => mutate(undefined, args?.mutate),
+    signInAsync: (args) => mutateAsync(undefined, args?.mutate),
   };
 };

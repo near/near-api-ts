@@ -17,7 +17,7 @@ export const useRemoveRecord = () => {
         },
         mutate: {
           onSuccess: (_data, _variables, _onMutateResult, context) => {
-            context.client.invalidateQueries({
+            void context.client.invalidateQueries({
               queryKey: ['callContractReadFunction', ContractAccountId, 'get_records'],
             });
           },

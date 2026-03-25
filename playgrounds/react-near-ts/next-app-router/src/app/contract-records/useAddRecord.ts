@@ -19,7 +19,7 @@ export const useAddRecord = (setRecordInput: Dispatch<SetStateAction<string>>) =
         mutate: {
           onSuccess: (_data, _variables, _onMutateResult, context) => {
             setRecordInput('');
-            context.client.invalidateQueries({
+            void context.client.invalidateQueries({
               queryKey: ['callContractReadFunction', ContractAccountId, 'get_records'],
             });
           },

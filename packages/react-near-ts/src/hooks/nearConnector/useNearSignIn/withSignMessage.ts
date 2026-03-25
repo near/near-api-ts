@@ -15,11 +15,11 @@ import {
   toSecp256k1CurveString,
 } from 'near-api-ts';
 import * as z from 'zod/mini';
-import type { InnerUseNearConnectArgs } from '../../../../types/hooks/nearConnector/useNearConnect/useNearConnect.ts';
+import type { InnerUseNearSignInArgs } from '../../../../types/hooks/nearConnector/useNearSignIn/useNearSignIn.ts';
 import type {
   Variables,
   WithSignMessageOutput,
-} from '../../../../types/hooks/nearConnector/useNearConnect/withSignMessage.ts';
+} from '../../../../types/hooks/nearConnector/useNearSignIn/withSignMessage.ts';
 import type { SetConnectedAccountId, SetSigners, StoreContext } from '../../../../types/store.ts';
 import { NearConnectorServiceSchema } from '../_common.ts';
 
@@ -41,7 +41,7 @@ export const createNep413MessageSignatureSchema = (curve: Curve) =>
       ),
     );
 
-// We need to transform the signed message from @hot-labs/near-connect to near-api-ts format
+// We need to transform the signed message from @hot-labs/near-signIn to near-api-ts format
 const transformSignedMessage = (
   signedMessage: NearConnectSignedMessage,
   message: Message,
@@ -67,7 +67,7 @@ const transformSignedMessage = (
 };
 
 export const withSignMessage = (
-  args: InnerUseNearConnectArgs,
+  args: InnerUseNearSignInArgs,
   context: StoreContext,
   setSigners: SetSigners,
   setConnectedAccountId: SetConnectedAccountId,
@@ -113,7 +113,7 @@ export const withSignMessage = (
 
   return {
     ...rest,
-    connect: (args) => mutate(args, args?.mutate),
-    connectAsync: (args) => mutateAsync(args, args?.mutate),
+    signIn: (args) => mutate(args, args?.mutate),
+    signInAsync: (args) => mutateAsync(args, args?.mutate),
   };
 };

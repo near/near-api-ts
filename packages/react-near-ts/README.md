@@ -69,17 +69,28 @@ export const App = ({ children }: { children: React.ReactNode }) => (
 
 ## Hooks
 
-### `useNearConnector`
+### `useNearSignIn`
 
-Connect/disconnect wallet.
+Connect Near Protocol wallet.
 
 ```tsx
-import { useNearConnector } from 'react-near-ts';
+import { useNearSignIn } from 'react-near-ts';
 
-const { connect, disconnect } = useNearConnector();
+const { signIn } = useNearSignIn();
 
-<button onClick={() => connect.mutate()}>Connect</button>
-<button onClick={() => disconnect.mutate()}>Disconnect</button>
+<button onClick={() => signIn()}>Sign In</button>
+```
+
+### `useNearSignOut`
+
+Disconnect Near Protocol wallet.
+
+```tsx
+import { useNearSignOut } from 'react-near-ts';
+
+const { signOut } = useNearSignOut();
+
+<button onClick={signOut}>Sign Out</button>
 ```
 
 ### `useConnectedAccount`
@@ -134,46 +145,46 @@ const records = useContractReadFunction({
 
 ### `useExecuteTransaction`
 
-Send signed transaction from connected wallet.
+Send a signed transaction from a connected wallet.
 
 ```tsx
 import {
   transfer,
   functionCall,
-  useExecuteTransaction,
+  useExecuteTransaction
 } from 'react-near-ts';
 
-const executeTransaction = useExecuteTransaction();
+const { executeTransaction } = useExecuteTransaction();
 
 // Transfer
-executeTransaction.mutate({
+executeTransaction({
   intent: {
     action: transfer({ amount: { near: '0.1' } }),
-    receiverAccountId: 'receiver.testnet',
-  },
+    receiverAccountId: 'receiver.testnet'
+  }
 });
 
 // Function call
-executeTransaction.mutate({
+executeTransaction({
   intent: {
     action: functionCall({
       functionName: 'add_record',
       functionArgs: { record: 'hello' },
-      gasLimit: { teraGas: '10' },
+      gasLimit: { teraGas: '10' }
     }),
-    receiverAccountId: 'react-near-ts.lantstool.testnet',
+    receiverAccountId: 'react-near-ts.lantstool.testnet'
   },
+  mutate: {
+    onSuccess: (data, variables, onMutateResult, context) => {
+      context.client.invalidateQueries({ queryKey: ['get_records'] });
+    }
+  }
 });
 ```
 
 ## Re-exports from `near-api-ts`
 
-`react-near-ts` also re-exports common client creators, action creators and
-utils, including:
-
-- `createMainnetClient`, `createTestnetClient`, `createClient`
-- `transfer`, `functionCall`, `createAccount`, `stake`, ...
-- `near`, `yoctoNear`, `teraGas`, `fromJsonBytes`, `toJsonBytes`, ...
+`react-near-ts` re-exports all imports of `near-api-ts`
 
 ## Playground
 

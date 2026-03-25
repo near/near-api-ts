@@ -4,30 +4,32 @@ import { Badge, Button, Grid, Group, Menu, Paper, Text, Title } from '@mantine/c
 import {
   createMessage,
   useConnectedAccount,
-  useNearConnect,
-  useNearDisconnect,
+  useNearSignIn,
+  useNearDisconnect, randomEd25519KeyPair
 } from 'react-near-ts';
 import styles from './Topbar.module.css';
 
 export const Topbar = () => {
   const { connectedAccountId, isConnectedAccount } = useConnectedAccount();
-  const { connectAsync } = useNearConnect({ additionalAction: 'SignMessage' });
+  // { signIn } = useNearConnect => useNearSignIn({ additionalAction: 'SignMessage' })
+  // { signOut } = useNearDisconnect => useNearSignOut
+  const { signIn } = useNearSignIn();
   const { disconnect } = useNearDisconnect();
 
   const connectWallet = async () => {
-    // connect();
+    signIn();
 
-    // connect({
+    // signIn({
     //   publicKey: randomEd25519KeyPair().publicKey,
     //   contractAccountId: 'testnet',
     //   gasBudget: { near: '1000' },
     //   allowedFunctions: 'AllNonPayable',
     // });
 
-    const signedMessage = await connectAsync({
-      message: createMessage({ message: '123', recipient: 'test' }),
-    });
-    console.log('Connect + signedMessage: ', signedMessage);
+    // const signedMessage = await signInAsync({
+    //   message: createMessage({ message: '123', recipient: 'test' }),
+    // });
+    // console.log('Connect + signedMessage: ', signedMessage);
   };
 
   return (
@@ -70,7 +72,7 @@ export const Topbar = () => {
             </Menu>
           ) : (
             <Button size="sm" radius="md" onClick={connectWallet} color="#12b886">
-              Connect Wallet
+              Sign In
             </Button>
           )}
         </Grid.Col>

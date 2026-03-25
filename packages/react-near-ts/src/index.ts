@@ -2,7 +2,8 @@
 
 // near-api-ts reexports
 export * from 'near-api-ts';
-export { useNearConnect } from './hooks/nearConnector/useNearConnect/useNearConnect.ts';
+
+export { useNearSignIn } from './hooks/nearConnector/useNearSignIn/useNearSignIn.ts';
 export { useNearDisconnect } from './hooks/nearConnector/useNearDisconnect.ts';
 // Lib
 export { useAccountInfo } from './hooks/useAccountInfo.ts';
