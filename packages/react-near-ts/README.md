@@ -90,7 +90,7 @@ import { useNearSignOut } from 'react-near-ts';
 
 const { signOut } = useNearSignOut();
 
-<button onClick={signOut}>Sign Out</button>
+<button onClick={() => signOut()}>Sign Out</button>
 ```
 
 ### `useConnectedAccount`

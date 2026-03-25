@@ -5,16 +5,14 @@ import {
   createMessage,
   useConnectedAccount,
   useNearSignIn,
-  useNearDisconnect, randomEd25519KeyPair
+  useNearSignOut, randomEd25519KeyPair
 } from 'react-near-ts';
 import styles from './Topbar.module.css';
 
 export const Topbar = () => {
   const { connectedAccountId, isConnectedAccount } = useConnectedAccount();
-  // { signIn } = useNearConnect => useNearSignIn({ additionalAction: 'SignMessage' })
-  // { signOut } = useNearDisconnect => useNearSignOut
   const { signIn } = useNearSignIn();
-  const { disconnect } = useNearDisconnect();
+  const { signOut } = useNearSignOut();
 
   const connectWallet = async () => {
     signIn();
@@ -67,7 +65,7 @@ export const Topbar = () => {
                 </Paper>
               </Menu.Target>
               <Menu.Dropdown>
-                <Menu.Item onClick={() => disconnect()}>Disconnect</Menu.Item>
+                <Menu.Item onClick={() => signOut()}>Disconnect</Menu.Item>
               </Menu.Dropdown>
             </Menu>
           ) : (

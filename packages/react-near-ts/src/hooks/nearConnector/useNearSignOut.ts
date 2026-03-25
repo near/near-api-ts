@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import type { UseNearDisconnect } from '../../../types/hooks/nearConnector/useNearDisconnect.ts';
+import type { UseNearSignOut } from '../../../types/hooks/nearConnector/useNearSignOut.ts';
 import { useNearStore } from '../../store/NearStoreProvider.tsx';
 import { NearConnectorServiceSchema } from './_common.ts';
 
-export const useNearDisconnect: UseNearDisconnect = (args) => {
+export const useNearSignOut: UseNearSignOut = (args) => {
   const getContext = useNearStore((store) => store.getContext);
   const clearSigners = useNearStore((store) => store.clearSigners);
   const setConnectedAccountId = useNearStore((store) => store.setConnectedAccountId);
@@ -23,7 +23,7 @@ export const useNearDisconnect: UseNearDisconnect = (args) => {
 
   return {
     ...rest,
-    disconnect: (options) => mutate(undefined, options),
-    disconnectAsync: (options) => mutateAsync(undefined, options),
+    signOut: (options) => mutate(undefined, options),
+    signOutAsync: (options) => mutateAsync(undefined, options),
   };
 };
