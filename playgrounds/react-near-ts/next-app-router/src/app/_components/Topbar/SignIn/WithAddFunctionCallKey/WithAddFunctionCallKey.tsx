@@ -14,11 +14,15 @@ export const WithAddFunctionCallKey = (props: WithAddFunctionCallKeyProps) => {
     const output = await signInAsync({
       publicKey: randomEd25519KeyPair().publicKey,
       contractAccountId: 'testnet',
-      gasBudget: { near: '1000' },
+      gasBudget: { near: '1.5' },
       allowedFunctions: 'AllNonPayable',
     });
     console.log('Sign In + Add Function Call Key: ', output);
   };
 
-  return <Button onClick={signIn}>Sign In + Add Function Call Key</Button>;
+  return (
+    <Button onClick={signIn} color="#12b886" size="sm" radius="md">
+      Sign In + Add Function Call Key
+    </Button>
+  );
 };

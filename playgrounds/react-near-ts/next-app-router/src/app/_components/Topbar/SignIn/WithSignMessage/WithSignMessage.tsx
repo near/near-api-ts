@@ -35,7 +35,13 @@ export const WithSignMessage = (props: WithSignMessageProps) => {
   };
 
   return (
-    <Button onClick={signIn} loading={fetchMessageMutation.isPending}>
+    <Button
+      onClick={signIn}
+      loading={fetchMessageMutation.isPending}
+      color="#12b886"
+      size="sm"
+      radius="md"
+    >
       Sign In + Sign Message
     </Button>
   );

@@ -14,5 +14,9 @@ export const WithoutAdditionalAction = (props: WithoutAdditionalActionProps) => 
     console.log('Sign In: ', output);
   };
 
-  return <Button onClick={signIn}>Only Sign In</Button>;
+  return (
+    <Button onClick={signIn} color="#12b886" size="sm" radius="md">
+      Only Sign In
+    </Button>
+  );
 };
