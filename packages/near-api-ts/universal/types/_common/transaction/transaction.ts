@@ -47,6 +47,12 @@ export type TransactionIntent = Prettify<
   } & (SingleAction | MultiActions)
 >;
 
+export type SignedTransaction = {
+  transaction: Transaction;
+  transactionHash: CryptoHash;
+  signature: Signature;
+};
+
 // Native Transaction
 
 export type NativeAction =
@@ -66,14 +72,6 @@ export type NativeTransaction = {
   receiverId: AccountId;
   nonce: bigint;
   blockHash: Uint8Array;
-};
-
-// Signed Transaction
-
-export type SignedTransaction = {
-  transaction: Transaction;
-  transactionHash: CryptoHash;
-  signature: Signature;
 };
 
 export type NativeSignedTransaction = {

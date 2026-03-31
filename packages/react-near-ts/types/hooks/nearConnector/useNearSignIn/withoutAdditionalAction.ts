@@ -1,8 +1,13 @@
 import type { MutateOptions } from '@tanstack/react-query';
+import type { AccountId } from 'near-api-ts';
 import type { BaseUseMutationResult, MutationOptions } from '../../_common/tanstackMutation.ts';
 
 type Variables = void;
-type Data = void;
+
+type Data = {
+  connectedAccountId: AccountId;
+};
+
 type Err = Error;
 
 export type WithoutAdditionalActionArgs<OnMutateResult> = {

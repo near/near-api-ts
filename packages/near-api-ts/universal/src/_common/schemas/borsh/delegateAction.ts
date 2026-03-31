@@ -9,9 +9,15 @@ import { functionCallActionBorshSchema } from './actions/functionCall';
 import { stakeActionBorshSchema } from './actions/stake';
 import { transferActionBorshSchema } from './actions/transfer';
 import { useGlobalContractActionBorshSchema } from './actions/useGlobalContract';
-import { publicKeyBorshSchema } from './publicKey';
+import { PublicKeyBorshSchema } from './publicKey';
+import { SignatureBorshSchema } from './signature';
 
-const allowedActionBorshSchema: Schema = {
+// Delegate action cannot contain another delegate action;
+// But we have to keep it to make sure that the enum is the same as in nearcore
+// (for borsh serialization/deserialization). So we use a placeholder struct here -
+// delegate: 'bool'. The field type is not important, it is just used to make sure that
+// the enum is the same.
+const NonDelegateActionBorshSchema: Schema = {
   enum: [
     createAccountActionBorshSchema,
     deployContractActionBorshSchema,
@@ -21,21 +27,26 @@ const allowedActionBorshSchema: Schema = {
     addKeyActionBorshSchema,
     deleteKeyActionBorshSchema,
     deleteAccountActionBorshSchema,
-    { struct: { signedDelegate: 'string' } }, // TODO is it possible to rid this placeholder and keep enum order?
+    { struct: { delegate: 'bool' } },
     deployGlobalContractActionBorshSchema,
     useGlobalContractActionBorshSchema,
   ],
 };
 
-export const delegateActionBorshSchema: Schema = {
+export const DelegateActionBorshSchema: Schema = {
   struct: {
     senderId: 'string',
-    publicKey: publicKeyBorshSchema,
-    actions: { array: { type: allowedActionBorshSchema } },
     receiverId: 'string',
+    actions: { array: { type: NonDelegateActionBorshSchema } },
     nonce: 'u64',
     maxBlockHeight: 'u64',
+    publicKey: PublicKeyBorshSchema,
   },
 };
 
-// TODO add DelegateActionPrefix
+export const SignedDelegateActionBorshSchema: Schema = {
+  struct: {
+    delegateAction: DelegateActionBorshSchema,
+    signature: SignatureBorshSchema,
+  },
+};

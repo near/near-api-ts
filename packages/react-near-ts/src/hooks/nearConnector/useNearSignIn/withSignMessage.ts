@@ -98,11 +98,12 @@ export const withSignMessage = (
 
         const nearConnectSignedMessage = await promise;
         const signedMessage = transformSignedMessage(nearConnectSignedMessage, variables.message);
+        const connectedAccountId = signedMessage.signerAccountId;
 
-        setSigners(signedMessage.signerAccountId);
-        setConnectedAccountId(signedMessage.signerAccountId);
+        setSigners(connectedAccountId);
+        setConnectedAccountId(connectedAccountId);
 
-        return signedMessage;
+        return { signedMessage, connectedAccountId };
       } catch (e) {
         throw e;
       } finally {

@@ -33,6 +33,8 @@ export const withoutAdditionalAction = (
 
         setSigners(connectedAccountId);
         setConnectedAccountId(connectedAccountId);
+
+        return { connectedAccountId };
       } catch (e) {
         throw e;
       } finally {

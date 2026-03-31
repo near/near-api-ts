@@ -1,6 +1,6 @@
 import type { Schema } from 'borsh';
 
-export const Nep413MessageSchema: Schema = {
+export const Nep413MessageBorshSchema: Schema = {
   struct: {
     tag: 'u32',
     message: 'string',

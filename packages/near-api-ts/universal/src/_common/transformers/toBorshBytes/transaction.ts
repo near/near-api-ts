@@ -1,6 +1,9 @@
 import { serialize } from 'borsh';
 import type { BorshBytes } from '../../../../types/_common/common';
-import { signedTransactionBorshSchema, transactionBorshSchema } from '../../schemas/borsh';
+import {
+  SignedTransactionBorshSchema,
+  TransactionBorshSchema,
+} from '../../schemas/borsh/transaction';
 import type {
   InnerSignedTransaction,
   InnerTransaction,
@@ -9,10 +12,10 @@ import { toNativeSignedTransaction, toNativeTransaction } from '../toNative/tran
 
 export const toBorshTransaction = (transaction: InnerTransaction): BorshBytes => {
   const nativeTransaction = toNativeTransaction(transaction);
-  return serialize(transactionBorshSchema, nativeTransaction);
+  return serialize(TransactionBorshSchema, nativeTransaction);
 };
 
 export const toBorshSignedTransaction = (signedTransaction: InnerSignedTransaction): BorshBytes => {
   const nativeSignedTransaction = toNativeSignedTransaction(signedTransaction);
-  return serialize(signedTransactionBorshSchema, nativeSignedTransaction);
+  return serialize(SignedTransactionBorshSchema, nativeSignedTransaction);
 };

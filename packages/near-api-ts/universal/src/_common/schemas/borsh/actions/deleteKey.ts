@@ -1,10 +1,10 @@
-import { publicKeyBorshSchema } from '../publicKey';
+import { PublicKeyBorshSchema } from '../publicKey';
 
 export const deleteKeyActionBorshSchema = {
   struct: {
     deleteKey: {
       struct: {
-        publicKey: publicKeyBorshSchema,
+        publicKey: PublicKeyBorshSchema,
       },
     },
   },

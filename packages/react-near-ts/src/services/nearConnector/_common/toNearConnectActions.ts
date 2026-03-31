@@ -82,7 +82,10 @@ const toNearConnectAction = (action: NatAction): NearConnectorAction => {
   throw new Error(`Unsupported action type: ${action}`);
 };
 
-export const toNearConnectActions = (intent: TransactionIntent): NearConnectorAction[] => {
+// TODO make sure that it will work only without a sponsor action;
+export const toNearConnectActions = (
+  intent: Omit<TransactionIntent, 'receiverAccountId'>,
+): NearConnectorAction[] => {
   if (intent.action) return [toNearConnectAction(intent.action)];
   if (intent.actions) return intent.actions.map((action) => toNearConnectAction(action));
   return [];

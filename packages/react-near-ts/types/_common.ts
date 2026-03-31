@@ -5,3 +5,5 @@ export type KeyIf<K extends PropertyKey, V> = [V] extends [undefined]
 export type ResultOk<V> = { ok: true; value: V };
 export type ResultErr<E> = { ok: false; error: E };
 export type Result<V, E> = ResultOk<V> | ResultErr<E>;
+
+// TODO move to _common folder

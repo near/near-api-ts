@@ -1,6 +1,7 @@
 import { NearConnector } from '@hot-labs/near-connect';
 import type { CreateNearConnectorService } from '../../../types/services/nearConnector.ts';
-import { createSafeExecuteTransaction } from './executeTransaction/executeTransaction.ts';
+import { createSafeExecuteTransaction } from './executeTransaction.ts';
+import { createSafeSignDelegation } from './signDelegation.ts';
 import { createSafeSignMessage } from './signMessage.ts';
 
 const serviceId = 'nearConnector';
@@ -12,8 +13,8 @@ export const createNearConnectorService: CreateNearConnectorService = (args) => 
     const connector = new NearConnector({
       network: args.networkId,
       features: {
-        signDelegateActions: true
-      }
+        signDelegateActions: true,
+      },
     });
     return {
       serviceId,
@@ -26,6 +27,7 @@ export const createNearConnectorService: CreateNearConnectorService = (args) => 
       serviceId,
       safeExecuteTransaction: createSafeExecuteTransaction(args.serviceBox.connector),
       safeSignMessage: createSafeSignMessage(args.serviceBox.connector),
+      safeSignDelegation: createSafeSignDelegation(args.serviceBox.connector),
     };
   },
 });

@@ -20,6 +20,6 @@ const Secp256k1SignatureBorshSchema = {
   },
 };
 
-export const signatureBorshSchema: Schema = {
+export const SignatureBorshSchema: Schema = {
   enum: [Ed25519SignatureBorshSchema, Secp256k1SignatureBorshSchema],
 };

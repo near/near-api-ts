@@ -60,6 +60,8 @@ export const withAddFunctionCallKey = (
 
         setSigners(connectedAccountId);
         setConnectedAccountId(connectedAccountId);
+
+        return { connectedAccountId };
       } catch (e) {
         throw e;
       } finally {

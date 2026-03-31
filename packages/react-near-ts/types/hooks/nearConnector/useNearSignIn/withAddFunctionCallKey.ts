@@ -10,7 +10,10 @@ export type Variables = {
   allowedFunctions: AllowedFunctions;
 };
 
-type Data = void;
+type Data = {
+  connectedAccountId: AccountId;
+};
+
 type Err = Error;
 
 export type WithAddFunctionCallKeyArgs<OnMutateResult> = {

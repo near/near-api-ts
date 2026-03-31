@@ -135,12 +135,14 @@ export type { Curve } from './types/_common/curveString';
 export type { Message, SignedMessage } from './types/_common/message';
 export type { FunctionCallAction } from './types/_common/transaction/actions/functionCall';
 export type { TransferAction } from './types/_common/transaction/actions/transfer';
+export type { Delegation, DelegationIntent, SignedDelegation } from './types/_common/transaction/delegation';
 export type {
   Action,
   SignedTransaction,
   Transaction,
   TransactionIntent,
 } from './types/_common/transaction/transaction';
+
 // Client
 export type { Client } from './types/client/client';
 export type {

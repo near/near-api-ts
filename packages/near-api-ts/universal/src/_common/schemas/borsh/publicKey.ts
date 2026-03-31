@@ -20,6 +20,6 @@ const Secp256k1PublicKeyBorshSchema = {
   },
 };
 
-export const publicKeyBorshSchema: Schema = {
+export const PublicKeyBorshSchema: Schema = {
   enum: [Ed25519PublicKeyBorshSchema, Secp256k1PublicKeyBorshSchema],
 };

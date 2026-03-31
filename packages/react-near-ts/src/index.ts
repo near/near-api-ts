@@ -1,48 +1,20 @@
 'use client';
 
-// near-api-ts reexports
-export * from 'near-api-ts';
-
+// biome-ignore assist/source/organizeImports: exports
 export { useNearSignIn } from './hooks/nearConnector/useNearSignIn/useNearSignIn.ts';
 export { useNearSignOut } from './hooks/nearConnector/useNearSignOut.ts';
-// Lib
 export { useAccountInfo } from './hooks/useAccountInfo.ts';
 export { useConnectedAccount } from './hooks/useConnectedAccount.ts';
 export { useContractReadFunction } from './hooks/useContractReadFunction.ts';
 export { useExecuteTransaction } from './hooks/useExecuteTransaction.ts';
 export { useSignMessage } from './hooks/useSignMessage.ts';
+export { useSignDelegation } from './hooks/useSignDelegation.ts';
 export { MainnetNearProvider } from './providers/MainnetNearProvider.tsx';
 export { NearProvider } from './providers/NearProvider.tsx';
 export { TestnetNearProvider } from './providers/TestnetNearProdiver.tsx';
 export { createNearConnectorService } from './services/nearConnector/nearConnector.ts';
 export { createNearStore } from './store/nearStore.ts';
 
-// export {
-//   createTestnetClient,
-//   createMainnetClient,
-//   createClient,
-//   // actionCreators
-//   createAccount,
-//   transfer,
-//   addFullAccessKey,
-//   addFunctionCallKey,
-//   functionCall,
-//   deployContract,
-//   stake,
-//   deleteKey,
-//   deleteAccount,
-//   //utils
-//   keyPair,
-//   randomEd25519KeyPair,
-//   randomSecp256k1KeyPair,
-//   nearToken,
-//   near,
-//   yoctoNear,
-//   nearGas,
-//   gas,
-//   teraGas,
-//   fromJsonBytes,
-//   toJsonBytes,
-// } from 'near-api-ts';
+// near-api-ts reexports
+export * from 'near-api-ts';
 
-// export type { DeserializeResultFnArgs } from 'near-api-ts';

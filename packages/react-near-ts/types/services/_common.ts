@@ -1,17 +1,18 @@
-import type { AccountId, Client, Message, SignedMessage, TransactionIntent } from 'near-api-ts';
+import type {
+  AccountId,
+  Client,
+  DelegationIntent,
+  Message,
+  SignedMessage,
+  TransactionIntent,
+} from 'near-api-ts';
 import type { Result } from '../_common.ts';
 
 // ------------------------------------------------------------------------------------------------
 // ExecuteTransaction
 
-export type ExecuteTransactionArgs = {
-  intent: TransactionIntent;
-};
-
-export type ExecuteTransactionOutput = {
-  rawRpcResult: unknown;
-};
-
+export type ExecuteTransactionArgs = { intent: TransactionIntent };
+export type ExecuteTransactionOutput = { rawRpcResult: unknown };
 type ExecuteTransactionError = unknown;
 
 export type SafeExecuteTransaction = (
@@ -21,17 +22,27 @@ export type SafeExecuteTransaction = (
 // ------------------------------------------------------------------------------------------------
 // SignMessage
 
-export type SignMessageArgs = {
-  message: Message;
-};
-
+export type SignMessageArgs = { message: Message };
 export type SignMessageOutput = SignedMessage;
-
 type SignMessageError = unknown;
 
 export type SafeSignMessage = (
   args: SignMessageArgs,
 ) => Promise<Result<SignMessageOutput, SignMessageError>>;
+
+// ------------------------------------------------------------------------------------------------
+// Sign Delegation
+
+export type SignDelegationArgs = { intent: DelegationIntent };
+
+// TODO replace with SignedDelegation in the future
+export type SignDelegationOutput = { borsh64SignedDelegation: string };
+
+type SignDelegationError = unknown;
+
+export type SafeSignDelegation = (
+  args: SignDelegationArgs,
+) => Promise<Result<SignDelegationOutput, SignDelegationError>>;
 
 // ------------------------------------------------------------------------------------------------
 
@@ -41,6 +52,7 @@ export type Signer<ServiceId extends string = string> = {
   serviceId: ServiceId;
   safeExecuteTransaction: SafeExecuteTransaction;
   safeSignMessage: SafeSignMessage;
+  safeSignDelegation: SafeSignDelegation;
 };
 
 export type Service<

@@ -10,6 +10,7 @@ const items = [
   { href: '/send-near', label: 'Send Near' },
   { href: '/contract-records', label: 'Contract Records' },
   { href: '/sign-message', label: 'Sign Message' },
+  { href: '/sign-delegate-action', label: 'Sign Delegate Action' },
 ];
 
 export const Navigation = () => {

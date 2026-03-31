@@ -1,6 +1,11 @@
 import type { NearConnector } from '@hot-labs/near-connect';
 import type { AccountId, PublicKey } from 'near-api-ts';
-import type { SafeExecuteTransaction, SafeSignMessage, ServiceCreator } from './_common.ts';
+import type {
+  SafeExecuteTransaction,
+  SafeSignDelegation,
+  SafeSignMessage,
+  ServiceCreator,
+} from './_common.ts';
 
 type CreateAccountAction = {
   createAccount: {};
@@ -76,6 +81,7 @@ export type NearConnectorAction =
 
 export type CreateSafeExecuteTransaction = (connector: NearConnector) => SafeExecuteTransaction;
 export type CreateSafeSignMessage = (connector: NearConnector) => SafeSignMessage;
+export type CreateSafeSignDelegation = (connector: NearConnector) => SafeSignDelegation;
 
 export type NearConnectorNetworkId = 'mainnet' | 'testnet';
 

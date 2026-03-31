@@ -1,4 +1,4 @@
-import { publicKeyBorshSchema } from '../publicKey';
+import { PublicKeyBorshSchema } from '../publicKey';
 
 const fullAccessPermissionBorshSchema = {
   struct: {
@@ -33,7 +33,7 @@ export const addKeyActionBorshSchema = {
   struct: {
     addKey: {
       struct: {
-        publicKey: publicKeyBorshSchema,
+        publicKey: PublicKeyBorshSchema,
         accessKey: accessKeyBorshSchema,
       },
     },
