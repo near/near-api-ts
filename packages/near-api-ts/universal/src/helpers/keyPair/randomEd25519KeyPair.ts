@@ -17,16 +17,19 @@ const createSafeSignByEd25519Key = (u8PrivateKey: Uint8Array) =>
 export const safeRandomEd25519KeyPair: SafeCreateRandomEd25519KeyPair = wrapInternalError(
   'CreateRandomEd25519KeyPair.Internal',
   () => {
-    const { secretKey: u8SecretKey, publicKey: u8PublicKey } = ed25519.keygen();
+    const { secretKey: secretKeyU8, publicKey: publicKeyU8 } = ed25519.keygen();
 
-    const u8PrivateKey = new Uint8Array([...u8SecretKey, ...u8PublicKey]);
-    const publicKey = toEd25519CurveString(u8PublicKey);
-    const privateKey = toEd25519CurveString(u8PrivateKey);
-    const safeSign = createSafeSignByEd25519Key(u8PrivateKey);
+    const privateKeyU8 = new Uint8Array([...secretKeyU8, ...publicKeyU8]);
+    const publicKey = toEd25519CurveString(publicKeyU8);
+    const privateKey = toEd25519CurveString(privateKeyU8);
+    const safeSign = createSafeSignByEd25519Key(privateKeyU8);
 
     return result.ok({
+      curve: 'ed25519' as const,
       publicKey,
+      publicKeyU8,
       privateKey,
+      privateKeyU8,
       sign: asThrowable(safeSign),
       safeSign,
     });

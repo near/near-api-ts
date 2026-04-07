@@ -24,8 +24,11 @@ export type SafeSignBySecp256k1Key = (
 type CreateRandomSecp256k1Error = NatError<'CreateRandomSecp256k1KeyPair.Internal'>;
 
 export type Secp256k1KeyPair = {
+  curve: 'secp256k1';
   publicKey: Secp256k1PublicKey;
+  publicKeyU8: Uint8Array;
   privateKey: Secp256k1PrivateKey;
+  privateKeyU8: Uint8Array;
   sign: SignBySecp256k1Key;
   safeSign: SafeSignBySecp256k1Key;
 };

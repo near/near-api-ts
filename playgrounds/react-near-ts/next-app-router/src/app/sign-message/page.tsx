@@ -38,14 +38,16 @@ const SignMessage = () => {
   }
 
   const signMessage = async () => {
+    // backend
     const message = createMessage({
       message: 'Login',
       recipient: 'abc',
     });
-
+    // frontend
     const signedMessage = await signMessageAsync({ message });
     console.log('Signed message:', signedMessage);
 
+    // backend fetch(/verify, { signedMessage } )
     const isValid = await verifyMessage({
       signedMessage,
       message,

@@ -3,11 +3,13 @@ import { functionCall, useSignDelegation } from 'react-near-ts';
 import { ContractAccountId } from '@/app/contract-records/config.ts';
 
 export const useSignAddRecordDelegation = (setRecordInput: Dispatch<SetStateAction<string>>) => {
-  const mutation = useSignDelegation({ mutation: { onSettled: () => setRecordInput('') } });
+  const { signDelegation, ...mutation } = useSignDelegation({
+    mutation: { onSettled: () => setRecordInput('') },
+  });
 
   return {
     signAddRecordDelegation: (record: string) => {
-      mutation.signDelegation({
+      signDelegation({
         intent: {
           action: functionCall({
             functionName: 'add_record',
@@ -19,6 +21,6 @@ export const useSignAddRecordDelegation = (setRecordInput: Dispatch<SetStateActi
         },
       });
     },
-    signAddRecordDelegationMutation: mutation,
+    ...mutation,
   };
 };

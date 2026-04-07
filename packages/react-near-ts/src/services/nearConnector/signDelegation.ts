@@ -18,10 +18,10 @@ export const createSafeSignDelegation: CreateSafeSignDelegation =
         ],
       });
 
-      const borsh64SignedDelegation = signedDelegateActions[0];
-      // TODO need to unpack to borsh64SignedDelegation to delegation + signature
+      const signedDelegationBorsh64 = signedDelegateActions[0];
+      // TODO need to unpack to signedDelegationBorsh64 to delegation + signature
 
-      return result.ok({ borsh64SignedDelegation });
+      return result.ok({ signedDelegationBorsh64 });
     } catch (e) {
       return result.err(e);
     }

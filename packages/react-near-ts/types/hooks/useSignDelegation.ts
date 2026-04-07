@@ -9,7 +9,7 @@ type SignDelegationVariables = {
 
 // TODO replace with SignedDelegation in the future
 
-type SingDelegationOutput = { borsh64SignedDelegation: string };
+type SingDelegationOutput = { signedDelegationBorsh64: string };
 type SingDelegationError = Error;
 
 type UseSignDelegationArgs<OnMutateResult> = {

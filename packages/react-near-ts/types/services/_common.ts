@@ -36,7 +36,7 @@ export type SafeSignMessage = (
 export type SignDelegationArgs = { intent: DelegationIntent };
 
 // TODO replace with SignedDelegation in the future
-export type SignDelegationOutput = { borsh64SignedDelegation: string };
+export type SignDelegationOutput = { signedDelegationBorsh64: string };
 
 type SignDelegationError = unknown;
 

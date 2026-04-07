@@ -41,6 +41,7 @@ export const createSafeSignMessage: CreateSafeSignMessage = (connector) => async
     const base58Signature =
       curve === 'ed25519' ? toEd25519CurveString(u8Signature) : toSecp256k1CurveString(u8Signature);
 
+    /// todo Return messageBorsh64 + add tag to Message
     return result.ok({
       signerAccountId: validNearConnectSignedMessage.accountId,
       signerPublicKey: publicKey,

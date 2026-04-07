@@ -1,7 +1,7 @@
 import type { Schema } from 'borsh';
 import { addKeyActionBorshSchema } from './addKey';
 import { createAccountActionBorshSchema } from './createAccount';
-import { DelegateActionBorshSchema } from './delegate';
+import { DelegateActionActionBorshSchema } from './delegate';
 import { deleteAccountActionBorshSchema } from './deleteAccount';
 import { deleteKeyActionBorshSchema } from './deleteKey';
 import { deployContractActionBorshSchema } from './deployContract';
@@ -23,7 +23,7 @@ export const ActionBorshSchema: Schema = {
     addKeyActionBorshSchema,
     deleteKeyActionBorshSchema,
     deleteAccountActionBorshSchema,
-    DelegateActionBorshSchema,
+    DelegateActionActionBorshSchema,
     deployGlobalContractActionBorshSchema,
     useGlobalContractActionBorshSchema,
   ],

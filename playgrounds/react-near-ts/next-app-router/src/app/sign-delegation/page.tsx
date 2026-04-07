@@ -9,7 +9,7 @@ import { useSignAddRecordDelegation } from '@/app/sign-delegation/useSignAddReco
 const SignDelegateAction = () => {
   const { isConnectedAccount } = useConnectedAccount();
   const [recordInput, setRecordInput] = useState('');
-  const { signAddRecordDelegation, signAddRecordDelegationMutation } =
+  const { signAddRecordDelegation, data, isPending, isSuccess } =
     useSignAddRecordDelegation(setRecordInput);
 
   return (
@@ -36,13 +36,13 @@ const SignDelegateAction = () => {
                 color="#12b886"
                 onClick={() => signAddRecordDelegation(recordInput)}
                 disabled={!recordInput.trim()}
-                loading={signAddRecordDelegationMutation.isPending}
+                loading={isPending}
               >
                 Sign Delegation
               </Button>
             </Group>
 
-            {signAddRecordDelegationMutation.isSuccess && (
+            {isSuccess && (
               <Stack>
                 <Space />
                 <Text size="sm" c="green">
@@ -56,7 +56,7 @@ const SignDelegateAction = () => {
                     },
                   }}
                 >
-                  {signAddRecordDelegationMutation.data.borsh64SignedDelegation}
+                  {data.signedDelegationBorsh64}
                 </Code>
               </Stack>
             )}

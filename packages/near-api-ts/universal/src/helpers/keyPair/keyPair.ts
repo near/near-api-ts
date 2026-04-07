@@ -38,8 +38,11 @@ export const safeKeyPair: SafeCreateKeyPair = wrapInternalError(
     const safeSign = createSafeSign(validPrivateKey.data);
 
     return result.ok({
+      curve: innerPublicKey.curve,
       publicKey: innerPublicKey.publicKey,
+      publicKeyU8: innerPublicKey.u8PublicKey,
       privateKey: validPrivateKey.data.privateKey,
+      privateKeyU8: validPrivateKey.data.u8PrivateKey,
       sign: asThrowable(safeSign),
       safeSign,
     });

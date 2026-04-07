@@ -30,8 +30,11 @@ type CreateKeyPairError =
   | NatError<'CreateKeyPair.Internal'>;
 
 export type KeyPair = {
+  curve: Curve;
   publicKey: PublicKey;
+  publicKeyU8: Uint8Array;
   privateKey: PrivateKey;
+  privateKeyU8: Uint8Array;
   sign: Sign;
   safeSign: SafeSign;
 };

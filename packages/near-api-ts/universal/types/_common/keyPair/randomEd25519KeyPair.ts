@@ -24,8 +24,11 @@ export type SafeSignByEd25519Key = (
 type CreateRandomEd25519KeyPairError = NatError<'CreateRandomEd25519KeyPair.Internal'>;
 
 export type Ed25519KeyPair = {
+  curve: 'ed25519';
   publicKey: Ed25519PublicKey;
+  publicKeyU8: Uint8Array;
   privateKey: Ed25519PrivateKey;
+  privateKeyU8: Uint8Array;
   sign: SignByEd25519Key;
   safeSign: SafeSignByEd25519Key;
 };
