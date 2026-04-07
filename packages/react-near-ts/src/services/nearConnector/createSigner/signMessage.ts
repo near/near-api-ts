@@ -6,8 +6,11 @@ import {
   toSecp256k1CurveString,
 } from 'near-api-ts';
 import * as z from 'zod/mini';
-import type { CreateSafeSignMessage } from '../../../types/services/nearConnector.ts';
-import { result } from '../../_common/utils/result.ts';
+import type {
+  CreateCanSignMessage,
+  CreateSafeSignMessage,
+} from '../../../../types/services/nearConnector.ts';
+import { result } from '../../../_common/utils/result.ts';
 
 const NearConnectSignedMessageSchema = z.object({
   accountId: AccountIdSchema,
@@ -52,3 +55,7 @@ export const createSafeSignMessage: CreateSafeSignMessage = (connector) => async
     return result.err(e);
   }
 };
+
+// We assume that if the wallet declares that it supports signMessage, then it supports signMessage;
+export const createCanSignMessage: CreateCanSignMessage = (connector) => (_args) =>
+  connector.features.signMessage === true;

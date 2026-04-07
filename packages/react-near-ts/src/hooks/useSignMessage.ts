@@ -6,16 +6,21 @@ import { useNearStore } from '../store/NearStoreProvider.tsx';
 
 const tryOnManySigners = async (args: SignMessageArgs, context: StoreContext) => {
   const signers = context.signers;
-  if (signers.length === 0) throw new Error('No signers available');
 
   const signMessage = async (signerIndex: number) => {
     const signer = signers[signerIndex];
 
+    if (!signer)
+      throw new Error(
+        'There is no signer that can sign message. If you use nearConnect service make sure ' +
+          'to enable supportedFeatures.signMessage feature in createNearConnectorService',
+      );
+
+    const canSign = signer.canSignMessage(args);
+    if (!canSign) return signMessage(signerIndex + 1);
+
     const result = await signer.safeSignMessage(args);
     if (result.ok) return result.value;
-
-    // right now we only support one signer - we will support multiple signers after adding
-    // canSignMessage method to all signers
 
     throw result.error;
   };

@@ -13,7 +13,7 @@ export const createNearStore: CreateNearStore = (args) => {
   // TODO check if service already exists; If so - throw an error
   const services = serviceCreators.reduce(
     (acc, creator) => {
-      acc[creator.serviceId] = creator.createService();
+      acc[creator.serviceId] = creator.createService({ networkId });
       return acc;
     },
     {} as Record<ServiceId, Service>,

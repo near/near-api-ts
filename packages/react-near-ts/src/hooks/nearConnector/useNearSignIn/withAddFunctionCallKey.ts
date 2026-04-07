@@ -21,6 +21,14 @@ export const withAddFunctionCallKey = (
       const services = NearConnectorServiceSchema.parse(context.services);
       const connector = services.nearConnector.serviceBox.connector;
 
+      // We want to make sure that the wallet supports the signIn + addFunctionCallKey feature
+      // before we try to use it.
+      if (!connector.features.signInWithFunctionCallKey)
+        throw new Error(
+          'Please enable supportedFeatures.signInAdditionalAction.addFunctionCallKey flag ' +
+          'in createNearConnectorService before using the hook.',
+        );
+
       let callback!: (event: EventMap['wallet:signIn']) => void;
 
       try {

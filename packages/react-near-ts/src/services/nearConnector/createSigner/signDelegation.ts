@@ -1,6 +1,9 @@
 import type { NearConnector } from '@hot-labs/near-connect';
-import type { CreateSafeSignDelegation } from '../../../types/services/nearConnector.ts';
-import { result } from '../../_common/utils/result.ts';
+import type {
+  CreateCanSignDelegation,
+  CreateSafeSignDelegation,
+} from '../../../../types/services/nearConnector.ts';
+import { result } from '../../../_common/utils/result.ts';
 import { toNearConnectActions } from './_common/toNearConnectActions.ts';
 
 export const createSafeSignDelegation: CreateSafeSignDelegation =
@@ -26,3 +29,7 @@ export const createSafeSignDelegation: CreateSafeSignDelegation =
       return result.err(e);
     }
   };
+
+// We assume that if the wallet declares that it supports signDelegation, then it supports signDelegation;
+export const createCanSignDelegation: CreateCanSignDelegation = (connector) => (_args) =>
+  connector.features.signDelegateActions === true;

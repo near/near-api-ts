@@ -1,6 +1,6 @@
 import type { Action as NatAction, TransactionIntent } from 'near-api-ts';
 import { nearGas, nearToken } from 'near-api-ts';
-import type { NearConnectorAction } from '../../../../types/services/nearConnector.ts';
+import type { NearConnectorAction } from '../../../../../types/services/nearConnector.ts';
 
 const toNearConnectAction = (action: NatAction): NearConnectorAction => {
   if (action.actionType === 'CreateAccount')

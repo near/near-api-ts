@@ -5,8 +5,8 @@ import React from 'react';
 import { Topbar } from './_components/Topbar/Topbar';
 import './globals.css';
 import '@mantine/core/styles.css';
-import { TestnetNearProvider } from 'react-near-ts';
 import { Navigation } from './_components/Navigation/Navigation';
+import { CustomNearProvider } from '@/app/CustomNearProvider.tsx';
 
 const displayFont = Playfair_Display({
   subsets: ['latin'],
@@ -30,7 +30,7 @@ const RootLayout = ({
 }>) => (
   <html lang="en" className={`${displayFont.variable} ${bodyFont.variable}`}>
     <body className={bodyFont.variable}>
-      <TestnetNearProvider>
+      <CustomNearProvider>
         <MantineProvider>
           <Space h="lg" />
           <Container size="sm">
@@ -41,7 +41,7 @@ const RootLayout = ({
             {children}
           </Container>
         </MantineProvider>
-      </TestnetNearProvider>
+      </CustomNearProvider>
     </body>
   </html>
 );

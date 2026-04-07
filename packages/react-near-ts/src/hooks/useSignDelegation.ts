@@ -6,10 +6,18 @@ import { useNearStore } from '../store/NearStoreProvider.tsx';
 
 const tryOnManySigners = async (args: SignDelegationArgs, context: StoreContext) => {
   const signers = context.signers;
-  if (signers.length === 0) throw new Error('No signers available');
 
-  const signMessage = async (signerIndex: number) => {
+  const signDelegation = async (signerIndex: number) => {
     const signer = signers[signerIndex];
+
+    if (!signer)
+      throw new Error(
+        'There is no signer that can sign delegation. If you use nearConnect service make sure ' +
+          'to enable supportedFeatures.signDelegation feature in createNearConnectorService',
+      );
+
+    const canSign = signer.canSignDelegation(args);
+    if (!canSign) return signDelegation(signerIndex + 1);
 
     const result = await signer.safeSignDelegation(args);
     if (result.ok) return result.value;
@@ -17,7 +25,7 @@ const tryOnManySigners = async (args: SignDelegationArgs, context: StoreContext)
     throw result.error;
   };
 
-  return signMessage(0);
+  return signDelegation(0);
 };
 
 export const useSignDelegation: UseSignDelegation = (args) => {

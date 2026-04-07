@@ -1,5 +1,8 @@
-import type { CreateSafeExecuteTransaction } from '../../../types/services/nearConnector.ts';
-import { result } from '../../_common/utils/result.ts';
+import type {
+  CreateCanExecuteTransaction,
+  CreateSafeExecuteTransaction,
+} from '../../../../types/services/nearConnector.ts';
+import { result } from '../../../_common/utils/result.ts';
 import { toNearConnectActions } from './_common/toNearConnectActions.ts';
 
 export const createSafeExecuteTransaction: CreateSafeExecuteTransaction =
@@ -17,3 +20,6 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction =
       return result.err(e);
     }
   };
+
+export const createCanExecuteTransaction: CreateCanExecuteTransaction = (connector) => (_args) =>
+  connector.features.signAndSendTransaction === true;

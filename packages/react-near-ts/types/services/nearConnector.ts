@@ -1,6 +1,9 @@
 import type { NearConnector } from '@hot-labs/near-connect';
 import type { AccountId, PublicKey } from 'near-api-ts';
 import type {
+  CanExecuteTransaction,
+  CanSignDelegation,
+  CanSignMessage,
   SafeExecuteTransaction,
   SafeSignDelegation,
   SafeSignMessage,
@@ -80,16 +83,30 @@ export type NearConnectorAction =
   | DeleteAccountAction;
 
 export type CreateSafeExecuteTransaction = (connector: NearConnector) => SafeExecuteTransaction;
-export type CreateSafeSignMessage = (connector: NearConnector) => SafeSignMessage;
-export type CreateSafeSignDelegation = (connector: NearConnector) => SafeSignDelegation;
+export type CreateCanExecuteTransaction = (connector: NearConnector) => CanExecuteTransaction;
 
-export type NearConnectorNetworkId = 'mainnet' | 'testnet';
+export type CreateSafeSignMessage = (connector: NearConnector) => SafeSignMessage;
+export type CreateCanSignMessage = (connector: NearConnector) => CanSignMessage;
+
+export type CreateSafeSignDelegation = (connector: NearConnector) => SafeSignDelegation;
+export type CreateCanSignDelegation = (connector: NearConnector) => CanSignDelegation;
 
 export type NearConnectorServiceCreator = ServiceCreator<
   'nearConnector',
   { connector: NearConnector }
 >;
 
-export type CreateNearConnectorService = (args: {
-  networkId: NearConnectorNetworkId;
-}) => NearConnectorServiceCreator;
+export type CreateNearConnectorServiceArgs = {
+  supportedFeatures?: {
+    signInAdditionalAction?: {
+      signMessage?: boolean;
+      addFunctionCallKey?: boolean;
+    };
+    signMessage?: boolean;
+    signDelegation?: boolean;
+  };
+};
+
+export type CreateNearConnectorService = (
+  args?: CreateNearConnectorServiceArgs,
+) => NearConnectorServiceCreator;

@@ -15,7 +15,7 @@ type UseExecuteTransactionArgs<OnMutateResult> = {
   mutation?: MutationOptions<Data, Err, Variables, OnMutateResult>;
 };
 
-type ExecuteTransactionArgs<OnMutateResult> = Prettify<
+export type ExecuteTransactionArgs<OnMutateResult> = Prettify<
   Variables & { mutate?: MutateOptions<Data, Err, Variables, OnMutateResult> }
 >;
 

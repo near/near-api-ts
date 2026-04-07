@@ -8,7 +8,7 @@ const createTestnetNearStore = () =>
   createNearStore({
     networkId: 'testnet',
     clientCreator: createTestnetClient,
-    serviceCreator: createNearConnectorService({ networkId: 'testnet' }),
+    serviceCreator: createNearConnectorService(),
   });
 
 export const TestnetNearProvider = (props: { children: ReactNode }) => (

@@ -19,6 +19,8 @@ export type SafeExecuteTransaction = (
   args: ExecuteTransactionArgs,
 ) => Promise<Result<ExecuteTransactionOutput, ExecuteTransactionError>>;
 
+export type CanExecuteTransaction = (args: ExecuteTransactionArgs) => boolean;
+
 // ------------------------------------------------------------------------------------------------
 // SignMessage
 
@@ -29,6 +31,8 @@ type SignMessageError = unknown;
 export type SafeSignMessage = (
   args: SignMessageArgs,
 ) => Promise<Result<SignMessageOutput, SignMessageError>>;
+
+export type CanSignMessage = (args: SignMessageArgs) => boolean;
 
 // ------------------------------------------------------------------------------------------------
 // Sign Delegation
@@ -44,6 +48,8 @@ export type SafeSignDelegation = (
   args: SignDelegationArgs,
 ) => Promise<Result<SignDelegationOutput, SignDelegationError>>;
 
+export type CanSignDelegation = (args: SignDelegationArgs) => boolean;
+
 // ------------------------------------------------------------------------------------------------
 
 export type ServiceId = string;
@@ -51,8 +57,11 @@ export type ServiceId = string;
 export type Signer<ServiceId extends string = string> = {
   serviceId: ServiceId;
   safeExecuteTransaction: SafeExecuteTransaction;
+  canExecuteTransaction: CanExecuteTransaction;
   safeSignMessage: SafeSignMessage;
+  canSignMessage: CanSignMessage;
   safeSignDelegation: SafeSignDelegation;
+  canSignDelegation: CanSignDelegation;
 };
 
 export type Service<
@@ -68,7 +77,7 @@ export type ServiceCreator<
   ServiceBox extends Record<string, unknown> = Record<string, unknown>,
 > = {
   serviceId: ServiceId;
-  createService(): Service<ServiceId, ServiceBox>;
+  createService(args: { networkId: string }): Service<ServiceId, ServiceBox>;
   createSigner(args: {
     signerAccountId: AccountId;
     serviceBox: ServiceBox;

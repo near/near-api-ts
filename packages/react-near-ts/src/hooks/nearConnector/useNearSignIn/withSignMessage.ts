@@ -78,6 +78,14 @@ export const withSignMessage = (
       const services = NearConnectorServiceSchema.parse(context.services);
       const connector = services.nearConnector.serviceBox.connector;
 
+      // We want to make sure that the wallet supports the signIn + signMessage feature
+      // before we try to use it.
+      if (!connector.features.signInAndSignMessage)
+        throw new Error(
+          'Please enable supportedFeatures.signInAdditionalAction.signMessage flag ' +
+            'in createNearConnectorService before using the hook.',
+        );
+
       let callback!: (event: EventMap['wallet:signInAndSignMessage']) => void;
 
       try {
