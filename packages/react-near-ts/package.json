@@ -1,6 +1,6 @@
 {
   "name": "react-near-ts",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "TypeScript-first toolkit for integrating NEAR Protocol with your React application",
   "type": "module",
   "publishConfig": {
