@@ -1,4 +1,4 @@
-import { secp256k1 } from '@noble/curves/secp256k1';
+import { getPublicKey, utils } from '@noble/secp256k1';
 import type {
   CreateRandomSecp256k1KeyPair,
   SafeCreateRandomSecp256k1KeyPair,
@@ -17,9 +17,9 @@ const createSafeSignBySecp256k1Key = (u8PrivateKey: Uint8Array) =>
 export const safeRandomSecp256k1KeyPair: SafeCreateRandomSecp256k1KeyPair = wrapInternalError(
   'CreateRandomSecp256k1KeyPair.Internal',
   () => {
-    const secretKeyU8 = secp256k1.utils.randomSecretKey();
+    const secretKeyU8 = utils.randomSecretKey();
     // nearcore expects an uncompressed public key without header 0x04
-    const publicKeyU8 = secp256k1.getPublicKey(secretKeyU8, false);
+    const publicKeyU8 = getPublicKey(secretKeyU8, false);
     const publicKeyWithoutHeaderU8 = publicKeyU8.slice(1);
 
     const privateKeyU8 = new Uint8Array([...secretKeyU8, ...publicKeyWithoutHeaderU8]);

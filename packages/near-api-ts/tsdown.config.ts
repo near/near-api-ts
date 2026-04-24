@@ -1,43 +1,40 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from 'tsdown';
 
 export default defineConfig([
   {
     entry: {
       'universal/index': 'universal/index.ts',
     },
+    root: 'universal',
     platform: 'neutral',
-    target: 'esnext',
+    target: 'es2025',
     format: ['esm'],
     outDir: 'dist',
     dts: true,
     sourcemap: true,
-    splitting: false,
-    clean: true,
   },
   {
     entry: {
       'node/index': 'node/index.ts',
     },
+    root: 'node',
     platform: 'node',
-    target: 'esnext',
+    target: 'es2025',
     format: ['esm'],
     outDir: 'dist',
     dts: true,
     sourcemap: true,
-    splitting: false,
-    clean: true,
   },
   {
     entry: {
       'browser/index': 'browser/index.ts',
     },
+    root: 'browser',
     platform: 'browser',
-    target: 'esnext',
+    target: 'es2025',
     format: ['esm'],
     outDir: 'dist',
     dts: true,
     sourcemap: true,
-    splitting: false,
-    clean: true,
   },
 ]);

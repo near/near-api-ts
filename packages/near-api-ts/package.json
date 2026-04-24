@@ -1,6 +1,6 @@
 {
   "name": "near-api-ts",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Typescript library for interactions with Near Protocol in the browser or Node.js",
   "type": "module",
   "engines": {
@@ -10,25 +10,28 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "tsdown",
+    "dev": "tsdown --watch",
     "run": "tsx universal/index.ts",
     "typecheck": "tsc --noEmit",
     "sandbox:stop": "kill-port 4560",
     "test:all": "vitest run"
   },
   "peerDependencies": {
-    "zod": ">=4.3.0 <5"
+    "zod": ">=4.3.6 <5"
   },
   "dependencies": {
     "@near-js/jsonrpc-types": "^1.6.0",
-    "@noble/curves": "^1.9.7",
-    "@noble/hashes": "^1.8.0",
-    "@scure/base": "^1.2.6",
+    "@noble/ed25519": "^3.1.0",
+    "@noble/hashes": "^2.2.0",
+    "@noble/secp256k1": "^3.1.0",
+    "@scure/base": "^2.2.0",
     "borsh": "^2.0.0",
-    "lodash-es": "^4.17.23"
+    "lodash-es": "^4.18.1",
+    "type-fest": "^5.6.0"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.12",
     "zod": "^4.3.6"
   },
   "exports": {
@@ -39,9 +42,9 @@
         "default": "./dist/browser/index.js"
       },
       "node": {
-        "types": "./dist/node/index.d.ts",
-        "import": "./dist/node/index.js",
-        "default": "./dist/node/index.js"
+        "types": "./dist/node/index.d.mts",
+        "import": "./dist/node/index.mjs",
+        "default": "./dist/node/index.mjs"
       },
       "default": {
         "types": "./dist/universal/index.d.ts",
@@ -55,9 +58,9 @@
       "default": "./dist/browser/index.js"
     },
     "./node": {
-      "types": "./dist/node/index.d.ts",
-      "import": "./dist/node/index.js",
-      "default": "./dist/node/index.js"
+      "types": "./dist/node/index.d.mts",
+      "import": "./dist/node/index.mjs",
+      "default": "./dist/node/index.mjs"
     }
   },
   "files": [

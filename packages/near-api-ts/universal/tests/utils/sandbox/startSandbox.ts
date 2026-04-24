@@ -19,15 +19,3 @@ export const startSandbox = async () =>
       ],
     },
   });
-
-export const withSandbox = async (fn: (args: { rpcUrl: string }) => Promise<void>) => {
-  console.log('starting sandbox...');
-  const sandbox = await startSandbox();
-  try {
-    await fn({ rpcUrl: sandbox.rpcUrl });
-  } catch (e) {
-    throw e;
-  } finally {
-    await sandbox.stop();
-  }
-};

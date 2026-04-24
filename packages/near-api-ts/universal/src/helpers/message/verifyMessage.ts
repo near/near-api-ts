@@ -1,4 +1,4 @@
-import { sha256 } from '@noble/hashes/sha2';
+import { sha256 } from '@noble/hashes/sha2.js';
 import * as z from 'zod/mini';
 import type { SafeVerifyMessage, VerifyMessage } from '../../../types/_common/message';
 import type { SafeGetAccountAccessKeys } from '../../../types/client/methods/account/getAccountAccessKeys';

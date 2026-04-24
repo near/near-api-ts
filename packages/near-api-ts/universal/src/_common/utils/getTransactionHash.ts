@@ -1,4 +1,4 @@
-import { sha256 } from '@noble/hashes/sha2';
+import { sha256 } from '@noble/hashes/sha2.js';
 import { base58 } from '@scure/base';
 import type { Base58String } from '../../../types/_common/common';
 import type { InnerTransaction } from '../schemas/zod/transaction/transaction';

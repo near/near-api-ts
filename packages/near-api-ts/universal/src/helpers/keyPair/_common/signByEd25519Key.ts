@@ -1,7 +1,10 @@
-import { ed25519 } from '@noble/curves/ed25519';
+import * as ed25519 from '@noble/ed25519';
+import { sha512 } from '@noble/hashes/sha2.js';
 import { BinaryLengths } from '../../../_common/configs/constants';
 import { toEd25519CurveString } from '../../../_common/transformers/toCurveString';
 import { result } from '../../../_common/utils/result';
+
+ed25519.hashes.sha512 = sha512;
 
 export const signByEd25519Key = (u8PrivateKey: Uint8Array, u8Message: Uint8Array) => {
   const u8SecretKey = u8PrivateKey.slice(0, BinaryLengths.Ed25519.SecretKey);

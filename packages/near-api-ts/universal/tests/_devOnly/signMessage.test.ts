@@ -1,4 +1,4 @@
-import { sha256 } from '@noble/hashes/sha2';
+import { sha256 } from '@noble/hashes/sha2.js';
 import { describe, it } from 'vitest';
 import { createTestnetClient, keyPair } from '../../index';
 import { toBorshNep413Message } from '../../src/_common/transformers/toBorshBytes/message';

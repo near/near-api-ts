@@ -1,4 +1,4 @@
-import { ed25519 } from '@noble/curves/ed25519';
+import { keygen } from '@noble/ed25519';
 import type {
   CreateRandomEd25519KeyPair,
   SafeCreateRandomEd25519KeyPair,
@@ -17,7 +17,7 @@ const createSafeSignByEd25519Key = (u8PrivateKey: Uint8Array) =>
 export const safeRandomEd25519KeyPair: SafeCreateRandomEd25519KeyPair = wrapInternalError(
   'CreateRandomEd25519KeyPair.Internal',
   () => {
-    const { secretKey: secretKeyU8, publicKey: publicKeyU8 } = ed25519.keygen();
+    const { secretKey: secretKeyU8, publicKey: publicKeyU8 } = keygen();
 
     const privateKeyU8 = new Uint8Array([...secretKeyU8, ...publicKeyU8]);
     const publicKey = toEd25519CurveString(publicKeyU8);

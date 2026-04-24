@@ -11,10 +11,10 @@
   "dependencies": {
     "@mantine/core": "^8.3.16",
     "@mantine/hooks": "^8.3.16",
-    "@tanstack/react-query": "^5.90.21",
-    "next": "16.2.1",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "@tanstack/react-query": "^5.100.1",
+    "next": "16.2.3",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "react-near-ts": "workspace:*",
     "zod": "^4.3.6"
   },

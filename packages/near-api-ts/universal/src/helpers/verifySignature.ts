@@ -1,5 +1,7 @@
-import { ed25519 } from '@noble/curves/ed25519';
-import { secp256k1 } from '@noble/curves/secp256k1';
+import * as ed25519 from '@noble/ed25519';
+import { hmac } from '@noble/hashes/hmac.js';
+import { sha256, sha512 } from '@noble/hashes/sha2.js';
+import * as secp256k1 from '@noble/secp256k1';
 import * as z from 'zod/mini';
 import type { SafeVerifySignature, VerifySignature } from '../../types/_common/verifySignature';
 import { resultNatError } from '../_common/natError';
@@ -8,6 +10,10 @@ import { SignatureSchema } from '../_common/schemas/zod/common/signature';
 import { asThrowable } from '../_common/utils/asThrowable';
 import { result } from '../_common/utils/result';
 import { wrapInternalError } from '../_common/utils/wrapInternalError';
+
+ed25519.hashes.sha512 = sha512;
+secp256k1.hashes.hmacSha256 = (key, msg) => hmac(sha256, key, msg);
+secp256k1.hashes.sha256 = sha256;
 
 export const VerifySignatureArgsSchema = z.object({
   publicKey: PublicKeySchema,

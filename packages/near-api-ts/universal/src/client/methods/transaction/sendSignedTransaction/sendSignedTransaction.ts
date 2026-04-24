@@ -37,7 +37,8 @@ export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction = 
 
       const rpcResponse = await context.sendRequest({
         method: 'send_tx',
-        params: { // TODO move this logic to signTransaction
+        params: {
+          // TODO move this logic to signTransaction
           signed_tx_base64: toBorshSignedTransaction(validArgs.data.signedTransaction).toBase64(),
           wait_until: 'EXECUTED_OPTIMISTIC',
         },

@@ -1,4 +1,3 @@
 packages:
   - 'packages/*'
-  - 'playgrounds/near-api-ts/*'
   - 'playgrounds/react-near-ts/*'

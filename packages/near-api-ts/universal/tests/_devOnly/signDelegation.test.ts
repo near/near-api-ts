@@ -1,4 +1,4 @@
-import { sha256 } from '@noble/hashes/sha2';
+import { sha256 } from '@noble/hashes/sha2.js';
 import { base58 } from '@scure/base';
 import { deserialize, type Schema, serialize } from 'borsh';
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
