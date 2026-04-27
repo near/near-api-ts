@@ -23,13 +23,19 @@ const transformKey = (fullAccessKey: FullAccessKey): PoolFullAccessKey => {
   return key;
 };
 
-export const createFullAccessPoolKeys = (
+export const createFullAccessPoolKeys = async (
   accountKeys: AccountAccessKey[],
   signerContext: MemorySignerContext,
-): PoolFullAccessKey[] =>
-  accountKeys
-    .filter(
-      ({ publicKey, accessType }) =>
-        signerContext.keyService.safeFindKeyPair({ publicKey }).ok && accessType === 'FullAccess',
-    )
-    .map((key) => transformKey(key as FullAccessKey));
+): Promise<PoolFullAccessKey[]> => {
+  const filteredKeys = [];
+
+  for (const key of accountKeys) {
+    const isKey = await signerContext.keyService.safeHasKey(key);
+    // If key exists in the keyService (we can sign data by it) and is full access
+    if (isKey.ok && isKey.value === true && key.accessType === 'FullAccess') {
+      filteredKeys.push(transformKey(key));
+    }
+  }
+
+  return filteredKeys;
+};

@@ -52,7 +52,7 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
     const safeSendSignedTransaction = createSafeSendSignedTransaction(context);
 
     return result.ok({
-      [ClientBrand]: true as const, // TODO hide from console.log
+      [ClientBrand]: true as const, // TODO remove
       getAccountInfo: asThrowable(safeGetAccountInfo),
       getAccountAccessKey: asThrowable(safeGetAccountAccessKey),
       getAccountAccessKeys: asThrowable(safeGetAccountAccessKeys),

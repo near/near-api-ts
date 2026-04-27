@@ -1,25 +1,17 @@
 import * as z from 'zod/mini';
 import type {
   CreateMemoryKeyService,
-  SafeCreateMemoryKeyService,
-} from '../../../types/keyServices/memoryKeyService/createMemoryKeyService';
-import type {
-  MemoryKeyService,
   MemoryKeyServiceContext,
+  SafeCreateMemoryKeyService,
 } from '../../../types/keyServices/memoryKeyService/memoryKeyService';
-import { createNatError } from '../../_common/natError';
+import { resultNatError } from '../../_common/natError';
 import { PrivateKeySchema } from '../../_common/schemas/zod/common/privateKey';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
-import { createSafeFindKeyPair } from './createFindKeyPair';
-import { createSafeSignTransaction } from './createSignTransaction';
-import { getKeyPairs } from './getKeyPairs';
-
-export const MemoryKeyServiceBrand = Symbol('MemoryKeyService');
-
-export const isMemoryKeyService = (value: unknown): value is MemoryKeyService =>
-  typeof value === 'object' && value !== null && MemoryKeyServiceBrand in value;
+import { toKeyPairs } from './inner/toKeyPairs';
+import { createSafeHasKey } from './public/hasKey';
+import { createSafeSignData } from './public/signData';
 
 const KeySourceSchema = z.object({
   privateKey: PrivateKeySchema,
@@ -42,28 +34,27 @@ export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService = wrapIntern
     const validArgs = CreateMemoryKeyServiceArgsSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateMemoryKeyService.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('CreateMemoryKeyService.Args.InvalidSchema', {
+        zodError: validArgs.error,
+      });
 
     const context = {
-      keyPairs: getKeyPairs(validArgs.data),
+      keyPairs: toKeyPairs(validArgs.data),
     } as MemoryKeyServiceContext;
 
-    const safeFindKeyPair = createSafeFindKeyPair(context);
-    const safeSignTransaction = createSafeSignTransaction(context);
+    const safeHasKey = createSafeHasKey(context);
+    const hasKey = asThrowable(safeHasKey);
 
-    context.safeFindKeyPair = safeFindKeyPair;
+    context.hasKey = hasKey;
+
+    const safeSignData = createSafeSignData(context);
+    const signData = asThrowable(safeSignData);
 
     return result.ok({
-      [MemoryKeyServiceBrand]: true as const,
-      signTransaction: asThrowable(safeSignTransaction),
-      safeSignTransaction,
-      findKeyPair: asThrowable(safeFindKeyPair),
-      safeFindKeyPair,
+      hasKey,
+      safeHasKey,
+      signData,
+      safeSignData,
     });
   },
 );

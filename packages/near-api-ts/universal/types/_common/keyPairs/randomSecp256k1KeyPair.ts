@@ -2,23 +2,25 @@ import type { NatError } from '../../../src/_common/natError';
 import type { Result } from '../common';
 import type { Secp256k1PrivateKey, Secp256k1PublicKey, Secp256k1Signature } from '../crypto';
 import type { Secp256k1Curve } from '../curveString';
+import type { KeyPairSignDataArgs } from './_common';
 
-// *********** Sign *****
-
-export type SignBySecp256k1KeyOutput = {
-  signature: Secp256k1Signature;
+// *********** SignData *****
+export type SignedDataSecp256k1 = {
+  dataU8: Uint8Array;
   curve: Secp256k1Curve;
-  u8Signature: Uint8Array;
+  signature: Secp256k1Signature;
+  signatureU8: Uint8Array;
 };
 
-type SignBySecp256k1KeyError = NatError<'Secp256k1KeyPair.Sign.Internal'>;
+type Secp256k1SignDataError =
+  | NatError<'Secp256k1KeyPair.SignData.Args.InvalidSchema'>
+  | NatError<'Secp256k1KeyPair.SignData.Internal'>;
 
-export type SignBySecp256k1Key = (u8Message: Uint8Array) => SignBySecp256k1KeyOutput;
+export type SafeSignData = (
+  args: KeyPairSignDataArgs,
+) => Promise<Result<SignedDataSecp256k1, Secp256k1SignDataError>>;
 
-export type SafeSignBySecp256k1Key = (
-  u8Message: Uint8Array,
-) => Result<SignBySecp256k1KeyOutput, SignBySecp256k1KeyError>;
-
+type SignData = (args: KeyPairSignDataArgs) => Promise<SignedDataSecp256k1>;
 // ***********  CreateRandomSecp256k1KeyPair *****
 
 type CreateRandomSecp256k1Error = NatError<'CreateRandomSecp256k1KeyPair.Internal'>;
@@ -29,8 +31,8 @@ export type Secp256k1KeyPair = {
   publicKeyU8: Uint8Array;
   privateKey: Secp256k1PrivateKey;
   privateKeyU8: Uint8Array;
-  sign: SignBySecp256k1Key;
-  safeSign: SafeSignBySecp256k1Key;
+  signData: SignData;
+  safeSignData: SafeSignData;
 };
 
 export type SafeCreateRandomSecp256k1KeyPair = () => Result<

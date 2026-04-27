@@ -1,33 +1,52 @@
-import { MemoryKeyServiceBrand } from '../../../src/keyServices/memoryKeyService/createMemoryKeyService';
-import type { PublicKey } from '../../_common/crypto';
-import type { KeyPair } from '../../_common/keyPair/keyPair';
+import type { NatError } from '../../../src/_common/natError';
+import type { Result } from '../../_common/common';
+import type { PrivateKey, PublicKey } from '../../_common/crypto';
+import type { KeyPair } from '../../_common/keyPairs/keyPair';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../_common/natError';
-import type { FindKeyPair, SafeFindKeyPair } from './createFindKeyPair';
-import type { SafeSignTransaction, SignTransaction } from './createSignTransaction';
+import type { HasKey, SafeHasKey } from './hasKey';
+import type { SafeSignData, SignData } from './signData';
 
 export interface MemoryKeyServicePublicErrorRegistry {
   'CreateMemoryKeyService.Args.InvalidSchema': InvalidSchemaErrorContext;
   'CreateMemoryKeyService.Internal': InternalErrorContext;
-  'MemoryKeyService.SignTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'MemoryKeyService.SignTransaction.SigningKeyPair.NotFound': {
-    signerPublicKey: PublicKey;
-  };
-  'MemoryKeyService.SignTransaction.Internal': InternalErrorContext;
-  'MemoryKeyService.FindKeyPair.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'MemoryKeyService.FindKeyPair.NotFound': { publicKey: PublicKey };
-  'MemoryKeyService.FindKeyPair.Internal': InternalErrorContext;
+  'MemoryKeyService.SignData.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'MemoryKeyService.SignData.SigningKey.NotFound': { publicKey: PublicKey };
+  'MemoryKeyService.SignData.Internal': InternalErrorContext;
+  'MemoryKeyService.HasKey.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'MemoryKeyService.HasKey.Internal': InternalErrorContext;
 }
+
+// ************************************************************************************
+// MemoryKeyService
 export type KeyPairs = Record<PublicKey, KeyPair>;
 
 export type MemoryKeyServiceContext = {
   keyPairs: KeyPairs;
-  safeFindKeyPair: SafeFindKeyPair;
+  hasKey: HasKey;
 };
 
 export type MemoryKeyService = {
-  [MemoryKeyServiceBrand]: true;
-  signTransaction: SignTransaction;
-  safeSignTransaction: SafeSignTransaction;
-  findKeyPair: FindKeyPair;
-  safeFindKeyPair: SafeFindKeyPair;
+  hasKey: HasKey;
+  signData: SignData;
+  safeHasKey: SafeHasKey;
+  safeSignData: SafeSignData;
 };
+
+// ************************************************************************************
+// CreateMemoryKeyService
+
+type KeySource = { privateKey: PrivateKey };
+type SingleKeySource = { keySource: KeySource; keySources?: never };
+type MultiKeySources = { keySource?: never; keySources: KeySource[] };
+
+export type CreateMemoryKeyServiceArgs = SingleKeySource | MultiKeySources;
+
+type CreateMemoryKeyServiceError =
+  | NatError<'CreateMemoryKeyService.Args.InvalidSchema'>
+  | NatError<'CreateMemoryKeyService.Internal'>;
+
+export type SafeCreateMemoryKeyService = (
+  args: CreateMemoryKeyServiceArgs,
+) => Result<MemoryKeyService, CreateMemoryKeyServiceError>;
+
+export type CreateMemoryKeyService = (args: CreateMemoryKeyServiceArgs) => MemoryKeyService;

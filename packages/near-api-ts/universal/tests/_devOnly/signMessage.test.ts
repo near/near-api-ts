@@ -14,7 +14,7 @@ const signMessage = async (args: { message: Message }): Promise<SignedMessage> =
 
   const borshNep413Message = toBorshNep413Message(args.message);
   const u8MessageHash = sha256(borshNep413Message);
-  const { signature } = kp.sign(u8MessageHash); // keyService.sign will be async
+  const { signature } = await kp.signData({ dataU8: u8MessageHash });
 
   return {
     signerAccountId,
@@ -25,7 +25,7 @@ const signMessage = async (args: { message: Message }): Promise<SignedMessage> =
 };
 
 describe('Sign Message - Ok', () => {
-  it('Sign', async () => {
+  it('SignData', async () => {
     // #1
     const message = createMessage({
       message: 'Login',

@@ -1,10 +1,9 @@
 import { sha256 } from '@noble/hashes/sha2.js';
 import { base58 } from '@scure/base';
-import { deserialize, type Schema, serialize } from 'borsh';
+import { type Schema, serialize } from 'borsh';
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
-import { type AccountId, type Client, keyPair, verifySignature } from '../../index';
-import { DelegateActionActionBorshSchema } from '../../src/_common/schemas/borsh/actions/delegate';
+import { type AccountId, type Client, keyPair} from '../../index';
 import { DelegateActionBorshSchema } from '../../src/_common/schemas/borsh/delegateAction';
 import {
   SignedTransactionBorshSchema,
@@ -22,8 +21,8 @@ const schema: Schema = {
   },
 };
 
-const signDelegation = (senderId: AccountId, deposit: bigint) => {
-  const delegateAction = {
+const signDelegation = async (senderId: AccountId, deposit: bigint) => {
+  const delegation = {
     tag: 1073742190, // (1 << 30) + 366,
     senderId,
     receiverId: 'bob123',
@@ -33,15 +32,15 @@ const signDelegation = (senderId: AccountId, deposit: bigint) => {
     publicKey: { ed25519Key: { data: kp.publicKeyU8 } },
   };
 
-  const delegateActionBorsh = serialize(schema, delegateAction);
+  const delegateActionBorsh = serialize(schema, delegation);
 
   const delegateActionHashU8 = sha256(delegateActionBorsh);
-  const { u8Signature } = kp.sign(delegateActionHashU8);
+  const { signatureU8 } = await kp.signData({ dataU8: delegateActionHashU8 });
 
   return {
     delegate: {
-      delegateAction,
-      signature: { ed25519Signature: { data: u8Signature } },
+      delegateAction: delegation,
+      signature: { ed25519Signature: { data: signatureU8 } },
     },
   };
 };
@@ -66,10 +65,10 @@ describe('Full-scale delegation test', async () => {
     });
 
     const balanceBefore = await client.getAccountInfo({ accountId: 'relay' });
-    console.log('relay balance before:', balanceBefore.accountInfo.balance.total.near )
+    console.log('relay balance before:', balanceBefore.accountInfo.balance.total.near);
 
     const aliceBalanceBefore = await client.getAccountInfo({ accountId: 'alice' });
-    console.log('alice balance before:', aliceBalanceBefore.accountInfo.balance.total.near )
+    console.log('alice balance before:', aliceBalanceBefore.accountInfo.balance.total.near);
 
     // actions: [signDelegation('alice', 100n), { transfer: { deposit: 200n } }],
 
@@ -79,16 +78,16 @@ describe('Full-scale delegation test', async () => {
       nonce: BigInt(accountAccessKey.nonce + 1),
       receiverId: 'alice',
       blockHash: base58.decode(blockHash),
-      actions: [signDelegation('alice', 500000000000000000000000000n)], // 500 NEAR
+      actions: [await signDelegation('alice', 500000000000000000000000000n)], // 500 NEAR
     };
 
     const transactionBorsh = serialize(TransactionBorshSchema, transaction);
     const transactionHashU8 = sha256(transactionBorsh);
-    const { u8Signature } = relayKp.sign(transactionHashU8);
+    const { signatureU8 } = await relayKp.signData({ dataU8: transactionHashU8 });
 
     const signedTransaction = {
       transaction,
-      signature: { ed25519Signature: { data: u8Signature } },
+      signature: { ed25519Signature: { data: signatureU8 } },
     };
 
     const signedTransactionBorsh64 = serialize(
@@ -116,11 +115,10 @@ describe('Full-scale delegation test', async () => {
 
     log(json);
 
-
     const balanceAfter = await client.getAccountInfo({ accountId: 'relay' });
-    console.log('relay balance after:', balanceAfter.accountInfo.balance.total.near )
+    console.log('relay balance after:', balanceAfter.accountInfo.balance.total.near);
 
     const aliceBalanceAfter = await client.getAccountInfo({ accountId: 'alice' });
-    console.log('alice balance after:', aliceBalanceAfter.accountInfo.balance.total.near )
+    console.log('alice balance after:', aliceBalanceAfter.accountInfo.balance.total.near);
   });
 });

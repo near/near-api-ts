@@ -1,13 +1,14 @@
 import type { $ZodError } from 'zod/v4/core';
 import type { NatError } from '../../src/_common/natError';
 import type { ClientInnerErrorRegistry, ClientPublicErrorRegistry } from '../client/client';
+import type { SignTransactionPublicErrorRegistry } from '../helpers/signTransaction';
 import type { MemoryKeyServicePublicErrorRegistry } from '../keyServices/memoryKeyService/memoryKeyService';
 import type {
   MemorySignerInnerErrorRegistry,
   MemorySignerPublicErrorRegistry,
 } from '../signers/memorySigner/memorySigner';
 import type { ResultErr } from './common';
-import type { KeyPairPublicErrorRegistry } from './keyPair/keyPair';
+import type { KeyPairPublicErrorRegistry } from './keyPairs/keyPair';
 import type { MessagePublicErrorRegistry } from './message';
 import type { NearGasPublicErrorRegistry } from './nearGas';
 import type { NearTokenPublicErrorRegistry } from './nearToken';
@@ -30,6 +31,7 @@ export interface NatPublicErrorRegistry
     MemorySignerPublicErrorRegistry,
     ActionsPublicErrorRegistry,
     KeyPairPublicErrorRegistry,
+    SignTransactionPublicErrorRegistry,
     VerifySignaturePublicErrorRegistry,
     MessagePublicErrorRegistry,
     NearTokenPublicErrorRegistry,

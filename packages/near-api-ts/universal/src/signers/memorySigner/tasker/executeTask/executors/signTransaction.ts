@@ -9,6 +9,7 @@ import type { MemorySignerContext } from '../../../../../../types/signers/memory
 import type { NatError } from '../../../../../_common/natError';
 import { result } from '../../../../../_common/utils/result';
 import { wrapInternalError } from '../../../../../_common/utils/wrapInternalError';
+import { signTransaction as signTransactionHelper } from '../../../../../helpers/signTransaction';
 
 type Execute = () => Promise<
   Result<SignedTransaction, NatError<'MemorySigner.SignTransaction.Internal'>>
@@ -32,7 +33,8 @@ export const signTransaction = async (
     };
 
     // This call will never fail
-    const signedTransaction = await signerContext.keyService.signTransaction({
+    const signedTransaction = await signTransactionHelper({
+      signDataProvider: signerContext.keyService,
       transaction,
     });
 

@@ -5,14 +5,13 @@ import { asThrowable } from '../../../universal/src/_common/utils/asThrowable';
 import { result } from '../../../universal/src/_common/utils/result';
 import { wrapInternalError } from '../../../universal/src/_common/utils/wrapInternalError';
 import type { Result } from '../../../universal/types/_common/common';
-import type { KeyPair } from '../../../universal/types/_common/keyPair/keyPair';
+import type { KeyPair } from '../../../universal/types/_common/keyPairs/keyPair';
 import { createGetKeyPair } from './private/getKeyPair';
 import { openIdbConnection } from './private/openIdbConnection';
 import { createSafeAddKey } from './public/addKey';
 import { createSafeClear } from './public/clear';
 import { createSafeHasKey } from './public/hasKey';
 import { createSafeRemoveKey } from './public/removeKey';
-import { createSafeSignTransaction } from './public/signTransaction';
 
 export type IdbKeyServiceContext = {
   idbName: string;
@@ -40,19 +39,16 @@ export const safeCreateIdbKeyService: any = wrapInternalError(
     const safeHasKey = createSafeHasKey(context);
     const safeRemoveKey = createSafeRemoveKey(context);
     const safeClear = createSafeClear(context);
-    const safeSignTransaction = createSafeSignTransaction(context);
 
     return result.ok({
       addKey: asThrowable(safeAddKey),
       hasKey: asThrowable(safeHasKey),
       removeKey: asThrowable(safeRemoveKey),
       clear: asThrowable(safeClear),
-      signTransaction: asThrowable(safeSignTransaction),
       safeAddKey,
       safeHasKey,
       safeRemoveKey,
       safeClear,
-      safeSignTransaction,
     });
   },
 );

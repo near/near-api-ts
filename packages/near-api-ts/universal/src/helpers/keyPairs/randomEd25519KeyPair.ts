@@ -2,17 +2,31 @@ import { keygen } from '@noble/ed25519';
 import type {
   CreateRandomEd25519KeyPair,
   SafeCreateRandomEd25519KeyPair,
-} from '../../../types/_common/keyPair/randomEd25519KeyPair';
+  SafeSignData,
+} from '../../../types/_common/keyPairs/randomEd25519KeyPair';
+import { BinaryLengths } from '../../_common/configs/constants';
+import { resultNatError } from '../../_common/natError';
 import { toEd25519CurveString } from '../../_common/transformers/toCurveString';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
+import { SignDataArgsZodSchema } from './_common/_index';
 import { signByEd25519Key } from './_common/signByEd25519Key';
 
-const createSafeSignByEd25519Key = (u8PrivateKey: Uint8Array) =>
-  wrapInternalError('Ed25519KeyPair.Sign.Internal', (u8Message: Uint8Array) =>
-    signByEd25519Key(u8PrivateKey, u8Message),
-  );
+const createSafeSignData = (privateKeyU8: Uint8Array): SafeSignData => {
+  const secretKeyU8 = privateKeyU8.slice(0, BinaryLengths.Ed25519.SecretKey);
+
+  return wrapInternalError('Ed25519KeyPair.SignData.Internal', async (args) => {
+    const validArgs = SignDataArgsZodSchema.safeParse(args);
+
+    if (!validArgs.success)
+      return resultNatError('Ed25519KeyPair.SignData.Args.InvalidSchema', {
+        zodError: validArgs.error,
+      });
+
+    return signByEd25519Key(secretKeyU8, validArgs.data.dataU8);
+  });
+};
 
 export const safeRandomEd25519KeyPair: SafeCreateRandomEd25519KeyPair = wrapInternalError(
   'CreateRandomEd25519KeyPair.Internal',
@@ -22,7 +36,8 @@ export const safeRandomEd25519KeyPair: SafeCreateRandomEd25519KeyPair = wrapInte
     const privateKeyU8 = new Uint8Array([...secretKeyU8, ...publicKeyU8]);
     const publicKey = toEd25519CurveString(publicKeyU8);
     const privateKey = toEd25519CurveString(privateKeyU8);
-    const safeSign = createSafeSignByEd25519Key(privateKeyU8);
+
+    const safeSignData = createSafeSignData(privateKeyU8);
 
     return result.ok({
       curve: 'ed25519' as const,
@@ -30,8 +45,8 @@ export const safeRandomEd25519KeyPair: SafeCreateRandomEd25519KeyPair = wrapInte
       publicKeyU8,
       privateKey,
       privateKeyU8,
-      sign: asThrowable(safeSign),
-      safeSign,
+      signData: asThrowable(safeSignData),
+      safeSignData,
     });
   },
 );

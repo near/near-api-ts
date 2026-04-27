@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createMemoryKeyService, randomEd25519KeyPair } from '../../../../index';
+import { safeSignTransaction, signTransaction } from '../../../../src/helpers/signTransaction';
 import type { Transaction } from '../../../../types/_common/transaction/transaction';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
@@ -21,11 +22,8 @@ const transaction: Transaction = {
 
 describe('KeyService', () => {
   it('SignTransaction.Ok', async () => {
-    const keyService = await createMemoryKeyService({
-      keySource: { privateKey },
-    });
-
-    const res = await keyService.signTransaction({ transaction });
+    const keyService = createMemoryKeyService({ keySource: { privateKey } });
+    const res = await signTransaction({ signDataProvider: keyService, transaction });
 
     expect(res.transactionHash).toBe('HFdRehqc88853UQQZtFibmPAn77i9X64SwvxVSJjFpAa');
     expect(res.signature).toBe(
@@ -34,17 +32,16 @@ describe('KeyService', () => {
   });
 
   it('MemoryKeyService.SignTransaction.SigningKeyPair.NotFound', async () => {
-    const keyService = await createMemoryKeyService({
-      keySource: { privateKey },
-    });
+    const keyService = createMemoryKeyService({ keySource: { privateKey } });
 
-    const res = await keyService.safeSignTransaction({
+    const res = await safeSignTransaction({
+      signDataProvider: keyService,
       transaction: {
         ...transaction,
         signerPublicKey: randomEd25519KeyPair().publicKey,
       },
     });
 
-    assertNatErrKind(res, 'MemoryKeyService.SignTransaction.SigningKeyPair.NotFound');
+    assertNatErrKind(res, 'MemoryKeyService.SignData.SigningKey.NotFound');
   });
 });

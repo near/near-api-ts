@@ -1,5 +1,3 @@
-import './types/_common/Uint8Array';
-
 // Errors
 export { isNatError } from './src/_common/natError';
 export {
@@ -51,17 +49,17 @@ export {
 } from './src/helpers/actionCreators/transfer';
 // KeyPair
 export {
+  keyPair,
   safeKeyPair,
-  throwableKeyPair as keyPair,
-} from './src/helpers/keyPair/keyPair';
+} from './src/helpers/keyPairs/keyPair/keyPair';
 export {
   randomEd25519KeyPair,
   safeRandomEd25519KeyPair,
-} from './src/helpers/keyPair/randomEd25519KeyPair';
+} from './src/helpers/keyPairs/randomEd25519KeyPair';
 export {
   randomSecp256k1KeyPair,
   safeRandomSecp256k1KeyPair,
-} from './src/helpers/keyPair/randomSecp256k1KeyPair';
+} from './src/helpers/keyPairs/randomSecp256k1KeyPair';
 export { createMessage, safeCreateMessage } from './src/helpers/message/createMessage';
 export { safeVerifyMessage, verifyMessage } from './src/helpers/message/verifyMessage';
 // NearGas
@@ -89,7 +87,7 @@ export { safeVerifySignature, verifySignature } from './src/helpers/verifySignat
 export {
   safeCreateMemoryKeyService,
   throwableCreateMemoryKeyService as createMemoryKeyService,
-} from './src/keyServices/memoryKeyService/createMemoryKeyService';
+} from './src/keyServices/memoryKeyService/memoryKeyService';
 // Signers
 export {
   createSafeMemorySignerFactory,
@@ -135,7 +133,11 @@ export type { Curve } from './types/_common/curveString';
 export type { Message, SignedMessage } from './types/_common/message';
 export type { FunctionCallAction } from './types/_common/transaction/actions/functionCall';
 export type { TransferAction } from './types/_common/transaction/actions/transfer';
-export type { Delegation, DelegationIntent, SignedDelegation } from './types/_common/transaction/delegation';
+export type {
+  Delegation,
+  DelegationIntent,
+  SignedDelegation,
+} from './types/_common/transaction/delegation';
 export type {
   Action,
   SignedTransaction,

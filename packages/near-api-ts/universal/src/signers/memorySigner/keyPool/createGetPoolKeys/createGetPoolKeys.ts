@@ -65,9 +65,14 @@ export const createGetPoolKeys =
         );
 
       // 5. Create pool keys and return them;
+      const [fullAccessPoolKeys, functionCallPollKeys] = await Promise.all([
+        createFullAccessPoolKeys(allowedAccessKeys, signerContext),
+        createFunctionCallPoolKeys(allowedAccessKeys, signerContext),
+      ]);
+
       state.poolKeys = {
-        fullAccess: createFullAccessPoolKeys(allowedAccessKeys, signerContext),
-        functionCall: createFunctionCallPoolKeys(allowedAccessKeys, signerContext),
+        fullAccess: fullAccessPoolKeys,
+        functionCall: functionCallPollKeys,
       };
       state.poolKeysLoadingPromise = undefined;
 

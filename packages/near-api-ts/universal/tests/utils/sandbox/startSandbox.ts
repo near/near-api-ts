@@ -3,7 +3,7 @@ import { near } from '../../../index';
 
 export const startSandbox = async () =>
   await Sandbox.start({
-    version: '2.11.0',
+    version: '2.11.1',
     config: {
       rpcPort: 4560,
       additionalAccounts: [

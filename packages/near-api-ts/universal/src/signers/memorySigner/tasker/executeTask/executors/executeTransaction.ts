@@ -7,6 +7,7 @@ import type { MemorySignerContext } from '../../../../../../types/signers/memory
 import { createNatError, type NatError } from '../../../../../_common/natError';
 import { result } from '../../../../../_common/utils/result';
 import { wrapInternalError } from '../../../../../_common/utils/wrapInternalError';
+import { signTransaction as signTransactionHelper } from '../../../../../helpers/signTransaction';
 
 type Attempt = (
   attemptIndex: number,
@@ -40,7 +41,8 @@ export const executeTransaction = async (
       };
 
       // This call will never fail
-      const signedTransaction = await signerContext.keyService.signTransaction({
+      const signedTransaction = await signTransactionHelper({
+        signDataProvider: signerContext.keyService,
         transaction,
       });
 
@@ -48,7 +50,7 @@ export const executeTransaction = async (
         signedTransaction,
       });
 
-      // If tx executed successfully - update key nonce and return tx execution result;
+      // If tx executed successfully, update key nonce and return tx execution result;
       if (txResult.ok) {
         key.setNonce(newNonce);
         return txResult;

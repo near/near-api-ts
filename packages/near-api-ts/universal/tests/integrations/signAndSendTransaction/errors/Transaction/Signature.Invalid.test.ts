@@ -6,6 +6,7 @@ import {
   type MemoryKeyService,
   transfer,
 } from '../../../../../index';
+import { signTransaction } from '../../../../../src/helpers/signTransaction';
 import { assertNatErrKind } from '../../../../utils/assertNatErrKind';
 import { createDefaultClient, log } from '../../../../utils/common';
 import { startSandbox } from '../../../../utils/sandbox/startSandbox';
@@ -19,8 +20,8 @@ describe('Invalid signature', () => {
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
-    client = await createDefaultClient(sandbox);
-    keyService = await createMemoryKeyService({
+    client = createDefaultClient(sandbox);
+    keyService = createMemoryKeyService({
       keySources: [
         { privateKey: DEFAULT_PRIVATE_KEY },
         { privateKey: testKeys.fc.forContract.privateKey },
@@ -35,7 +36,8 @@ describe('Invalid signature', () => {
       publicKey: DEFAULT_PUBLIC_KEY,
     });
 
-    const signedTransaction = await keyService.signTransaction({
+    const signedTransaction = await signTransaction({
+      signDataProvider: keyService,
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: DEFAULT_PUBLIC_KEY,

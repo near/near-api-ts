@@ -2,12 +2,14 @@ import { expect, test } from 'vitest';
 import { createMemoryKeyService, randomEd25519KeyPair, verifySignature } from '../../../../index';
 import { TransactionSchema } from '../../../../src/_common/schemas/zod/transaction/transaction';
 import { getTransactionHash } from '../../../../src/_common/utils/getTransactionHash';
+import { signTransaction } from '../../../../src/helpers/signTransaction';
 
 test('ed25519 transaction verification', async () => {
   const keyPair = randomEd25519KeyPair();
   const keyService = createMemoryKeyService({ keySource: keyPair });
 
-  const signedTransaction = await keyService.signTransaction({
+  const signedTransaction = await signTransaction({
+    signDataProvider: keyService,
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: keyPair.publicKey,

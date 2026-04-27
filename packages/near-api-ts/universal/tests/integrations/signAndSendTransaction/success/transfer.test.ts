@@ -6,6 +6,7 @@ import {
   type MemoryKeyService,
   transfer,
 } from '../../../../index';
+import { signTransaction } from '../../../../src/helpers/signTransaction';
 import { createDefaultClient } from '../../../utils/common';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
 import { testKeys } from '../../../utils/testKeys';
@@ -34,7 +35,8 @@ describe('Transaction success', () => {
       publicKey: DEFAULT_PUBLIC_KEY,
     });
 
-    const signedTransaction = await keyService.signTransaction({
+    const signedTransaction = await signTransaction({
+      signDataProvider: keyService,
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: DEFAULT_PUBLIC_KEY,
@@ -45,11 +47,7 @@ describe('Transaction success', () => {
       },
     });
 
-    await expect(
-      client.sendSignedTransaction({
-        signedTransaction,
-      }),
-    ).resolves.toMatchObject({
+    await expect(client.sendSignedTransaction({ signedTransaction })).resolves.toMatchObject({
       rawRpcResult: {
         status: { SuccessValue: '' },
       },

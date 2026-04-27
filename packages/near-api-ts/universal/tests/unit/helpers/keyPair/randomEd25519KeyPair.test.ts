@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { keyPair, randomEd25519KeyPair } from '../../../../index';
 
 describe('randomEd25519KeyPair', () => {
-  it('Ok', () => {
+  it('Ok', async () => {
     const randomKey = randomEd25519KeyPair();
     const fromRandom = keyPair(randomKey.privateKey);
     console.log(randomKey);
@@ -10,7 +10,7 @@ describe('randomEd25519KeyPair', () => {
 
     expect(fromRandom.publicKey).toBe(randomKey.publicKey);
 
-    const x = randomKey.sign(Uint8Array.from('48656c6c6f20776f726c6421'));
+    const x = await randomKey.signData({ dataU8: Uint8Array.from('48656c6c6f20776f726c6421')});
     console.log(x);
   });
 });

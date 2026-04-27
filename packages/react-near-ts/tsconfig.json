@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es2024",
+    "target": "esnext",
     "useDefineForClassFields": true,
-    "lib": ["es2024", "DOM", "DOM.Iterable"],
+    "lib": ["esnext", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -11,7 +11,6 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
-    "noEmit": true,
     "jsx": "react-jsx",
 
     "strict": true,
@@ -20,11 +19,7 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "noUncheckedIndexedAccess": false,
-
-    "paths": {
-      "near-api-ts": ["../near-api-ts/browser/index.ts"]
-    }
+    "noUncheckedIndexedAccess": false
   },
   "include": ["src", "types", "tests"]
 }

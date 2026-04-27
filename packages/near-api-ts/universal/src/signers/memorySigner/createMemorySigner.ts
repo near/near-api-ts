@@ -15,17 +15,23 @@ import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 import { isClient } from '../../client/createClient';
-import { isMemoryKeyService } from '../../keyServices/memoryKeyService/createMemoryKeyService';
 import { createSafeExecuteTransaction } from './createExecuteTransaction';
 import { createSafeSignTransaction } from './createSignTransaction';
 import { createKeyPool } from './keyPool/createKeyPool';
 import { createTasker } from './tasker/createTasker';
 import { createTaskQueue } from './taskQueue/createTaskQueue';
 
+// keyService: z.object({
+//   safeSignData: z.custom<SafeSignData>(
+//     (val) => typeof val === 'function',
+//     'keyService.safeSignData must be a function', // TODO compete
+//   ),
+// }),
+
 const CreateMemorySignerArgsSchema = z.object({
   signerAccountId: AccountIdSchema,
-  client: z.custom<Client>((value) => isClient(value)),
-  keyService: z.custom<MemoryKeyService>((value) => isMemoryKeyService(value)),
+  client: z.custom<Client>((value) => isClient(value)), // TODO fix it
+  keyService: z.custom<MemoryKeyService>((value) => true), // TODO fix it
   keyPool: z.optional(
     z.object({
       allowedAccessKeys: z.optional(z.array(PublicKeySchema).check(z.minLength(1))),

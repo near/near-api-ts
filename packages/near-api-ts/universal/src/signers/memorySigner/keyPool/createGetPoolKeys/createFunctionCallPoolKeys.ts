@@ -25,13 +25,19 @@ const transformKey = (functionCallKey: FunctionCallKey): PoolFunctionCallKey => 
   return key;
 };
 
-export const createFunctionCallPoolKeys = (
+export const createFunctionCallPoolKeys = async (
   accountKeys: AccountAccessKey[],
   signerContext: MemorySignerContext,
-): PoolFunctionCallKey[] =>
-  accountKeys
-    .filter(
-      ({ publicKey, accessType }) =>
-        signerContext.keyService.safeFindKeyPair({ publicKey }).ok && accessType === 'FunctionCall',
-    )
-    .map((key) => transformKey(key as FunctionCallKey));
+): Promise<PoolFunctionCallKey[]> => {
+  const filteredKeys = [];
+
+  for (const key of accountKeys) {
+    const isKey = await signerContext.keyService.safeHasKey(key);
+    // If key exists in the keyService (we can sign data by it) and is full access
+    if (isKey.ok && isKey.value === true && key.accessType === 'FunctionCall') {
+      filteredKeys.push(transformKey(key));
+    }
+  }
+
+  return filteredKeys;
+};

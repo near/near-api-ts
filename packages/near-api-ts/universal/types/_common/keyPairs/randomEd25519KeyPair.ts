@@ -2,22 +2,25 @@ import type { NatError } from '../../../src/_common/natError';
 import type { Result } from '../common';
 import type { Ed25519PrivateKey, Ed25519PublicKey, Ed25519Signature } from '../crypto';
 import type { Ed25519Curve } from '../curveString';
+import type { KeyPairSignDataArgs } from './_common';
 
-// *********** Sign *****
-
-export type SignByEd25519KeyOutput = {
-  signature: Ed25519Signature;
+// *********** SignData *****
+export type Ed25519SignedData = {
+  dataU8: Uint8Array;
   curve: Ed25519Curve;
-  u8Signature: Uint8Array;
+  signature: Ed25519Signature;
+  signatureU8: Uint8Array;
 };
 
-type SignByEd25519KeyError = NatError<'Ed25519KeyPair.Sign.Internal'>;
+type Ed25519SignDataError =
+  | NatError<'Ed25519KeyPair.SignData.Args.InvalidSchema'>
+  | NatError<'Ed25519KeyPair.SignData.Internal'>;
 
-export type SignByEd25519Key = (u8Message: Uint8Array) => SignByEd25519KeyOutput;
+export type SafeSignData = (
+  args: KeyPairSignDataArgs,
+) => Promise<Result<Ed25519SignedData, Ed25519SignDataError>>;
 
-export type SafeSignByEd25519Key = (
-  u8Message: Uint8Array,
-) => Result<SignByEd25519KeyOutput, SignByEd25519KeyError>;
+type SignData = (args: KeyPairSignDataArgs) => Promise<Ed25519SignedData>;
 
 // ***********  CreateRandomEd25519KeyPair *****
 
@@ -29,8 +32,8 @@ export type Ed25519KeyPair = {
   publicKeyU8: Uint8Array;
   privateKey: Ed25519PrivateKey;
   privateKeyU8: Uint8Array;
-  sign: SignByEd25519Key;
-  safeSign: SafeSignByEd25519Key;
+  signData: SignData;
+  safeSignData: SafeSignData;
 };
 
 export type SafeCreateRandomEd25519KeyPair = () => Result<
