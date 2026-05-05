@@ -11,6 +11,7 @@ import { createSafeGetAccountAccessKeys } from './methods/account/getAccountAcce
 import { createSafeGetAccountInfo } from './methods/account/getAccountInfo/getAccountInfo';
 import { createSafeGetBlock } from './methods/block/getBlock/getBlock';
 import { createSafeCallContractReadFunction } from './methods/contract/callContractReadFunction/callContractReadFunction';
+import { createSafeGetTransactionResult } from './methods/transaction/getTransactionResult/getTransactionResult';
 import { createSafeSendSignedTransaction } from './methods/transaction/sendSignedTransaction/sendSignedTransaction';
 import { CreateTransportArgsSchema, createTransport } from './transport/createTransport';
 
@@ -49,6 +50,7 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
     const safeGetAccountAccessKeys = createSafeGetAccountAccessKeys(context);
     const safeCallContractReadFunction = createSafeCallContractReadFunction(context);
     const safeGetBlock = createSafeGetBlock(context);
+    const safeGetTransactionResult = createSafeGetTransactionResult(context);
     const safeSendSignedTransaction = createSafeSendSignedTransaction(context);
 
     return result.ok({
@@ -59,6 +61,7 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
       callContractReadFunction: asThrowable(safeCallContractReadFunction as any) as any, // TODO Fix: asThrowable doesn't work fine with overloads
       getBlock: asThrowable(safeGetBlock),
       getRecentBlockHash: asThrowable(cache.getRecentBlockHash),
+      getTransactionResult: asThrowable(safeGetTransactionResult),
       sendSignedTransaction: asThrowable(safeSendSignedTransaction),
       safeGetAccountInfo,
       safeGetAccountAccessKey,
@@ -66,6 +69,7 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
       safeCallContractReadFunction,
       safeGetBlock,
       safeGetRecentBlockHash: cache.getRecentBlockHash,
+      safeGetTransactionResult,
       safeSendSignedTransaction,
     });
   },

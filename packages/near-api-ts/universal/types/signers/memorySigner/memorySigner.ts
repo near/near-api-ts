@@ -39,7 +39,7 @@ export type MemorySigner = {
   signerAccountId: AccountId;
   client: Client;
   keyService: MemoryKeyService;
-  signTransaction: SignTransactionIntent;
+  signTransaction: SignTransactionIntent; // TODO remove Intent from public type
   executeTransaction: ExecuteTransaction;
   safeSignTransaction: SafeSignTransactionIntent;
   safeExecuteTransaction: SafeExecuteTransaction;

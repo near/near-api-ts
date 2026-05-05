@@ -28,6 +28,11 @@ import type {
   SafeCallContractReadFunction,
 } from './methods/contract/callContractReadFunction';
 import type {
+  GetTransactionResult,
+  GetTransactionResultPublicErrorRegistry,
+  SafeGetTransactionResult,
+} from './methods/transaction/getTransactionResult';
+import type {
   SafeSendSignedTransaction,
   SendSignedTransaction,
   SendSignedTransactionPublicErrorRegistry,
@@ -44,6 +49,7 @@ export interface ClientPublicErrorRegistry
     CallContractReadFunctionPublicErrorRegistry,
     GetBlockPublicErrorRegistry,
     GetRecentBlockHashPublicErrorRegistry,
+    GetTransactionResultPublicErrorRegistry,
     SendSignedTransactionPublicErrorRegistry {}
 
 export type ClientContext = {
@@ -60,6 +66,7 @@ export type Client = {
   callContractReadFunction: CallContractReadFunction;
   getBlock: GetBlock;
   getRecentBlockHash: GetRecentBlockHash;
+  getTransactionResult: GetTransactionResult;
   sendSignedTransaction: SendSignedTransaction;
   // safe variants
   safeGetAccountInfo: SafeGetAccountInfo;
@@ -68,9 +75,6 @@ export type Client = {
   safeCallContractReadFunction: SafeCallContractReadFunction;
   safeGetBlock: SafeGetBlock;
   safeGetRecentBlockHash: SafeGetRecentBlockHash;
+  safeGetTransactionResult: SafeGetTransactionResult;
   safeSendSignedTransaction: SafeSendSignedTransaction;
-
-  // getContractState: GetContractState;
-  // getProtocolConfig: GetProtocolConfig;
-  // getGasPrice: GetGasPrice;
 };

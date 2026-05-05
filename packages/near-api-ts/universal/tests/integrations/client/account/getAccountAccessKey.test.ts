@@ -12,7 +12,7 @@ describe('Get Account Access Key', () => {
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
-    client = await createDefaultClient(sandbox);
+    client = createDefaultClient(sandbox);
     return () => sandbox.stop();
   });
 

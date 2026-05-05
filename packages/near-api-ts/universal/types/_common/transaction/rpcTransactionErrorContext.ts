@@ -3,6 +3,9 @@ import type { AccountId, CryptoHash, Nonce } from '../common';
 import type { NearToken } from '../nearToken';
 
 export type TransactionErrorContext = {
+  NotFound: { transactionHash: CryptoHash; signerAccountId: AccountId };
+  Expired: null;
+  Timeout: null;
   Nonce: {
     Invalid: { transactionNonce: Nonce; accessKeyNonce: Nonce };
   };
@@ -22,10 +25,8 @@ export type TransactionErrorContext = {
   Signature: {
     Invalid: null;
   };
-  Expired: null;
-  Timeout: null;
   Action: {
-    InvalidIndex: { rpcResponse: RpcResponse };
+    InvalidIndex: { rpcResponse: RpcResponse }; // TODO What is this error about?
     CreateAccount: {
       AlreadyExist: {
         accountId: AccountId;

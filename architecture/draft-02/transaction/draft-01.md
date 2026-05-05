@@ -17,15 +17,15 @@
 
 type TransactionProcessingStage =
   'StartedOptimistic'
-  'StartedFinal' | 'ExecutedOptimistic'
-  'ExecutedNearlyFinal'
-  'ExecutedFinal'
+'StartedFinal' | 'ExecutedOptimistic';
+'ExecutedNearlyFinal';
+'ExecutedFinal';
 
 
 type ExecutionStatus =
   'InProgress'
-  'Success';
-  'Error';
+'Success';
+'Error';
 
 
 // ************************************************
@@ -92,20 +92,18 @@ signer.executeTransaction(); // ExecutedOptimistic <-> ExecutedFinal
 
 type TransactionResult = {
   transactionHash: 'FaeKovQ3iWsMQex6vwSH9eYbGnm2Y95DCaEgHdmkCM82',
-  confirmationLevel: 'CompletedFinal',
-  executionResult: {
+  processingStage: 'ExecutedFinal',
+  execution: {
     status: 'Success',
     data: 'bnVsbA=='
   },
-  transactionArgs: { // ???? or flattened?
-    signerAccountId: 'alice.near',
-    signerPublicKey: 'ed25519:5BGSaf6YjVm756...RJSGjREvU9d',
-    nonce: 2,
-    actionRecords: [],
-    receiverAccountId: 'bob.near',
-  },
+  signerAccountId: 'alice.near',
+  signerPublicKey: 'ed25519:5BGSaf6YjVm756...RJSGjREvU9d',
+  nonce: 2,
+  actionSummaries: [],
+  receiverAccountId: 'bob.near',
   signature: 'ed25519:5BGSaf6Yj...pRJSGjREvU9d',
-  receipts: [{
+  executionTrace: [{
     receiptId: 'FaeKovQ3iWsMQex6vwSH9eYbGnm2Y95DCaEgHdmkCM82',
     outcome: {
       executorAccountId: 'alice.near',
@@ -123,6 +121,38 @@ type TransactionResult = {
     proof: null,
   }]
 }
+
+// --- Prev design ----
+const client = {
+  fireAndForgetTransaction,
+  // fireAndValidateTransaction, // INCLUDED_OPTIMISTIC / INCLUDED_FINAL
+  includeTransaction, // INCLUDED_OPTIMISTIC / INCLUDED_FINAL
+  waitForExecutionResult
+};
+const signer = {
+  submitTransaction,
+  executeTransaction
+};
+
+const submittedTransactionWithValidationError = await signer.submitTransaction({ transfer: { near: 10 } }); // 600ms
+// MUST HANDLE: invalid nonce (re-sign), timeout error (re-submit until included)
+// { signedTransaction, signedTransactionHash, status: SUCCESS }
+// { signedTransaction, signedTransactionHash, status: { ERROR: INVALID_TRANSACTION } }
+function submitTransaction(tx) {
+  while (nonce is invalid) {
+    await client.fireAndValidateTransaction(tx)
+  }
+}
+
+function executeTransaction() {
+  const { signedTransaction } = await this.submitTransaction();
+  await client.waitForExecutionResult({ signedTransaction })
+}
+
+showToUser("Transaction <txHash> is in progress");
+
+// in background
+await client.waitForExecutionResult({ signedTransaction })
 
 ```
 

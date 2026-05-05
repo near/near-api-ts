@@ -14,7 +14,7 @@
     "dev": "tsdown --watch",
     "run": "tsx universal/index.ts",
     "typecheck": "tsc --noEmit",
-    "sandbox:stop": "kill-port 4560",
+    "sandbox:stop": "kill-port 5000",
     "test:all": "vitest run"
   },
   "peerDependencies": {

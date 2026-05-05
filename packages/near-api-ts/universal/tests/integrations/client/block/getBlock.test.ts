@@ -11,7 +11,7 @@ describe('Get Block', () => {
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
-    client = await createDefaultClient(sandbox);
+    client = createDefaultClient(sandbox);
     return () => sandbox.stop();
   });
 
