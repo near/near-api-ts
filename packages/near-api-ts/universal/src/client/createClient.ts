@@ -13,7 +13,7 @@ import { createSafeGetBlock } from './methods/block/getBlock/getBlock';
 import { createSafeCallContractReadFunction } from './methods/contract/callContractReadFunction/callContractReadFunction';
 import { createSafeGetTransactionResult } from './methods/transaction/getTransactionResult/getTransactionResult';
 import { createSafeSendSignedTransaction } from './methods/transaction/sendSignedTransaction/sendSignedTransaction';
-import { CreateTransportArgsSchema, createTransport } from './transport/createTransport';
+import { CreateTransportArgsZodSchema, createTransport } from './transport/createTransport';
 
 export const ClientBrand = Symbol('Client');
 
@@ -21,7 +21,7 @@ export const isClient = (value: unknown): value is Client =>
   typeof value === 'object' && value !== null && ClientBrand in value;
 
 const CreateClientArgsSchema = z.object({
-  transport: CreateTransportArgsSchema,
+  transport: CreateTransportArgsZodSchema,
 });
 
 export const safeCreateClient: SafeCreateClient = wrapInternalError(

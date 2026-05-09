@@ -2,7 +2,7 @@ import type { Result } from '../../../../../types/_common/common';
 import type { SendRequestContext } from '../../../../../types/client/transport/sendRequest';
 import type { InnerRpcEndpoint } from '../../../../../types/client/transport/transport';
 import { createNatError, type NatError } from '../../../../_common/natError';
-import { type RpcResponse, RpcResponseSchema } from '../../../../_common/schemas/zod/rpc';
+import { type RpcResponse, RpcResponseZodSchema } from '../../../../_common/schemas/zod/rpc/rpc';
 import { result } from '../../../../_common/utils/result';
 import { snakeToCamelCase } from '../../../../_common/utils/snakeToCamelCase';
 import { extractRpcErrors } from './extractRpcErrors';
@@ -50,7 +50,7 @@ export const sendOnce = async (
 
   // Perform high level check if the RPC response matches the expected format;
   // We will do a precise check inside each client method (it's better for tree-shaking);
-  const generalRpcResponse = RpcResponseSchema.safeParse(camelCased);
+  const generalRpcResponse = RpcResponseZodSchema.safeParse(camelCased);
 
   if (!generalRpcResponse.success) {
     return result.err(

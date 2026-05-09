@@ -1,7 +1,7 @@
 import * as z from 'zod/mini';
 import { oneLine } from '../../../utils/common';
 
-export const Base64StringSchema = z.string().check(
+export const Base64StringZodSchema = z.string().check(
   z.regex(
     /^[A-Za-z0-9+/]*={0,2}$/,
     oneLine(`Base64 string contains invalid characters. Allowed characters:

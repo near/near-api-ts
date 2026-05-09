@@ -4,15 +4,15 @@ import type {
   SafeCreateStakeAction,
 } from '../../../types/_common/transaction/actions/stake';
 import { createNatError } from '../../_common/natError';
-import { NearTokenArgsSchema } from '../../_common/schemas/zod/common/nearToken';
-import { PublicKeySchema } from '../../_common/schemas/zod/common/publicKey';
+import { NearTokenArgsZodSchema } from '../../_common/schemas/zod/common/nearToken';
+import { PublicKeyZodSchema } from '../../_common/schemas/zod/common/publicKey';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 
 export const CreateStakeActionArgsSchema = z.object({
-  amount: NearTokenArgsSchema,
-  validatorPublicKey: PublicKeySchema,
+  amount: NearTokenArgsZodSchema,
+  validatorPublicKey: PublicKeyZodSchema,
 });
 
 export const safeStake: SafeCreateStakeAction = wrapInternalError(

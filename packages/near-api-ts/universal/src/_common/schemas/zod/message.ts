@@ -1,12 +1,12 @@
 import * as z from 'zod/mini';
-import { AccountIdSchema } from './common/accountId';
-import { Base64StringSchema } from './common/base64String';
-import { PublicKeySchema } from './common/publicKey';
-import { SignatureSchema } from './common/signature';
+import { AccountIdZodSchema } from './common/accountId';
+import { Base64StringZodSchema } from './common/base64String';
+import { PublicKeyZodSchema } from './common/publicKey';
+import { SignatureZodSchema } from './common/signature';
 
 export const NonceSchema = z
   .pipe(
-    Base64StringSchema,
+    Base64StringZodSchema,
     z.transform((nonce) => {
       const u8Nonce = Uint8Array.fromBase64(nonce);
       return { nonce, u8Nonce };
@@ -25,8 +25,8 @@ export const MessageSchema = z.object({
 });
 
 export const SignedMessageSchema = z.object({
-  signerAccountId: AccountIdSchema,
-  signerPublicKey: PublicKeySchema,
+  signerAccountId: AccountIdZodSchema,
+  signerPublicKey: PublicKeyZodSchema,
   message: MessageSchema,
-  signature: SignatureSchema,
+  signature: SignatureZodSchema,
 });

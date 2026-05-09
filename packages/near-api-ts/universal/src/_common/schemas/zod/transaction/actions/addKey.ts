@@ -1,26 +1,26 @@
 import * as z from 'zod/mini';
-import { AllowedFunctionsSchema, GasBudgetSchema } from '../../common/accessKey';
-import { AccountIdSchema } from '../../common/accountId';
-import { PublicKeySchema } from '../../common/publicKey';
+import { AllowedFunctionsSchema, GasBudgetZodSchema } from '../../common/accessKey';
+import { AccountIdZodSchema } from '../../common/accountId';
+import { PublicKeyZodSchema } from '../../common/publicKey';
 
-const AddFullAccessKeyActionSchema = z.object({
+const AddFullAccessKeyActionZodSchema = z.object({
   actionType: z.literal('AddKey'),
   accessType: z.literal('FullAccess'),
-  publicKey: PublicKeySchema,
+  publicKey: PublicKeyZodSchema,
 });
 
-const AddFunctionCallKeyActionSchema = z.object({
+const AddFunctionCallKeyActionZodSchema = z.object({
   actionType: z.literal('AddKey'),
   accessType: z.literal('FunctionCall'),
-  publicKey: PublicKeySchema,
-  contractAccountId: AccountIdSchema,
-  gasBudget: GasBudgetSchema,
+  publicKey: PublicKeyZodSchema,
+  contractAccountId: AccountIdZodSchema,
+  gasBudget: GasBudgetZodSchema,
   allowedFunctions: AllowedFunctionsSchema,
 });
 
-export const AddKeyActionSchema = z.union([
-  AddFullAccessKeyActionSchema,
-  AddFunctionCallKeyActionSchema,
+export const AddKeyActionZodSchema = z.union([
+  AddFullAccessKeyActionZodSchema,
+  AddFunctionCallKeyActionZodSchema,
 ]);
 
-export type InnerAddKeyAction = z.infer<typeof AddKeyActionSchema>;
+export type InnerAddKeyAction = z.infer<typeof AddKeyActionZodSchema>;

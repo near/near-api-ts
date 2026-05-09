@@ -22,12 +22,12 @@ export type NativeBlockReference =
 export type Base58String = string;
 export type Base64String = string;
 
-export type Nonce = number;
+export type TransactionNonce = number;
 export type AccountId = string;
 export type BorshBytes = Uint8Array;
 
 /**
- * Contract function name has max 256 characters
+ * Contract function name has max characters limit - see protocol config
  */
 export type ContractFunctionName = string;
 

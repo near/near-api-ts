@@ -1,26 +1,29 @@
-import { RpcTransactionResponseSchema } from '@near-js/jsonrpc-types';
+import {
+  ExecutionOutcomeWithIdViewSchema,
+  FinalExecutionStatusSchema,
+  ReceiptViewSchema,
+  SignedTransactionViewSchema,
+  TxExecutionStatusSchema,
+} from '@near-js/jsonrpc-types';
+import * as z from 'zod/mini';
 import type { GetTransactionResultArgs } from '../../../../../../types/client/methods/transaction/getTransactionResult';
-import { createNatError } from '../../../../../_common/natError';
-import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc';
+import type { Prettify } from '../../../../../../types/utils';
+import { createNatError, resultNatError } from '../../../../../_common/natError';
+import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc/rpc';
 import { result } from '../../../../../_common/utils/result';
-import { handleActionError } from './handleActionError';
 
 export const handleResult = (rpcResponse: RpcResponse, inputArgs: GetTransactionResultArgs) => {
-  const rpcResult = RpcTransactionResponseSchema().safeParse(rpcResponse.result);
+  // const rpcResult = TransactionStatusRpcResultZodSchema.safeParse(rpcResponse.result);
+  //
+  // if (!rpcResult.success)
+  //   return resultNatError('Client.GetTransactionResult.Exhausted', {
+  //     lastError: createNatError({
+  //       kind: 'SendRequest.Attempt.Response.InvalidSchema',
+  //       context: { zodError: rpcResult.error },
+  //     }),
+  //   });
 
-  if (!rpcResult.success)
-    return result.err(
-      createNatError({
-        kind: 'Client.GetTransactionResult.Exhausted',
-        context: {
-          lastError: createNatError({
-            kind: 'SendRequest.Attempt.Response.InvalidSchema',
-            context: { zodError: rpcResult.error },
-          }),
-        },
-      }),
-    );
-
+  //const tx: TransactionStatusRpcResult = rpcResult.data;
   // When tx action error happened, and tx was recorded on-chain
   // if (
   //   typeof rpcResult.data.status === 'object' &&
@@ -29,8 +32,8 @@ export const handleResult = (rpcResponse: RpcResponse, inputArgs: GetTransaction
   // )
   //   return handleActionError(rpcResult.data.status.Failure.ActionError, rpcResponse, inputArgs);
 
-  const output = {
-    rawRpcResult: rpcResult.data, // TODO Return result type without errors
+  const output: any = {
+    rawRpcResult: rpcResponse,
   };
 
   return result.ok(output);

@@ -5,12 +5,12 @@ import { createSendRequest } from './sendRequest/1-createSendRequest/createSendR
 import {
   defaultTransportPolicy,
   mergeTransportPolicy,
-  PartialTransportPolicySchema,
+  PartialTransportPolicyZodSchema,
 } from './transportPolicy';
 
-export const CreateTransportArgsSchema = z.object({
+export const CreateTransportArgsZodSchema = z.object({
   rpcEndpoints: RpcEndpointsArgsSchema,
-  policy: PartialTransportPolicySchema,
+  policy: PartialTransportPolicyZodSchema,
 });
 
 export const createTransport: CreateTransport = (args) => {

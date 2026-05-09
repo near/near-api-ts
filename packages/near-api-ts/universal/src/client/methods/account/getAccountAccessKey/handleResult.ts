@@ -1,13 +1,14 @@
 import { AccessKeyViewSchema } from '@near-js/jsonrpc-types';
 import * as z from 'zod/mini';
 import type { GetAccountAccessKeyArgs } from '../../../../../types/client/methods/account/getAccountAccessKey';
+import type { Prettify } from '../../../../../types/utils';
 import { createNatError } from '../../../../_common/natError';
-import type { RpcResponse } from '../../../../_common/schemas/zod/rpc';
+import type { RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
 import { result } from '../../../../_common/utils/result';
 import { transformAccessKey } from '../_common/transformAccessKey';
 
 // For legacy reasons, nearcore returns result.error string field when
-// RpcQueryError::UnknownAccessKey error happen;
+// RpcQueryError::UnknownAccessKey error happens;
 const UnknownKeySchema = z.object({
   blockHash: z.string(),
   blockHeight: z.number(),
@@ -21,7 +22,9 @@ const RpcQueryViewAccessKeyOkResultSchema = z.object({
   ...AccessKeyViewSchema().shape,
 });
 
-export type RpcQueryViewAccessKeyOkResult = z.infer<typeof RpcQueryViewAccessKeyOkResultSchema>;
+export type RpcQueryViewAccessKeyOkResult = Prettify<
+  z.infer<typeof RpcQueryViewAccessKeyOkResultSchema>
+>;
 
 const RpcQueryViewAccessKeyResultSchema = z.union([
   RpcQueryViewAccessKeyOkResultSchema,

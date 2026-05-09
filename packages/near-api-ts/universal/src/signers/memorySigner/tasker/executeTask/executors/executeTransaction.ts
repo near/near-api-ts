@@ -1,4 +1,4 @@
-import type { Nonce, Result } from '../../../../../../types/_common/common';
+import type { TransactionNonce, Result } from '../../../../../../types/_common/common';
 import type { Transaction } from '../../../../../../types/_common/transaction/transaction';
 import type { SendSignedTransactionOutput } from '../../../../../../types/client/methods/transaction/sendSignedTransaction';
 import type { PoolKey } from '../../../../../../types/signers/memorySigner/inner/keyPool';
@@ -11,7 +11,7 @@ import { signTransaction as signTransactionHelper } from '../../../../../helpers
 
 type Attempt = (
   attemptIndex: number,
-  newNonce: Nonce,
+  newNonce: TransactionNonce,
 ) => Promise<
   Result<
     SendSignedTransactionOutput,

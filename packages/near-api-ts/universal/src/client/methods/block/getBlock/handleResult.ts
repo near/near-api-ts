@@ -1,6 +1,6 @@
 import { RpcBlockResponseSchema } from '@near-js/jsonrpc-types';
 import { createNatError } from '../../../../_common/natError';
-import type { RpcResponse } from '../../../../_common/schemas/zod/rpc';
+import type { RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
 import { result } from '../../../../_common/utils/result';
 
 export const handleResult = (rpcResponse: RpcResponse) => {

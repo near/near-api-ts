@@ -1,12 +1,12 @@
 import * as z from 'zod/mini';
 import { BinaryLengths } from '../../../configs/constants';
-import { CurveStringSchema } from './curveString';
+import { CurveStringZodSchema } from './curveString';
 
 const { Ed25519, Secp256k1 } = BinaryLengths;
 
-export const PublicKeySchema = z
+export const PublicKeyZodSchema = z
   .pipe(
-    CurveStringSchema,
+    CurveStringZodSchema,
     z.transform((val) => ({
       publicKey: val.curveString,
       u8PublicKey: val.u8Data,
@@ -23,4 +23,4 @@ export const PublicKeySchema = z
     ),
   );
 
-export type InnerPublicKey = z.infer<typeof PublicKeySchema>;
+export type InnerPublicKey = z.infer<typeof PublicKeyZodSchema>;

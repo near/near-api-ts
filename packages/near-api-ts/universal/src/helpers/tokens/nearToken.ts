@@ -16,9 +16,9 @@ import type {
 import { NearDecimals } from '../../_common/configs/constants';
 import { createNatError } from '../../_common/natError';
 import {
-  NearInputSchema,
-  NearTokenArgsSchema,
-  YoctoNearInputSchema,
+  NearInputZodSchema,
+  NearTokenArgsZodSchema,
+  YoctoNearInputZodSchema,
 } from '../../_common/schemas/zod/common/nearToken';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { nodeInspectSymbol } from '../../_common/utils/common';
@@ -143,7 +143,7 @@ const nearTokenProto: ThisType<NearToken> = {
 export const safeYoctoNear: SafeCreateNearTokenFromYoctoNear = wrapInternalError(
   'CreateNearTokenFromYoctoNear.Internal',
   (yoctoNear) => {
-    const validYoctoNear = YoctoNearInputSchema.safeParse(yoctoNear);
+    const validYoctoNear = YoctoNearInputZodSchema.safeParse(yoctoNear);
 
     if (!validYoctoNear.success)
       return result.err(
@@ -171,7 +171,7 @@ export const throwableYoctoNear: CreateNearTokenFromYoctoNear = asThrowable(safe
 export const safeNear: SafeCreateNearTokenFromNear = wrapInternalError(
   'CreateNearTokenFromNear.Internal',
   (near) => {
-    const validNear = NearInputSchema.safeParse(near);
+    const validNear = NearInputZodSchema.safeParse(near);
 
     if (!validNear.success)
       return result.err(
@@ -199,7 +199,7 @@ export const throwableNear: CreateNearTokenFromNear = asThrowable(safeNear);
 export const safeNearToken: SafeCreateNearToken = wrapInternalError(
   'CreateNearToken.Internal',
   (args) => {
-    const validArgs = NearTokenArgsSchema.safeParse(args);
+    const validArgs = NearTokenArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return result.err(

@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { createMemoryKeyService, randomSecp256k1KeyPair, verifySignature } from '../../../../index';
-import { TransactionSchema } from '../../../../src/_common/schemas/zod/transaction/transaction';
+import { TransactionZodSchema } from '../../../../src/_common/schemas/zod/transaction/transaction';
 import { getTransactionHash } from '../../../../src/_common/utils/getTransactionHash';
 import { signTransaction } from '../../../../src/helpers/signTransaction';
 
@@ -23,7 +23,7 @@ test('secp256k1 transaction verification', async () => {
     },
   });
 
-  const innerTx = TransactionSchema.parse(signedTransaction.transaction);
+  const innerTx = TransactionZodSchema.parse(signedTransaction.transaction);
   const { u8TransactionHash } = getTransactionHash(innerTx);
 
   const isValid = verifySignature({

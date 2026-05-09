@@ -1,11 +1,11 @@
 import * as z from 'zod/mini';
-import { NearTokenArgsSchema } from '../../common/nearToken';
-import { PublicKeySchema } from '../../common/publicKey';
+import { NearTokenArgsZodSchema } from '../../common/nearToken';
+import { PublicKeyZodSchema } from '../../common/publicKey';
 
-export const StakeActionSchema = z.object({
+export const StakeActionZodSchema = z.object({
   actionType: z.literal('Stake'),
-  amount: NearTokenArgsSchema,
-  validatorPublicKey: PublicKeySchema,
+  amount: NearTokenArgsZodSchema,
+  validatorPublicKey: PublicKeyZodSchema,
 });
 
-export type InnerStakeAction = z.infer<typeof StakeActionSchema>;
+export type InnerStakeAction = z.infer<typeof StakeActionZodSchema>;

@@ -1,4 +1,4 @@
-import type { Nonce } from '../../../../../types/_common/common';
+import type { TransactionNonce } from '../../../../../types/_common/common';
 import type { PoolKey } from '../../../../../types/signers/memorySigner/inner/keyPool';
 
 export const createLock = (key: PoolKey) => () => {
@@ -9,6 +9,6 @@ export const createUnlock = (key: PoolKey) => () => {
   key.isLocked = false;
 };
 
-export const createSetNonce = (key: PoolKey) => (newNonce: Nonce) => {
+export const createSetNonce = (key: PoolKey) => (newNonce: TransactionNonce) => {
   key.nonce = newNonce;
 };

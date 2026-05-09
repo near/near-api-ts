@@ -93,7 +93,7 @@ signer.executeTransaction(); // ExecutedOptimistic <-> ExecutedFinal
 type TransactionResult = {
   transactionHash: 'FaeKovQ3iWsMQex6vwSH9eYbGnm2Y95DCaEgHdmkCM82',
   processingStage: 'ExecutedFinal',
-  execution: {
+  executionOutcome: {
     status: 'Success',
     data: 'bnVsbA=='
   },

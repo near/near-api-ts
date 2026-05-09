@@ -17,7 +17,7 @@ const transformResult = (result: unknown): GetGasPriceResult => {
 
 // const GetGasPriceArgsSchema = z.optional(
 //   z.object({
-//     blockId: z.optional(BlockIdSchema), // TODO use atMomentOf?
+//     blockId: z.optional(BlockIdZodSchema), // TODO use atMomentOf?
 //   }),
 // );
 

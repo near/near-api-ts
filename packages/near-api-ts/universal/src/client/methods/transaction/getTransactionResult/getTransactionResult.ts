@@ -4,19 +4,17 @@ import type {
   SafeGetTransactionResult,
 } from '../../../../../types/client/methods/transaction/getTransactionResult';
 import { resultNatError } from '../../../../_common/natError';
-import { BaseOptionsSchema, PoliciesSchema } from '../../../../_common/schemas/zod/client';
-import { AccountIdSchema } from '../../../../_common/schemas/zod/common/accountId';
-import { CryptoHashSchema } from '../../../../_common/schemas/zod/common/cryptoHash';
+import { BaseOptionsZodSchema, PoliciesZodSchema } from '../../../../_common/schemas/zod/client';
+import { CryptoHashZodSchema } from '../../../../_common/schemas/zod/common/cryptoHash';
 import { repackError } from '../../../../_common/utils/repackError';
 import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
-import { handleError } from './handleError/handleError';
+import { handleError } from './handleError';
 import { handleResult } from './handleResult/handleResult';
 
 const GetTransactionResultArgsZodShema = z.object({
-  transactionHash: CryptoHashSchema,
-  signerAccountId: AccountIdSchema,
-  policies: PoliciesSchema,
-  options: BaseOptionsSchema,
+  transactionHash: CryptoHashZodSchema,
+  policies: PoliciesZodSchema,
+  options: BaseOptionsZodSchema,
 });
 
 export const createSafeGetTransactionResult: CreateSafeGetTransactionResult = (context) =>
@@ -34,14 +32,12 @@ export const createSafeGetTransactionResult: CreateSafeGetTransactionResult = (c
         method: 'EXPERIMENTAL_tx_status',
         params: {
           tx_hash: validArgs.data.transactionHash.cryptoHash,
-          sender_account_id: validArgs.data.signerAccountId,
+          sender_account_id: 'any', // We expect that RPC tracks all shards, so signerAccountId doesn't matter
           wait_until: 'NONE',
         },
         transportPolicy: args.policies?.transport,
         signal: args.options?.signal,
       });
-
-      console.log(rpcResponse);
 
       if (!rpcResponse.ok)
         return repackError({

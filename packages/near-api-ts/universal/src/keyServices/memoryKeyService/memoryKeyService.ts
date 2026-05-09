@@ -5,7 +5,7 @@ import type {
   SafeCreateMemoryKeyService,
 } from '../../../types/keyServices/memoryKeyService/memoryKeyService';
 import { resultNatError } from '../../_common/natError';
-import { PrivateKeySchema } from '../../_common/schemas/zod/common/privateKey';
+import { PrivateKeyZodSchema } from '../../_common/schemas/zod/common/privateKey';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
@@ -14,7 +14,7 @@ import { createSafeHasKey } from './public/hasKey';
 import { createSafeSignData } from './public/signData';
 
 const KeySourceSchema = z.object({
-  privateKey: PrivateKeySchema,
+  privateKey: PrivateKeyZodSchema,
 });
 
 const CreateMemoryKeyServiceArgsSchema = z.union([

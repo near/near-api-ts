@@ -1,6 +1,6 @@
 import type { CreateKeyPair, SafeCreateKeyPair } from '../../../../types/_common/keyPairs/keyPair';
 import { resultNatError } from '../../../_common/natError';
-import { PrivateKeySchema } from '../../../_common/schemas/zod/common/privateKey';
+import { PrivateKeyZodSchema } from '../../../_common/schemas/zod/common/privateKey';
 import { asThrowable } from '../../../_common/utils/asThrowable';
 import { result } from '../../../_common/utils/result';
 import { wrapInternalError } from '../../../_common/utils/wrapInternalError';
@@ -10,7 +10,7 @@ import { createSafeSignData } from './signData';
 export const safeKeyPair: SafeCreateKeyPair = wrapInternalError(
   'CreateKeyPair.Internal',
   (privateKey) => {
-    const validPrivateKey = PrivateKeySchema.safeParse(privateKey);
+    const validPrivateKey = PrivateKeyZodSchema.safeParse(privateKey);
 
     if (!validPrivateKey.success)
       return resultNatError('CreateKeyPair.Args.InvalidSchema', {

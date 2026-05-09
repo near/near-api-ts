@@ -6,18 +6,18 @@ import type {
 import { createNatError } from '../../_common/natError';
 import {
   AllowedFunctionsSchema,
-  GasBudgetSchema,
+  GasBudgetZodSchema,
 } from '../../_common/schemas/zod/common/accessKey';
-import { AccountIdSchema } from '../../_common/schemas/zod/common/accountId';
-import { PublicKeySchema } from '../../_common/schemas/zod/common/publicKey';
+import { AccountIdZodSchema } from '../../_common/schemas/zod/common/accountId';
+import { PublicKeyZodSchema } from '../../_common/schemas/zod/common/publicKey';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 
 export const CreateAddFunctionCallKeyActionArgsSchema = z.object({
-  publicKey: PublicKeySchema,
-  contractAccountId: AccountIdSchema,
-  gasBudget: GasBudgetSchema,
+  publicKey: PublicKeyZodSchema,
+  contractAccountId: AccountIdZodSchema,
+  gasBudget: GasBudgetZodSchema,
   allowedFunctions: AllowedFunctionsSchema,
 });
 

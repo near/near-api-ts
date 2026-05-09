@@ -1,7 +1,7 @@
 // import type { DelegateAction } from '@near-js/jsonrpc-types';
 // import type { NatError } from '../../../../src/_common/natError';
 // import type { Prettify } from '../../../utils';
-// import type { AccountId, BlockHash, BlockHeight, Nonce, Result } from '../../common';
+// import type { AccountId, BlockHash, BlockHeight, TransactionNonce, Result } from '../../common';
 // import type { NativePublicKey, PublicKey, Signature } from '../../crypto';
 // import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../natError';
 // import type { Action, NativeAction } from '../transaction';

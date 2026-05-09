@@ -9,8 +9,8 @@ import type {
   SafeCreateMemorySigner,
 } from '../../../types/signers/memorySigner/public/createMemorySigner';
 import { createNatError } from '../../_common/natError';
-import { AccountIdSchema } from '../../_common/schemas/zod/common/accountId';
-import { PublicKeySchema } from '../../_common/schemas/zod/common/publicKey';
+import { AccountIdZodSchema } from '../../_common/schemas/zod/common/accountId';
+import { PublicKeyZodSchema } from '../../_common/schemas/zod/common/publicKey';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
@@ -29,12 +29,12 @@ import { createTaskQueue } from './taskQueue/createTaskQueue';
 // }),
 
 const CreateMemorySignerArgsSchema = z.object({
-  signerAccountId: AccountIdSchema,
+  signerAccountId: AccountIdZodSchema,
   client: z.custom<Client>((value) => isClient(value)), // TODO fix it
   keyService: z.custom<MemoryKeyService>((value) => true), // TODO fix it
   keyPool: z.optional(
     z.object({
-      allowedAccessKeys: z.optional(z.array(PublicKeySchema).check(z.minLength(1))),
+      allowedAccessKeys: z.optional(z.array(PublicKeyZodSchema).check(z.minLength(1))),
     }),
   ),
   taskQueue: z.optional(

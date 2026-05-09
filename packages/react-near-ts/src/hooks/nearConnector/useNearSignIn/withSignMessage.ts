@@ -4,12 +4,12 @@ import type {
 } from '@hot-labs/near-connect/build/types';
 import { useMutation } from '@tanstack/react-query';
 import {
-  AccountIdSchema,
-  Base64StringSchema,
+  AccountIdZodSchema,
+  Base64StringZodSchema,
   type Curve,
   constants,
   type Message,
-  PublicKeySchema,
+  PublicKeyZodSchema,
   type SignedMessage,
   toEd25519CurveString,
   toSecp256k1CurveString,
@@ -26,7 +26,7 @@ import { NearConnectorServiceSchema } from '../_common.ts';
 export const createNep413MessageSignatureSchema = (curve: Curve) =>
   z
     .pipe(
-      Base64StringSchema,
+      Base64StringZodSchema,
       z.transform((base64Signature) => ({
         u8Signature: Uint8Array.fromBase64(base64Signature),
       })),
@@ -46,8 +46,8 @@ const transformSignedMessage = (
   signedMessage: NearConnectSignedMessage,
   message: Message,
 ): SignedMessage => {
-  const signerAccountId = AccountIdSchema.parse(signedMessage?.accountId);
-  const signerPublicKey = PublicKeySchema.parse(signedMessage?.publicKey);
+  const signerAccountId = AccountIdZodSchema.parse(signedMessage?.accountId);
+  const signerPublicKey = PublicKeyZodSchema.parse(signedMessage?.publicKey);
 
   const { u8Signature } = createNep413MessageSignatureSchema(signerPublicKey.curve).parse(
     signedMessage?.signature,

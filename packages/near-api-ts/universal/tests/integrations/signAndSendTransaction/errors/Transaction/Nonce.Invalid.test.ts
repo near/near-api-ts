@@ -30,7 +30,7 @@ describe('Execute transaction', () => {
     return () => sandbox.stop();
   });
 
-  it('Invalid Nonce', async () => {
+  it('Invalid TransactionNonce', async () => {
     const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
       accountId: 'nat',
       publicKey: DEFAULT_PUBLIC_KEY,

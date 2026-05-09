@@ -6,15 +6,15 @@ import type { TransportPolicy } from '../../../types/client/transport/transport'
 const Regular = z.literal('Regular');
 const Archival = z.literal('Archival');
 
-const RpcTypePreferencesSchema = z.union([
+const RpcTypePreferencesZodSchema = z.union([
   z.tuple([Regular]),
   z.tuple([Archival]),
   z.tuple([Regular, Archival]),
   z.tuple([Archival, Regular]),
 ]);
 
-const TransportPolicySchema = z.object({
-  rpcTypePreferences: RpcTypePreferencesSchema,
+const TransportPolicyZodSchema = z.object({
+  rpcTypePreferences: RpcTypePreferencesZodSchema,
   timeouts: z.partial(
     z.object({
       // Unlikely that a request could finish less in than 100ms -
@@ -44,7 +44,7 @@ const TransportPolicySchema = z.object({
   ),
 });
 
-export const PartialTransportPolicySchema = z.optional(z.partial(TransportPolicySchema));
+export const PartialTransportPolicyZodSchema = z.optional(z.partial(TransportPolicyZodSchema));
 
 export const defaultTransportPolicy: TransportPolicy = {
   rpcTypePreferences: ['Regular', 'Archival'],

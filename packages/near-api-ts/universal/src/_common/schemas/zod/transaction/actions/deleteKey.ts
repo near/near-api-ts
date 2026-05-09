@@ -1,9 +1,9 @@
 import * as z from 'zod/mini';
-import { PublicKeySchema } from '../../common/publicKey';
+import { PublicKeyZodSchema } from '../../common/publicKey';
 
-export const DeleteKeyActionSchema = z.object({
+export const DeleteKeyActionZodSchema = z.object({
   actionType: z.literal('DeleteKey'),
-  publicKey: PublicKeySchema,
+  publicKey: PublicKeyZodSchema,
 });
 
-export type InnerDeleteKeyAction = z.infer<typeof DeleteKeyActionSchema>;
+export type InnerDeleteKeyAction = z.infer<typeof DeleteKeyActionZodSchema>;

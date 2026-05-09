@@ -4,13 +4,13 @@ import type {
   SafeCreateDeleteAccountAction,
 } from '../../../types/_common/transaction/actions/deleteAccount';
 import { createNatError } from '../../_common/natError';
-import { AccountIdSchema } from '../../_common/schemas/zod/common/accountId';
+import { AccountIdZodSchema } from '../../_common/schemas/zod/common/accountId';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 
 export const CreateDeleteAccountActionArgsSchema = z.object({
-  beneficiaryAccountId: AccountIdSchema,
+  beneficiaryAccountId: AccountIdZodSchema,
 });
 
 export const safeDeleteAccount: SafeCreateDeleteAccountAction = wrapInternalError(

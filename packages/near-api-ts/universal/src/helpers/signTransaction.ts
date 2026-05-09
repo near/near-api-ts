@@ -1,14 +1,14 @@
 import * as z from 'zod/mini';
 import type { SafeSignTransaction, SignTransaction } from '../../types/helpers/signTransaction';
 import { resultNatError } from '../_common/natError';
-import { TransactionSchema } from '../_common/schemas/zod/transaction/transaction';
+import { TransactionZodSchema } from '../_common/schemas/zod/transaction/transaction';
 import { asThrowable } from '../_common/utils/asThrowable';
 import { getTransactionHash } from '../_common/utils/getTransactionHash';
 import { result } from '../_common/utils/result';
 import { wrapInternalError } from '../_common/utils/wrapInternalError';
 
 const SignTransactionArgsSchema = z.object({
-  transaction: TransactionSchema,
+  transaction: TransactionZodSchema,
   signDataProvider: z.object({
     safeSignData: z.custom(
       (val) => typeof val === 'function',

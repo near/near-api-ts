@@ -3,7 +3,7 @@ import * as z from 'zod/mini';
 import type { Curve, CurveString } from '../../../../../types/_common/curveString';
 import { oneLine } from '../../../utils/common';
 
-export const CurveStringSchema = z.pipe(
+export const CurveStringZodSchema = z.pipe(
   z.string().check(
     z.regex(
       /^(ed25519|secp256k1):[1-9A-HJ-NP-Za-km-z]+$/,

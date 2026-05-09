@@ -7,11 +7,11 @@ import type {
 } from '../../../types/_common/transaction/actions/functionCall';
 import { createNatError, NatError } from '../../_common/natError';
 import {
-  ContractFunctionNameSchema,
-  JsonValueSchema,
+  ContractFunctionNameZodSchema,
+  JsonValueZodSchema,
 } from '../../_common/schemas/zod/common/common';
-import { NearGasArgsSchema } from '../../_common/schemas/zod/common/nearGas';
-import { NearTokenArgsSchema } from '../../_common/schemas/zod/common/nearToken';
+import { NearGasArgsZodSchema } from '../../_common/schemas/zod/common/nearGas';
+import { NearTokenArgsZodSchema } from '../../_common/schemas/zod/common/nearToken';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { toJsonBytes } from '../../_common/utils/common';
 import { result } from '../../_common/utils/result';
@@ -57,7 +57,7 @@ const serializeFunctionArgs = (
   // If a user uses a default serializer and passes some functionArgs -
   // functionArgs should be a valid JSON object;
   if (args?.functionArgs) {
-    const jsonArgs = JsonValueSchema.safeParse(args.functionArgs);
+    const jsonArgs = JsonValueZodSchema.safeParse(args.functionArgs);
 
     if (!jsonArgs.success)
       return result.err(
@@ -75,10 +75,10 @@ const serializeFunctionArgs = (
 };
 
 export const CreateFunctionCallActionArgsSchema = z.object({
-  functionName: ContractFunctionNameSchema,
+  functionName: ContractFunctionNameZodSchema,
   functionArgs: z.optional(z.unknown()),
-  gasLimit: NearGasArgsSchema,
-  attachedDeposit: z.optional(NearTokenArgsSchema),
+  gasLimit: NearGasArgsZodSchema,
+  attachedDeposit: z.optional(NearTokenArgsZodSchema),
   options: z.optional(
     z.object({
       serializeArgs: z.optional(z.instanceof(Function)),

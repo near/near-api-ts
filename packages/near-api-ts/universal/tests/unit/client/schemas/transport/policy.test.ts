@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import * as z from 'zod/mini';
 import {
   defaultTransportPolicy,
-  PartialTransportPolicySchema,
+  PartialTransportPolicyZodSchema,
 } from '../../../../../src/client/transport/transportPolicy';
 import type { PartialTransportPolicy } from '../../../../../types/client/transport/transport';
 
@@ -10,7 +10,7 @@ z.config(z.locales.en());
 
 describe('Ok', () => {
   it('defaultTransportPolicy', async () => {
-    const res = PartialTransportPolicySchema.safeParse(defaultTransportPolicy);
+    const res = PartialTransportPolicyZodSchema.safeParse(defaultTransportPolicy);
     expect(res.success).toBe(true);
   });
 
@@ -18,7 +18,7 @@ describe('Ok', () => {
     const x: PartialTransportPolicy = {
       rpcTypePreferences: ['Archival'],
     };
-    const res = PartialTransportPolicySchema.safeParse(x);
+    const res = PartialTransportPolicyZodSchema.safeParse(x);
     expect(res.success).toBe(true);
   });
 });
@@ -29,7 +29,7 @@ describe('Error', () => {
       // @ts-expect-error
       rpcTypePreferences: [],
     };
-    const res = PartialTransportPolicySchema.safeParse(x);
+    const res = PartialTransportPolicyZodSchema.safeParse(x);
     expect(res.success).toBe(false);
   });
   // retryBackoff
@@ -39,7 +39,7 @@ describe('Error', () => {
         requestMs: 50, // should be >= 100ms
       },
     };
-    const res = PartialTransportPolicySchema.safeParse(x);
+    const res = PartialTransportPolicyZodSchema.safeParse(x);
     console.log(res);
     expect(res.success).toBe(false);
   });
@@ -52,7 +52,7 @@ describe('Error', () => {
         },
       },
     };
-    const res = PartialTransportPolicySchema.safeParse(x);
+    const res = PartialTransportPolicyZodSchema.safeParse(x);
     console.log(res);
     expect(res.success).toBe(false);
   });

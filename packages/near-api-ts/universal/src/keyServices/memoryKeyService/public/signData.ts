@@ -2,12 +2,12 @@ import * as z from 'zod/mini';
 import type { MemoryKeyServiceContext } from '../../../../types/keyServices/memoryKeyService/memoryKeyService';
 import type { SafeSignData } from '../../../../types/keyServices/memoryKeyService/signData';
 import { resultNatError } from '../../../_common/natError';
-import { PublicKeySchema } from '../../../_common/schemas/zod/common/publicKey';
+import { PublicKeyZodSchema } from '../../../_common/schemas/zod/common/publicKey';
 import { result } from '../../../_common/utils/result';
 import { wrapInternalError } from '../../../_common/utils/wrapInternalError';
 
 const SignDataArgsZodSchema = z.object({
-  publicKey: PublicKeySchema,
+  publicKey: PublicKeyZodSchema,
   dataU8: z.instanceof(Uint8Array),
 });
 

@@ -1,19 +1,15 @@
 import * as z from 'zod/mini';
+import type { Prettify } from '../../../../../types/utils';
 
-const BaseRpcResponseSchema = z.object({
-  jsonrpc: z.literal('2.0'),
-  id: z.number(),
-});
-
-const BaseRpcErrorSchema = z.object({
+const BaseRpcErrorZodSchema = z.object({
   code: z.number(),
   message: z.string(),
   data: z.optional(z.unknown()),
 });
 
-const RpcErrorSchema = z.discriminatedUnion('name', [
+const RpcErrorZodSchema = z.discriminatedUnion('name', [
   z.object({
-    ...BaseRpcErrorSchema.shape,
+    ...BaseRpcErrorZodSchema.shape,
     name: z.literal('REQUEST_VALIDATION_ERROR'),
     cause: z.discriminatedUnion('name', [
       z.object({
@@ -27,7 +23,7 @@ const RpcErrorSchema = z.discriminatedUnion('name', [
     ]),
   }),
   z.object({
-    ...BaseRpcErrorSchema.shape,
+    ...BaseRpcErrorZodSchema.shape,
     name: z.literal('HANDLER_ERROR'),
     cause: z.object({
       info: z.unknown(),
@@ -35,7 +31,7 @@ const RpcErrorSchema = z.discriminatedUnion('name', [
     }),
   }),
   z.object({
-    ...BaseRpcErrorSchema.shape,
+    ...BaseRpcErrorZodSchema.shape,
     name: z.literal('INTERNAL_ERROR'),
     cause: z.object({
       name: z.literal('INTERNAL_ERROR'),
@@ -44,19 +40,21 @@ const RpcErrorSchema = z.discriminatedUnion('name', [
   }),
 ]);
 
-export type RpcError = z.infer<typeof RpcErrorSchema>;
+export type RpcError = Prettify<z.infer<typeof RpcErrorZodSchema>>;
 
-export const RpcResponseSchema = z.union([
+export const RpcResponseZodSchema = z.union([
   z.object({
-    ...BaseRpcResponseSchema.shape,
+    jsonrpc: z.literal('2.0'),
+    id: z.number(),
     result: z.unknown(),
     error: z.optional(z.never()),
   }),
   z.object({
-    ...BaseRpcResponseSchema.shape,
+    jsonrpc: z.literal('2.0'),
+    id: z.number(),
     result: z.optional(z.never()),
-    error: RpcErrorSchema,
+    error: RpcErrorZodSchema,
   }),
 ]);
 
-export type RpcResponse = z.infer<typeof RpcResponseSchema>;
+export type RpcResponse = Prettify<z.infer<typeof RpcResponseZodSchema>>;

@@ -1,12 +1,12 @@
 import * as z from 'zod/mini';
 import { BinaryLengths } from '../../../configs/constants';
-import { CurveStringSchema } from './curveString';
+import { CurveStringZodSchema } from './curveString';
 
 const { Ed25519, Secp256k1 } = BinaryLengths;
 
-export const SignatureSchema = z
+export const SignatureZodSchema = z
   .pipe(
-    CurveStringSchema,
+    CurveStringZodSchema,
     z.transform((val) => ({
       signature: val.curveString,
       u8Signature: val.u8Data,
@@ -23,4 +23,4 @@ export const SignatureSchema = z
     ),
   );
 
-export type InnerSignature = z.infer<typeof SignatureSchema>;
+export type InnerSignature = z.infer<typeof SignatureZodSchema>;

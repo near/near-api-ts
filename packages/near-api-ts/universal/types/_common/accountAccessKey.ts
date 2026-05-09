@@ -1,11 +1,11 @@
-import type { AccountId, ContractFunctionName, Nonce } from './common';
+import type { AccountId, ContractFunctionName, TransactionNonce } from './common';
 import type { PublicKey } from './crypto';
 import type { NearTokenArgs } from './nearToken';
 
 export type FullAccessKey = {
   accessType: 'FullAccess';
   publicKey: PublicKey;
-  nonce: Nonce;
+  nonce: TransactionNonce;
 };
 
 /**
@@ -49,7 +49,7 @@ export type AllowedFunctions = 'AllNonPayable' | ContractFunctionName[];
 export type FunctionCallKey = {
   accessType: 'FunctionCall';
   publicKey: PublicKey;
-  nonce: Nonce;
+  nonce: TransactionNonce;
   contractAccountId: AccountId;
   gasBudget: GasBudget;
   allowedFunctions: AllowedFunctions;

@@ -12,7 +12,7 @@ import { createSafeRemoveKeyPair } from './public/removeKeyPair';
 import { createSafeSignTransaction } from './public/signTransaction';
 
 // const KeySourceSchema = z.object({
-//   privateKey: PrivateKeySchema,
+//   privateKey: PrivateKeyZodSchema,
 // });
 //
 const CreateFileKeyServiceArgsSchema = z.optional(

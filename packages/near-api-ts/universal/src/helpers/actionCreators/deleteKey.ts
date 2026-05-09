@@ -4,13 +4,13 @@ import type {
   SafeCreateDeleteKeyAction,
 } from '../../../types/_common/transaction/actions/deleteKey';
 import { createNatError } from '../../_common/natError';
-import { PublicKeySchema } from '../../_common/schemas/zod/common/publicKey';
+import { PublicKeyZodSchema } from '../../_common/schemas/zod/common/publicKey';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 
 export const CreateDeleteKeyActionArgsSchema = z.object({
-  publicKey: PublicKeySchema,
+  publicKey: PublicKeyZodSchema,
 });
 
 export const safeDeleteKey: SafeCreateDeleteKeyAction = wrapInternalError(

@@ -6,7 +6,7 @@ import {
   createMemorySigner,
   createTestnetClient,
 } from '../../index';
-import { SignedTransactionSchema } from '../../src/_common/schemas/zod/transaction/transaction';
+import { SignedTransactionZodSchema } from '../../src/_common/schemas/zod/transaction/transaction';
 import { toBorshSignedTransaction } from '../../src/_common/transformers/toBorshBytes/transaction';
 import { log } from '../utils/common';
 
@@ -34,7 +34,7 @@ describe('Get Detailed Transaction', () => {
       }
     });
 
-    const txBorsh64 = toBorshSignedTransaction(SignedTransactionSchema.parse(signedTx)).toBase64()
+    const txBorsh64 = toBorshSignedTransaction(SignedTransactionZodSchema.parse(signedTx)).toBase64()
 
     log(txBorsh64)
   });

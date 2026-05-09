@@ -22,7 +22,7 @@ import * as z from 'zod/mini';
  *   ✓ "0", "12", "3.4", "10.00"
  *   ✗ ".5", "5.", "1.234", "-1", "1e3", " 1"
  */
-const createTokensInputSchema = (decimals: number) =>
+const createTokensInputZodSchema = (decimals: number) =>
   z.string().check(
     z.refine(
       (val) => {
@@ -35,20 +35,20 @@ const createTokensInputSchema = (decimals: number) =>
     ),
   );
 
-export const NearInputSchema = createTokensInputSchema(24);
+export const NearInputZodSchema = createTokensInputZodSchema(24);
 
-const BigintStringSchema = z.pipe(
+const BigintStringZodSchema = z.pipe(
   z.string().check(z.regex(/^\d+$/, 'Must contain only digits')),
   z.transform((v) => BigInt(v)),
 );
 
-export const YoctoNearInputSchema = z.union([z.bigint(), BigintStringSchema]);
+export const YoctoNearInputZodSchema = z.union([z.bigint(), BigintStringZodSchema]);
 
-export const NearTokenArgsSchema = z.union([
+export const NearTokenArgsZodSchema = z.union([
   z.object({
-    near: NearInputSchema,
+    near: NearInputZodSchema,
   }),
   z.object({
-    yoctoNear: YoctoNearInputSchema,
+    yoctoNear: YoctoNearInputZodSchema,
   }),
 ]);

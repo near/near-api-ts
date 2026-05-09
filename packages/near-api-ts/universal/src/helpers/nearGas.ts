@@ -15,9 +15,9 @@ import type {
 } from '../../types/_common/nearGas';
 import { createNatError } from '../_common/natError';
 import {
-  GasInputSchema,
-  NearGasArgsSchema,
-  TeraGasInputSchema,
+  GasInputZodSchema,
+  NearGasArgsZodSchema,
+  TeraGasInputZodSchema,
 } from '../_common/schemas/zod/common/nearGas';
 import { asThrowable } from '../_common/utils/asThrowable';
 import { nodeInspectSymbol } from '../_common/utils/common';
@@ -139,7 +139,7 @@ const nearGasProto: ThisType<NearGas> = {
 export const safeGas: SafeCreateNearGasFromGas = wrapInternalError(
   'CreateNearGasFromGas.Internal',
   (gas) => {
-    const validGas = GasInputSchema.safeParse(gas);
+    const validGas = GasInputZodSchema.safeParse(gas);
 
     if (!validGas.success)
       return result.err(
@@ -167,7 +167,7 @@ export const throwableGas: CreateNearGasFromGas = asThrowable(safeGas);
 export const safeTeraGas: SafeCreateNearGasFromTeraGas = wrapInternalError(
   'CreateNearGasFromTeraGas.Internal',
   (teraGas) => {
-    const validTeraGas = TeraGasInputSchema.safeParse(teraGas);
+    const validTeraGas = TeraGasInputZodSchema.safeParse(teraGas);
 
     if (!validTeraGas.success)
       return result.err(
@@ -195,7 +195,7 @@ export const throwableTeraGas: CreateNearGasFromTeraGas = asThrowable(safeTeraGa
 export const safeNearGas: SafeCreateNearGas = wrapInternalError(
   'CreateNearGas.Internal',
   (args) => {
-    const validArgs = NearGasArgsSchema.safeParse(args);
+    const validArgs = NearGasArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return result.err(

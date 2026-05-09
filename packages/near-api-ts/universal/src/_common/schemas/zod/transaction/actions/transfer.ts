@@ -1,9 +1,9 @@
 import * as z from 'zod/mini';
-import { NearTokenArgsSchema } from '../../common/nearToken';
+import { NearTokenArgsZodSchema } from '../../common/nearToken';
 
-export const TransferActionSchema = z.object({
+export const TransferActionZodSchema = z.object({
   actionType: z.literal('Transfer'),
-  amount: NearTokenArgsSchema,
+  amount: NearTokenArgsZodSchema,
 });
 
-export type InnerTransferAction = z.infer<typeof TransferActionSchema>;
+export type InnerTransferAction = z.infer<typeof TransferActionZodSchema>;

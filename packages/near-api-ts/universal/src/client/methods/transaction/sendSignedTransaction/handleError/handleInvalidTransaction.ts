@@ -2,7 +2,7 @@ import { InvalidTxErrorSchema } from '@near-js/jsonrpc-types';
 import * as z from 'zod/mini';
 import { yoctoNear } from '../../../../../../index';
 import { createNatError } from '../../../../../_common/natError';
-import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc';
+import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc/rpc';
 import { result } from '../../../../../_common/utils/result';
 
 const InvalidTransactionErrorSchema = z.object({

@@ -5,9 +5,9 @@ import type {
 } from '../../../../../types/client/methods/block/getBlock';
 import { createNatError } from '../../../../_common/natError';
 import {
-  BaseOptionsSchema,
-  BlockReferenceSchema,
-  PoliciesSchema,
+  BaseOptionsZodSchema,
+  BlockReferenceZodSchema,
+  PoliciesZodSchema,
 } from '../../../../_common/schemas/zod/client';
 import { toNativeBlockReference } from '../../../../_common/transformers/toNative/blockReference';
 import { repackError } from '../../../../_common/utils/repackError';
@@ -18,9 +18,9 @@ import { handleResult } from './handleResult';
 
 const GetBlockArgsSchema = z.optional(
   z.object({
-    blockReference: z.optional(BlockReferenceSchema),
-    policies: PoliciesSchema,
-    options: BaseOptionsSchema,
+    blockReference: z.optional(BlockReferenceZodSchema),
+    policies: PoliciesZodSchema,
+    options: BaseOptionsZodSchema,
   }),
 );
 

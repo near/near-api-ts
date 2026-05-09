@@ -11,7 +11,7 @@ import {
   functionCall,
   transfer,
 } from '../../index';
-import { SignedTransactionSchema } from '../../src/_common/schemas/zod/transaction/transaction';
+import { SignedTransactionZodSchema } from '../../src/_common/schemas/zod/transaction/transaction';
 import { toBorshSignedTransaction } from '../../src/_common/transformers/toBorshBytes/transaction';
 import { safeSleep } from '../../src/_common/utils/sleep';
 import { createDefaultClient, getFileBytes, log } from '../utils/common';

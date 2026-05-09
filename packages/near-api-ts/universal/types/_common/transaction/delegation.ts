@@ -1,5 +1,5 @@
 import type { Prettify } from '../../utils';
-import type { AccountId, Base64String, BlockHash, BlockHeight, Nonce } from '../common';
+import type { AccountId, Base64String, BlockHash, BlockHeight, TransactionNonce } from '../common';
 import type { PublicKey, Signature } from '../crypto';
 import type {
   AddFullAccessKeyAction,
@@ -38,7 +38,7 @@ type DelegationBase = {
   senderAccountId: AccountId;
   senderPublicKey: PublicKey;
   receiverAccountId: AccountId;
-  nonce: Nonce;
+  nonce: TransactionNonce;
   blockHash: BlockHash;
   expiration: Expiration;
 };

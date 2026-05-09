@@ -25,3 +25,5 @@ dist-ssr
 
 # Playwright
 /packages/near-api-ts/browser/playwright-test-results
+
+.claude

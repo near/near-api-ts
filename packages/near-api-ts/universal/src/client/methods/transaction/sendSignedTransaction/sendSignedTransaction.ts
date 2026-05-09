@@ -4,8 +4,8 @@ import type {
   SafeSendSignedTransaction,
 } from '../../../../../types/client/methods/transaction/sendSignedTransaction';
 import { createNatError } from '../../../../_common/natError';
-import { BaseOptionsSchema, PoliciesSchema } from '../../../../_common/schemas/zod/client';
-import { SignedTransactionSchema } from '../../../../_common/schemas/zod/transaction/transaction';
+import { BaseOptionsZodSchema, PoliciesZodSchema } from '../../../../_common/schemas/zod/client';
+import { SignedTransactionZodSchema } from '../../../../_common/schemas/zod/transaction/transaction';
 import { toBorshSignedTransaction } from '../../../../_common/transformers/toBorshBytes/transaction';
 import { repackError } from '../../../../_common/utils/repackError';
 import { result } from '../../../../_common/utils/result';
@@ -16,9 +16,9 @@ import { handleResult } from './handleResult/handleResult';
 // We will return the ability to select waitUntil after redesign its name;
 
 const SendSignedTransactionArgsShema = z.object({
-  signedTransaction: SignedTransactionSchema,
-  policies: PoliciesSchema,
-  options: BaseOptionsSchema,
+  signedTransaction: SignedTransactionZodSchema,
+  policies: PoliciesZodSchema,
+  options: BaseOptionsZodSchema,
 });
 
 export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction = (context) =>

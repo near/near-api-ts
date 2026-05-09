@@ -1,85 +1,85 @@
 import * as z from 'zod/mini';
-import { AccountIdSchema } from '../common/accountId';
-import { BlockHashSchema, NonceSchema } from '../common/common';
-import { CryptoHashSchema } from '../common/cryptoHash';
-import { PublicKeySchema } from '../common/publicKey';
-import { SignatureSchema } from '../common/signature';
-import { AddKeyActionSchema } from './actions/addKey';
-import { CreateAccountActionSchema } from './actions/createAccount';
-import { DeleteAccountActionSchema } from './actions/deleteAccount';
-import { DeleteKeyActionSchema } from './actions/deleteKey';
-import { DeployContractActionSchema } from './actions/deployContract';
-import { FunctionCallActionSchema } from './actions/functionCall';
-import { StakeActionSchema } from './actions/stake';
-import { TransferActionSchema } from './actions/transfer';
+import { AccountIdZodSchema } from '../common/accountId';
+import { BlockHashZodSchema, TransactionNonceZodSchema } from '../common/common';
+import { CryptoHashZodSchema } from '../common/cryptoHash';
+import { PublicKeyZodSchema } from '../common/publicKey';
+import { SignatureZodSchema } from '../common/signature';
+import { AddKeyActionZodSchema } from './actions/addKey';
+import { CreateAccountActionZodSchema } from './actions/createAccount';
+import { DeleteAccountActionZodSchema } from './actions/deleteAccount';
+import { DeleteKeyActionZodSchema } from './actions/deleteKey';
+import { DeployContractActionZodSchema } from './actions/deployContract';
+import { FunctionCallActionZodSchema } from './actions/functionCall';
+import { StakeActionZodSchema } from './actions/stake';
+import { TransferActionZodSchema } from './actions/transfer';
 
-const ActionSchema = z.union([
-  CreateAccountActionSchema,
-  TransferActionSchema,
-  AddKeyActionSchema,
-  DeployContractActionSchema,
-  FunctionCallActionSchema,
-  StakeActionSchema,
-  DeleteKeyActionSchema,
-  DeleteAccountActionSchema,
+const ActionZodSchema = z.union([
+  CreateAccountActionZodSchema,
+  TransferActionZodSchema,
+  AddKeyActionZodSchema,
+  DeployContractActionZodSchema,
+  FunctionCallActionZodSchema,
+  StakeActionZodSchema,
+  DeleteKeyActionZodSchema,
+  DeleteAccountActionZodSchema,
 ]);
 
-export type InnerAction = z.infer<typeof ActionSchema>;
+export type InnerAction = z.infer<typeof ActionZodSchema>;
 
-const TransactionBaseSchema = z.object({
-  signerAccountId: AccountIdSchema,
-  signerPublicKey: PublicKeySchema,
-  receiverAccountId: AccountIdSchema,
-  nonce: NonceSchema,
-  blockHash: BlockHashSchema,
+const TransactionBaseZodSchema = z.object({
+  signerAccountId: AccountIdZodSchema,
+  signerPublicKey: PublicKeyZodSchema,
+  receiverAccountId: AccountIdZodSchema,
+  nonce: TransactionNonceZodSchema,
+  blockHash: BlockHashZodSchema,
 });
 
-export const TransactionSingleActionSchema = z.object({
-  action: ActionSchema,
+export const TransactionSingleActionZodSchema = z.object({
+  action: ActionZodSchema,
   actions: z.optional(z.never()),
 });
 
-export const SingleActionTransactionSchema = z.object({
-  ...TransactionBaseSchema.shape,
-  ...TransactionSingleActionSchema.shape,
+export const SingleActionTransactionZodSchema = z.object({
+  ...TransactionBaseZodSchema.shape,
+  ...TransactionSingleActionZodSchema.shape,
 });
 
-export const TransactionMultiActionsSchema = z.object({
+export const TransactionMultiActionsZodSchema = z.object({
   action: z.optional(z.never()),
-  actions: z.array(ActionSchema).check(z.minLength(1)),
+  actions: z.array(ActionZodSchema).check(z.minLength(1)),
 });
 
-export const MultiActionsTransactionSchema = z.object({
-  ...TransactionBaseSchema.shape,
-  ...TransactionMultiActionsSchema.shape,
+export const MultiActionsTransactionZodSchema = z.object({
+  ...TransactionBaseZodSchema.shape,
+  ...TransactionMultiActionsZodSchema.shape,
 });
 
-export const TransactionSchema = z.union([
-  SingleActionTransactionSchema,
-  MultiActionsTransactionSchema,
+export const TransactionZodSchema = z.union([
+  SingleActionTransactionZodSchema,
+  MultiActionsTransactionZodSchema,
 ]);
 
-export type InnerTransaction = z.infer<typeof TransactionSchema>;
+export type InnerTransaction = z.infer<typeof TransactionZodSchema>;
 
-export const SingleActionTransactionIntentSchema = z.object({
-  ...TransactionSingleActionSchema.shape,
-  receiverAccountId: AccountIdSchema,
+export const SingleActionTransactionIntentZodSchema = z.object({
+  ...TransactionSingleActionZodSchema.shape,
+  receiverAccountId: AccountIdZodSchema,
 });
 
-export const MultiActionsTransactionIntentSchema = z.object({
-  ...TransactionMultiActionsSchema.shape,
-  receiverAccountId: AccountIdSchema,
+export const MultiActionsTransactionIntentZodSchema = z.object({
+  ...TransactionMultiActionsZodSchema.shape,
+  receiverAccountId: AccountIdZodSchema,
 });
 
-export const TransactionIntentSchema = z.union([
-  SingleActionTransactionIntentSchema,
-  MultiActionsTransactionIntentSchema,
+export const TransactionIntentZodSchema = z.union([
+  SingleActionTransactionIntentZodSchema,
+  MultiActionsTransactionIntentZodSchema,
 ]);
 
-export const SignedTransactionSchema = z.object({
-  transaction: TransactionSchema,
-  transactionHash: CryptoHashSchema,
-  signature: SignatureSchema,
+export const SignedTransactionZodSchema = z.object({
+  transaction: TransactionZodSchema,
+  transactionHash: CryptoHashZodSchema,
+  signature: SignatureZodSchema,
 });
 
-export type InnerSignedTransaction = z.infer<typeof SignedTransactionSchema>;
+export type InnerSignedTransaction = z.infer<typeof SignedTransactionZodSchema>;

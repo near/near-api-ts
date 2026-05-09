@@ -8,29 +8,50 @@ import {
   type MemoryKeyService,
   transfer,
 } from '../../../../index';
+import { safeSleep } from '../../../../src/_common/utils/sleep';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 import { createDefaultClient, log } from '../../../utils/common';
+import { startShardedSandbox } from '../../../utils/sandbox/sharded/startShardedSandbox';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
-import { startShardedSandbox } from '../../../utils/sandbox/startShardedSandbox';
 
 vi.setConfig({ testTimeout: 60000 });
 
 describe('getTransactionResult', () => {
-  let clientS0: Client;
-  let clientS1: Client;
+  let client: Client;
 
   beforeAll(async () => {
-    const [node0, node1] = await startShardedSandbox();
-    clientS0 = createDefaultClient(node0);
-    clientS1 = createDefaultClient(node1);
-    return () => {
-      node0.stop();
-      node1.stop();
-    };
+    const sandbox = await startSandbox();
+    client = createDefaultClient(sandbox);
+    return () => sandbox.stop();
   });
 
-  it('get account info', async () => {
-    log(['node0 → near', await clientS0.safeGetAccountAccessKeys({ accountId: 'near' })]);
-    log(['node1 → near', await clientS1.safeGetAccountAccessKeys({ accountId: 'near' })]);
+  it('simple tx', async () => {
+    const keyService = createMemoryKeyService({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } });
+
+    const alice = createMemorySigner({
+      signerAccountId: 'alice',
+      client,
+      keyService,
+    });
+
+    const signedTransaction = await alice.signTransaction({
+      intent: {
+        action: transfer({ amount: { near: '1' } }),
+        receiverAccountId: 'nat',
+      },
+    });
+
+    client.sendSignedTransaction({ signedTransaction, })
+    console.log('2');
+
+    await safeSleep(200)
+
+    const txResult = await client.safeGetTransactionResult({
+      // transactionHash: tx.rawRpcResult.transaction.hash,
+      transactionHash: signedTransaction.transactionHash
+      // transactionHash: '9Hzcxs5jcw3xNfdZB3ostNuyjzfkD9UQikHuuLoxtuSH',
+    });
+
+    log(txResult);
   });
 });

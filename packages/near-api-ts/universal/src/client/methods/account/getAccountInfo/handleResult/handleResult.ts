@@ -5,8 +5,9 @@ import type {
   GetAccountInfoArgs,
   GetAccountInfoOutput,
 } from '../../../../../../types/client/methods/account/getAccountInfo';
+import type { Prettify } from '../../../../../../types/utils';
 import { createNatError } from '../../../../../_common/natError';
-import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc';
+import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc/rpc';
 import { result } from '../../../../../_common/utils/result';
 import { calculateAccountBalance } from './calculateAccountBalance';
 
@@ -16,7 +17,7 @@ const RpcQueryViewAccountResultSchema = z.object({
   blockHeight: z.number(),
 });
 
-export type RpcQueryViewAccountResult = z.infer<typeof RpcQueryViewAccountResultSchema>;
+export type RpcQueryViewAccountResult = Prettify<z.infer<typeof RpcQueryViewAccountResultSchema>>;
 
 export const handleResult = (
   rpcResponse: RpcResponse,

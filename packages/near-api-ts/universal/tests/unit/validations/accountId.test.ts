@@ -1,11 +1,11 @@
 import { describe, it } from 'vitest';
 import * as z from 'zod/mini';
-import { AccountIdSchema } from '../../../src/_common/schemas/zod/common/accountId';
+import { AccountIdZodSchema } from '../../../src/_common/schemas/zod/common/accountId';
 
 z.config(z.locales.en());
 
 const testSchema = z.object({
-  accountId: AccountIdSchema,
+  accountId: AccountIdZodSchema,
 });
 
 describe('AccountId', () => {

@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
 
-export const GasInputSchema = z.union([
+export const GasInputZodSchema = z.union([
   z.bigint(),
   z.pipe(
     z.number().check(z.int()),
@@ -8,7 +8,7 @@ export const GasInputSchema = z.union([
   ),
 ]);
 
-const createTeraGasInputSchema = (decimals: number) =>
+const createTeraGasInputZodSchema = (decimals: number) =>
   z.string().check(
     z.refine(
       (val) => {
@@ -21,13 +21,13 @@ const createTeraGasInputSchema = (decimals: number) =>
     ),
   );
 
-export const TeraGasInputSchema = createTeraGasInputSchema(12);
+export const TeraGasInputZodSchema = createTeraGasInputZodSchema(12);
 
-export const NearGasArgsSchema = z.union([
+export const NearGasArgsZodSchema = z.union([
   z.object({
-    gas: GasInputSchema,
+    gas: GasInputZodSchema,
   }),
   z.object({
-    teraGas: TeraGasInputSchema,
+    teraGas: TeraGasInputZodSchema,
   }),
 ]);

@@ -1,5 +1,5 @@
 import type { Prettify } from '../../utils';
-import type { AccountId, BlockHash, CryptoHash, Nonce } from '../common';
+import type { AccountId, BlockHash, CryptoHash, TransactionNonce } from '../common';
 import type { NativePublicKey, NativeSignature, PublicKey, Signature } from '../crypto';
 import type {
   AddFullAccessKeyAction,
@@ -32,7 +32,7 @@ type TransactionBase = {
   signerAccountId: AccountId;
   signerPublicKey: PublicKey;
   receiverAccountId: AccountId;
-  nonce: Nonce;
+  nonce: TransactionNonce;
   blockHash: BlockHash;
 };
 

@@ -5,9 +5,9 @@ import type {
   SafeCallContractReadFunction,
 } from '../../../../../types/client/methods/contract/callContractReadFunction';
 import { createNatError } from '../../../../_common/natError';
-import { BlockReferenceSchema, PoliciesSchema } from '../../../../_common/schemas/zod/client';
-import { AccountIdSchema } from '../../../../_common/schemas/zod/common/accountId';
-import { ContractFunctionNameSchema } from '../../../../_common/schemas/zod/common/common';
+import { BlockReferenceZodSchema, PoliciesZodSchema } from '../../../../_common/schemas/zod/client';
+import { AccountIdZodSchema } from '../../../../_common/schemas/zod/common/accountId';
+import { ContractFunctionNameZodSchema } from '../../../../_common/schemas/zod/common/common';
 import { toNativeBlockReference } from '../../../../_common/transformers/toNative/blockReference';
 import { repackError } from '../../../../_common/utils/repackError';
 import { result } from '../../../../_common/utils/result';
@@ -17,11 +17,11 @@ import { handleResult } from './handleResult/handleResult';
 import { serializeFunctionArgs } from './serializeFunctionArgs';
 
 const GetAccountAccessKeyArgsSchema = z.object({
-  contractAccountId: AccountIdSchema,
-  functionName: ContractFunctionNameSchema,
+  contractAccountId: AccountIdZodSchema,
+  functionName: ContractFunctionNameZodSchema,
   functionArgs: z.optional(z.unknown()),
-  withStateAt: z.optional(BlockReferenceSchema),
-  policies: PoliciesSchema,
+  withStateAt: z.optional(BlockReferenceZodSchema),
+  policies: PoliciesZodSchema,
   options: z.optional(
     z.object({
       serializeArgs: z.optional(z.instanceof(Function)),

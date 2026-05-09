@@ -1,56 +1,59 @@
-import type { Prettify } from '../../utils';
-import type { AccountId, CryptoHash, Nonce } from '../common';
-import type { PublicKey, Signature } from '../crypto';
+/**
+ * Native analog - Included
+ */
+export type StartedOptimistic = 'StartedOptimistic';
+
+/**
+ * Native analog - IncludedFinal
+ */
+export type StartedFinal = 'StartedFinal';
+
+/**
+ * Native analog - ExecutedOptimistic
+ */
+export type ExecutedOptimistic = 'ExecutedOptimistic';
+
+/**
+ * Native analog - Executed
+ */
+export type ExecutedNearlyFinal = 'ExecutedNearlyFinal';
+
+/**
+ * Native analog - Final
+ */
+export type ExecutedFinal = 'ExecutedFinal';
 
 // export type TransactionProcessingStage =
-//   | 'StartedOptimistic'
-//   | 'StartedFinal'
-//   | 'ExecutedOptimistic'
-//   | 'ExecutedNearlyFinal'
-//   | 'ExecutedFinal';
+//   | StartedOptimistic
+//   | StartedFinal
+//   | ExecutedOptimistic
+//   | ExecutedNearlyFinal
+//   | ExecutedFinal;
+
 //
 // export type TransactionExecutionStatus = 'InProgress' | 'Success' | 'Error';
 
-type StartedTransactionDetails = {
-  transactionHash: CryptoHash;
-  processingStage: 'StartedOptimistic' | 'StartedFinal';
-};
+// type StartedTransactionDetails = {
+//   transactionHash: CryptoHash;
+//   processingStage: StartedOptimistic | StartedFinal;
+// };
+//
+// type TransactionBaseDetails = {
+//   transactionHash: CryptoHash;
+//   executionOutcome: ExecutionOutcome;
+//   signerAccountId: AccountId;
+//   signerPublicKey: PublicKey;
+//   nonce: TransactionNonce;
+//   actionSummaries: ActionSummaries;
+//   receiverAccountId: AccountId;
+//   signature: Signature;
+// };
 
-type ExecutionSuccess = {
-  status: 'Success';
-  data: unknown;
-};
+// export type ExecutedTransactionDetails = Prettify<
+//   {
+//     processingStage: 'ExecutedOptimistic' | 'ExecutedNearlyFinal' | 'ExecutedFinal';
+//     executionTrace: ExecutionTrace;
+//   } & TransactionBaseDetails
+// >;
 
-type ExecutionError = {
-  status: 'Error';
-  error: unknown;
-};
-
-type TransactionBaseDetails = {
-  transactionHash: CryptoHash;
-  execution: ExecutionSuccess | ExecutionError; // outcome?
-  signerAccountId: AccountId;
-  signerPublicKey: PublicKey;
-  nonce: Nonce;
-  actionOverviews: unknown[],
-  receiverAccountId: AccountId;
-  signature: Signature;
-};
-
-type TransactionToReceiptConversionStep = unknown;
-
-type ExecutionStep = {
-  receiptId: CryptoHash;
-};
-
-type ExecutionTrace = [TransactionToReceiptConversionStep, ...ExecutionStep[]];
-
-export type ExecutedTransactionDetails = Prettify<
-  {
-    processingStage: 'ExecutedOptimistic' | 'ExecutedNearlyFinal' | 'ExecutedFinal';
-    executionTrace: ExecutionTrace,
-    // receipts: Receipts;
-  } & TransactionBaseDetails
->;
-
-type TransactionDetails = StartedTransactionDetails | ExecutedTransactionDetails;
+// type TransactionDetails = StartedTransactionDetails | ExecutedTransactionDetails;

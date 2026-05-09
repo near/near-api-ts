@@ -1,9 +1,9 @@
 import * as z from 'zod/mini';
-import { AccountIdSchema } from '../../common/accountId';
+import { AccountIdZodSchema } from '../../common/accountId';
 
-export const DeleteAccountActionSchema = z.object({
+export const DeleteAccountActionZodSchema = z.object({
   actionType: z.literal('DeleteAccount'),
-  beneficiaryAccountId: AccountIdSchema,
+  beneficiaryAccountId: AccountIdZodSchema,
 });
 
-export type InnerDeleteAccountAction = z.infer<typeof DeleteAccountActionSchema>;
+export type InnerDeleteAccountAction = z.infer<typeof DeleteAccountActionZodSchema>;

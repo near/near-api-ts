@@ -4,13 +4,13 @@ import type {
   SafeCreateAddFullAccessKeyAction,
 } from '../../../types/_common/transaction/actions/addKey';
 import { createNatError } from '../../_common/natError';
-import { PublicKeySchema } from '../../_common/schemas/zod/common/publicKey';
+import { PublicKeyZodSchema } from '../../_common/schemas/zod/common/publicKey';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 
 export const CreateAddFullAccessKeyActionArgsSchema = z.object({
-  publicKey: PublicKeySchema,
+  publicKey: PublicKeyZodSchema,
 });
 
 export const safeAddFullAccessKey: SafeCreateAddFullAccessKeyAction = wrapInternalError(

@@ -5,8 +5,8 @@ import * as secp256k1 from '@noble/secp256k1';
 import * as z from 'zod/mini';
 import type { SafeVerifySignature, VerifySignature } from '../../types/_common/verifySignature';
 import { resultNatError } from '../_common/natError';
-import { PublicKeySchema } from '../_common/schemas/zod/common/publicKey';
-import { SignatureSchema } from '../_common/schemas/zod/common/signature';
+import { PublicKeyZodSchema } from '../_common/schemas/zod/common/publicKey';
+import { SignatureZodSchema } from '../_common/schemas/zod/common/signature';
 import { asThrowable } from '../_common/utils/asThrowable';
 import { result } from '../_common/utils/result';
 import { wrapInternalError } from '../_common/utils/wrapInternalError';
@@ -16,9 +16,9 @@ secp256k1.hashes.hmacSha256 = (key, msg) => hmac(sha256, key, msg);
 secp256k1.hashes.sha256 = sha256;
 
 export const VerifySignatureArgsSchema = z.object({
-  publicKey: PublicKeySchema,
+  publicKey: PublicKeyZodSchema,
   message: z.instanceof(Uint8Array),
-  signature: SignatureSchema,
+  signature: SignatureZodSchema,
 });
 
 export const safeVerifySignature: SafeVerifySignature = wrapInternalError(

@@ -1,18 +1,43 @@
-import type { RpcResponse } from '../../../src/_common/schemas/zod/rpc';
-import type { AccountId, CryptoHash, Nonce } from '../common';
+import type { RpcResponse } from '../../../src/_common/schemas/zod/rpc/rpc';
+import type { AccountId, CryptoHash, TransactionNonce } from '../common';
 import type { NearToken } from '../nearToken';
+import type {
+  ExecutedNearlyFinal,
+  ExecutedOptimistic,
+  StartedFinal,
+  StartedOptimistic,
+} from '../transactionDetails/_common';
 
 export type TransactionErrorContext = {
-  NotFound: { transactionHash: CryptoHash; signerAccountId: AccountId };
+  NotFound: {
+    transactionHash: CryptoHash;
+  };
+  NotCompleted: {
+    transactionHash: CryptoHash;
+    currentProcessingStage:
+      | StartedOptimistic
+      | StartedFinal
+      | ExecutedOptimistic
+      | ExecutedNearlyFinal;
+  };
   Expired: null;
   Timeout: null;
   Nonce: {
-    Invalid: { transactionNonce: Nonce; accessKeyNonce: Nonce };
+    // TODO Rename - it's not clear why nonce is invalid. Better name - TooLow
+    Invalid: {
+      transactionNonce: TransactionNonce;
+      accessKeyNonce: TransactionNonce;
+    };
   };
   Signer: {
-    NotFound: { signerAccountId: AccountId };
+    NotFound: {
+      signerAccountId: AccountId;
+    };
     Balance: {
-      TooLow: { transactionCost: NearToken; signerAccountId: AccountId };
+      TooLow: {
+        transactionCost: NearToken;
+        signerAccountId: AccountId;
+      };
     };
   };
   Receiver: {
@@ -26,7 +51,10 @@ export type TransactionErrorContext = {
     Invalid: null;
   };
   Action: {
-    InvalidIndex: { rpcResponse: RpcResponse }; // TODO What is this error about?
+    // TODO What is this error about?
+    InvalidIndex: {
+      rpcResponse: RpcResponse;
+    };
     CreateAccount: {
       AlreadyExist: {
         accountId: AccountId;

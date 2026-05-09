@@ -1,31 +1,31 @@
 import * as z from 'zod/mini';
-import { PartialTransportPolicySchema } from '../../../client/transport/transportPolicy';
-import { BlockHashSchema, BlockHeightSchema } from './common/common';
+import { PartialTransportPolicyZodSchema } from '../../../client/transport/transportPolicy';
+import { BlockHashZodSchema, BlockHeightZodSchema } from './common/common';
 
-export const PoliciesSchema = z.optional(
+export const PoliciesZodSchema = z.optional(
   z.object({
-    transport: PartialTransportPolicySchema,
+    transport: PartialTransportPolicyZodSchema,
   }),
 );
 
-export const BaseOptionsSchema = z.optional(
+export const BaseOptionsZodSchema = z.optional(
   z.object({
     signal: z.optional(z.instanceof(AbortSignal)),
   }),
 );
 
-export const BlockReferenceSchema = z.union([
+export const BlockReferenceZodSchema = z.union([
   z.literal('LatestOptimisticBlock'),
   z.literal('LatestNearFinalBlock'),
   z.literal('LatestFinalBlock'),
   z.literal('EarliestAvailableBlock'),
   z.literal('GenesisBlock'),
   z.object({
-    blockHash: BlockHashSchema,
+    blockHash: BlockHashZodSchema,
     blockHeight: z.optional(z.never()),
   }),
   z.object({
     blockHash: z.optional(z.never()),
-    blockHeight: BlockHeightSchema,
+    blockHeight: BlockHeightZodSchema,
   }),
 ]);

@@ -2,13 +2,13 @@ import * as z from 'zod/mini';
 import type { CreateMessage, SafeCreateMessage } from '../../../types/_common/message';
 import { Nep413Message } from '../../_common/configs/constants';
 import { resultNatError } from '../../_common/natError';
-import { JsonValueSchema } from '../../_common/schemas/zod/common/common';
+import { JsonValueZodSchema } from '../../_common/schemas/zod/common/common';
 import { asThrowable } from '../../_common/utils/asThrowable';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 
 export const CreateMessageArgsSchema = z.object({
-  message: JsonValueSchema,
+  message: JsonValueZodSchema,
   recipient: z.string(),
   nonce: z.optional(z.instanceof(Uint8Array).check(z.length(Nep413Message.NonceLength))),
 });

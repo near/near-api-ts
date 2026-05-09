@@ -1,14 +1,14 @@
 import * as z from 'zod/mini';
-import { ContractFunctionNameSchema } from '../../common/common';
-import { NearGasArgsSchema } from '../../common/nearGas';
-import { NearTokenArgsSchema } from '../../common/nearToken';
+import { ContractFunctionNameZodSchema } from '../../common/common';
+import { NearGasArgsZodSchema } from '../../common/nearGas';
+import { NearTokenArgsZodSchema } from '../../common/nearToken';
 
-export const FunctionCallActionSchema = z.object({
+export const FunctionCallActionZodSchema = z.object({
   actionType: z.literal('FunctionCall'),
-  functionName: ContractFunctionNameSchema,
+  functionName: ContractFunctionNameZodSchema,
   functionArgs: z.instanceof(Uint8Array),
-  gasLimit: NearGasArgsSchema,
-  attachedDeposit: z.optional(NearTokenArgsSchema),
+  gasLimit: NearGasArgsZodSchema,
+  attachedDeposit: z.optional(NearTokenArgsZodSchema),
 });
 
-export type InnerFunctionCallAction = z.infer<typeof FunctionCallActionSchema>;
+export type InnerFunctionCallAction = z.infer<typeof FunctionCallActionZodSchema>;

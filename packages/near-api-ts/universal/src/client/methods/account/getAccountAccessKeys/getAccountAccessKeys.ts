@@ -5,11 +5,11 @@ import type {
 } from '../../../../../types/client/methods/account/getAccountAccessKeys';
 import { createNatError } from '../../../../_common/natError';
 import {
-  BaseOptionsSchema,
-  BlockReferenceSchema,
-  PoliciesSchema,
+  BaseOptionsZodSchema,
+  BlockReferenceZodSchema,
+  PoliciesZodSchema,
 } from '../../../../_common/schemas/zod/client';
-import { AccountIdSchema } from '../../../../_common/schemas/zod/common/accountId';
+import { AccountIdZodSchema } from '../../../../_common/schemas/zod/common/accountId';
 import { toNativeBlockReference } from '../../../../_common/transformers/toNative/blockReference';
 import { repackError } from '../../../../_common/utils/repackError';
 import { result } from '../../../../_common/utils/result';
@@ -18,10 +18,10 @@ import { handleError } from './handleError';
 import { handleResult } from './handleResult';
 
 const GetAccountAccessKeysArgsSchema = z.object({
-  accountId: AccountIdSchema,
-  atMomentOf: z.optional(BlockReferenceSchema),
-  policies: PoliciesSchema,
-  options: BaseOptionsSchema,
+  accountId: AccountIdZodSchema,
+  atMomentOf: z.optional(BlockReferenceZodSchema),
+  policies: PoliciesZodSchema,
+  options: BaseOptionsZodSchema,
 });
 
 export const createSafeGetAccountAccessKeys: CreateSafeGetAccountAccessKeys = (context) =>
