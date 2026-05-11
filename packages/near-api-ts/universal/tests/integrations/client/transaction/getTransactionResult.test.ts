@@ -41,14 +41,14 @@ describe('getTransactionResult', () => {
       },
     });
 
-    client.sendSignedTransaction({ signedTransaction, })
+    client.sendSignedTransaction({ signedTransaction });
     console.log('2');
 
-    await safeSleep(200)
+    await safeSleep(200);
 
     const txResult = await client.safeGetTransactionResult({
       // transactionHash: tx.rawRpcResult.transaction.hash,
-      transactionHash: signedTransaction.transactionHash
+      transactionHash: signedTransaction.transactionHash,
       // transactionHash: '9Hzcxs5jcw3xNfdZB3ostNuyjzfkD9UQikHuuLoxtuSH',
     });
 

@@ -13,8 +13,8 @@ const signMessage = async (args: { message: Message }): Promise<SignedMessage> =
   const signerAccountId = 'eclipseer.testnet';
 
   const borshNep413Message = toBorshNep413Message(args.message);
-  const u8MessageHash = sha256(borshNep413Message);
-  const { signature } = await kp.signData({ dataU8: u8MessageHash });
+  const messageHashU8 = sha256(borshNep413Message);
+  const { signature } = await kp.signData({ dataU8: messageHashU8 });
 
   return {
     signerAccountId,

@@ -9,16 +9,16 @@ export const PublicKeyZodSchema = z
     CurveStringZodSchema,
     z.transform((val) => ({
       publicKey: val.curveString,
-      u8PublicKey: val.u8Data,
+      publicKeyU8: val.dataU8,
       curve: val.curve,
     })),
   )
   .check(
     z.refine(
-      ({ curve, u8PublicKey }) =>
+      ({ curve, publicKeyU8 }) =>
         curve === 'ed25519'
-          ? u8PublicKey.length === Ed25519.PublicKey
-          : u8PublicKey.length === Secp256k1.PublicKey,
+          ? publicKeyU8.length === Ed25519.PublicKey
+          : publicKeyU8.length === Secp256k1.PublicKey,
       { error: 'Invalid public key length' },
     ),
   );

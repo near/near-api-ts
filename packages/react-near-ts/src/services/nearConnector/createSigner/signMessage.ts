@@ -39,10 +39,10 @@ export const createSafeSignMessage: CreateSafeSignMessage = (connector) => async
     const { publicKey, curve } = validNearConnectSignedMessage.publicKey;
 
     // TODO Use createNep413MessageSignatureSchema
-    const u8Signature = Uint8Array.fromBase64(validNearConnectSignedMessage.signature);
+    const signatureU8 = Uint8Array.fromBase64(validNearConnectSignedMessage.signature);
 
     const base58Signature =
-      curve === 'ed25519' ? toEd25519CurveString(u8Signature) : toSecp256k1CurveString(u8Signature);
+      curve === 'ed25519' ? toEd25519CurveString(signatureU8) : toSecp256k1CurveString(signatureU8);
 
     /// todo Return messageBorsh64 + add tag to Message
     return result.ok({

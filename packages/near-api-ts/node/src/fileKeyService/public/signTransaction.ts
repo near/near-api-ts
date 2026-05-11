@@ -40,9 +40,9 @@ export const createSafeSignTransaction: any = (context: any) =>
       throw keyPair.error;
     }
 
-    const { transactionHash, u8TransactionHash } = getTransactionHash(innerTransaction);
+    const { transactionHash, transactionHashU8 } = getTransactionHash(innerTransaction);
 
-    const { signature } = keyPair.value.sign(u8TransactionHash); // todo make async?
+    const { signature } = keyPair.value.sign(transactionHashU8); // todo make async?
 
     return result.ok({
       transaction: args.transaction,

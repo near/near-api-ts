@@ -11,7 +11,7 @@ import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 export const CreateDeployContractActionArgsSchema = z.union([
   z.object({
     wasmBase64: z.base64(),
-    wasmBytes: z.optional(z.never()),
+    wasmBytes: z.optional(z.never()), // TODO rename to wasmU8
   }),
   z.object({
     wasmBase64: z.optional(z.never()),
@@ -32,13 +32,13 @@ export const safeDeployContract: SafeCreateDeployContractAction = wrapInternalEr
         }),
       );
 
-    const u8Wasm = validArgs.data.wasmBytes
+    const wasmU8 = validArgs.data.wasmBytes
       ? validArgs.data.wasmBytes
       : Uint8Array.fromBase64(validArgs.data.wasmBase64);
 
     return result.ok({
       actionType: 'DeployContract' as const,
-      wasmBytes: u8Wasm,
+      wasmBytes: wasmU8,
     });
   },
 );

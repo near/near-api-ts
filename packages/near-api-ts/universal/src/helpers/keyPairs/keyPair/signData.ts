@@ -7,10 +7,10 @@ import { SignDataArgsZodSchema } from '../_common/_index';
 import { signByEd25519Key } from '../_common/signByEd25519Key';
 import { signBySecp256k1Key } from '../_common/signBySecp256k1Key';
 
-const getSecretKey = ({ curve, u8PrivateKey }: InnerPrivateKey) => {
+const getSecretKey = ({ curve, privateKeyU8 }: InnerPrivateKey) => {
   const secretKeyLength =
     curve === 'ed25519' ? BinaryLengths.Ed25519.SecretKey : BinaryLengths.Secp256k1.SecretKey;
-  return u8PrivateKey.slice(0, secretKeyLength);
+  return privateKeyU8.slice(0, secretKeyLength);
 };
 
 export const createSafeSignData = (innerPrivateKey: InnerPrivateKey): SafeSignData => {

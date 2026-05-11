@@ -29,11 +29,11 @@ export const safeSignTransaction: SafeSignTransaction = wrapInternalError(
 
     const { transaction: innerTransaction } = validArgs.data;
 
-    const { transactionHash, u8TransactionHash } = getTransactionHash(innerTransaction);
+    const { transactionHash, transactionHashU8 } = getTransactionHash(innerTransaction);
 
     const signedData = await args.signDataProvider.safeSignData({
       publicKey: innerTransaction.signerPublicKey.publicKey,
-      dataU8: u8TransactionHash,
+      dataU8: transactionHashU8,
     });
 
     if (!signedData.ok) return result.err(signedData.error);

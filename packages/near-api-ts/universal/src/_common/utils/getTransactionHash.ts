@@ -6,14 +6,14 @@ import { toBorshTransaction } from '../transformers/toBorshBytes/transaction';
 
 type GetTransactionHashOutput = {
   transactionHash: Base58String;
-  u8TransactionHash: Uint8Array;
+  transactionHashU8: Uint8Array;
 };
 
 export const getTransactionHash = (transaction: InnerTransaction): GetTransactionHashOutput => {
   const transactionBorshBytes = toBorshTransaction(transaction);
-  const u8TransactionHash = sha256(transactionBorshBytes);
+  const transactionHashU8 = sha256(transactionBorshBytes);
   return {
-    transactionHash: base58.encode(u8TransactionHash),
-    u8TransactionHash,
+    transactionHash: base58.encode(transactionHashU8),
+    transactionHashU8,
   };
 };

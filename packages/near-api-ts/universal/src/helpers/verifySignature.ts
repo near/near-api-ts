@@ -34,7 +34,7 @@ export const safeVerifySignature: SafeVerifySignature = wrapInternalError(
     const { publicKey, signature, message } = validArgs.data;
 
     if (publicKey.curve === 'ed25519') {
-      return result.ok(ed25519.verify(signature.u8Signature, message, publicKey.u8PublicKey));
+      return result.ok(ed25519.verify(signature.signatureU8, message, publicKey.publicKeyU8));
     }
 
     // NEAR Protocol stores secp256k1 signatures as 65 bytes: [r (32) | s (32) |
@@ -53,9 +53,9 @@ export const safeVerifySignature: SafeVerifySignature = wrapInternalError(
 
     return result.ok(
       secp256k1.verify(
-        signature.u8Signature.subarray(0, 64),
+        signature.signatureU8.subarray(0, 64),
         message,
-        new Uint8Array([0x04, ...publicKey.u8PublicKey]),
+        new Uint8Array([0x04, ...publicKey.publicKeyU8]),
         { prehash: false },
       ),
     );

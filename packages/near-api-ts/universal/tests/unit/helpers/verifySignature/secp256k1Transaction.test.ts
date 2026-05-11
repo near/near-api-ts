@@ -24,11 +24,11 @@ test('secp256k1 transaction verification', async () => {
   });
 
   const innerTx = TransactionZodSchema.parse(signedTransaction.transaction);
-  const { u8TransactionHash } = getTransactionHash(innerTx);
+  const { transactionHashU8 } = getTransactionHash(innerTx);
 
   const isValid = verifySignature({
     publicKey: keyPair.publicKey,
-    message: u8TransactionHash,
+    message: transactionHashU8,
     signature: signedTransaction.signature,
   });
 

@@ -8,7 +8,7 @@ export { isNatError } from './src/_common/natError';
 export { AccountIdZodSchema } from './src/_common/schemas/zod/common/accountId';
 export { Base64StringZodSchema } from './src/_common/schemas/zod/common/base64String';
 export { PublicKeyZodSchema } from './src/_common/schemas/zod/common/publicKey';
-export { MessageSchema } from './src/_common/schemas/zod/message';
+export { MessageZodSchema } from './src/_common/schemas/zod/message';
 export {
   toEd25519CurveString,
   toSecp256k1CurveString,

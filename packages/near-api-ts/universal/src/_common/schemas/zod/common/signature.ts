@@ -9,16 +9,16 @@ export const SignatureZodSchema = z
     CurveStringZodSchema,
     z.transform((val) => ({
       signature: val.curveString,
-      u8Signature: val.u8Data,
+      signatureU8: val.dataU8,
       curve: val.curve,
     })),
   )
   .check(
     z.refine(
-      ({ curve, u8Signature }) =>
+      ({ curve, signatureU8 }) =>
         curve === 'ed25519'
-          ? u8Signature.length === Ed25519.Signature
-          : u8Signature.length === Secp256k1.Signature,
+          ? signatureU8.length === Ed25519.Signature
+          : signatureU8.length === Secp256k1.Signature,
       { error: 'Invalid signature length' },
     ),
   );

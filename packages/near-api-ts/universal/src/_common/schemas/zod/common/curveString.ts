@@ -12,11 +12,11 @@ export const CurveStringZodSchema = z.pipe(
     ),
   ),
   z.transform((curveString: CurveString) => {
-    const [curve, base58String] = curveString.split(':');
+    const [curve, dataBase58] = curveString.split(':');
     return {
       curveString,
       curve: curve as Curve,
-      u8Data: base58.decode(base58String),
+      dataU8: base58.decode(dataBase58),
     };
   }),
 );

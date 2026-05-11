@@ -28,15 +28,15 @@ export const createNep413MessageSignatureSchema = (curve: Curve) =>
     .pipe(
       Base64StringZodSchema,
       z.transform((base64Signature) => ({
-        u8Signature: Uint8Array.fromBase64(base64Signature),
+        signatureU8: Uint8Array.fromBase64(base64Signature),
       })),
     )
     .check(
       z.refine(
-        ({ u8Signature }) =>
+        ({ signatureU8 }) =>
           curve === 'ed25519'
-            ? u8Signature.length === constants.BinaryLengths.Ed25519.Signature
-            : u8Signature.length === constants.BinaryLengths.Secp256k1.Signature,
+            ? signatureU8.length === constants.BinaryLengths.Ed25519.Signature
+            : signatureU8.length === constants.BinaryLengths.Secp256k1.Signature,
         { error: 'Invalid signature length' },
       ),
     );
@@ -49,14 +49,14 @@ const transformSignedMessage = (
   const signerAccountId = AccountIdZodSchema.parse(signedMessage?.accountId);
   const signerPublicKey = PublicKeyZodSchema.parse(signedMessage?.publicKey);
 
-  const { u8Signature } = createNep413MessageSignatureSchema(signerPublicKey.curve).parse(
+  const { signatureU8 } = createNep413MessageSignatureSchema(signerPublicKey.curve).parse(
     signedMessage?.signature,
   );
 
   const signature =
     signerPublicKey.curve === 'ed25519'
-      ? toEd25519CurveString(u8Signature)
-      : toSecp256k1CurveString(u8Signature);
+      ? toEd25519CurveString(signatureU8)
+      : toSecp256k1CurveString(signatureU8);
 
   return {
     signerAccountId,

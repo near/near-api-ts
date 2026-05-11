@@ -9,16 +9,16 @@ export const PrivateKeyZodSchema = z
     CurveStringZodSchema,
     z.transform((val) => ({
       privateKey: val.curveString,
-      u8PrivateKey: val.u8Data,
+      privateKeyU8: val.dataU8,
       curve: val.curve,
     })),
   )
   .check(
     z.refine(
-      ({ curve, u8PrivateKey }) =>
+      ({ curve, privateKeyU8 }) =>
         curve === 'ed25519'
-          ? u8PrivateKey.length === Ed25519.PrivateKey
-          : u8PrivateKey.length === Secp256k1.PrivateKey,
+          ? privateKeyU8.length === Ed25519.PrivateKey
+          : privateKeyU8.length === Secp256k1.PrivateKey,
       { error: 'Invalid private key length' },
     ),
   );

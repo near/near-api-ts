@@ -4,29 +4,29 @@ import { Base64StringZodSchema } from './common/base64String';
 import { PublicKeyZodSchema } from './common/publicKey';
 import { SignatureZodSchema } from './common/signature';
 
-export const NonceSchema = z
+export const MessageNonceZodSchema = z
   .pipe(
     Base64StringZodSchema,
     z.transform((nonce) => {
-      const u8Nonce = Uint8Array.fromBase64(nonce);
-      return { nonce, u8Nonce };
+      const nonceU8 = Uint8Array.fromBase64(nonce);
+      return { nonce, nonceU8 };
     }),
   )
   .check(
-    z.refine(({ u8Nonce }) => u8Nonce.length === 32, {
+    z.refine(({ nonceU8 }) => nonceU8.length === 32, {
       error: 'Binary nonce length should be 32 bytes',
     }),
   );
 
-export const MessageSchema = z.object({
+export const MessageZodSchema = z.object({
   message: z.string(),
   recipient: z.string(),
-  nonce: NonceSchema,
+  nonce: MessageNonceZodSchema,
 });
 
-export const SignedMessageSchema = z.object({
+export const SignedMessageZodSchema = z.object({
   signerAccountId: AccountIdZodSchema,
   signerPublicKey: PublicKeyZodSchema,
-  message: MessageSchema,
+  message: MessageZodSchema,
   signature: SignatureZodSchema,
 });

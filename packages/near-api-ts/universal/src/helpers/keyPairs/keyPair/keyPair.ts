@@ -25,7 +25,7 @@ export const safeKeyPair: SafeCreateKeyPair = wrapInternalError(
       publicKey: innerPublicKey.publicKey,
       publicKeyU8: innerPublicKey.publicKeyU8,
       privateKey: validPrivateKey.data.privateKey,
-      privateKeyU8: validPrivateKey.data.u8PrivateKey,
+      privateKeyU8: validPrivateKey.data.privateKeyU8,
       signData: asThrowable(safeSignData),
       safeSignData,
     });

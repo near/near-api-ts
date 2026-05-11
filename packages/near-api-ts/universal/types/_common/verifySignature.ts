@@ -10,7 +10,7 @@ export interface VerifySignaturePublicErrorRegistry {
 
 export type VerifySignatureArgs = {
   publicKey: PublicKey;
-  message: Uint8Array;
+  message: Uint8Array; // TODO rename to dataU8
   signature: Signature;
 };
 

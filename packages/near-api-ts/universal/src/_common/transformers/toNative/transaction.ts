@@ -43,7 +43,7 @@ export const toNativeTransaction = (transaction: InnerTransaction): NativeTransa
   actions: toNativeActions(transaction),
   receiverId: transaction.receiverAccountId,
   nonce: BigInt(transaction.nonce),
-  blockHash: transaction.blockHash.u8CryptoHash,
+  blockHash: transaction.blockHash.cryptoHashU8,
 });
 
 export const toNativeSignedTransaction = (
