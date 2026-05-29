@@ -1,12 +1,7 @@
 import type { RpcResponse } from '../../../src/_common/schemas/zod/rpc/rpc';
 import type { AccountId, CryptoHash, TransactionNonce } from '../common';
 import type { NearToken } from '../nearToken';
-import type {
-  ExecutedNearlyFinal,
-  ExecutedOptimistic,
-  StartedFinal,
-  StartedOptimistic,
-} from '../transactionDetails/_common';
+import type { ProcessingStage } from '../transactionDetails/processingStage';
 
 export type TransactionErrorContext = {
   NotFound: {
@@ -15,10 +10,10 @@ export type TransactionErrorContext = {
   NotCompleted: {
     transactionHash: CryptoHash;
     currentProcessingStage:
-      | StartedOptimistic
-      | StartedFinal
-      | ExecutedOptimistic
-      | ExecutedNearlyFinal;
+      | ProcessingStage['ConvertedOptimistic']
+      | ProcessingStage['ConvertedFinal']
+      | ProcessingStage['ExecutedOptimistic']
+      | ProcessingStage['ExecutedNearlyFinal'];
   };
   Expired: null;
   Timeout: null;

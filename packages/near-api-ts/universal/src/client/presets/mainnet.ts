@@ -5,11 +5,10 @@ export const createMainnetClient = () =>
     transport: {
       rpcEndpoints: {
         regular: [
-          { url: 'https://free.rpc.fastnear.com' },
+          { url: 'https://rpc.mainnet.fastnear.com' },
           { url: 'https://rpc.intea.rs' },
-          { url: 'https://near.blockpi.network/v1/rpc/public' },
         ],
-        archival: [{ url: 'https://near.lava.build:443' }],
+        archival: [{ url: 'https://archival-rpc.mainnet.fastnear.com' }],
       },
     },
   });

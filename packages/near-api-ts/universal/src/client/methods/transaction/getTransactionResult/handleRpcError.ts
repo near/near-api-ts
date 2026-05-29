@@ -2,7 +2,8 @@ import { ErrorWrapperFor_RpcTransactionErrorSchema } from '@near-js/jsonrpc-type
 import { createNatError, resultNatError } from '../../../../_common/natError';
 import type { RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
 
-export const handleError = (rpcResponse: RpcResponse) => {
+export const handleRpcError = (rpcResponse: RpcResponse) => {
+  // TODO replace with own schema - remove dead errors
   const rpcError = ErrorWrapperFor_RpcTransactionErrorSchema().safeParse(rpcResponse.error);
 
   if (!rpcError.success)

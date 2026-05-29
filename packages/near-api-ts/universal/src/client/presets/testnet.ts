@@ -5,10 +5,10 @@ export const createTestnetClient = () =>
     transport: {
       rpcEndpoints: {
         regular: [
-          { url: 'https://test.rpc.fastnear.com' },
-          { url: 'https://rpc.testnet.near.org' },
+          { url: 'https://rpc.testnet.fastnear.com' },
+          { url: 'https://testnet-rpc.intea.rs' },
         ],
-        archival: [{ url: 'https://neart.lava.build:443' }],
+        archival: [{ url: 'https://archival-rpc.testnet.fastnear.com' }],
       },
     },
   });

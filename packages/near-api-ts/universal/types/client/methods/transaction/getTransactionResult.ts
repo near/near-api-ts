@@ -1,12 +1,8 @@
 import type { NatError } from '../../../../src/_common/natError';
-import type { AccountId, CryptoHash, TransactionNonce, Result } from '../../../_common/common';
-import type { PublicKey, Signature } from '../../../_common/crypto';
+import type { CryptoHash, Result } from '../../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { TransactionErrorContext } from '../../../_common/transaction/rpcTransactionErrorContext';
-import type { ExecutedFinal } from '../../../_common/transactionDetails/_common';
-import type { ActionSummaries } from '../../../_common/transactionDetails/actionSummaries';
-import type { ExecutionOutcome } from '../../../_common/transactionDetails/executionOutcome';
-import type { ExecutionTrace } from '../../../_common/transactionDetails/executionTrace';
+import type { TransactionResult } from '../../../_common/transactionDetails/transactionResult';
 import type { ClientContext } from '../../client';
 import type {
   AbortedErrorContext,
@@ -14,7 +10,7 @@ import type {
   PreferredRpcNotFoundErrorContext,
   TimeoutErrorContext,
 } from '../../transport/sendRequest';
-import type { TransportPolicy } from '../../transport/transport';
+import type { PartialTransportPolicy } from '../../transport/transport';
 
 export interface GetTransactionResultPublicErrorRegistry {
   'Client.GetTransactionResult.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -30,25 +26,14 @@ export interface GetTransactionResultPublicErrorRegistry {
 export type GetTransactionResultArgs = {
   transactionHash: CryptoHash;
   policies?: {
-    transport?: TransportPolicy;
+    transport?: PartialTransportPolicy;
   };
   options?: {
     signal?: AbortSignal;
   };
 };
 
-export type GetTransactionResultOutput = {
-  transactionHash: CryptoHash;
-  processingStage: ExecutedFinal;
-  executionOutcome: ExecutionOutcome;
-  signerAccountId: AccountId;
-  signerPublicKey: PublicKey;
-  nonce: TransactionNonce;
-  actionSummaries: ActionSummaries;
-  receiverAccountId: AccountId;
-  signature: Signature;
-  executionTrace: ExecutionTrace;
-};
+export type GetTransactionResultOutput = TransactionResult;
 
 export type GetTransactionResultError =
   | NatError<'Client.GetTransactionResult.Args.InvalidSchema'>

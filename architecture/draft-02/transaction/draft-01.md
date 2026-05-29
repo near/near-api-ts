@@ -37,8 +37,13 @@ type ExecutionStatus =
 
 // All possible options: [no_wait | wait]; [null <-> ExecutedFinal]; [by hash | by signed_tx]; [with | without receipts]
 
-client.getTransactionResult; // no_wait, [null, ExecutedFinal], by hash, with receipts
-client.awaitTransactionResult; // wait, [ExecutedOptimistic, ExecutedFinal], by hash, with receipts
+// V1
+// client.getTransactionResult; // no_wait, [null, ExecutedFinal], by hash, with receipts
+// client.awaitTransactionResult; // wait, [ExecutedOptimistic, ExecutedFinal], by hash, with receipts
+
+// V2
+client.getTransactionResult; // no_wait, ExecutedFinal, by hash, with receipts
+client.awaitTransactionExecution; // wait, [ExecutedOptimistic, ExecutedFinal], by hash, with receipts
 
 
 // client.getExecutedTransaction;

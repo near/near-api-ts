@@ -11,7 +11,7 @@ import type {
   PreferredRpcNotFoundErrorContext,
   TimeoutErrorContext,
 } from '../../transport/sendRequest';
-import type { TransportPolicy } from '../../transport/transport';
+import type { PartialTransportPolicy } from '../../transport/transport';
 
 export interface SendSignedTransactionPublicErrorRegistry {
   'Client.SendSignedTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -42,7 +42,7 @@ export interface SendSignedTransactionPublicErrorRegistry {
 export type SendSignedTransactionArgs = {
   signedTransaction: SignedTransaction;
   policies?: {
-    transport?: TransportPolicy;
+    transport?: PartialTransportPolicy;
   };
   options?: {
     signal?: AbortSignal;

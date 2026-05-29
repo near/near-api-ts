@@ -7,11 +7,8 @@ export type BlockHash = CryptoHash;
 export type BlockHeight = number;
 
 export type BlockId = { blockHash: BlockHash } | { blockHeight: BlockHeight };
-
 export type LatestBlock = 'LatestOptimisticBlock' | 'LatestNearFinalBlock' | 'LatestFinalBlock';
-
 export type SyncCheckpoint = 'EarliestAvailableBlock' | 'GenesisBlock';
-
 export type BlockReference = LatestBlock | SyncCheckpoint | BlockId;
 
 export type NativeBlockReference =
@@ -25,6 +22,9 @@ export type Base64String = string;
 export type TransactionNonce = number;
 export type AccountId = string;
 export type BorshBytes = Uint8Array;
+
+export type ReceiptId = CryptoHash;
+export type Log = string;
 
 /**
  * Contract function name has max characters limit - see protocol config

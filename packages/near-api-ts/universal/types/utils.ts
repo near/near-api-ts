@@ -42,3 +42,23 @@ export type KeyIf<K extends PropertyKey, V> = [V] extends [undefined]
  * ```
  */
 export type Prettify<T> = { [K in keyof T]: T[K] } & {};
+
+
+/**
+ * Stricter version of the built-in `Exclude<T, U>`.
+ *
+ * The standard `Exclude` accepts any `U`, even values that are not part of `T`,
+ * which silently allows typos or stale members to pass type-checking.
+ * `ExcludeStrict` constrains `U extends T`, so the compiler errors when you try
+ * to exclude something that isn't actually a member of `T`.
+ *
+ * Examples:
+ * ```ts
+ * type Status = 'pending' | 'done' | 'failed';
+ *
+ * type A = Exclude<Status, 'done' | 'unknown'>;       // OK — 'unknown' is silently ignored
+ * type B = ExcludeStrict<Status, 'done' | 'unknown'>; // Error — 'unknown' is not in Status
+ * type C = ExcludeStrict<Status, 'done'>;             // => 'pending' | 'failed'
+ * ```
+ */
+export type ExcludeStrict<T, U extends T> = Exclude<T, U>;

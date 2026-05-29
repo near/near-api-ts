@@ -8,8 +8,8 @@ import { BaseOptionsZodSchema, PoliciesZodSchema } from '../../../../_common/sch
 import { CryptoHashZodSchema } from '../../../../_common/schemas/zod/common/cryptoHash';
 import { repackError } from '../../../../_common/utils/repackError';
 import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
-import { handleError } from './handleError';
-import { handleResult } from './handleResult/handleResult';
+import { handleRpcError } from './handleRpcError';
+import { handleRpcResult } from './handleRpcResult/handleRpcResult';
 
 const GetTransactionResultArgsZodShema = z.object({
   transactionHash: CryptoHashZodSchema,
@@ -47,7 +47,7 @@ export const createSafeGetTransactionResult: CreateSafeGetTransactionResult = (c
         });
 
       return rpcResponse.value.error
-        ? handleError(rpcResponse.value)
-        : handleResult(rpcResponse.value, args);
+        ? handleRpcError(rpcResponse.value)
+        : handleRpcResult(rpcResponse.value, args);
     },
   );

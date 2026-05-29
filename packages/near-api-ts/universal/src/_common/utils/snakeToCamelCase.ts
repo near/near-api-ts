@@ -1,4 +1,5 @@
 // TODO do not rename keys which starts with _ or __
+// TODO convert into general function convertObjectKeysCase
 
 export const snakeToCamelCase = (obj: any): unknown => {
   if (obj === null || typeof obj !== 'object') {
