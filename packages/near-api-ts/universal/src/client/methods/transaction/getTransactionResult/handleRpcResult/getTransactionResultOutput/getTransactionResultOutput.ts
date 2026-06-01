@@ -1,7 +1,4 @@
-import type {
-  TransactionResult,
-  TransactionResultCommon,
-} from '../../../../../../../types/_common/transactionDetails/transactionResult';
+import type { TransactionResult } from '../../../../../../../types/_common/transactionDetails/transactionResult';
 import type { RpcFinalTransactionDetails } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
 import {
   isRpcTransactionOutcomeFailure,
@@ -14,18 +11,10 @@ import {
 import { getNonConversionSteps } from './getProcessingSteps/getNonConversionSteps/getNonConversionSteps';
 
 export const getTransactionResultOutput = (
-  finalDetails: RpcFinalTransactionDetails,
+  rpcFinalTransactionDetails: RpcFinalTransactionDetails,
 ): TransactionResult => {
-  const { transaction, transactionOutcome, status, receiptsOutcome, receipts } = finalDetails;
-
-  const transactionSummary: TransactionResultCommon['transactionSummary'] = {
-    signerAccountId: transaction.signerId,
-    signerPublicKey: transaction.publicKey.publicKey,
-    nonce: transaction.nonce,
-    actionSummaries: transaction.actions, // TODO finish
-    receiverAccountId: transaction.receiverId,
-    signature: transaction.signature.signature,
-  };
+  const { transaction, transactionOutcome, status, receiptsOutcome, receipts } =
+    rpcFinalTransactionDetails;
 
   // For some reason TypeScript can't figure out from Zod schema type that
   // when status = SuccessValue it means that transaction outcome is always SuccessReceiptId;
@@ -33,7 +22,7 @@ export const getTransactionResultOutput = (
 
   // When the transaction execution is successful;
   if ('SuccessValue' in status && isRpcTransactionOutcomeSuccess(transactionOutcome)) {
-    const conversionStepSuccess = getConversionStepSuccess(transactionOutcome);
+    const conversionStepSuccess = getConversionStepSuccess(transaction, transactionOutcome);
 
     const { executionSteps, refundSteps } = getNonConversionSteps(
       transaction,
@@ -44,12 +33,10 @@ export const getTransactionResultOutput = (
 
     return {
       transactionHash: transaction.hash.cryptoHash,
-      processingStage: 'CompletedFinal',
       result: {
         status: 'Success',
         data: status.SuccessValue,
       },
-      transactionSummary,
       processingSteps: {
         conversionStep: conversionStepSuccess,
         executionSteps,
@@ -66,7 +53,6 @@ export const getTransactionResultOutput = (
   ) {
     return {
       transactionHash: transaction.hash.cryptoHash,
-      processingStage: 'CompletedFinal',
       result: {
         status: 'ConversionError',
         error: {
@@ -74,9 +60,8 @@ export const getTransactionResultOutput = (
           context: status.Failure.InvalidTxError,
         },
       },
-      transactionSummary,
       processingSteps: {
-        conversionStep: getConversionStepError(transactionOutcome),
+        conversionStep: getConversionStepError(transaction, transactionOutcome),
         executionSteps: null,
         refundSteps: null,
       },
@@ -92,7 +77,6 @@ export const getTransactionResultOutput = (
   ) {
     return {
       transactionHash: transaction.hash.cryptoHash,
-      processingStage: 'CompletedFinal',
       result: {
         status: 'ExecutionError',
         error: {
@@ -100,9 +84,8 @@ export const getTransactionResultOutput = (
           context: status.Failure.ActionError,
         },
       },
-      transactionSummary,
       processingSteps: {
-        conversionStep: getConversionStepSuccess(transactionOutcome),
+        conversionStep: getConversionStepSuccess(transaction, transactionOutcome),
         executionSteps: [],
         refundSteps: [],
       },

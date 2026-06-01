@@ -55,8 +55,9 @@ describe('getTransactionResult', () => {
     // const txResult = await testnetClient.safeGetTransactionResult({
     //   // transactionHash: 'GMhxbrMZ4PAprLdwb9wyJ627kVRBWKK6yvfCTL8Mf5Fs',  // DelegateActionInvalidNonce
     //   // transactionHash: '3AByi9aq9KukKZRGSEVhkffk7Vjb2rpBKcf5daUdrKDY', // request - not SIR
-    //   transactionHash: '3QMHh2yBHBGrkcxQtPfx9npCnJsHaXTMcTTwmM4SbKSw', // sign (mpc) - not SIR
+    //   // transactionHash: '3QMHh2yBHBGrkcxQtPfx9npCnJsHaXTMcTTwmM4SbKSw', // sign (mpc) - not SIR
     //   // transactionHash: '33GmSjm2uudAknXkShLhE1idNd6FePWnKBT7Mqb6CA5b', local receipt
+    //   transactionHash: '4Y9wvJ3TrkLxRW1d8BMQH6amRWtaDqcLdwFG9RWp9RJd', // SIR, delete account, refund failed
     //   policies: { transport: { rpcTypePreferences: ['Archival', 'Regular'] } },
     // });
     //
@@ -65,9 +66,9 @@ describe('getTransactionResult', () => {
     const mainnetClient = createMainnetClient()
 
     const mainnetTxResult = await mainnetClient.safeGetTransactionResult({
-      // transactionHash: 'HoWytDmLdYF4MnmayBSArwxef6Tj6pDYjnuNCVdSEnXe', // execute_intents - SIR
+      transactionHash: 'HoWytDmLdYF4MnmayBSArwxef6Tj6pDYjnuNCVdSEnXe', // execute_intents - SIR
       // transactionHash: 'GxFGnomJ8znxJkpSduxZk7c9F3nqh7waAvnWxdFfxshK', // v1.signer - respond - not SIR
-      transactionHash: 'DSnehcspPKHuX44brwy4gWDhJYBaKwcP21Hq4qqjncE1', // wrap.near - ft_transfer_call - not SIR
+      // transactionHash: 'DSnehcspPKHuX44brwy4gWDhJYBaKwcP21Hq4qqjncE1', // wrap.near - ft_transfer_call - not SIR
       policies: { transport: { rpcTypePreferences: ['Archival', 'Regular'] } },
     });
 

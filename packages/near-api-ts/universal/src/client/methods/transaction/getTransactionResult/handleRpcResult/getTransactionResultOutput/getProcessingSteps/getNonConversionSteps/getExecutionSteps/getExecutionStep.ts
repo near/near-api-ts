@@ -2,12 +2,13 @@ import { gas, yoctoNear } from '../../../../../../../../../../index';
 import type {
   ExecutionStep,
   ExecutionStepResult,
+  FirstExecutionStep,
 } from '../../../../../../../../../../types/_common/transactionDetails/processingSteps/executionStep';
 import type { RpcActionReceiptTrimmed } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
 import type { RpcReceiptOutcome } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
 import type { ReceiptCreationMap } from '../createReceiptCreationMap';
 
-const getExecutionStepOutcome = (
+const getExecutionStepResult = (
   status: RpcReceiptOutcome['outcome']['status'],
 ): ExecutionStepResult => {
   if (typeof status === 'object' && 'SuccessValue' in status) {
@@ -17,10 +18,11 @@ const getExecutionStepOutcome = (
     };
   }
 
+  // DeferredTo / ResolvedBy // ChainedTo / ExecutionContinues / ExecutionStep / NextExecutionStep
   if (typeof status === 'object' && 'SuccessReceiptId' in status) {
     return {
-      status: 'ContinuesIn',
-      receiptId: status.SuccessReceiptId.cryptoHash,
+      status: 'Continuation',
+      nextExecutionStepId: status.SuccessReceiptId.cryptoHash,
     };
   }
 
@@ -37,11 +39,11 @@ const getExecutionStepOutcome = (
   throw new Error(`Unexpected receipt execution outcome status: ${JSON.stringify(status)}`);
 };
 
-export const getExecutionStep = (
+const getExecutionStepBase = (
   receipt: RpcActionReceiptTrimmed,
   receiptOutcome: RpcReceiptOutcome,
   receiptCreationMap: ReceiptCreationMap,
-): ExecutionStep => {
+): Omit<ExecutionStep, 'createdBy' | 'createdAt'> => {
   const { Action } = receipt.receipt;
 
   const dataReceivers = Action.outputDataReceivers.map(({ dataId, receiverId }) => ({
@@ -49,24 +51,80 @@ export const getExecutionStep = (
     receiverAccountId: receiverId,
   }));
 
+  // During execution, receipt may create new receipts, like as TS function may produce new promises;
+  const producedSteps = receiptOutcome.outcome.receiptIds.map(({ cryptoHash }) => {
+    const { kind } = receiptCreationMap.restSteps[cryptoHash];
+    return kind === 'Execution'
+      ? {
+          kind,
+          executionStepId: cryptoHash,
+        }
+      : {
+          kind,
+          refundStepId: cryptoHash,
+        };
+  });
+
   return {
-    receiptId: receipt.receiptId,
-    receiptSummary: {
-      createdBy: {
-        accountId: receipt.predecessorId,
-      },
-      createdAt: { blockHash: receiptCreationMap[receipt.receiptId].createdAtBlockHash },
-      actionSummaries: Action.actions,
-      requiredDataIds: Action.inputDataIds,
-      futureDataReceivers: dataReceivers,
-      isPromiseYield: Action.isPromiseYield,
-    },
-    result: getExecutionStepOutcome(receiptOutcome.outcome.status),
-    executedBy: { accountId: receiptOutcome.outcome.executorId },
+    executionStepId: receipt.receiptId,
+    result: getExecutionStepResult(receiptOutcome.outcome.status),
     executedAt: { blockHash: receiptOutcome.blockHash.cryptoHash },
-    createdReceiptIds: receiptOutcome.outcome.receiptIds.map(({ cryptoHash }) => cryptoHash),
+    executedBy: { accountId: receiptOutcome.outcome.executorId },
+    producedSteps,
+    actionSummaries: Action.actions,
+    requiredDataIds: Action.inputDataIds,
+    futureDataReceivers: dataReceivers,
+    isPromiseYield: Action.isPromiseYield,
     gasFee: yoctoNear(receiptOutcome.outcome.tokensBurnt),
     gasUsed: gas(receiptOutcome.outcome.gasBurnt),
     logs: receiptOutcome.outcome.logs,
+  };
+};
+
+export const getFirstExecutionStep = (
+  receipt: RpcActionReceiptTrimmed,
+  receiptOutcome: RpcReceiptOutcome,
+  receiptCreationMap: ReceiptCreationMap,
+): FirstExecutionStep => {
+  const base = getExecutionStepBase(receipt, receiptOutcome, receiptCreationMap);
+  const { createdAt, createdBy } = receiptCreationMap.firstStep;
+
+  // We don't use spread operator for ExecutionStepBase properties because it would break a
+  // logical grouping of properties and make a transaction reading in the console more difficult
+  const { executionStepId, result, ...restBase } = base;
+
+  return {
+    executionStepId: base.executionStepId,
+    result: base.result,
+    createdAt,
+    createdBy: {
+      accountId: receipt.predecessorId,
+      conversionStepId: createdBy.conversionStepId,
+    },
+    ...restBase,
+  };
+};
+
+export const getExecutionStep = (
+  receipt: RpcActionReceiptTrimmed,
+  receiptOutcome: RpcReceiptOutcome,
+  receiptCreationMap: ReceiptCreationMap,
+): ExecutionStep => {
+  const base = getExecutionStepBase(receipt, receiptOutcome, receiptCreationMap);
+  const { createdAt, createdBy } = receiptCreationMap.restSteps[receipt.receiptId];
+
+  // We don't use spread operator for ExecutionStepBase properties because it would break a
+  // logical grouping of properties and make a transaction reading in the console more difficult
+  const { executionStepId, result, ...restBase } = base;
+
+  return {
+    executionStepId,
+    result,
+    createdAt,
+    createdBy: {
+      accountId: receipt.predecessorId,
+      executionStepId: createdBy.executionStepId,
+    },
+    ...restBase,
   };
 };

@@ -6,14 +6,9 @@ import type { RpcActionReceiptTrimmed } from '../../../../../../../../_common/sc
 import type { RpcReceiptOutcome } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
 import type { ReceiptCreationMap } from './createReceiptCreationMap';
 
-const getExecutionStepOutcome = (
-  status: RpcReceiptOutcome['outcome']['status'],
-): RefundStepResult => {
+const getRefundStepResult = (status: RpcReceiptOutcome['outcome']['status']): RefundStepResult => {
   if (typeof status === 'object' && 'SuccessValue' in status) {
-    return {
-      status: 'Success',
-      data: status.SuccessValue,
-    };
+    return { status: 'Success' };
   }
 
   if (typeof status === 'object' && 'Failure' in status) {
@@ -37,16 +32,12 @@ export const getRefundStep = (
   const { Action } = receipt.receipt;
 
   return {
-    receiptId: receipt.receiptId,
-    receiptSummary: {
-      createdBy: {
-        accountId: receipt.predecessorId,
-      },
-      createdAt: { blockHash: receiptCreationMap[receipt.receiptId].createdAtBlockHash },
-      actionSummaries: Action.actions,
-    },
-    result: getExecutionStepOutcome(receiptOutcome.outcome.status),
-    executedBy: { accountId: receiptOutcome.outcome.executorId },
+    refundStepId: receipt.receiptId,
+    result: getRefundStepResult(receiptOutcome.outcome.status),
+    createdAt: receiptCreationMap.restSteps[receipt.receiptId].createdAt,
+    createdBy: receiptCreationMap.restSteps[receipt.receiptId].createdBy,
     executedAt: { blockHash: receiptOutcome.blockHash.cryptoHash },
+    executedBy: { accountId: receiptOutcome.outcome.executorId },
+    actionSummaries: Action.actions,
   };
 };

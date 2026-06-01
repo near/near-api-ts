@@ -1,37 +1,23 @@
-import type { AccountId, CryptoHash, TransactionNonce } from '../common';
-import type { PublicKey, Signature } from '../crypto';
-import type { ActionSummaries } from './actionSummaries';
-import type { ProcessingStage } from './processingStage';
+import type { CryptoHash } from '../common';
 import type { ConversionStepError, ConversionStepSuccess } from './processingSteps/conversionStep';
-import type { ExecutionStep } from './processingSteps/executionStep';
+import type { ExecutionSteps } from './processingSteps/executionStep';
 import type { RefundStep } from './processingSteps/refundStep';
 
-export type TransactionResultCommon = {
+export type TransactionSuccess = {
   transactionHash: CryptoHash;
-  processingStage: ProcessingStage['CompletedFinal'];
-  transactionSummary: {
-    signerAccountId: AccountId;
-    signerPublicKey: PublicKey;
-    actionSummaries: ActionSummaries;
-    receiverAccountId: AccountId;
-    nonce: TransactionNonce;
-    signature: Signature;
-  };
-};
-
-export type TransactionSuccess = TransactionResultCommon & {
   result: {
     status: 'Success';
     data: unknown;
   };
   processingSteps: {
     conversionStep: ConversionStepSuccess;
-    executionSteps: ExecutionStep[];
+    executionSteps: ExecutionSteps;
     refundSteps: RefundStep[];
   };
 };
 
-export type TransactionConversionError = TransactionResultCommon & {
+export type TransactionConversionError = {
+  transactionHash: CryptoHash;
   result: {
     status: 'ConversionError';
     error: { kind: unknown; context: unknown };
@@ -43,14 +29,15 @@ export type TransactionConversionError = TransactionResultCommon & {
   };
 };
 
-export type TransactionExecutionError = TransactionResultCommon & {
+export type TransactionExecutionError = {
+  transactionHash: CryptoHash;
   result: {
     status: 'ExecutionError';
     error: { kind: unknown; context: unknown };
   };
   processingSteps: {
     conversionStep: ConversionStepSuccess;
-    executionSteps: ExecutionStep[];
+    executionSteps: ExecutionSteps;
     refundSteps: RefundStep[];
   };
 };

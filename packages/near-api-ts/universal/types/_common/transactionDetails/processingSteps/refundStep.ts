@@ -4,7 +4,6 @@ import type { ActionSummaries } from '../actionSummaries';
 export type RefundStepResult =
   | {
       status: 'Success';
-      data: unknown;
     }
   | {
       status: 'Error';
@@ -12,13 +11,22 @@ export type RefundStepResult =
     };
 
 export type RefundStep = {
-  receiptId: ReceiptId;
-  receiptSummary: {
-    createdBy: { accountId: AccountId };
-    createdAt: { blockHash: BlockHash };
-    actionSummaries: ActionSummaries;
-  };
+  refundStepId: ReceiptId;
   result: RefundStepResult;
-  executedBy: { accountId: AccountId };
+  createdAt: { blockHash: BlockHash };
+  createdBy: { executionStepId: ReceiptId };
   executedAt: { blockHash: BlockHash };
+  executedBy: { accountId: AccountId };
+  actionSummaries: ActionSummaries;
 };
+
+// created: {
+//   at: { blockHash: BlockHash };
+//   by: { accountId: AccountId };
+//   during: { step: 'Execution'; receiptId: ReceiptId };
+// };
+
+// executed: {
+//   at: { blockHash: BlockHash };
+//   by: { accountId: AccountId };
+// };

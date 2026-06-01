@@ -1,11 +1,18 @@
-import type { AccountId, BlockHash, CryptoHash, Log, ReceiptId } from '../../common';
+import type {
+  AccountId,
+  BlockHash,
+  CryptoHash,
+  Log,
+  ReceiptId,
+  TransactionHash,
+} from '../../common';
 import type { NearGas } from '../../nearGas';
 import type { NearToken } from '../../nearToken';
 import type { ActionSummaries } from '../actionSummaries';
 
-export type ReceivedDataId = CryptoHash;
+export type RequiredDataId = CryptoHash;
 
-export type DataReceiver = {
+export type FutureDataReceiver = {
   dataId: CryptoHash;
   receiverAccountId: AccountId;
 };
@@ -16,29 +23,62 @@ export type ExecutionStepResult =
       data: unknown;
     }
   | {
-      status: 'ContinuesIn';
-      receiptId: CryptoHash;
+      status: 'Continuation';
+      nextExecutionStepId: ReceiptId;
     }
   | {
       status: 'Error';
       error: { kind: unknown; context: unknown };
     };
 
-export type ExecutionStep = {
-  receiptId: ReceiptId;
-  receiptSummary: {
-    createdBy: { accountId: AccountId };
-    createdAt: { blockHash: BlockHash };
-    actionSummaries: ActionSummaries;
-    requiredDataIds: ReceivedDataId[];
-    futureDataReceivers: DataReceiver[];
-    isPromiseYield: boolean;
-  };
+type ProducedStep =
+  | { kind: 'Execution'; executionStepId: ReceiptId }
+  | { kind: 'Refund'; refundStepId: ReceiptId };
+
+type ExecutionStepCommon = {
+  executionStepId: ReceiptId;
   result: ExecutionStepResult;
-  executedBy: { accountId: AccountId };
+  createdAt: { blockHash: BlockHash };
   executedAt: { blockHash: BlockHash };
-  createdReceiptIds: ReceiptId[];
+  executedBy: { accountId: AccountId };
+  producedSteps: ProducedStep[];
+  actionSummaries: ActionSummaries;
+  requiredDataIds: RequiredDataId[];
+  futureDataReceivers: FutureDataReceiver[];
+  isPromiseYield: boolean;
   gasFee: NearToken;
   gasUsed: NearGas;
   logs: Log[];
 };
+
+export type FirstExecutionStep = ExecutionStepCommon & {
+  createdBy: { accountId: AccountId; conversionStepId: TransactionHash };
+};
+
+export type ExecutionStep = ExecutionStepCommon & {
+  createdBy: { accountId: AccountId; executionStepId: ReceiptId };
+};
+
+export type ExecutionSteps = [FirstExecutionStep, ...ExecutionStep[]] | [];
+
+/*
+
+createdAt: { blockHash: BlockHash };
+    createdBy: { accountId: AccountId };
+    createdDuring: { step: 'Conversion' } | { step: 'Execution'; receiptId: ReceiptId };
+
+
+    created: {
+      at: { blockHash: BlockHash };
+      by: { accountId: AccountId };
+      during: { step: 'Conversion' } | { step: 'Execution'; receiptId: ReceiptId };
+    };
+
+      executedAt: { blockHash: BlockHash };
+    executedBy: { accountId: AccountId };
+
+     executed: {
+      at: { blockHash: BlockHash };
+      by: { accountId: AccountId };
+    };
+ */
