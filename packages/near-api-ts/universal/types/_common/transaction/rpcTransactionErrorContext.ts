@@ -35,6 +35,7 @@ export type TransactionErrorContext = {
       };
     };
   };
+  //  TODO remove
   Receiver: {
     NotFound: {
       receiverAccountId: AccountId;
@@ -49,6 +50,12 @@ export type TransactionErrorContext = {
     // TODO What is this error about?
     InvalidIndex: {
       rpcResponse: RpcResponse;
+    };
+    Receiver: {
+      NotFound: {
+        receiverAccountId: AccountId;
+        actionIndex: number;
+      };
     };
     CreateAccount: {
       AlreadyExist: {

@@ -1,3 +1,4 @@
+import { yoctoNear } from '../../../../../../../../../index';
 import type {
   RefundStep,
   RefundStepResult,
@@ -7,21 +8,42 @@ import type { RpcReceiptOutcome } from '../../../../../../../../_common/schemas/
 import type { ReceiptCreationMap } from './createReceiptCreationMap';
 
 const getRefundStepResult = (status: RpcReceiptOutcome['outcome']['status']): RefundStepResult => {
-  if (typeof status === 'object' && 'SuccessValue' in status) {
+  if (typeof status === 'object' && 'SuccessValue' in status && status.SuccessValue === '') {
     return { status: 'Success' };
   }
 
-  if (typeof status === 'object' && 'Failure' in status) {
+  if (
+    typeof status === 'object' &&
+    'Failure' in status &&
+    typeof status.Failure.ActionError.kind === 'object' &&
+    'AccountDoesNotExist' in status.Failure.ActionError.kind
+  ) {
     return {
       status: 'Error',
       error: {
-        kind: 'any',
-        context: status.Failure,
+        kind: 'Receiver.NotFound',
+        receiverAccountId: status.Failure.ActionError.kind.AccountDoesNotExist.accountId,
       },
     };
   }
 
-  throw new Error(`Unexpected receipt execution outcome status: ${JSON.stringify(status)}`);
+  throw new Error(`Unexpected refund receipt outcome status: 
+    got: ${JSON.stringify(status)}, 
+    but only SuccessValue = '' or Failure.ActionError.kind = AccountDoesNotExist is expected.`);
+};
+
+const getRefundAmount = (receipt: RpcActionReceiptTrimmed) => {
+  const { actions } = receipt.receipt.Action;
+
+  if (actions.length === 1 && typeof actions[0] === 'object' && 'Transfer' in actions[0]) {
+    return yoctoNear(actions[0].Transfer.deposit);
+  }
+
+  throw new Error(
+    `Unexpected refund receipt actions: 
+    got: ${JSON.stringify(receipt.receipt.Action.actions)}, 
+    but only a single Transfer action is expected.`,
+  );
 };
 
 export const getRefundStep = (
@@ -29,8 +51,6 @@ export const getRefundStep = (
   receiptOutcome: RpcReceiptOutcome,
   receiptCreationMap: ReceiptCreationMap,
 ): RefundStep => {
-  const { Action } = receipt.receipt;
-
   return {
     refundStepId: receipt.receiptId,
     result: getRefundStepResult(receiptOutcome.outcome.status),
@@ -38,6 +58,6 @@ export const getRefundStep = (
     createdBy: receiptCreationMap.restSteps[receipt.receiptId].createdBy,
     executedAt: { blockHash: receiptOutcome.blockHash.cryptoHash },
     executedBy: { accountId: receiptOutcome.outcome.executorId },
-    actionSummaries: Action.actions,
+    refundAmount: getRefundAmount(receipt),
   };
 };

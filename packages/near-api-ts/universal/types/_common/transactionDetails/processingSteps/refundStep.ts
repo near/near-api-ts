@@ -1,5 +1,5 @@
 import type { AccountId, BlockHash, ReceiptId } from '../../common';
-import type { ActionSummaries } from '../actionSummaries';
+import type { NearToken } from '../../nearToken';
 
 export type RefundStepResult =
   | {
@@ -7,26 +7,18 @@ export type RefundStepResult =
     }
   | {
       status: 'Error';
-      error: { kind: unknown; context: unknown };
+      error: {
+        kind: 'Receiver.NotFound';
+        receiverAccountId: AccountId;
+      };
     };
 
 export type RefundStep = {
   refundStepId: ReceiptId;
+  refundAmount: NearToken;
   result: RefundStepResult;
   createdAt: { blockHash: BlockHash };
   createdBy: { executionStepId: ReceiptId };
   executedAt: { blockHash: BlockHash };
   executedBy: { accountId: AccountId };
-  actionSummaries: ActionSummaries;
 };
-
-// created: {
-//   at: { blockHash: BlockHash };
-//   by: { accountId: AccountId };
-//   during: { step: 'Execution'; receiptId: ReceiptId };
-// };
-
-// executed: {
-//   at: { blockHash: BlockHash };
-//   by: { accountId: AccountId };
-// };
