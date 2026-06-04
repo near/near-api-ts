@@ -2,7 +2,6 @@ import { gas, yoctoNear } from '../../../../../../../../../../index';
 import type {
   ExecutionStep,
   ExecutionStepResult,
-  FirstExecutionStep,
 } from '../../../../../../../../../../types/_common/transactionDetails/processingSteps/executionStep';
 import type { RpcActionReceiptTrimmed } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
 import type { RpcReceiptOutcome } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
@@ -53,7 +52,7 @@ const getExecutionStepBase = (
 
   // During execution, receipt may create new receipts, like as TS function may produce new promises;
   const producedSteps = receiptOutcome.outcome.receiptIds.map(({ cryptoHash }) => {
-    const { kind } = receiptCreationMap.restSteps[cryptoHash];
+    const { kind } = receiptCreationMap[cryptoHash];
     return kind === 'Execution'
       ? {
           kind,
@@ -81,29 +80,7 @@ const getExecutionStepBase = (
   };
 };
 
-export const getFirstExecutionStep = (
-  receipt: RpcActionReceiptTrimmed,
-  receiptOutcome: RpcReceiptOutcome,
-  receiptCreationMap: ReceiptCreationMap,
-): FirstExecutionStep => {
-  const base = getExecutionStepBase(receipt, receiptOutcome, receiptCreationMap);
-  const { createdAt, createdBy } = receiptCreationMap.firstStep;
 
-  // We don't use spread operator for ExecutionStepBase properties because it would break a
-  // logical grouping of properties and make a transaction reading in the console more difficult
-  const { executionStepId, result, ...restBase } = base;
-
-  return {
-    executionStepId: base.executionStepId,
-    result: base.result,
-    createdAt,
-    createdBy: {
-      accountId: receipt.predecessorId,
-      conversionStepId: createdBy.conversionStepId,
-    },
-    ...restBase,
-  };
-};
 
 export const getExecutionStep = (
   receipt: RpcActionReceiptTrimmed,
@@ -111,7 +88,7 @@ export const getExecutionStep = (
   receiptCreationMap: ReceiptCreationMap,
 ): ExecutionStep => {
   const base = getExecutionStepBase(receipt, receiptOutcome, receiptCreationMap);
-  const { createdAt, createdBy } = receiptCreationMap.restSteps[receipt.receiptId];
+  const { createdAt } = receiptCreationMap[receipt.receiptId];
 
   // We don't use spread operator for ExecutionStepBase properties because it would break a
   // logical grouping of properties and make a transaction reading in the console more difficult
@@ -123,7 +100,6 @@ export const getExecutionStep = (
     createdAt,
     createdBy: {
       accountId: receipt.predecessorId,
-      executionStepId: createdBy.executionStepId,
     },
     ...restBase,
   };

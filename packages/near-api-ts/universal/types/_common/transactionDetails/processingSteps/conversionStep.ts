@@ -1,10 +1,4 @@
-import type {
-  AccountId,
-  BlockHash,
-  ReceiptId,
-  TransactionHash,
-  TransactionNonce,
-} from '../../common';
+import type { AccountId, BlockHash, ReceiptId, TransactionNonce } from '../../common';
 import type { PublicKey, Signature } from '../../crypto';
 import type { NearGas } from '../../nearGas';
 import type { NearToken } from '../../nearToken';
@@ -19,25 +13,23 @@ export type TransactionSummary = {
   signature: Signature;
 };
 
-export type ConversionStepSuccess = {
-  conversionStepId: TransactionHash;
-  result: {
-    status: 'Success';
-    firstExecutionStepId: ReceiptId;
-  };
+type ConversionStepCommon = {
   executedAt: { blockHash: BlockHash };
   transactionSummary: TransactionSummary;
   gasFee: NearToken;
   gasUsed: NearGas;
 };
 
-export type ConversionStepError = {
+export type ConversionStepSuccess = ConversionStepCommon & {
+  result: {
+    status: 'Success';
+    firstExecutionStepId: ReceiptId;
+  };
+};
+
+export type ConversionStepError = ConversionStepCommon & {
   result: {
     status: 'Error';
     error: { kind: unknown; context: unknown };
   };
-  executedAt: { blockHash: BlockHash };
-  transactionSummary: TransactionSummary;
-  gasFee: NearToken;
-  gasUsed: NearGas;
 };

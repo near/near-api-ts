@@ -1,11 +1,4 @@
-import type {
-  AccountId,
-  BlockHash,
-  CryptoHash,
-  Log,
-  ReceiptId,
-  TransactionHash,
-} from '../../common';
+import type { AccountId, BlockHash, CryptoHash, Log, ReceiptId } from '../../common';
 import type { NearGas } from '../../nearGas';
 import type { NearToken } from '../../nearToken';
 import type { ActionSummaries } from '../actionSummaries';
@@ -35,10 +28,11 @@ type ProducedStep =
   | { kind: 'Execution'; executionStepId: ReceiptId }
   | { kind: 'Refund'; refundStepId: ReceiptId };
 
-type ExecutionStepCommon = {
+export type ExecutionStep = {
   executionStepId: ReceiptId;
   result: ExecutionStepResult;
   createdAt: { blockHash: BlockHash };
+  createdBy: { accountId: AccountId };
   executedAt: { blockHash: BlockHash };
   executedBy: { accountId: AccountId };
   producedSteps: ProducedStep[];
@@ -51,34 +45,4 @@ type ExecutionStepCommon = {
   logs: Log[];
 };
 
-export type FirstExecutionStep = ExecutionStepCommon & {
-  createdBy: { accountId: AccountId; conversionStepId: TransactionHash };
-};
-
-export type ExecutionStep = ExecutionStepCommon & {
-  createdBy: { accountId: AccountId; executionStepId: ReceiptId };
-};
-
-export type ExecutionSteps = [FirstExecutionStep, ...ExecutionStep[]] | [];
-
-/*
-
-createdAt: { blockHash: BlockHash };
-    createdBy: { accountId: AccountId };
-    createdDuring: { step: 'Conversion' } | { step: 'Execution'; receiptId: ReceiptId };
-
-
-    created: {
-      at: { blockHash: BlockHash };
-      by: { accountId: AccountId };
-      during: { step: 'Conversion' } | { step: 'Execution'; receiptId: ReceiptId };
-    };
-
-      executedAt: { blockHash: BlockHash };
-    executedBy: { accountId: AccountId };
-
-     executed: {
-      at: { blockHash: BlockHash };
-      by: { accountId: AccountId };
-    };
- */
+export type ExecutionSteps = ExecutionStep[];

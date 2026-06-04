@@ -5,30 +5,19 @@ import type { RpcActionReceipt } from '../../../../../../../../_common/schemas/z
 import type { RpcReceiptOutcome } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
 import type { RpcTransactionSummary } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
 import { createReceiptCreationMap, type ReceiptCreationMap } from './createReceiptCreationMap';
-import { getExecutionStep, getFirstExecutionStep } from './getExecutionSteps/getExecutionStep';
+import { getExecutionStep } from './getExecutionSteps/getExecutionStep';
 import { getReceiptsWithOutcomes, type ReceiptsWithOutcomes } from './getReceiptsWithOutcomes';
 import { getRefundStep } from './getRefundStep';
 
 export const getExecutionSteps = (
   receiptsWithOutcomes: ReceiptsWithOutcomes,
   receiptCreationMap: ReceiptCreationMap,
-): ExecutionSteps => {
-  const [firstReceipt, ...restReceipts] = receiptsWithOutcomes.filter(
-    ({ receipt }) => receipt.predecessorId !== 'system',
-  );
-
-  const firstStep = getFirstExecutionStep(
-    firstReceipt.receipt,
-    firstReceipt.receiptOutcome,
-    receiptCreationMap,
-  );
-
-  const restSteps = restReceipts.map(({ receipt, receiptOutcome }) =>
-    getExecutionStep(receipt, receiptOutcome, receiptCreationMap),
-  );
-
-  return [firstStep, ...restSteps];
-};
+): ExecutionSteps =>
+  receiptsWithOutcomes
+    .filter(({ receipt }) => receipt.predecessorId !== 'system')
+    .map(({ receipt, receiptOutcome }) =>
+      getExecutionStep(receipt, receiptOutcome, receiptCreationMap),
+    );
 
 const getRefundSteps = (
   receiptsWithOutcomes: ReceiptsWithOutcomes,
@@ -59,11 +48,7 @@ export const getNonConversionSteps = (
     conversionStepSuccess,
   );
 
-  const receiptCreationMap = createReceiptCreationMap(
-    conversionStepSuccess,
-    receiptsWithOutcomes,
-    transaction.hash.cryptoHash,
-  );
+  const receiptCreationMap = createReceiptCreationMap(conversionStepSuccess, receiptsWithOutcomes);
 
   return {
     executionSteps: getExecutionSteps(receiptsWithOutcomes, receiptCreationMap),

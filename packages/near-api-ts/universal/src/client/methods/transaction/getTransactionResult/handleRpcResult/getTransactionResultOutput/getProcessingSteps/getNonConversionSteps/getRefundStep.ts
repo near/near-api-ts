@@ -20,10 +20,7 @@ const getRefundStepResult = (status: RpcReceiptOutcome['outcome']['status']): Re
   ) {
     return {
       status: 'Error',
-      error: {
-        kind: 'Receiver.NotFound',
-        receiverAccountId: status.Failure.ActionError.kind.AccountDoesNotExist.accountId,
-      },
+      error: { kind: 'Receiver.NotFound' },
     };
   }
 
@@ -54,10 +51,9 @@ export const getRefundStep = (
   return {
     refundStepId: receipt.receiptId,
     result: getRefundStepResult(receiptOutcome.outcome.status),
-    createdAt: receiptCreationMap.restSteps[receipt.receiptId].createdAt,
-    createdBy: receiptCreationMap.restSteps[receipt.receiptId].createdBy,
+    createdAt: receiptCreationMap[receipt.receiptId].createdAt,
     executedAt: { blockHash: receiptOutcome.blockHash.cryptoHash },
-    executedBy: { accountId: receiptOutcome.outcome.executorId },
     refundAmount: getRefundAmount(receipt),
+    receiverAccountId: receiptOutcome.outcome.executorId,
   };
 };

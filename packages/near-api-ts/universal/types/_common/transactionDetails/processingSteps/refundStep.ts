@@ -9,16 +9,14 @@ export type RefundStepResult =
       status: 'Error';
       error: {
         kind: 'Receiver.NotFound';
-        receiverAccountId: AccountId;
       };
     };
 
 export type RefundStep = {
   refundStepId: ReceiptId;
+  receiverAccountId: AccountId;
   refundAmount: NearToken;
   result: RefundStepResult;
   createdAt: { blockHash: BlockHash };
-  createdBy: { executionStepId: ReceiptId };
   executedAt: { blockHash: BlockHash };
-  executedBy: { accountId: AccountId };
 };
