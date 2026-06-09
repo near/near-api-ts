@@ -1,9 +1,14 @@
+import type { Result } from '../../../../../../../types/_common/common';
 import type { TransactionResult } from '../../../../../../../types/_common/transactionDetails/transactionResult';
+import type { InnerGetTransactionResultArgs } from '../../../../../../../types/client/methods/transaction/getTransactionResult';
+import type { NatError } from '../../../../../../_common/natError';
 import type { RpcFinalTransactionDetails } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
 import {
   isRpcTransactionOutcomeFailure,
   isRpcTransactionOutcomeSuccess,
 } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
+import { result } from '../../../../../../_common/utils/result';
+import { baseDeserializeResultData } from './baseDeserializeResultData';
 import {
   getConversionStepError,
   getConversionStepSuccess,
@@ -12,7 +17,11 @@ import { getNonConversionSteps } from './getProcessingSteps/getNonConversionStep
 
 export const getTransactionResultOutput = (
   rpcFinalTransactionDetails: RpcFinalTransactionDetails,
-): TransactionResult => {
+  inputArgs: InnerGetTransactionResultArgs,
+): Result<
+  TransactionResult,
+  NatError<'Client.GetTransactionResult.DeserializeResultData.Failed'>
+> => {
   const { transaction, transactionOutcome, status, receiptsOutcome, receipts } =
     rpcFinalTransactionDetails;
 
@@ -31,18 +40,21 @@ export const getTransactionResultOutput = (
       conversionStepSuccess,
     );
 
-    return {
+    const resultData = baseDeserializeResultData(inputArgs, status.SuccessValue);
+    if (!resultData.ok) return resultData;
+
+    return result.ok({
       transactionHash: transaction.hash.cryptoHash,
       result: {
         status: 'Success',
-        data: status.SuccessValue,
+        data: resultData.value,
       },
       processingSteps: {
         conversionStep: conversionStepSuccess,
         executionSteps,
         refundSteps,
       },
-    };
+    });
   }
 
   // When the transaction wasn't even converted into a receipt and included in the block
@@ -51,7 +63,7 @@ export const getTransactionResultOutput = (
     'InvalidTxError' in status.Failure &&
     isRpcTransactionOutcomeFailure(transactionOutcome)
   ) {
-    return {
+    return result.ok({
       transactionHash: transaction.hash.cryptoHash,
       result: {
         status: 'ConversionError',
@@ -65,7 +77,7 @@ export const getTransactionResultOutput = (
         executionSteps: null,
         refundSteps: null,
       },
-    };
+    });
   }
 
   // When the transaction was converted into a receipt and included in the block
@@ -75,7 +87,7 @@ export const getTransactionResultOutput = (
     'ActionError' in status.Failure &&
     isRpcTransactionOutcomeSuccess(transactionOutcome)
   ) {
-    return {
+    return result.ok({
       transactionHash: transaction.hash.cryptoHash,
       result: {
         status: 'ExecutionError',
@@ -89,7 +101,7 @@ export const getTransactionResultOutput = (
         executionSteps: [],
         refundSteps: [],
       },
-    };
+    });
   }
 
   // For TS only: we checked all possible cases

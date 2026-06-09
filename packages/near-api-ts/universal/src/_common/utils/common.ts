@@ -14,7 +14,7 @@ export const toJsonBytes = (value: unknown): Uint8Array =>
 
 export const fromJsonBytes = (bytes: Uint8Array | number[]): unknown => {
   const u8 = Array.isArray(bytes) ? new Uint8Array(bytes) : bytes;
-  return JSON.parse(new TextDecoder().decode(u8));
+  return JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(u8));
 };
 
 /**

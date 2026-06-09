@@ -1,10 +1,11 @@
 import * as z from 'zod/mini';
 import type {
   CreateSafeGetTransactionResult,
+  InnerGetTransactionResultArgs,
   SafeGetTransactionResult,
 } from '../../../../../types/client/methods/transaction/getTransactionResult';
 import { resultNatError } from '../../../../_common/natError';
-import { BaseOptionsZodSchema, PoliciesZodSchema } from '../../../../_common/schemas/zod/client';
+import { PoliciesZodSchema } from '../../../../_common/schemas/zod/client';
 import { CryptoHashZodSchema } from '../../../../_common/schemas/zod/common/cryptoHash';
 import { repackError } from '../../../../_common/utils/repackError';
 import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
@@ -14,13 +15,18 @@ import { handleRpcResult } from './handleRpcResult/handleRpcResult';
 const GetTransactionResultArgsZodShema = z.object({
   transactionHash: CryptoHashZodSchema,
   policies: PoliciesZodSchema,
-  options: BaseOptionsZodSchema,
+  options: z.optional(
+    z.object({
+      signal: z.optional(z.instanceof(AbortSignal)),
+      deserializeResultData: z.optional(z.instanceof(Function)),
+    }),
+  ),
 });
 
 export const createSafeGetTransactionResult: CreateSafeGetTransactionResult = (context) =>
   wrapInternalError(
     'Client.GetTransactionResult.Internal',
-    async (args): ReturnType<SafeGetTransactionResult> => {
+    async (args: InnerGetTransactionResultArgs): ReturnType<SafeGetTransactionResult> => {
       const validArgs = GetTransactionResultArgsZodShema.safeParse(args);
 
       if (!validArgs.success)

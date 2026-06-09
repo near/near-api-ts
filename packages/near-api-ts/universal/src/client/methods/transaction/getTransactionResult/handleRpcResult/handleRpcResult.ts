@@ -1,5 +1,5 @@
 import * as z from 'zod/mini';
-import type { GetTransactionResultArgs } from '../../../../../../types/client/methods/transaction/getTransactionResult';
+import type { InnerGetTransactionResultArgs } from '../../../../../../types/client/methods/transaction/getTransactionResult';
 import type { ExcludeStrict } from '../../../../../../types/utils';
 import { createNatError, resultNatError } from '../../../../../_common/natError';
 import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc/rpc';
@@ -15,7 +15,6 @@ import {
   type RpcIncludedTransactionDetails,
   RpcIncludedTransactionDetailsZodSchema,
 } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
-import { result } from '../../../../../_common/utils/result';
 import { getTransactionResultOutput } from './getTransactionResultOutput/getTransactionResultOutput';
 
 const getCurrentProcessingStage = (
@@ -48,7 +47,10 @@ const RpcResultZodSchema: z.ZodMiniType<RpcResult> = z.union([
   RpcFinalTransactionDetailsZodSchema,
 ]);
 
-export const handleRpcResult = (rpcResponse: RpcResponse, inputArgs: GetTransactionResultArgs) => {
+export const handleRpcResult = (
+  rpcResponse: RpcResponse,
+  inputArgs: InnerGetTransactionResultArgs,
+) => {
   const rpcResult = RpcResultZodSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)
@@ -69,5 +71,5 @@ export const handleRpcResult = (rpcResponse: RpcResponse, inputArgs: GetTransact
     });
 
   // #2. Transform rpc data into NAT format
-  return result.ok(getTransactionResultOutput(rpcResult.data));
+  return getTransactionResultOutput(rpcResult.data, inputArgs);
 };

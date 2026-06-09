@@ -1,13 +1,30 @@
-import type { CryptoHash } from '../common';
+import type { Base64String, CryptoHash } from '../common';
 import type { ConversionStepError, ConversionStepSuccess } from './processingSteps/conversionStep';
 import type { ExecutionSteps } from './processingSteps/executionStep';
 import type { RefundStep } from './processingSteps/refundStep';
 
-export type TransactionSuccess = {
+export type DeserializeTransactionResultDataArgs = { data: Base64String };
+
+export type BaseDeserializeTransactionResultDataFn = (
+  args: DeserializeTransactionResultDataArgs,
+) => unknown;
+
+export type MaybeBaseDeserializeTransactionResultDataFn =
+  | BaseDeserializeTransactionResultDataFn
+  | undefined;
+
+// Data type is a return type of custom deserializer (passed by user) or unknown;
+type TransactionSuccessResultData<RD extends MaybeBaseDeserializeTransactionResultDataFn> = [
+  RD,
+] extends [BaseDeserializeTransactionResultDataFn]
+  ? ReturnType<RD>
+  : unknown;
+
+export type TransactionSuccess<RD extends MaybeBaseDeserializeTransactionResultDataFn> = {
   transactionHash: CryptoHash;
   result: {
     status: 'Success';
-    data: unknown;
+    data: TransactionSuccessResultData<RD>;
   };
   processingSteps: {
     conversionStep: ConversionStepSuccess;
@@ -42,7 +59,7 @@ export type TransactionExecutionError = {
   };
 };
 
-export type TransactionResult =
-  | TransactionSuccess
+export type TransactionResult<RD extends MaybeBaseDeserializeTransactionResultDataFn = undefined> =
+  | TransactionSuccess<RD>
   | TransactionConversionError
   | TransactionExecutionError;
