@@ -1,35 +1,33 @@
 import type { ActionView } from '@near-js/jsonrpc-types';
 import { fromJsonBytes, gas, yoctoNear } from '../../../../../../../../../index';
-import type {
-  ActionSummaries,
-  ActionSummary,
-} from '../../../../../../../../../types/_common/transactionDetails/actionSummaries';
+import type { Base64String } from '../../../../../../../../../types/_common/common';
+import type { ActionSummary } from '../../../../../../../../../types/_common/transactionDetails/actionSummaries';
 
-export const getFunctionCallArgs = (base64: string) => {
-  const bytes = Uint8Array.fromBase64(base64);
+export const getFunctionArgs = (argsBase64: Base64String) => {
   try {
-    // return { format: 'json', data: new TextDecoder().decode(bytes) };
-    return fromJsonBytes(bytes);
+    return fromJsonBytes(Uint8Array.fromBase64(argsBase64));
   } catch {
-    return { format: 'base64', base64 };
+    return argsBase64;
   }
 };
 
-const getActionSummary = (rpcAction: ActionView): ActionSummary => {
-  if (typeof rpcAction === 'object' && 'FunctionCall' in rpcAction) {
+export const baseGetActionSummary = (rpcAction: ActionView): ActionSummary => {
+  if (rpcAction === 'CreateAccount') {
+    return {
+      actionType: 'CreateAccount',
+    };
+  }
+
+  if ('FunctionCall' in rpcAction) {
     const { FunctionCall } = rpcAction;
     return {
       actionType: 'FunctionCall' as const,
       functionName: FunctionCall.methodName,
-      functionArgs: getFunctionCallArgs(FunctionCall.args),
+      functionArgs: getFunctionArgs(FunctionCall.args),
       gasLimit: gas(FunctionCall.gas),
       attachedDeposit: yoctoNear(FunctionCall.deposit),
     };
   }
 
-  return rpcAction;
-};
-
-export const getActionSummaries = (rpcActions: ActionView[]): ActionSummaries => {
-  return rpcActions.map(getActionSummary);
+  throw new Error('unreachable');
 };

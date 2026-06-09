@@ -1,7 +1,7 @@
 import type { AccountId, BlockHash, CryptoHash, Log, ReceiptId } from '../../common';
 import type { NearGas } from '../../nearGas';
 import type { NearToken } from '../../nearToken';
-import type { ActionSummaries } from '../actionSummaries';
+import type { ActionSummary } from '../actionSummaries';
 
 export type RequiredDataId = CryptoHash;
 
@@ -36,7 +36,7 @@ export type ExecutionStep = {
   executedAt: { blockHash: BlockHash };
   executedBy: { accountId: AccountId };
   producedSteps: ProducedStep[];
-  actionSummaries: ActionSummaries;
+  actionSummaries: ActionSummary[];
   requiredDataIds: RequiredDataId[];
   futureDataReceivers: FutureDataReceiver[];
   isPromiseYield: boolean;

@@ -70,7 +70,7 @@ const getExecutionStepBase = (
     executedAt: { blockHash: receiptOutcome.blockHash.cryptoHash },
     executedBy: { accountId: receiptOutcome.outcome.executorId },
     producedSteps,
-    actionSummaries: Action.actions,
+    actionSummaries: Action.actions as any, // TODO Fix
     requiredDataIds: Action.inputDataIds,
     futureDataReceivers: dataReceivers,
     isPromiseYield: Action.isPromiseYield,

@@ -20,7 +20,8 @@ export const getTransactionResultOutput = (
   inputArgs: InnerGetTransactionResultArgs,
 ): Result<
   TransactionResult,
-  NatError<'Client.GetTransactionResult.DeserializeResultData.Failed'>
+  | NatError<'Client.GetTransactionResult.DeserializeResultData.Failed'>
+  | NatError<'Client.GetTransactionResult.DeserializeActionSummaries.Failed'>
 > => {
   const { transaction, transactionOutcome, status, receiptsOutcome, receipts } =
     rpcFinalTransactionDetails;
@@ -31,13 +32,18 @@ export const getTransactionResultOutput = (
 
   // When the transaction execution is successful;
   if ('SuccessValue' in status && isRpcTransactionOutcomeSuccess(transactionOutcome)) {
-    const conversionStepSuccess = getConversionStepSuccess(transaction, transactionOutcome);
+    const conversionStepSuccess = getConversionStepSuccess(
+      transaction,
+      transactionOutcome,
+      inputArgs,
+    );
+    if (!conversionStepSuccess.ok) return conversionStepSuccess;
 
     const { executionSteps, refundSteps } = getNonConversionSteps(
       transaction,
       receipts,
       receiptsOutcome,
-      conversionStepSuccess,
+      conversionStepSuccess.value,
     );
 
     const resultData = baseDeserializeResultData(inputArgs, status.SuccessValue);
@@ -50,7 +56,7 @@ export const getTransactionResultOutput = (
         data: resultData.value,
       },
       processingSteps: {
-        conversionStep: conversionStepSuccess,
+        conversionStep: conversionStepSuccess.value,
         executionSteps,
         refundSteps,
       },
@@ -63,6 +69,9 @@ export const getTransactionResultOutput = (
     'InvalidTxError' in status.Failure &&
     isRpcTransactionOutcomeFailure(transactionOutcome)
   ) {
+    const conversionStepError = getConversionStepError(transaction, transactionOutcome, inputArgs);
+    if (!conversionStepError.ok) return conversionStepError;
+
     return result.ok({
       transactionHash: transaction.hash.cryptoHash,
       result: {
@@ -73,7 +82,7 @@ export const getTransactionResultOutput = (
         },
       },
       processingSteps: {
-        conversionStep: getConversionStepError(transaction, transactionOutcome),
+        conversionStep: conversionStepError.value,
         executionSteps: null,
         refundSteps: null,
       },
@@ -87,6 +96,13 @@ export const getTransactionResultOutput = (
     'ActionError' in status.Failure &&
     isRpcTransactionOutcomeSuccess(transactionOutcome)
   ) {
+    const conversionStepSuccess = getConversionStepSuccess(
+      transaction,
+      transactionOutcome,
+      inputArgs,
+    );
+    if (!conversionStepSuccess.ok) return conversionStepSuccess;
+
     return result.ok({
       transactionHash: transaction.hash.cryptoHash,
       result: {
@@ -97,7 +113,7 @@ export const getTransactionResultOutput = (
         },
       },
       processingSteps: {
-        conversionStep: getConversionStepSuccess(transaction, transactionOutcome),
+        conversionStep: conversionStepSuccess.value,
         executionSteps: [],
         refundSteps: [],
       },

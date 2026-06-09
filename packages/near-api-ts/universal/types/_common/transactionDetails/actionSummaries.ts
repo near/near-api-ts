@@ -1,14 +1,18 @@
 import type { NearGas } from '../nearGas';
 import type { NearToken } from '../nearToken';
 
-export type FunctionCallActionSummary = {
+export type CreateAccountActionSummary = {
+  actionType: 'CreateAccount';
+};
+
+export type FunctionCallActionSummary<FCA> = {
   actionType: 'FunctionCall';
   functionName: string;
-  functionArgs: unknown;
+  functionArgs: FCA;
   gasLimit: NearGas;
   attachedDeposit: NearToken;
 };
 
-export type ActionSummary = FunctionCallActionSummary | unknown;
-
-export type ActionSummaries = ActionSummary[];
+export type ActionSummary<FCA = unknown> =
+  | FunctionCallActionSummary<FCA>
+  | CreateAccountActionSummary;
