@@ -11,9 +11,9 @@ import type { RpcActionReceipt } from '../../../../../../../../_common/schemas/z
 import type { RpcReceiptOutcome } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
 import type { RpcTransactionSummary } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
 import { result } from '../../../../../../../../_common/utils/result';
-import { baseDeserializeExecutionSteps } from '../../baseDeserializeExecutionSteps';
 import { createReceiptCreationMap, type ReceiptCreationMap } from './createReceiptCreationMap';
-import { getRawExecutionStep } from './getRawExecutionSteps/getRawExecutionStep';
+import { deserializeExecutionSteps } from './deserializeExecutionSteps';
+import { getRawExecutionStep } from './getExecutionSteps/getRawExecutionStep';
 import { getReceiptsWithOutcomes, type ReceiptsWithOutcomes } from './getReceiptsWithOutcomes';
 import { getRefundStep } from './getRefundStep';
 
@@ -53,7 +53,7 @@ export const getNonConversionSteps = (
   // transaction just started and hasn't produced any receipts yet;
   // We still run the deserialization so a custom deserializer defines the executionSteps shape;
   if (receiptsOutcome.length === 0) {
-    const executionSteps = baseDeserializeExecutionSteps(inputArgs, []);
+    const executionSteps = deserializeExecutionSteps(inputArgs, []);
     if (!executionSteps.ok) return executionSteps;
 
     return result.ok({ executionSteps: executionSteps.value, refundSteps: [] });
@@ -68,10 +68,8 @@ export const getNonConversionSteps = (
 
   const receiptCreationMap = createReceiptCreationMap(conversionStepSuccess, receiptsWithOutcomes);
 
-  const executionSteps = baseDeserializeExecutionSteps(
-    inputArgs,
-    getRawExecutionSteps(receiptsWithOutcomes, receiptCreationMap),
-  );
+  const rawExecutionSteps = getRawExecutionSteps(receiptsWithOutcomes, receiptCreationMap);
+  const executionSteps = deserializeExecutionSteps(inputArgs, rawExecutionSteps);
   if (!executionSteps.ok) return executionSteps;
 
   return result.ok({

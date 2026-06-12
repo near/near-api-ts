@@ -1,24 +1,25 @@
-import type { Result } from '../../../../../../../types/_common/common';
+import type { Base64String, Result } from '../../../../../../../../../types/_common/common';
 import type {
-  ExecutionStep,
   ExecutionStepResult,
   ExecutionSteps,
+  ParsedExecutionStep,
   RawExecutionStep,
-  RawExecutionStepResult,
-} from '../../../../../../../types/_common/transactionDetails/processingSteps/executionStep';
-import type { MaybeBaseDeserializeTransactionExecutionStepsFn } from '../../../../../../../types/_common/transactionDetails/transactionResult';
-import type { InnerGetTransactionResultArgs } from '../../../../../../../types/client/methods/transaction/getTransactionResult';
-import { type NatError, resultNatError } from '../../../../../../_common/natError';
-import { result } from '../../../../../../_common/utils/result';
-import { baseParseBase64Data } from './_common/parseBase64Data';
-import { baseGetActionSummary } from './getProcessingSteps/_common/getActionSummaries';
+} from '../../../../../../../../../types/_common/transactionDetails/processingSteps/executionStep';
+import type { MaybeBaseDeserializeTransactionExecutionStepsFn } from '../../../../../../../../../types/_common/transactionDetails/transactionResult';
+import type { InnerGetTransactionResultArgs } from '../../../../../../../../../types/client/methods/transaction/getTransactionResult';
+import { type NatError, resultNatError } from '../../../../../../../../_common/natError';
+import { result } from '../../../../../../../../_common/utils/result';
+import { baseParseBase64Data } from '../../_common/parseBase64Data';
+import { baseGetActionSummary } from '../_common/getActionSummaries';
 
-const baseGetExecutionStepResult = (rawResult: RawExecutionStepResult): ExecutionStepResult =>
+const baseGetExecutionStepResult = (
+  rawResult: ExecutionStepResult<Base64String>,
+): ExecutionStepResult<unknown> =>
   rawResult.status === 'Success'
     ? { status: 'Success', data: baseParseBase64Data(rawResult.data) }
     : rawResult;
 
-const baseGetExecutionStep = (rawExecutionStep: RawExecutionStep): ExecutionStep => ({
+const getParsedExecutionStep = (rawExecutionStep: RawExecutionStep): ParsedExecutionStep => ({
   executionStepId: rawExecutionStep.executionStepId,
   result: baseGetExecutionStepResult(rawExecutionStep.result),
   createdAt: rawExecutionStep.createdAt,
@@ -35,20 +36,20 @@ const baseGetExecutionStep = (rawExecutionStep: RawExecutionStep): ExecutionStep
   logs: rawExecutionStep.logs,
 });
 
-export const baseDeserializeExecutionSteps = <
-  ES extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+export const deserializeExecutionSteps = <
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
 >(
   inputArgs: InnerGetTransactionResultArgs,
   rawExecutionSteps: RawExecutionStep[],
 ): Result<
-  ExecutionSteps<ES>,
+  ExecutionSteps<ESF>,
   NatError<'Client.GetTransactionResult.DeserializeExecutionSteps.Failed'>
 > => {
   // If a user wants to use his own custom deserializer:
   if (inputArgs.options?.deserializeExecutionSteps) {
     try {
       return result.ok(
-        inputArgs.options.deserializeExecutionSteps({ rawExecutionSteps }) as ExecutionSteps<ES>,
+        inputArgs.options.deserializeExecutionSteps({ rawExecutionSteps }) as ExecutionSteps<ESF>,
       );
     } catch (cause) {
       return resultNatError('Client.GetTransactionResult.DeserializeExecutionSteps.Failed', {
@@ -59,5 +60,5 @@ export const baseDeserializeExecutionSteps = <
   }
   // If no custom deserializer is provided, use the default one and return default ExecutionSteps
   // with unknown result.data type and unknown functionCall.functionArgs type;
-  return result.ok(rawExecutionSteps.map(baseGetExecutionStep) as ExecutionSteps<ES>);
+  return result.ok(rawExecutionSteps.map(getParsedExecutionStep) as ExecutionSteps<ESF>);
 };

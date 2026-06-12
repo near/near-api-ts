@@ -8,7 +8,7 @@ import {
   isRpcTransactionOutcomeSuccess,
 } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
 import { result } from '../../../../../../_common/utils/result';
-import { baseDeserializeResultData } from './baseDeserializeResultData';
+import { deserializeResultData } from './deserializeResultData';
 import {
   getConversionStepError,
   getConversionStepSuccess,
@@ -49,7 +49,7 @@ export const getTransactionResultOutput = (
     );
     if (!nonConversionSteps.ok) return nonConversionSteps;
 
-    const resultData = baseDeserializeResultData(inputArgs, status.SuccessValue);
+    const resultData = deserializeResultData(inputArgs, status.SuccessValue);
     if (!resultData.ok) return resultData;
 
     return result.ok({

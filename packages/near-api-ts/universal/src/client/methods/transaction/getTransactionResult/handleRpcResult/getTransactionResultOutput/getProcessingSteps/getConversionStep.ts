@@ -2,9 +2,9 @@ import type { ActionView } from '@near-js/jsonrpc-types';
 import { gas, yoctoNear } from '../../../../../../../../index';
 import type { Result } from '../../../../../../../../types/_common/common';
 import type {
-  ActionSummaries,
   ConversionStepError,
   ConversionStepSuccess,
+  TransactionActionSummaries,
   TransactionSummary,
 } from '../../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep';
 import type { MaybeBaseDeserializeTransactionActionSummariesFn } from '../../../../../../../../types/_common/transactionDetails/transactionResult';
@@ -16,20 +16,22 @@ import type {
 } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
 import type { RpcTransactionSummary } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
 import { result } from '../../../../../../../_common/utils/result';
-import { baseGetActionSummary } from './_common/getActionSummaries';
+import { baseGetActionSummary, getRawActionSummary } from './_common/getActionSummaries';
 
-export const getActionSummaries = <AS extends MaybeBaseDeserializeTransactionActionSummariesFn>(
-  rawActionSummaries: ActionView[],
+export const getActionSummaries = <ASF extends MaybeBaseDeserializeTransactionActionSummariesFn>(
+  rpcActions: ActionView[],
   inputArgs: InnerGetTransactionResultArgs,
 ): Result<
-  ActionSummaries<AS>,
+  TransactionActionSummaries<ASF>,
   NatError<'Client.GetTransactionResult.DeserializeActionSummaries.Failed'>
 > => {
+  const rawActionSummaries = rpcActions.map(getRawActionSummary);
+
   // If a user wants to use his own custom deserializer:
   if (inputArgs.options?.deserializeActionSummaries) {
     try {
       return result.ok(
-        inputArgs.options.deserializeActionSummaries({ rawActionSummaries }) as ActionSummaries<AS>,
+        inputArgs.options.deserializeActionSummaries({ rawActionSummaries }) as TransactionActionSummaries<ASF>,
       );
     } catch (cause) {
       return resultNatError('Client.GetTransactionResult.DeserializeActionSummaries.Failed', {
@@ -40,7 +42,7 @@ export const getActionSummaries = <AS extends MaybeBaseDeserializeTransactionAct
   }
   // If no custom deserializer is provided, use the default one and return default ActionSummaries
   // with unknown functionCall.functionArgs type
-  return result.ok(rawActionSummaries.map(baseGetActionSummary) as ActionSummaries<AS>);
+  return result.ok(rawActionSummaries.map(baseGetActionSummary) as TransactionActionSummaries<ASF>);
 };
 
 const getTransactionSummary = (

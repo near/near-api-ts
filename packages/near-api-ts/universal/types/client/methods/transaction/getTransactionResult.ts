@@ -1,8 +1,8 @@
-import type { ActionView } from '@near-js/jsonrpc-types';
 import type { NatError } from '../../../../src/_common/natError';
 import type { Base64String, CryptoHash, Result } from '../../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { TransactionErrorContext } from '../../../_common/transaction/rpcTransactionErrorContext';
+import type { RawActionSummary } from '../../../_common/transactionDetails/actionSummaries';
 import type { RawExecutionStep } from '../../../_common/transactionDetails/processingSteps/executionStep';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
@@ -33,11 +33,11 @@ export interface GetTransactionResultPublicErrorRegistry {
   'Client.GetTransactionResult.Rpc.Transaction.NotCompleted': TransactionErrorContext['NotCompleted'];
   'Client.GetTransactionResult.DeserializeResultData.Failed': {
     cause: unknown;
-    data: Base64String;
+    rawData: Base64String;
   };
   'Client.GetTransactionResult.DeserializeActionSummaries.Failed': {
     cause: unknown;
-    rawActionSummaries: ActionView[];
+    rawActionSummaries: RawActionSummary[];
   };
   'Client.GetTransactionResult.DeserializeExecutionSteps.Failed': {
     cause: unknown;
@@ -47,10 +47,10 @@ export interface GetTransactionResultPublicErrorRegistry {
 }
 
 type Options<
-  RD extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
-  AS extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ES extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-> = [RD, AS, ES] extends [undefined, undefined, undefined]
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
+> = [RDF, ASF, ESF] extends [undefined, undefined, undefined]
   ? {
       options?: {
         signal?: AbortSignal;
@@ -60,21 +60,21 @@ type Options<
       };
     }
   : {
-      options: { signal?: AbortSignal } & KeyIf<'deserializeResultData', RD> &
-        KeyIf<'deserializeActionSummaries', AS> &
-        KeyIf<'deserializeExecutionSteps', ES>;
+      options: { signal?: AbortSignal } & KeyIf<'deserializeResultData', RDF> &
+        KeyIf<'deserializeActionSummaries', ASF> &
+        KeyIf<'deserializeExecutionSteps', ESF>;
     };
 
 export type GetTransactionResultArgs<
-  RD extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
-  AS extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ES extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > = {
   transactionHash: CryptoHash;
   policies?: {
     transport?: PartialTransportPolicy;
   };
-} & Options<RD, AS, ES>;
+} & Options<RDF, ASF, ESF>;
 
 // Inside the implementation function we don't care about the particular deserializer result and
 // treat it as unknown data;
@@ -92,10 +92,10 @@ export type InnerGetTransactionResultArgs = {
 };
 
 export type GetTransactionResultOutput<
-  RD extends MaybeBaseDeserializeTransactionResultDataFn,
-  AS extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ES extends MaybeBaseDeserializeTransactionExecutionStepsFn,
-> = TransactionResult<RD, AS, ES>;
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+> = TransactionResult<RDF, ASF, ESF>;
 
 export type GetTransactionResultError =
   | NatError<'Client.GetTransactionResult.Args.InvalidSchema'>
@@ -111,20 +111,20 @@ export type GetTransactionResultError =
   | NatError<'Client.GetTransactionResult.Internal'>;
 
 export type SafeGetTransactionResult = <
-  RD extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
-  AS extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ES extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 >(
-  args: GetTransactionResultArgs<RD, AS, ES>,
-) => Promise<Result<GetTransactionResultOutput<RD, AS, ES>, GetTransactionResultError>>;
+  args: GetTransactionResultArgs<RDF, ASF, ESF>,
+) => Promise<Result<GetTransactionResultOutput<RDF, ASF, ESF>, GetTransactionResultError>>;
 
 export type GetTransactionResult = <
-  RD extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
-  AS extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ES extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 >(
-  args: GetTransactionResultArgs<RD, AS, ES>,
-) => Promise<GetTransactionResultOutput<RD, AS, ES>>;
+  args: GetTransactionResultArgs<RDF, ASF, ESF>,
+) => Promise<GetTransactionResultOutput<RDF, ASF, ESF>>;
 
 export type CreateSafeGetTransactionResult = (
   clientContext: ClientContext,

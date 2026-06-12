@@ -1,15 +1,17 @@
 import { gas, yoctoNear } from '../../../../../../../../../../index';
+import type { Base64String } from '../../../../../../../../../../types/_common/common';
 import type {
+  ExecutionStepResult,
   RawExecutionStep,
-  RawExecutionStepResult,
 } from '../../../../../../../../../../types/_common/transactionDetails/processingSteps/executionStep';
 import type { RpcActionReceiptTrimmed } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
 import type { RpcReceiptOutcome } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
+import { getRawActionSummary } from '../../_common/getActionSummaries';
 import type { ReceiptCreationMap } from '../createReceiptCreationMap';
 
 const getRawExecutionStepResult = (
   status: RpcReceiptOutcome['outcome']['status'],
-): RawExecutionStepResult => {
+): ExecutionStepResult<Base64String> => {
   if (typeof status === 'object' && 'SuccessValue' in status) {
     return {
       status: 'Success',
@@ -69,7 +71,7 @@ const getRawExecutionStepBase = (
     executedAt: { blockHash: receiptOutcome.blockHash.cryptoHash },
     executedBy: { accountId: receiptOutcome.outcome.executorId },
     producedSteps,
-    actionSummaries: Action.actions,
+    actionSummaries: Action.actions.map(getRawActionSummary),
     requiredDataIds: Action.inputDataIds,
     futureDataReceivers: dataReceivers,
     isPromiseYield: Action.isPromiseYield,

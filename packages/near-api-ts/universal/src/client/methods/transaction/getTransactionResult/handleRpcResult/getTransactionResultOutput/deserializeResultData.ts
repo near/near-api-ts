@@ -4,21 +4,21 @@ import { type NatError, resultNatError } from '../../../../../../_common/natErro
 import { result } from '../../../../../../_common/utils/result';
 import { baseParseBase64Data } from './_common/parseBase64Data';
 
-export const baseDeserializeResultData = (
+export const deserializeResultData = (
   inputArgs: InnerGetTransactionResultArgs,
-  data: Base64String,
+  rawData: Base64String,
 ): Result<unknown, NatError<'Client.GetTransactionResult.DeserializeResultData.Failed'>> => {
   // If a user wants to use his own custom deserializer:
   if (inputArgs.options?.deserializeResultData) {
     try {
-      return result.ok(inputArgs.options.deserializeResultData({ data }));
+      return result.ok(inputArgs.options.deserializeResultData({ rawData }));
     } catch (cause) {
       return resultNatError('Client.GetTransactionResult.DeserializeResultData.Failed', {
         cause,
-        data,
+        rawData,
       });
     }
   }
   // If no custom deserializer:
-  return result.ok(baseParseBase64Data(data));
+  return result.ok(baseParseBase64Data(rawData));
 };

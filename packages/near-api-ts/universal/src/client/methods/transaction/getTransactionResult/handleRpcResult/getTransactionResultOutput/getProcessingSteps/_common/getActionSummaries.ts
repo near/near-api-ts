@@ -1,7 +1,10 @@
 import type { ActionView } from '@near-js/jsonrpc-types';
 import { fromJsonBytes, gas, yoctoNear } from '../../../../../../../../../index';
 import type { Base64String } from '../../../../../../../../../types/_common/common';
-import type { ActionSummary } from '../../../../../../../../../types/_common/transactionDetails/actionSummaries';
+import type {
+  ParsedActionSummary,
+  RawActionSummary,
+} from '../../../../../../../../../types/_common/transactionDetails/actionSummaries';
 
 export const getFunctionArgs = (argsBase64: Base64String) => {
   try {
@@ -11,7 +14,9 @@ export const getFunctionArgs = (argsBase64: Base64String) => {
   }
 };
 
-export const baseGetActionSummary = (rpcAction: ActionView): ActionSummary => {
+// Assembles the raw action summary from the RPC action - all fields are converted except
+// functionCall.functionArgs which stays a raw base64 string;
+export const getRawActionSummary = (rpcAction: ActionView): RawActionSummary => {
   if (rpcAction === 'CreateAccount') {
     return {
       actionType: 'CreateAccount',
@@ -23,7 +28,7 @@ export const baseGetActionSummary = (rpcAction: ActionView): ActionSummary => {
     return {
       actionType: 'FunctionCall' as const,
       functionName: FunctionCall.methodName,
-      functionArgs: getFunctionArgs(FunctionCall.args),
+      functionArgs: FunctionCall.args,
       gasLimit: gas(FunctionCall.gas),
       attachedDeposit: yoctoNear(FunctionCall.deposit),
     };
@@ -46,4 +51,17 @@ export const baseGetActionSummary = (rpcAction: ActionView): ActionSummary => {
   }
 
   throw new Error('unreachable');
+};
+
+// Default deserialization of the raw action summary - tries to parse functionCall.functionArgs
+// as JSON, otherwise keeps the raw base64 string (functionArgs type stays unknown);
+export const baseGetActionSummary = (rawActionSummary: RawActionSummary): ParsedActionSummary => {
+  if (rawActionSummary.actionType === 'FunctionCall') {
+    return {
+      ...rawActionSummary,
+      functionArgs: getFunctionArgs(rawActionSummary.functionArgs),
+    };
+  }
+
+  return rawActionSummary;
 };
