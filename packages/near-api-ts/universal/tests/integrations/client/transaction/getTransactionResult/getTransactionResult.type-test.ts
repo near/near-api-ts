@@ -3,7 +3,12 @@ import * as z from 'zod/mini';
 import { createTestnetClient } from '../../../../../src/client/presets/testnet';
 import type { ActionSummary } from '../../../../../types/_common/transactionDetails/actionSummaries';
 import type {
+  ExecutionStep,
+  RawExecutionStep,
+} from '../../../../../types/_common/transactionDetails/processingSteps/executionStep';
+import type {
   DeserializeTransactionActionSummariesArgs,
+  DeserializeTransactionExecutionStepsArgs,
   DeserializeTransactionResultDataArgs,
 } from '../../../../../types/_common/transactionDetails/transactionResult';
 
@@ -32,6 +37,25 @@ type Summaries<TPromise> =
     ? S
     : never;
 
+// `executionSteps` lives on the Success and ExecutionError members (ConversionError holds null);
+type MemberExecSteps<TMember> = TMember extends {
+  processingSteps: { executionSteps: infer S };
+}
+  ? S
+  : never;
+
+type ExecSteps<TPromise> = MemberExecSteps<
+  Extract<Awaited<TPromise>, { result: { status: 'Success' } }>
+>;
+
+type ExecutionErrorExecSteps<TPromise> = MemberExecSteps<
+  Extract<Awaited<TPromise>, { result: { status: 'ExecutionError' } }>
+>;
+
+type ConversionErrorExecSteps<TPromise> = MemberExecSteps<
+  Extract<Awaited<TPromise>, { result: { status: 'ConversionError' } }>
+>;
+
 // Fixtures
 
 const responseZodSchema = z.object({ decimals: z.number() });
@@ -53,6 +77,17 @@ type CustomDeserializeActionSummaries = (
 const passthroughActionSummaries = (args: DeserializeTransactionActionSummariesArgs) =>
   args.rawActionSummaries;
 
+const deserializeExecutionSteps = (args: DeserializeTransactionExecutionStepsArgs): {
+  stepsCount: number;
+} => ({ stepsCount: args.rawExecutionSteps.length });
+type CustomDeserializeExecutionSteps = (args: DeserializeTransactionExecutionStepsArgs) => {
+  stepsCount: number;
+};
+
+// Pass-through execution steps deserializer -> ReturnType is RawExecutionStep[]
+const passthroughExecutionSteps = (args: DeserializeTransactionExecutionStepsArgs) =>
+  args.rawExecutionSteps;
+
 const client = createTestnetClient();
 const transactionHash = 'HoWytDmLdYF4MnmayBSArwxef6Tj6pDYjnuNCVdSEnXe';
 
@@ -62,6 +97,11 @@ const transactionHash = 'HoWytDmLdYF4MnmayBSArwxef6Tj6pDYjnuNCVdSEnXe';
 const a1 = client.getTransactionResult({ transactionHash });
 type _A1Data = Assert<Equal<SuccessData<typeof a1>, unknown>>;
 type _A1Summaries = Assert<Equal<Summaries<typeof a1>, ActionSummary[]>>;
+type _A1ExecSteps = Assert<Equal<ExecSteps<typeof a1>, ExecutionStep[]>>;
+type _A1ExecutionErrorExecSteps = Assert<
+  Equal<ExecutionErrorExecSteps<typeof a1>, ExecutionStep[]>
+>;
+type _A1ConversionErrorExecSteps = Assert<Equal<ConversionErrorExecSteps<typeof a1>, null>>;
 
 const a2 = client.getTransactionResult({ transactionHash, options: {} });
 type _A2Data = Assert<Equal<SuccessData<typeof a2>, unknown>>;
@@ -164,6 +204,82 @@ const d2 = client.getTransactionResult<
 type _D2Data = Assert<Equal<SuccessData<typeof d2>, { decimals: number }>>;
 type _D2Summaries = Assert<Equal<Summaries<typeof d2>, [number, number, string]>>;
 
+// GROUP E - only deserializeExecutionSteps (RD = undefined, AS = undefined, ES set)
+// -> data: unknown, actionSummaries: ActionSummary[], executionSteps: ReturnType<ES>
+
+const e1 = client.getTransactionResult({
+  transactionHash,
+  options: { deserializeExecutionSteps },
+});
+type _E1Data = Assert<Equal<SuccessData<typeof e1>, unknown>>;
+type _E1Summaries = Assert<Equal<Summaries<typeof e1>, ActionSummary[]>>;
+type _E1ExecSteps = Assert<Equal<ExecSteps<typeof e1>, { stepsCount: number }>>;
+type _E1ExecutionErrorExecSteps = Assert<
+  Equal<ExecutionErrorExecSteps<typeof e1>, { stepsCount: number }>
+>;
+type _E1ConversionErrorExecSteps = Assert<Equal<ConversionErrorExecSteps<typeof e1>, null>>;
+
+const e2 = client.getTransactionResult<undefined, undefined, CustomDeserializeExecutionSteps>({
+  transactionHash,
+  options: { deserializeExecutionSteps },
+});
+type _E2Data = Assert<Equal<SuccessData<typeof e2>, unknown>>;
+type _E2Summaries = Assert<Equal<Summaries<typeof e2>, ActionSummary[]>>;
+type _E2ExecSteps = Assert<Equal<ExecSteps<typeof e2>, { stepsCount: number }>>;
+
+// Pass-through deserializer -> executionSteps: RawExecutionStep[]
+const e3 = client.getTransactionResult({
+  transactionHash,
+  options: { deserializeExecutionSteps: passthroughExecutionSteps },
+});
+type _E3Data = Assert<Equal<SuccessData<typeof e3>, unknown>>;
+type _E3ExecSteps = Assert<Equal<ExecSteps<typeof e3>, RawExecutionStep[]>>;
+
+// GROUP F - combos with deserializeExecutionSteps
+
+const f1 = client.getTransactionResult({
+  transactionHash,
+  options: { deserializeResultData, deserializeExecutionSteps },
+});
+type _F1Data = Assert<Equal<SuccessData<typeof f1>, { decimals: number }>>;
+type _F1Summaries = Assert<Equal<Summaries<typeof f1>, ActionSummary[]>>;
+type _F1ExecSteps = Assert<Equal<ExecSteps<typeof f1>, { stepsCount: number }>>;
+
+const f2 = client.getTransactionResult({
+  transactionHash,
+  options: { deserializeActionSummaries, deserializeExecutionSteps },
+});
+type _F2Data = Assert<Equal<SuccessData<typeof f2>, unknown>>;
+type _F2Summaries = Assert<Equal<Summaries<typeof f2>, [number, number, string]>>;
+type _F2ExecSteps = Assert<Equal<ExecSteps<typeof f2>, { stepsCount: number }>>;
+
+const f3 = client.getTransactionResult({
+  transactionHash,
+  options: { deserializeResultData, deserializeActionSummaries, deserializeExecutionSteps },
+});
+type _F3Data = Assert<Equal<SuccessData<typeof f3>, { decimals: number }>>;
+type _F3Summaries = Assert<Equal<Summaries<typeof f3>, [number, number, string]>>;
+type _F3ExecSteps = Assert<Equal<ExecSteps<typeof f3>, { stepsCount: number }>>;
+
+const f4 = client.getTransactionResult<
+  CustomDeserializeResultData,
+  CustomDeserializeActionSummaries,
+  CustomDeserializeExecutionSteps
+>({
+  transactionHash,
+  options: { deserializeResultData, deserializeActionSummaries, deserializeExecutionSteps },
+});
+type _F4Data = Assert<Equal<SuccessData<typeof f4>, { decimals: number }>>;
+type _F4Summaries = Assert<Equal<Summaries<typeof f4>, [number, number, string]>>;
+type _F4ExecSteps = Assert<Equal<ExecSteps<typeof f4>, { stepsCount: number }>>;
+
+// Both deserializers set, ES omitted -> executionSteps stays default ExecutionStep[]
+const f5 = client.getTransactionResult({
+  transactionHash,
+  options: { deserializeResultData, deserializeActionSummaries },
+});
+type _F5ExecSteps = Assert<Equal<ExecSteps<typeof f5>, ExecutionStep[]>>;
+
 // Narrowing sanity check - `data` is reachable only after narrowing on `status`, and the
 // error members expose `error` instead of `data`.
 const narrowed = await client.getTransactionResult({
@@ -232,4 +348,40 @@ client.getTransactionResult({
   transactionHash,
   // @ts-expect-error signal must be an AbortSignal
   options: { signal: 'not-a-signal' },
+});
+
+client.getTransactionResult({
+  transactionHash,
+  options: {
+    // @ts-expect-error deserializeExecutionSteps arg must be { rawExecutionSteps: RawExecutionStep[] }
+    deserializeExecutionSteps: (_args: { rawExecutionSteps: string }) => [],
+  },
+});
+
+client.getTransactionResult<undefined, undefined, undefined>({
+  transactionHash,
+  options: {
+    // @ts-expect-error ES pinned to undefined -> deserializeExecutionSteps is poison-pilled (never)
+    deserializeExecutionSteps,
+  },
+});
+
+client.getTransactionResult<
+  CustomDeserializeResultData,
+  CustomDeserializeActionSummaries,
+  undefined
+>({
+  transactionHash,
+  options: {
+    deserializeResultData,
+    deserializeActionSummaries,
+    // @ts-expect-error ES pinned to undefined -> deserializeExecutionSteps is poison-pilled (never)
+    deserializeExecutionSteps,
+  },
+});
+
+client.getTransactionResult({
+  transactionHash,
+  // @ts-expect-error deserializeExecutionSteps belongs inside `options`, not at the top level
+  deserializeExecutionSteps,
 });

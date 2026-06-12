@@ -19,6 +19,8 @@ const GetTransactionResultArgsZodShema = z.object({
     z.object({
       signal: z.optional(z.instanceof(AbortSignal)),
       deserializeResultData: z.optional(z.instanceof(Function)),
+      deserializeActionSummaries: z.optional(z.instanceof(Function)),
+      deserializeExecutionSteps: z.optional(z.instanceof(Function)),
     }),
   ),
 });

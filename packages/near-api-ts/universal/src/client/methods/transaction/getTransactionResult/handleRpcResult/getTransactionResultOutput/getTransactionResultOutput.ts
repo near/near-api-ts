@@ -22,6 +22,7 @@ export const getTransactionResultOutput = (
   TransactionResult,
   | NatError<'Client.GetTransactionResult.DeserializeResultData.Failed'>
   | NatError<'Client.GetTransactionResult.DeserializeActionSummaries.Failed'>
+  | NatError<'Client.GetTransactionResult.DeserializeExecutionSteps.Failed'>
 > => {
   const { transaction, transactionOutcome, status, receiptsOutcome, receipts } =
     rpcFinalTransactionDetails;
@@ -39,12 +40,14 @@ export const getTransactionResultOutput = (
     );
     if (!conversionStepSuccess.ok) return conversionStepSuccess;
 
-    const { executionSteps, refundSteps } = getNonConversionSteps(
+    const nonConversionSteps = getNonConversionSteps(
       transaction,
       receipts,
       receiptsOutcome,
       conversionStepSuccess.value,
+      inputArgs,
     );
+    if (!nonConversionSteps.ok) return nonConversionSteps;
 
     const resultData = baseDeserializeResultData(inputArgs, status.SuccessValue);
     if (!resultData.ok) return resultData;
@@ -57,8 +60,7 @@ export const getTransactionResultOutput = (
       },
       processingSteps: {
         conversionStep: conversionStepSuccess.value,
-        executionSteps,
-        refundSteps,
+        ...nonConversionSteps.value,
       },
     });
   }
@@ -103,6 +105,15 @@ export const getTransactionResultOutput = (
     );
     if (!conversionStepSuccess.ok) return conversionStepSuccess;
 
+    const nonConversionSteps = getNonConversionSteps(
+      transaction,
+      receipts,
+      receiptsOutcome,
+      conversionStepSuccess.value,
+      inputArgs,
+    );
+    if (!nonConversionSteps.ok) return nonConversionSteps;
+
     return result.ok({
       transactionHash: transaction.hash.cryptoHash,
       result: {
@@ -114,8 +125,7 @@ export const getTransactionResultOutput = (
       },
       processingSteps: {
         conversionStep: conversionStepSuccess.value,
-        executionSteps: [],
-        refundSteps: [],
+        ...nonConversionSteps.value,
       },
     });
   }

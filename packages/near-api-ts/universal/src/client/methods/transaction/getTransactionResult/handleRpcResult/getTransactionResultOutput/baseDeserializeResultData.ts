@@ -1,8 +1,8 @@
 import type { Base64String, Result } from '../../../../../../../types/_common/common';
 import type { InnerGetTransactionResultArgs } from '../../../../../../../types/client/methods/transaction/getTransactionResult';
 import { type NatError, resultNatError } from '../../../../../../_common/natError';
-import { fromJsonBytes } from '../../../../../../_common/utils/common';
 import { result } from '../../../../../../_common/utils/result';
+import { baseParseBase64Data } from './_common/parseBase64Data';
 
 export const baseDeserializeResultData = (
   inputArgs: InnerGetTransactionResultArgs,
@@ -20,16 +20,5 @@ export const baseDeserializeResultData = (
     }
   }
   // If no custom deserializer:
-
-  // nearcore returns empty string when there is no result data;
-  // So for better readability, we return null instead of empty string;
-  if (data === '') return result.ok(null);
-
-  // Try our best - if we can parse the data as JSON, return the parsed result;
-  // otherwise, return the raw base64 data;
-  try {
-    return result.ok(fromJsonBytes(Uint8Array.fromBase64(data)));
-  } catch (e) {
-    return result.ok(data);
-  }
+  return result.ok(baseParseBase64Data(data));
 };

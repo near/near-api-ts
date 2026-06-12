@@ -15,8 +15,10 @@ import { safeSleep } from '../../../../../src/_common/utils/sleep';
 import type { TransactionHash } from '../../../../../types/_common/common';
 import type {
   DeserializeTransactionActionSummariesArgs,
+  DeserializeTransactionExecutionStepsArgs,
   DeserializeTransactionResultDataArgs,
 } from '../../../../../types/_common/transactionDetails/transactionResult';
+import type { MemorySigner } from '../../../../../types/signers/memorySigner/memorySigner';
 import { assertNatErrKind } from '../../../../utils/assertNatErrKind';
 import { createDefaultClient, getFileBytes, log } from '../../../../utils/common';
 import { startSandbox } from '../../../../utils/sandbox/startSandbox';
@@ -25,6 +27,7 @@ vi.setConfig({ testTimeout: 60000 });
 
 describe('CallContractReadFunction', () => {
   let client: Client;
+  let nat: MemorySigner;
   let transactionHash: TransactionHash;
 
   beforeAll(async () => {
@@ -34,7 +37,7 @@ describe('CallContractReadFunction', () => {
     const keyService = createMemoryKeyService({
       keySource: { privateKey: DEFAULT_PRIVATE_KEY },
     });
-    const nat = createMemorySigner({
+    nat = createMemorySigner({
       signerAccountId: 'nat',
       client,
       keyService,
@@ -84,5 +87,103 @@ describe('CallContractReadFunction', () => {
     }
 
     const as = tx.processingSteps.conversionStep.transactionSummary.actionSummaries;
+  });
+
+  it('Default executionSteps - data is parsed and actionSummaries are converted', async () => {
+    const tx = await client.getTransactionResult({ transactionHash });
+
+    expect(tx.result.status).toBe('Success');
+
+    const { executionSteps } = tx.processingSteps;
+    expect(executionSteps).not.toBeNull();
+    if (executionSteps === null) return;
+
+    expect(executionSteps.length).toBeGreaterThan(0);
+
+    for (const executionStep of executionSteps) {
+      // Raw RPC actions are converted into default ActionSummaries;
+      for (const actionSummary of executionStep.actionSummaries) {
+        expect(actionSummary.actionType).toBeDefined();
+      }
+      // Raw base64 data is parsed - write_record returns nothing, so the data must be null;
+      if (executionStep.result.status === 'Success') {
+        expect(executionStep.result.data).toBeNull();
+      }
+    }
+  });
+
+  it('Custom deserializeExecutionSteps', async () => {
+    const tx = await client.getTransactionResult({
+      transactionHash,
+      options: {
+        deserializeExecutionSteps: (args: DeserializeTransactionExecutionStepsArgs) => {
+          // Custom deserializer receives fully assembled steps with raw data and actionSummaries;
+          for (const rawExecutionStep of args.rawExecutionSteps) {
+            expect(typeof rawExecutionStep.executionStepId).toBe('string');
+            if (rawExecutionStep.result.status === 'Success') {
+              expect(typeof rawExecutionStep.result.data).toBe('string');
+            }
+          }
+          return { stepsCount: args.rawExecutionSteps.length };
+        },
+      },
+    });
+
+    expect(tx.result.status).toBe('Success');
+    if (tx.result.status !== 'Success') return;
+
+    expect(tx.processingSteps.executionSteps).toEqual({ stepsCount: 1 });
+  });
+
+  it('Custom deserializeExecutionSteps throws', async () => {
+    const tx = await client.safeGetTransactionResult({
+      transactionHash,
+      options: {
+        deserializeExecutionSteps: () => {
+          throw new Error('Boom');
+        },
+      },
+    });
+
+    assertNatErrKind(tx, 'Client.GetTransactionResult.DeserializeExecutionSteps.Failed');
+  });
+
+  it('ExecutionError - executionSteps are built', async () => {
+    const signedTransaction = await nat.signTransaction({
+      intent: {
+        actions: [
+          functionCall({
+            functionName: 'non_existent_function',
+            functionArgs: {},
+            gasLimit: { teraGas: '30' },
+          }),
+        ],
+        receiverAccountId: 'c.nat',
+      },
+    });
+
+    // The transaction fails during execution, so we ignore the send error and
+    // fetch the result by hash;
+    await client.safeSendSignedTransaction({ signedTransaction });
+    await safeSleep(500);
+
+    const tx = await client.getTransactionResult({
+      transactionHash: signedTransaction.transactionHash,
+    });
+
+    expect(tx.result.status).toBe('ExecutionError');
+
+    const { executionSteps, refundSteps } = tx.processingSteps;
+    expect(executionSteps).not.toBeNull();
+    if (executionSteps === null) return;
+
+    expect(executionSteps.length).toBeGreaterThan(0);
+    expect(Array.isArray(refundSteps)).toBe(true);
+
+    for (const executionStep of executionSteps) {
+      for (const actionSummary of executionStep.actionSummaries) {
+        expect(actionSummary.actionType).toBeDefined();
+      }
+    }
   });
 });

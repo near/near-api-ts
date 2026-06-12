@@ -1,22 +1,30 @@
+import type { Result } from '../../../../../../../../../types/_common/common';
 import type { ConversionStepSuccess } from '../../../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep';
-import type { ExecutionSteps } from '../../../../../../../../../types/_common/transactionDetails/processingSteps/executionStep';
+import type {
+  ExecutionSteps,
+  RawExecutionStep,
+} from '../../../../../../../../../types/_common/transactionDetails/processingSteps/executionStep';
 import type { RefundStep } from '../../../../../../../../../types/_common/transactionDetails/processingSteps/refundStep';
+import type { InnerGetTransactionResultArgs } from '../../../../../../../../../types/client/methods/transaction/getTransactionResult';
+import type { NatError } from '../../../../../../../../_common/natError';
 import type { RpcActionReceipt } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
 import type { RpcReceiptOutcome } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
 import type { RpcTransactionSummary } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
+import { result } from '../../../../../../../../_common/utils/result';
+import { baseDeserializeExecutionSteps } from '../../baseDeserializeExecutionSteps';
 import { createReceiptCreationMap, type ReceiptCreationMap } from './createReceiptCreationMap';
-import { getExecutionStep } from './getExecutionSteps/getExecutionStep';
+import { getRawExecutionStep } from './getRawExecutionSteps/getRawExecutionStep';
 import { getReceiptsWithOutcomes, type ReceiptsWithOutcomes } from './getReceiptsWithOutcomes';
 import { getRefundStep } from './getRefundStep';
 
-export const getExecutionSteps = (
+const getRawExecutionSteps = (
   receiptsWithOutcomes: ReceiptsWithOutcomes,
   receiptCreationMap: ReceiptCreationMap,
-): ExecutionSteps =>
+): RawExecutionStep[] =>
   receiptsWithOutcomes
     .filter(({ receipt }) => receipt.predecessorId !== 'system')
     .map(({ receipt, receiptOutcome }) =>
-      getExecutionStep(receipt, receiptOutcome, receiptCreationMap),
+      getRawExecutionStep(receipt, receiptOutcome, receiptCreationMap),
     );
 
 const getRefundSteps = (
@@ -36,10 +44,20 @@ export const getNonConversionSteps = (
   receipts: RpcActionReceipt[],
   receiptsOutcome: RpcReceiptOutcome[],
   conversionStepSuccess: ConversionStepSuccess,
-): NonConversionSteps => {
+  inputArgs: InnerGetTransactionResultArgs,
+): Result<
+  NonConversionSteps,
+  NatError<'Client.GetTransactionResult.DeserializeExecutionSteps.Failed'>
+> => {
   // To make sure we have at least one receipt outcome - theoretically it's possible that the
   // transaction just started and hasn't produced any receipts yet;
-  if (receiptsOutcome.length === 0) return { executionSteps: [], refundSteps: [] };
+  // We still run the deserialization so a custom deserializer defines the executionSteps shape;
+  if (receiptsOutcome.length === 0) {
+    const executionSteps = baseDeserializeExecutionSteps(inputArgs, []);
+    if (!executionSteps.ok) return executionSteps;
+
+    return result.ok({ executionSteps: executionSteps.value, refundSteps: [] });
+  }
 
   const receiptsWithOutcomes = getReceiptsWithOutcomes(
     transaction,
@@ -50,8 +68,14 @@ export const getNonConversionSteps = (
 
   const receiptCreationMap = createReceiptCreationMap(conversionStepSuccess, receiptsWithOutcomes);
 
-  return {
-    executionSteps: getExecutionSteps(receiptsWithOutcomes, receiptCreationMap),
+  const executionSteps = baseDeserializeExecutionSteps(
+    inputArgs,
+    getRawExecutionSteps(receiptsWithOutcomes, receiptCreationMap),
+  );
+  if (!executionSteps.ok) return executionSteps;
+
+  return result.ok({
+    executionSteps: executionSteps.value,
     refundSteps: getRefundSteps(receiptsWithOutcomes, receiptCreationMap),
-  };
+  });
 };
