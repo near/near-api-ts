@@ -1,8 +1,19 @@
+import type { ContractWasmHash } from '../common';
 import type { NearGas } from '../nearGas';
 import type { NearToken } from '../nearToken';
 
 export type CreateAccountActionSummary = {
   actionType: 'CreateAccount';
+};
+
+export type TransferActionSummary = {
+  actionType: 'Transfer';
+  amount: NearToken;
+};
+
+export type DeployContractActionSummary = {
+  actionType: 'DeployContract';
+  contractWasmHash: ContractWasmHash;
 };
 
 export type FunctionCallActionSummary<FCA> = {
@@ -14,5 +25,7 @@ export type FunctionCallActionSummary<FCA> = {
 };
 
 export type ActionSummary<FCA = unknown> =
-  | FunctionCallActionSummary<FCA>
-  | CreateAccountActionSummary;
+  | CreateAccountActionSummary
+  | TransferActionSummary
+  | DeployContractActionSummary
+  | FunctionCallActionSummary<FCA>;

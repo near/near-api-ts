@@ -29,5 +29,21 @@ export const baseGetActionSummary = (rpcAction: ActionView): ActionSummary => {
     };
   }
 
+  if ('Transfer' in rpcAction) {
+    const { Transfer } = rpcAction;
+    return {
+      actionType: 'Transfer' as const,
+      amount: yoctoNear(Transfer.deposit),
+    };
+  }
+
+  if ('DeployContract' in rpcAction) {
+    const { DeployContract } = rpcAction;
+    return {
+      actionType: 'DeployContract' as const,
+      contractWasmHash: DeployContract.code,
+    };
+  }
+
   throw new Error('unreachable');
 };

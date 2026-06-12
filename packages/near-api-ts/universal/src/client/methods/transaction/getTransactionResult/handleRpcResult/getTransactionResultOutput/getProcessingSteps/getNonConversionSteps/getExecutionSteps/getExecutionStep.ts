@@ -17,7 +17,6 @@ const getExecutionStepResult = (
     };
   }
 
-  // DeferredTo / ResolvedBy // ChainedTo / ExecutionContinues / ExecutionStep / NextExecutionStep
   if (typeof status === 'object' && 'SuccessReceiptId' in status) {
     return {
       status: 'Continuation',
@@ -79,8 +78,6 @@ const getExecutionStepBase = (
     logs: receiptOutcome.outcome.logs,
   };
 };
-
-
 
 export const getExecutionStep = (
   receipt: RpcActionReceiptTrimmed,

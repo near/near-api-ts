@@ -25,6 +25,7 @@ export type BorshBytes = Uint8Array;
 
 export type ReceiptId = CryptoHash;
 export type TransactionHash = CryptoHash;
+export type ContractWasmHash = CryptoHash;
 export type Log = string;
 
 /**

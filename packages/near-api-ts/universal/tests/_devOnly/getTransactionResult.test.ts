@@ -66,9 +66,9 @@ describe('getTransactionResult', () => {
     const mainnetClient = createMainnetClient()
 
     const mainnetTxResult = await mainnetClient.safeGetTransactionResult({
-      // transactionHash: 'HoWytDmLdYF4MnmayBSArwxef6Tj6pDYjnuNCVdSEnXe', // execute_intents - SIR
+      transactionHash: 'HoWytDmLdYF4MnmayBSArwxef6Tj6pDYjnuNCVdSEnXe', // execute_intents - SIR
       // transactionHash: 'GxFGnomJ8znxJkpSduxZk7c9F3nqh7waAvnWxdFfxshK', // v1.signer - respond - not SIR
-      transactionHash: 'DSnehcspPKHuX44brwy4gWDhJYBaKwcP21Hq4qqjncE1', // wrap.near - ft_transfer_call - not SIR
+      // transactionHash: 'DSnehcspPKHuX44brwy4gWDhJYBaKwcP21Hq4qqjncE1', // wrap.near - ft_transfer_call - not SIR
       policies: { transport: { rpcTypePreferences: ['Archival', 'Regular'] } },
     });
 
