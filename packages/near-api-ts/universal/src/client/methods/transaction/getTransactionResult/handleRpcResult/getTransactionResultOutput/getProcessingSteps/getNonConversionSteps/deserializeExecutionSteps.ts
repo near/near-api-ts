@@ -9,14 +9,14 @@ import type { MaybeBaseDeserializeTransactionExecutionStepsFn } from '../../../.
 import type { InnerGetTransactionResultArgs } from '../../../../../../../../../types/client/methods/transaction/getTransactionResult';
 import { type NatError, resultNatError } from '../../../../../../../../_common/natError';
 import { result } from '../../../../../../../../_common/utils/result';
-import { baseParseBase64Data } from '../../_common/parseBase64Data';
+import { tryParseBase64ToObject } from '../../_common/tryParseBase64ToObject';
 import { baseGetActionSummary } from '../_common/getActionSummaries';
 
 const baseGetExecutionStepResult = (
   rawResult: ExecutionStepResult<Base64String>,
 ): ExecutionStepResult<unknown> =>
   rawResult.status === 'Success'
-    ? { status: 'Success', data: baseParseBase64Data(rawResult.data) }
+    ? { status: 'Success', data: tryParseBase64ToObject(rawResult.data) }
     : rawResult;
 
 const getParsedExecutionStep = (rawExecutionStep: RawExecutionStep): ParsedExecutionStep => ({
