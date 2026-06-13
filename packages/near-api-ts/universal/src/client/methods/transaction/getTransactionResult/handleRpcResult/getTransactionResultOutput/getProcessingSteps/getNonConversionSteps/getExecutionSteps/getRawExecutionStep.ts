@@ -39,11 +39,11 @@ const getRawExecutionStepResult = (
   throw new Error(`Unexpected receipt execution outcome status: ${JSON.stringify(status)}`);
 };
 
-const getRawExecutionStepBase = (
+export const getRawExecutionStep = (
   receipt: RpcActionReceiptTrimmed,
   receiptOutcome: RpcReceiptOutcome,
   receiptCreationMap: ReceiptCreationMap,
-): Omit<RawExecutionStep, 'createdBy' | 'createdAt'> => {
+): RawExecutionStep => {
   const { Action } = receipt.receipt;
 
   const dataReceivers = Action.outputDataReceivers.map(({ dataId, receiverId }) => ({
@@ -68,6 +68,8 @@ const getRawExecutionStepBase = (
   return {
     executionStepId: receipt.receiptId,
     result: getRawExecutionStepResult(receiptOutcome.outcome.status),
+    createdAt: receiptCreationMap[receipt.receiptId].createdAt,
+    createdBy: { accountId: receipt.predecessorId },
     executedAt: { blockHash: receiptOutcome.blockHash.cryptoHash },
     executedBy: { accountId: receiptOutcome.outcome.executorId },
     producedSteps,
@@ -78,28 +80,5 @@ const getRawExecutionStepBase = (
     gasFee: yoctoNear(receiptOutcome.outcome.tokensBurnt),
     gasUsed: gas(receiptOutcome.outcome.gasBurnt),
     logs: receiptOutcome.outcome.logs,
-  };
-};
-
-export const getRawExecutionStep = (
-  receipt: RpcActionReceiptTrimmed,
-  receiptOutcome: RpcReceiptOutcome,
-  receiptCreationMap: ReceiptCreationMap,
-): RawExecutionStep => {
-  const base = getRawExecutionStepBase(receipt, receiptOutcome, receiptCreationMap);
-  const { createdAt } = receiptCreationMap[receipt.receiptId];
-
-  // We don't use spread operator for RawExecutionStepBase properties because it would break a
-  // logical grouping of properties and make a transaction reading in the console more difficult
-  const { executionStepId, result, ...restBase } = base;
-
-  return {
-    executionStepId,
-    result,
-    createdAt,
-    createdBy: {
-      accountId: receipt.predecessorId,
-    },
-    ...restBase,
   };
 };
