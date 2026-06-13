@@ -1,22 +1,34 @@
-import { describe, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import * as z from 'zod/mini';
 import { AccountIdZodSchema } from '../../../src/_common/schemas/zod/common/accountId';
 
 z.config(z.locales.en());
 
-const testSchema = z.object({
-  accountId: AccountIdZodSchema,
-});
-
 describe('AccountIdZodSchema', () => {
-  it('parses a valid account id', () => {
-    const res = testSchema.safeParse({
-      accountId: '12-1.',
-    });
+  it.each([
+    'ab',
+    'nat',
+    'bob.near',
+    'a-b.c_d.near',
+    '12-1',
+    'sub.account.testnet',
+    'a'.repeat(64),
+  ])('accepts a valid account id: %s', (accountId) => {
+    expect(AccountIdZodSchema.safeParse(accountId).success).toBe(true);
+  });
 
-    if (!res.success) {
-      console.log(z.prettifyError(res.error));
-      console.log(res.error);
-    }
+  it.each([
+    ['a', 'shorter than 2 chars'],
+    ['a'.repeat(65), 'longer than 64 chars'],
+    ['Bob', 'uppercase letters'],
+    ['nat.', 'trailing separator'],
+    ['.nat', 'leading separator'],
+    ['na..t', 'consecutive dot separators'],
+    ['na--t', 'consecutive dash separators'],
+    ['nat_', 'trailing underscore'],
+    ['na me', 'whitespace'],
+    ['ab!', 'illegal character'],
+  ])('rejects an invalid account id (%s): "%s"', (accountId) => {
+    expect(AccountIdZodSchema.safeParse(accountId).success).toBe(false);
   });
 });
