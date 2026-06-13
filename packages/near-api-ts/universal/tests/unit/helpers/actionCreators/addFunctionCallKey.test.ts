@@ -6,8 +6,8 @@ import {
 } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
-describe('addFunctionCallKey action', () => {
-  it('Ok', () => {
+describe('addFunctionCallKey', () => {
+  it('creates an action with various gasBudget and allowedFunctions options', () => {
     addFunctionCallKey({
       publicKey: randomEd25519KeyPair().publicKey,
       contractAccountId: 'nat',
@@ -23,19 +23,19 @@ describe('addFunctionCallKey action', () => {
     });
   });
 
-  it('InvalidSchema - no args', () => {
+  it('rejects missing args with Args.InvalidSchema', () => {
     // @ts-expect-error
     const res = safeAddFunctionCallKey();
     assertNatErrKind(res, 'CreateAction.AddFunctionCallKey.Args.InvalidSchema');
   });
 
-  it('InvalidSchema - invalid publicKey', () => {
+  it('rejects an invalid public key with Args.InvalidSchema', () => {
     // @ts-expect-error
     const res = safeAddFunctionCallKey({ publicKey: '123' });
     assertNatErrKind(res, 'CreateAction.AddFunctionCallKey.Args.InvalidSchema');
   });
 
-  it('InvalidSchema - invalid publicKey', () => {
+  it('rejects an empty allowedFunctions list with Args.InvalidSchema', () => {
     const res = safeAddFunctionCallKey({
       publicKey: randomEd25519KeyPair().publicKey,
       contractAccountId: 'nat',

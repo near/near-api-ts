@@ -2,8 +2,8 @@ import { describe, it } from 'vitest';
 import { near, safeTransfer, transfer, yoctoNear } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
-describe('Create Transfer action', () => {
-  it('Ok', () => {
+describe('transfer', () => {
+  it('creates an action from various amount formats', () => {
     transfer({ amount: near('1') });
     transfer({ amount: { near: '1' } });
 
@@ -14,13 +14,13 @@ describe('Create Transfer action', () => {
     transfer({ amount: { yoctoNear: '10' } });
   });
 
-  it('InvalidSchema - no args', () => {
+  it('rejects missing args with Args.InvalidSchema', () => {
     // @ts-expect-error
     const res = safeTransfer();
     assertNatErrKind(res, 'CreateAction.Transfer.Args.InvalidSchema');
   });
 
-  it('InvalidSchema - invalid amount', () => {
+  it('rejects an invalid amount with Args.InvalidSchema', () => {
     // @ts-expect-error
     const res = safeTransfer({ amount: 1 });
     assertNatErrKind(res, 'CreateAction.Transfer.Args.InvalidSchema');

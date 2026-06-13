@@ -15,8 +15,8 @@ const transaction = {
   blockHash: 'EDhhHZrpcbJ4RrswFrcsPjww9oa6LTruF5Q4Hq2dXYwP',
 };
 
-describe('Transaction', () => {
-  it('Ok', () => {
+describe('TransactionZodSchema', () => {
+  it('parses a valid transaction', () => {
     const res = TransactionZodSchema.safeParse(transaction);
     console.log(res);
   });

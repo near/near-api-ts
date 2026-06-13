@@ -5,8 +5,8 @@ import type { RpcEndpoints } from '../../../../../types/client/transport/transpo
 
 z.config(z.locales.en());
 
-describe('Ok', () => {
-  it('1 regular', async () => {
+describe('rpcEndpoints schema › valid', () => {
+  it('accepts a single regular endpoint', async () => {
     const x: RpcEndpoints = {
       regular: [{ url: 'http://localhost:8080' }],
     };
@@ -14,7 +14,7 @@ describe('Ok', () => {
     expect(res.success).toBe(true);
   });
 
-  it('1 archival', async () => {
+  it('accepts a single archival endpoint with headers', async () => {
     const x: RpcEndpoints = {
       archival: [
         {
@@ -27,7 +27,7 @@ describe('Ok', () => {
     expect(res.success).toBe(true);
   });
 
-  it('1 regular + 1 archival', async () => {
+  it('accepts both regular and archival endpoints', async () => {
     const x: RpcEndpoints = {
       regular: [{ url: 'http://localhost:8080' }],
       archival: [{ url: 'http://localhost:8080' }],
@@ -37,8 +37,8 @@ describe('Ok', () => {
   });
 });
 
-describe('Error', () => {
-  it('empty regular', async () => {
+describe('rpcEndpoints schema › invalid', () => {
+  it('rejects an empty regular list', async () => {
     const x: RpcEndpoints = {
       regular: [],
     };
@@ -46,7 +46,7 @@ describe('Error', () => {
     expect(res.success).toBe(false);
   });
 
-  it('empty regular + valid archival', async () => {
+  it('rejects an empty regular list even with valid archival', async () => {
     const x: RpcEndpoints = {
       regular: [],
       archival: [{ url: 'http://localhost:8080' }],
@@ -56,7 +56,7 @@ describe('Error', () => {
     expect(res.success).toBe(false);
   });
 
-  it('null regular + valid archival', async () => {
+  it('rejects a non-array regular value', async () => {
     const x: RpcEndpoints = {
       // @ts-expect-error
       regular: 'invalid',

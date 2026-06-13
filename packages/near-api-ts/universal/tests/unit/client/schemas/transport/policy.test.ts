@@ -8,13 +8,13 @@ import type { PartialTransportPolicy } from '../../../../../types/client/transpo
 
 z.config(z.locales.en());
 
-describe('Ok', () => {
-  it('defaultTransportPolicy', async () => {
+describe('transportPolicy schema › valid', () => {
+  it('accepts the default transport policy', async () => {
     const res = PartialTransportPolicyZodSchema.safeParse(defaultTransportPolicy);
     expect(res.success).toBe(true);
   });
 
-  it('rpcTypePreferences', async () => {
+  it('accepts archival rpcTypePreferences', async () => {
     const x: PartialTransportPolicy = {
       rpcTypePreferences: ['Archival'],
     };
@@ -23,8 +23,8 @@ describe('Ok', () => {
   });
 });
 
-describe('Error', () => {
-  it('rpcTypePreferences', async () => {
+describe('transportPolicy schema › invalid', () => {
+  it('rejects an empty rpcTypePreferences list', async () => {
     const x: PartialTransportPolicy = {
       // @ts-expect-error
       rpcTypePreferences: [],
@@ -33,7 +33,7 @@ describe('Error', () => {
     expect(res.success).toBe(false);
   });
   // retryBackoff
-  it('timeouts.requestMs', async () => {
+  it('rejects a requestMs below the minimum', async () => {
     const x: PartialTransportPolicy = {
       timeouts: {
         requestMs: 50, // should be >= 100ms
@@ -44,7 +44,7 @@ describe('Error', () => {
     expect(res.success).toBe(false);
   });
 
-  it('rpc.retryBackoff.multiplier', async () => {
+  it('rejects a retry backoff multiplier below 1', async () => {
     const x: PartialTransportPolicy = {
       rpc: {
         retryBackoff: {

@@ -6,8 +6,8 @@ const privateKey =
   'ed25519:3kDMsPd8EsgPNV2yarJFtKMvCtV4fN4MkwhaW5BXcNx4a2NhMjE8ycVb3Vu1yrhqZc31dCPHNNUYJV3UK9GbFFd6';
 const publicKey = 'ed25519:AkTn58AmaJcF7L15WqKUUfm8fv5gwzSymHXg3EDRpC44';
 
-describe('KeyPair', () => {
-  it('Safe creation', () => {
+describe('keyPair', () => {
+  it('creates a key pair from a valid private key', () => {
     const kp1 = safeKeyPair(privateKey);
 
     expect(kp1.ok).toBe(true);
@@ -17,7 +17,7 @@ describe('KeyPair', () => {
     }
   });
 
-  it('CreateKeyPair.Args.InvalidSchema', () => {
+  it('rejects malformed keys with CreateKeyPair.Args.InvalidSchema', () => {
     const kp1 = safeKeyPair('123');
     assertNatErrKind(kp1, 'CreateKeyPair.Args.InvalidSchema');
 

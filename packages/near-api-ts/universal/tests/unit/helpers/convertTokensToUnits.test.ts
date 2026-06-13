@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { convertTokensToUnits } from '../../../src/helpers/tokens/tokenConverter/convertTokensToUnits';
 
-describe('Convert Tokens To Units', () => {
+describe('convertTokensToUnits', () => {
   it.each([
     ['0', 1, 0n],
     ['0.0', 1, 0n],

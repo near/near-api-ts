@@ -20,8 +20,8 @@ const transaction: Transaction = {
   blockHash: 'EDhhHZrpcbJ4RrswFrcsPjww9oa6LTruF5Q4Hq2dXYwP',
 };
 
-describe('KeyService', () => {
-  it('SignTransaction.Ok', async () => {
+describe('memoryKeyService.signTransaction', () => {
+  it('signs a transaction and returns hash and signature', async () => {
     const keyService = createMemoryKeyService({ keySource: { privateKey } });
     const res = await signTransaction({ signDataProvider: keyService, transaction });
 
@@ -31,7 +31,7 @@ describe('KeyService', () => {
     );
   });
 
-  it('MemoryKeyService.SignTransaction.SigningKeyPair.NotFound', async () => {
+  it('fails with SigningKey.NotFound when no key matches the signer', async () => {
     const keyService = createMemoryKeyService({ keySource: { privateKey } });
 
     const res = await safeSignTransaction({

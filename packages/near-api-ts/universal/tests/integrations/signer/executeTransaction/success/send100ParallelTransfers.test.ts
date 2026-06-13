@@ -13,7 +13,7 @@ import { startSandbox } from '../../../../utils/sandbox/startSandbox';
 
 vi.setConfig({ testTimeout: 60000 });
 
-describe('100 native transfers', () => {
+describe('executeTransaction › success', () => {
   let client: Client;
 
   beforeAll(async () => {
@@ -22,7 +22,7 @@ describe('100 native transfers', () => {
     return () => sandbox.stop();
   });
 
-  it('100 native transfers by 10 FA keys', async () => {
+  it('sends 100 parallel native transfers using 10 function-call keys', async () => {
     const keyPairs = new Array(9).fill(0).map(() => randomEd25519KeyPair());
 
     const keyService = createMemoryKeyService({

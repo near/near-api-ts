@@ -2,18 +2,18 @@ import { describe, it } from 'vitest';
 import { deleteAccount, safeDeleteAccount } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
-describe('Delete Account action', () => {
-  it('Ok', () => {
+describe('deleteAccount', () => {
+  it('creates an action from a valid beneficiary', () => {
     deleteAccount({ beneficiaryAccountId: 'nat' });
   });
 
-  it('InvalidSchema - no args', () => {
+  it('rejects missing args with Args.InvalidSchema', () => {
     // @ts-expect-error
     const res = safeDeleteAccount();
     assertNatErrKind(res, 'CreateAction.DeleteAccount.Args.InvalidSchema');
   });
 
-  it('InvalidSchema - invalid amount', () => {
+  it('rejects an invalid beneficiary account id with Args.InvalidSchema', () => {
     const res = safeDeleteAccount({ beneficiaryAccountId: '###' });
     assertNatErrKind(res, 'CreateAction.DeleteAccount.Args.InvalidSchema');
   });

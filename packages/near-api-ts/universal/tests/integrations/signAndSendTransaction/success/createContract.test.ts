@@ -17,7 +17,7 @@ import { testKeys } from '../../../utils/testKeys';
 
 vi.setConfig({ testTimeout: 60000 });
 
-describe('Transaction success', () => {
+describe('safeSendSignedTransaction › success', () => {
   let client: Client;
   let keyService: MemoryKeyService;
 
@@ -33,7 +33,7 @@ describe('Transaction success', () => {
     return () => sandbox.stop();
   });
 
-  it('Create contract', async () => {
+  it('creates, funds, and deploys a contract in one transaction', async () => {
     const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
       accountId: 'nat',
       publicKey: DEFAULT_PUBLIC_KEY,

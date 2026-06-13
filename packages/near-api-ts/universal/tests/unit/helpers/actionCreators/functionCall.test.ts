@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { functionCall, safeFunctionCall, teraGas } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
-describe('Create FunctionCall action - ok', () => {
-  it('Ok', () => {
+describe('functionCall › valid', () => {
+  it('creates an action with only name and gasLimit', () => {
     const res = functionCall({
       functionName: 'create',
       gasLimit: teraGas('10'),
@@ -11,7 +11,7 @@ describe('Create FunctionCall action - ok', () => {
     expect(res.functionName).toBe('create');
   });
 
-  it('Ok - attachedDeposit', () => {
+  it('creates an action with an attachedDeposit', () => {
     const res = functionCall({
       functionName: 'create',
       gasLimit: teraGas('10'),
@@ -20,7 +20,7 @@ describe('Create FunctionCall action - ok', () => {
     expect(res.functionName).toBe('create');
   });
 
-  it('Ok - json functionArgs', () => {
+  it('creates an action with object functionArgs', () => {
     const res = functionCall({
       functionName: 'create',
       gasLimit: teraGas('10'),
@@ -29,7 +29,7 @@ describe('Create FunctionCall action - ok', () => {
     expect(res.functionName).toBe('create');
   });
 
-  it('Ok - json functionArgs', () => {
+  it('creates an action with primitive functionArgs', () => {
     const res = functionCall({
       functionName: 'create',
       gasLimit: teraGas('10'),
@@ -38,7 +38,7 @@ describe('Create FunctionCall action - ok', () => {
     expect(res.functionName).toBe('create');
   });
 
-  it('Ok - functionArgs + serializeArgs', () => {
+  it('creates an action with functionArgs and a custom serializeArgs', () => {
     const res = functionCall({
       functionName: 'create',
       gasLimit: teraGas('10'),
@@ -50,7 +50,7 @@ describe('Create FunctionCall action - ok', () => {
     expect(res.functionName).toBe('create');
   });
 
-  it('Ok - serializeArgs only', () => {
+  it('creates an action with serializeArgs and no functionArgs', () => {
     const res = functionCall({
       functionName: 'create',
       gasLimit: teraGas('10'),
@@ -62,8 +62,8 @@ describe('Create FunctionCall action - ok', () => {
   });
 });
 
-describe('Create FunctionCall action - errors', () => {
-  it('Args.InvalidSchema - Invalid gasLimit', () => {
+describe('functionCall › invalid', () => {
+  it('rejects a negative gasLimit with Args.InvalidSchema', () => {
     const res = safeFunctionCall({
       functionName: 'create',
       gasLimit: { teraGas: '-10' },
@@ -71,7 +71,7 @@ describe('Create FunctionCall action - errors', () => {
     assertNatErrKind(res, 'CreateAction.FunctionCall.Args.InvalidSchema');
   });
 
-  it('Args.InvalidSchema - invalid json', () => {
+  it('rejects non-JSON-serializable functionArgs with Args.InvalidSchema', () => {
     // @ts-expect-error
     const res = safeFunctionCall({
       functionName: 'x',
@@ -81,7 +81,7 @@ describe('Create FunctionCall action - errors', () => {
     assertNatErrKind(res, 'CreateAction.FunctionCall.Args.InvalidSchema');
   });
 
-  it('CustomSerializer.InvalidOutput', () => {
+  it('fails with SerializeArgs.InvalidOutput when serializeArgs returns a non-Uint8Array', () => {
     const res = safeFunctionCall({
       functionName: 'x',
       gasLimit: teraGas('10'),
@@ -94,7 +94,7 @@ describe('Create FunctionCall action - errors', () => {
     assertNatErrKind(res, 'CreateAction.FunctionCall.SerializeArgs.InvalidOutput');
   });
 
-  it('CustomSerializer.Failed', () => {
+  it('fails with SerializeArgs.Failed when serializeArgs throws', () => {
     const res = safeFunctionCall({
       functionName: 'x',
       gasLimit: teraGas('10'),

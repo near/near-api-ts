@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { keyPair, randomEd25519KeyPair } from '../../../../index';
 
 describe('randomEd25519KeyPair', () => {
-  it('Ok', async () => {
+  it('generates a valid ed25519 key pair', async () => {
     const randomKey = randomEd25519KeyPair();
     const fromRandom = keyPair(randomKey.privateKey);
     console.log(randomKey);

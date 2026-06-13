@@ -8,8 +8,8 @@ const testSchema = z.object({
   accountId: AccountIdZodSchema,
 });
 
-describe('AccountId', () => {
-  it('Ok', () => {
+describe('AccountIdZodSchema', () => {
+  it('parses a valid account id', () => {
     const res = testSchema.safeParse({
       accountId: '12-1.',
     });

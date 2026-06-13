@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { createMemoryKeyService, randomEd25519KeyPair } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
-describe('MemoryKeyService', () => {
-  it('HasKey - ok > true', async () => {
+describe('memoryKeyService.hasKey', () => {
+  it('returns true when the key is present', async () => {
     const kp1 = randomEd25519KeyPair();
 
     const keyService = createMemoryKeyService({
@@ -13,7 +13,7 @@ describe('MemoryKeyService', () => {
     expect(result).toBe(true);
   });
 
-  it('HasKey - ok > false', async () => {
+  it('returns false when the key is absent', async () => {
     const keyService = createMemoryKeyService({
       keySource: { privateKey: randomEd25519KeyPair().privateKey },
     });
@@ -23,7 +23,7 @@ describe('MemoryKeyService', () => {
     expect(result).toBe(false);
   });
 
-  it('HasKey - err > Args.InvalidSchema', async () => {
+  it('rejects an invalid public key with Args.InvalidSchema', async () => {
     const keyService = createMemoryKeyService({
       keySource: { privateKey: randomEd25519KeyPair().privateKey },
     });

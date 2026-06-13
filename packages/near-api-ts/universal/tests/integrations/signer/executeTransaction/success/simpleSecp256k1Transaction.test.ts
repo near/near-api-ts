@@ -13,7 +13,7 @@ import { startSandbox } from '../../../../utils/sandbox/startSandbox';
 
 vi.setConfig({ testTimeout: 60000 });
 
-describe('native transfer by secp256k1 key', () => {
+describe('executeTransaction › success', () => {
   let client: Client;
 
   beforeAll(async () => {
@@ -22,7 +22,7 @@ describe('native transfer by secp256k1 key', () => {
     return () => sandbox.stop();
   });
 
-  it('native transfer', async () => {
+  it('signs and sends a native transfer with a secp256k1 key', async () => {
     const keyService1 = createMemoryKeyService({
       keySource: { privateKey: DEFAULT_PRIVATE_KEY },
     });
