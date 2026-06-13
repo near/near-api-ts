@@ -7,7 +7,7 @@ import type {
 import type {
   ParsedExecutionStep,
   RawExecutionStep,
-} from '../../../../../types/_common/transactionDetails/processingSteps/executionStep';
+} from '../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
 import type {
   DeserializeTransactionActionSummariesArgs,
   DeserializeTransactionExecutionStepsArgs,

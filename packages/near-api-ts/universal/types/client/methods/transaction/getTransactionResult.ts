@@ -3,7 +3,7 @@ import type { Base64String, CryptoHash, Result } from '../../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { TransactionErrorContext } from '../../../_common/transaction/rpcTransactionErrorContext';
 import type { RawActionSummary } from '../../../_common/transactionDetails/actionSummaries';
-import type { RawExecutionStep } from '../../../_common/transactionDetails/processingSteps/executionStep';
+import type { RawExecutionStep } from '../../../_common/transactionDetails/processingSteps/executionSteps/executionStep';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   BaseDeserializeTransactionExecutionStepsFn,

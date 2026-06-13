@@ -1,7 +1,14 @@
 import type { Base64String, CryptoHash } from '../common';
 import type { RawActionSummary } from './actionSummaries';
-import type { ConversionStepError, ConversionStepSuccess } from './processingSteps/conversionStep';
-import type { ExecutionSteps, RawExecutionStep } from './processingSteps/executionStep';
+import type {
+  ConversionStepFailure,
+  ConversionStepSuccess,
+} from './processingSteps/conversionStep';
+import type { ExecutionError } from './processingSteps/executionSteps/executionError';
+import type {
+  ExecutionSteps,
+  RawExecutionStep,
+} from './processingSteps/executionSteps/executionStep';
 import type { RefundStep } from './processingSteps/refundStep';
 
 // DeserializeTransactionResultData
@@ -61,7 +68,7 @@ export type TransactionSuccess<
   };
 };
 
-export type TransactionConversionError<
+export type TransactionConversionFailure<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
 > = {
   transactionHash: CryptoHash;
@@ -70,20 +77,20 @@ export type TransactionConversionError<
     error: { kind: unknown; context: unknown };
   };
   processingSteps: {
-    conversionStep: ConversionStepError<ASF>;
+    conversionStep: ConversionStepFailure<ASF>;
     executionSteps: null;
     refundSteps: null;
   };
 };
 
-export type TransactionExecutionError<
+export type TransactionExecutionFailure<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
   ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
 > = {
   transactionHash: CryptoHash;
   result: {
     status: 'ExecutionError';
-    error: { kind: unknown; context: unknown };
+    error: ExecutionError;
   };
   processingSteps: {
     conversionStep: ConversionStepSuccess<ASF>;
@@ -98,5 +105,5 @@ export type TransactionResult<
   ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > =
   | TransactionSuccess<RDF, ASF, ESF>
-  | TransactionConversionError<ASF>
-  | TransactionExecutionError<ASF, ESF>;
+  | TransactionConversionFailure<ASF>
+  | TransactionExecutionFailure<ASF, ESF>;

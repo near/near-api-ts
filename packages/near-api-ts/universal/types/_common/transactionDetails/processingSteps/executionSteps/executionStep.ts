@@ -1,11 +1,18 @@
-import type { AccountId, Base64String, BlockHash, CryptoHash, Log, ReceiptId } from '../../common';
-import type { NearGas } from '../../nearGas';
-import type { NearToken } from '../../nearToken';
-import type { ParsedActionSummary, RawActionSummary } from '../actionSummaries';
+import type {
+  AccountId,
+  Base64String,
+  BlockHash,
+  CryptoHash,
+  Log,
+  ReceiptId,
+} from '../../../common';
+import type { NearGas } from '../../../nearGas';
+import type { NearToken } from '../../../nearToken';
+import type { ParsedActionSummary, RawActionSummary } from '../../actionSummaries';
 import type {
   BaseDeserializeTransactionExecutionStepsFn,
   MaybeBaseDeserializeTransactionExecutionStepsFn,
-} from '../transactionResult';
+} from '../../transactionResult';
 
 export type RequiredDataId = CryptoHash;
 
@@ -25,7 +32,7 @@ export type ExecutionStepResult<RD> =
     }
   | {
       status: 'Error';
-      error: { kind: unknown; context: unknown };
+      error: unknown;
     };
 
 type ProducedStep =

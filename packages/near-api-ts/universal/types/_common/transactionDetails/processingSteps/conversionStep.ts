@@ -42,7 +42,7 @@ export type ConversionStepSuccess<
   };
 };
 
-export type ConversionStepError<
+export type ConversionStepFailure<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
 > = ConversionStepCommon<ASF> & {
   result: {

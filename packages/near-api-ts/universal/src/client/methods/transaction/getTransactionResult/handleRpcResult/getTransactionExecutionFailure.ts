@@ -1,5 +1,6 @@
+import type { ActionError } from '@near-js/jsonrpc-types';
 import type { Result } from '../../../../../../types/_common/common';
-import type { TransactionExecutionError } from '../../../../../../types/_common/transactionDetails/transactionResult';
+import type { TransactionExecutionFailure } from '../../../../../../types/_common/transactionDetails/transactionResult';
 import type { InnerGetTransactionResultArgs } from '../../../../../../types/client/methods/transaction/getTransactionResult';
 import type { NatError } from '../../../../../_common/natError';
 import type { RpcActionReceipt } from '../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
@@ -7,18 +8,19 @@ import type { RpcReceiptOutcome } from '../../../../../_common/schemas/zod/rpc/t
 import type { RpcTransactionOutcomeSuccess } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
 import type { RpcTransactionSummary } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
 import { result } from '../../../../../_common/utils/result';
+import { getExecutionError } from './_common/getExecutionError/getExecutionError';
 import { getConversionStepSuccess } from './_common/getProcessingSteps/getConversionStep';
 import { getNonConversionSteps } from './_common/getProcessingSteps/getNonConversionSteps/getNonConversionSteps';
 
-export const getTransactionExecutionError = (
+export const getTransactionExecutionFailure = (
   transaction: RpcTransactionSummary,
   transactionOutcome: RpcTransactionOutcomeSuccess,
   receipts: RpcActionReceipt[],
   receiptsOutcome: RpcReceiptOutcome[],
-  status: any,
+  actionError: ActionError,
   inputArgs: InnerGetTransactionResultArgs,
 ): Result<
-  TransactionExecutionError<undefined, undefined>,
+  TransactionExecutionFailure<undefined, undefined>,
   | NatError<'Client.GetTransactionResult.DeserializeResultData.Failed'>
   | NatError<'Client.GetTransactionResult.DeserializeActionSummaries.Failed'>
   | NatError<'Client.GetTransactionResult.DeserializeExecutionSteps.Failed'>
@@ -43,10 +45,7 @@ export const getTransactionExecutionError = (
     transactionHash: transaction.hash.cryptoHash,
     result: {
       status: 'ExecutionError',
-      error: {
-        kind: 'any',
-        context: status.Failure.ActionError,
-      },
+      error: getExecutionError(actionError),
     },
     processingSteps: {
       conversionStep: conversionStepSuccess.value,

@@ -4,7 +4,7 @@ import type {
   ExecutionSteps,
   ParsedExecutionStep,
   RawExecutionStep,
-} from '../../../../../../../../../../types/_common/transactionDetails/processingSteps/executionStep';
+} from '../../../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
 import type { MaybeBaseDeserializeTransactionExecutionStepsFn } from '../../../../../../../../../../types/_common/transactionDetails/transactionResult';
 import type { InnerGetTransactionResultArgs } from '../../../../../../../../../../types/client/methods/transaction/getTransactionResult';
 import { type NatError, resultNatError } from '../../../../../../../../../_common/natError';

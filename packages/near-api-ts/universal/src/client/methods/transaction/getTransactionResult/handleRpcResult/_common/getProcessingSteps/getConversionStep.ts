@@ -2,7 +2,7 @@ import type { ActionView } from '@near-js/jsonrpc-types';
 import { gas, yoctoNear } from '../../../../../../../../index';
 import type { Result } from '../../../../../../../../types/_common/common';
 import type {
-  ConversionStepError,
+  ConversionStepFailure,
   ConversionStepSuccess,
   TransactionActionSummaries,
   TransactionSummary,
@@ -18,7 +18,7 @@ import type { RpcTransactionSummary } from '../../../../../../../_common/schemas
 import { result } from '../../../../../../../_common/utils/result';
 import { baseGetActionSummary, getRawActionSummary } from './_common/getActionSummaries';
 
-export const getActionSummaries = <ASF extends MaybeBaseDeserializeTransactionActionSummariesFn>(
+const getActionSummaries = <ASF extends MaybeBaseDeserializeTransactionActionSummariesFn>(
   rpcActions: ActionView[],
   inputArgs: InnerGetTransactionResultArgs,
 ): Result<
@@ -31,7 +31,9 @@ export const getActionSummaries = <ASF extends MaybeBaseDeserializeTransactionAc
   if (inputArgs.options?.deserializeActionSummaries) {
     try {
       return result.ok(
-        inputArgs.options.deserializeActionSummaries({ rawActionSummaries }) as TransactionActionSummaries<ASF>,
+        inputArgs.options.deserializeActionSummaries({
+          rawActionSummaries,
+        }) as TransactionActionSummaries<ASF>,
       );
     } catch (cause) {
       return resultNatError('Client.GetTransactionResult.DeserializeActionSummaries.Failed', {
@@ -88,12 +90,12 @@ export const getConversionStepSuccess = (
   });
 };
 
-export const getConversionStepError = (
+export const getConversionStepFailure = (
   transaction: RpcTransactionSummary,
   transactionOutcome: RpcTransactionOutcomeFailure,
   inputArgs: InnerGetTransactionResultArgs,
 ): Result<
-  ConversionStepError,
+  ConversionStepFailure,
   NatError<'Client.GetTransactionResult.DeserializeActionSummaries.Failed'>
 > => {
   const transactionSummary = getTransactionSummary(transaction, inputArgs);

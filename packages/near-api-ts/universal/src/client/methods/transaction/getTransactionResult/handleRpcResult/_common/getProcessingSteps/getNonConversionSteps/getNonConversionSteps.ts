@@ -1,6 +1,6 @@
 import type { Result } from '../../../../../../../../../types/_common/common';
 import type { ConversionStepSuccess } from '../../../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep';
-import type { ExecutionSteps } from '../../../../../../../../../types/_common/transactionDetails/processingSteps/executionStep';
+import type { ExecutionSteps } from '../../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
 import type { RefundStep } from '../../../../../../../../../types/_common/transactionDetails/processingSteps/refundStep';
 import type { InnerGetTransactionResultArgs } from '../../../../../../../../../types/client/methods/transaction/getTransactionResult';
 import type { NatError } from '../../../../../../../../_common/natError';

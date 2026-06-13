@@ -19,8 +19,8 @@ import {
   isRpcTransactionOutcomeFailure,
   isRpcTransactionOutcomeSuccess,
 } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
-import { getTransactionConversionError } from './getTransactionConversionError';
-import { getTransactionExecutionError } from './getTransactionExecutionError';
+import { getTransactionConversionFailure } from './getTransactionConversionFailure';
+import { getTransactionExecutionFailure } from './getTransactionExecutionFailure';
 import { getTransactionSuccess } from './getTransactionSuccess';
 
 const getCurrentProcessingStage = (
@@ -96,7 +96,12 @@ export const handleRpcResult = (
     'InvalidTxError' in status.Failure &&
     isRpcTransactionOutcomeFailure(transactionOutcome)
   )
-    return getTransactionConversionError(transaction, transactionOutcome, status, inputArgs);
+    return getTransactionConversionFailure(
+      transaction,
+      transactionOutcome,
+      status.Failure.InvalidTxError,
+      inputArgs,
+    );
 
   // #2.3 When the transaction was converted into a receipt and included in the block
   // but failed during execution
@@ -105,12 +110,12 @@ export const handleRpcResult = (
     'ActionError' in status.Failure &&
     isRpcTransactionOutcomeSuccess(transactionOutcome)
   )
-    return getTransactionExecutionError(
+    return getTransactionExecutionFailure(
       transaction,
       transactionOutcome,
       receipts,
       receiptsOutcome,
-      status,
+      status.Failure.ActionError,
       inputArgs,
     );
 

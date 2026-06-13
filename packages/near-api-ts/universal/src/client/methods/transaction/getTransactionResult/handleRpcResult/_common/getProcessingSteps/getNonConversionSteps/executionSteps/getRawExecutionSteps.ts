@@ -3,7 +3,7 @@ import type { Base64String } from '../../../../../../../../../../types/_common/c
 import type {
   ExecutionStepResult,
   RawExecutionStep,
-} from '../../../../../../../../../../types/_common/transactionDetails/processingSteps/executionStep';
+} from '../../../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
 import type { RpcActionReceiptTrimmed } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
 import type { RpcReceiptOutcome } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
 import { getRawActionSummary } from '../../_common/getActionSummaries';
