@@ -8,8 +8,9 @@ import {
   type MemoryKeyService,
   type MemorySignerFactory,
 } from '../../../../../../../index';
+import { safeSleep } from '../../../../../../../src/_common/utils/sleep';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
-import { createDefaultClient } from '../../../../../../utils/common';
+import { createDefaultClient, log } from '../../../../../../utils/common';
 import { startSandbox } from '../../../../../../utils/sandbox/startSandbox';
 
 vi.setConfig({ testTimeout: 60000 });
@@ -22,8 +23,8 @@ describe('CreateAccount', () => {
   beforeAll(async () => {
     const sandbox = await startSandbox();
 
-    client = await createDefaultClient(sandbox);
-    keyService = await createMemoryKeyService({
+    client = createDefaultClient(sandbox);
+    keyService = createMemoryKeyService({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
     });
     createSigner = createMemorySignerFactory({ client, keyService });
@@ -31,18 +32,17 @@ describe('CreateAccount', () => {
   });
 
   it('AlreadyExist', async () => {
-    const nat = await createSigner('nat');
+    const errorKind =
+      'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist';
+    const nat = createSigner('nat');
 
-    const res = await nat.safeExecuteTransaction({
+    const tx = await nat.safeExecuteTransaction({
       intent: {
         action: createAccount(),
         receiverAccountId: 'bob',
       },
     });
 
-    assertNatErrKind(
-      res,
-      'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist',
-    );
+    assertNatErrKind(tx, errorKind);
   });
 });

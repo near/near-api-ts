@@ -1,32 +1,20 @@
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
-import { beforeAll, describe, it, vi } from 'vitest';
-import {
-  type Client,
-  createAccount,
-  createMemoryKeyService,
-  type MemoryKeyService,
-} from '../../../../../../index';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { type Client, createAccount, keyPair } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
-import { testKeys } from '../../../../../utils/testKeys';
 
 vi.setConfig({ testTimeout: 60000 });
 
 describe('Execute transaction', () => {
   let client: Client;
-  let keyService: MemoryKeyService;
+  const defaultKeyPair = keyPair(DEFAULT_PRIVATE_KEY);
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyService = createMemoryKeyService({
-      keySources: [
-        { privateKey: DEFAULT_PRIVATE_KEY },
-        { privateKey: testKeys.fc.forContract.privateKey },
-      ],
-    });
     return () => sandbox.stop();
   });
 
@@ -36,8 +24,8 @@ describe('Execute transaction', () => {
       publicKey: DEFAULT_PUBLIC_KEY,
     });
 
-    const signedTransaction =await signTransaction({
-      signDataProvider: keyService,
+    const signedTransaction = await signTransaction({
+      signDataProvider: defaultKeyPair,
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: DEFAULT_PUBLIC_KEY,
@@ -56,5 +44,9 @@ describe('Execute transaction', () => {
       res,
       'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist',
     );
+
+    // res.error is now narrowed to the AlreadyExist member:
+    const tx = res.error.context.transactionHash;
+    expect(tx).toBeTypeOf('string');
   });
 });

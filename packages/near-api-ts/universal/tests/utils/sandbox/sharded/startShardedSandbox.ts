@@ -9,7 +9,7 @@ import { type NearToken, near, yoctoNear } from '../../../../index';
 import { safeSleep } from '../../../../src/_common/utils/sleep';
 import { getAvailablePorts } from './getAvailablePorts';
 
-const SANDBOX_VERSION = '2.11.1';
+const SANDBOX_VERSION = '2.12.0';
 export const LOCALHOST = '127.0.0.1';
 
 const NODE0_PUBLIC_KEY = 'ed25519:7PGseFbWxvYVgZ89K1uTJKYoKetWs7BJtbyXDzfbAcqX';

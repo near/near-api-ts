@@ -1,7 +1,7 @@
 import { GenesisAccount, Sandbox } from 'near-sandbox';
 
 const sandbox = await Sandbox.start({
-  version: '2.11.1',
+  version: '2.12.0',
   config: {
     rpcPort: 4567,
     additionalAccounts: [
