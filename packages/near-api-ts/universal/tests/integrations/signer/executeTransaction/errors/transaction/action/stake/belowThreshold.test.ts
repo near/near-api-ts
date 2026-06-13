@@ -9,14 +9,14 @@ import {
   near,
   randomEd25519KeyPair,
   stake,
-} from '../../../../../../../index';
-import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
-import { createDefaultClient } from '../../../../../../utils/common';
-import { startSandbox } from '../../../../../../utils/sandbox/startSandbox';
+} from '../../../../../../../../index';
+import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
+import { createDefaultClient } from '../../../../../../../utils/common';
+import { startSandbox } from '../../../../../../../utils/sandbox/startSandbox';
 
 vi.setConfig({ testTimeout: 60000 });
 
-describe('Stake', () => {
+describe('executeTransaction › Transaction.Action.Stake.BelowThreshold', () => {
   let client: Client;
   let keyService: MemoryKeyService;
   let createSigner: MemorySignerFactory;
@@ -31,7 +31,7 @@ describe('Stake', () => {
     return () => sandbox.stop();
   });
 
-  it('BelowThreshold', async () => {
+  it('fails with Transaction.Action.Stake.BelowThreshold when the stake is below the seat price', async () => {
     const nat = await createSigner('nat');
 
     const res = await nat.safeExecuteTransaction({

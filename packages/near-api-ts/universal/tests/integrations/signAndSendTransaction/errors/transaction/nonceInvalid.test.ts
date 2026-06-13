@@ -14,7 +14,7 @@ import { testKeys } from '../../../../utils/testKeys';
 
 vi.setConfig({ testTimeout: 60000 });
 
-describe('Signer Does Not exist', () => {
+describe('safeSendSignedTransaction › Transaction.Nonce.Invalid', () => {
   let client: Client;
   let keyService: MemoryKeyService;
 
@@ -30,8 +30,8 @@ describe('Signer Does Not exist', () => {
     return () => sandbox.stop();
   });
 
-  it('not-existed signer', async () => {
-    const { blockHash } = await client.getAccountAccessKey({
+  it('fails with Transaction.Nonce.Invalid when the nonce is already used', async () => {
+    const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
       accountId: 'nat',
       publicKey: DEFAULT_PUBLIC_KEY,
     });
@@ -39,9 +39,9 @@ describe('Signer Does Not exist', () => {
     const signedTransaction = await signTransaction({
       signDataProvider: keyService,
       transaction: {
-        signerAccountId: '123.nat',
+        signerAccountId: 'nat',
         signerPublicKey: DEFAULT_PUBLIC_KEY,
-        nonce: 1,
+        nonce: accountAccessKey.nonce + 0,
         blockHash,
         action: transfer({ amount: { near: '100' } }),
         receiverAccountId: 'bob',
@@ -51,7 +51,6 @@ describe('Signer Does Not exist', () => {
     const res = await client.safeSendSignedTransaction({
       signedTransaction,
     });
-
-    assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound');
+    assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid');
   });
 });

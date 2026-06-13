@@ -3,7 +3,6 @@ import { beforeAll, describe, it, vi } from 'vitest';
 import {
   type Client,
   createMemoryKeyService,
-  deleteAccount,
   type MemoryKeyService,
   transfer,
 } from '../../../../../index';
@@ -15,7 +14,7 @@ import { testKeys } from '../../../../utils/testKeys';
 
 vi.setConfig({ testTimeout: 60000 });
 
-describe('Execute transaction', () => {
+describe('safeSendSignedTransaction › Transaction.Expired', () => {
   let client: Client;
   let keyService: MemoryKeyService;
 
@@ -31,21 +30,16 @@ describe('Execute transaction', () => {
     return () => sandbox.stop();
   });
 
-  it('Transfer to non-exist account', async () => {
-    const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
-      accountId: 'nat',
-      publicKey: DEFAULT_PUBLIC_KEY,
-    });
-
+  it('fails with Transaction.Expired when the block hash is too old', async () => {
     const signedTransaction = await signTransaction({
       signDataProvider: keyService,
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: DEFAULT_PUBLIC_KEY,
-        nonce: accountAccessKey.nonce + 1,
-        blockHash,
-        action: transfer({ amount: { near: '1' } }),
-        receiverAccountId: '123.nat',
+        nonce: 1,
+        blockHash: '6nrziuxAjeYvmtusxDhSvfPkXNUXDmQznKXebzE5wC1G',
+        action: transfer({ amount: { near: '100' } }),
+        receiverAccountId: 'bob',
       },
     });
 
@@ -53,11 +47,11 @@ describe('Execute transaction', () => {
       signedTransaction,
     });
 
-    assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound');
+    assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Expired');
   });
 
-  it('Delete account of non-exist account', async () => {
-    const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+  it('fails with Transaction.Expired when the nonce is too far ahead', async () => {
+    const { blockHash } = await client.getAccountAccessKey({
       accountId: 'nat',
       publicKey: DEFAULT_PUBLIC_KEY,
     });
@@ -67,10 +61,10 @@ describe('Execute transaction', () => {
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: DEFAULT_PUBLIC_KEY,
-        nonce: accountAccessKey.nonce + 1,
+        nonce: 2_000_000_000_000_000,
         blockHash,
-        action: deleteAccount({ beneficiaryAccountId: 'bob' }),
-        receiverAccountId: '123.nat',
+        action: transfer({ amount: { near: '100' } }),
+        receiverAccountId: 'bob',
       },
     });
 
@@ -78,6 +72,6 @@ describe('Execute transaction', () => {
       signedTransaction,
     });
 
-    assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound');
+    assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Expired');
   });
 });

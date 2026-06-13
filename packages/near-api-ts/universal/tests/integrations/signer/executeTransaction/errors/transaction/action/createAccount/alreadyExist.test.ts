@@ -7,15 +7,15 @@ import {
   createMemorySignerFactory,
   type MemoryKeyService,
   type MemorySignerFactory,
-} from '../../../../../../../index';
-import { safeSleep } from '../../../../../../../src/_common/utils/sleep';
-import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
-import { createDefaultClient, log } from '../../../../../../utils/common';
-import { startSandbox } from '../../../../../../utils/sandbox/startSandbox';
+} from '../../../../../../../../index';
+import { safeSleep } from '../../../../../../../../src/_common/utils/sleep';
+import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
+import { createDefaultClient, log } from '../../../../../../../utils/common';
+import { startSandbox } from '../../../../../../../utils/sandbox/startSandbox';
 
 vi.setConfig({ testTimeout: 60000 });
 
-describe('CreateAccount', () => {
+describe('executeTransaction › Transaction.Action.CreateAccount.AlreadyExist', () => {
   let client: Client;
   let keyService: MemoryKeyService;
   let createSigner: MemorySignerFactory;
@@ -31,7 +31,7 @@ describe('CreateAccount', () => {
     return () => sandbox.stop();
   });
 
-  it('AlreadyExist', async () => {
+  it('fails with Transaction.Action.CreateAccount.AlreadyExist when creating an existing account', async () => {
     const errorKind =
       'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist';
     const nat = createSigner('nat');

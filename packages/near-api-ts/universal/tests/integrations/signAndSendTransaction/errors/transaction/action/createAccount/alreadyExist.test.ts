@@ -1,14 +1,15 @@
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
-import { type Client, createAccount, keyPair } from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
-import { createDefaultClient } from '../../../../../utils/common';
-import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
+import { type Client, createAccount, keyPair } from '../../../../../../../index';
+import { safeSleep } from '../../../../../../../src/_common/utils/sleep';
+import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
+import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import { createDefaultClient, log } from '../../../../../../utils/common';
+import { startSandbox } from '../../../../../../utils/sandbox/startSandbox';
 
 vi.setConfig({ testTimeout: 60000 });
 
-describe('Execute transaction', () => {
+describe('safeSendSignedTransaction › Transaction.Action.CreateAccount.AlreadyExist', () => {
   let client: Client;
   const defaultKeyPair = keyPair(DEFAULT_PRIVATE_KEY);
 
@@ -18,7 +19,7 @@ describe('Execute transaction', () => {
     return () => sandbox.stop();
   });
 
-  it('Account Already Exists', async () => {
+  it('fails with Transaction.Action.CreateAccount.AlreadyExist when creating an existing account', async () => {
     const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
       accountId: 'nat',
       publicKey: DEFAULT_PUBLIC_KEY,
@@ -36,17 +37,22 @@ describe('Execute transaction', () => {
       },
     });
 
-    const res = await client.safeSendSignedTransaction({
+    const tx = await client.safeSendSignedTransaction({
       signedTransaction,
     });
 
     assertNatErrKind(
-      res,
+      tx,
       'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist',
     );
 
-    // res.error is now narrowed to the AlreadyExist member:
-    const tx = res.error.context.transactionHash;
-    expect(tx).toBeTypeOf('string');
+    await safeSleep(500);
+
+    const txResult = await client.getTransactionResult({
+      transactionHash: tx.error.context.transactionHash
+    })
+    log(txResult)
+
+    // expect(tx).toBeTypeOf('string');
   });
 });

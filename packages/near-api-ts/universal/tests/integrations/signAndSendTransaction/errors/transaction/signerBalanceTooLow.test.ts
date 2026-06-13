@@ -14,7 +14,7 @@ import { testKeys } from '../../../../utils/testKeys';
 
 vi.setConfig({ testTimeout: 60000 });
 
-describe('Invalid signature', () => {
+describe('safeSendSignedTransaction › Transaction.Signer.Balance.TooLow', () => {
   let client: Client;
   let keyService: MemoryKeyService;
 
@@ -30,7 +30,7 @@ describe('Invalid signature', () => {
     return () => sandbox.stop();
   });
 
-  it('invalid signature', async () => {
+  it('fails with Transaction.Signer.Balance.TooLow when the signer cannot cover the transfer', async () => {
     const { blockHash } = await client.getAccountAccessKey({
       accountId: 'nat',
       publicKey: DEFAULT_PUBLIC_KEY,
@@ -43,20 +43,16 @@ describe('Invalid signature', () => {
         signerPublicKey: DEFAULT_PUBLIC_KEY,
         nonce: 1,
         blockHash,
-        action: transfer({ amount: { near: '100' } }),
+        action: transfer({ amount: { near: '10005' } }),
         receiverAccountId: 'bob',
       },
     });
 
     const res = await client.safeSendSignedTransaction({
-      signedTransaction: {
-        ...signedTransaction,
-        signature:
-          'ed25519:4nhGVzRVDF1orVnfhQB4rG7ZqEhahUJQpuzvpMKe1dH6JMksAXbdQk1JzuwmNfzdtbL8PGDNx3c9BJFbZ4Guc3T4',
-      },
+      signedTransaction,
     });
     log(res);
 
-    assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid');
+    assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow');
   });
 });

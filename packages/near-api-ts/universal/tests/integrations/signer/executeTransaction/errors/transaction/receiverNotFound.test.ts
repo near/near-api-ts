@@ -15,7 +15,7 @@ import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 
 vi.setConfig({ testTimeout: 60000 });
 
-describe('Receiver.NotFound', () => {
+describe('executeTransaction › Transaction.Receiver.NotFound', () => {
   let client: Client;
   let keyService: MemoryKeyService;
   let createSigner: MemorySignerFactory;
@@ -30,7 +30,7 @@ describe('Receiver.NotFound', () => {
     return () => sandbox.stop();
   });
 
-  it('Transfer', async () => {
+  it('fails with Transaction.Receiver.NotFound when transferring to a missing account', async () => {
     const nat = createSigner('nat');
 
     const tx = await nat.safeExecuteTransaction({
@@ -42,7 +42,7 @@ describe('Receiver.NotFound', () => {
     assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Receiver.NotFound');
   });
 
-  it('Delete Account', async () => {
+  it('fails with Transaction.Receiver.NotFound when deleting a missing account', async () => {
     const nat = createSigner('nat');
 
     const tx = await nat.safeExecuteTransaction({

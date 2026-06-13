@@ -1,14 +1,14 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, it, vi } from 'vitest';
+import * as z from 'zod/mini';
 import {
-  addFullAccessKey,
+  addFunctionCallKey,
   type Client,
   createAccount,
   createMemoryKeyService,
   createMemorySignerFactory,
   type MemoryKeyService,
   type MemorySignerFactory,
-  near,
   randomEd25519KeyPair,
   transfer,
 } from '../../../../../../index';
@@ -16,61 +16,58 @@ import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 
+z.config(z.locales.en());
 vi.setConfig({ testTimeout: 60000 });
 
-describe('Signer.Balance.TooLow', () => {
+describe('executeTransaction › KeyPool.SigningKey.NotFound', async () => {
   let client: Client;
   let keyService: MemoryKeyService;
   let createSigner: MemorySignerFactory;
+
   const keyPair1 = randomEd25519KeyPair();
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
     keyService = createMemoryKeyService({
-      keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, keyPair1],
+      keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, { privateKey: keyPair1.privateKey }],
     });
     createSigner = createMemorySignerFactory({ client, keyService });
     return () => sandbox.stop();
   });
 
-  it('Transfer too many tokens', async () => {
+  it('fails with KeyPool.SigningKey.NotFound when no key in the pool can sign', async () => {
+    // Create a new user with an FC key
     const nat = createSigner('nat');
 
-    // 1. Create an account with 10 FA keys
     await nat.executeTransaction({
       intent: {
         actions: [
           createAccount(),
-          addFullAccessKey(keyPair1),
-          ...Array(9)
-            .fill(0)
-            .map(() => addFullAccessKey(randomEd25519KeyPair())),
-          transfer({ amount: { near: '1' } }),
+          addFunctionCallKey({
+            publicKey: keyPair1.publicKey,
+            contractAccountId: 'abc',
+            gasBudget: 'Unlimited',
+            allowedFunctions: 'AllNonPayable',
+          }),
+          transfer({ amount: { near: '10' } }),
         ],
-        receiverAccountId: 'abc.nat',
+        receiverAccountId: 'user.nat',
       },
     });
 
-    const info1 = await client.getAccountInfo({ accountId: 'abc.nat' });
-    const { balance: balance1 } = info1.accountInfo;
+    // Try to sign FA transaction with an FC key
+    const user = createSigner('user.nat');
 
-    expect(balance1.total.near).toBe('1');
-    expect(balance1.available.near).toBe('0.9908');
-    expect(balance1.locked.amount.near).toBe('0.0092');
+    // const keys = await client.getAccountAccessKeys({ accountId: 'user.nat' });
+    // console.log(keys);
 
-    // 2. try to send
-    const abc = createSigner('abc.nat');
-
-    const tx = await abc.safeExecuteTransaction({
+    const tx2 = await user.safeExecuteTransaction({
       intent: {
-        action: transfer({
-          amount: near('1'),
-        }),
+        action: transfer({ amount: { near: '1' } }),
         receiverAccountId: 'nat',
       },
     });
-
-    assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Signer.Balance.TooLow');
+    assertNatErrKind(tx2, 'MemorySigner.ExecuteTransaction.KeyPool.SigningKey.NotFound');
   });
 });

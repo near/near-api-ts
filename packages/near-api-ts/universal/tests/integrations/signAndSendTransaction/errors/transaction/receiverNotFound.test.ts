@@ -3,6 +3,7 @@ import { beforeAll, describe, it, vi } from 'vitest';
 import {
   type Client,
   createMemoryKeyService,
+  deleteAccount,
   type MemoryKeyService,
   transfer,
 } from '../../../../../index';
@@ -14,7 +15,7 @@ import { testKeys } from '../../../../utils/testKeys';
 
 vi.setConfig({ testTimeout: 60000 });
 
-describe('Execute transaction', () => {
+describe('safeSendSignedTransaction › Transaction.Receiver.NotFound', () => {
   let client: Client;
   let keyService: MemoryKeyService;
 
@@ -30,28 +31,8 @@ describe('Execute transaction', () => {
     return () => sandbox.stop();
   });
 
-  it('expired by invalid block hash', async () => {
-    const signedTransaction = await signTransaction({
-      signDataProvider: keyService,
-      transaction: {
-        signerAccountId: 'nat',
-        signerPublicKey: DEFAULT_PUBLIC_KEY,
-        nonce: 1,
-        blockHash: '6nrziuxAjeYvmtusxDhSvfPkXNUXDmQznKXebzE5wC1G',
-        action: transfer({ amount: { near: '100' } }),
-        receiverAccountId: 'bob',
-      },
-    });
-
-    const res = await client.safeSendSignedTransaction({
-      signedTransaction,
-    });
-
-    assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Expired');
-  });
-
-  it('expired by too large nonce', async () => {
-    const { blockHash } = await client.getAccountAccessKey({
+  it('fails with Transaction.Receiver.NotFound when transferring to a missing account', async () => {
+    const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
       accountId: 'nat',
       publicKey: DEFAULT_PUBLIC_KEY,
     });
@@ -61,10 +42,10 @@ describe('Execute transaction', () => {
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: DEFAULT_PUBLIC_KEY,
-        nonce: 2_000_000_000_000_000,
+        nonce: accountAccessKey.nonce + 1,
         blockHash,
-        action: transfer({ amount: { near: '100' } }),
-        receiverAccountId: 'bob',
+        action: transfer({ amount: { near: '1' } }),
+        receiverAccountId: '123.nat',
       },
     });
 
@@ -72,6 +53,31 @@ describe('Execute transaction', () => {
       signedTransaction,
     });
 
-    assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Expired');
+    assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound');
+  });
+
+  it('fails with Transaction.Receiver.NotFound when deleting a missing account', async () => {
+    const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+      accountId: 'nat',
+      publicKey: DEFAULT_PUBLIC_KEY,
+    });
+
+    const signedTransaction = await signTransaction({
+      signDataProvider: keyService,
+      transaction: {
+        signerAccountId: 'nat',
+        signerPublicKey: DEFAULT_PUBLIC_KEY,
+        nonce: accountAccessKey.nonce + 1,
+        blockHash,
+        action: deleteAccount({ beneficiaryAccountId: 'bob' }),
+        receiverAccountId: '123.nat',
+      },
+    });
+
+    const res = await client.safeSendSignedTransaction({
+      signedTransaction,
+    });
+
+    assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound');
   });
 });
