@@ -7,10 +7,10 @@ import {
   createMemorySignerFactory,
   type MemoryKeyService,
   type MemorySignerFactory,
-} from '../../../../../../../../index';
-import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
-import { createDefaultClient } from '../../../../../../../utils/common';
-import { startSandbox } from '../../../../../../../utils/sandbox/startSandbox';
+} from '../../../../../../../index';
+import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import { createDefaultClient } from '../../../../../../utils/common';
+import { startSandbox } from '../../../../../../utils/sandbox/startSandbox';
 
 vi.setConfig({ testTimeout: 60000 });
 

@@ -10,10 +10,10 @@ import {
   type MemoryKeyService,
   randomEd25519KeyPair,
   transfer,
-} from '../../../../../index';
-import { assertNatErrKind } from '../../../../utils/assertNatErrKind';
-import { createDefaultClient } from '../../../../utils/common';
-import { startSandbox } from '../../../../utils/sandbox/startSandbox';
+} from '../../../../index';
+import { assertNatErrKind } from '../../../utils/assertNatErrKind';
+import { createDefaultClient } from '../../../utils/common';
+import { startSandbox } from '../../../utils/sandbox/startSandbox';
 
 z.config(z.locales.en());
 vi.setConfig({ testTimeout: 60000 });

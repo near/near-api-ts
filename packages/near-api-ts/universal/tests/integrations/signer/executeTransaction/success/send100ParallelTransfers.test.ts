@@ -7,9 +7,9 @@ import {
   createMemorySigner,
   randomEd25519KeyPair,
   transfer,
-} from '../../../../../../index';
-import { createDefaultClient } from '../../../../../utils/common';
-import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
+} from '../../../../../index';
+import { createDefaultClient } from '../../../../utils/common';
+import { startSandbox } from '../../../../utils/sandbox/startSandbox';
 
 vi.setConfig({ testTimeout: 60000 });
 

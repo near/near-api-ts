@@ -7,9 +7,9 @@ import {
   createMemorySigner,
   type MemoryKeyService,
   transfer,
-} from '../../../../../index';
-import { createDefaultClient } from '../../../../utils/common';
-import { startSandbox } from '../../../../utils/sandbox/startSandbox';
+} from '../../../../index';
+import { createDefaultClient } from '../../../utils/common';
+import { startSandbox } from '../../../utils/sandbox/startSandbox';
 
 z.config(z.locales.en());
 vi.setConfig({ testTimeout: 60000 });

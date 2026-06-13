@@ -9,10 +9,10 @@ import {
   near,
   randomEd25519KeyPair,
   stake,
-} from '../../../../../../../../index';
-import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
-import { createDefaultClient } from '../../../../../../../utils/common';
-import { startSandbox } from '../../../../../../../utils/sandbox/startSandbox';
+} from '../../../../../../../index';
+import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import { createDefaultClient } from '../../../../../../utils/common';
+import { startSandbox } from '../../../../../../utils/sandbox/startSandbox';
 
 vi.setConfig({ testTimeout: 60000 });
 
@@ -31,22 +31,19 @@ describe('Stake', () => {
     return () => sandbox.stop();
   });
 
-  it('BelowThreshold', async () => {
+  it('NotFound', async () => {
     const nat = await createSigner('nat');
 
     const res = await nat.safeExecuteTransaction({
       intent: {
         action: stake({
-          amount: near('1'),
+          amount: near('0'),
           validatorPublicKey: randomEd25519KeyPair().publicKey,
         }),
         receiverAccountId: nat.signerAccountId,
       },
     });
 
-    assertNatErrKind(
-      res,
-      'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.Stake.BelowThreshold',
-    );
+    assertNatErrKind(res, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.Stake.NotFound');
   });
 });

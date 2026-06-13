@@ -4,10 +4,11 @@ import {
   type Client,
   createMemoryKeyService,
   createMemorySignerFactory,
-  deleteAccount,
   type MemoryKeyService,
   type MemorySignerFactory,
-  transfer,
+  near,
+  randomEd25519KeyPair,
+  stake,
 } from '../../../../../../../index';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../../../../utils/common';
@@ -15,7 +16,7 @@ import { startSandbox } from '../../../../../../utils/sandbox/startSandbox';
 
 vi.setConfig({ testTimeout: 60000 });
 
-describe('Receiver.NotFound', () => {
+describe('Stake', () => {
   let client: Client;
   let keyService: MemoryKeyService;
   let createSigner: MemorySignerFactory;
@@ -23,34 +24,29 @@ describe('Receiver.NotFound', () => {
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyService = createMemoryKeyService({
-      keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
+    keyService = await createMemoryKeyService({
+      keySource: { privateKey: DEFAULT_PRIVATE_KEY },
     });
     createSigner = createMemorySignerFactory({ client, keyService });
     return () => sandbox.stop();
   });
 
-  it('Transfer', async () => {
-    const nat = createSigner('nat');
+  it('Balance.TooLow', async () => {
+    const nat = await createSigner('nat');
 
-    const tx = await nat.safeExecuteTransaction({
+    const res = await nat.safeExecuteTransaction({
       intent: {
-        action: transfer({ amount: { near: '1' } }),
-        receiverAccountId: 'not-bob',
+        action: stake({
+          amount: near('100000000'),
+          validatorPublicKey: randomEd25519KeyPair().publicKey,
+        }),
+        receiverAccountId: nat.signerAccountId,
       },
     });
-    assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Receiver.NotFound');
-  });
 
-  it('Delete Account', async () => {
-    const nat = createSigner('nat');
-
-    const tx = await nat.safeExecuteTransaction({
-      intent: {
-        action: deleteAccount({ beneficiaryAccountId: 'bob' }),
-        receiverAccountId: 'not-bob',
-      },
-    });
-    assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Receiver.NotFound');
+    assertNatErrKind(
+      res,
+      'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.Stake.Balance.TooLow',
+    );
   });
 });
