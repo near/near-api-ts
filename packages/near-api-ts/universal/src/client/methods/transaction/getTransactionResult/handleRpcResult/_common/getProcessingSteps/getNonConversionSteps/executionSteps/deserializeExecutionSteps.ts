@@ -1,18 +1,18 @@
-import type { Base64String, Result } from '../../../../../../../../../types/_common/common';
+import type { Base64String, Result } from '../../../../../../../../../../types/_common/common';
 import type {
   ExecutionStepResult,
   ExecutionSteps,
   ParsedExecutionStep,
   RawExecutionStep,
-} from '../../../../../../../../../types/_common/transactionDetails/processingSteps/executionStep';
-import type { MaybeBaseDeserializeTransactionExecutionStepsFn } from '../../../../../../../../../types/_common/transactionDetails/transactionResult';
-import type { InnerGetTransactionResultArgs } from '../../../../../../../../../types/client/methods/transaction/getTransactionResult';
-import { type NatError, resultNatError } from '../../../../../../../../_common/natError';
-import { result } from '../../../../../../../../_common/utils/result';
-import { tryParseBase64ToObject } from '../../_common/tryParseBase64ToObject';
-import { baseGetActionSummary } from '../_common/getActionSummaries';
+} from '../../../../../../../../../../types/_common/transactionDetails/processingSteps/executionStep';
+import type { MaybeBaseDeserializeTransactionExecutionStepsFn } from '../../../../../../../../../../types/_common/transactionDetails/transactionResult';
+import type { InnerGetTransactionResultArgs } from '../../../../../../../../../../types/client/methods/transaction/getTransactionResult';
+import { type NatError, resultNatError } from '../../../../../../../../../_common/natError';
+import { result } from '../../../../../../../../../_common/utils/result';
+import { tryParseBase64ToObject } from '../../../tryParseBase64ToObject';
+import { baseGetActionSummary } from '../../_common/getActionSummaries';
 
-const baseGetExecutionStepResult = (
+const getParsedResult = (
   rawResult: ExecutionStepResult<Base64String>,
 ): ExecutionStepResult<unknown> =>
   rawResult.status === 'Success'
@@ -21,7 +21,7 @@ const baseGetExecutionStepResult = (
 
 const getParsedExecutionStep = (rawExecutionStep: RawExecutionStep): ParsedExecutionStep => ({
   executionStepId: rawExecutionStep.executionStepId,
-  result: baseGetExecutionStepResult(rawExecutionStep.result),
+  result: getParsedResult(rawExecutionStep.result),
   createdAt: rawExecutionStep.createdAt,
   createdBy: rawExecutionStep.createdBy,
   executedAt: rawExecutionStep.executedAt,

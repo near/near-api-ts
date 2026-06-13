@@ -2,11 +2,11 @@ import type { Base64String, Result } from '../../../../../../../types/_common/co
 import type { InnerGetTransactionResultArgs } from '../../../../../../../types/client/methods/transaction/getTransactionResult';
 import { type NatError, resultNatError } from '../../../../../../_common/natError';
 import { result } from '../../../../../../_common/utils/result';
-import { tryParseBase64ToObject } from './_common/tryParseBase64ToObject';
+import { tryParseBase64ToObject } from './tryParseBase64ToObject';
 
 export const deserializeResultData = (
-  inputArgs: InnerGetTransactionResultArgs,
   rawData: Base64String,
+  inputArgs: InnerGetTransactionResultArgs,
 ): Result<unknown, NatError<'Client.GetTransactionResult.DeserializeResultData.Failed'>> => {
   // If a user wants to use his own custom deserializer:
   if (inputArgs.options?.deserializeResultData) {

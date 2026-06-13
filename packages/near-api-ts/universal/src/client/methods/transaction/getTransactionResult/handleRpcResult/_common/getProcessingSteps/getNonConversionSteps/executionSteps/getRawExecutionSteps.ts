@@ -8,6 +8,7 @@ import type { RpcActionReceiptTrimmed } from '../../../../../../../../../_common
 import type { RpcReceiptOutcome } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
 import { getRawActionSummary } from '../../_common/getActionSummaries';
 import type { ReceiptCreationMap } from '../createReceiptCreationMap';
+import type { ReceiptsWithOutcomes } from '../getReceiptsWithOutcomes';
 
 const getRawExecutionStepResult = (
   status: RpcReceiptOutcome['outcome']['status'],
@@ -39,7 +40,7 @@ const getRawExecutionStepResult = (
   throw new Error(`Unexpected receipt execution outcome status: ${JSON.stringify(status)}`);
 };
 
-export const getRawExecutionStep = (
+const getRawExecutionStep = (
   receipt: RpcActionReceiptTrimmed,
   receiptOutcome: RpcReceiptOutcome,
   receiptCreationMap: ReceiptCreationMap,
@@ -72,8 +73,8 @@ export const getRawExecutionStep = (
     createdBy: { accountId: receipt.predecessorId },
     executedAt: { blockHash: receiptOutcome.blockHash.cryptoHash },
     executedBy: { accountId: receiptOutcome.outcome.executorId },
-    producedSteps,
     actionSummaries: Action.actions.map(getRawActionSummary),
+    producedSteps,
     requiredDataIds: Action.inputDataIds,
     futureDataReceivers: dataReceivers,
     isPromiseYield: Action.isPromiseYield,
@@ -82,3 +83,13 @@ export const getRawExecutionStep = (
     logs: receiptOutcome.outcome.logs,
   };
 };
+
+export const getRawExecutionSteps = (
+  receiptsWithOutcomes: ReceiptsWithOutcomes,
+  receiptCreationMap: ReceiptCreationMap,
+): RawExecutionStep[] =>
+  receiptsWithOutcomes
+    .filter(({ receipt }) => receipt.predecessorId !== 'system')
+    .map(({ receipt, receiptOutcome }) =>
+      getRawExecutionStep(receipt, receiptOutcome, receiptCreationMap),
+    );

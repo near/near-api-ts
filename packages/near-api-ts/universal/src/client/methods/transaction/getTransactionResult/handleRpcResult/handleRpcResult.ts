@@ -15,7 +15,13 @@ import {
   type RpcIncludedTransactionDetails,
   RpcIncludedTransactionDetailsZodSchema,
 } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
-import { getTransactionResultOutput } from './getTransactionResultOutput/getTransactionResultOutput';
+import {
+  isRpcTransactionOutcomeFailure,
+  isRpcTransactionOutcomeSuccess,
+} from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
+import { getTransactionConversionError } from './getTransactionConversionError';
+import { getTransactionExecutionError } from './getTransactionExecutionError';
+import { getTransactionSuccess } from './getTransactionSuccess';
 
 const getCurrentProcessingStage = (
   finalExecutionStatus: ExcludeStrict<RpcResult['finalExecutionStatus'], 'FINAL'>,
@@ -61,7 +67,7 @@ export const handleRpcResult = (
       }),
     });
 
-  // #1. Check if the transaction is fully completed
+  // #1 Check if the transaction is fully completed
   const { finalExecutionStatus } = rpcResult.data;
 
   if (finalExecutionStatus !== 'FINAL')
@@ -70,6 +76,44 @@ export const handleRpcResult = (
       currentProcessingStage: getCurrentProcessingStage(finalExecutionStatus),
     });
 
-  // #2. Transform rpc data into NAT format
-  return getTransactionResultOutput(rpcResult.data, inputArgs);
+  // #2 Transform raw rpc result into NAT format
+  const { transaction, transactionOutcome, status, receiptsOutcome, receipts } = rpcResult.data;
+
+  // #2.1 When the transaction execution is successful;
+  if ('SuccessValue' in status && isRpcTransactionOutcomeSuccess(transactionOutcome))
+    return getTransactionSuccess(
+      transaction,
+      transactionOutcome,
+      receipts,
+      receiptsOutcome,
+      status.SuccessValue,
+      inputArgs,
+    );
+
+  // #2.2 When the transaction wasn't even converted into a receipt and included in the block
+  if (
+    'Failure' in status &&
+    'InvalidTxError' in status.Failure &&
+    isRpcTransactionOutcomeFailure(transactionOutcome)
+  )
+    return getTransactionConversionError(transaction, transactionOutcome, status, inputArgs);
+
+  // #2.3 When the transaction was converted into a receipt and included in the block
+  // but failed during execution
+  if (
+    'Failure' in status &&
+    'ActionError' in status.Failure &&
+    isRpcTransactionOutcomeSuccess(transactionOutcome)
+  )
+    return getTransactionExecutionError(
+      transaction,
+      transactionOutcome,
+      receipts,
+      receiptsOutcome,
+      status,
+      inputArgs,
+    );
+
+  // For TS only - we checked all possible cases
+  throw new Error('Unreachable');
 };

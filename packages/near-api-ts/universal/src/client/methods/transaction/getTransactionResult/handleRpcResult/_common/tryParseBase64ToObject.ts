@@ -1,5 +1,5 @@
-import type { Base64String } from '../../../../../../../../types/_common/common';
-import { fromJsonBytes } from '../../../../../../../_common/utils/common';
+import type { Base64String } from '../../../../../../../types/_common/common';
+import { fromJsonBytes } from '../../../../../../_common/utils/common';
 
 export const tryParseBase64ToObject = (rawData: Base64String): unknown => {
   // nearcore returns empty string when there is no result data;

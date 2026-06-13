@@ -14,7 +14,7 @@ import {
 } from '../../../../../index';
 import { toJsonBytes } from '../../../../../src/_common/utils/common';
 import { safeSleep } from '../../../../../src/_common/utils/sleep';
-import { deserializeExecutionSteps } from '../../../../../src/client/methods/transaction/getTransactionResult/handleRpcResult/getTransactionResultOutput/getProcessingSteps/getNonConversionSteps/deserializeExecutionSteps';
+import { deserializeExecutionSteps } from '../../../../../src/client/methods/transaction/getTransactionResult/handleRpcResult/_common/getProcessingSteps/getNonConversionSteps/executionSteps/deserializeExecutionSteps';
 import type { Base64String, TransactionHash } from '../../../../../types/_common/common';
 import type { ActionSummary } from '../../../../../types/_common/transactionDetails/actionSummaries';
 import type { ExecutionStep } from '../../../../../types/_common/transactionDetails/processingSteps/executionStep';

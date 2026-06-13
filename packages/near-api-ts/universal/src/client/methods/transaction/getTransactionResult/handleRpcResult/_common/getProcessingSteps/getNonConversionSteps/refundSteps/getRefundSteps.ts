@@ -1,11 +1,12 @@
-import { yoctoNear } from '../../../../../../../../../index';
+import { yoctoNear } from '../../../../../../../../../../index';
 import type {
   RefundStep,
   RefundStepResult,
-} from '../../../../../../../../../types/_common/transactionDetails/processingSteps/refundStep';
-import type { RpcActionReceiptTrimmed } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
-import type { RpcReceiptOutcome } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
-import type { ReceiptCreationMap } from './createReceiptCreationMap';
+} from '../../../../../../../../../../types/_common/transactionDetails/processingSteps/refundStep';
+import type { RpcActionReceiptTrimmed } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
+import type { RpcReceiptOutcome } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
+import type { ReceiptCreationMap } from '../createReceiptCreationMap';
+import type { ReceiptsWithOutcomes } from '../getReceiptsWithOutcomes';
 
 const getRefundStepResult = (status: RpcReceiptOutcome['outcome']['status']): RefundStepResult => {
   if (typeof status === 'object' && 'SuccessValue' in status && status.SuccessValue === '') {
@@ -43,7 +44,7 @@ const getRefundAmount = (receipt: RpcActionReceiptTrimmed) => {
   );
 };
 
-export const getRefundStep = (
+const getRefundStep = (
   receipt: RpcActionReceiptTrimmed,
   receiptOutcome: RpcReceiptOutcome,
   receiptCreationMap: ReceiptCreationMap,
@@ -57,3 +58,13 @@ export const getRefundStep = (
     receiverAccountId: receiptOutcome.outcome.executorId,
   };
 };
+
+export const getRefundSteps = (
+  receiptsWithOutcomes: ReceiptsWithOutcomes,
+  receiptCreationMap: ReceiptCreationMap,
+) =>
+  receiptsWithOutcomes
+    .filter(({ receipt }) => receipt.predecessorId === 'system')
+    .map((receiptOutcome) =>
+      getRefundStep(receiptOutcome.receipt, receiptOutcome.receiptOutcome, receiptCreationMap),
+    );

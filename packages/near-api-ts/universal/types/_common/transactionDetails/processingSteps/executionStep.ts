@@ -39,8 +39,8 @@ export type ExecutionStep<RD, AS> = {
   createdBy: { accountId: AccountId };
   executedAt: { blockHash: BlockHash };
   executedBy: { accountId: AccountId };
-  producedSteps: ProducedStep[];
   actionSummaries: AS;
+  producedSteps: ProducedStep[];
   requiredDataIds: RequiredDataId[];
   futureDataReceivers: FutureDataReceiver[];
   isPromiseYield: boolean;
