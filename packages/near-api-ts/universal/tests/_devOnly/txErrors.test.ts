@@ -1,5 +1,5 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { beforeAll, describe, it, vi } from 'vitest';
+import { beforeAll, describe, it } from 'vitest';
 import {
   addFullAccessKey,
   createMemoryKeyService,
@@ -17,8 +17,6 @@ import type { MemorySigner } from '../../types/signers/memorySigner/memorySigner
 import type { MemorySignerFactory } from '../../types/signers/memorySigner/public/createMemorySigner';
 import { createDefaultClient, getFileBytes, log } from '../utils/common';
 import { startSandbox } from '../utils/sandbox/startSandbox';
-
-vi.setConfig({ testTimeout: 60000 });
 
 describe('CallContractReadFunction', () => {
   let client: Client;

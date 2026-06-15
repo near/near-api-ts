@@ -1,5 +1,5 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { beforeAll, describe, it, vi } from 'vitest';
+import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
   createMemoryKeyService,
@@ -12,8 +12,6 @@ import {
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
-
-vi.setConfig({ testTimeout: 60000 });
 
 describe('executeTransaction › Transaction.Receiver.NotFound', () => {
   let client: Client;

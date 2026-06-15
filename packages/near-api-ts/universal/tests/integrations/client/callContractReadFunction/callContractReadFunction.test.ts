@@ -1,5 +1,5 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import {
   type Client,
   createAccount,
@@ -14,8 +14,6 @@ import { toJsonBytes } from '../../../../src/_common/utils/common';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 import { createDefaultClient, getFileBytes } from '../../../utils/common';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
-
-vi.setConfig({ testTimeout: 60000 });
 
 describe('CallContractReadFunction', () => {
   let client: Client;

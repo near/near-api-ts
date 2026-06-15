@@ -1,5 +1,5 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { beforeAll, describe, it, vi } from 'vitest';
+import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
   createAccount,
@@ -8,12 +8,9 @@ import {
   type MemoryKeyService,
   type MemorySignerFactory,
 } from '../../../../../../../../index';
-import { safeSleep } from '../../../../../../../../src/_common/utils/sleep';
 import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
-import { createDefaultClient, log } from '../../../../../../../utils/common';
+import { createDefaultClient } from '../../../../../../../utils/common';
 import { startSandbox } from '../../../../../../../utils/sandbox/startSandbox';
-
-vi.setConfig({ testTimeout: 60000 });
 
 describe('executeTransaction › Transaction.Action.CreateAccount.AlreadyExist', () => {
   let client: Client;

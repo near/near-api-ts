@@ -1,5 +1,5 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import * as z from 'zod/mini';
 import {
   type Client,
@@ -17,7 +17,6 @@ import { createDefaultClient, log } from '../utils/common';
 import { startShardedSandbox } from '../utils/sandbox/sharded/startShardedSandbox';
 import { startSandbox } from '../utils/sandbox/startSandbox';
 
-vi.setConfig({ testTimeout: 60000 });
 z.config(z.locales.en());
 
 describe('getTransactionResult', () => {

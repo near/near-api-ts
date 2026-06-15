@@ -1,5 +1,5 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { beforeAll, describe, it, vi } from 'vitest';
+import { beforeAll, describe, it } from 'vitest';
 import * as z from 'zod/mini';
 import {
   type Client,
@@ -24,8 +24,6 @@ import type {
 import type { MemorySigner } from '../../../../../types/signers/memorySigner/memorySigner';
 import { createDefaultClient, getFileBytes, log } from '../../../../utils/common';
 import { startSandbox } from '../../../../utils/sandbox/startSandbox';
-
-vi.setConfig({ testTimeout: 60000 });
 
 const WriteRecordArgsZodShema = z.object({
   record_id: z.number(),

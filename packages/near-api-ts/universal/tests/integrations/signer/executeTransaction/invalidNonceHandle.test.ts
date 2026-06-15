@@ -1,5 +1,5 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import * as z from 'zod/mini';
 import {
   type Client,
@@ -12,8 +12,6 @@ import { createDefaultClient } from '../../../utils/common';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
 
 z.config(z.locales.en());
-vi.setConfig({ testTimeout: 60000 });
-
 describe('MemorySigner.executeTransaction', async () => {
   let client: Client;
   let keyService: MemoryKeyService;

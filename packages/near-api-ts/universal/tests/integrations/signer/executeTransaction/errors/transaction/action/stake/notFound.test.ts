@@ -1,5 +1,5 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { beforeAll, describe, it, vi } from 'vitest';
+import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
   createMemoryKeyService,
@@ -14,8 +14,6 @@ import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../../../../../utils/common';
 import { startSandbox } from '../../../../../../../utils/sandbox/startSandbox';
 
-vi.setConfig({ testTimeout: 60000 });
-
 describe('executeTransaction › Transaction.Action.Stake.NotFound', () => {
   let client: Client;
   let keyService: MemoryKeyService;
@@ -24,15 +22,13 @@ describe('executeTransaction › Transaction.Action.Stake.NotFound', () => {
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyService = await createMemoryKeyService({
-      keySource: { privateKey: DEFAULT_PRIVATE_KEY },
-    });
+    keyService = createMemoryKeyService({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } });
     createSigner = createMemorySignerFactory({ client, keyService });
     return () => sandbox.stop();
   });
 
   it('fails with Transaction.Action.Stake.NotFound when staking zero with an unknown validator key', async () => {
-    const nat = await createSigner('nat');
+    const nat = createSigner('nat');
 
     const res = await nat.safeExecuteTransaction({
       intent: {

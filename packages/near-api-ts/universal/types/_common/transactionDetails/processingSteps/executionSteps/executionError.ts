@@ -1,16 +1,26 @@
 import type { Prettify } from '../../../../utils';
 import type { AccountId, CryptoHash } from '../../../common';
+import type { NearToken } from '../../../nearToken';
+
+/**
+ * nearcore ActionErrorKind to NAT ExecutionError map
+ *
+ * AccountDoesNotExist -> Executor.NotFound
+ * LackBalanceForState -> Executor.StorageDeposit.TooLow
+ * AccountAlreadyExists -> CreateAccount.AlreadyExist
+ *
+ */
 
 interface CreateAccountErrorRegistry {
-  'CreateAccount.AlreadyExist': {
-    accountId: AccountId;
-  };
+  'CreateAccount.AlreadyExist': { accountId: AccountId };
 }
 
-export interface ExecutionErrorRegistry extends CreateAccountErrorRegistry {
-  X: { a: number };
-  Y: { b: number };
+interface ExecutorErrorRegistry {
+  'Executor.NotFound': { accountId: AccountId };
+  'Executor.StorageDeposit.TooLow': { accountId: AccountId; missingAmount: NearToken };
 }
+
+export interface ExecutionErrorRegistry extends ExecutorErrorRegistry, CreateAccountErrorRegistry {}
 
 export type ExecutionErrorKind = keyof ExecutionErrorRegistry;
 

@@ -1,5 +1,5 @@
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
-import { beforeAll, describe, it, vi } from 'vitest';
+import { beforeAll, describe, it } from 'vitest';
 import {
   addFullAccessKey,
   type Client,
@@ -14,8 +14,6 @@ import { signTransaction } from '../../../../src/helpers/signTransaction';
 import { createDefaultClient, getFileBytes, log } from '../../../utils/common';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
 import { testKeys } from '../../../utils/testKeys';
-
-vi.setConfig({ testTimeout: 60000 });
 
 describe('safeSendSignedTransaction › success', () => {
   let client: Client;

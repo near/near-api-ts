@@ -1,9 +1,7 @@
-import { describe, it, vi } from 'vitest';
+import { describe, it } from 'vitest';
 import { randomEd25519KeyPair } from '../../../../universal';
 import { log } from '../../../../universal/tests/utils/common';
 import { throwableCreateFileKeyService } from '../../../src/fileKeyService/fileKeyService';
-
-vi.setConfig({ testTimeout: 60000 });
 
 describe('FileKeyService.', () => {
   it('Add key', async () => {

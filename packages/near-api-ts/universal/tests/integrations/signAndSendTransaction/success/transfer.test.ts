@@ -1,5 +1,5 @@
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import {
   type Client,
   createMemoryKeyService,
@@ -10,8 +10,6 @@ import { signTransaction } from '../../../../src/helpers/signTransaction';
 import { createDefaultClient } from '../../../utils/common';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
 import { testKeys } from '../../../utils/testKeys';
-
-vi.setConfig({ testTimeout: 60000 });
 
 describe('safeSendSignedTransaction › success', () => {
   let client: Client;
