@@ -58,21 +58,19 @@ export const calculateAccountBalance = (
   const validatorStake = yoctoNear(accountInfo.locked);
   const total = yoctoNear(accountInfo.amount).add(validatorStake);
 
-  // If an account uses 770 bytes or fewer - no storageDeposit
+  // If an account uses 770 bytes or fewer: no storageDeposit
   if (accountInfo.storageUsage <= ZeroBalanceAccountStorageLimit)
     return {
       total,
       available: total.sub(validatorStake),
       locked: {
-        amount: validatorStake,
-        breakdown: {
-          validatorStake,
-          storageDeposit: yoctoNear(0n),
-        },
+        total: validatorStake,
+        validatorStake,
+        storageDeposit: yoctoNear(0n),
       },
     };
 
-  // If an account uses more than 770 bytes - max(storageDeposit, validatorStake) will be locked
+  // If an account uses more than 770 bytes: max(storageDeposit, validatorStake) will be locked
   const storageDeposit = yoctoNear(
     storagePricePerByte.yoctoNear * BigInt(accountInfo.storageUsage),
   );
@@ -82,11 +80,9 @@ export const calculateAccountBalance = (
     total,
     available: total.sub(lockedAmount),
     locked: {
-      amount: lockedAmount,
-      breakdown: {
-        validatorStake,
-        storageDeposit,
-      },
+      total: lockedAmount,
+      validatorStake,
+      storageDeposit,
     },
   };
 };

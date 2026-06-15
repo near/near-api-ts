@@ -8,7 +8,6 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
         kind: 'CreateAccount.AlreadyExist',
         context: {
           accountId: actionError.kind.AccountAlreadyExists.accountId,
-          executionStepIndex: actionError.index ?? 0,
         },
       };
   }

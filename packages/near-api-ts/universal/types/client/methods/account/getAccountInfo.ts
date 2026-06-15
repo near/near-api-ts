@@ -1,5 +1,4 @@
 import type { NatError } from '../../../../src/_common/natError';
-import type { RpcQueryViewAccountResult } from '../../../../src/client/methods/account/getAccountInfo/handleResult/handleResult';
 import type {
   AccountId,
   BlockHash,
@@ -22,7 +21,6 @@ import type {
   RpcQueryBlockGarbageCollectedErrorContext,
   RpcQueryBlockNotFoundErrorContext,
   RpcQueryNotSyncedErrorContext,
-  RpcQueryShardNotTrackedErrorContext,
 } from '../_common/common';
 
 export interface GetAccountInfoPublicErrorRegistry {
@@ -38,7 +36,6 @@ export interface GetAccountInfoPublicErrorRegistry {
     blockHeight: BlockHeight;
   };
   'Client.GetAccountInfo.Rpc.NotSynced': RpcQueryNotSyncedErrorContext;
-  'Client.GetAccountInfo.Rpc.Shard.NotTracked': RpcQueryShardNotTrackedErrorContext;
   'Client.GetAccountInfo.Rpc.Block.GarbageCollected': RpcQueryBlockGarbageCollectedErrorContext;
   'Client.GetAccountInfo.Rpc.Block.NotFound': RpcQueryBlockNotFoundErrorContext;
   'Client.GetAccountInfo.Internal': InternalErrorContext;
@@ -56,27 +53,24 @@ export type GetAccountInfoArgs = {
 };
 
 export type GetAccountInfoOutput = {
-  blockHash: BlockHash;
-  blockHeight: BlockHeight;
   accountId: AccountId;
-  accountInfo: {
-    balance: {
+  balance: {
+    total: NearToken;
+    available: NearToken;
+    locked: {
       total: NearToken;
-      available: NearToken;
-      locked: {
-        amount: NearToken;
-        breakdown: {
-          validatorStake: NearToken;
-          storageDeposit: NearToken;
-        };
-      };
+      validatorStake: NearToken;
+      storageDeposit: NearToken;
     };
-    usedStorageBytes: number;
-    contractHash?: CryptoHash;
-    globalContractHash?: CryptoHash;
-    globalContractAccountId?: AccountId;
   };
-  rawRpcResult: RpcQueryViewAccountResult;
+  usedStorageBytes: number;
+  contractWasmHash: CryptoHash | null;
+  globalContractWasmHash: CryptoHash | null;
+  globalContractAccountId: AccountId | null;
+  atMomentOf: {
+    blockHash: BlockHash;
+    blockHeight: BlockHeight;
+  };
 };
 
 export type GetAccountInfoError =
@@ -87,7 +81,6 @@ export type GetAccountInfoError =
   | NatError<'Client.GetAccountInfo.Aborted'>
   | NatError<'Client.GetAccountInfo.Exhausted'>
   | NatError<'Client.GetAccountInfo.Rpc.NotSynced'>
-  | NatError<'Client.GetAccountInfo.Rpc.Shard.NotTracked'>
   | NatError<'Client.GetAccountInfo.Rpc.Block.GarbageCollected'>
   | NatError<'Client.GetAccountInfo.Rpc.Block.NotFound'>
   | NatError<'Client.GetAccountInfo.Rpc.Account.NotFound'>

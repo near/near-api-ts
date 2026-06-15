@@ -15,7 +15,7 @@ export interface ExecutionErrorRegistry extends CreateAccountErrorRegistry {
 export type ExecutionErrorKind = keyof ExecutionErrorRegistry;
 
 export type ExecutionError<K extends ExecutionErrorKind = ExecutionErrorKind> = K extends K
-  ? { kind: K; context: { executionStepIndex: number } & ExecutionErrorRegistry[K] }
+  ? { kind: K; context: ExecutionErrorRegistry[K] }
   : never;
 
 // export type ExecutionError = {

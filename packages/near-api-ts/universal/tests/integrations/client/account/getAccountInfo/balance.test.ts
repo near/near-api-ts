@@ -47,18 +47,17 @@ describe('Get Account Balance', () => {
       },
     });
 
-    const info1 = await client.getAccountInfo({ accountId: 'abc1.nat' });
-    const { balance } = info1.accountInfo;
+    const { balance } = await client.getAccountInfo({ accountId: 'abc1.nat' });
 
     expect(balance.total.near).toBe('0');
     expect(balance.available.near).toBe('0');
-    expect(balance.locked.amount.near).toBe('0');
+    expect(balance.locked.total.near).toBe('0');
   });
 
   // Test#2 ---------------------
   it('Ok: total: 1, available: 1, locked: 0 (storage: 182b, staked: 0)', async () => {
     const nat = await createSigner('nat');
-    // 1. Create new account
+    // 1. Create a new account
     await nat.executeTransaction({
       intent: {
         actions: [createAccount(), addFullAccessKey(keyPair1), transfer({ amount: { near: '1' } })],
@@ -67,14 +66,14 @@ describe('Get Account Balance', () => {
     });
 
     const info1 = await client.getAccountInfo({ accountId: 'abc2.nat' });
-    const { balance: balance1 } = info1.accountInfo;
+    const { balance: balance1 } = info1;
 
     expect(balance1.total.near).toBe('1');
     expect(balance1.available.near).toBe('1');
-    expect(balance1.locked.amount.near).toBe('0');
+    expect(balance1.locked.total.near).toBe('0');
 
     // 2. Transfer all NEAR tokens
-    const abc = await createSigner('abc2.nat');
+    const abc = createSigner('abc2.nat');
 
     await abc.executeTransaction({
       intent: {
@@ -86,11 +85,11 @@ describe('Get Account Balance', () => {
     });
 
     const info2 = await client.getAccountInfo({ accountId: 'abc2.nat' });
-    const { balance: balance2 } = info2.accountInfo;
+    const { balance: balance2 } = info2;
 
     expect(balance2.total.near).toBe('0');
     expect(balance2.available.near).toBe('0');
-    expect(balance2.locked.amount.near).toBe('0');
+    expect(balance2.locked.total.near).toBe('0');
   });
 
   // Test#3 ---------------------
@@ -112,11 +111,11 @@ describe('Get Account Balance', () => {
     });
 
     const info1 = await client.getAccountInfo({ accountId: 'abc3.nat' });
-    const { balance: balance1 } = info1.accountInfo;
+    const { balance: balance1 } = info1;
 
     expect(balance1.total.near).toBe('2000');
     expect(balance1.available.near).toBe('1999.9908');
-    expect(balance1.locked.amount.near).toBe('0.0092');
+    expect(balance1.locked.total.near).toBe('0.0092');
 
     // 2. Stake 1500
     const abc = createSigner('abc3.nat');
@@ -132,11 +131,11 @@ describe('Get Account Balance', () => {
     });
 
     const info2 = await client.getAccountInfo({ accountId: 'abc3.nat' });
-    const { balance: balance2 } = info2.accountInfo;
+    const { balance: balance2 } = info2;
 
     expect(balance2.total.near).toBe('1999.99995399476875');
     expect(balance2.available.near).toBe('499.99995399476875');
-    expect(balance2.locked.amount.near).toBe('1500');
+    expect(balance2.locked.total.near).toBe('1500');
 
     // 3. Transfer all NEAR tokens
     await abc.executeTransaction({
@@ -149,11 +148,11 @@ describe('Get Account Balance', () => {
     });
 
     const info3 = await client.getAccountInfo({ accountId: 'abc3.nat' });
-    const { balance: balance3 } = info3.accountInfo;
+    const { balance: balance3 } = info3;
 
     expect(balance3.total.near).toBe('1500');
     expect(balance3.available.near).toBe('0');
-    expect(balance3.locked.amount.near).toBe('1500');
+    expect(balance3.locked.total.near).toBe('1500');
   });
 
   // Test#4 ---------------------
@@ -177,11 +176,11 @@ describe('Get Account Balance', () => {
     });
 
     const info1 = await client.getAccountInfo({ accountId: 'abc4.nat' });
-    const { balance: balance1 } = info1.accountInfo;
+    const { balance: balance1 } = info1;
 
     expect(balance1.total.near).toBe('1');
     expect(balance1.available.near).toBe('0.9908');
-    expect(balance1.locked.amount.near).toBe('0.0092');
+    expect(balance1.locked.total.near).toBe('0.0092');
 
     // 2. Delete 2 FA keys
     const abc = createSigner('abc4.nat');
@@ -194,11 +193,11 @@ describe('Get Account Balance', () => {
     });
 
     const info2 = await client.getAccountInfo({ accountId: 'abc4.nat' });
-    const { balance: balance2 } = info2.accountInfo;
+    const { balance: balance2 } = info2;
 
     expect(balance2.total.near).toBe('0.99994040945');
     expect(balance2.available.near).toBe('0.99994040945');
-    expect(balance2.locked.amount.near).toBe('0');
+    expect(balance2.locked.total.near).toBe('0');
 
     // 3. Transfer all NEAR tokens
     await abc.executeTransaction({
@@ -211,10 +210,10 @@ describe('Get Account Balance', () => {
     });
 
     const info3 = await client.getAccountInfo({ accountId: 'abc4.nat' });
-    const { balance: balance3 } = info3.accountInfo;
+    const { balance: balance3 } = info3;
 
     expect(balance3.total.near).toBe('0');
     expect(balance3.available.near).toBe('0');
-    expect(balance3.locked.amount.near).toBe('0');
+    expect(balance3.locked.total.near).toBe('0');
   });
 });

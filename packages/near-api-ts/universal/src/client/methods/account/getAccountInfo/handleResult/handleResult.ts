@@ -1,12 +1,9 @@
 import { AccountViewSchema } from '@near-js/jsonrpc-types';
 import * as z from 'zod/mini';
 import type { NearToken } from '../../../../../../types/_common/nearToken';
-import type {
-  GetAccountInfoArgs,
-  GetAccountInfoOutput,
-} from '../../../../../../types/client/methods/account/getAccountInfo';
+import type { GetAccountInfoArgs } from '../../../../../../types/client/methods/account/getAccountInfo';
 import type { Prettify } from '../../../../../../types/utils';
-import { createNatError } from '../../../../../_common/natError';
+import { createNatError, resultNatError } from '../../../../../_common/natError';
 import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc/rpc';
 import { result } from '../../../../../_common/utils/result';
 import { calculateAccountBalance } from './calculateAccountBalance';
@@ -27,47 +24,33 @@ export const handleResult = (
   const rpcResult = RpcQueryViewAccountResultSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)
-    return result.err(
-      createNatError({
-        kind: 'Client.GetAccountInfo.Exhausted',
-        context: {
-          lastError: createNatError({
-            kind: 'SendRequest.Attempt.Response.InvalidSchema',
-            context: { zodError: rpcResult.error },
-          }),
-        },
+    return resultNatError('Client.GetAccountInfo.Exhausted', {
+      lastError: createNatError({
+        kind: 'SendRequest.Attempt.Response.InvalidSchema',
+        context: { zodError: rpcResult.error },
       }),
-    );
+    });
 
   const accountInfo = rpcResult.data;
-
-  const output: GetAccountInfoOutput = {
-    blockHash: accountInfo.blockHash,
-    blockHeight: accountInfo.blockHeight,
-    accountId: args.accountId,
-    accountInfo: {
-      balance: calculateAccountBalance(accountInfo, storagePricePerByte),
-      usedStorageBytes: accountInfo.storageUsage,
-    },
-    rawRpcResult: accountInfo,
-  };
-
-  // When near account doesn't have a deployed contract on it,
-  // it returns the placeholder instead of WASM hash
-  if (accountInfo.codeHash !== '11111111111111111111111111111111') {
-    output.accountInfo.contractHash = accountInfo.codeHash;
-  }
-
-  if (typeof accountInfo.globalContractHash === 'string') {
-    output.accountInfo.globalContractHash = accountInfo.globalContractHash;
-  }
-
-  if (typeof accountInfo.globalContractAccountId === 'string') {
-    output.accountInfo.globalContractAccountId = accountInfo.globalContractAccountId;
-  }
 
   // storage_paid_at - deprecated since March 18, 2020:
   // https://github.com/near/nearcore/issues/2271
 
-  return result.ok(output);
+  // When near account doesn't have a deployed contract on it,
+  // it returns the placeholder instead of WASM hash
+  const contractWasmHash =
+    accountInfo.codeHash !== '11111111111111111111111111111111' ? null : accountInfo.codeHash;
+
+  return result.ok({
+    accountId: args.accountId,
+    balance: calculateAccountBalance(accountInfo, storagePricePerByte),
+    usedStorageBytes: accountInfo.storageUsage,
+    contractWasmHash,
+    globalContractWasmHash: accountInfo.globalContractHash ?? null,
+    globalContractAccountId: accountInfo.globalContractAccountId ?? null,
+    atMomentOf: {
+      blockHash: accountInfo.blockHash,
+      blockHeight: accountInfo.blockHeight,
+    },
+  });
 };

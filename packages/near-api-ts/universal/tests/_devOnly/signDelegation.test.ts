@@ -65,10 +65,10 @@ describe('Full-scale delegation test', async () => {
     });
 
     const balanceBefore = await client.getAccountInfo({ accountId: 'relay' });
-    console.log('relay balance before:', balanceBefore.accountInfo.balance.total.near);
+    console.log('relay balance before:', balanceBefore.balance.total.near);
 
     const aliceBalanceBefore = await client.getAccountInfo({ accountId: 'alice' });
-    console.log('alice balance before:', aliceBalanceBefore.accountInfo.balance.total.near);
+    console.log('alice balance before:', aliceBalanceBefore.balance.total.near);
 
     // actions: [signDelegation('alice', 100n), { transfer: { deposit: 200n } }],
 
@@ -116,9 +116,9 @@ describe('Full-scale delegation test', async () => {
     log(json);
 
     const balanceAfter = await client.getAccountInfo({ accountId: 'relay' });
-    console.log('relay balance after:', balanceAfter.accountInfo.balance.total.near);
+    console.log('relay balance after:', balanceAfter.balance.total.near);
 
     const aliceBalanceAfter = await client.getAccountInfo({ accountId: 'alice' });
-    console.log('alice balance after:', aliceBalanceAfter.accountInfo.balance.total.near);
+    console.log('alice balance after:', aliceBalanceAfter.balance.total.near);
   });
 });

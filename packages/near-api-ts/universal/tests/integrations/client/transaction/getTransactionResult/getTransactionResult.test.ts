@@ -1,5 +1,5 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, it, vi } from 'vitest';
 import * as z from 'zod/mini';
 import {
   type Client,
@@ -12,9 +12,7 @@ import {
   near,
   transfer,
 } from '../../../../../index';
-import { toJsonBytes } from '../../../../../src/_common/utils/common';
 import { safeSleep } from '../../../../../src/_common/utils/sleep';
-import { deserializeExecutionSteps } from '../../../../../src/client/methods/transaction/getTransactionResult/handleRpcResult/_common/getProcessingSteps/getNonConversionSteps/executionSteps/deserializeExecutionSteps';
 import type { Base64String, TransactionHash } from '../../../../../types/_common/common';
 import type { ActionSummary } from '../../../../../types/_common/transactionDetails/actionSummaries';
 import type { ExecutionStep } from '../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
@@ -24,7 +22,6 @@ import type {
   DeserializeTransactionResultDataArgs,
 } from '../../../../../types/_common/transactionDetails/transactionResult';
 import type { MemorySigner } from '../../../../../types/signers/memorySigner/memorySigner';
-import { assertNatErrKind } from '../../../../utils/assertNatErrKind';
 import { createDefaultClient, getFileBytes, log } from '../../../../utils/common';
 import { startSandbox } from '../../../../utils/sandbox/startSandbox';
 

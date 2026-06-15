@@ -53,11 +53,11 @@ describe('executeTransaction › Transaction.Signer.Balance.TooLow', () => {
     });
 
     const info1 = await client.getAccountInfo({ accountId: 'abc.nat' });
-    const { balance: balance1 } = info1.accountInfo;
+    const { balance: balance1 } = info1;
 
     expect(balance1.total.near).toBe('1');
     expect(balance1.available.near).toBe('0.9908');
-    expect(balance1.locked.amount.near).toBe('0.0092');
+    expect(balance1.locked.total.near).toBe('0.0092');
 
     // 2. try to send
     const abc = createSigner('abc.nat');

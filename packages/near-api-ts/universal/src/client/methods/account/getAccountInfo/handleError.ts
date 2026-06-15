@@ -33,14 +33,6 @@ export const handleError = (rpcResponse: RpcResponse) => {
         }),
       );
 
-    if (cause.name === 'UNAVAILABLE_SHARD')
-      return result.err(
-        createNatError({
-          kind: `Client.GetAccountInfo.Rpc.Shard.NotTracked`,
-          context: { shardId: cause.info.requestedShardId },
-        }),
-      );
-
     if (cause.name === 'GARBAGE_COLLECTED_BLOCK')
       return result.err(
         createNatError({
@@ -65,7 +57,7 @@ export const handleError = (rpcResponse: RpcResponse) => {
       );
   }
 
-  // Account specific errors
+  // Account-specific errors
   if (cause.name === 'UNKNOWN_ACCOUNT')
     return result.err(
       createNatError({
