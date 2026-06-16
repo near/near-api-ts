@@ -3,7 +3,7 @@ import { base58 } from '@scure/base';
 import { type Schema, serialize } from 'borsh';
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
-import { type AccountId, type Client, keyPair} from '../../index';
+import { type AccountId, type Client, keyPair } from '../../index';
 import { DelegateActionBorshSchema } from '../../src/_common/schemas/borsh/delegateAction';
 import {
   SignedTransactionBorshSchema,
@@ -49,7 +49,7 @@ describe('Full-scale delegation test', async () => {
   let client: Client;
 
   beforeAll(async () => {
-    const sandbox = await startSandbox();
+    const sandbox = await startSandbox({ rpcPort: 4560 });
     client = createDefaultClient(sandbox);
     return () => sandbox.stop();
   });

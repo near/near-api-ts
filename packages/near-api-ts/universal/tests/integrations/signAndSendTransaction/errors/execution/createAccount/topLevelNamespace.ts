@@ -7,7 +7,7 @@ import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from './createAccount.test';
 
-export const alreadyExist = (context: TestContext) => async () => {
+export const topLevelNamespace = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -23,23 +23,24 @@ export const alreadyExist = (context: TestContext) => async () => {
       nonce: accountAccessKey.nonce + 1,
       blockHash,
       action: createAccount(),
-      receiverAccountId: 'nat',
+      receiverAccountId: 'top-level-account',
     },
   });
 
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
   // TODO rework after rework SendSignedTransaction
-  assertNatErrKind(
-    tx,
-    'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist',
-  );
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Internal');
   await safeSleep(500);
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
+  assertTxResultExecutionErrKind(txResult, 'CreateAccount.TopLevelNamespace');
 
-  assertTxResultExecutionErrKind(txResult, 'CreateAccount.AlreadyExist');
-  expect(txResult.result.error.context).toStrictEqual({ newAccountId: 'nat' });
+  expect(txResult.result.error.context).toStrictEqual({
+    newAccountId: 'top-level-account',
+    creatorAccountId: 'nat',
+    registrarAccountId: 'registrar',
+  });
 };

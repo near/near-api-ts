@@ -1,11 +1,11 @@
 import { GenesisAccount, Sandbox } from 'near-sandbox';
 import { near } from '../../../index';
 
-export const startSandbox = async () =>
+export const startSandbox = async (args?: { rpcPort?: number }) =>
   await Sandbox.start({
     version: '2.12.0',
     config: {
-      rpcPort: 4560,
+      rpcPort: args?.rpcPort,
       additionalAccounts: [
         GenesisAccount.createDefault('nat'),
         GenesisAccount.createDefault('alice'),

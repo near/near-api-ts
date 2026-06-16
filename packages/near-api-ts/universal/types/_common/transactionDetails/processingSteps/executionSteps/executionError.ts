@@ -1,18 +1,27 @@
-import type { Prettify } from '../../../../utils';
-import type { AccountId, CryptoHash } from '../../../common';
+import type { AccountId } from '../../../common';
 import type { NearToken } from '../../../nearToken';
 
 /**
  * nearcore ActionErrorKind to NAT ExecutionError map
  *
- * AccountDoesNotExist -> Executor.NotFound
+ * AccountDoesNotExist -> Executor.NotFound \
  * LackBalanceForState -> Executor.StorageDeposit.TooLow
- * AccountAlreadyExists -> CreateAccount.AlreadyExist
  *
+ * AccountAlreadyExists -> CreateAccount.AlreadyExist \
+ * CreateAccountOnlyByRegistrar -> CreateAccount.TopLevelNamespace \
+ * CreateAccountNotAllowed -> CreateAccount.ForeignNamespace \
+ * OnlyImplicitAccountCreationAllowed -> CreateAccount.ImplicitAccount
  */
 
 interface CreateAccountErrorRegistry {
-  'CreateAccount.AlreadyExist': { accountId: AccountId };
+  'CreateAccount.AlreadyExist': { newAccountId: AccountId };
+  'CreateAccount.TopLevelNamespace': {
+    newAccountId: AccountId;
+    creatorAccountId: AccountId;
+    registrarAccountId: AccountId;
+  };
+  'CreateAccount.ForeignNamespace': { newAccountId: AccountId; creatorAccountId: AccountId };
+  'CreateAccount.ImplicitAccount': { newAccountId: AccountId };
 }
 
 interface ExecutorErrorRegistry {

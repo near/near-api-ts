@@ -3,11 +3,10 @@ import { expect } from 'vitest';
 import { createAccount } from '../../../../../../index';
 import { safeSleep } from '../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from './createAccount.test';
 
-export const alreadyExist = (context: TestContext) => async () => {
+export const implicitDeterministicNearAccount = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -23,23 +22,19 @@ export const alreadyExist = (context: TestContext) => async () => {
       nonce: accountAccessKey.nonce + 1,
       blockHash,
       action: createAccount(),
-      receiverAccountId: 'nat',
+      receiverAccountId: '0s0123456789012345678901234567890123456789',
     },
   });
 
-  const tx = await client.safeSendSignedTransaction({ signedTransaction });
-
-  // TODO rework after rework SendSignedTransaction
-  assertNatErrKind(
-    tx,
-    'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist',
-  );
+  await client.safeSendSignedTransaction({ signedTransaction });
   await safeSleep(500);
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
+  assertTxResultExecutionErrKind(txResult, 'CreateAccount.ImplicitAccount');
 
-  assertTxResultExecutionErrKind(txResult, 'CreateAccount.AlreadyExist');
-  expect(txResult.result.error.context).toStrictEqual({ newAccountId: 'nat' });
+  expect(txResult.result.error.context).toStrictEqual({
+    newAccountId: '0s0123456789012345678901234567890123456789',
+  });
 };

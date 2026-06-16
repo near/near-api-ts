@@ -26,7 +26,32 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
     if ('AccountAlreadyExists' in kind)
       return {
         kind: 'CreateAccount.AlreadyExist',
-        context: { accountId: kind.AccountAlreadyExists.accountId },
+        context: { newAccountId: kind.AccountAlreadyExists.accountId },
+      };
+
+    if ('CreateAccountOnlyByRegistrar' in kind)
+      return {
+        kind: 'CreateAccount.TopLevelNamespace',
+        context: {
+          newAccountId: kind.CreateAccountOnlyByRegistrar.accountId,
+          creatorAccountId: kind.CreateAccountOnlyByRegistrar.predecessorId,
+          registrarAccountId: kind.CreateAccountOnlyByRegistrar.registrarAccountId,
+        },
+      };
+
+    if ('CreateAccountNotAllowed' in kind)
+      return {
+        kind: 'CreateAccount.ForeignNamespace',
+        context: {
+          newAccountId: kind.CreateAccountNotAllowed.accountId,
+          creatorAccountId: kind.CreateAccountNotAllowed.predecessorId,
+        },
+      };
+
+    if ('OnlyImplicitAccountCreationAllowed' in kind)
+      return {
+        kind: 'CreateAccount.ImplicitAccount',
+        context: { newAccountId: kind.OnlyImplicitAccountCreationAllowed.accountId },
       };
   }
 

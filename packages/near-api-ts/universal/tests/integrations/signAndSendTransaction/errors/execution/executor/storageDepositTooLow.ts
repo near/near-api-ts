@@ -8,6 +8,15 @@ import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxRes
 import { getFileBytes } from '../../../../../utils/common';
 import type { TestContext } from './executor.test';
 
+/**
+ * Reproduces ActionErrorKind::LackBalanceForState (the action-level variant produced in a
+ * receipt at runtime/runtime/src/lib.rs, NOT the tx-validation InvalidTxError variant).
+ *
+ * We create a fresh sub-account, fund it with a tiny amount, and deploy an ~83 KB contract
+ * in the same receipt. Every action succeeds, but the post-execution check_storage_stake on
+ * the new account fails because the deposited balance can't cover the contract's storage
+ * (~0.84 NEAR at the default storage_amount_per_byte of 1e19 yocto/byte).
+ */
 export const storageDepositTooLow = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
@@ -25,7 +34,6 @@ export const storageDepositTooLow = (context: TestContext) => async () => {
       blockHash,
       actions: [
         createAccount(),
-        // Far less than the ~0.84 NEAR the deployed contract needs for storage.
         transfer({ amount: near('0.1') }),
         deployContract({
           wasmBytes: await getFileBytes('./wasm/write-get-record.wasm'),
@@ -42,8 +50,7 @@ export const storageDepositTooLow = (context: TestContext) => async () => {
   await safeSleep(500);
 
   const txResult = await client.getTransactionResult({
-    // @ts-ignore
-    transactionHash: tx.error.context.cause.context.rpcResponse.result.transaction.hash,
+    transactionHash: signedTransaction.transactionHash,
   });
 
   assertTxResultExecutionErrKind(txResult, 'Executor.StorageDeposit.TooLow');
