@@ -18,6 +18,11 @@ export type StakeActionSummary = {
   validatorPublicKey: PublicKey;
 };
 
+export type DeleteKeyActionSummary = {
+  actionType: 'DeleteKey';
+  publicKey: PublicKey;
+};
+
 export type DeployContractActionSummary = {
   actionType: 'DeployContract';
   contractWasmHash: ContractWasmHash;
@@ -35,6 +40,7 @@ export type ActionSummary<FCA> =
   | CreateAccountActionSummary
   | TransferActionSummary
   | StakeActionSummary
+  | DeleteKeyActionSummary
   | DeployContractActionSummary
   | FunctionCallActionSummary<FCA>;
 

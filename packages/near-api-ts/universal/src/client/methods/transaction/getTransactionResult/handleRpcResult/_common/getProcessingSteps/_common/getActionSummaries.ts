@@ -52,6 +52,14 @@ export const getRawActionSummary = (rpcAction: ActionView): RawActionSummary => 
     };
   }
 
+  if ('DeleteKey' in rpcAction) {
+    const { DeleteKey } = rpcAction;
+    return {
+      actionType: 'DeleteKey' as const,
+      publicKey: DeleteKey.publicKey as PublicKey, // TODO validate key by zod
+    };
+  }
+
   if ('DeployContract' in rpcAction) {
     const { DeployContract } = rpcAction;
     return {

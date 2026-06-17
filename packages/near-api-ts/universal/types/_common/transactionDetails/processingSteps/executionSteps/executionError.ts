@@ -1,4 +1,5 @@
 import type { AccountId } from '../../../common';
+import type { PublicKey } from '../../../crypto';
 import type { NearToken } from '../../../nearToken';
 
 /**
@@ -15,6 +16,8 @@ import type { NearToken } from '../../../nearToken';
  * InsufficientStake -> Stake.BelowThreshold \
  * TriesToStake -> Stake.Balance.TooLow \
  * TriesToUnstake -> Stake.NotFound
+ *
+ * DeleteKeyDoesNotExist -> DeleteKey.NotFound
  */
 
 interface CreateAccountErrorRegistry {
@@ -48,10 +51,15 @@ interface StakeErrorRegistry {
   'Stake.NotFound': { accountId: AccountId };
 }
 
+interface DeleteKeyErrorRegistry {
+  'DeleteKey.NotFound': { accountId: AccountId; publicKey: PublicKey };
+}
+
 export interface ExecutionErrorRegistry
   extends ExecutorErrorRegistry,
     CreateAccountErrorRegistry,
-    StakeErrorRegistry {}
+    StakeErrorRegistry,
+    DeleteKeyErrorRegistry {}
 
 export type ExecutionErrorKind = keyof ExecutionErrorRegistry;
 

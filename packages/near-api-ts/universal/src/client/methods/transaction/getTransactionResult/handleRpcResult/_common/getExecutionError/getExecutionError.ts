@@ -1,5 +1,6 @@
 import type { ActionError } from '@near-js/jsonrpc-types';
 import { yoctoNear } from '../../../../../../../../index';
+import type { PublicKey } from '../../../../../../../../types/_common/crypto';
 import type { ExecutionError } from '../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionError';
 
 export const getExecutionError = (actionError: ActionError): ExecutionError => {
@@ -87,6 +88,16 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
       return {
         kind: 'Stake.NotFound',
         context: { accountId: kind.TriesToUnstake.accountId },
+      };
+
+    // DeleteKey action
+    if ('DeleteKeyDoesNotExist' in kind)
+      return {
+        kind: 'DeleteKey.NotFound',
+        context: {
+          accountId: kind.DeleteKeyDoesNotExist.accountId,
+          publicKey: kind.DeleteKeyDoesNotExist.publicKey as PublicKey,
+        },
       };
   }
 
