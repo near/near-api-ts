@@ -1,4 +1,5 @@
 import type { Base64String, ContractWasmHash } from '../common';
+import type { PublicKey } from '../crypto';
 import type { NearGas } from '../nearGas';
 import type { NearToken } from '../nearToken';
 
@@ -9,6 +10,12 @@ export type CreateAccountActionSummary = {
 export type TransferActionSummary = {
   actionType: 'Transfer';
   amount: NearToken;
+};
+
+export type StakeActionSummary = {
+  actionType: 'Stake';
+  amount: NearToken;
+  validatorPublicKey: PublicKey;
 };
 
 export type DeployContractActionSummary = {
@@ -27,6 +34,7 @@ export type FunctionCallActionSummary<FCA> = {
 export type ActionSummary<FCA> =
   | CreateAccountActionSummary
   | TransferActionSummary
+  | StakeActionSummary
   | DeployContractActionSummary
   | FunctionCallActionSummary<FCA>;
 

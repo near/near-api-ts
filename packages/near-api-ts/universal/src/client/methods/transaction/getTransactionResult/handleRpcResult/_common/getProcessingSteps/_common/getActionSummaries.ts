@@ -1,6 +1,7 @@
 import type { ActionView } from '@near-js/jsonrpc-types';
 import { fromJsonBytes, gas, yoctoNear } from '../../../../../../../../../index';
 import type { Base64String } from '../../../../../../../../../types/_common/common';
+import type { PublicKey } from '../../../../../../../../../types/_common/crypto';
 import type {
   ParsedActionSummary,
   RawActionSummary,
@@ -39,6 +40,15 @@ export const getRawActionSummary = (rpcAction: ActionView): RawActionSummary => 
     return {
       actionType: 'Transfer' as const,
       amount: yoctoNear(Transfer.deposit),
+    };
+  }
+
+  if ('Stake' in rpcAction) {
+    const { Stake } = rpcAction;
+    return {
+      actionType: 'Stake' as const,
+      amount: yoctoNear(Stake.stake),
+      validatorPublicKey: Stake.publicKey as PublicKey, // TODO validate key by zod
     };
   }
 

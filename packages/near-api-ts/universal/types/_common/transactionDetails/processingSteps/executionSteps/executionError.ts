@@ -11,6 +11,10 @@ import type { NearToken } from '../../../nearToken';
  * CreateAccountOnlyByRegistrar -> CreateAccount.TopLevelNamespace \
  * CreateAccountNotAllowed -> CreateAccount.ForeignNamespace \
  * OnlyImplicitAccountCreationAllowed -> CreateAccount.ImplicitAccount
+ *
+ * InsufficientStake -> Stake.BelowThreshold \
+ * TriesToStake -> Stake.Balance.TooLow \
+ * TriesToUnstake -> Stake.NotFound
  */
 
 interface CreateAccountErrorRegistry {
@@ -29,17 +33,28 @@ interface ExecutorErrorRegistry {
   'Executor.StorageDeposit.TooLow': { accountId: AccountId; missingAmount: NearToken };
 }
 
-export interface ExecutionErrorRegistry extends ExecutorErrorRegistry, CreateAccountErrorRegistry {}
+interface StakeErrorRegistry {
+  'Stake.BelowThreshold': {
+    accountId: AccountId;
+    proposedStake: NearToken;
+    minimumStake: NearToken;
+  };
+  'Stake.Balance.TooLow': {
+    accountId: AccountId;
+    proposedStake: NearToken;
+    totalBalance: NearToken;
+    missingAmount: NearToken;
+  };
+  'Stake.NotFound': { accountId: AccountId };
+}
+
+export interface ExecutionErrorRegistry
+  extends ExecutorErrorRegistry,
+    CreateAccountErrorRegistry,
+    StakeErrorRegistry {}
 
 export type ExecutionErrorKind = keyof ExecutionErrorRegistry;
 
 export type ExecutionError<K extends ExecutionErrorKind = ExecutionErrorKind> = K extends K
   ? { kind: K; context: ExecutionErrorRegistry[K] }
   : never;
-
-// export type ExecutionError = {
-//   [K in ExecutionErrorKind]: {
-//     kind: K;
-//     context: Prettify<{ executionStepIndex: number } & ExecutionErrorRegistry[K]>;
-//   };
-// }[ExecutionErrorKind];

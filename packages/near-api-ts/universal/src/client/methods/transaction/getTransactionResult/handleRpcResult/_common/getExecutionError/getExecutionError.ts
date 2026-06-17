@@ -53,6 +53,41 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
         kind: 'CreateAccount.ImplicitAccount',
         context: { newAccountId: kind.OnlyImplicitAccountCreationAllowed.accountId },
       };
+
+    // Stake action
+    if ('InsufficientStake' in kind)
+      return {
+        kind: 'Stake.BelowThreshold',
+        context: {
+          accountId: kind.InsufficientStake.accountId,
+          proposedStake: yoctoNear(kind.InsufficientStake.stake),
+          minimumStake: yoctoNear(kind.InsufficientStake.minimumStake),
+        },
+      };
+
+    if ('TriesToStake' in kind) {
+      const proposedStake = yoctoNear(kind.TriesToStake.stake);
+      const totalBalance = yoctoNear(kind.TriesToStake.balance).add(
+        yoctoNear(kind.TriesToStake.locked),
+      );
+      const missingAmount = proposedStake.sub(totalBalance);
+
+      return {
+        kind: 'Stake.Balance.TooLow',
+        context: {
+          accountId: kind.TriesToStake.accountId,
+          proposedStake,
+          totalBalance,
+          missingAmount,
+        },
+      };
+    }
+
+    if ('TriesToUnstake' in kind)
+      return {
+        kind: 'Stake.NotFound',
+        context: { accountId: kind.TriesToUnstake.accountId },
+      };
   }
 
   throw new Error('Unknown execution error', { cause: actionError });
