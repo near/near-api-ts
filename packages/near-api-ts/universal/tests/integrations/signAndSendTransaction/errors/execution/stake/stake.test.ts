@@ -25,17 +25,17 @@ describe('signAndSendTransaction › Stake.* errors', () => {
   });
 
   it(
-    'fails with Stake.Balance.TooLow when staking more than the account balance',
+    'fails with Action.Stake.NotEnoughBalance when staking more than the account balance',
     balanceTooLow(context),
   );
 
   it(
-    'fails with Stake.BelowThreshold when the stake is below the seat price',
+    'fails with Action.Stake.BelowThreshold when the stake is below the seat price',
     belowThreshold(context),
   );
 
   it(
-    'fails with Stake.NotFound when staking zero with an unknown validator key',
+    'fails with Action.Stake.NotFound when staking zero with an unknown validator key',
     notFound(context),
   );
 });

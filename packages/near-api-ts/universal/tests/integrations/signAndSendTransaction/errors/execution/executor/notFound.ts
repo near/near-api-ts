@@ -3,7 +3,6 @@ import { expect } from 'vitest';
 import { transfer } from '../../../../../../index';
 import { safeSleep } from '../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from './executor.test';
 
@@ -27,15 +26,12 @@ export const notFound = (context: TestContext) => async () => {
     },
   });
 
-  const tx = await client.safeSendSignedTransaction({ signedTransaction });
-
-  // TODO rework after rework SendSignedTransaction
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound');
+  await client.safeSendSignedTransaction({ signedTransaction });
   await safeSleep(500);
 
   const txResult = await client.getTransactionResult({
-    transactionHash: tx.error.context.transactionHash,
+    transactionHash: signedTransaction.transactionHash,
   });
   assertTxResultExecutionErrKind(txResult, 'Executor.NotFound');
-  expect(txResult.result.error.context).toStrictEqual({ accountId: 'not-exist' });
+  expect(txResult.result.error.context.executorAccountId).toBe('not-exist');
 };

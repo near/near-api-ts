@@ -40,9 +40,9 @@ export const balanceTooLow = (context: TestContext) => async () => {
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Stake.Balance.TooLow');
+  assertTxResultExecutionErrKind(txResult, 'Action.Stake.NotEnoughBalance');
   expect(txResult.result.error.context).toMatchObject({
-    accountId: 'nat',
+    validatorAccountId: 'nat',
     proposedStake: near('100000000'),
   });
 };

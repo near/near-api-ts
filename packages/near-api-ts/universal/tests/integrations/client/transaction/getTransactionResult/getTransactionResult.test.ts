@@ -123,7 +123,7 @@ describe('CallContractReadFunction', () => {
     const tx = await client.getTransactionResult({
       transactionHash,
       options: {
-        // deserializeResultData,
+        deserializeResultData,
         deserializeActionSummaries,
         deserializeExecutionSteps,
       },

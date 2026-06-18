@@ -40,6 +40,6 @@ export const notFound = (context: TestContext) => async () => {
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Stake.NotFound');
-  expect(txResult.result.error.context).toStrictEqual({ accountId: 'nat' });
+  assertTxResultExecutionErrKind(txResult, 'Action.Stake.NotFound');
+  expect(txResult.result.error.context).toStrictEqual({ validatorAccountId: 'nat' });
 };

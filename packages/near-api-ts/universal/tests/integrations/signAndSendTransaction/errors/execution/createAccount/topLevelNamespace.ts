@@ -36,7 +36,7 @@ export const topLevelNamespace = (context: TestContext) => async () => {
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
-  assertTxResultExecutionErrKind(txResult, 'CreateAccount.TopLevelNamespace');
+  assertTxResultExecutionErrKind(txResult, 'Action.CreateAccount.TopLevelNamespace');
 
   expect(txResult.result.error.context).toStrictEqual({
     newAccountId: 'top-level-account',

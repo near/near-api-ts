@@ -5,13 +5,12 @@ import { safeSleep } from '../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
-import { log } from '../../../../../utils/common';
 import type { TestContext } from './deleteKey.test';
 
 export const notFound = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const missingKey = randomEd25519KeyPair().publicKey;
+  const missingPublicKey = randomEd25519KeyPair().publicKey;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
     accountId: 'nat',
@@ -25,7 +24,7 @@ export const notFound = (context: TestContext) => async () => {
       signerPublicKey: DEFAULT_PUBLIC_KEY,
       nonce: accountAccessKey.nonce + 1,
       blockHash,
-      action: deleteKey({ publicKey: missingKey }),
+      action: deleteKey({ publicKey: missingPublicKey }),
       receiverAccountId: 'nat',
     },
   });
@@ -39,10 +38,10 @@ export const notFound = (context: TestContext) => async () => {
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
-  log(txResult);
-  assertTxResultExecutionErrKind(txResult, 'DeleteKey.NotFound');
+
+  assertTxResultExecutionErrKind(txResult, 'Action.DeleteKey.NotFound');
   expect(txResult.result.error.context).toStrictEqual({
     accountId: 'nat',
-    publicKey: missingKey,
+    publicKey: missingPublicKey,
   });
 };

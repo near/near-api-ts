@@ -5,58 +5,61 @@ import type { NearToken } from '../../../nearToken';
 /**
  * nearcore ActionErrorKind to NAT ExecutionError map
  *
- * AccountDoesNotExist -> Executor.NotFound \
- * LackBalanceForState -> Executor.StorageDeposit.TooLow
+ * AccountDoesNotExist -> Executor.NotFound
+ * LackBalanceForState -> Executor.NotEnoughBalance
  *
- * AccountAlreadyExists -> CreateAccount.AlreadyExist \
- * CreateAccountOnlyByRegistrar -> CreateAccount.TopLevelNamespace \
- * CreateAccountNotAllowed -> CreateAccount.ForeignNamespace \
- * OnlyImplicitAccountCreationAllowed -> CreateAccount.ImplicitAccount
+ * ActorNoPermission -> Action.Forbidden
  *
- * InsufficientStake -> Stake.BelowThreshold \
- * TriesToStake -> Stake.Balance.TooLow \
- * TriesToUnstake -> Stake.NotFound
+ * AccountAlreadyExists -> Action.CreateAccount.AlreadyExist
+ * CreateAccountOnlyByRegistrar -> Action.CreateAccount.TopLevelNamespace
+ * CreateAccountNotAllowed -> Action.CreateAccount.ForeignNamespace
+ * OnlyImplicitAccountCreationAllowed -> Action.CreateAccount.ImplicitAccount
  *
- * DeleteKeyDoesNotExist -> DeleteKey.NotFound
+ * InsufficientStake -> Action.Stake.BelowThreshold
+ * TriesToStake ->  Action.Stake.NotEnoughBalance
+ * TriesToUnstake ->  Action.Action.Stake.NotFound
+ *
+ * DeleteKeyDoesNotExist -> Action.DeleteKey.NotFound
  */
 
+interface CommonExecutionErrorRegistry {
+  'Executor.NotFound': { executorAccountId: AccountId };
+  'Executor.NotEnoughBalance': { executorAccountId: AccountId; missingAmount: NearToken };
+  'Action.Forbidden': { executionStepCreatorAccountId: AccountId; executorAccountId: AccountId };
+}
+
 interface CreateAccountErrorRegistry {
-  'CreateAccount.AlreadyExist': { newAccountId: AccountId };
-  'CreateAccount.TopLevelNamespace': {
+  'Action.CreateAccount.AlreadyExist': { newAccountId: AccountId };
+  'Action.CreateAccount.TopLevelNamespace': {
     newAccountId: AccountId;
     creatorAccountId: AccountId;
     registrarAccountId: AccountId;
   };
-  'CreateAccount.ForeignNamespace': { newAccountId: AccountId; creatorAccountId: AccountId };
-  'CreateAccount.ImplicitAccount': { newAccountId: AccountId };
-}
-
-interface ExecutorErrorRegistry {
-  'Executor.NotFound': { accountId: AccountId };
-  'Executor.StorageDeposit.TooLow': { accountId: AccountId; missingAmount: NearToken };
+  'Action.CreateAccount.ForeignNamespace': { newAccountId: AccountId; creatorAccountId: AccountId };
+  'Action.CreateAccount.ImplicitAccount': { newAccountId: AccountId };
 }
 
 interface StakeErrorRegistry {
-  'Stake.BelowThreshold': {
-    accountId: AccountId;
+  'Action.Stake.BelowThreshold': {
+    validatorAccountId: AccountId;
     proposedStake: NearToken;
     minimumStake: NearToken;
   };
-  'Stake.Balance.TooLow': {
-    accountId: AccountId;
+  'Action.Stake.NotEnoughBalance': {
+    validatorAccountId: AccountId;
     proposedStake: NearToken;
     totalBalance: NearToken;
     missingAmount: NearToken;
   };
-  'Stake.NotFound': { accountId: AccountId };
+  'Action.Stake.NotFound': { validatorAccountId: AccountId };
 }
 
 interface DeleteKeyErrorRegistry {
-  'DeleteKey.NotFound': { accountId: AccountId; publicKey: PublicKey };
+  'Action.DeleteKey.NotFound': { accountId: AccountId; publicKey: PublicKey };
 }
 
 export interface ExecutionErrorRegistry
-  extends ExecutorErrorRegistry,
+  extends CommonExecutionErrorRegistry,
     CreateAccountErrorRegistry,
     StakeErrorRegistry,
     DeleteKeyErrorRegistry {}

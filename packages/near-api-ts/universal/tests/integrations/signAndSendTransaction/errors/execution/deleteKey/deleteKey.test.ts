@@ -23,7 +23,7 @@ describe('signAndSendTransaction › DeleteKey.* errors', () => {
   });
 
   it(
-    'fails with DeleteKey.NotFound when deleting a key that is not attached to the account',
+    'fails with Action.DeleteKey.NotFound when deleting a key that is not attached to the account',
     notFound(context),
   );
 });

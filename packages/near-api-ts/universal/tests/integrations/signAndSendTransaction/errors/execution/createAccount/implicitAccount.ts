@@ -6,7 +6,7 @@ import { signTransaction } from '../../../../../../src/helpers/signTransaction';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from './createAccount.test';
 
-export const implicitDeterministicNearAccount = (context: TestContext) => async () => {
+export const implicitAccount = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -22,7 +22,7 @@ export const implicitDeterministicNearAccount = (context: TestContext) => async 
       nonce: accountAccessKey.nonce + 1,
       blockHash,
       action: createAccount(),
-      receiverAccountId: '0s0123456789012345678901234567890123456789',
+      receiverAccountId: '8a3a2af86f8b2a0d013761565dc6ee86af153f6fa4c7db4bd9a52f63ff072d4c',
     },
   });
 
@@ -32,9 +32,9 @@ export const implicitDeterministicNearAccount = (context: TestContext) => async 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
-  assertTxResultExecutionErrKind(txResult, 'CreateAccount.ImplicitAccount');
+  assertTxResultExecutionErrKind(txResult, 'Action.CreateAccount.ImplicitAccount');
 
   expect(txResult.result.error.context).toStrictEqual({
-    newAccountId: '0s0123456789012345678901234567890123456789',
+    newAccountId: '8a3a2af86f8b2a0d013761565dc6ee86af153f6fa4c7db4bd9a52f63ff072d4c',
   });
 };

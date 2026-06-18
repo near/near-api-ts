@@ -40,6 +40,6 @@ export const alreadyExist = (context: TestContext) => async () => {
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'CreateAccount.AlreadyExist');
+  assertTxResultExecutionErrKind(txResult, 'Action.CreateAccount.AlreadyExist');
   expect(txResult.result.error.context).toStrictEqual({ newAccountId: 'nat' });
 };

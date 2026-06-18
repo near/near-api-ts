@@ -24,6 +24,22 @@ export const getRawActionSummary = (rpcAction: ActionView): RawActionSummary => 
     };
   }
 
+  if ('Transfer' in rpcAction) {
+    const { Transfer } = rpcAction;
+    return {
+      actionType: 'Transfer' as const,
+      amount: yoctoNear(Transfer.deposit),
+    };
+  }
+
+  if ('DeployContract' in rpcAction) {
+    const { DeployContract } = rpcAction;
+    return {
+      actionType: 'DeployContract' as const,
+      contractWasmHash: DeployContract.code,
+    };
+  }
+
   if ('FunctionCall' in rpcAction) {
     const { FunctionCall } = rpcAction;
     return {
@@ -32,14 +48,6 @@ export const getRawActionSummary = (rpcAction: ActionView): RawActionSummary => 
       functionArgs: FunctionCall.args,
       gasLimit: gas(FunctionCall.gas),
       attachedDeposit: yoctoNear(FunctionCall.deposit),
-    };
-  }
-
-  if ('Transfer' in rpcAction) {
-    const { Transfer } = rpcAction;
-    return {
-      actionType: 'Transfer' as const,
-      amount: yoctoNear(Transfer.deposit),
     };
   }
 
@@ -60,11 +68,11 @@ export const getRawActionSummary = (rpcAction: ActionView): RawActionSummary => 
     };
   }
 
-  if ('DeployContract' in rpcAction) {
-    const { DeployContract } = rpcAction;
+  if ('DeleteAccount' in rpcAction) {
+    const { DeleteAccount } = rpcAction;
     return {
-      actionType: 'DeployContract' as const,
-      contractWasmHash: DeployContract.code,
+      actionType: 'DeleteAccount' as const,
+      beneficiaryAccountId: DeleteAccount.beneficiaryId,
     };
   }
 

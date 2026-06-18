@@ -11,14 +11,16 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
     if ('AccountDoesNotExist' in kind)
       return {
         kind: 'Executor.NotFound',
-        context: { accountId: kind.AccountDoesNotExist.accountId },
+        context: {
+          executorAccountId: kind.AccountDoesNotExist.accountId,
+        },
       };
 
     if ('LackBalanceForState' in kind)
       return {
-        kind: 'Executor.StorageDeposit.TooLow',
+        kind: 'Executor.NotEnoughBalance',
         context: {
-          accountId: kind.LackBalanceForState.accountId,
+          executorAccountId: kind.LackBalanceForState.accountId,
           missingAmount: yoctoNear(kind.LackBalanceForState.amount),
         },
       };
@@ -26,13 +28,15 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
     // CreateAccount action
     if ('AccountAlreadyExists' in kind)
       return {
-        kind: 'CreateAccount.AlreadyExist',
-        context: { newAccountId: kind.AccountAlreadyExists.accountId },
+        kind: 'Action.CreateAccount.AlreadyExist',
+        context: {
+          newAccountId: kind.AccountAlreadyExists.accountId,
+        },
       };
 
     if ('CreateAccountOnlyByRegistrar' in kind)
       return {
-        kind: 'CreateAccount.TopLevelNamespace',
+        kind: 'Action.CreateAccount.TopLevelNamespace',
         context: {
           newAccountId: kind.CreateAccountOnlyByRegistrar.accountId,
           creatorAccountId: kind.CreateAccountOnlyByRegistrar.predecessorId,
@@ -42,7 +46,7 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
 
     if ('CreateAccountNotAllowed' in kind)
       return {
-        kind: 'CreateAccount.ForeignNamespace',
+        kind: 'Action.CreateAccount.ForeignNamespace',
         context: {
           newAccountId: kind.CreateAccountNotAllowed.accountId,
           creatorAccountId: kind.CreateAccountNotAllowed.predecessorId,
@@ -51,16 +55,16 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
 
     if ('OnlyImplicitAccountCreationAllowed' in kind)
       return {
-        kind: 'CreateAccount.ImplicitAccount',
+        kind: 'Action.CreateAccount.ImplicitAccount',
         context: { newAccountId: kind.OnlyImplicitAccountCreationAllowed.accountId },
       };
 
     // Stake action
     if ('InsufficientStake' in kind)
       return {
-        kind: 'Stake.BelowThreshold',
+        kind: 'Action.Stake.BelowThreshold',
         context: {
-          accountId: kind.InsufficientStake.accountId,
+          validatorAccountId: kind.InsufficientStake.accountId,
           proposedStake: yoctoNear(kind.InsufficientStake.stake),
           minimumStake: yoctoNear(kind.InsufficientStake.minimumStake),
         },
@@ -74,9 +78,9 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
       const missingAmount = proposedStake.sub(totalBalance);
 
       return {
-        kind: 'Stake.Balance.TooLow',
+        kind: 'Action.Stake.NotEnoughBalance',
         context: {
-          accountId: kind.TriesToStake.accountId,
+          validatorAccountId: kind.TriesToStake.accountId,
           proposedStake,
           totalBalance,
           missingAmount,
@@ -86,14 +90,14 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
 
     if ('TriesToUnstake' in kind)
       return {
-        kind: 'Stake.NotFound',
-        context: { accountId: kind.TriesToUnstake.accountId },
+        kind: 'Action.Stake.NotFound',
+        context: { validatorAccountId: kind.TriesToUnstake.accountId },
       };
 
     // DeleteKey action
     if ('DeleteKeyDoesNotExist' in kind)
       return {
-        kind: 'DeleteKey.NotFound',
+        kind: 'Action.DeleteKey.NotFound',
         context: {
           accountId: kind.DeleteKeyDoesNotExist.accountId,
           publicKey: kind.DeleteKeyDoesNotExist.publicKey as PublicKey,

@@ -40,9 +40,9 @@ export const belowThreshold = (context: TestContext) => async () => {
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Stake.BelowThreshold');
+  assertTxResultExecutionErrKind(txResult, 'Action.Stake.BelowThreshold');
   expect(txResult.result.error.context).toMatchObject({
-    accountId: 'nat',
+    validatorAccountId: 'nat',
     proposedStake: near('1'),
   });
 };

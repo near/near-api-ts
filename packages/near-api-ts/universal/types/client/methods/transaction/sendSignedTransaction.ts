@@ -25,6 +25,7 @@ export interface SendSignedTransactionPublicErrorRegistry {
   //
   'Client.SendSignedTransaction.Rpc.Transaction.Expired': TransactionErrorContext['Expired'];
   'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid': TransactionErrorContext['Nonce']['Invalid'];
+  // TODO: Signer.NotEnoughBalance
   'Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow': TransactionErrorContext['Signer']['Balance']['TooLow'];
   'Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound': TransactionErrorContext['Signer']['NotFound'];
   'Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid': TransactionErrorContext['Signature']['Invalid'];

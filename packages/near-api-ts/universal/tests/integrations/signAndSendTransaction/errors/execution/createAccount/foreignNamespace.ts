@@ -5,6 +5,7 @@ import { safeSleep } from '../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
+import { log } from '../../../../../utils/common';
 import type { TestContext } from './createAccount.test';
 
 export const foreignNamespace = (context: TestContext) => async () => {
@@ -36,8 +37,8 @@ export const foreignNamespace = (context: TestContext) => async () => {
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
-
-  assertTxResultExecutionErrKind(txResult, 'CreateAccount.ForeignNamespace');
+  log(txResult)
+  assertTxResultExecutionErrKind(txResult, 'Action.CreateAccount.ForeignNamespace');
 
   expect(txResult.result.error.context).toStrictEqual({
     newAccountId: 'subaccount.alice',

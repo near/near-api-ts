@@ -29,48 +29,28 @@ describe('getTransactionResult', () => {
   });
 
   it('simple tx', async () => {
-    // const keyService = createMemoryKeyService({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } });
-    //
-    // const alice = createMemorySigner({
-    //   signerAccountId: 'alice',
-    //   client,
-    //   keyService,
-    // });
-    //
-    // const signedTransaction = await alice.signTransaction({
-    //   intent: {
-    //     action: transfer({ amount: { near: '1' } }),
-    //     receiverAccountId: 'nat',
-    //   },
-    // });
-    //
-    // client.sendSignedTransaction({ signedTransaction });
-    //
-    // await safeSleep(1000);
+    const testnetClient = createTestnetClient();
 
-
-    // const testnetClient = createTestnetClient();
-    //
-    // const txResult = await testnetClient.safeGetTransactionResult({
-    //   // transactionHash: 'GMhxbrMZ4PAprLdwb9wyJ627kVRBWKK6yvfCTL8Mf5Fs',  // DelegateActionInvalidNonce
-    //   // transactionHash: '3AByi9aq9KukKZRGSEVhkffk7Vjb2rpBKcf5daUdrKDY', // request - not SIR
-    //   // transactionHash: '3QMHh2yBHBGrkcxQtPfx9npCnJsHaXTMcTTwmM4SbKSw', // sign (mpc) - not SIR
-    //   // transactionHash: '4Y9wvJ3TrkLxRW1d8BMQH6amRWtaDqcLdwFG9RWp9RJd', // SIR, delete account, refund failed
-    //   // transactionHash: '33GmSjm2uudAknXkShLhE1idNd6FePWnKBT7Mqb6CA5b', // SIR, yield, request
-    //   policies: { transport: { rpcTypePreferences: ['Archival', 'Regular'] } },
-    // });
-    //
-    // log(txResult);
-
-    const mainnetClient = createMainnetClient()
-
-    const mainnetTxResult = await mainnetClient.safeGetTransactionResult({
-      // transactionHash: 'HoWytDmLdYF4MnmayBSArwxef6Tj6pDYjnuNCVdSEnXe', // execute_intents - SIR
-      // transactionHash: 'GxFGnomJ8znxJkpSduxZk7c9F3nqh7waAvnWxdFfxshK', // v1.signer - respond - not SIR
-      transactionHash: 'DSnehcspPKHuX44brwy4gWDhJYBaKwcP21Hq4qqjncE1', // wrap.near - ft_transfer_call - not SIR
+    const txResult = await testnetClient.safeGetTransactionResult({
+      // transactionHash: 'GMhxbrMZ4PAprLdwb9wyJ627kVRBWKK6yvfCTL8Mf5Fs',  // DelegateActionInvalidNonce
+      // transactionHash: '3AByi9aq9KukKZRGSEVhkffk7Vjb2rpBKcf5daUdrKDY', // request - not SIR
+      // transactionHash: '3QMHh2yBHBGrkcxQtPfx9npCnJsHaXTMcTTwmM4SbKSw', // sign (mpc) - not SIR
+      transactionHash: '4Y9wvJ3TrkLxRW1d8BMQH6amRWtaDqcLdwFG9RWp9RJd', // SIR, delete account, refund failed
+      // transactionHash: '33GmSjm2uudAknXkShLhE1idNd6FePWnKBT7Mqb6CA5b', // SIR, yield, request
       policies: { transport: { rpcTypePreferences: ['Archival', 'Regular'] } },
     });
 
-    log(mainnetTxResult);
+    log(txResult);
+
+    // const mainnetClient = createMainnetClient()
+    //
+    // const mainnetTxResult = await mainnetClient.safeGetTransactionResult({
+    //   // transactionHash: 'HoWytDmLdYF4MnmayBSArwxef6Tj6pDYjnuNCVdSEnXe', // execute_intents - SIR
+    //   // transactionHash: 'GxFGnomJ8znxJkpSduxZk7c9F3nqh7waAvnWxdFfxshK', // v1.signer - respond - not SIR
+    //   transactionHash: 'DSnehcspPKHuX44brwy4gWDhJYBaKwcP21Hq4qqjncE1', // wrap.near - ft_transfer_call - not SIR
+    //   policies: { transport: { rpcTypePreferences: ['Archival', 'Regular'] } },
+    // });
+    //
+    // log(mainnetTxResult);
   });
 });

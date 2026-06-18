@@ -3,7 +3,6 @@ import { expect } from 'vitest';
 import { createAccount, deployContract, near, transfer } from '../../../../../../index';
 import { safeSleep } from '../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import { getFileBytes } from '../../../../../utils/common';
 import type { TestContext } from './executor.test';
@@ -17,7 +16,7 @@ import type { TestContext } from './executor.test';
  * the new account fails because the deposited balance can't cover the contract's storage
  * (~0.84 NEAR at the default storage_amount_per_byte of 1e19 yocto/byte).
  */
-export const storageDepositTooLow = (context: TestContext) => async () => {
+export const notEnoughBalance = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -43,17 +42,14 @@ export const storageDepositTooLow = (context: TestContext) => async () => {
     },
   });
 
-  const tx = await client.safeSendSignedTransaction({ signedTransaction });
-
-  // TODO rework after rework SendSignedTransaction
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Internal');
+  await client.safeSendSignedTransaction({ signedTransaction });
   await safeSleep(500);
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Executor.StorageDeposit.TooLow');
-  expect(txResult.result.error.context.accountId).toBe('new.nat');
+  assertTxResultExecutionErrKind(txResult, 'Executor.NotEnoughBalance');
+  expect(txResult.result.error.context.executorAccountId).toBe('new.nat');
   expect(txResult.result.error.context.missingAmount.near).toBe('0.73734');
 };
