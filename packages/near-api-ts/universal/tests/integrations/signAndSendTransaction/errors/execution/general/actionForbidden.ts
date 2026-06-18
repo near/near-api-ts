@@ -4,7 +4,6 @@ import { deleteKey } from '../../../../../../index';
 import { safeSleep } from '../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
-import { log } from '../../../../../utils/common';
 import type { TestContext } from './general.test';
 
 export const actionForbidden = (context: TestContext) => async () => {
@@ -33,7 +32,6 @@ export const actionForbidden = (context: TestContext) => async () => {
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
-  log(txResult);
 
   assertTxResultExecutionErrKind(txResult, 'Action.Forbidden');
   expect(txResult.result.error.context.stepCreatorAccountId).toBe('nat');

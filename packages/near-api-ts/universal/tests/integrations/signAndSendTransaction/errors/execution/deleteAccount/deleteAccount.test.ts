@@ -4,16 +4,14 @@ import { type Client, keyPair } from '../../../../../../index';
 import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
-import { actionForbidden } from './actionForbidden';
-import { executorNotEnoughBalance } from './executorNotEnoughBalance';
-import { executorNotFound } from './executorNotFound';
+import { staking } from './staking';
 
 export type TestContext = {
   client: Client;
   defaultKeyPair: KeyPair;
 };
 
-describe('signAndSendTransaction › General execution step errors', () => {
+describe('signAndSendTransaction › DeleteAccount.* errors', () => {
   const context = {
     defaultKeyPair: keyPair(DEFAULT_PRIVATE_KEY),
   } as TestContext;
@@ -24,11 +22,8 @@ describe('signAndSendTransaction › General execution step errors', () => {
     return () => sandbox.stop();
   });
 
-  it('fails with Executor.NotFound', executorNotFound(context));
-  it('fails with Executor.NotEnoughBalance', executorNotEnoughBalance(context));
-
   it(
-    'fails with Action.Forbidden when try to perform self-only actions on the foreign account',
-    actionForbidden(context),
+    'fails with Action.DeleteAccount.Staking when deleting an account that has an active stake',
+    staking(context),
   );
 });

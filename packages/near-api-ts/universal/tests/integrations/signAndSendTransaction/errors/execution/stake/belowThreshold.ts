@@ -42,7 +42,7 @@ export const belowThreshold = (context: TestContext) => async () => {
 
   assertTxResultExecutionErrKind(txResult, 'Action.Stake.BelowThreshold');
   expect(txResult.result.error.context).toMatchObject({
-    validatorAccountId: 'nat',
+    accountId: 'nat',
     proposedStake: near('1'),
   });
 };

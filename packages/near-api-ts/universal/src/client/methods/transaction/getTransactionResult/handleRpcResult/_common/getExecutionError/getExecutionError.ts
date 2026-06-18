@@ -37,7 +37,7 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
     // CreateAccount action
     if ('AccountAlreadyExists' in kind)
       return {
-        kind: 'Action.CreateAccount.AlreadyExist',
+        kind: 'Action.CreateAccount.AlreadyExists',
         context: {
           newAccountId: kind.AccountAlreadyExists.accountId,
         },
@@ -73,7 +73,7 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
       return {
         kind: 'Action.Stake.BelowThreshold',
         context: {
-          validatorAccountId: kind.InsufficientStake.accountId,
+          accountId: kind.InsufficientStake.accountId,
           proposedStake: yoctoNear(kind.InsufficientStake.stake),
           minimumStake: yoctoNear(kind.InsufficientStake.minimumStake),
         },
@@ -89,7 +89,7 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
       return {
         kind: 'Action.Stake.NotEnoughBalance',
         context: {
-          validatorAccountId: kind.TriesToStake.accountId,
+          accountId: kind.TriesToStake.accountId,
           proposedStake,
           totalBalance,
           missingAmount,
@@ -100,7 +100,7 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
     if ('TriesToUnstake' in kind)
       return {
         kind: 'Action.Stake.NotFound',
-        context: { validatorAccountId: kind.TriesToUnstake.accountId },
+        context: { accountId: kind.TriesToUnstake.accountId },
       };
 
     // DeleteKey action
@@ -110,6 +110,15 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
         context: {
           accountId: kind.DeleteKeyDoesNotExist.accountId,
           publicKey: kind.DeleteKeyDoesNotExist.publicKey as PublicKey,
+        },
+      };
+
+    // DeleteAccount action
+    if ('DeleteAccountStaking' in kind)
+      return {
+        kind: 'Action.DeleteAccount.Staking',
+        context: {
+          accountId: kind.DeleteAccountStaking.accountId,
         },
       };
   }

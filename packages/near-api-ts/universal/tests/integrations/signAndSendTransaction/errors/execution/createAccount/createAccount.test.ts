@@ -4,7 +4,7 @@ import { type Client, keyPair } from '../../../../../../index';
 import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
-import { alreadyExist } from './alreadyExist';
+import { alreadyExists } from './alreadyExists';
 import { foreignNamespace } from './foreignNamespace';
 import { implicitAccount } from './implicitAccount';
 import { topLevelNamespace } from './topLevelNamespace';
@@ -26,8 +26,8 @@ describe('signAndSendTransaction › CreateAccount.* errors', () => {
   });
 
   it(
-    'fails with Action.CreateAccount.AlreadyExist when trying to recreate an existing account',
-    alreadyExist(context),
+    'fails with Action.CreateAccount.AlreadyExists when trying to recreate an existing account',
+    alreadyExists(context),
   );
 
   it(

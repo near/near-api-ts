@@ -41,5 +41,5 @@ export const notFound = (context: TestContext) => async () => {
   });
 
   assertTxResultExecutionErrKind(txResult, 'Action.Stake.NotFound');
-  expect(txResult.result.error.context).toStrictEqual({ validatorAccountId: 'nat' });
+  expect(txResult.result.error.context).toStrictEqual({ accountId: 'nat' });
 };

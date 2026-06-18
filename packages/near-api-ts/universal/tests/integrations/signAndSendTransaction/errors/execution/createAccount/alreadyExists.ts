@@ -7,7 +7,7 @@ import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from './createAccount.test';
 
-export const alreadyExist = (context: TestContext) => async () => {
+export const alreadyExists = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -40,6 +40,6 @@ export const alreadyExist = (context: TestContext) => async () => {
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Action.CreateAccount.AlreadyExist');
+  assertTxResultExecutionErrKind(txResult, 'Action.CreateAccount.AlreadyExists');
   expect(txResult.result.error.context).toStrictEqual({ newAccountId: 'nat' });
 };
