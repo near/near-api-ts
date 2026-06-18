@@ -4,6 +4,7 @@ import { type Client, keyPair } from '../../../../../../index';
 import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
+import { largeState } from './largeState';
 import { staking } from './staking';
 
 export type TestContext = {
@@ -22,8 +23,6 @@ describe('signAndSendTransaction › DeleteAccount.* errors', () => {
     return () => sandbox.stop();
   });
 
-  it(
-    'fails with Action.DeleteAccount.Staking when deleting an account that has an active stake',
-    staking(context),
-  );
+  it('Action.DeleteAccount.Staking', staking(context));
+  it('Action.DeleteAccount.LargeState', largeState(context));
 });

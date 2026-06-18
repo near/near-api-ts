@@ -121,6 +121,14 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
           accountId: kind.DeleteAccountStaking.accountId,
         },
       };
+
+    if ('DeleteAccountWithLargeState' in kind)
+      return {
+        kind: 'Action.DeleteAccount.LargeState',
+        context: {
+          accountId: kind.DeleteAccountWithLargeState.accountId,
+        },
+      };
   }
 
   throw new Error('Unknown execution error', { cause: actionError });
