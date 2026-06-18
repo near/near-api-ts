@@ -1,12 +1,13 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
-import { transfer } from '../../../../../../index';
+import { deleteKey } from '../../../../../../index';
 import { safeSleep } from '../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
-import type { TestContext } from './executor.test';
+import { log } from '../../../../../utils/common';
+import type { TestContext } from './general.test';
 
-export const notFound = (context: TestContext) => async () => {
+export const actionForbidden = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -21,8 +22,8 @@ export const notFound = (context: TestContext) => async () => {
       signerPublicKey: DEFAULT_PUBLIC_KEY,
       nonce: accountAccessKey.nonce + 1,
       blockHash,
-      action: transfer({ amount: { near: '1' } }),
-      receiverAccountId: 'not-exist',
+      action: deleteKey(context.defaultKeyPair),
+      receiverAccountId: 'alice',
     },
   });
 
@@ -32,6 +33,9 @@ export const notFound = (context: TestContext) => async () => {
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
-  assertTxResultExecutionErrKind(txResult, 'Executor.NotFound');
-  expect(txResult.result.error.context.executorAccountId).toBe('not-exist');
+  log(txResult);
+
+  assertTxResultExecutionErrKind(txResult, 'Action.Forbidden');
+  expect(txResult.result.error.context.stepCreatorAccountId).toBe('nat');
+  expect(txResult.result.error.context.executorAccountId).toBe('alice');
 };

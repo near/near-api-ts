@@ -5,7 +5,7 @@ import { safeSleep } from '../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import { getFileBytes } from '../../../../../utils/common';
-import type { TestContext } from './executor.test';
+import type { TestContext } from './general.test';
 
 /**
  * Reproduces ActionErrorKind::LackBalanceForState (the action-level variant produced in a
@@ -16,7 +16,7 @@ import type { TestContext } from './executor.test';
  * the new account fails because the deposited balance can't cover the contract's storage
  * (~0.84 NEAR at the default storage_amount_per_byte of 1e19 yocto/byte).
  */
-export const notEnoughBalance = (context: TestContext) => async () => {
+export const executorNotEnoughBalance = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({

@@ -4,8 +4,9 @@ import { type Client, keyPair } from '../../../../../../index';
 import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
-import { notEnoughBalance } from './notEnoughBalance';
-import { notFound } from './notFound';
+import { actionForbidden } from './actionForbidden';
+import { executorNotEnoughBalance } from './executorNotEnoughBalance';
+import { executorNotFound } from './executorNotFound';
 
 export type TestContext = {
   client: Client;
@@ -25,13 +26,18 @@ describe('signAndSendTransaction › Executor.* errors', () => {
 
   it(
     'fails with Executor.NotFound when try to transfer NEAR to non-existing account',
-    notFound(context),
+    executorNotFound(context),
   );
 
   it(
     'fails with Executor.NotEnoughBalance ' +
       'when try to create a new named subaccount and deploy a contract, ' +
       'but subaccount has not enough storage deposit',
-    notEnoughBalance(context),
+    executorNotEnoughBalance(context),
+  );
+
+  it(
+    'fails with Action.Forbidden when try to perform self-only actions on the foreign account',
+    actionForbidden(context),
   );
 });

@@ -7,7 +7,7 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
   if (typeof actionError.kind === 'object') {
     const { kind } = actionError;
 
-    // Executor-related
+    // General
     if ('AccountDoesNotExist' in kind)
       return {
         kind: 'Executor.NotFound',
@@ -22,6 +22,15 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
         context: {
           executorAccountId: kind.LackBalanceForState.accountId,
           missingAmount: yoctoNear(kind.LackBalanceForState.amount),
+        },
+      };
+
+    if ('ActorNoPermission' in kind)
+      return {
+        kind: 'Action.Forbidden',
+        context: {
+          stepCreatorAccountId: kind.ActorNoPermission.actorId,
+          executorAccountId: kind.ActorNoPermission.accountId,
         },
       };
 

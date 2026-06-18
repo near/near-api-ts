@@ -22,10 +22,10 @@ import type { NearToken } from '../../../nearToken';
  * DeleteKeyDoesNotExist -> Action.DeleteKey.NotFound
  */
 
-interface CommonExecutionErrorRegistry {
+interface GeneralExecutionErrorRegistry {
   'Executor.NotFound': { executorAccountId: AccountId };
   'Executor.NotEnoughBalance': { executorAccountId: AccountId; missingAmount: NearToken };
-  'Action.Forbidden': { executionStepCreatorAccountId: AccountId; executorAccountId: AccountId };
+  'Action.Forbidden': { stepCreatorAccountId: AccountId; executorAccountId: AccountId };
 }
 
 interface CreateAccountErrorRegistry {
@@ -59,7 +59,7 @@ interface DeleteKeyErrorRegistry {
 }
 
 export interface ExecutionErrorRegistry
-  extends CommonExecutionErrorRegistry,
+  extends GeneralExecutionErrorRegistry,
     CreateAccountErrorRegistry,
     StakeErrorRegistry,
     DeleteKeyErrorRegistry {}
