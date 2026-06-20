@@ -68,6 +68,16 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
         context: { newAccountId: kind.OnlyImplicitAccountCreationAllowed.accountId },
       };
 
+    // AddKey
+    if ('AddKeyAlreadyExists' in kind)
+      return {
+        kind: 'Action.AddKey.AlreadyExists',
+        context: {
+          accountId: kind.AddKeyAlreadyExists.accountId,
+          publicKey: kind.AddKeyAlreadyExists.publicKey as PublicKey, // TODO validate by zod
+        },
+      };
+
     // Stake action
     if ('InsufficientStake' in kind)
       return {

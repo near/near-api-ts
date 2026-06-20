@@ -1,6 +1,6 @@
 import type { AccountId, ContractFunctionName, TransactionNonce } from './common';
 import type { PublicKey } from './crypto';
-import type { NearTokenArgs } from './nearToken';
+import type { NearToken, NearTokenArgs } from './nearToken';
 
 export type FullAccessKey = {
   accessType: 'FullAccess';
@@ -27,7 +27,7 @@ export type FullAccessKey = {
  *
  * @see {@link https://nomicon.io/DataStructures/AccessKey.html | Nomicon — Access Keys}
  */
-export type GasBudget = 'Unlimited' | NearTokenArgs;
+export type GasBudget = 'Unlimited' | NearToken;
 
 /**
  * The set of contract functions this function-call key is permitted to invoke.

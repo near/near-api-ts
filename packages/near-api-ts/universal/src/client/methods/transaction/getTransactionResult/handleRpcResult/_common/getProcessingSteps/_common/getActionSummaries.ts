@@ -7,14 +7,6 @@ import type {
   RawActionSummary,
 } from '../../../../../../../../../types/_common/transactionDetails/actionSummaries';
 
-export const getFunctionArgs = (argsBase64: Base64String) => {
-  try {
-    return fromJsonBytes(Uint8Array.fromBase64(argsBase64));
-  } catch {
-    return argsBase64;
-  }
-};
-
 // Assembles the raw action summary from the RPC action - all fields are converted except
 // functionCall.functionArgs which stays a raw base64 string;
 export const getRawActionSummary = (rpcAction: ActionView): RawActionSummary => {
@@ -29,6 +21,30 @@ export const getRawActionSummary = (rpcAction: ActionView): RawActionSummary => 
     return {
       actionType: 'Transfer' as const,
       amount: yoctoNear(Transfer.deposit),
+    };
+  }
+
+  if ('AddKey' in rpcAction) {
+    const { AddKey } = rpcAction;
+
+    if (AddKey.accessKey.permission === 'FullAccess')
+      return {
+        actionType: 'AddKey' as const,
+        accessType: 'FullAccess' as const,
+        publicKey: AddKey.publicKey as PublicKey,
+      };
+
+    const { allowance, methodNames, receiverId } = AddKey.accessKey.permission.FunctionCall;
+    const gasBudget = typeof allowance === 'string' ? yoctoNear(allowance) : 'Unlimited';
+    const allowedFunctions = methodNames.length > 0 ? methodNames : 'AllNonPayable';
+
+    return {
+      actionType: 'AddKey' as const,
+      accessType: 'FunctionCall' as const,
+      publicKey: AddKey.publicKey as PublicKey,
+      contractAccountId: receiverId,
+      gasBudget,
+      allowedFunctions,
     };
   }
 
@@ -77,6 +93,14 @@ export const getRawActionSummary = (rpcAction: ActionView): RawActionSummary => 
   }
 
   throw new Error('unreachable');
+};
+
+export const getFunctionArgs = (argsBase64: Base64String) => {
+  try {
+    return fromJsonBytes(Uint8Array.fromBase64(argsBase64));
+  } catch {
+    return argsBase64;
+  }
 };
 
 // Default deserialization of the raw action summary - tries to parse functionCall.functionArgs

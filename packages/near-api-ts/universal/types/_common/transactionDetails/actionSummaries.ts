@@ -1,16 +1,33 @@
-import type { AccountId, Base64String, ContractWasmHash } from '../common';
+import type { AllowedFunctions, GasBudget } from '../accountAccessKey';
+import type { AccountId, Base64String, ContractFunctionName, ContractWasmHash } from '../common';
 import type { PublicKey } from '../crypto';
 import type { NearGas } from '../nearGas';
 import type { NearToken } from '../nearToken';
+import type { CreateAccountAction } from '../transaction/actions/createAccount';
+import type { DeleteAccountAction } from '../transaction/actions/deleteAccount';
+import type { DeleteKeyAction } from '../transaction/actions/deleteKey';
 
-export type CreateAccountActionSummary = {
-  actionType: 'CreateAccount';
-};
+export type CreateAccountActionSummary = CreateAccountAction;
 
 export type TransferActionSummary = {
   actionType: 'Transfer';
   amount: NearToken;
 };
+
+export type AddKeyActionSummary =
+  | {
+      actionType: 'AddKey';
+      accessType: 'FullAccess';
+      publicKey: PublicKey;
+    }
+  | {
+      actionType: 'AddKey';
+      accessType: 'FunctionCall';
+      publicKey: PublicKey;
+      contractAccountId: AccountId;
+      gasBudget: GasBudget;
+      allowedFunctions: AllowedFunctions;
+    };
 
 export type DeployContractActionSummary = {
   actionType: 'DeployContract';
@@ -19,7 +36,7 @@ export type DeployContractActionSummary = {
 
 export type FunctionCallActionSummary<FCA> = {
   actionType: 'FunctionCall';
-  functionName: string;
+  functionName: ContractFunctionName;
   functionArgs: FCA;
   gasLimit: NearGas;
   attachedDeposit: NearToken;
@@ -31,19 +48,13 @@ export type StakeActionSummary = {
   validatorPublicKey: PublicKey;
 };
 
-export type DeleteKeyActionSummary = {
-  actionType: 'DeleteKey';
-  publicKey: PublicKey;
-};
-
-export type DeleteAccountActionSummary = {
-  actionType: 'DeleteAccount';
-  beneficiaryAccountId: AccountId;
-};
+export type DeleteKeyActionSummary = DeleteKeyAction;
+export type DeleteAccountActionSummary = DeleteAccountAction;
 
 export type ActionSummary<FCA> =
   | CreateAccountActionSummary
   | TransferActionSummary
+  | AddKeyActionSummary
   | DeployContractActionSummary
   | FunctionCallActionSummary<FCA>
   | StakeActionSummary

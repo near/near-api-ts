@@ -1,8 +1,9 @@
 import type { NatError } from '../../../../src/_common/natError';
-import type { AllowedFunctions, GasBudget } from '../../accountAccessKey';
+import type { AllowedFunctions } from '../../accountAccessKey';
 import type { AccountId, ContractFunctionName, Result } from '../../common';
 import type { NativePublicKey, PublicKey } from '../../crypto';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../natError';
+import type { NearTokenArgs } from '../../nearToken';
 
 export interface CreateAddKeyActionPublicErrorRegistry {
   'CreateAction.AddFullAccessKey.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -36,11 +37,12 @@ export type CreateAddFullAccessKeyAction = (
 ) => AddFullAccessKeyAction;
 
 // AddFunctionCallKey
+type GasBudgetArgs = 'Unlimited' | NearTokenArgs;
 
 export type CreateAddFunctionCallKeyActionArgs = {
   publicKey: PublicKey;
   contractAccountId: AccountId;
-  gasBudget: GasBudget;
+  gasBudget: GasBudgetArgs;
   allowedFunctions: AllowedFunctions;
 };
 
@@ -49,7 +51,7 @@ export type AddFunctionCallKeyAction = {
   accessType: 'FunctionCall';
   publicKey: PublicKey;
   contractAccountId: AccountId;
-  gasBudget: GasBudget;
+  gasBudget: GasBudgetArgs;
   allowedFunctions: AllowedFunctions;
 };
 

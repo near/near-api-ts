@@ -6,6 +6,7 @@ import type {
 } from '../../../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
 import type { RpcActionReceiptTrimmed } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
 import type { RpcReceiptOutcome } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
+import { getExecutionError } from '../../../getExecutionError/getExecutionError';
 import { getRawActionSummary } from '../../_common/getActionSummaries';
 import type { ReceiptCreationMap } from '../createReceiptCreationMap';
 import type { ReceiptsWithOutcomes } from '../getReceiptsWithOutcomes';
@@ -30,13 +31,10 @@ const getRawExecutionStepResult = (
   if (typeof status === 'object' && 'Failure' in status) {
     return {
       status: 'Error',
-      error: {
-        kind: 'any',
-        context: status.Failure,
-      },
+      error: getExecutionError(status.Failure.ActionError),
     };
   }
-
+  // Should never happen as we cover all possible cases
   throw new Error(`Unexpected receipt execution outcome status: ${JSON.stringify(status)}`);
 };
 
