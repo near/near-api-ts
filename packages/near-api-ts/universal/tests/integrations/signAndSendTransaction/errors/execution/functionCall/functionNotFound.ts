@@ -1,12 +1,18 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
-import { expect } from 'vitest';
-import { addFunctionCallKey } from '../../../../../../index';
+import {
+  addFullAccessKey,
+  createAccount,
+  deployContract,
+  functionCall,
+  transfer,
+} from '../../../../../../index';
 import { safeSleep } from '../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
-import type { TestContext } from './addKey.test';
+import { getFileBytes, log } from '../../../../../utils/common';
+import type { TestContext } from './functionCall.test';
 
-export const alreadyExists = (context: TestContext) => async () => {
+export const functionNotFound = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -21,13 +27,17 @@ export const alreadyExists = (context: TestContext) => async () => {
       signerPublicKey: DEFAULT_PUBLIC_KEY,
       nonce: accountAccessKey.nonce + 1,
       blockHash,
-      action: addFunctionCallKey({
-        publicKey: DEFAULT_PUBLIC_KEY,
-        contractAccountId: 'alice',
-        gasBudget: { near: '2.25' },
-        allowedFunctions: 'AllNonPayable',
-      }),
-      receiverAccountId: 'nat',
+      actions: [
+        createAccount(),
+        transfer({ amount: { near: '10' } }),
+        addFullAccessKey(defaultKeyPair),
+        deployContract({ wasmBytes: await getFileBytes('./wasm/write-get-record.wasm') }),
+        functionCall({
+          functionName: 'not_exist',
+          gasLimit: { teraGas: '10' },
+        }),
+      ],
+      receiverAccountId: 'contract.nat',
     },
   });
 
@@ -37,10 +47,6 @@ export const alreadyExists = (context: TestContext) => async () => {
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
-
-  assertTxResultExecutionErrKind(txResult, 'Action.AddKey.AlreadyExists');
-  expect(txResult.result.error.context).toStrictEqual({
-    accountId: 'nat',
-    publicKey: DEFAULT_PUBLIC_KEY,
-  });
+  log(txResult);
+  assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.Function.NotFound');
 };

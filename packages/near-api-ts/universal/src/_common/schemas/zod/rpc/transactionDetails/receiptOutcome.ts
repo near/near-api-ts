@@ -16,17 +16,22 @@ export const RpcReceiptOutcomeZodSchema = z.object({
     receiptIds: z.array(CryptoHashZodSchema),
     gasBurnt: z.number(),
     tokensBurnt: z.string(),
-    metadata: z.object({
-      version: z.union([z.literal(2), z.literal(3)]),
-      gasProfile: z.array(
-        z.object({
-          cost: z.string(),
-          costCategory: z.union([z.literal('ACTION_COST'), z.literal('WASM_HOST_COST')]),
-          gasUsed: z.string(),
-        }),
-      ),
-    }),
-
+    metadata: z.union([
+      z.object({
+        version: z.literal(1),
+        gasProfile: z.null(),
+      }),
+      z.object({
+        version: z.union([z.literal(2), z.literal(3)]),
+        gasProfile: z.array(
+          z.object({
+            cost: z.string(),
+            costCategory: z.union([z.literal('ACTION_COST'), z.literal('WASM_HOST_COST')]),
+            gasUsed: z.string(),
+          }),
+        ),
+      }),
+    ]),
     logs: z.array(z.string()),
   }),
   proof: z.array(MerklePathItemSchema()),

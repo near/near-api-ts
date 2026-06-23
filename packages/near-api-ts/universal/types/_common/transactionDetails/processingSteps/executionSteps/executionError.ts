@@ -37,7 +37,7 @@ interface CreateAccountErrorRegistry {
   'Action.CreateAccount.TopLevelNamespace': {
     newAccountId: AccountId;
     creatorAccountId: AccountId;
-    registrarAccountId: AccountId;
+    registrarAccountId: AccountId; // TODO Remove
   };
   'Action.CreateAccount.ForeignNamespace': { newAccountId: AccountId; creatorAccountId: AccountId };
   'Action.CreateAccount.ImplicitAccount': { newAccountId: AccountId };
@@ -45,6 +45,14 @@ interface CreateAccountErrorRegistry {
 
 interface AddKeyErrorRegistry {
   'Action.AddKey.AlreadyExists': { accountId: AccountId; publicKey: PublicKey };
+}
+
+interface FunctionCallErrorRegistry {
+  'Action.FunctionCall.Wasm.NotFound': { contractAccountId: AccountId };
+  'Action.FunctionCall.Compilation.Failed': { cause: string };
+  'Action.FunctionCall.Function.NotFound': null;
+  'Action.FunctionCall.Function.InvalidSignature': null;
+  'Action.FunctionCall.Execution.Failed': { cause: string };
 }
 
 interface StakeErrorRegistry {
@@ -75,6 +83,7 @@ export interface ExecutionErrorRegistry
   extends GeneralExecutionErrorRegistry,
     CreateAccountErrorRegistry,
     AddKeyErrorRegistry,
+    FunctionCallErrorRegistry,
     StakeErrorRegistry,
     DeleteKeyErrorRegistry,
     DeleteAccountErrorRegistry {}

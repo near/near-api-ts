@@ -2,6 +2,7 @@ import type { ActionError } from '@near-js/jsonrpc-types';
 import { yoctoNear } from '../../../../../../../../index';
 import type { PublicKey } from '../../../../../../../../types/_common/crypto';
 import type { ExecutionError } from '../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionError';
+import { getFunctionCallActionError } from './getFunctionCallActionError/getFunctionCallActionError';
 
 export const getExecutionError = (actionError: ActionError): ExecutionError => {
   if (typeof actionError.kind === 'object') {
@@ -77,6 +78,9 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
           publicKey: kind.AddKeyAlreadyExists.publicKey as PublicKey, // TODO validate by zod
         },
       };
+
+    // FunctionCall action
+    if ('FunctionCallError' in kind) return getFunctionCallActionError(kind.FunctionCallError);
 
     // Stake action
     if ('InsufficientStake' in kind)
