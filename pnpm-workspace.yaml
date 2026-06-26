@@ -1,5 +1,6 @@
 packages:
   - 'packages/*'
+  - 'packages/near-api-ts/universal/tests/utils/transactionIndexer'
   - 'playgrounds/react-near-ts/*'
 allowBuilds:
   esbuild: true
