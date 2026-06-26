@@ -9,10 +9,10 @@ const RpcEndpointSchema = z.object({
 export const RpcEndpointsArgsSchema = z.union([
   z.object({
     regular: z.array(RpcEndpointSchema).check(z.minLength(1)),
-    archival: z.undefined(),
+    archival: z.optional(z.undefined()),
   }),
   z.object({
-    regular: z.undefined(),
+    regular: z.optional(z.undefined()),
     archival: z.array(RpcEndpointSchema).check(z.minLength(1)),
   }),
   z.object({

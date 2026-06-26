@@ -34,18 +34,22 @@ export const getRawActionSummary = (rpcAction: ActionView): RawActionSummary => 
         publicKey: AddKey.publicKey as PublicKey,
       };
 
-    const { allowance, methodNames, receiverId } = AddKey.accessKey.permission.FunctionCall;
-    const gasBudget = typeof allowance === 'string' ? yoctoNear(allowance) : 'Unlimited';
-    const allowedFunctions = methodNames.length > 0 ? methodNames : 'AllNonPayable';
+    if ('FunctionCall' in AddKey.accessKey.permission) {
+      const { allowance, methodNames, receiverId } = AddKey.accessKey.permission.FunctionCall;
+      const gasBudget = typeof allowance === 'string' ? yoctoNear(allowance) : 'Unlimited';
+      const allowedFunctions = methodNames.length > 0 ? methodNames : 'AllNonPayable';
 
-    return {
-      actionType: 'AddKey' as const,
-      accessType: 'FunctionCall' as const,
-      publicKey: AddKey.publicKey as PublicKey,
-      contractAccountId: receiverId,
-      gasBudget,
-      allowedFunctions,
-    };
+      return {
+        actionType: 'AddKey' as const,
+        accessType: 'FunctionCall' as const,
+        publicKey: AddKey.publicKey as PublicKey,
+        contractAccountId: receiverId,
+        gasBudget,
+        allowedFunctions,
+      };
+    }
+
+    throw new Error('Unsupported access key permission', { cause: AddKey });
   }
 
   if ('DeployContract' in rpcAction) {

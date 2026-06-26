@@ -14,14 +14,14 @@
     "dev": "tsdown --watch",
     "run": "tsx universal/index.ts",
     "typecheck": "tsc --noEmit",
-    "sandbox:stop": "kill-port 5000",
+    "sandbox:stop": "kill-port 4560",
     "test:all": "vitest run"
   },
   "peerDependencies": {
     "zod": ">=4.3.6 <5"
   },
   "dependencies": {
-    "@near-js/jsonrpc-types": "^1.6.0",
+    "@near-js/jsonrpc-types": "^1.7.3",
     "@noble/ed25519": "^3.1.0",
     "@noble/hashes": "^2.2.0",
     "@noble/secp256k1": "^3.1.0",

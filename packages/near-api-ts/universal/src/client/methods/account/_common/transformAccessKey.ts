@@ -14,17 +14,21 @@ export const transformAccessKey = (key: AccessKeyInfoView): AccountAccessKey => 
       nonce,
     };
 
-  const { receiverId, methodNames, allowance } = key.accessKey.permission.FunctionCall;
+  if ('FunctionCall' in key.accessKey.permission) {
+    const { receiverId, methodNames, allowance } = key.accessKey.permission.FunctionCall;
 
-  const gasBudget = typeof allowance === 'string' ? throwableYoctoNear(allowance) : 'Unlimited';
-  const allowedFunctions = methodNames.length > 0 ? methodNames : 'AllNonPayable';
+    const gasBudget = typeof allowance === 'string' ? throwableYoctoNear(allowance) : 'Unlimited';
+    const allowedFunctions = methodNames.length > 0 ? methodNames : 'AllNonPayable';
 
-  return {
-    accessType: 'FunctionCall',
-    publicKey,
-    nonce,
-    contractAccountId: receiverId,
-    gasBudget,
-    allowedFunctions,
-  };
+    return {
+      accessType: 'FunctionCall',
+      publicKey,
+      nonce,
+      contractAccountId: receiverId,
+      gasBudget,
+      allowedFunctions,
+    };
+  }
+
+  throw new Error('Unsupported access key permission', { cause: key });
 };

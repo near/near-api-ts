@@ -10,7 +10,7 @@ export const startSandbox = async (args?: StartSandboxArgs) =>
   await Sandbox.start({
     version: args?.nearcoreVersion ?? '2.12.0',
     config: {
-      rpcPort: args?.rpcPort ?? 4560,
+      rpcPort: args?.rpcPort,
       additionalAccounts: [
         GenesisAccount.createDefault('nat'),
         GenesisAccount.createDefault('alice'),
