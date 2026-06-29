@@ -1,7 +1,7 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { closePool, pool } from './db';
+import { pool } from './db/db';
 
 const migrationsDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'migrations');
 
@@ -64,5 +64,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       console.error(error);
       process.exitCode = 1;
     })
-    .finally(closePool);
+    .finally(() => pool.end());
 }

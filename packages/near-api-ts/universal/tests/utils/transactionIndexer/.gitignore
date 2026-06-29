@@ -1,0 +1,3 @@
+logs/
+.env
+.google-cloud-key.json

@@ -25,7 +25,8 @@ it('getTransactionResult', async () => {
     // transactionHash: 'HoWytDmLdYF4MnmayBSArwxef6Tj6pDYjnuNCVdSEnXe', // execute_intents - SIR
     // transactionHash: 'GxFGnomJ8znxJkpSduxZk7c9F3nqh7waAvnWxdFfxshK', // v1.signer - respond - not SIR
     // transactionHash: 'DSnehcspPKHuX44brwy4gWDhJYBaKwcP21Hq4qqjncE1', // wrap.near - ft_transfer_call - not SIR
-    transactionHash: '9usBJmQ3J1e2XTULjjkuyXPrsyRmp3CxDDVtVMd4HWgF', // old HostError::GuestPanic
+    // transactionHash: '9usBJmQ3J1e2XTULjjkuyXPrsyRmp3CxDDVtVMd4HWgF', // old HostError::GuestPanic
+    transactionHash: '4NTSNVrJ2YSRKTvywbPd9iHd4EMLjES1CgsRay7LgErY',
     policies: { transport: { rpcTypePreferences: ['Archival', 'Regular'] } },
   });
 

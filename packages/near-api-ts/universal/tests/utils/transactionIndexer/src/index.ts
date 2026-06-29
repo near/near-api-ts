@@ -1,3 +1,3 @@
-export { dbConfig } from './config';
-export { closePool, pool } from './db';
-export { migrate } from './migrate';
+import { loadFailedTransactions } from './indexer/loadFailedTransactions';
+
+await loadFailedTransactions(['2021-01-20']);
