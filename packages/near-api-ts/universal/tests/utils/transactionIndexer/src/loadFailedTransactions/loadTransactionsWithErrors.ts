@@ -46,7 +46,7 @@ export const loadTransactionsWithErrors = async (days: string[]) => {
 
         logger.info({ processed, total: allRows.length, failed }, 'progress');
 
-        await safeSleep(500);
+        await safeSleep(1000);
       }
 
       logger.info({ total: allRows.length, failed }, 'day finished');
