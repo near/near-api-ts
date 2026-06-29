@@ -1,3 +1,4 @@
 import { loadTransactionsWithErrors } from './loadFailedTransactions/loadTransactionsWithErrors';
+import { getDateRange } from './utils/getDateRange';
 
-await loadTransactionsWithErrors(['2021-01-20']);
+await loadTransactionsWithErrors(getDateRange('2020-10-12', '2021-10-13'));

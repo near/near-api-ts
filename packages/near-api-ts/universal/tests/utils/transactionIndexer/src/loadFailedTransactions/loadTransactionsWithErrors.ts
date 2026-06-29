@@ -4,7 +4,7 @@ import { getBigqueryTransactions } from './getBigqueryTransactions';
 
 // We don't want to send 100k+ requests to RPC at the same time, so we process
 // them in chunks of this size.
-const CHUNK_SIZE = 50;
+const CHUNK_SIZE = 25;
 
 const getChunks = <I>(arr: I[], size: number) => {
   const result = [];
