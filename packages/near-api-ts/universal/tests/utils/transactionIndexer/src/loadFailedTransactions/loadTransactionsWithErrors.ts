@@ -1,10 +1,11 @@
+import { safeSleep } from '../../../../../src/_common/utils/sleep';
 import { createDayLogger } from '../logger';
 import { fetchRpcTransaction } from './fetchRpcTransaction/fetchRpcTransaction';
 import { getBigqueryTransactions } from './getBigqueryTransactions';
 
 // We don't want to send 100k+ requests to RPC at the same time, so we process
 // them in chunks of this size.
-const CHUNK_SIZE = 25;
+const CHUNK_SIZE = 50;
 
 const getChunks = <I>(arr: I[], size: number) => {
   const result = [];
@@ -44,6 +45,8 @@ export const loadTransactionsWithErrors = async (days: string[]) => {
         ).length;
 
         logger.info({ processed, total: allRows.length, failed }, 'progress');
+
+        await safeSleep(500);
       }
 
       logger.info({ total: allRows.length, failed }, 'day finished');

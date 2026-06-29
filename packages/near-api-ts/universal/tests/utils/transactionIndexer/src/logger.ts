@@ -5,13 +5,16 @@ import pino from 'pino';
 
 const logsDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'logs');
 
-// One log file per day. Each line is JSONL (easy to grep/filter across millions
-// of records), mirrored to stdout so a run stays visible in the terminal too.
+// One log file per day, foldered by year/month: `logs/2020/01/20.log`. Each
+// line is JSONL (easy to grep/filter across millions of records), mirrored to
+// stdout so a run stays visible in the terminal too.
 export const createDayLogger = (day: string) => {
-  mkdirSync(logsDir, { recursive: true });
+  const [year, month, dayOfMonth] = day.split('-');
+  const dayDir = path.join(logsDir, year, month);
+  mkdirSync(dayDir, { recursive: true });
 
   const fileStream = pino.destination({
-    dest: path.join(logsDir, `${day}.log`),
+    dest: path.join(dayDir, `${dayOfMonth}.log`),
     append: true,
     sync: false,
   });

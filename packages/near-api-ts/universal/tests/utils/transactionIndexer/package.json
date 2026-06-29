@@ -11,7 +11,8 @@
     "db:down": "docker compose down",
     "db:reset": "docker compose down -v && docker compose up -d",
     "db:migrate": "tsx src/migrate.ts",
-    "db:size": "tsx src/db/dbSize.ts"
+    "db:size": "tsx src/db/dbSize.ts",
+    "db:errors": "tsx src/db/dbErrors.ts"
   },
   "dependencies": {
     "@google-cloud/bigquery": "^8.3.1",

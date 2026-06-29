@@ -5,6 +5,11 @@ import { getActionErrorKind } from './getActionErrorKind';
 
 export type FetchResult = 'ok' | 'failed';
 
+// Node's fetch has no default timeout, so a stalled connection would hang the
+// whole run forever. Abort a request that takes longer than this and let the
+// retry logic try again.
+const REQUEST_TIMEOUT_MS = 10_000;
+
 // Error thrown for non-2xx RPC responses, carrying enough context for the logs
 // to clearly distinguish a rate limit (HTTP 429) from other failures.
 class RpcHttpError extends Error {
@@ -55,6 +60,7 @@ export const fetchRpcTransaction = async (
           sender_account_id: 'any',
         },
       }),
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
 
     // fetch only rejects on network errors, so a 429/5xx arrives here as a
@@ -81,6 +87,8 @@ export const fetchRpcTransaction = async (
   } catch (err) {
     const rateLimited = err instanceof RpcHttpError && err.rateLimited;
     const status = err instanceof RpcHttpError ? err.status : undefined;
+    // AbortSignal.timeout() rejects with a DOMException named 'TimeoutError'.
+    const timedOut = err instanceof Error && err.name === 'TimeoutError';
 
     // Retry transient failures (RPC/network/DB) up to 3 attempts, then record
     // the final failure with the txHash so it can be found in the day's log.
@@ -92,6 +100,11 @@ export const fetchRpcTransaction = async (
           { txHash, attempt, status, backoffMs },
           'rate limited — backing off and retrying',
         );
+      } else if (timedOut) {
+        logger.warn(
+          { txHash, attempt, timeoutMs: REQUEST_TIMEOUT_MS },
+          'request timed out — retrying',
+        );
       }
 
       await safeSleep(backoffMs);
@@ -99,8 +112,12 @@ export const fetchRpcTransaction = async (
     }
 
     logger.error(
-      { txHash, attempt, rateLimited, status, err },
-      rateLimited ? 'fetchRpcTransaction failed: rate limited' : 'fetchRpcTransaction failed',
+      { txHash, attempt, rateLimited, timedOut, status, err },
+      rateLimited
+        ? 'fetchRpcTransaction failed: rate limited'
+        : timedOut
+          ? 'fetchRpcTransaction failed: timed out'
+          : 'fetchRpcTransaction failed',
     );
     return 'failed';
   }
