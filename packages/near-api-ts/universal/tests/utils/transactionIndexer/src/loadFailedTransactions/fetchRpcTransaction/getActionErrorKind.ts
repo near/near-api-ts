@@ -1,4 +1,7 @@
 import { type ActionError } from '@near-js/jsonrpc-types';
+import * as z from 'zod/mini';
+import { RpcFinalTransactionDetailsZodSchema } from '../../../../../../src/_common/schemas/zod/rpc/transactionDetails/transactionDetails';
+import { snakeToCamelCase } from '../../../../../../src/_common/utils/snakeToCamelCase';
 
 const convertActionError = (actionError: ActionError) => {
   const { kind } = actionError;
@@ -67,10 +70,23 @@ const convertActionError = (actionError: ActionError) => {
   return errorKind + Object.keys(kind)[0];
 };
 
-export const getActionErrorKind = (actionError: ActionError) => {
+const RpcResponseZodSchema = z.object({
+  result: RpcFinalTransactionDetailsZodSchema,
+});
+
+export const getActionErrorKind = (rawRpcResponse: unknown, receiptId: string) => {
+  const camelCase = snakeToCamelCase(rawRpcResponse);
+  const txResult = RpcResponseZodSchema.parse(camelCase).result;
+  const receipt = txResult.receiptsOutcome.find((receipt) => receipt.id.cryptoHash === receiptId);
+
+  if (!receipt || !('Failure' in receipt.outcome.status))
+    throw new Error(`Receipt ${receiptId} not found`);
+
+  const { ActionError } = receipt.outcome.status.Failure;
+
   try {
-    return convertActionError(actionError);
+    return convertActionError(ActionError);
   } catch (e) {
-    return `UnknownActionError: ${JSON.stringify(actionError)}`;
+    return `UnknownActionError: ${JSON.stringify(ActionError)}`;
   }
 };

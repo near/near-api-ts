@@ -1,3 +1,3 @@
-import { loadFailedTransactions } from './indexer/loadFailedTransactions';
+import { loadTransactionsWithErrors } from './loadFailedTransactions/loadTransactionsWithErrors';
 
-await loadFailedTransactions(['2021-01-20']);
+await loadTransactionsWithErrors(['2021-01-20']);

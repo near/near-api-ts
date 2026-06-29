@@ -1,6 +1,6 @@
 import { createDayLogger } from '../logger';
-import { fetchRpcTransaction } from './fetchRpcTransaction';
-import { getFailedTransactionsByDay } from './getFailedTransactionsByDay';
+import { fetchRpcTransaction } from './fetchRpcTransaction/fetchRpcTransaction';
+import { getBigqueryTransactions } from './getBigqueryTransactions';
 
 // We don't want to send 100k+ requests to RPC at the same time, so we process
 // them in chunks of this size.
@@ -14,7 +14,7 @@ const getChunks = <I>(arr: I[], size: number) => {
   return result;
 };
 
-export const loadFailedTransactions = async (days: string[]) => {
+export const loadTransactionsWithErrors = async (days: string[]) => {
   for (const day of days) {
     // One log file per day; flushed on completion (even on failure).
     const { logger, close } = createDayLogger(day);
@@ -22,8 +22,8 @@ export const loadFailedTransactions = async (days: string[]) => {
       logger.info('day started');
 
       // 1. Fetch all failed transactions for the day.
-      // const allRows = (await getFailedTransactionsByDay(day)).slice(0, 20);
-      const allRows = await getFailedTransactionsByDay(day);
+      // const allRows = (await getBigqueryTransactions(day)).slice(0, 20);
+      const allRows = await getBigqueryTransactions(day);
       logger.info({ count: allRows.length }, 'fetched failed transactions');
 
       // 2. Process them in chunks so RPC isn't hit with everything at once.
@@ -33,7 +33,9 @@ export const loadFailedTransactions = async (days: string[]) => {
 
       for (const chunk of chunks) {
         const results = await Promise.allSettled(
-          chunk.map(({ txHash }) => fetchRpcTransaction(txHash, 1, logger)),
+          chunk.map(({ txHash, receiptId, blockDate }) =>
+            fetchRpcTransaction(txHash, receiptId, blockDate.value, 1, logger),
+          ),
         );
 
         processed += chunk.length;
