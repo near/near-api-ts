@@ -8,7 +8,7 @@ export type FetchResult = 'ok' | 'failed';
 // Node's fetch has no default timeout, so a stalled connection would hang the
 // whole run forever. Abort a request that takes longer than this and let the
 // retry logic try again.
-const REQUEST_TIMEOUT_MS = 10_000;
+const REQUEST_TIMEOUT_MS = 5_000;
 
 // Error thrown for non-2xx RPC responses, carrying enough context for the logs
 // to clearly distinguish a rate limit (HTTP 429) from other failures.
