@@ -30,10 +30,14 @@
 - `MemoryKeyService` now exposes `hasKey` to
   check whether a public key is managed by the service.
 
+- Added type `GasLimitArgs` for previous behavior of `GasBudget` type.
+  Use `GasLimitArgs` when you need to create functionCall key.
+
 ### Changed
 
 - Migrated to TypeScript 6.
-
+- Bump dependencies.
+- 
 - **Breaking:** `getAccountInfo` output (`GetAccountInfoOutput`) was
   restructured.
   It is now:
@@ -73,6 +77,8 @@
   The same `signData` / `safeSignData` shape is applied to `Ed25519KeyPair` and
   `Secp256k1KeyPair` returned from `randomEd25519KeyPair` /
   `randomSecp256k1KeyPair`.
+- **Breaking:** `GasBudget` now accepts `'Unlimited' | NearTokenArgs` instead
+  of `'Unlimited' | NearToken`. For previous behavior, use `GasLimitArgs`
 
 ### Removed
 

@@ -1,12 +1,12 @@
 import type { MutateOptions } from '@tanstack/react-query';
-import type { AccountId, AllowedFunctions, GasBudget, PublicKey } from 'near-api-ts';
+import type { AccountId, AllowedFunctions, GasBudgetArgs, PublicKey } from 'near-api-ts';
 import type { Prettify } from '../../../_common/common.ts';
 import type { BaseUseMutationResult, MutationOptions } from '../../_common/tanstackMutation.ts';
 
 export type Variables = {
   publicKey: PublicKey;
   contractAccountId: AccountId;
-  gasBudget: GasBudget;
+  gasBudget: GasBudgetArgs;
   allowedFunctions: AllowedFunctions;
 };
 

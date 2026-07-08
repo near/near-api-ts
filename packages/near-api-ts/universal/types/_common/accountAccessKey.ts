@@ -27,8 +27,9 @@ export type FullAccessKey = {
  *
  * @see {@link https://nomicon.io/DataStructures/AccessKey.html | Nomicon — Access Keys}
  */
-export type GasBudget = 'Unlimited' | NearToken;
 
+export type GasBudgetArgs = 'Unlimited' | NearTokenArgs;
+export type GasBudget = 'Unlimited' | NearToken;
 /**
  * The set of contract functions this function-call key is permitted to invoke.
  * - `'AllNonPayable'` — the key may call any non-payable function on the contract.

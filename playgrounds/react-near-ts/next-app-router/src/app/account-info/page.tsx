@@ -37,7 +37,7 @@ const AccountInfo = () => {
     );
   }
 
-  const { balance, usedStorageBytes } = accountInfo.data.accountInfo;
+  const { balance, usedStorageBytes } = accountInfo.data;
 
   return (
     <Card padding="xl" radius="md" withBorder>
@@ -83,7 +83,7 @@ const AccountInfo = () => {
           <Text size="xs" c="dimmed">
             Locked Balance
           </Text>
-          <Text fw={500}>{balance.locked.amount.near} NEAR</Text>
+          <Text fw={500}>{balance.locked.total.near} NEAR</Text>
         </Paper>
       </Stack>
     </Card>

@@ -9,19 +9,19 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@mantine/core": "^8.3.16",
-    "@mantine/hooks": "^8.3.16",
-    "@tanstack/react-query": "^5.100.1",
-    "next": "16.2.3",
-    "react": "19.2.5",
-    "react-dom": "19.2.5",
+    "@mantine/core": "^8.3.18",
+    "@mantine/hooks": "^8.3.18",
+    "@tanstack/react-query": "5.101.2",
+    "next": "16.2.10",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
     "react-near-ts": "workspace:*",
-    "zod": "^4.3.6"
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "postcss": "^8.5.12",
+    "postcss": "^8.5.16",
     "postcss-preset-mantine": "^1.18.0",
     "postcss-simple-vars": "^7.0.1"
   }

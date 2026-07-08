@@ -18,7 +18,7 @@
     "zod": ">=4.3.0 <5"
   },
   "dependencies": {
-    "@hot-labs/near-connect": "^0.11.1",
+    "@hot-labs/near-connect": "^0.11.4",
     "near-api-ts": "workspace:*",
     "zustand": "^5.0.11"
   },

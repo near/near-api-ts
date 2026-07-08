@@ -116,6 +116,7 @@ export type {
   FullAccessKey,
   FunctionCallKey,
   GasBudget,
+  GasBudgetArgs,
 } from './types/_common/accountAccessKey';
 export type {
   AccountId,

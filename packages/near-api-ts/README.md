@@ -25,12 +25,12 @@ import {
 // Read some data from the chain
 const client = createTestnetClient();
 
-const { accountInfo } = await client.getAccountInfo({
+const { balance } = await client.getAccountInfo({
   accountId: 'testnet',
   atMomentOf: 'LatestFinalBlock',
 });
-console.log('Near:', accountInfo.balance.total.near);
-console.log('YoctoNear:', accountInfo.balance.total.yoctoNear);
+console.log('Near:', balance.total.near);
+console.log('YoctoNear:',balance.total.yoctoNear);
 
 // Send some transaction
 const keyService = createMemoryKeyService({
