@@ -11,6 +11,7 @@ crate-type = ["cdylib", "rlib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
 near-sdk = "5.28"
+serde_json = "1.0.150"
 
 [dev-dependencies]
 near-sdk = { version = "5.28", features = ["unit-testing"] }

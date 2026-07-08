@@ -5,11 +5,11 @@ import {
   deployContract,
   functionCall,
   transfer,
-} from '../../../../../../index';
-import { safeSleep } from '../../../../../../src/_common/utils/sleep';
-import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
-import type { TestContext } from './functionCall.test';
+} from '../../../../../../../index';
+import { safeSleep } from '../../../../../../../src/_common/utils/sleep';
+import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
+import { assertTxResultExecutionErrKind } from '../../../../../../utils/assertTxResultExecutionErrKind';
+import type { TestContext } from '../functionCall.test';
 
 export const compilationFailed = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;

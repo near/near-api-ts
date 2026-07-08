@@ -114,5 +114,7 @@ export const transformHostError = (hostError: HostError): string => {
   if ('Ed25519VerifyInvalidInput' in hostError)
     return `ED25519 signature verification error: ${hostError.Ed25519VerifyInvalidInput.msg}`;
 
-  return String(hostError); // Should never happen
+  // Should never happen as all new host errors are transformed into string (ExecutionError)
+  // by nearcore itself
+  return JSON.stringify(hostError);
 };

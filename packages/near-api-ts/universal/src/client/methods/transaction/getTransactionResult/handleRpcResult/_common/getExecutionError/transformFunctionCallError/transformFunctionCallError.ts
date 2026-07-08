@@ -3,13 +3,12 @@ import type { ExecutionError } from '../../../../../../../../../types/_common/tr
 import { transformHostError } from './transformHostError';
 import { transformWasmTrap } from './transformWasmTrap';
 
-export const getFunctionCallActionError = (
+export const transformFunctionCallError = (
   rpcFunctionCallError: FunctionCallError,
 ):
   | ExecutionError<'Action.FunctionCall.Wasm.NotFound'>
   | ExecutionError<'Action.FunctionCall.Compilation.Failed'>
   | ExecutionError<'Action.FunctionCall.Function.NotFound'>
-  | ExecutionError<'Action.FunctionCall.Function.InvalidSignature'>
   | ExecutionError<'Action.FunctionCall.Execution.Failed'> => {
   if (typeof rpcFunctionCallError === 'string') {
     // Transform deprecated WasmUnknownError to be compatible with the modern nearcore ExecutionError
@@ -58,8 +57,8 @@ export const getFunctionCallActionError = (
 
     if (MethodResolveError === 'MethodInvalidSignature')
       return {
-        kind: 'Action.FunctionCall.Function.InvalidSignature',
-        context: null,
+        kind: 'Action.FunctionCall.Compilation.Failed',
+        context: { cause: 'InvalidFunctionSignature' }
       };
   }
 

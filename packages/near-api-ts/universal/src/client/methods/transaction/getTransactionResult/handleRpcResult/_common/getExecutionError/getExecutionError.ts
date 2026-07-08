@@ -2,7 +2,7 @@ import type { ActionError } from '@near-js/jsonrpc-types';
 import { yoctoNear } from '../../../../../../../../index';
 import type { PublicKey } from '../../../../../../../../types/_common/crypto';
 import type { ExecutionError } from '../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionError';
-import { getFunctionCallActionError } from './getFunctionCallActionError/getFunctionCallActionError';
+import { transformFunctionCallError } from './transformFunctionCallError/transformFunctionCallError';
 
 export const getExecutionError = (actionError: ActionError): ExecutionError => {
   if (typeof actionError.kind === 'object') {
@@ -80,7 +80,17 @@ export const getExecutionError = (actionError: ActionError): ExecutionError => {
       };
 
     // FunctionCall action
-    if ('FunctionCallError' in kind) return getFunctionCallActionError(kind.FunctionCallError);
+    if ('FunctionCallError' in kind) return transformFunctionCallError(kind.FunctionCallError);
+
+    // This error may only happen when a new receipt is created, in practice -
+    // only during function call action
+    // Since some errors in reality would never happen (even they are declared in nearcore),
+    // and some is very old (happened only in 2021), we stringify it.
+    if ('NewReceiptValidationError' in kind)
+      return {
+        kind: 'Action.FunctionCall.Execution.Failed',
+        context: { cause: JSON.stringify(kind) },
+      };
 
     // Stake action
     if ('InsufficientStake' in kind)

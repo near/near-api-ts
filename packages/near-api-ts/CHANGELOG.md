@@ -3,6 +3,8 @@
 ## [Unreleased 0.10.0]
 
 ### Added
+- New `client.getTransactionResult` method – fully reworked nearcore API for transaction
+  status. Returns the result of a completed transaction.
 - New standalone `signTransaction` / `safeSignTransaction` helper
   (`src/helpers/signTransaction`). Accepts
   `{ transaction, signDataProvider: { safeSignData } }` and returns a

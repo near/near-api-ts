@@ -74,7 +74,7 @@ export type TransactionConversionFailure<
   transactionHash: CryptoHash;
   result: {
     status: 'ConversionError';
-    error: { kind: unknown; context: unknown };
+    error: unknown; // TODO figure out the real type
   };
   processingSteps: {
     conversionStep: ConversionStepFailure<ASF>;

@@ -554,6 +554,7 @@ dependencies = [
  "near-api",
  "near-sandbox",
  "near-sdk",
+ "serde_json",
  "testresult",
  "tokio",
 ]

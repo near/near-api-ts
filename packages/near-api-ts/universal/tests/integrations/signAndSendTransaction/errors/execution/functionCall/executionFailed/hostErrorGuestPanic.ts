@@ -1,9 +1,9 @@
 import { expect } from 'vitest';
-import { createMainnetClient } from '../../../../../../index';
-import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
-import { log } from '../../../../../utils/common';
+import { createMainnetClient } from '../../../../../../../index';
+import { assertTxResultExecutionErrKind } from '../../../../../../utils/assertTxResultExecutionErrKind';
+import { log } from '../../../../../../utils/common';
 
-export const executionErrorOld = () => async () => {
+export const hostErrorGuestPanic = () => async () => {
   const mainnetClient = createMainnetClient();
 
   const txResult = await mainnetClient.getTransactionResult({

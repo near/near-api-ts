@@ -6,14 +6,14 @@ import {
   functionCall,
   near,
   transfer,
-} from '../../../../../../index';
-import { safeSleep } from '../../../../../../src/_common/utils/sleep';
-import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
-import { getFileBytes, log } from '../../../../../utils/common';
-import type { TestContext } from './functionCall.test';
+} from '../../../../../../../index';
+import { safeSleep } from '../../../../../../../src/_common/utils/sleep';
+import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
+import { assertTxResultExecutionErrKind } from '../../../../../../utils/assertTxResultExecutionErrKind';
+import { getFileBytes, log } from '../../../../../../utils/common';
+import type { TestContext } from '../functionCall.test';
 
-export const executionErrorNew = (context: TestContext) => async () => {
+export const executionError = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({

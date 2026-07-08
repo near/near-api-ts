@@ -21,7 +21,7 @@ const getRefundStepResult = (status: RpcReceiptOutcome['outcome']['status']): Re
   ) {
     return {
       status: 'Error',
-      error: { kind: 'Receiver.NotFound' },
+      error: { kind: 'Receiver.NotFound', context: null },
     };
   }
 

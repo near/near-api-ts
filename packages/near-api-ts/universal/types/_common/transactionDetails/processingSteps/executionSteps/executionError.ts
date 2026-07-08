@@ -2,30 +2,6 @@ import type { AccountId } from '../../../common';
 import type { PublicKey } from '../../../crypto';
 import type { NearToken } from '../../../nearToken';
 
-/**
- * nearcore ActionErrorKind to NAT ExecutionError map
- *
- * AccountDoesNotExist -> Executor.NotFound
- * LackBalanceForState -> Executor.NotEnoughBalance
- * ActorNoPermission -> Action.Forbidden
- *
- * AccountAlreadyExists -> Action.CreateAccount.AlreadyExists
- * CreateAccountOnlyByRegistrar -> Action.CreateAccount.TopLevelNamespace
- * CreateAccountNotAllowed -> Action.CreateAccount.ForeignNamespace
- * OnlyImplicitAccountCreationAllowed -> Action.CreateAccount.ImplicitAccount
- *
- * AddKeyAlreadyExists -> Action.AddKey.AlreadyExists
- *
- * InsufficientStake -> Action.Stake.BelowThreshold
- * TriesToStake ->  Action.Stake.NotEnoughBalance
- * TriesToUnstake ->  Action.Action.Stake.NotFound
- *
- * DeleteKeyDoesNotExist -> Action.DeleteKey.NotFound
- *
- * DeleteAccountStaking -> Action.DeleteAccount.Staking
- * DeleteAccountWithLargeState -> Action.DeleteAccount.LargeState
- */
-
 interface GeneralExecutionErrorRegistry {
   'Executor.NotFound': { executorAccountId: AccountId };
   'Executor.NotEnoughBalance': { executorAccountId: AccountId; missingAmount: NearToken };
@@ -37,7 +13,7 @@ interface CreateAccountErrorRegistry {
   'Action.CreateAccount.TopLevelNamespace': {
     newAccountId: AccountId;
     creatorAccountId: AccountId;
-    registrarAccountId: AccountId; // TODO Remove
+    registrarAccountId: AccountId;
   };
   'Action.CreateAccount.ForeignNamespace': { newAccountId: AccountId; creatorAccountId: AccountId };
   'Action.CreateAccount.ImplicitAccount': { newAccountId: AccountId };
@@ -49,9 +25,8 @@ interface AddKeyErrorRegistry {
 
 interface FunctionCallErrorRegistry {
   'Action.FunctionCall.Wasm.NotFound': { contractAccountId: AccountId };
-  'Action.FunctionCall.Compilation.Failed': { cause: string };
   'Action.FunctionCall.Function.NotFound': null;
-  'Action.FunctionCall.Function.InvalidSignature': null;
+  'Action.FunctionCall.Compilation.Failed': { cause: string };
   'Action.FunctionCall.Execution.Failed': { cause: string };
 }
 

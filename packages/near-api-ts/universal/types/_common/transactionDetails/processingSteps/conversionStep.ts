@@ -25,13 +25,14 @@ export type TransactionSummary<
   signature: Signature;
 };
 
-type ConversionStepCommon<ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined> =
-  {
-    executedAt: { blockHash: BlockHash };
-    transactionSummary: TransactionSummary<ASF>;
-    gasFee: NearToken;
-    gasUsed: NearGas;
-  };
+type ConversionStepCommon<
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+> = {
+  executedAt: { blockHash: BlockHash };
+  transactionSummary: TransactionSummary<ASF>;
+  gasFee: NearToken;
+  gasUsed: NearGas;
+};
 
 export type ConversionStepSuccess<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
@@ -47,6 +48,6 @@ export type ConversionStepFailure<
 > = ConversionStepCommon<ASF> & {
   result: {
     status: 'Error';
-    error: { kind: unknown; context: unknown };
+    error: unknown;
   };
 };

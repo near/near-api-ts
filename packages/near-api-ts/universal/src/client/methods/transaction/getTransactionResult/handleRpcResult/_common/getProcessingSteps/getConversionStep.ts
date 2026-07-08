@@ -1,4 +1,4 @@
-import type { ActionView } from '@near-js/jsonrpc-types';
+import type { ActionView, InvalidTxError } from '@near-js/jsonrpc-types';
 import { gas, yoctoNear } from '../../../../../../../../index';
 import type { Result } from '../../../../../../../../types/_common/common';
 import type {
@@ -16,6 +16,7 @@ import type {
 } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
 import type { RpcTransactionSummary } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
 import { result } from '../../../../../../../_common/utils/result';
+import { getConversionError } from '../getConversionError';
 import { baseGetActionSummary, getRawActionSummary } from './_common/getActionSummaries';
 
 const getActionSummaries = <ASF extends MaybeBaseDeserializeTransactionActionSummariesFn>(
@@ -93,6 +94,7 @@ export const getConversionStepSuccess = (
 export const getConversionStepFailure = (
   transaction: RpcTransactionSummary,
   transactionOutcome: RpcTransactionOutcomeFailure,
+  invalidTxError: InvalidTxError,
   inputArgs: InnerGetTransactionResultArgs,
 ): Result<
   ConversionStepFailure,
@@ -104,10 +106,7 @@ export const getConversionStepFailure = (
   return result.ok({
     result: {
       status: 'Error',
-      error: {
-        kind: 'error',
-        context: 'any',
-      },
+      error: getConversionError(invalidTxError),
     },
     executedAt: {
       blockHash: transactionOutcome.blockHash.cryptoHash,

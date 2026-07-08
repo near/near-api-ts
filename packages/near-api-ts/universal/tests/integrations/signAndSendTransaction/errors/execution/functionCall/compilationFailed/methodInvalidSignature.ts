@@ -5,20 +5,20 @@ import {
   functionCall,
   near,
   transfer,
-} from '../../../../../../index';
-import { safeSleep } from '../../../../../../src/_common/utils/sleep';
-import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
-import { log } from '../../../../../utils/common';
-import type { TestContext } from './functionCall.test';
+} from '../../../../../../../index';
+import { safeSleep } from '../../../../../../../src/_common/utils/sleep';
+import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
+import { assertTxResultExecutionErrKind } from '../../../../../../utils/assertTxResultExecutionErrKind';
+import { log } from '../../../../../../utils/common';
+import type { TestContext } from '../functionCall.test';
 
 /**
  * wasmBase64 = compiled WAT: (module (func (export "add_record") (param i32)))
  *
  * `add_record` is exported with a param (i32), violating NEAR's required
- * `() -> ()` entrypoint signature -> Function.InvalidSignature.
+ * `() -> ()` entrypoint signature -> Compilation.Failed
  */
-export const functionInvalidSignature = (context: TestContext) => async () => {
+export const methodInvalidSignature = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -57,5 +57,5 @@ export const functionInvalidSignature = (context: TestContext) => async () => {
   });
   log(txResult);
 
-  assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.Function.InvalidSignature');
+  assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.Compilation.Failed');
 };

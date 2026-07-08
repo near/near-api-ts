@@ -9,6 +9,7 @@ export type RefundStepResult =
       status: 'Error';
       error: {
         kind: 'Receiver.NotFound';
+        context: null;
       };
     };
 

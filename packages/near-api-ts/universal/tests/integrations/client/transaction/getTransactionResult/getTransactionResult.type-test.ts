@@ -294,8 +294,7 @@ if (narrowed.result.status === 'Success') {
   type _NarrowData = Assert<Equal<typeof narrowed.result.data, { decimals: number }>>;
 } else {
   // ConversionError | ExecutionError both carry `error`, never `data`
-  type _NarrowErrorKind = Assert<Equal<typeof narrowed.result.error.kind, unknown>>;
-  type _NarrowErrorContext = Assert<Equal<typeof narrowed.result.error.context, unknown>>;
+  type _NarrowErrorKind = Assert<Equal<typeof narrowed.result.error, unknown>>;
 }
 type _NarrowSummaries = Assert<
   Equal<

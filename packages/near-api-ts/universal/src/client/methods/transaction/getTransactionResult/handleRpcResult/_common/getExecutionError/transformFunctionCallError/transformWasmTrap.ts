@@ -6,8 +6,7 @@ import type { WasmTrap } from '@near-js/jsonrpc-types';
  * `cause` of an `Action.FunctionCall.Execution.Failed` ExecutionError.
  */
 export const transformWasmTrap = (wasmTrap: WasmTrap): string => {
-  if (wasmTrap === 'IncorrectCallIndirectSignature')
-    return 'Call indirect incorrect signature trap.';
+  if (wasmTrap === 'Unreachable') return 'An `unreachable` opcode was executed.';
   if (wasmTrap === 'MemoryOutOfBounds') return 'Memory out of bounds trap.';
   if (wasmTrap === 'CallIndirectOOB') return 'Call indirect out of bounds trap.';
   if (wasmTrap === 'IllegalArithmetic') return 'An arithmetic exception, e.g. divided by zero.';
@@ -15,6 +14,8 @@ export const transformWasmTrap = (wasmTrap: WasmTrap): string => {
   if (wasmTrap === 'GenericTrap') return 'Generic trap.';
   if (wasmTrap === 'StackOverflow') return 'Stack overflow.';
   if (wasmTrap === 'IndirectCallToNull') return 'Indirect call to null.';
+  if (wasmTrap === 'IncorrectCallIndirectSignature')
+    return 'Call indirect incorrect signature trap.';
 
-  return String(wasmTrap); // Should never happen
+  return JSON.stringify(wasmTrap); // Should never happen
 };

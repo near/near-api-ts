@@ -6,6 +6,7 @@ import type { NatError } from '../../../../../_common/natError';
 import type { RpcTransactionOutcomeFailure } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
 import type { RpcTransactionSummary } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
 import { result } from '../../../../../_common/utils/result';
+import { getConversionError } from './_common/getConversionError';
 import { getConversionStepFailure } from './_common/getProcessingSteps/getConversionStep';
 
 export const getTransactionConversionFailure = (
@@ -20,6 +21,7 @@ export const getTransactionConversionFailure = (
   const conversionStepError = getConversionStepFailure(
     transaction,
     transactionOutcomeFailure,
+    invalidTxError,
     inputArgs,
   );
   if (!conversionStepError.ok) return conversionStepError;
@@ -28,10 +30,7 @@ export const getTransactionConversionFailure = (
     transactionHash: transaction.hash.cryptoHash,
     result: {
       status: 'ConversionError',
-      error: {
-        kind: 'any',
-        context: invalidTxError,
-      },
+      error: getConversionError(invalidTxError),
     },
     processingSteps: {
       conversionStep: conversionStepError.value,
