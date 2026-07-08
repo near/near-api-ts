@@ -1,5 +1,19 @@
 # Changelog
 
+## [UNRELEASED] v0.11.0
+
+### Added
+
+### Changed
+
+- Now empty `functionArgs` in
+  `TransactionResult -> ActionSummary -> FunctionCall` returns as `null`
+  instead of empty string.
+
+### Removed
+
+---
+
 ## v0.10.0
 
 ### Added
@@ -37,7 +51,7 @@
 
 - Migrated to TypeScript 6.
 - Bump dependencies.
-- 
+-
 - **Breaking:** `getAccountInfo` output (`GetAccountInfoOutput`) was
   restructured.
   It is now:

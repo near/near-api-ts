@@ -101,6 +101,7 @@ export const getRawActionSummary = (rpcAction: ActionView): RawActionSummary => 
 
 export const getFunctionArgs = (argsBase64: Base64String) => {
   try {
+    if (argsBase64 === '') return null;
     return fromJsonBytes(Uint8Array.fromBase64(argsBase64));
   } catch {
     return argsBase64;
