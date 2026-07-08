@@ -2,7 +2,7 @@ import type { Base64String, Result } from '../../../../../../../types/_common/co
 import type { InnerGetTransactionResultArgs } from '../../../../../../../types/client/methods/transaction/getTransactionResult';
 import { type NatError, resultNatError } from '../../../../../../_common/natError';
 import { result } from '../../../../../../_common/utils/result';
-import { tryParseBase64ToObject } from './tryParseBase64ToObject';
+import { tryParseBase64ToObject } from '../../../../../../_common/utils/tryParseBase64ToObject';
 
 export const deserializeResultData = (
   rawData: Base64String,

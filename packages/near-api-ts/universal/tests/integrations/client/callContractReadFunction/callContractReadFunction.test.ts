@@ -82,7 +82,7 @@ describe('CallContractReadFunction', () => {
       functionName: 'get_record',
       functionArgs: { record: 1 },
     });
-    assertNatErrKind(res, 'Client.CallContractReadFunction.Rpc.Execution.Failed');
+    assertNatErrKind(res, 'Client.CallContractReadFunction.Rpc.FunctionCall.Failed');
   });
 
   it('Args.InvalidSchema - invalid json args', async () => {

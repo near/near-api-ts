@@ -3,7 +3,7 @@ import { createNatError } from '../../../../_common/natError';
 import type { RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
 import { result } from '../../../../_common/utils/result';
 
-export const handleError = (rpcResponse: RpcResponse) => {
+export const handleRpcError = (rpcResponse: RpcResponse) => {
   // We use QueryErrorSchema cuz there is no separate 'view_access_key' method -
   // it's part of 'query'
   const rpcError = ErrorWrapperFor_RpcQueryErrorSchema().safeParse(rpcResponse.error);
@@ -24,23 +24,6 @@ export const handleError = (rpcResponse: RpcResponse) => {
   const { name, cause } = rpcError.data;
 
   if (name === 'HANDLER_ERROR') {
-    // General 'query' Errors
-    if (cause.name === 'NO_SYNCED_BLOCKS')
-      return result.err(
-        createNatError({
-          kind: `Client.CallContractReadFunction.Rpc.NotSynced`,
-          context: null,
-        }),
-      );
-
-    if (cause.name === 'UNAVAILABLE_SHARD')
-      return result.err(
-        createNatError({
-          kind: `Client.CallContractReadFunction.Rpc.Shard.NotTracked`,
-          context: { shardId: cause.info.requestedShardId },
-        }),
-      );
-
     if (cause.name === 'GARBAGE_COLLECTED_BLOCK')
       return result.err(
         createNatError({

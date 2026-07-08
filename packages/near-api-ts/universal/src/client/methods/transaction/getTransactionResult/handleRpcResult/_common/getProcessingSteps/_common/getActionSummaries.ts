@@ -1,11 +1,11 @@
 import type { ActionView } from '@near-js/jsonrpc-types';
-import { fromJsonBytes, gas, yoctoNear } from '../../../../../../../../../index';
-import type { Base64String } from '../../../../../../../../../types/_common/common';
+import { gas, yoctoNear } from '../../../../../../../../../index';
 import type { PublicKey } from '../../../../../../../../../types/_common/crypto';
 import type {
   ParsedActionSummary,
   RawActionSummary,
 } from '../../../../../../../../../types/_common/transactionDetails/actionSummaries';
+import { tryParseBase64ToObject } from '../../../../../../../../_common/utils/tryParseBase64ToObject';
 
 // Assembles the raw action summary from the RPC action - all fields are converted except
 // functionCall.functionArgs which stays a raw base64 string;
@@ -99,24 +99,14 @@ export const getRawActionSummary = (rpcAction: ActionView): RawActionSummary => 
   throw new Error('unreachable');
 };
 
-export const getFunctionArgs = (argsBase64: Base64String) => {
-  try {
-    if (argsBase64 === '') return null;
-    return fromJsonBytes(Uint8Array.fromBase64(argsBase64));
-  } catch {
-    return argsBase64;
-  }
-};
-
 // Default deserialization of the raw action summary - tries to parse functionCall.functionArgs
 // as JSON, otherwise keeps the raw base64 string (functionArgs type stays unknown);
 export const baseGetActionSummary = (rawActionSummary: RawActionSummary): ParsedActionSummary => {
   if (rawActionSummary.actionType === 'FunctionCall') {
     return {
       ...rawActionSummary,
-      functionArgs: getFunctionArgs(rawActionSummary.functionArgs),
+      functionArgs: tryParseBase64ToObject(rawActionSummary.functionArgs),
     };
   }
-
   return rawActionSummary;
 };

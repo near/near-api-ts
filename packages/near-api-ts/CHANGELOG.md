@@ -10,6 +10,24 @@
   `TransactionResult -> ActionSummary -> FunctionCall` returns as `null`
   instead of empty string.
 
+- Rework `client.callContractReadFunction`:  \
+  Previously:
+  - `options.deserializeResult` accepts `rawResult: number[]` as an argument;
+  - If the default `deserializeResult` failed to parse a raw result as JSON it
+    returns
+    error
+    `Client.CallContractReadFunction.ResultDeserialization.JsonParseFailed`
+  - returns `{  blockHash, blockHeight, result, rawResult, logs }`
+  - has `.Shard.NotTracked` + `NotSynced` errors
+
+  Now
+  - `options.deserializeResult` accepts `resultBase64: string` as an argument;
+  - If the default `deserializeResult` failed to parse a raw result as JSON it
+    returns
+    a raw result as base64 or null
+  - returns `{  result, logs, withStateAt: { blockHash, blockHeight } }`
+  - removed `.Shard.NotTracked` + `NotSynced` errors - will end up as `Internal`
+
 ### Removed
 
 ---

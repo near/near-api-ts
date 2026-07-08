@@ -26,7 +26,10 @@ const RpcQueryCallReadFunctionResultSchema = z.union([
   ContractExecutionErrorSchema,
 ]);
 
-export const handleResult = (rpcResponse: RpcResponse, args: InnerCallContractReadFunctionArgs) => {
+export const handleRpcResult = (
+  rpcResponse: RpcResponse,
+  args: InnerCallContractReadFunctionArgs,
+) => {
   const rpcResult = RpcQueryCallReadFunctionResultSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)
@@ -50,10 +53,10 @@ export const handleResult = (rpcResponse: RpcResponse, args: InnerCallContractRe
   if ('error' in rpcResult.data)
     return result.err(
       createNatError({
-        kind: 'Client.CallContractReadFunction.Rpc.Execution.Failed',
+        kind: 'Client.CallContractReadFunction.Rpc.FunctionCall.Failed',
         context: {
           contractAccountId: args.contractAccountId,
-          message: rpcResult.data.error,
+          cause: rpcResult.data.error,
           blockHash,
           blockHeight,
         },
@@ -63,13 +66,12 @@ export const handleResult = (rpcResponse: RpcResponse, args: InnerCallContractRe
   const deserializedResult = deserializeCallResult(args, rpcResult.data.result);
   if (!deserializedResult.ok) return deserializedResult;
 
-  const output = {
-    blockHash,
-    blockHeight,
-    logs,
+  return result.ok({
     result: deserializedResult.value,
-    rawResult: rpcResult.data.result,
-  };
-
-  return result.ok(output);
+    logs,
+    withStateAt: {
+      blockHash,
+      blockHeight,
+    },
+  });
 };

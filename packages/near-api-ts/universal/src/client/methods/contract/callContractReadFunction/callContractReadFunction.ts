@@ -12,8 +12,8 @@ import { toNativeBlockReference } from '../../../../_common/transformers/toNativ
 import { repackError } from '../../../../_common/utils/repackError';
 import { result } from '../../../../_common/utils/result';
 import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
-import { handleError } from './handleError';
-import { handleResult } from './handleResult/handleResult';
+import { handleRpcError } from './handleRpcError';
+import { handleRpcResult } from './handleRpcResult/handleRpcResult';
 import { serializeFunctionArgs } from './serializeFunctionArgs';
 
 const GetAccountAccessKeyArgsSchema = z.object({
@@ -70,7 +70,7 @@ export const createSafeCallContractReadFunction: CreateSafeCallContractReadFunct
         });
 
       return rpcResponse.value.error
-        ? handleError(rpcResponse.value)
-        : handleResult(rpcResponse.value, args);
+        ? handleRpcError(rpcResponse.value)
+        : handleRpcResult(rpcResponse.value, args);
     },
   );

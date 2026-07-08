@@ -1,10 +1,12 @@
 import type { NatError } from '../../../../src/_common/natError';
 import type {
   AccountId,
+  Base64String,
   BlockHash,
   BlockHeight,
   BlockReference,
   ContractFunctionName,
+  Log,
   MaybeJsonValue,
   Result,
 } from '../../../_common/common';
@@ -21,8 +23,6 @@ import type { PartialTransportPolicy } from '../../transport/transport';
 import type {
   RpcQueryBlockGarbageCollectedErrorContext,
   RpcQueryBlockNotFoundErrorContext,
-  RpcQueryNotSyncedErrorContext,
-  RpcQueryShardNotTrackedErrorContext,
 } from '../_common/common';
 
 export interface CallContractReadFunctionPublicErrorRegistry {
@@ -36,31 +36,22 @@ export interface CallContractReadFunctionPublicErrorRegistry {
   'Client.CallContractReadFunction.Timeout': TimeoutErrorContext;
   'Client.CallContractReadFunction.Aborted': AbortedErrorContext;
   'Client.CallContractReadFunction.Exhausted': ExhaustedErrorContext;
-  'Client.CallContractReadFunction.Rpc.NotSynced': RpcQueryNotSyncedErrorContext;
-  'Client.CallContractReadFunction.Rpc.Shard.NotTracked': RpcQueryShardNotTrackedErrorContext;
   'Client.CallContractReadFunction.Rpc.Block.GarbageCollected': RpcQueryBlockGarbageCollectedErrorContext;
   'Client.CallContractReadFunction.Rpc.Block.NotFound': RpcQueryBlockNotFoundErrorContext;
-  'Client.CallContractReadFunction.Rpc.Execution.Failed': {
+  'Client.CallContractReadFunction.Rpc.FunctionCall.Failed': {
     contractAccountId: AccountId;
-    message: string;
+    cause: string;
     blockHash: BlockHash;
     blockHeight: BlockHeight;
   };
-  'Client.CallContractReadFunction.ResultDeserialization.JsonParseFailed': {
-    cause: unknown;
-    rawResult: RawCallResult;
-  };
   'Client.CallContractReadFunction.DeserializeResult.Failed': {
     cause: unknown;
-    rawResult: RawCallResult;
+    resultBase64: Base64String;
   };
   'Client.CallContractReadFunction.Internal': InternalErrorContext;
 }
 
-export type RawCallResult = number[];
-export type RawCallLogs = string[];
-
-export type DeserializeResultFnArgs = { rawResult: RawCallResult };
+export type DeserializeResultFnArgs = { resultBase64: Base64String };
 export type BaseDeserializeResultFn = (args: DeserializeResultFnArgs) => unknown;
 export type MaybeBaseDeserializeResultFn = BaseDeserializeResultFn | undefined;
 
@@ -103,11 +94,12 @@ type Options<A, SR extends MaybeBaseSerializeArgsFn<A>, DR extends MaybeBaseDese
 type FunctionArgs<A> = KeyIf<'functionArgs', A>;
 
 export type CallContractReadFunctionOutput<R> = {
-  blockHash: BlockHash;
-  blockHeight: BlockHeight;
   result: R;
-  rawResult: RawCallResult;
-  logs: RawCallLogs;
+  logs: Log[];
+  withStateAt: {
+    blockHash: BlockHash;
+    blockHeight: BlockHeight;
+  };
 };
 
 // Return type of functionArgs or undefined
@@ -117,23 +109,16 @@ type FunctionArgsOf<SA> = SA extends (args: { functionArgs: infer T }) => Uint8A
 
 export type CallContractReadFunctionError =
   | NatError<'Client.CallContractReadFunction.Args.InvalidSchema'>
-  // SerializeArgs
   | NatError<'Client.CallContractReadFunction.SerializeArgs.InvalidOutput'>
   | NatError<'Client.CallContractReadFunction.SerializeArgs.Failed'>
-  // Send request
   | NatError<'Client.CallContractReadFunction.PreferredRpc.NotFound'>
   | NatError<'Client.CallContractReadFunction.Timeout'>
   | NatError<'Client.CallContractReadFunction.Aborted'>
   | NatError<'Client.CallContractReadFunction.Exhausted'>
-  // RPC
-  | NatError<'Client.CallContractReadFunction.Rpc.NotSynced'>
-  | NatError<'Client.CallContractReadFunction.Rpc.Shard.NotTracked'>
   | NatError<'Client.CallContractReadFunction.Rpc.Block.GarbageCollected'>
   | NatError<'Client.CallContractReadFunction.Rpc.Block.NotFound'>
   // TODO add contract not found
-  | NatError<'Client.CallContractReadFunction.Rpc.Execution.Failed'>
-  //
-  | NatError<'Client.CallContractReadFunction.ResultDeserialization.JsonParseFailed'>
+  | NatError<'Client.CallContractReadFunction.Rpc.FunctionCall.Failed'>
   | NatError<'Client.CallContractReadFunction.DeserializeResult.Failed'>
   | NatError<'Client.CallContractReadFunction.Internal'>;
 

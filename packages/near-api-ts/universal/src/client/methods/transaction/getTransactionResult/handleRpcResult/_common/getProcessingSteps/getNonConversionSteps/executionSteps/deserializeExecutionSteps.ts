@@ -9,7 +9,7 @@ import type { MaybeBaseDeserializeTransactionExecutionStepsFn } from '../../../.
 import type { InnerGetTransactionResultArgs } from '../../../../../../../../../../types/client/methods/transaction/getTransactionResult';
 import { type NatError, resultNatError } from '../../../../../../../../../_common/natError';
 import { result } from '../../../../../../../../../_common/utils/result';
-import { tryParseBase64ToObject } from '../../../tryParseBase64ToObject';
+import { tryParseBase64ToObject } from '../../../../../../../../../_common/utils/tryParseBase64ToObject';
 import { baseGetActionSummary } from '../../_common/getActionSummaries';
 
 const getParsedResult = (
