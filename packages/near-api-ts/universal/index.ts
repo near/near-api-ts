@@ -9,12 +9,10 @@ export { PublicKeyZodSchema } from './src/_common/schemas/zod/common/publicKey';
 export { MessageZodSchema } from './src/_common/schemas/zod/message';
 
 // Utils
-export {
-  toEd25519CurveString,
-  toSecp256k1CurveString,
-} from './src/_common/transformers/toCurveString';
+export { toEd25519CurveString, toSecp256k1CurveString } from './src/_common/transformers/toCurveString';
+export { base64ToObject } from './src/_common/utils/base64ToObject';
+export { objectToU8, u8ToObject } from './src/_common/utils/common';
 
-export { fromJsonBytes, toJsonBytes } from './src/_common/utils/common';
 // Clients
 export {
   safeCreateClient,

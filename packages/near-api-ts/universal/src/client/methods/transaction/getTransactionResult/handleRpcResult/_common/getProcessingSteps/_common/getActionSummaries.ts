@@ -5,7 +5,7 @@ import type {
   ParsedActionSummary,
   RawActionSummary,
 } from '../../../../../../../../../types/_common/transactionDetails/actionSummaries';
-import { tryParseBase64ToObject } from '../../../../../../../../_common/utils/tryParseBase64ToObject';
+import { tryBase64ToObject } from '../../../../../../../../_common/utils/base64ToObject';
 
 // Assembles the raw action summary from the RPC action - all fields are converted except
 // functionCall.functionArgs which stays a raw base64 string;
@@ -105,7 +105,7 @@ export const baseGetActionSummary = (rawActionSummary: RawActionSummary): Parsed
   if (rawActionSummary.actionType === 'FunctionCall') {
     return {
       ...rawActionSummary,
-      functionArgs: tryParseBase64ToObject(rawActionSummary.functionArgs),
+      functionArgs: tryBase64ToObject(rawActionSummary.functionArgs),
     };
   }
   return rawActionSummary;

@@ -1,6 +1,5 @@
 import * as z from 'zod/mini';
-import { createTestnetClient } from '../../../../index';
-import { tryParseBase64ToObject } from '../../../../src/_common/utils/tryParseBase64ToObject';
+import { base64ToObject, createTestnetClient } from '../../../../index';
 import type { Base64String } from '../../../../types/_common/common';
 
 type Equal<A, B> =
@@ -18,11 +17,11 @@ const client = createTestnetClient();
 const responseZodSchema = z.object({ decimals: z.number() });
 
 const deserializeResult = (args: {
-  resultBase64: Base64String;
+  rawResult: Base64String;
 }): z.output<typeof responseZodSchema> =>
-  responseZodSchema.parse(tryParseBase64ToObject(args.resultBase64));
+  responseZodSchema.parse(base64ToObject(args.rawResult));
 
-type CustomDeserializeResult = (args: { resultBase64: Base64String }) => {
+type CustomDeserializeResult = (args: { rawResult: Base64String }) => {
   decimals: number;
 };
 
@@ -106,7 +105,7 @@ const knownResult23 = client.callContractReadFunction({
 type T23 = Assert<Equal<OutputResult<typeof knownResult23>, { decimals: number }>>;
 
 const knownResult24 = client.callContractReadFunction<
-  (args: { resultBase64: Base64String }) => { decimals: number },
+  (args: { rawResult: Base64String }) => { decimals: number },
   { a: number }
 >({
   contractAccountId,
@@ -248,8 +247,8 @@ client.callContractReadFunction({
   contractAccountId,
   functionName,
   options: {
-    // @ts-expect-error deserializeResult arg must be { rawResult: number[] }
-    deserializeResult: (_args: { rawResult: string }) => ({ decimals: 1 }),
+    // @ts-expect-error deserializeResult arg must be { rawResult: string }
+    deserializeResult: (_args: { rawResult: number }) => ({ decimals: 1 }),
   },
 });
 

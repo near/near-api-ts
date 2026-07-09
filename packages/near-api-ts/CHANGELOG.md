@@ -4,6 +4,8 @@
 
 ### Added
 
+- `base64ToObject` utility function
+
 ### Changed
 
 - Now empty `functionArgs` in
@@ -22,12 +24,16 @@
   - When no account found – returns `Internal` error
 
   Now
-  - `options.deserializeResult` accepts `resultBase64: string` as an argument;
+  - `options.deserializeResult` accepts `rawResult: Base64String` as an
+    argument;
   - If the default `deserializeResult` failed to parse a raw result as JSON it
     returns a raw result as base64 or null
   - Returns `{  result, logs, withStateAt: { blockHash, blockHeight } }`
   - Removed `.Shard.NotTracked` + `NotSynced` errors - will end up as `Internal`
   - When no account found – returns `.Rpc.Account.NotFound` error
+
+- Rename helper `toJsonBytes` to `objectToU8`
+- Rename helper `fromJsonBytes` to `u8ToObject`
 
 ### Removed
 

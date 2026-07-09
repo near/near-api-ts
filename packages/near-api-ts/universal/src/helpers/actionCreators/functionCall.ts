@@ -13,7 +13,7 @@ import {
 import { NearGasArgsZodSchema } from '../../_common/schemas/zod/common/nearGas';
 import { NearTokenArgsZodSchema } from '../../_common/schemas/zod/common/nearToken';
 import { asThrowable } from '../../_common/utils/asThrowable';
-import { toJsonBytes } from '../../_common/utils/common';
+import { objectToU8 } from '../../_common/utils/common';
 import { result } from '../../_common/utils/result';
 import { wrapInternalError } from '../../_common/utils/wrapInternalError';
 
@@ -67,7 +67,7 @@ const serializeFunctionArgs = (
         }),
       );
 
-    return result.ok(toJsonBytes(args.functionArgs));
+    return result.ok(objectToU8(args.functionArgs));
   }
 
   // If no functionArgs and serializeArgs - return placeholder;

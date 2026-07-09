@@ -2,7 +2,7 @@ import type { Result } from '../../../../../types/_common/common';
 import type { InnerCallContractReadFunctionArgs } from '../../../../../types/client/methods/contract/callContractReadFunction';
 import { createNatError, NatError } from '../../../../_common/natError';
 import { JsonValueZodSchema } from '../../../../_common/schemas/zod/common/common';
-import { toJsonBytes } from '../../../../_common/utils/common';
+import { objectToU8 } from '../../../../_common/utils/common';
 import { result } from '../../../../_common/utils/result';
 
 export const serializeFunctionArgs = (
@@ -54,7 +54,7 @@ export const serializeFunctionArgs = (
         }),
       );
 
-    return result.ok(toJsonBytes(args.functionArgs));
+    return result.ok(objectToU8(args.functionArgs));
   }
 
   // If no functionArgs and serializeArgs - return placeholder;

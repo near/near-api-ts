@@ -1,6 +1,6 @@
 import {
+  base64ToObject,
   type DeserializeResultFnArgs,
-  fromJsonBytes,
   useConnectedAccount,
   useContractReadFunction,
 } from 'react-near-ts';
@@ -10,7 +10,7 @@ import { ContractAccountId } from './config';
 const ResultSchema = z.array(z.string());
 
 const deserializeResult = (args: DeserializeResultFnArgs) =>
-  ResultSchema.parse(fromJsonBytes(args.rawResult));
+  ResultSchema.parse(base64ToObject(args.rawResult));
 
 export const useReadRecords = () => {
   const { connectedAccountId, isConnectedAccount } = useConnectedAccount();

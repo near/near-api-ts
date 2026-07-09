@@ -51,12 +51,12 @@ export interface CallContractReadFunctionPublicErrorRegistry {
   };
   'Client.CallContractReadFunction.DeserializeResult.Failed': {
     cause: unknown;
-    resultBase64: Base64String;
+    rawResult: Base64String;
   };
   'Client.CallContractReadFunction.Internal': InternalErrorContext;
 }
 
-export type DeserializeResultFnArgs = { resultBase64: Base64String };
+export type DeserializeResultFnArgs = { rawResult: Base64String };
 export type BaseDeserializeResultFn = (args: DeserializeResultFnArgs) => unknown;
 export type MaybeBaseDeserializeResultFn = BaseDeserializeResultFn | undefined;
 

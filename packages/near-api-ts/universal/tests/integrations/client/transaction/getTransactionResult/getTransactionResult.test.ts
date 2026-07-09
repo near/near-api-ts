@@ -2,12 +2,12 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import * as z from 'zod/mini';
 import {
+  base64ToObject,
   type Client,
   createAccount,
   createMemoryKeyService,
   createMemorySigner,
   deployContract,
-  fromJsonBytes,
   functionCall,
   near,
   transfer,
@@ -78,7 +78,7 @@ describe('CallContractReadFunction', () => {
   it('Ok', async () => {
     // Just return some parsed result
     const deserializeResultData = (args: DeserializeTransactionResultDataArgs) =>
-      fromJsonBytes(Uint8Array.fromBase64(args.rawData));
+      base64ToObject(args.rawData);
 
     // We can validate that we called a write_record method with a valid WriteRecordArgs type functionArgs;
     const deserializeActionSummaries = (
@@ -92,7 +92,7 @@ describe('CallContractReadFunction', () => {
           return {
             ...rawActionSummary,
             functionArgs: WriteRecordArgsZodShema.parse(
-              fromJsonBytes(Uint8Array.fromBase64(rawActionSummary.functionArgs)),
+              base64ToObject(rawActionSummary.functionArgs),
             ),
           };
         }

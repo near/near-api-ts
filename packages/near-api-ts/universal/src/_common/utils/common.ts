@@ -9,10 +9,12 @@ export const isNodeJs =
 
 export const nodeInspectSymbol = isNodeJs ? Symbol.for('nodejs.util.inspect.custom') : undefined;
 
-export const toJsonBytes = (value: unknown): Uint8Array =>
+// TODO maybe we can take JsonValue instead of unknown
+export const objectToU8 = (value: unknown): Uint8Array =>
   new TextEncoder().encode(JSON.stringify(value));
 
-export const fromJsonBytes = (bytes: Uint8Array | number[]): unknown => {
+// TODO maybe we can return JsonValue instead of unknown
+export const u8ToObject = (bytes: Uint8Array | number[]): unknown => {
   const u8 = Array.isArray(bytes) ? new Uint8Array(bytes) : bytes;
   return JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(u8));
 };

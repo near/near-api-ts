@@ -1,5 +1,5 @@
 import * as z from 'zod/mini';
-import { useContractReadFunction } from '../../src';
+import { base64ToObject, useContractReadFunction } from '../../src';
 
 type Equal<A, B> =
   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;
@@ -16,10 +16,10 @@ const functionName = 'ft_balance_of';
 
 const responseZodSchema = z.object({ decimals: z.number() });
 
-const deserializeResult = (args: { rawResult: number[] }): { decimals: number } =>
-  responseZodSchema.parse(args.rawResult);
+const deserializeResult = (args: { rawResult: string }): { decimals: number } =>
+  responseZodSchema.parse(base64ToObject(args.rawResult));
 
-type CustomDeserializeResult = (args: { rawResult: number[] }) => {
+type CustomDeserializeResult = (args: { rawResult: string }) => {
   decimals: number;
 };
 
@@ -104,7 +104,7 @@ const knownResult23 = useContractReadFunction({
 type T23 = Assert<Equal<OutputResult<typeof knownResult23>, { decimals: number }>>;
 
 const knownResult24 = useContractReadFunction<
-  (args: { rawResult: number[] }) => { decimals: number },
+  (args: { rawResult: string }) => { decimals: number },
   { a: number }
 >({
   contractAccountId,
@@ -246,8 +246,8 @@ useContractReadFunction({
   contractAccountId,
   functionName,
   options: {
-    // @ts-expect-error deserializeResult arg must be { rawResult: number[] }
-    deserializeResult: (_args: { rawResult: string }) => ({ decimals: 1 }),
+    // @ts-expect-error deserializeResult arg must be { rawResult: string }
+    deserializeResult: (_args: { rawResult: number }) => ({ decimals: 1 }),
   },
 });
 
