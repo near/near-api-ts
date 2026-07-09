@@ -124,15 +124,15 @@ Call read-only contract methods.
 ```tsx
 import {
   useContractReadFunction,
-  fromJsonBytes,
+  base64ToObject,
   type DeserializeResultFnArgs,
 } from 'react-near-ts';
 import * as z from 'zod/mini';
 
 const ResultSchema = z.array(z.string());
 
-const deserializeResult = ({ rawResult }: DeserializeResultFnArgs) =>
-  ResultSchema.parse(fromJsonBytes(rawResult));
+const deserializeResult = (args: DeserializeResultFnArgs) =>
+  ResultSchema.parse(base64ToObject(args.rawResult));
 
 const records = useContractReadFunction({
   contractAccountId: 'react-near-ts.lantstool.testnet',
