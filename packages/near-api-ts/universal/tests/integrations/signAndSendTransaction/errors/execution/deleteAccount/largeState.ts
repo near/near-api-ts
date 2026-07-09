@@ -29,7 +29,7 @@ export const largeState = (context: TestContext) => async () => {
     },
   });
 
-  await client.safeSendSignedTransaction({ signedTransaction: signedTx1 });
+  await client.safeSendSignedTransaction(signedTx1);
   await safeSleep(500);
 
   // 2. Try to delete an account
@@ -45,7 +45,7 @@ export const largeState = (context: TestContext) => async () => {
     },
   });
 
-  await client.safeSendSignedTransaction({ signedTransaction: signedDeleteAccountTx });
+  await client.safeSendSignedTransaction(signedDeleteAccountTx);
   await safeSleep(500);
 
   const txResult = await client.getTransactionResult({

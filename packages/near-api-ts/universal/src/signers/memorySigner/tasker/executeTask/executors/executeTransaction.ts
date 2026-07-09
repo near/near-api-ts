@@ -1,4 +1,4 @@
-import type { TransactionNonce, Result } from '../../../../../../types/_common/common';
+import type { Result, TransactionNonce } from '../../../../../../types/_common/common';
 import type { Transaction } from '../../../../../../types/_common/transaction/transaction';
 import type { SendSignedTransactionOutput } from '../../../../../../types/client/methods/transaction/sendSignedTransaction';
 import type { PoolKey } from '../../../../../../types/signers/memorySigner/inner/keyPool';
@@ -46,9 +46,7 @@ export const executeTransaction = async (
         transaction,
       });
 
-      const txResult = await signerContext.client.safeSendSignedTransaction({
-        signedTransaction,
-      });
+      const txResult = await signerContext.client.safeSendSignedTransaction(signedTransaction);
 
       // If tx executed successfully, update key nonce and return tx execution result;
       if (txResult.ok) {

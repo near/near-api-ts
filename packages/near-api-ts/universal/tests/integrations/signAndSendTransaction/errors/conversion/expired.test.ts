@@ -41,9 +41,7 @@ describe('safeSendSignedTransaction › Transaction.Expired', () => {
       },
     });
 
-    const res = await client.safeSendSignedTransaction({
-      signedTransaction,
-    });
+    const res = await client.safeSendSignedTransaction(signedTransaction);
 
     assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Expired');
   });
@@ -66,10 +64,7 @@ describe('safeSendSignedTransaction › Transaction.Expired', () => {
       },
     });
 
-    const res = await client.safeSendSignedTransaction({
-      signedTransaction,
-    });
-
+    const res = await client.safeSendSignedTransaction(signedTransaction);
     assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Expired');
   });
 });

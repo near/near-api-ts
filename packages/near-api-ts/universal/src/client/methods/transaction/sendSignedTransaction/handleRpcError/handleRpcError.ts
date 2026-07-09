@@ -4,7 +4,7 @@ import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc/rpc';
 import { result } from '../../../../../_common/utils/result';
 import { handleInvalidTransaction } from './handleInvalidTransaction';
 
-export const handleError = (rpcResponse: RpcResponse) => {
+export const handleRpcError = (rpcResponse: RpcResponse) => {
   const rpcError = ErrorWrapperFor_RpcTransactionErrorSchema().safeParse(rpcResponse.error);
 
   if (!rpcError.success)

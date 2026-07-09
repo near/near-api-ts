@@ -51,7 +51,7 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
     },
   });
 
-  await client.safeSendSignedTransaction({ signedTransaction: signedTransaction1 });
+  await client.safeSendSignedTransaction(signedTransaction1);
   await safeSleep(500);
 
   // #2 Call contract function for error
@@ -72,7 +72,7 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
     },
   });
 
-  await client.safeSendSignedTransaction({ signedTransaction });
+  await client.safeSendSignedTransaction(signedTransaction);
   await safeSleep(500);
 
   const txResult = await client.getTransactionResult({

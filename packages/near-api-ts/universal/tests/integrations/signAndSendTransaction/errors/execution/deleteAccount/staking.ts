@@ -27,7 +27,7 @@ export const staking = (context: TestContext) => async () => {
     },
   });
 
-  await client.safeSendSignedTransaction({ signedTransaction: signedStakeTx });
+  await client.safeSendSignedTransaction(signedStakeTx);
   await safeSleep(500);
 
   // 2. Try to delete an account
@@ -43,7 +43,7 @@ export const staking = (context: TestContext) => async () => {
     },
   });
 
-  await client.safeSendSignedTransaction({ signedTransaction: signedDeleteAccountTx });
+  await client.safeSendSignedTransaction(signedDeleteAccountTx);
   await safeSleep(500);
 
   const txResult = await client.getTransactionResult({

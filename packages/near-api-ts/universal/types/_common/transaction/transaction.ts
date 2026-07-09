@@ -1,5 +1,5 @@
 import type { Prettify } from '../../utils';
-import type { AccountId, BlockHash, CryptoHash, TransactionNonce } from '../common';
+import type { AccountId, Base64String, BlockHash, CryptoHash, TransactionNonce } from '../common';
 import type { NativePublicKey, NativeSignature, PublicKey, Signature } from '../crypto';
 import type {
   AddFullAccessKeyAction,
@@ -48,9 +48,10 @@ export type TransactionIntent = Prettify<
 >;
 
 export type SignedTransaction = {
-  transaction: Transaction;
   transactionHash: CryptoHash;
+  transaction: Transaction;
   signature: Signature;
+  signedTransactionBorsh64: Base64String;
 };
 
 // Native Transaction

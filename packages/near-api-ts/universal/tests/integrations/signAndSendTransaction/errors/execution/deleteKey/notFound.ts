@@ -29,7 +29,7 @@ export const notFound = (context: TestContext) => async () => {
     },
   });
 
-  const tx = await client.safeSendSignedTransaction({ signedTransaction });
+  const tx = await client.safeSendSignedTransaction(signedTransaction);
 
   // TODO rework after rework SendSignedTransaction
   assertNatErrKind(tx, 'Client.SendSignedTransaction.Internal');

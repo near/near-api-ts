@@ -5,7 +5,7 @@ import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc/rpc';
 import { result } from '../../../../../_common/utils/result';
 import { handleActionError } from './handleActionError';
 
-export const handleResult = (rpcResponse: RpcResponse, inputArgs: SendSignedTransactionArgs) => {
+export const handleRpcResult = (rpcResponse: RpcResponse) => {
   const rpcResult = RpcTransactionResponseSchema().safeParse(rpcResponse.result);
 
   if (!rpcResult.success)
@@ -27,7 +27,7 @@ export const handleResult = (rpcResponse: RpcResponse, inputArgs: SendSignedTran
     'Failure' in rpcResult.data.status &&
     'ActionError' in rpcResult.data.status.Failure
   )
-    return handleActionError(rpcResult.data.status.Failure.ActionError, rpcResponse, inputArgs);
+    return handleActionError(rpcResult.data.status.Failure.ActionError, rpcResponse);
 
   const output = {
     rawRpcResult: rpcResult.data, // TODO Return result type without errors

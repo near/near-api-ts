@@ -3,11 +3,8 @@ import type {
   NativeSignedTransaction,
   NativeTransaction,
 } from '../../../../types/_common/transaction/transaction';
-import type {
-  InnerAction,
-  InnerSignedTransaction,
-  InnerTransaction,
-} from '../../schemas/zod/transaction/transaction';
+import type { InnerSignature } from '../../schemas/zod/common/signature';
+import type { InnerAction, InnerTransaction } from '../../schemas/zod/transaction/transaction';
 import { toNativeAddKeyAction } from './actions/addKey';
 import { toNativeCreateAccountAction } from './actions/createAccount';
 import { toNativeDeleteAccountAction } from './actions/deleteAccount';
@@ -47,8 +44,9 @@ export const toNativeTransaction = (transaction: InnerTransaction): NativeTransa
 });
 
 export const toNativeSignedTransaction = (
-  signedTransaction: InnerSignedTransaction,
+  transaction: InnerTransaction,
+  signature: InnerSignature,
 ): NativeSignedTransaction => ({
-  transaction: toNativeTransaction(signedTransaction.transaction),
-  signature: toNativeSignature(signedTransaction.signature),
+  transaction: toNativeTransaction(transaction),
+  signature: toNativeSignature(signature),
 });

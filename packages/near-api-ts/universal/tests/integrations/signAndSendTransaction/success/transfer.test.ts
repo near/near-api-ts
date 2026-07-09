@@ -45,7 +45,7 @@ describe('safeSendSignedTransaction › success', () => {
       },
     });
 
-    await expect(client.sendSignedTransaction({ signedTransaction })).resolves.toMatchObject({
+    await expect(client.sendSignedTransaction(signedTransaction)).resolves.toMatchObject({
       rawRpcResult: {
         status: { SuccessValue: '' },
       },

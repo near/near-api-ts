@@ -7,7 +7,7 @@ import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from './stake.test';
 
-export const balanceTooLow = (context: TestContext) => async () => {
+export const notEnoughBalance = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -30,7 +30,7 @@ export const balanceTooLow = (context: TestContext) => async () => {
     },
   });
 
-  const tx = await client.safeSendSignedTransaction({ signedTransaction });
+  const tx = await client.safeSendSignedTransaction(signedTransaction);
 
   // TODO rework after rework SendSignedTransaction
   assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.Balance.TooLow');

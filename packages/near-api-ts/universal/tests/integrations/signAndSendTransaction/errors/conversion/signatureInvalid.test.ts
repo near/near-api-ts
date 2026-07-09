@@ -46,12 +46,15 @@ describe('safeSendSignedTransaction › Transaction.Signature.Invalid', () => {
       },
     });
 
+    // Signature bytes are the last 64/65 bytes of the signed transaction - corrupt them;
+    const corruptedTxBorsh = Uint8Array.fromBase64(signedTransaction.signedTransactionBorsh64);
+
+    for (let i = corruptedTxBorsh.length - 1; i >= corruptedTxBorsh.length - 65; i--) {
+      corruptedTxBorsh[i] = 0;
+    }
+
     const res = await client.safeSendSignedTransaction({
-      signedTransaction: {
-        ...signedTransaction,
-        signature:
-          'ed25519:4nhGVzRVDF1orVnfhQB4rG7ZqEhahUJQpuzvpMKe1dH6JMksAXbdQk1JzuwmNfzdtbL8PGDNx3c9BJFbZ4Guc3T4',
-      },
+      signedTransactionBorsh64: corruptedTxBorsh.toBase64(),
     });
     log(res);
 

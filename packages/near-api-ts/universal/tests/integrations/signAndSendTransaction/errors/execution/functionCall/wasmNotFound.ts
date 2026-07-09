@@ -31,7 +31,7 @@ export const wasmNotFound = (context: TestContext) => async () => {
     },
   });
 
-  await client.safeSendSignedTransaction({ signedTransaction });
+  await client.safeSendSignedTransaction(signedTransaction);
   await safeSleep(500);
 
   const txResult = await client.getTransactionResult({

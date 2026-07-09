@@ -3,20 +3,15 @@ import type {
   CreateSafeSendSignedTransaction,
   SafeSendSignedTransaction,
 } from '../../../../../types/client/methods/transaction/sendSignedTransaction';
-import { createNatError } from '../../../../_common/natError';
+import { resultNatError } from '../../../../_common/natError';
 import { BaseOptionsZodSchema, PoliciesZodSchema } from '../../../../_common/schemas/zod/client';
-import { SignedTransactionZodSchema } from '../../../../_common/schemas/zod/transaction/transaction';
-import { toBorshSignedTransaction } from '../../../../_common/transformers/toBorshBytes/transaction';
 import { repackError } from '../../../../_common/utils/repackError';
-import { result } from '../../../../_common/utils/result';
 import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
-import { handleError } from './handleError/handleError';
-import { handleResult } from './handleResult/handleResult';
-
-// We will return the ability to select waitUntil after redesign its name;
+import { handleRpcError } from './handleRpcError/handleRpcError';
+import { handleRpcResult } from './handleRpcResult/handleRpcResult';
 
 const SendSignedTransactionArgsShema = z.object({
-  signedTransaction: SignedTransactionZodSchema,
+  signedTransactionBorsh64: z.base64(),
   policies: PoliciesZodSchema,
   options: BaseOptionsZodSchema,
 });
@@ -28,18 +23,14 @@ export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction = 
       const validArgs = SendSignedTransactionArgsShema.safeParse(args);
 
       if (!validArgs.success)
-        return result.err(
-          createNatError({
-            kind: 'Client.SendSignedTransaction.Args.InvalidSchema',
-            context: { zodError: validArgs.error },
-          }),
-        );
+        return resultNatError('Client.SendSignedTransaction.Args.InvalidSchema', {
+          zodError: validArgs.error,
+        });
 
       const rpcResponse = await context.sendRequest({
         method: 'send_tx',
         params: {
-          // TODO move this logic to signTransaction
-          signed_tx_base64: toBorshSignedTransaction(validArgs.data.signedTransaction).toBase64(),
+          signed_tx_base64: args.signedTransactionBorsh64,
           wait_until: 'EXECUTED_OPTIMISTIC',
         },
         transportPolicy: args.policies?.transport,
@@ -54,7 +45,7 @@ export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction = 
         });
 
       return rpcResponse.value.error
-        ? handleError(rpcResponse.value)
-        : handleResult(rpcResponse.value, args);
+        ? handleRpcError(rpcResponse.value)
+        : handleRpcResult(rpcResponse.value);
     },
   );

@@ -4,8 +4,8 @@ import { type Client, keyPair } from '../../../../../../index';
 import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
-import { balanceTooLow } from './balanceTooLow';
 import { belowThreshold } from './belowThreshold';
+import { notEnoughBalance } from './notEnoughBalance';
 import { notFound } from './notFound';
 
 export type TestContext = {
@@ -26,7 +26,7 @@ describe('signAndSendTransaction › Stake.* errors', () => {
 
   it(
     'fails with Action.Stake.NotEnoughBalance when staking more than the account balance',
-    balanceTooLow(context),
+    notEnoughBalance(context),
   );
 
   it(

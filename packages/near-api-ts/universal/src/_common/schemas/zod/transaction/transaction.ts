@@ -1,9 +1,7 @@
 import * as z from 'zod/mini';
 import { AccountIdZodSchema } from '../common/accountId';
 import { BlockHashZodSchema, TransactionNonceZodSchema } from '../common/common';
-import { CryptoHashZodSchema } from '../common/cryptoHash';
 import { PublicKeyZodSchema } from '../common/publicKey';
-import { SignatureZodSchema } from '../common/signature';
 import { AddKeyActionZodSchema } from './actions/addKey';
 import { CreateAccountActionZodSchema } from './actions/createAccount';
 import { DeleteAccountActionZodSchema } from './actions/deleteAccount';
@@ -75,11 +73,3 @@ export const TransactionIntentZodSchema = z.union([
   SingleActionTransactionIntentZodSchema,
   MultiActionsTransactionIntentZodSchema,
 ]);
-
-export const SignedTransactionZodSchema = z.object({
-  transaction: TransactionZodSchema,
-  transactionHash: CryptoHashZodSchema,
-  signature: SignatureZodSchema,
-});
-
-export type InnerSignedTransaction = z.infer<typeof SignedTransactionZodSchema>;

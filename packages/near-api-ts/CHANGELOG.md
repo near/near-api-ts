@@ -5,6 +5,8 @@
 ### Added
 
 - `base64ToObject` utility function
+- Helper `signTransaction` now returns `SignedTransaction` with `signedTransactionBorsh64`
+
 
 ### Changed
 
@@ -34,6 +36,7 @@
 
 - Rename helper `toJsonBytes` to `objectToU8`
 - Rename helper `fromJsonBytes` to `u8ToObject`
+- Added `signedTransactionBorsh64` to type `SignedTransaction`
 
 ### Removed
 

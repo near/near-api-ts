@@ -46,9 +46,7 @@ describe('safeSendSignedTransaction › Transaction.Signer.Balance.TooLow', () =
       },
     });
 
-    const res = await client.safeSendSignedTransaction({
-      signedTransaction,
-    });
+    const res = await client.safeSendSignedTransaction(signedTransaction);
     log(res);
 
     assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow');

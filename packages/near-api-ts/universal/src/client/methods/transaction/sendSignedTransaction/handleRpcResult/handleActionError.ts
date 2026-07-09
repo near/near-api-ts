@@ -1,6 +1,5 @@
 import type { ActionError } from '@near-js/jsonrpc-types';
 import { yoctoNear } from '../../../../../../index';
-import type { SendSignedTransactionArgs } from '../../../../../../types/client/methods/transaction/sendSignedTransaction';
 import { createNatError } from '../../../../../_common/natError';
 import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc/rpc';
 import { result } from '../../../../../_common/utils/result';
@@ -8,9 +7,8 @@ import { result } from '../../../../../_common/utils/result';
 export const handleActionError = (
   actionError: ActionError,
   rpcResponse: RpcResponse,
-  inputArgs: SendSignedTransactionArgs,
 ) => {
-  const { transactionHash } = inputArgs.signedTransaction;
+  const transactionHash = 'delete-later';
   const { kind, index: actionIndex } = actionError;
 
   // Action index is not defined if ActionError.kind is `ActionErrorKind::LackBalanceForState`;
