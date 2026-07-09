@@ -17,16 +17,17 @@
     returns
     error
     `Client.CallContractReadFunction.ResultDeserialization.JsonParseFailed`
-  - returns `{  blockHash, blockHeight, result, rawResult, logs }`
-  - has `.Shard.NotTracked` + `NotSynced` errors
+  - Returns `{  blockHash, blockHeight, result, rawResult, logs }`
+  - Has `.Shard.NotTracked` + `NotSynced` errors
+  - When no account found – returns `Internal` error
 
   Now
   - `options.deserializeResult` accepts `resultBase64: string` as an argument;
   - If the default `deserializeResult` failed to parse a raw result as JSON it
-    returns
-    a raw result as base64 or null
-  - returns `{  result, logs, withStateAt: { blockHash, blockHeight } }`
-  - removed `.Shard.NotTracked` + `NotSynced` errors - will end up as `Internal`
+    returns a raw result as base64 or null
+  - Returns `{  result, logs, withStateAt: { blockHash, blockHeight } }`
+  - Removed `.Shard.NotTracked` + `NotSynced` errors - will end up as `Internal`
+  - When no account found – returns `.Rpc.Account.NotFound` error
 
 ### Removed
 

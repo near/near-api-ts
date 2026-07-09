@@ -134,4 +134,20 @@ describe('CallContractReadFunction', () => {
     });
     assertNatErrKind(res, 'Client.CallContractReadFunction.DeserializeResult.Failed');
   });
+
+  it('return .Rpc.FunctionCall.Failed when no WASM found on the account', async () => {
+    const res = await client.safeCallContractReadFunction({
+      contractAccountId: 'nat',
+      functionName: 'get_record',
+    });
+    assertNatErrKind(res, 'Client.CallContractReadFunction.Rpc.FunctionCall.Failed');
+  });
+
+  it('return .Rpc.ContractAccount.NotFound when no contract found on the account', async () => {
+    const res = await client.safeCallContractReadFunction({
+      contractAccountId: 'not-exist',
+      functionName: 'get_record',
+    });
+    assertNatErrKind(res, 'Client.CallContractReadFunction.Rpc.Account.NotFound');
+  });
 });

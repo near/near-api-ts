@@ -38,6 +38,11 @@ export interface CallContractReadFunctionPublicErrorRegistry {
   'Client.CallContractReadFunction.Exhausted': ExhaustedErrorContext;
   'Client.CallContractReadFunction.Rpc.Block.GarbageCollected': RpcQueryBlockGarbageCollectedErrorContext;
   'Client.CallContractReadFunction.Rpc.Block.NotFound': RpcQueryBlockNotFoundErrorContext;
+  'Client.CallContractReadFunction.Rpc.Account.NotFound': {
+    contractAccountId: AccountId;
+    blockHash: BlockHash;
+    blockHeight: BlockHeight;
+  };
   'Client.CallContractReadFunction.Rpc.FunctionCall.Failed': {
     contractAccountId: AccountId;
     cause: string;
@@ -117,7 +122,7 @@ export type CallContractReadFunctionError =
   | NatError<'Client.CallContractReadFunction.Exhausted'>
   | NatError<'Client.CallContractReadFunction.Rpc.Block.GarbageCollected'>
   | NatError<'Client.CallContractReadFunction.Rpc.Block.NotFound'>
-  // TODO add contract not found
+  | NatError<'Client.CallContractReadFunction.Rpc.Account.NotFound'>
   | NatError<'Client.CallContractReadFunction.Rpc.FunctionCall.Failed'>
   | NatError<'Client.CallContractReadFunction.DeserializeResult.Failed'>
   | NatError<'Client.CallContractReadFunction.Internal'>;

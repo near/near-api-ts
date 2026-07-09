@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
 import type { InnerCallContractReadFunctionArgs } from '../../../../../../types/client/methods/contract/callContractReadFunction';
-import { createNatError } from '../../../../../_common/natError';
+import { createNatError, resultNatError } from '../../../../../_common/natError';
 import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc/rpc';
 import { result } from '../../../../../_common/utils/result';
 import { deserializeCallResult } from './deserializeCallResult';
@@ -33,17 +33,12 @@ export const handleRpcResult = (
   const rpcResult = RpcQueryCallReadFunctionResultSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)
-    return result.err(
-      createNatError({
-        kind: 'Client.CallContractReadFunction.Exhausted',
-        context: {
-          lastError: createNatError({
-            kind: 'SendRequest.Attempt.Response.InvalidSchema',
-            context: { zodError: rpcResult.error },
-          }),
-        },
+    return resultNatError('Client.CallContractReadFunction.Exhausted', {
+      lastError: createNatError({
+        kind: 'SendRequest.Attempt.Response.InvalidSchema',
+        context: { zodError: rpcResult.error },
       }),
-    );
+    });
 
   const { blockHash, blockHeight, logs } = rpcResult.data;
 
@@ -51,17 +46,12 @@ export const handleRpcResult = (
   // All others are going into response.error, and we handle them in handleError;
   // https://github.com/near/nearcore/blob/a9557047d1bd45da0d06cf6b880fea6487c35e20/chain/jsonrpc/src/lib.rs#L200C13-L209C17
   if ('error' in rpcResult.data)
-    return result.err(
-      createNatError({
-        kind: 'Client.CallContractReadFunction.Rpc.FunctionCall.Failed',
-        context: {
-          contractAccountId: args.contractAccountId,
-          cause: rpcResult.data.error,
-          blockHash,
-          blockHeight,
-        },
-      }),
-    );
+    return resultNatError('Client.CallContractReadFunction.Rpc.FunctionCall.Failed', {
+      contractAccountId: args.contractAccountId,
+      cause: rpcResult.data.error,
+      blockHash,
+      blockHeight,
+    });
 
   const deserializedResult = deserializeCallResult(args, rpcResult.data.result);
   if (!deserializedResult.ok) return deserializedResult;

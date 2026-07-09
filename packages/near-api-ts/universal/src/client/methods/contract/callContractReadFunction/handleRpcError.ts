@@ -1,7 +1,6 @@
 import { ErrorWrapperFor_RpcQueryErrorSchema } from '@near-js/jsonrpc-types';
-import { createNatError } from '../../../../_common/natError';
+import { createNatError, resultNatError } from '../../../../_common/natError';
 import type { RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
-import { result } from '../../../../_common/utils/result';
 
 export const handleRpcError = (rpcResponse: RpcResponse) => {
   // We use QueryErrorSchema cuz there is no separate 'view_access_key' method -
@@ -9,50 +8,36 @@ export const handleRpcError = (rpcResponse: RpcResponse) => {
   const rpcError = ErrorWrapperFor_RpcQueryErrorSchema().safeParse(rpcResponse.error);
 
   if (!rpcError.success)
-    return result.err(
-      createNatError({
-        kind: 'Client.CallContractReadFunction.Exhausted',
-        context: {
-          lastError: createNatError({
-            kind: 'SendRequest.Attempt.Response.InvalidSchema',
-            context: { zodError: rpcError.error },
-          }),
-        },
+    return resultNatError('Client.CallContractReadFunction.Exhausted', {
+      lastError: createNatError({
+        kind: 'SendRequest.Attempt.Response.InvalidSchema',
+        context: { zodError: rpcError.error },
       }),
-    );
+    });
 
   const { name, cause } = rpcError.data;
 
   if (name === 'HANDLER_ERROR') {
     if (cause.name === 'GARBAGE_COLLECTED_BLOCK')
-      return result.err(
-        createNatError({
-          kind: `Client.CallContractReadFunction.Rpc.Block.GarbageCollected`,
-          context: {
-            blockHash: cause.info.blockHash,
-            blockHeight: cause.info.blockHeight,
-          },
-        }),
-      );
+      return resultNatError(`Client.CallContractReadFunction.Rpc.Block.GarbageCollected`, {
+        blockHash: cause.info.blockHash,
+        blockHeight: cause.info.blockHeight,
+      });
 
     // Most likely it's not really possible to get UNKNOWN_BLOCK error when trying to
     // fetch data from relative block like 'LatestFinalBlock' or 'EarliestAvailableBlock'
     if (cause.name === 'UNKNOWN_BLOCK' && 'blockId' in cause.info.blockReference)
-      return result.err(
-        createNatError({
-          kind: `Client.CallContractReadFunction.Rpc.Block.NotFound`,
-          context: {
-            blockId: cause.info.blockReference.blockId,
-          },
-        }),
-      );
+      return resultNatError(`Client.CallContractReadFunction.Rpc.Block.NotFound`, {
+        blockId: cause.info.blockReference.blockId,
+      });
+
+    if (cause.name === 'UNKNOWN_ACCOUNT')
+      return resultNatError(`Client.CallContractReadFunction.Rpc.Account.NotFound`, {
+        contractAccountId: cause.info.requestedAccountId,
+        blockHash: cause.info.blockHash,
+        blockHeight: cause.info.blockHeight,
+      });
   }
 
-  // Stub
-  return result.err(
-    createNatError({
-      kind: 'Client.CallContractReadFunction.Internal',
-      context: { cause: rpcResponse },
-    }),
-  );
+  return resultNatError('Client.CallContractReadFunction.Internal', { cause: rpcResponse });
 };
