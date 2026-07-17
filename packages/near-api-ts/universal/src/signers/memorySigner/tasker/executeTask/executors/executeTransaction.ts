@@ -1,6 +1,6 @@
 import type { Result, TransactionNonce } from '../../../../../../types/_common/common';
 import type { Transaction } from '../../../../../../types/_common/transaction/transaction';
-import type { SendSignedTransactionOutput } from '../../../../../../types/client/methods/transaction/sendSignedTransaction';
+import type { SendSignedTransactionOutput } from '../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import type { PoolKey } from '../../../../../../types/signers/memorySigner/inner/keyPool';
 import type { Task } from '../../../../../../types/signers/memorySigner/inner/taskQueue';
 import type { MemorySignerContext } from '../../../../../../types/signers/memorySigner/memorySigner';
@@ -14,7 +14,7 @@ type Attempt = (
   newNonce: TransactionNonce,
 ) => Promise<
   Result<
-    SendSignedTransactionOutput,
+    SendSignedTransactionOutput<undefined, undefined, undefined, undefined>,
     | NatError<'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction'>
     | NatError<'MemorySigner.ExecuteTransaction.Internal'>
   >
@@ -46,7 +46,7 @@ export const executeTransaction = async (
         transaction,
       });
 
-      const txResult = await signerContext.client.safeSendSignedTransaction(signedTransaction);
+      const txResult = await signerContext.client.safeSendSignedTransaction({ signedTransaction });
 
       // If tx executed successfully, update key nonce and return tx execution result;
       if (txResult.ok) {

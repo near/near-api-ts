@@ -1,7 +1,7 @@
-import type { ConversionStepSuccess } from '../../../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep';
-import type { RpcActionReceipt } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
-import type { RpcReceiptOutcome } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
-import type { RpcTransactionSummary } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
+import type { ConversionStepSuccess } from '../../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep';
+import type { RpcActionReceipt } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
+import type { RpcReceiptOutcome } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
+import type { RpcTransactionSummary } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
 
 export const getReceiptsWithOutcomes = (
   transaction: RpcTransactionSummary,

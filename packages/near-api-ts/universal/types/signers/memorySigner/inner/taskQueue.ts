@@ -11,10 +11,8 @@ import type {
   SignedTransaction,
   TransactionIntent,
 } from '../../../_common/transaction/transaction';
-import type {
-  SendSignedTransactionError,
-  SendSignedTransactionOutput,
-} from '../../../client/methods/transaction/sendSignedTransaction';
+import type { SendSignedTransactionError } from '../../../client/methods/transaction/sendSignedTransaction/error';
+import type { SendSignedTransactionOutput } from '../../../client/methods/transaction/sendSignedTransaction/output';
 import type { MemorySignerErrorContext } from '../_common/errorContext';
 import type { MemorySignerContext } from '../memorySigner';
 import type { CreateMemorySignerArgs } from '../public/createMemorySigner';
@@ -78,7 +76,7 @@ type ExecuteTransactionTaskError =
 
 export type AddExecuteTransactionTask = (
   intent: TransactionIntent,
-) => Promise<Result<SendSignedTransactionOutput, ExecuteTransactionTaskError>>;
+) => Promise<Result<SendSignedTransactionOutput<any, any, any, any>, ExecuteTransactionTaskError>>;
 
 export type CreateAddExecuteTransactionTask = (
   context: TaskQueueContext,

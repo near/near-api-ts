@@ -14,6 +14,4 @@ export type SignedData = {
   signatureU8: Uint8Array;
 };
 
-export type SafeSignData<TSignDataError> = (
-  args: SignDataArgs,
-) => Promise<Result<SignedData, TSignDataError>>;
+export type SafeSignData<SDE> = (args: SignDataArgs) => Promise<Result<SignedData, SDE>>;

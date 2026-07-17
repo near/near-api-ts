@@ -4,7 +4,7 @@ import { type NatError, resultNatError } from '../../../../../../_common/natErro
 import { tryBase64ToObject } from '../../../../../../_common/utils/base64ToObject';
 import { result } from '../../../../../../_common/utils/result';
 
-export const deserializeResultData = (
+export const getResultData = (
   rawData: Base64String,
   inputArgs: InnerGetTransactionResultArgs,
 ): Result<unknown, NatError<'Client.GetTransactionResult.DeserializeResultData.Failed'>> => {

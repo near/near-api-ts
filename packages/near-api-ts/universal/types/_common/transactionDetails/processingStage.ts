@@ -5,7 +5,7 @@
  *   1. How far has processing progressed? (just converted → all receipts executed)
  *   2. How finalized is what we've seen so far?  (optimistic / final)
  *
- * The names map 1:1 to nearcore's `TxExecutionStatus` enum:
+ * The names related to nearcore's `TxExecutionStatus` enum:
  *
  * - **ConvertedOptimistic** (nearcore: `Included`): Transaction has been included
  *   in a block and converted into its initial receipt by the chunk producer.
@@ -54,14 +54,17 @@
  *   (receipts finish executing before the block finalizes)
  *
  * For transactions that produce no receipts (`ConversionError`), only the
- * *ExecutedOptimistic → CompletedFinal* tail of the second flow is reachable —
+ * *ExecutedOptimistic → CompletedFinal* flow is reachable —
  * the `Converted*` and `ExecutedNearlyFinal` stages are skipped because there is
  * nothing distinct to observe at them.
  */
-export type ProcessingStage = {
+export type TransactionProcessingStageMap = {
   ConvertedOptimistic: 'ConvertedOptimistic';
   ConvertedFinal: 'ConvertedFinal';
   ExecutedOptimistic: 'ExecutedOptimistic';
   ExecutedNearlyFinal: 'ExecutedNearlyFinal';
   CompletedFinal: 'CompletedFinal';
 };
+
+export type TransactionProcessingStage = keyof TransactionProcessingStageMap;
+export type MaybeTransactionProcessingStage = TransactionProcessingStage | undefined;

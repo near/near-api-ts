@@ -2,8 +2,6 @@ import type { NatError } from '../../../../src/_common/natError';
 import type { Base64String, CryptoHash, Result } from '../../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { RawActionSummary } from '../../../_common/transactionDetails/actionSummaries';
-import type { ProcessingStage } from '../../../_common/transactionDetails/processingStage';
-import type { RawExecutionStep } from '../../../_common/transactionDetails/processingSteps/executionSteps/executionStep';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   BaseDeserializeTransactionExecutionStepsFn,
@@ -11,8 +9,10 @@ import type {
   MaybeBaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionExecutionStepsFn,
   MaybeBaseDeserializeTransactionResultDataFn,
-  TransactionResult,
-} from '../../../_common/transactionDetails/transactionResult';
+} from '../../../_common/transactionDetails/deserializers';
+import type { TransactionProcessingStageMap } from '../../../_common/transactionDetails/processingStage';
+import type { RawExecutionStep } from '../../../_common/transactionDetails/processingSteps/executionSteps/executionStep';
+import type { TransactionResult } from '../../../_common/transactionDetails/transactionResult';
 import type { KeyIf } from '../../../utils';
 import type { ClientContext } from '../../client';
 import type {
@@ -22,6 +22,7 @@ import type {
   TimeoutErrorContext,
 } from '../../transport/sendRequest';
 import type { PartialTransportPolicy } from '../../transport/transport';
+import type { TransactionDetailsInnerErrorRegistry } from './_common/innerErrorRegistry';
 
 export interface GetTransactionResultPublicErrorRegistry {
   'Client.GetTransactionResult.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -35,23 +36,14 @@ export interface GetTransactionResultPublicErrorRegistry {
   'Client.GetTransactionResult.Rpc.Transaction.NotCompleted': {
     transactionHash: CryptoHash;
     currentProcessingStage:
-      | ProcessingStage['ConvertedOptimistic']
-      | ProcessingStage['ConvertedFinal']
-      | ProcessingStage['ExecutedOptimistic']
-      | ProcessingStage['ExecutedNearlyFinal'];
+      | TransactionProcessingStageMap['ConvertedOptimistic']
+      | TransactionProcessingStageMap['ConvertedFinal']
+      | TransactionProcessingStageMap['ExecutedOptimistic']
+      | TransactionProcessingStageMap['ExecutedNearlyFinal'];
   };
-  'Client.GetTransactionResult.DeserializeResultData.Failed': {
-    cause: unknown;
-    rawData: Base64String;
-  };
-  'Client.GetTransactionResult.DeserializeActionSummaries.Failed': {
-    cause: unknown;
-    rawActionSummaries: RawActionSummary[];
-  };
-  'Client.GetTransactionResult.DeserializeExecutionSteps.Failed': {
-    cause: unknown;
-    rawExecutionSteps: RawExecutionStep[];
-  };
+  'Client.GetTransactionResult.DeserializeResultData.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeResultData.Failed'];
+  'Client.GetTransactionResult.DeserializeActionSummaries.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'];
+  'Client.GetTransactionResult.DeserializeExecutionSteps.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'];
   'Client.GetTransactionResult.Internal': InternalErrorContext;
 }
 

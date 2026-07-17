@@ -27,19 +27,22 @@ import type {
   CallContractReadFunctionPublicErrorRegistry,
   SafeCallContractReadFunction,
 } from './methods/contract/callContractReadFunction';
+import type { TransactionDetailsInnerErrorRegistry } from './methods/transaction/_common/innerErrorRegistry';
 import type {
   GetTransactionResult,
   GetTransactionResultPublicErrorRegistry,
   SafeGetTransactionResult,
 } from './methods/transaction/getTransactionResult';
+import type { SendSignedTransactionPublicErrorRegistry } from './methods/transaction/sendSignedTransaction/error';
 import type {
   SafeSendSignedTransaction,
   SendSignedTransaction,
-  SendSignedTransactionPublicErrorRegistry,
-} from './methods/transaction/sendSignedTransaction';
+} from './methods/transaction/sendSignedTransaction/sendSignedTransaction';
 import type { SendRequest, SendRequestInnerErrorRegistry } from './transport/sendRequest';
 
-export interface ClientInnerErrorRegistry extends SendRequestInnerErrorRegistry {}
+export interface ClientInnerErrorRegistry
+  extends SendRequestInnerErrorRegistry,
+    TransactionDetailsInnerErrorRegistry {}
 
 export interface ClientPublicErrorRegistry
   extends CreateClientPublicErrorRegistry,

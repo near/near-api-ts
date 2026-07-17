@@ -54,7 +54,10 @@ describe('safeSendSignedTransaction › Transaction.Signature.Invalid', () => {
     }
 
     const res = await client.safeSendSignedTransaction({
-      signedTransactionBorsh64: corruptedTxBorsh.toBase64(),
+      signedTransaction: {
+        signedTransactionBorsh64: corruptedTxBorsh.toBase64(),
+        transactionHash: signedTransaction.transactionHash,
+      },
     });
     log(res);
 

@@ -34,10 +34,10 @@ export type DeployContractActionSummary = {
   contractWasmHash: ContractWasmHash;
 };
 
-export type FunctionCallActionSummary<FCA> = {
+export type FunctionCallActionSummary<FA> = {
   actionType: 'FunctionCall';
   functionName: ContractFunctionName;
-  functionArgs: FCA;
+  functionArgs: FA;
   gasLimit: NearGas;
   attachedDeposit: NearToken;
 };
@@ -51,12 +51,12 @@ export type StakeActionSummary = {
 export type DeleteKeyActionSummary = DeleteKeyAction;
 export type DeleteAccountActionSummary = DeleteAccountAction;
 
-export type ActionSummary<FCA> =
+export type ActionSummary<FA> =
   | CreateAccountActionSummary
   | TransferActionSummary
   | AddKeyActionSummary
   | DeployContractActionSummary
-  | FunctionCallActionSummary<FCA>
+  | FunctionCallActionSummary<FA>
   | StakeActionSummary
   | DeleteKeyActionSummary
   | DeleteAccountActionSummary;

@@ -5,14 +5,14 @@ import type {
   RawActionSummary,
 } from '../../../../../types/_common/transactionDetails/actionSummaries';
 import type {
-  ParsedExecutionStep,
-  RawExecutionStep,
-} from '../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
-import type {
   DeserializeTransactionActionSummariesArgs,
   DeserializeTransactionExecutionStepsArgs,
   DeserializeTransactionResultDataArgs,
-} from '../../../../../types/_common/transactionDetails/transactionResult';
+} from '../../../../../types/_common/transactionDetails/deserializers';
+import type {
+  ParsedExecutionStep,
+  RawExecutionStep,
+} from '../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
 
 type Equal<A, B> =
   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;

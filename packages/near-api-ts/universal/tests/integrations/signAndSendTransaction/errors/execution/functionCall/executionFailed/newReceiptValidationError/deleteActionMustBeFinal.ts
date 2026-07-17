@@ -51,11 +51,11 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
     },
   });
 
-  await client.safeSendSignedTransaction(signedTransaction1);
+  await client.safeSendSignedTransaction({ signedTransaction: signedTransaction1 });
   await safeSleep(500);
 
   // #2 Call contract function for error
-  const signedTransaction = await signTransaction({
+  const signedTransaction2 = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
       signerAccountId: 'nat',
@@ -72,11 +72,11 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
     },
   });
 
-  await client.safeSendSignedTransaction(signedTransaction);
+  await client.safeSendSignedTransaction({ signedTransaction: signedTransaction2 });
   await safeSleep(500);
 
   const txResult = await client.getTransactionResult({
-    transactionHash: signedTransaction.transactionHash,
+    transactionHash: signedTransaction2.transactionHash,
   });
   log(txResult);
 

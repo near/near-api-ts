@@ -46,7 +46,7 @@ describe('safeSendSignedTransaction › Transaction.Signer.NotFound', () => {
       },
     });
 
-    const res = await client.safeSendSignedTransaction(signedTransaction);
+    const res = await client.safeSendSignedTransaction({ signedTransaction });
     assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound');
   });
 });

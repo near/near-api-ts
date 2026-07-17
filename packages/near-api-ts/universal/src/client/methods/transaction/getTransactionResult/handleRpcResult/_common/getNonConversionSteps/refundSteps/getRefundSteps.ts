@@ -1,10 +1,10 @@
-import { yoctoNear } from '../../../../../../../../../../index';
+import { yoctoNear } from '../../../../../../../../../index';
 import type {
   RefundStep,
   RefundStepResult,
-} from '../../../../../../../../../../types/_common/transactionDetails/processingSteps/refundStep';
-import type { RpcActionReceiptTrimmed } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
-import type { RpcReceiptOutcome } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
+} from '../../../../../../../../../types/_common/transactionDetails/processingSteps/refundStep';
+import type { RpcActionReceiptTrimmed } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
+import type { RpcReceiptOutcome } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
 import type { ReceiptCreationMap } from '../createReceiptCreationMap';
 import type { ReceiptsWithOutcomes } from '../getReceiptsWithOutcomes';
 

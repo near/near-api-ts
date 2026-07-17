@@ -2,6 +2,7 @@ import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   addFullAccessKey,
+  createClient,
   createMemoryKeyService,
   createMemorySignerFactory,
   deployContract,
@@ -23,12 +24,19 @@ describe('SendTx', () => {
   const defaultKeyPair = keyPair(DEFAULT_PRIVATE_KEY);
 
   beforeAll(async () => {
+    // client = createClient({
+    //   transport: {
+    //     rpcEndpoints: {
+    //       archival: [{ url: 'http://localhost:3030' }],
+    //     },
+    //   },
+    // });
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
     return () => sandbox.stop();
   });
 
-  it('test', async () => {
+  it('send tx', async () => {
     const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
       accountId: 'nat',
       publicKey: defaultKeyPair.publicKey,
@@ -37,16 +45,27 @@ describe('SendTx', () => {
     const signedTransaction = await signTransaction({
       signDataProvider: defaultKeyPair,
       transaction: {
-        signerAccountId: 'new.nat',
+        signerAccountId: 'nat',
         signerPublicKey: defaultKeyPair.publicKey,
         nonce: accountAccessKey.nonce + 1,
         blockHash,
-        actions: [transfer({ amount: { near: '1' } })],
-        receiverAccountId: '123',
+        actions: [createAccount(), transfer({ amount: { near: '10' } })],
+        receiverAccountId: 'abc.nat',
       },
     });
 
-    const tx = await client.safeSendSignedTransaction(signedTransaction);
+    const tx = await client.sendSignedTransaction({
+      signedTransaction,
+      minimalProcessingStage: 'ConvertedOptimistic',
+    });
+    log(tx);
+  });
+
+  it('get tx', async () => {
+    const tx = await client.safeGetTransactionResult({
+      transactionHash: 'AHouNKfqnMXVNsTZvWMH6UanzNehM6tmuGs5cDwTnp1m',
+    });
     log(tx);
   });
 });
+// tx_hash=FctUgErsrQawXxuFuNbLj4ANHSDxtNzwEioTZNsNGt5D

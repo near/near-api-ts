@@ -74,7 +74,7 @@ describe('MemorySigner.signTransaction', async () => {
         receiverAccountId: 'user.nat',
       },
     });
-    await client.sendSignedTransaction(tx1);
+    await client.sendSignedTransaction({  signedTransaction: tx1 });
 
     // Try to sign FA transaction with an FC key
     const user = createMemorySigner({

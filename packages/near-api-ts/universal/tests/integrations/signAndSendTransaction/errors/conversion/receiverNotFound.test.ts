@@ -47,7 +47,7 @@ describe('safeSendSignedTransaction › Transaction.Receiver.NotFound', () => {
       },
     });
 
-    const res = await client.safeSendSignedTransaction(signedTransaction);
+    const res = await client.safeSendSignedTransaction({ signedTransaction });
     assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound');
   });
 
@@ -69,7 +69,7 @@ describe('safeSendSignedTransaction › Transaction.Receiver.NotFound', () => {
       },
     });
 
-    const res = await client.safeSendSignedTransaction(signedTransaction);
+    const res = await client.safeSendSignedTransaction({ signedTransaction });
     assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound');
   });
 });

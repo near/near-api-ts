@@ -1,51 +1,20 @@
-import type { Base64String, CryptoHash } from '../common';
-import type { RawActionSummary } from './actionSummaries';
+import type { CryptoHash } from '../common';
+import type {
+  BaseDeserializeTransactionResultDataFn,
+  MaybeBaseDeserializeTransactionActionSummariesFn,
+  MaybeBaseDeserializeTransactionExecutionStepsFn,
+  MaybeBaseDeserializeTransactionResultDataFn,
+} from './deserializers';
 import type {
   ConversionStepFailure,
   ConversionStepSuccess,
 } from './processingSteps/conversionStep';
 import type { ExecutionError } from './processingSteps/executionSteps/executionError';
-import type {
-  ExecutionSteps,
-  RawExecutionStep,
-} from './processingSteps/executionSteps/executionStep';
+import type { ExecutionSteps } from './processingSteps/executionSteps/executionStep';
 import type { RefundStep } from './processingSteps/refundStep';
 
-// DeserializeTransactionResultData
-export type DeserializeTransactionResultDataArgs = { rawData: Base64String };
-
-export type BaseDeserializeTransactionResultDataFn = (
-  args: DeserializeTransactionResultDataArgs,
-) => unknown;
-
-export type MaybeBaseDeserializeTransactionResultDataFn =
-  | BaseDeserializeTransactionResultDataFn
-  | undefined;
-
-// DeserializeTransactionActionSummaries
-export type DeserializeTransactionActionSummariesArgs = { rawActionSummaries: RawActionSummary[] };
-
-export type BaseDeserializeTransactionActionSummariesFn = (
-  args: DeserializeTransactionActionSummariesArgs,
-) => unknown;
-
-export type MaybeBaseDeserializeTransactionActionSummariesFn =
-  | BaseDeserializeTransactionActionSummariesFn
-  | undefined;
-
-// DeserializeTransactionExecutionSteps
-export type DeserializeTransactionExecutionStepsArgs = { rawExecutionSteps: RawExecutionStep[] };
-
-export type BaseDeserializeTransactionExecutionStepsFn = (
-  args: DeserializeTransactionExecutionStepsArgs,
-) => unknown;
-
-export type MaybeBaseDeserializeTransactionExecutionStepsFn =
-  | BaseDeserializeTransactionExecutionStepsFn
-  | undefined;
-
-// Data type is a return type of custom deserializer (passed by user) or unknown;
-type TransactionSuccessResultData<RDF extends MaybeBaseDeserializeTransactionResultDataFn> = [
+// result.data is a return type of custom deserializer (passed by user) or unknown;
+export type TransactionSuccessResultData<RDF extends MaybeBaseDeserializeTransactionResultDataFn> = [
   RDF,
 ] extends [BaseDeserializeTransactionResultDataFn]
   ? ReturnType<RDF>

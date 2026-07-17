@@ -7,6 +7,7 @@ export const oneLine = (msg: string): string => msg.replace(/\s+/g, ' ').trim();
 export const isNodeJs =
   typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
 
+// TODO consider removing it and make it node-package specific - no need this code for browser/universal
 export const nodeInspectSymbol = isNodeJs ? Symbol.for('nodejs.util.inspect.custom') : undefined;
 
 // TODO maybe we can take JsonValue instead of unknown

@@ -1,5 +1,5 @@
 import type { FunctionCallError } from '@near-js/jsonrpc-types';
-import type { ExecutionError } from '../../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionError';
+import type { ExecutionError } from '../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionError';
 import { transformHostError } from './transformHostError';
 import { transformWasmTrap } from './transformWasmTrap';
 

@@ -12,7 +12,7 @@ import type { ParsedActionSummary, RawActionSummary } from '../../actionSummarie
 import type {
   BaseDeserializeTransactionExecutionStepsFn,
   MaybeBaseDeserializeTransactionExecutionStepsFn,
-} from '../../transactionResult';
+} from '../../deserializers';
 import type { ExecutionError } from './executionError';
 
 export type RequiredDataId = CryptoHash;

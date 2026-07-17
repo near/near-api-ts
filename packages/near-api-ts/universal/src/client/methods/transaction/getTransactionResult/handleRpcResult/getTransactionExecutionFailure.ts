@@ -7,10 +7,11 @@ import type { RpcActionReceipt } from '../../../../../_common/schemas/zod/rpc/tr
 import type { RpcReceiptOutcome } from '../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
 import type { RpcTransactionOutcomeSuccess } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
 import type { RpcTransactionSummary } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
+import { repackError } from '../../../../../_common/utils/repackError';
 import { result } from '../../../../../_common/utils/result';
-import { getExecutionError } from './_common/getExecutionError/getExecutionError';
-import { getConversionStepSuccess } from './_common/getProcessingSteps/getConversionStep';
-import { getNonConversionSteps } from './_common/getProcessingSteps/getNonConversionSteps/getNonConversionSteps';
+import { getExecutionError } from '../../_common/getExecutionError/getExecutionError';
+import { getConversionStepSuccess } from '../../_common/processingSteps/getConversionStepSuccess';
+import { getNonConversionSteps } from './_common/getNonConversionSteps/getNonConversionSteps';
 
 export const getTransactionExecutionFailure = (
   transaction: RpcTransactionSummary,
@@ -28,16 +29,22 @@ export const getTransactionExecutionFailure = (
   const conversionStepSuccess = getConversionStepSuccess(
     transaction,
     transactionOutcome,
-    inputArgs,
+    inputArgs.options?.deserializeActionSummaries,
   );
-  if (!conversionStepSuccess.ok) return conversionStepSuccess;
+  
+  if (!conversionStepSuccess.ok)
+    return repackError({
+      error: conversionStepSuccess.error,
+      originPrefix: 'Inner.Client.TransactionDetails',
+      targetPrefix: 'Client.GetTransactionResult',
+    });
 
   const nonConversionSteps = getNonConversionSteps(
     transaction,
     receipts,
     receiptsOutcome,
     conversionStepSuccess.value,
-    inputArgs,
+    inputArgs.options?.deserializeExecutionSteps,
   );
   if (!nonConversionSteps.ok) return nonConversionSteps;
 

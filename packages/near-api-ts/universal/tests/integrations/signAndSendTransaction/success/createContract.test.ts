@@ -64,7 +64,7 @@ describe('safeSendSignedTransaction › success', () => {
       },
     });
 
-    const tx1 = await client.safeSendSignedTransaction(signedTransaction);
+    const tx1 = await client.safeSendSignedTransaction({ signedTransaction });
     log(tx1);
   });
 });

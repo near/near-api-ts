@@ -6,7 +6,7 @@
 
 
 // What can we guarantee for a user?
-// type TransactionProcessingStage =
+// type TransactionProcessingStageMap =
 //   'IncludedOptimistic'        // IncludedOptimistic + Not Executed + No Refund
 //   'IncludedFinal';            // IncludedFinal + Not Executed + No Refund
 //  

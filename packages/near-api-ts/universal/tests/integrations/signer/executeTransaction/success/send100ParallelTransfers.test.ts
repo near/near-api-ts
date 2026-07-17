@@ -63,7 +63,7 @@ describe('executeTransaction › success', () => {
     // log(sendNearTokensResults);
 
     sendNearTokensResults.forEach((result) =>
-      console.log(result.rawRpcResult.transaction.hash, result.rawRpcResult.status),
+      console.log(result.transactionHash, result.result),
     );
   });
 });

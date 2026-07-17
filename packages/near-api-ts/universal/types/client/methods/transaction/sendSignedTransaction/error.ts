@@ -1,16 +1,13 @@
-import type { RpcTransactionResponse } from '@near-js/jsonrpc-types';
-import type { NatError } from '../../../../src/_common/natError';
-import type { Base64String, Result } from '../../../_common/common';
-import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
-import type { TransactionErrorContext } from '../../../_common/transaction/rpcTransactionErrorContext';
-import type { ClientContext } from '../../client';
+import type { NatError } from '../../../../../src/_common/natError';
+import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../../_common/natError';
+import type { TransactionErrorContext } from '../../../../_common/transaction/rpcTransactionErrorContext';
 import type {
   AbortedErrorContext,
   ExhaustedErrorContext,
   PreferredRpcNotFoundErrorContext,
   TimeoutErrorContext,
-} from '../../transport/sendRequest';
-import type { PartialTransportPolicy } from '../../transport/transport';
+} from '../../../transport/sendRequest';
+import type { TransactionDetailsInnerErrorRegistry } from '../_common/innerErrorRegistry';
 
 export interface SendSignedTransactionPublicErrorRegistry {
   'Client.SendSignedTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -19,7 +16,7 @@ export interface SendSignedTransactionPublicErrorRegistry {
   'Client.SendSignedTransaction.Timeout': TimeoutErrorContext;
   'Client.SendSignedTransaction.Aborted': AbortedErrorContext;
   'Client.SendSignedTransaction.Exhausted': ExhaustedErrorContext;
-  // TODO move to Inner?
+
   'Client.SendSignedTransaction.Rpc.Transaction.Action.InvalidIndex': TransactionErrorContext['Action']['InvalidIndex'];
   //
   'Client.SendSignedTransaction.Rpc.Transaction.Expired': TransactionErrorContext['Expired'];
@@ -36,36 +33,22 @@ export interface SendSignedTransactionPublicErrorRegistry {
   'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.Balance.TooLow': TransactionErrorContext['Action']['Stake']['Balance']['TooLow'];
   'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.NotFound': TransactionErrorContext['Action']['Stake']['NotFound'];
   //
+  'Client.SendSignedTransaction.DeserializeResultData.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeResultData.Failed'];
+  'Client.SendSignedTransaction.DeserializeActionSummaries.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'];
+  'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'];
   'Client.SendSignedTransaction.Internal': InternalErrorContext;
 }
 
-export type SendSignedTransactionArgs = {
-  signedTransactionBorsh64: Base64String;
-  policies?: {
-    transport?: PartialTransportPolicy;
-  };
-  options?: {
-    signal?: AbortSignal;
-  };
-};
-
-export type SendSignedTransactionOutput = {
-  rawRpcResult: RpcTransactionResponse; // TODO Tx without Failure
-};
-
 export type SendSignedTransactionError =
   | NatError<'Client.SendSignedTransaction.Args.InvalidSchema'>
-  // SendRequest
   | NatError<'Client.SendSignedTransaction.PreferredRpc.NotFound'>
   | NatError<'Client.SendSignedTransaction.Timeout'>
   | NatError<'Client.SendSignedTransaction.Aborted'>
   | NatError<'Client.SendSignedTransaction.Exhausted'>
-  // RPC - transaction
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Expired'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid'>
-  // RPC - shared with signer.executeTransaction
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Timeout'>
@@ -73,17 +56,7 @@ export type SendSignedTransactionError =
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.BelowThreshold'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.Balance.TooLow'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.NotFound'>
-  // Stub
+  | NatError<'Client.SendSignedTransaction.DeserializeResultData.Failed'>
+  | NatError<'Client.SendSignedTransaction.DeserializeActionSummaries.Failed'>
+  | NatError<'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed'>
   | NatError<'Client.SendSignedTransaction.Internal'>;
-
-export type SafeSendSignedTransaction = (
-  args: SendSignedTransactionArgs,
-) => Promise<Result<SendSignedTransactionOutput, SendSignedTransactionError>>;
-
-export type SendSignedTransaction = (
-  args: SendSignedTransactionArgs,
-) => Promise<SendSignedTransactionOutput>;
-
-export type CreateSafeSendSignedTransaction = (
-  clientContext: ClientContext,
-) => SafeSendSignedTransaction;

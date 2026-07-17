@@ -15,12 +15,12 @@ import {
 import { safeSleep } from '../../../../../src/_common/utils/sleep';
 import type { Base64String, TransactionHash } from '../../../../../types/_common/common';
 import type { ActionSummary } from '../../../../../types/_common/transactionDetails/actionSummaries';
-import type { ExecutionStep } from '../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
 import type {
   DeserializeTransactionActionSummariesArgs,
   DeserializeTransactionExecutionStepsArgs,
   DeserializeTransactionResultDataArgs,
-} from '../../../../../types/_common/transactionDetails/transactionResult';
+} from '../../../../../types/_common/transactionDetails/deserializers';
+import type { ExecutionStep } from '../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
 import type { MemorySigner } from '../../../../../types/signers/memorySigner/memorySigner';
 import { createDefaultClient, getFileBytes, log } from '../../../../utils/common';
 import { startSandbox } from '../../../../utils/sandbox/startSandbox';
@@ -70,7 +70,7 @@ describe('CallContractReadFunction', () => {
     });
 
     await safeSleep(500); // We can't use CompletedFinal yet
-    transactionHash = tx.rawRpcResult.transaction.hash;
+    transactionHash = tx.transactionHash;
 
     return () => sandbox.stop();
   });

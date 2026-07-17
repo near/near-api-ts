@@ -1,13 +1,13 @@
-import { gas, yoctoNear } from '../../../../../../../../../../index';
-import type { Base64String } from '../../../../../../../../../../types/_common/common';
+import { gas, yoctoNear } from '../../../../../../../../../index';
+import type { Base64String } from '../../../../../../../../../types/_common/common';
 import type {
   ExecutionStepResult,
   RawExecutionStep,
-} from '../../../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
-import type { RpcActionReceiptTrimmed } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
-import type { RpcReceiptOutcome } from '../../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
-import { getExecutionError } from '../../../getExecutionError/getExecutionError';
-import { getRawActionSummary } from '../../_common/getActionSummaries';
+} from '../../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
+import type { RpcActionReceiptTrimmed } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
+import type { RpcReceiptOutcome } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
+import { getExecutionError } from '../../../../../_common/getExecutionError/getExecutionError';
+import { getRawActionSummary } from '../../../../../_common/processingSteps/getActionSummary/getRawActionSummary';
 import type { ReceiptCreationMap } from '../createReceiptCreationMap';
 import type { ReceiptsWithOutcomes } from '../getReceiptsWithOutcomes';
 
@@ -38,7 +38,7 @@ const getRawExecutionStepResult = (
   throw new Error(`Unexpected receipt execution outcome status: ${JSON.stringify(status)}`);
 };
 
-const getRawExecutionStep = (
+export const getRawExecutionStep = (
   receipt: RpcActionReceiptTrimmed,
   receiptOutcome: RpcReceiptOutcome,
   receiptCreationMap: ReceiptCreationMap,
@@ -81,13 +81,3 @@ const getRawExecutionStep = (
     logs: receiptOutcome.outcome.logs,
   };
 };
-
-export const getRawExecutionSteps = (
-  receiptsWithOutcomes: ReceiptsWithOutcomes,
-  receiptCreationMap: ReceiptCreationMap,
-): RawExecutionStep[] =>
-  receiptsWithOutcomes
-    .filter(({ receipt }) => receipt.predecessorId !== 'system')
-    .map(({ receipt, receiptOutcome }) =>
-      getRawExecutionStep(receipt, receiptOutcome, receiptCreationMap),
-    );

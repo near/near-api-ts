@@ -1,37 +1,35 @@
-import { RpcTransactionResponseSchema } from '@near-js/jsonrpc-types';
-import type { SendSignedTransactionArgs } from '../../../../../../types/client/methods/transaction/sendSignedTransaction';
-import { createNatError } from '../../../../../_common/natError';
+import type { Result } from '../../../../../../types/_common/common';
+import type { TransactionProcessingStage } from '../../../../../../types/_common/transactionDetails/processingStage';
+import type { InnerSendSignedTransactionArgs } from '../../../../../../types/client/methods/transaction/sendSignedTransaction/args';
+import type { SendSignedTransactionError } from '../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
+import type {
+  TransactionDetailsFromStageCompletedFinal,
+  TransactionDetailsFromStageConvertedFinal,
+  TransactionDetailsFromStageConvertedOptimistic,
+  TransactionDetailsFromStageExecutedNearlyFinal,
+  TransactionDetailsFromStageExecutedOptimistic,
+} from '../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc/rpc';
-import { result } from '../../../../../_common/utils/result';
-import { handleActionError } from './handleActionError';
+import { getDetailsFromStageConvertedOptimistic } from './getDetailsFromStage/convertedOptimistic';
 
-export const handleRpcResult = (rpcResponse: RpcResponse) => {
-  const rpcResult = RpcTransactionResponseSchema().safeParse(rpcResponse.result);
-
-  if (!rpcResult.success)
-    return result.err(
-      createNatError({
-        kind: 'Client.SendSignedTransaction.Exhausted',
-        context: {
-          lastError: createNatError({
-            kind: 'SendRequest.Attempt.Response.InvalidSchema',
-            context: { zodError: rpcResult.error },
-          }),
-        },
-      }),
+export const handleRpcResult = (
+  rpcResponse: RpcResponse,
+  minimalProcessingStage: TransactionProcessingStage,
+  inputArgs: InnerSendSignedTransactionArgs,
+): Result<
+  | TransactionDetailsFromStageConvertedOptimistic<undefined, undefined, undefined>
+  | TransactionDetailsFromStageConvertedFinal<undefined, undefined, undefined>
+  | TransactionDetailsFromStageExecutedOptimistic<undefined, undefined, undefined>
+  | TransactionDetailsFromStageExecutedNearlyFinal<undefined, undefined, undefined>
+  | TransactionDetailsFromStageCompletedFinal<undefined, undefined, undefined>,
+  SendSignedTransactionError
+> => {
+  if (minimalProcessingStage === 'ConvertedOptimistic')
+    return getDetailsFromStageConvertedOptimistic(
+      rpcResponse,
+      inputArgs.signedTransaction.transactionHash,
+      inputArgs.options?.deserializeActionSummaries,
     );
 
-  // When tx action error happened, and tx was recorded on-chain
-  if (
-    typeof rpcResult.data.status === 'object' &&
-    'Failure' in rpcResult.data.status &&
-    'ActionError' in rpcResult.data.status.Failure
-  )
-    return handleActionError(rpcResult.data.status.Failure.ActionError, rpcResponse);
-
-  const output = {
-    rawRpcResult: rpcResult.data, // TODO Return result type without errors
-  };
-
-  return result.ok(output);
+  throw new Error('Unexpected processing stage');
 };

@@ -6,7 +6,7 @@ import type { ParsedActionSummary } from '../actionSummaries';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionActionSummariesFn,
-} from '../transactionResult';
+} from '../deserializers';
 
 export type TransactionActionSummaries<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,

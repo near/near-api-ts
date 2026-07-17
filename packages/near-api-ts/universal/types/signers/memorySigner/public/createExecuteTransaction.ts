@@ -3,7 +3,9 @@ import type { Result } from '../../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { TransactionErrorContext } from '../../../_common/transaction/rpcTransactionErrorContext';
 import type { TransactionIntent } from '../../../_common/transaction/transaction';
-import type { SendSignedTransactionOutput } from '../../../client/methods/transaction/sendSignedTransaction';
+import type {
+  SendSignedTransactionOutput
+} from '../../../client/methods/transaction/sendSignedTransaction/output';
 import type {
   AbortedErrorContext,
   ExhaustedErrorContext,
@@ -66,10 +68,10 @@ type ExecuteTransactionError =
 
 export type SafeExecuteTransaction = (
   args: ExecuteTransactionArgs,
-) => Promise<Result<SendSignedTransactionOutput, ExecuteTransactionError>>;
+) => Promise<Result<SendSignedTransactionOutput<any, any, any, any>, ExecuteTransactionError>>;
 
 export type ExecuteTransaction = (
   args: ExecuteTransactionArgs,
-) => Promise<SendSignedTransactionOutput>;
+) => Promise<SendSignedTransactionOutput<any, any, any, any>>;
 
 export type CreateSafeExecuteTransaction = (context: MemorySignerContext) => SafeExecuteTransaction;

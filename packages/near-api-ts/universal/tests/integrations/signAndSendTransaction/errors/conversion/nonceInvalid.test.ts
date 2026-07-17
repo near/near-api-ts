@@ -46,7 +46,7 @@ describe('safeSendSignedTransaction › Transaction.Nonce.Invalid', () => {
       },
     });
 
-    const res = await client.safeSendSignedTransaction(signedTransaction);
+    const res = await client.safeSendSignedTransaction({ signedTransaction });
     assertNatErrKind(res, 'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid');
   });
 });
