@@ -1,5 +1,5 @@
 import type { NativeAddKeyAction } from '../../../../../types/_common/transaction/actions/addKey';
-import { throwableNearToken } from '../../../../helpers/tokens/nearToken';
+import { nearToken } from '../../../../helpers/tokens/nearToken';
 import type { InnerAddKeyAction } from '../../../schemas/zod/transaction/actions/addKey';
 import { toNativePublicKey } from '../publicKey';
 
@@ -13,7 +13,7 @@ const getPermission = (
   return {
     functionCall: {
       receiverId: contractAccountId,
-      allowance: gasBudget === 'Unlimited' ? null : throwableNearToken(gasBudget).yoctoNear,
+      allowance: gasBudget === 'Unlimited' ? null : nearToken(gasBudget).yoctoNear,
       methodNames: allowedFunctions === 'AllNonPayable' ? [] : allowedFunctions,
     },
   };

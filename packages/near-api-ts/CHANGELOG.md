@@ -6,6 +6,7 @@
 
 - `base64ToObject` utility function
 - Helper `signTransaction` now returns `SignedTransaction` with `signedTransactionBorsh64`
+- Improve lib's tree-shaking
 
 
 ### Changed

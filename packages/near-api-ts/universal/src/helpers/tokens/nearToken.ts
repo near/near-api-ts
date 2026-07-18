@@ -164,7 +164,7 @@ export const safeYoctoNear: SafeCreateNearTokenFromYoctoNear = wrapInternalError
   },
 );
 
-export const throwableYoctoNear: CreateNearTokenFromYoctoNear = asThrowable(safeYoctoNear);
+export const yoctoNear: CreateNearTokenFromYoctoNear = asThrowable(safeYoctoNear);
 
 // FromNear
 
@@ -192,7 +192,7 @@ export const safeNear: SafeCreateNearTokenFromNear = wrapInternalError(
   },
 );
 
-export const throwableNear: CreateNearTokenFromNear = asThrowable(safeNear);
+export const near: CreateNearTokenFromNear = asThrowable(safeNear);
 
 // Near Token
 
@@ -209,10 +209,8 @@ export const safeNearToken: SafeCreateNearToken = wrapInternalError(
         }),
       );
 
-    return 'yoctoNear' in args
-      ? result.ok(throwableYoctoNear(args.yoctoNear))
-      : result.ok(throwableNear(args.near));
+    return 'yoctoNear' in args ? result.ok(yoctoNear(args.yoctoNear)) : result.ok(near(args.near));
   },
 );
 
-export const throwableNearToken: CreateNearToken = asThrowable(safeNearToken);
+export const nearToken: CreateNearToken = asThrowable(safeNearToken);

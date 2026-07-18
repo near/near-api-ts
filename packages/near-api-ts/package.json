@@ -3,6 +3,7 @@
   "version": "0.10.0",
   "description": "Typescript library for interactions with Near Protocol in the browser or Node.js",
   "type": "module",
+  "sideEffects": false,
   "engines": {
     "node": ">=25"
   },

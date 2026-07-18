@@ -1,11 +1,11 @@
 import type { NativeStakeAction } from '../../../../../types/_common/transaction/actions/stake';
-import { throwableNearToken } from '../../../../helpers/tokens/nearToken';
+import { nearToken } from '../../../../helpers/tokens/nearToken';
 import type { InnerStakeAction } from '../../../schemas/zod/transaction/actions/stake';
 import { toNativePublicKey } from '../publicKey';
 
 export const toNativeStakeAction = (action: InnerStakeAction): NativeStakeAction => ({
   stake: {
-    stake: throwableNearToken(action.amount).yoctoNear,
+    stake: nearToken(action.amount).yoctoNear,
     publicKey: toNativePublicKey(action.validatorPublicKey),
   },
 });

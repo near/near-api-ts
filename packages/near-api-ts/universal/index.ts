@@ -85,12 +85,12 @@ export { safeSignTransaction, signTransaction } from './src/helpers/signTransact
 // Near Token
 export {
   isNearToken,
+  near,
+  nearToken,
   safeNear,
   safeNearToken,
   safeYoctoNear,
-  throwableNear as near,
-  throwableNearToken as nearToken,
-  throwableYoctoNear as yoctoNear,
+  yoctoNear,
 } from './src/helpers/tokens/nearToken';
 export { safeVerifySignature, verifySignature } from './src/helpers/verifySignature';
 // Key Services

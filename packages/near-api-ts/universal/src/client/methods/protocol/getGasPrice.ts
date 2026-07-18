@@ -5,13 +5,13 @@ import type {
   GetGasPriceArgs,
   GetGasPriceResult,
 } from '../../../../types/client/methods/protocol/getGasPrice';
-import { throwableYoctoNear } from '../../../helpers/tokens/nearToken';
+import { yoctoNear } from '../../../helpers/tokens/nearToken';
 
 const transformResult = (result: unknown): GetGasPriceResult => {
   const valid = RpcGasPriceResponseSchema().parse(result);
 
   return {
-    gasPrice: throwableYoctoNear(valid.gasPrice),
+    gasPrice: yoctoNear(valid.gasPrice),
   };
 };
 
