@@ -3,30 +3,25 @@ import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../..
 import type { TransactionDetailsAtStageConvertedFinal } from '../../../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import type { NatError } from '../../../../../../../_common/natError';
 import type { RpcIncludedFinalTransactionDetails } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
-import { repackError } from '../../../../../../../_common/utils/repackError';
 import { result } from '../../../../../../../_common/utils/result';
-import { getConversionStepSuccess } from '../../../../_common/processingSteps/getConversionStepSuccess';
+import { getConversionStepSuccess } from '../../../../_common/_common/getConversionStepSuccess';
 
-export const getConvertedFinalDetails = (
-  rpcDetails: RpcIncludedFinalTransactionDetails,
-  transactionHash: TransactionHash,
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn,
-): Result<
-  TransactionDetailsAtStageConvertedFinal<undefined>,
-  NatError<'Client.SendSignedTransaction.DeserializeActionSummaries.Failed'>
+export const getConvertedFinalDetails = (args: {
+  rpcDetails: RpcIncludedFinalTransactionDetails;
+  transactionHash: TransactionHash;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn;
+}): Result<
+  TransactionDetailsAtStageConvertedFinal,
+  NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
 > => {
+  const { rpcDetails, transactionHash, deserializeActionSummaries } = args;
+
   const conversionStepSuccess = getConversionStepSuccess(
     rpcDetails.transaction,
     rpcDetails.transactionOutcome,
     deserializeActionSummaries,
   );
-
-  if (!conversionStepSuccess.ok)
-    return repackError({
-      error: conversionStepSuccess.error,
-      originPrefix: 'Inner.Client.TransactionDetails',
-      targetPrefix: 'Client.SendSignedTransaction',
-    });
+  if (!conversionStepSuccess.ok) return conversionStepSuccess;
 
   return result.ok({
     processingStage: 'ConvertedFinal',

@@ -19,7 +19,7 @@ export type TransactionDetailsAtStageConvertedOptimistic = {
 };
 
 export type TransactionDetailsAtStageConvertedFinal<
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
 > = {
   processingStage: TransactionProcessingStageMap['ConvertedFinal'];
   transactionHash: CryptoHash;
@@ -29,9 +29,9 @@ export type TransactionDetailsAtStageConvertedFinal<
 };
 
 export type TransactionDetailsAtStageExecutedOptimistic<
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > = {
   processingStage: TransactionProcessingStageMap['ExecutedOptimistic'];
   transactionHash: CryptoHash;
@@ -45,9 +45,9 @@ export type TransactionDetailsAtStageExecutedOptimistic<
 };
 
 export type TransactionDetailsAtStageExecutedNearlyFinal<
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > = {
   processingStage: TransactionProcessingStageMap['ExecutedNearlyFinal'];
   transactionHash: CryptoHash;
@@ -61,9 +61,9 @@ export type TransactionDetailsAtStageExecutedNearlyFinal<
 };
 
 export type TransactionDetailsAtStageCompletedFinal<
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > = {
   processingStage: TransactionProcessingStageMap['CompletedFinal'];
   transactionHash: CryptoHash;
@@ -78,9 +78,9 @@ export type TransactionDetailsAtStageCompletedFinal<
 };
 
 export type TransactionDetailsFromStageConvertedOptimistic<
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > =
   | TransactionDetailsAtStageConvertedOptimistic
   | TransactionDetailsAtStageConvertedFinal<ASF>
@@ -89,41 +89,41 @@ export type TransactionDetailsFromStageConvertedOptimistic<
   | TransactionDetailsAtStageCompletedFinal<RDF, ASF, ESF>;
 
 export type TransactionDetailsFromStageConvertedFinal<
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > =
   | TransactionDetailsAtStageConvertedFinal<ASF>
   | TransactionDetailsAtStageExecutedNearlyFinal<RDF, ASF, ESF>
   | TransactionDetailsAtStageCompletedFinal<RDF, ASF, ESF>;
 
 export type TransactionDetailsFromStageExecutedOptimistic<
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > =
   | TransactionDetailsAtStageExecutedOptimistic<RDF, ASF, ESF>
   | TransactionDetailsAtStageExecutedNearlyFinal<RDF, ASF, ESF>
   | TransactionDetailsAtStageCompletedFinal<RDF, ASF, ESF>;
 
 export type TransactionDetailsFromStageExecutedNearlyFinal<
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > =
   | TransactionDetailsAtStageExecutedNearlyFinal<RDF, ASF, ESF>
   | TransactionDetailsAtStageCompletedFinal<RDF, ASF, ESF>;
 
 export type TransactionDetailsFromStageCompletedFinal<
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > = TransactionDetailsAtStageCompletedFinal<RDF, ASF, ESF>;
 
 export type TransactionDetailsFromStage<
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > = {
   ConvertedOptimistic: TransactionDetailsFromStageConvertedOptimistic<RDF, ASF, ESF>;
   ConvertedFinal: TransactionDetailsFromStageConvertedFinal<RDF, ASF, ESF>;
@@ -133,10 +133,10 @@ export type TransactionDetailsFromStage<
 };
 
 export type SendSignedTransactionOutput<
-  TPS extends MaybeTransactionProcessingStage,
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+  TPS extends MaybeTransactionProcessingStage = undefined,
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > = [TPS] extends [undefined]
   ? TransactionDetailsFromStage<RDF, ASF, ESF>['ExecutedOptimistic']
   : TransactionDetailsFromStage<RDF, ASF, ESF>[Exclude<TPS, undefined>];

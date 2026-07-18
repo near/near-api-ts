@@ -1,16 +1,10 @@
 import type { Base64String, TransactionHash } from '../../../../_common/common';
 import type {
-  BaseDeserializeTransactionActionSummariesFn,
-  BaseDeserializeTransactionExecutionStepsFn,
-  BaseDeserializeTransactionResultDataFn,
   MaybeBaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionExecutionStepsFn,
   MaybeBaseDeserializeTransactionResultDataFn,
 } from '../../../../_common/transactionDetails/deserializers';
-import type {
-  MaybeTransactionProcessingStage,
-  TransactionProcessingStage,
-} from '../../../../_common/transactionDetails/processingStage';
+import type { MaybeTransactionProcessingStage } from '../../../../_common/transactionDetails/processingStage';
 import type { KeyIf } from '../../../../utils';
 import type { PartialTransportPolicy } from '../../../transport/transport';
 
@@ -49,20 +43,3 @@ export type SendSignedTransactionArgs<
   };
 } & KeyIf<'minimalProcessingStage', TPS> &
   Options<RDF, ASF, ESF>;
-
-// Inside the implementation function we don't care about the particular deserializer result and
-// treat it as unknown data;
-export type InnerSendSignedTransactionArgs = {
-  signedTransaction: {
-    signedTransactionBorsh64: Base64String;
-    transactionHash: TransactionHash;
-  };
-  minimalProcessingStage?: TransactionProcessingStage;
-  options?: {
-    signal?: AbortSignal;
-    transportPolicy?: PartialTransportPolicy;
-    deserializeResultData?: BaseDeserializeTransactionResultDataFn;
-    deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn;
-    deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
-  };
-};

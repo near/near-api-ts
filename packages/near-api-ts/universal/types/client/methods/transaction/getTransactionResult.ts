@@ -1,7 +1,6 @@
 import type { NatError } from '../../../../src/_common/natError';
-import type { Base64String, CryptoHash, Result } from '../../../_common/common';
+import type { CryptoHash, Result } from '../../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
-import type { RawActionSummary } from '../../../_common/transactionDetails/actionSummaries';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   BaseDeserializeTransactionExecutionStepsFn,
@@ -11,7 +10,6 @@ import type {
   MaybeBaseDeserializeTransactionResultDataFn,
 } from '../../../_common/transactionDetails/deserializers';
 import type { TransactionProcessingStageMap } from '../../../_common/transactionDetails/processingStage';
-import type { RawExecutionStep } from '../../../_common/transactionDetails/processingSteps/executionSteps/executionStep';
 import type { TransactionResult } from '../../../_common/transactionDetails/transactionResult';
 import type { KeyIf } from '../../../utils';
 import type { ClientContext } from '../../client';

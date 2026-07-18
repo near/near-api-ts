@@ -11,14 +11,10 @@ import type { TransactionDetailsInnerErrorRegistry } from '../_common/innerError
 
 export interface SendSignedTransactionPublicErrorRegistry {
   'Client.SendSignedTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
-  //
   'Client.SendSignedTransaction.PreferredRpc.NotFound': PreferredRpcNotFoundErrorContext;
   'Client.SendSignedTransaction.Timeout': TimeoutErrorContext;
   'Client.SendSignedTransaction.Aborted': AbortedErrorContext;
   'Client.SendSignedTransaction.Exhausted': ExhaustedErrorContext;
-
-  'Client.SendSignedTransaction.Rpc.Transaction.Action.InvalidIndex': TransactionErrorContext['Action']['InvalidIndex'];
-  //
   'Client.SendSignedTransaction.Rpc.Transaction.Expired': TransactionErrorContext['Expired'];
   'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid': TransactionErrorContext['Nonce']['Invalid'];
   // TODO: Signer.NotEnoughBalance

@@ -1,4 +1,5 @@
 import * as z from 'zod/mini';
+import { log } from '../../../../../tests/utils/common';
 import type {
   CreateSafeSendSignedTransaction,
   SafeSendSignedTransaction,
@@ -61,6 +62,8 @@ export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction = 
       signal: args.options?.signal,
     });
 
+    log(rpcResponse)
+
     if (!rpcResponse.ok)
       return repackError({
         error: rpcResponse.error,
@@ -70,5 +73,12 @@ export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction = 
 
     return rpcResponse.value.error
       ? handleRpcError(rpcResponse.value)
-      : handleRpcResult(rpcResponse.value, minimalProcessingStage, args);
+      : handleRpcResult(
+          rpcResponse.value,
+          minimalProcessingStage,
+          args.signedTransaction.transactionHash,
+          args.options?.deserializeResultData,
+          args.options?.deserializeActionSummaries,
+          args.options?.deserializeExecutionSteps,
+        );
   }) as SafeSendSignedTransaction;

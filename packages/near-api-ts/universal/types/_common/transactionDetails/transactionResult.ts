@@ -14,16 +14,14 @@ import type { ExecutionSteps } from './processingSteps/executionSteps/executionS
 import type { RefundStep } from './processingSteps/refundStep';
 
 // result.data is a return type of custom deserializer (passed by user) or unknown;
-export type TransactionSuccessResultData<RDF extends MaybeBaseDeserializeTransactionResultDataFn> = [
-  RDF,
-] extends [BaseDeserializeTransactionResultDataFn]
-  ? ReturnType<RDF>
-  : unknown;
+export type TransactionSuccessResultData<
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+> = [RDF] extends [BaseDeserializeTransactionResultDataFn] ? ReturnType<RDF> : unknown;
 
 export type TransactionSuccess<
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > = {
   transactionHash: CryptoHash;
   result: {
@@ -38,7 +36,7 @@ export type TransactionSuccess<
 };
 
 export type TransactionConversionFailure<
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
 > = {
   transactionHash: CryptoHash;
   result: {
@@ -53,8 +51,8 @@ export type TransactionConversionFailure<
 };
 
 export type TransactionExecutionFailure<
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > = {
   transactionHash: CryptoHash;
   result: {

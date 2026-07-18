@@ -1,7 +1,6 @@
 import * as z from 'zod/mini';
 import type {
   CreateSafeGetTransactionResult,
-  InnerGetTransactionResultArgs,
   SafeGetTransactionResult,
 } from '../../../../../types/client/methods/transaction/getTransactionResult';
 import { resultNatError } from '../../../../_common/natError';
@@ -10,7 +9,7 @@ import { CryptoHashZodSchema } from '../../../../_common/schemas/zod/common/cryp
 import { repackError } from '../../../../_common/utils/repackError';
 import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
 import { handleRpcError } from './handleRpcError';
-import { handleRpcResult } from './handleRpcResult/handleRpcResult';
+import { handleRpcResult } from './handleRpcResult';
 
 const GetTransactionResultArgsZodShema = z.object({
   transactionHash: CryptoHashZodSchema,
@@ -26,36 +25,47 @@ const GetTransactionResultArgsZodShema = z.object({
 });
 
 export const createSafeGetTransactionResult: CreateSafeGetTransactionResult = (context) =>
-  wrapInternalError(
-    'Client.GetTransactionResult.Internal',
-    async (args: InnerGetTransactionResultArgs): ReturnType<SafeGetTransactionResult> => {
-      const validArgs = GetTransactionResultArgsZodShema.safeParse(args);
+  wrapInternalError('Client.GetTransactionResult.Internal', async (args) => {
+    const validArgs = GetTransactionResultArgsZodShema.safeParse(args);
 
-      if (!validArgs.success)
-        return resultNatError('Client.GetTransactionResult.Args.InvalidSchema', {
-          zodError: validArgs.error,
-        });
-
-      const rpcResponse = await context.sendRequest({
-        method: 'EXPERIMENTAL_tx_status',
-        params: {
-          tx_hash: validArgs.data.transactionHash.cryptoHash,
-          sender_account_id: 'any', // We expect that RPC tracks all shards, so signerAccountId doesn't matter
-          wait_until: 'NONE',
-        },
-        transportPolicy: args.policies?.transport,
-        signal: args.options?.signal,
+    if (!validArgs.success)
+      return resultNatError('Client.GetTransactionResult.Args.InvalidSchema', {
+        zodError: validArgs.error,
       });
 
-      if (!rpcResponse.ok)
-        return repackError({
-          error: rpcResponse.error,
-          originPrefix: 'SendRequest',
+    const rpcResponse = await context.sendRequest({
+      method: 'EXPERIMENTAL_tx_status',
+      params: {
+        tx_hash: args.transactionHash,
+        sender_account_id: 'any', // We expect that RPC tracks all shards, so signerAccountId doesn't matter
+        wait_until: 'NONE',
+      },
+      transportPolicy: args.policies?.transport,
+      signal: args.options?.signal,
+    });
+
+    if (!rpcResponse.ok)
+      return repackError({
+        error: rpcResponse.error,
+        originPrefix: 'SendRequest',
+        targetPrefix: 'Client.GetTransactionResult',
+      });
+
+    if (rpcResponse.value.error) return handleRpcError(rpcResponse.value);
+
+    const details = handleRpcResult(
+      rpcResponse.value,
+      args.transactionHash,
+      args.options?.deserializeResultData,
+      args.options?.deserializeActionSummaries,
+      args.options?.deserializeExecutionSteps,
+    );
+
+    return details.ok
+      ? details
+      : repackError({
+          error: details.error,
+          originPrefix: 'Inner.Client.TransactionDetails',
           targetPrefix: 'Client.GetTransactionResult',
         });
-
-      return rpcResponse.value.error
-        ? handleRpcError(rpcResponse.value)
-        : handleRpcResult(rpcResponse.value, args);
-    },
-  );
+  }) as SafeGetTransactionResult;

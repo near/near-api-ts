@@ -54,9 +54,9 @@ describe('SendTx', () => {
       },
     });
 
-    const tx = await client.sendSignedTransaction({
+    const tx = await client.safeSendSignedTransaction({
       signedTransaction,
-      minimalProcessingStage: 'ConvertedOptimistic',
+      // minimalProcessingStage: 'ExecutedNearlyFinal',
     });
     log(tx);
   });
