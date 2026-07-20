@@ -38,6 +38,8 @@
 - Rename helper `toJsonBytes` to `objectToU8`
 - Rename helper `fromJsonBytes` to `u8ToObject`
 - Added `signedTransactionBorsh64` to type `SignedTransaction`
+- Changed `TransactionDetails` -> `ExecutionStep` -> `requiredDataIds: string[]` to
+  `requiredData: { dataId: string }[]`
 
 ### Removed
 

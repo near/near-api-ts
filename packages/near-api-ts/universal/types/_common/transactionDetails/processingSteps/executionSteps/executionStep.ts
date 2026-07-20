@@ -15,7 +15,7 @@ import type {
 } from '../../deserializers';
 import type { ExecutionError } from './executionError';
 
-export type RequiredDataId = CryptoHash;
+export type RequiredData = { dataId: CryptoHash };
 
 export type FutureDataReceiver = {
   dataId: CryptoHash;
@@ -49,7 +49,7 @@ export type ExecutionStep<RD, AS> = {
   executedBy: { accountId: AccountId };
   actionSummaries: AS;
   producedSteps: ProducedStep[];
-  requiredDataIds: RequiredDataId[];
+  requiredData: RequiredData[];
   futureDataReceivers: FutureDataReceiver[];
   isPromiseYield: boolean;
   gasFee: NearToken;

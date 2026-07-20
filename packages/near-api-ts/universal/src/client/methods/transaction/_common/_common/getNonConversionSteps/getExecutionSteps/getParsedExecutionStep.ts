@@ -25,7 +25,7 @@ export const getParsedExecutionStep = (
   executedBy: rawExecutionStep.executedBy,
   producedSteps: rawExecutionStep.producedSteps,
   actionSummaries: rawExecutionStep.actionSummaries.map(getParsedActionSummary),
-  requiredDataIds: rawExecutionStep.requiredDataIds,
+  requiredData: rawExecutionStep.requiredData,
   futureDataReceivers: rawExecutionStep.futureDataReceivers,
   isPromiseYield: rawExecutionStep.isPromiseYield,
   gasFee: rawExecutionStep.gasFee,

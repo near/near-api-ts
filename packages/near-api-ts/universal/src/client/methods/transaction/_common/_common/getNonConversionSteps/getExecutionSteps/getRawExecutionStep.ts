@@ -48,11 +48,6 @@ export const getRawExecutionStep = (
 ): RawExecutionStep => {
   const { Action } = receipt.receipt;
 
-  const futureDataReceivers = Action.outputDataReceivers.map(({ dataId, receiverId }) => ({
-    dataId,
-    receiverAccountId: receiverId,
-  }));
-
   // During execution, an execution step may create new execution steps
   const producedSteps = receiptOutcome.outcome.receiptIds.map(({ cryptoHash }) => {
     const { kind } = receiptCreationMap[cryptoHash];
@@ -60,6 +55,13 @@ export const getRawExecutionStep = (
       ? { kind, executionStepId: cryptoHash }
       : { kind, refundStepId: cryptoHash };
   });
+
+  const requiredData = Action.inputDataIds.map((dataId) => ({ dataId }));
+
+  const futureDataReceivers = Action.outputDataReceivers.map(({ dataId, receiverId }) => ({
+    dataId,
+    receiverAccountId: receiverId,
+  }));
 
   return {
     executionStepId: receipt.receiptId,
@@ -70,7 +72,7 @@ export const getRawExecutionStep = (
     executedBy: { accountId: receiptOutcome.outcome.executorId },
     actionSummaries: Action.actions.map(getRawActionSummary),
     producedSteps,
-    requiredDataIds: Action.inputDataIds,
+    requiredData,
     futureDataReceivers,
     isPromiseYield: Action.isPromiseYield,
     gasFee: yoctoNear(receiptOutcome.outcome.tokensBurnt),
