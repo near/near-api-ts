@@ -56,7 +56,7 @@ describe('SendTx', () => {
 
     const tx = await client.safeSendSignedTransaction({
       signedTransaction,
-      // minimalProcessingStage: 'ExecutedNearlyFinal',
+      // minimalProcessingStage: 'CompletedFinal',
       // options: {
       //   deserializeResultData: () => 1
       // }

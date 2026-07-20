@@ -2,10 +2,10 @@ import type { TransactionProcessingStage } from '../../../../types/_common/trans
 
 export const processingStageToWaitUntil = (processingStage: TransactionProcessingStage) => {
   if (processingStage === 'ConvertedOptimistic') return 'INCLUDED';
-  if (processingStage === 'CompletedFinal') return 'INCLUDED_FINAL';
+  if (processingStage === 'ConvertedFinal') return 'INCLUDED_FINAL';
   if (processingStage === 'ExecutedOptimistic') return 'EXECUTED_OPTIMISTIC';
   if (processingStage === 'ExecutedNearlyFinal') return 'EXECUTED';
-  if (processingStage === 'ConvertedFinal') return 'FINAL';
+  if (processingStage === 'CompletedFinal') return 'FINAL';
   throw new Error(`Unknown processing stage: ${processingStage}`);
 };
 
