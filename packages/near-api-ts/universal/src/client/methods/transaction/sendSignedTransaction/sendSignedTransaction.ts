@@ -1,5 +1,4 @@
 import * as z from 'zod/mini';
-import { log } from '../../../../../tests/utils/common';
 import type {
   CreateSafeSendSignedTransaction,
   SafeSendSignedTransaction,
@@ -52,29 +51,48 @@ export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction = 
 
     const minimalProcessingStage = withDefaultProcessingStage(args.minimalProcessingStage);
 
-    const rpcResponse = await context.sendRequest({
-      method: 'send_tx',
-      params: {
-        signed_tx_base64: args.signedTransaction.signedTransactionBorsh64,
-        wait_until: processingStageToWaitUntil(minimalProcessingStage),
-      },
-      transportPolicy: args.options?.transportPolicy,
-      signal: args.options?.signal,
-    });
+    // TODO Temporary solution - right now send_tx doesn't return 'receipts' so we have to
+    //  make another request to get them.  Fix after nearcore will include 'receipts' into response
+    //  for `send_tx`
+    const [sendTransactionRpcResponse, transactionStatusRpcResponse] = await Promise.all([
+      context.sendRequest({
+        method: 'send_tx',
+        params: {
+          signed_tx_base64: args.signedTransaction.signedTransactionBorsh64,
+          wait_until: 'NONE',
+        },
+        transportPolicy: args.options?.transportPolicy,
+        signal: args.options?.signal,
+      }),
+      context.sendRequest({
+        method: 'EXPERIMENTAL_tx_status',
+        params: {
+          signed_tx_base64: args.signedTransaction.signedTransactionBorsh64,
+          wait_until: processingStageToWaitUntil(minimalProcessingStage),
+        },
+        transportPolicy: args.options?.transportPolicy,
+        signal: args.options?.signal,
+      }),
+    ]);
 
-    log(rpcResponse)
-
-    if (!rpcResponse.ok)
+    if (!sendTransactionRpcResponse.ok)
       return repackError({
-        error: rpcResponse.error,
+        error: sendTransactionRpcResponse.error,
         originPrefix: 'SendRequest',
         targetPrefix: 'Client.SendSignedTransaction',
       });
 
-    return rpcResponse.value.error
-      ? handleRpcError(rpcResponse.value)
+    if (!transactionStatusRpcResponse.ok)
+      return repackError({
+        error: transactionStatusRpcResponse.error,
+        originPrefix: 'SendRequest',
+        targetPrefix: 'Client.SendSignedTransaction',
+      });
+
+    return transactionStatusRpcResponse.value.error
+      ? handleRpcError(transactionStatusRpcResponse.value)
       : handleRpcResult(
-          rpcResponse.value,
+          transactionStatusRpcResponse.value,
           minimalProcessingStage,
           args.signedTransaction.transactionHash,
           args.options?.deserializeResultData,

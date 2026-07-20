@@ -48,7 +48,7 @@ export const getRawExecutionStep = (
 ): RawExecutionStep => {
   const { Action } = receipt.receipt;
 
-  const dataReceivers = Action.outputDataReceivers.map(({ dataId, receiverId }) => ({
+  const futureDataReceivers = Action.outputDataReceivers.map(({ dataId, receiverId }) => ({
     dataId,
     receiverAccountId: receiverId,
   }));
@@ -71,7 +71,7 @@ export const getRawExecutionStep = (
     actionSummaries: Action.actions.map(getRawActionSummary),
     producedSteps,
     requiredDataIds: Action.inputDataIds,
-    futureDataReceivers: dataReceivers,
+    futureDataReceivers,
     isPromiseYield: Action.isPromiseYield,
     gasFee: yoctoNear(receiptOutcome.outcome.tokensBurnt),
     gasUsed: gas(receiptOutcome.outcome.gasBurnt),

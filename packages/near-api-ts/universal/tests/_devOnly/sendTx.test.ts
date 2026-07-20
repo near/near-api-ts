@@ -45,7 +45,7 @@ describe('SendTx', () => {
     const signedTransaction = await signTransaction({
       signDataProvider: defaultKeyPair,
       transaction: {
-        signerAccountId: 'nat',
+        signerAccountId: 'nat1',
         signerPublicKey: defaultKeyPair.publicKey,
         nonce: accountAccessKey.nonce + 1,
         blockHash,
@@ -56,7 +56,7 @@ describe('SendTx', () => {
 
     const tx = await client.safeSendSignedTransaction({
       signedTransaction,
-      // minimalProcessingStage: 'ExecutedNearlyFinal',
+      minimalProcessingStage: 'ExecutedNearlyFinal',
     });
     log(tx);
   });
