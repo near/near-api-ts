@@ -13,7 +13,7 @@ import { repackError } from '../../../../_common/utils/repackError';
 import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
 import { PartialTransportPolicyZodSchema } from '../../../transport/transportPolicy';
 import { handleRpcError } from './handleRpcError/handleRpcError';
-import { handleRpcResult } from './handleRpcResult/handleRpcResult';
+import { handleRpcResult } from './handleRpcResult';
 
 const SendSignedTransactionArgsShema = z.object({
   signedTransaction: z.object({

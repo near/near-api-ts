@@ -1,14 +1,14 @@
 import * as z from 'zod/mini';
-import type { Result, TransactionHash } from '../../../../../../types/_common/common';
+import type { Result, TransactionHash } from '../../../../../types/_common/common';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
-} from '../../../../../../types/_common/transactionDetails/deserializers';
-import type { TransactionProcessingStage } from '../../../../../../types/_common/transactionDetails/processingStage';
-import type { TransactionDetailsFromStage } from '../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
-import { createNatError, type NatError, resultNatError } from '../../../../../_common/natError';
-import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc/rpc';
+} from '../../../../../types/_common/transactionDetails/deserializers';
+import type { TransactionProcessingStage } from '../../../../../types/_common/transactionDetails/processingStage';
+import type { TransactionDetailsFromStage } from '../../../../../types/client/methods/transaction/sendSignedTransaction/output';
+import { createNatError, type NatError, resultNatError } from '../../../../_common/natError';
+import type { RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
 import {
   type RpcExecutedOptimisticTransactionDetails,
   RpcExecutedOptimisticTransactionDetailsZodSchema,
@@ -20,9 +20,9 @@ import {
   RpcIncludedFinalTransactionDetailsZodSchema,
   type RpcIncludedTransactionDetails,
   RpcIncludedTransactionDetailsZodSchema,
-} from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
-import { repackError } from '../../../../../_common/utils/repackError';
-import { getDetailsFromProcessingStage } from '../../_common/getDetailsFromProcessingStage/getDetailsFromProcessingStage';
+} from '../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
+import { repackError } from '../../../../_common/utils/repackError';
+import { getDetailsFromProcessingStage } from '../_common/getDetailsFromProcessingStage/getDetailsFromProcessingStage';
 
 export type RpcResult =
   | RpcIncludedTransactionDetails
@@ -30,14 +30,6 @@ export type RpcResult =
   | RpcExecutedOptimisticTransactionDetails
   | RpcExecutedTransactionDetails
   | RpcFinalTransactionDetails;
-
-export type TransactionDetailsHandlerContext = {
-  rpcResult: RpcResult;
-  transactionHash: TransactionHash;
-  deserializeResultData?: BaseDeserializeTransactionResultDataFn;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn;
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
-};
 
 const RpcResultZodSchema: z.ZodMiniType<RpcResult> = z.union([
   RpcIncludedTransactionDetailsZodSchema,
