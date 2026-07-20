@@ -54,7 +54,7 @@ interface DeleteAccountErrorRegistry {
   'Action.DeleteAccount.LargeState': { accountId: AccountId };
 }
 
-export interface ExecutionErrorRegistry
+export interface ExecutionFailureRegistry
   extends GeneralExecutionErrorRegistry,
     CreateAccountErrorRegistry,
     AddKeyErrorRegistry,
@@ -63,8 +63,8 @@ export interface ExecutionErrorRegistry
     DeleteKeyErrorRegistry,
     DeleteAccountErrorRegistry {}
 
-export type ExecutionErrorKind = keyof ExecutionErrorRegistry;
+export type ExecutionFailureKind = keyof ExecutionFailureRegistry;
 
-export type ExecutionError<K extends ExecutionErrorKind = ExecutionErrorKind> = K extends K
-  ? { kind: K; context: ExecutionErrorRegistry[K] }
+export type ExecutionFailure<K extends ExecutionFailureKind = ExecutionFailureKind> = K extends K
+  ? { kind: K; context: ExecutionFailureRegistry[K] }
   : never;

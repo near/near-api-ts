@@ -71,6 +71,7 @@ export const getExecutedOptimisticDetails = (args: {
     isRpcTransactionOutcomeSuccess(transactionOutcome)
   ) {
     // TODO Finish
+
     throw new Error('NatError -> ActionError');
   }
 

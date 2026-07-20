@@ -46,7 +46,6 @@ export type SendSignedTransactionError =
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow'>
-  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Timeout'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.BelowThreshold'>

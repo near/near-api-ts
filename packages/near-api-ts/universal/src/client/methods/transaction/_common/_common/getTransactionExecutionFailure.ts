@@ -11,7 +11,7 @@ import type { RpcReceiptOutcome } from '../../../../../_common/schemas/zod/rpc/t
 import type { RpcTransactionOutcomeSuccess } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
 import type { RpcTransactionSummary } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
 import { result } from '../../../../../_common/utils/result';
-import { getExecutionError } from './_common/_common/getExecutionError/getExecutionError';
+import { getExecutionFailure } from './_common/_common/getExecutionFailure/getExecutionFailure';
 import { getConversionStepSuccess } from './_common/getConversionStepSuccess';
 import { getNonConversionSteps } from './_common/getNonConversionSteps/getNonConversionSteps';
 
@@ -49,7 +49,7 @@ export const getTransactionExecutionFailure = (
     transactionHash: transaction.hash.cryptoHash,
     result: {
       status: 'ExecutionError',
-      error: getExecutionError(actionError),
+      error: getExecutionFailure(actionError),
     },
     processingSteps: {
       conversionStep: conversionStepSuccess.value,

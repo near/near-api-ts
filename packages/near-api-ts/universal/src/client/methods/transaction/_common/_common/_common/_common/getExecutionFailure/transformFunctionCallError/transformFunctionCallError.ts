@@ -1,15 +1,15 @@
 import type { FunctionCallError } from '@near-js/jsonrpc-types';
-import type { ExecutionError } from '../../../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionError';
+import type { ExecutionFailure } from '../../../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionFailure';
 import { transformHostError } from './transformHostError';
 import { transformWasmTrap } from './transformWasmTrap';
 
 export const transformFunctionCallError = (
   rpcFunctionCallError: FunctionCallError,
 ):
-  | ExecutionError<'Action.FunctionCall.Wasm.NotFound'>
-  | ExecutionError<'Action.FunctionCall.Compilation.Failed'>
-  | ExecutionError<'Action.FunctionCall.Function.NotFound'>
-  | ExecutionError<'Action.FunctionCall.Execution.Failed'> => {
+  | ExecutionFailure<'Action.FunctionCall.Wasm.NotFound'>
+  | ExecutionFailure<'Action.FunctionCall.Compilation.Failed'>
+  | ExecutionFailure<'Action.FunctionCall.Function.NotFound'>
+  | ExecutionFailure<'Action.FunctionCall.Execution.Failed'> => {
   if (typeof rpcFunctionCallError === 'string') {
     // Transform deprecated WasmUnknownError to be compatible with the modern nearcore ExecutionError
     if (rpcFunctionCallError === 'WasmUnknownError')

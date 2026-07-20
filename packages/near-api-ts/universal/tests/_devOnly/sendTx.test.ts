@@ -50,7 +50,7 @@ describe('SendTx', () => {
         nonce: accountAccessKey.nonce + 1,
         blockHash,
         actions: [createAccount(), transfer({ amount: { near: '10' } })],
-        receiverAccountId: 'abc.nat',
+        receiverAccountId: 'abc.nat2',
       },
     });
 

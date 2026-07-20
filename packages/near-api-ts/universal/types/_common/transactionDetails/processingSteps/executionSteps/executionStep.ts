@@ -13,7 +13,7 @@ import type {
   BaseDeserializeTransactionExecutionStepsFn,
   MaybeBaseDeserializeTransactionExecutionStepsFn,
 } from '../../deserializers';
-import type { ExecutionError } from './executionError';
+import type { ExecutionFailure } from './executionFailure';
 
 export type RequiredData = { dataId: CryptoHash };
 
@@ -33,7 +33,7 @@ export type ExecutionStepResult<RD> =
     }
   | {
       status: 'Error';
-      error: ExecutionError;
+      error: ExecutionFailure;
     };
 
 type ProducedStep =

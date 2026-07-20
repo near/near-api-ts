@@ -7,7 +7,7 @@ import type {
 import type { RpcActionReceiptTrimmed } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
 import type { RpcReceiptOutcome } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
 import { getRawActionSummary } from '../../_common/_common/getRawActionSummary';
-import { getExecutionError } from '../../_common/getExecutionError/getExecutionError';
+import { getExecutionFailure } from '../../_common/getExecutionFailure/getExecutionFailure';
 import type { ReceiptCreationMap } from '../createReceiptCreationMap';
 
 const getRawExecutionStepResult = (
@@ -33,7 +33,7 @@ const getRawExecutionStepResult = (
   if (typeof status === 'object' && 'Failure' in status) {
     return {
       status: 'Error',
-      error: getExecutionError(status.Failure.ActionError),
+      error: getExecutionFailure(status.Failure.ActionError),
     };
   }
 

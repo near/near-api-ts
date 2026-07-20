@@ -9,7 +9,7 @@ import type {
   ConversionStepFailure,
   ConversionStepSuccess,
 } from './processingSteps/conversionStep';
-import type { ExecutionError } from './processingSteps/executionSteps/executionError';
+import type { ExecutionFailure } from './processingSteps/executionSteps/executionFailure';
 import type { ExecutionSteps } from './processingSteps/executionSteps/executionStep';
 import type { RefundStep } from './processingSteps/refundStep';
 
@@ -57,7 +57,7 @@ export type TransactionExecutionFailure<
   transactionHash: CryptoHash;
   result: {
     status: 'ExecutionError';
-    error: ExecutionError;
+    error: ExecutionFailure;
   };
   processingSteps: {
     conversionStep: ConversionStepSuccess<ASF>;

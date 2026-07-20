@@ -1,8 +1,8 @@
 import { expect } from 'vitest';
 import type {
-  ExecutionError,
-  ExecutionErrorKind,
-} from '../../types/_common/transactionDetails/processingSteps/executionSteps/executionError';
+  ExecutionFailure,
+  ExecutionFailureKind,
+} from '../../types/_common/transactionDetails/processingSteps/executionSteps/executionFailure';
 import type { TransactionResult } from '../../types/_common/transactionDetails/transactionResult';
 
 /**
@@ -10,11 +10,11 @@ import type { TransactionResult } from '../../types/_common/transactionDetails/t
  * ExecutionError kind, narrowing the result union to the ExecutionError branch so callers can
  * read `txResult.result.error.context` with the kind-specific type.
  */
-export function assertTxResultExecutionErrKind<K extends ExecutionErrorKind>(
+export function assertTxResultExecutionErrKind<K extends ExecutionFailureKind>(
   txResult: TransactionResult,
   kind: K,
 ): asserts txResult is TransactionResult & {
-  result: { status: 'ExecutionError'; error: ExecutionError<K> };
+  result: { status: 'ExecutionError'; error: ExecutionFailure<K> };
 } {
   expect(txResult.result.status).toBe('ExecutionError');
   if (txResult.result.status !== 'ExecutionError') {
