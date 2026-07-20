@@ -6,56 +6,23 @@ import type {
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../types/_common/transactionDetails/deserializers';
 import type { TransactionResult } from '../../../../../types/_common/transactionDetails/transactionResult';
-import type { ExcludeStrict } from '../../../../../types/utils';
 import { createNatError, type NatError, resultNatError } from '../../../../_common/natError';
 import type { RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
-import {
-  type RpcExecutedOptimisticTransactionDetails,
-  RpcExecutedOptimisticTransactionDetailsZodSchema,
-  type RpcExecutedTransactionDetails,
-  RpcExecutedTransactionDetailsZodSchema,
-  type RpcFinalTransactionDetails,
-  RpcFinalTransactionDetailsZodSchema,
-  type RpcIncludedFinalTransactionDetails,
-  RpcIncludedFinalTransactionDetailsZodSchema,
-  type RpcIncludedTransactionDetails,
-  RpcIncludedTransactionDetailsZodSchema,
-} from '../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
+import { RpcFinalTransactionDetailsZodSchema } from '../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
 import {
   isRpcTransactionOutcomeFailure,
   isRpcTransactionOutcomeSuccess,
 } from '../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
+import { finalExecutionStatusToProcessingStage } from '../../../../_common/transformers/fromNative/processingStage';
 import { getTransactionConversionFailure } from '../_common/_common/getTransactionConversionFailure/getTransactionConversionFailure';
 import { getTransactionExecutionFailure } from '../_common/_common/getTransactionExecutionFailure';
 import { getTransactionSuccess } from '../_common/_common/getTransactionSuccess/getTransactionSuccess';
 
-const getCurrentProcessingStage = (
-  finalExecutionStatus: ExcludeStrict<RpcResult['finalExecutionStatus'], 'FINAL'>,
-) => {
-  if (finalExecutionStatus === 'INCLUDED') return 'ConvertedOptimistic';
-  if (finalExecutionStatus === 'INCLUDED_FINAL') return 'ConvertedFinal';
-  if (finalExecutionStatus === 'EXECUTED_OPTIMISTIC') return 'ExecutedOptimistic';
-  return 'ExecutedNearlyFinal';
-};
-
-/**
- *  When we fetch tx_status with wait_until = NONE, we can't get a response with
- *  the finalExecutionStatus: 'NONE'. In nearcore it's only possible to get such status when such tx
- *  in on another shard. But at this moment sharded RPC in nearcore is not implemented,
- *  so we assume that all RPC will track all shards.
- */
-export type RpcResult =
-  | RpcIncludedTransactionDetails
-  | RpcIncludedFinalTransactionDetails
-  | RpcExecutedOptimisticTransactionDetails
-  | RpcExecutedTransactionDetails
-  | RpcFinalTransactionDetails;
-
-const RpcResultZodSchema: z.ZodMiniType<RpcResult> = z.union([
-  RpcIncludedTransactionDetailsZodSchema,
-  RpcIncludedFinalTransactionDetailsZodSchema,
-  RpcExecutedOptimisticTransactionDetailsZodSchema,
-  RpcExecutedTransactionDetailsZodSchema,
+const RpcResultZodSchema = z.union([
+  z.object({ finalExecutionStatus: z.literal('INCLUDED') }),
+  z.object({ finalExecutionStatus: z.literal('INCLUDED_FINAL') }),
+  z.object({ finalExecutionStatus: z.literal('EXECUTED_OPTIMISTIC') }),
+  z.object({ finalExecutionStatus: z.literal('EXECUTED') }),
   RpcFinalTransactionDetailsZodSchema,
 ]);
 
@@ -89,7 +56,7 @@ export const handleRpcResult = (
   if (finalExecutionStatus !== 'FINAL')
     return resultNatError('Client.GetTransactionResult.Rpc.Transaction.NotCompleted', {
       transactionHash,
-      currentProcessingStage: getCurrentProcessingStage(finalExecutionStatus),
+      currentProcessingStage: finalExecutionStatusToProcessingStage(finalExecutionStatus),
     });
 
   const { transaction, transactionOutcome, status, receiptsOutcome, receipts } = rpcResult.data;

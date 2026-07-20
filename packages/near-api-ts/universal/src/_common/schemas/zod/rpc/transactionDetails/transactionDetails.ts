@@ -129,12 +129,3 @@ export const RpcFinalTransactionDetailsZodSchema = z.union([
 ]);
 
 export type RpcFinalTransactionDetails = z.infer<typeof RpcFinalTransactionDetailsZodSchema>;
-
-// Union of all observable (non-NONE) `finalExecutionStatus` discriminants. `NONE` is excluded
-// because it never reaches the transaction-details handlers (see `RpcResult`).
-export type RpcFinalExecutionStatus =
-  | 'INCLUDED'
-  | 'INCLUDED_FINAL'
-  | 'EXECUTED_OPTIMISTIC'
-  | 'EXECUTED'
-  | 'FINAL';

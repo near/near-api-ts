@@ -24,7 +24,7 @@ import {
 import { repackError } from '../../../../_common/utils/repackError';
 import { getDetailsFromProcessingStage } from '../_common/getDetailsFromProcessingStage/getDetailsFromProcessingStage';
 
-export type RpcResult =
+type RpcResult =
   | RpcIncludedTransactionDetails
   | RpcIncludedFinalTransactionDetails
   | RpcExecutedOptimisticTransactionDetails

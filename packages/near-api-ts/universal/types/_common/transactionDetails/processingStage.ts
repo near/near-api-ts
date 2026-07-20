@@ -68,3 +68,14 @@ export type TransactionProcessingStageMap = {
 
 export type TransactionProcessingStage = keyof TransactionProcessingStageMap;
 export type MaybeTransactionProcessingStage = TransactionProcessingStage | undefined;
+
+/**
+ * Maps each nearcore `finalExecutionStatus` (RPC wire vocabulary) to our `TransactionProcessingStage`.
+ */
+export type FinalExecutionStatusToProcessingStage = {
+  INCLUDED: 'ConvertedOptimistic';
+  INCLUDED_FINAL: 'ConvertedFinal';
+  EXECUTED_OPTIMISTIC: 'ExecutedOptimistic';
+  EXECUTED: 'ExecutedNearlyFinal';
+  FINAL: 'CompletedFinal';
+};
