@@ -6,13 +6,7 @@ import type {
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../../types/_common/transactionDetails/deserializers';
 import type { TransactionProcessingStage } from '../../../../../../types/_common/transactionDetails/processingStage';
-import type {
-  TransactionDetailsFromStageCompletedFinal,
-  TransactionDetailsFromStageConvertedFinal,
-  TransactionDetailsFromStageConvertedOptimistic,
-  TransactionDetailsFromStageExecutedNearlyFinal,
-  TransactionDetailsFromStageExecutedOptimistic,
-} from '../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
+import type { TransactionDetailsFromStage } from '../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import { createNatError, type NatError, resultNatError } from '../../../../../_common/natError';
 import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc/rpc';
 import {
@@ -28,11 +22,7 @@ import {
   RpcIncludedTransactionDetailsZodSchema,
 } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
 import { repackError } from '../../../../../_common/utils/repackError';
-import { getDetailsFromStageCompletedFinal } from './getDetailsFromStage/fromCompletedFinal';
-import { getDetailsFromStageConvertedFinal } from './getDetailsFromStage/fromConvertedFinal';
-import { getDetailsFromStageConvertedOptimistic } from './getDetailsFromStage/fromConvertedOptimistic';
-import { getDetailsFromStageExecutedNearlyFinal } from './getDetailsFromStage/fromExecutedNearlyFinal';
-import { getDetailsFromStageExecutedOptimistic } from './getDetailsFromStage/fromExecutedOptimistic';
+import { getDetailsFromProcessingStage } from '../../_common/getDetailsFromProcessingStage/getDetailsFromProcessingStage';
 
 export type RpcResult =
   | RpcIncludedTransactionDetails
@@ -57,14 +47,6 @@ const RpcResultZodSchema: z.ZodMiniType<RpcResult> = z.union([
   RpcFinalTransactionDetailsZodSchema,
 ]);
 
-const detailsFromStage = {
-  ConvertedOptimistic: getDetailsFromStageConvertedOptimistic,
-  ConvertedFinal: getDetailsFromStageConvertedFinal,
-  ExecutedOptimistic: getDetailsFromStageExecutedOptimistic,
-  ExecutedNearlyFinal: getDetailsFromStageExecutedNearlyFinal,
-  CompletedFinal: getDetailsFromStageCompletedFinal,
-};
-
 export const handleRpcResult = (
   rpcResponse: RpcResponse,
   minimalProcessingStage: TransactionProcessingStage,
@@ -73,11 +55,7 @@ export const handleRpcResult = (
   deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn,
   deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn,
 ): Result<
-  | TransactionDetailsFromStageConvertedOptimistic
-  | TransactionDetailsFromStageConvertedFinal
-  | TransactionDetailsFromStageExecutedOptimistic
-  | TransactionDetailsFromStageExecutedNearlyFinal
-  | TransactionDetailsFromStageCompletedFinal,
+  TransactionDetailsFromStage[TransactionProcessingStage],
   | NatError<'Client.GetTransactionResult.Exhausted'>
   | NatError<'Client.GetTransactionResult.DeserializeResultData.Failed'>
   | NatError<'Client.GetTransactionResult.DeserializeActionSummaries.Failed'>
@@ -93,13 +71,16 @@ export const handleRpcResult = (
       }),
     });
 
-  const details = detailsFromStage[minimalProcessingStage]({
-    rpcResult: rpcResult.data,
-    transactionHash,
-    deserializeResultData,
-    deserializeActionSummaries,
-    deserializeExecutionSteps,
-  });
+  const details = getDetailsFromProcessingStage(
+    {
+      rpcResult: rpcResult.data,
+      transactionHash,
+      deserializeResultData,
+      deserializeActionSummaries,
+      deserializeExecutionSteps,
+    },
+    minimalProcessingStage,
+  );
 
   return details.ok
     ? details

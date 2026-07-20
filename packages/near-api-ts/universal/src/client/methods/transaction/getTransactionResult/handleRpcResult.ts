@@ -25,9 +25,9 @@ import {
   isRpcTransactionOutcomeFailure,
   isRpcTransactionOutcomeSuccess,
 } from '../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
-import { getTransactionConversionFailure } from '../_common/getTransactionConversionFailure/getTransactionConversionFailure';
-import { getTransactionExecutionFailure } from '../_common/getTransactionExecutionFailure';
-import { getTransactionSuccess } from '../_common/getTransactionSuccess/getTransactionSuccess';
+import { getTransactionConversionFailure } from '../_common/_common/getTransactionConversionFailure/getTransactionConversionFailure';
+import { getTransactionExecutionFailure } from '../_common/_common/getTransactionExecutionFailure';
+import { getTransactionSuccess } from '../_common/_common/getTransactionSuccess/getTransactionSuccess';
 
 const getCurrentProcessingStage = (
   finalExecutionStatus: ExcludeStrict<RpcResult['finalExecutionStatus'], 'FINAL'>,

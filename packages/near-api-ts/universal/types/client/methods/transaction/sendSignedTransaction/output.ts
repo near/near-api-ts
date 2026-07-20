@@ -6,6 +6,7 @@ import type {
 } from '../../../../_common/transactionDetails/deserializers';
 import type {
   MaybeTransactionProcessingStage,
+  TransactionProcessingStage,
   TransactionProcessingStageMap,
 } from '../../../../_common/transactionDetails/processingStage';
 import type { ConversionStepSuccess } from '../../../../_common/transactionDetails/processingSteps/conversionStep';
@@ -77,59 +78,44 @@ export type TransactionDetailsAtStageCompletedFinal<
   };
 };
 
-export type TransactionDetailsFromStageConvertedOptimistic<
+// Maps each processing stage to the concrete detail shape observed at exactly that stage.
+// Every `TransactionDetailsAtStage*` carries a `processingStage` tag, so these remain distinct
+// union members even where two shapes are otherwise structurally identical.
+type TransactionDetailsByStage<
   RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
   ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-> =
-  | TransactionDetailsAtStageConvertedOptimistic
-  | TransactionDetailsAtStageConvertedFinal<ASF>
-  | TransactionDetailsAtStageExecutedOptimistic<RDF, ASF, ESF>
-  | TransactionDetailsAtStageExecutedNearlyFinal<RDF, ASF, ESF>
-  | TransactionDetailsAtStageCompletedFinal<RDF, ASF, ESF>;
+> = {
+  ConvertedOptimistic: TransactionDetailsAtStageConvertedOptimistic;
+  ConvertedFinal: TransactionDetailsAtStageConvertedFinal<ASF>;
+  ExecutedOptimistic: TransactionDetailsAtStageExecutedOptimistic<RDF, ASF, ESF>;
+  ExecutedNearlyFinal: TransactionDetailsAtStageExecutedNearlyFinal<RDF, ASF, ESF>;
+  CompletedFinal: TransactionDetailsAtStageCompletedFinal<RDF, ASF, ESF>;
+};
 
-export type TransactionDetailsFromStageConvertedFinal<
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-> =
-  | TransactionDetailsAtStageConvertedFinal<ASF>
-  | TransactionDetailsAtStageExecutedNearlyFinal<RDF, ASF, ESF>
-  | TransactionDetailsAtStageCompletedFinal<RDF, ASF, ESF>;
+// Which stages are reachable at/after a given minimal stage — the type-level twin of the runtime
+// `reachableStagesByStage` table in `getDetailsFromStage`. The `Converted*` and `Executed*`
+// mid-flows are disjoint, so this is not a plain suffix of a single ordering.
+type ReachableStageFromStage = {
+  ConvertedOptimistic: TransactionProcessingStage;
+  ConvertedFinal: 'ConvertedFinal' | 'ExecutedNearlyFinal' | 'CompletedFinal';
+  ExecutedOptimistic: 'ExecutedOptimistic' | 'ExecutedNearlyFinal' | 'CompletedFinal';
+  ExecutedNearlyFinal: 'ExecutedNearlyFinal' | 'CompletedFinal';
+  CompletedFinal: 'CompletedFinal';
+};
 
-export type TransactionDetailsFromStageExecutedOptimistic<
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-> =
-  | TransactionDetailsAtStageExecutedOptimistic<RDF, ASF, ESF>
-  | TransactionDetailsAtStageExecutedNearlyFinal<RDF, ASF, ESF>
-  | TransactionDetailsAtStageCompletedFinal<RDF, ASF, ESF>;
-
-export type TransactionDetailsFromStageExecutedNearlyFinal<
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-> =
-  | TransactionDetailsAtStageExecutedNearlyFinal<RDF, ASF, ESF>
-  | TransactionDetailsAtStageCompletedFinal<RDF, ASF, ESF>;
-
-export type TransactionDetailsFromStageCompletedFinal<
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-> = TransactionDetailsAtStageCompletedFinal<RDF, ASF, ESF>;
-
+// Asking to wait for a minimal stage yields a union of that stage and every later reachable one,
+// because by the time the RPC responds the transaction may have progressed further.
 export type TransactionDetailsFromStage<
   RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
   ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > = {
-  ConvertedOptimistic: TransactionDetailsFromStageConvertedOptimistic<RDF, ASF, ESF>;
-  ConvertedFinal: TransactionDetailsFromStageConvertedFinal<RDF, ASF, ESF>;
-  ExecutedOptimistic: TransactionDetailsFromStageExecutedOptimistic<RDF, ASF, ESF>;
-  ExecutedNearlyFinal: TransactionDetailsFromStageExecutedNearlyFinal<RDF, ASF, ESF>;
-  CompletedFinal: TransactionDetailsFromStageCompletedFinal<RDF, ASF, ESF>;
+  [S in TransactionProcessingStage]: TransactionDetailsByStage<
+    RDF,
+    ASF,
+    ESF
+  >[ReachableStageFromStage[S]];
 };
 
 export type SendSignedTransactionOutput<
