@@ -32,7 +32,7 @@ export const alreadyExists = (context: TestContext) => async () => {
   // TODO rework after rework SendSignedTransaction
   assertNatErrKind(
     tx,
-    'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist',
+    'Client.SendSignedTransaction.Rpc.Action.CreateAccount.AlreadyExists',
   );
   await safeSleep(500);
 

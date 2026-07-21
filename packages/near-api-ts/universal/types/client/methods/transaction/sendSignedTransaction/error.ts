@@ -1,7 +1,6 @@
 import type { NatError } from '../../../../../src/_common/natError';
 import type { Base64String, CryptoHash } from '../../../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../../_common/natError';
-import type { TransactionErrorContext } from '../../../../_common/transaction/rpcTransactionErrorContext';
 import type {
   MaybeBaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionExecutionStepsFn,
@@ -33,84 +32,52 @@ export interface SendSignedTransactionPublicErrorRegistry {
   'Client.SendSignedTransaction.Timeout': TimeoutErrorContext;
   'Client.SendSignedTransaction.Aborted': AbortedErrorContext;
   'Client.SendSignedTransaction.Exhausted': ExhaustedErrorContext;
-
   'Client.SendSignedTransaction.Rpc.Executor.NotFound': unknown;
+  'Client.SendSignedTransaction.Rpc.Executor.NotEnoughBalance': unknown;
+  'Client.SendSignedTransaction.Rpc.Action.Forbidden': unknown;
   'Client.SendSignedTransaction.Rpc.Action.CreateAccount.AlreadyExists': unknown;
-
-  // TODO will rework it later
-  'Client.SendSignedTransaction.Rpc.Transaction.Expired': TransactionErrorContext['Expired'];
-  'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid': TransactionErrorContext['Nonce']['Invalid'];
-  // TODO: Signer.NotEnoughBalance
-  'Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow': TransactionErrorContext['Signer']['Balance']['TooLow'];
-  'Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound': TransactionErrorContext['Signer']['NotFound'];
-  'Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid': TransactionErrorContext['Signature']['Invalid'];
-  'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound': TransactionErrorContext['Receiver']['NotFound'];
-  'Client.SendSignedTransaction.Rpc.Transaction.Timeout': TransactionErrorContext['Timeout'];
-  //
-  'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist': TransactionErrorContext['Action']['CreateAccount']['AlreadyExist'];
-  'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.BelowThreshold': TransactionErrorContext['Action']['Stake']['BelowThreshold'];
-  'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.Balance.TooLow': TransactionErrorContext['Action']['Stake']['Balance']['TooLow'];
-  'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.NotFound': TransactionErrorContext['Action']['Stake']['NotFound'];
-  //
+  'Client.SendSignedTransaction.Rpc.Action.CreateAccount.TopLevelNamespace': unknown;
+  'Client.SendSignedTransaction.Rpc.Action.CreateAccount.ForeignNamespace': unknown;
+  'Client.SendSignedTransaction.Rpc.Action.CreateAccount.ImplicitAccount': unknown;
+  'Client.SendSignedTransaction.Rpc.Action.AddKey.AlreadyExists': unknown;
+  'Client.SendSignedTransaction.Rpc.Action.FunctionCall.Wasm.NotFound': unknown;
+  'Client.SendSignedTransaction.Rpc.Action.FunctionCall.Function.NotFound': unknown;
+  'Client.SendSignedTransaction.Rpc.Action.FunctionCall.Compilation.Failed': unknown;
+  'Client.SendSignedTransaction.Rpc.Action.FunctionCall.Execution.Failed': unknown;
+  'Client.SendSignedTransaction.Rpc.Action.Stake.BelowThreshold': unknown;
+  'Client.SendSignedTransaction.Rpc.Action.Stake.NotEnoughBalance': unknown;
+  'Client.SendSignedTransaction.Rpc.Action.Stake.NotFound': unknown;
+  'Client.SendSignedTransaction.Rpc.Action.DeleteKey.NotFound': unknown;
+  'Client.SendSignedTransaction.Rpc.Action.DeleteAccount.Staking': unknown;
+  'Client.SendSignedTransaction.Rpc.Action.DeleteAccount.LargeState': unknown;
   'Client.SendSignedTransaction.DeserializeResultData.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeResultData.Failed'];
   'Client.SendSignedTransaction.DeserializeActionSummaries.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'];
   'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'];
   'Client.SendSignedTransaction.Internal': InternalErrorContext;
 }
 
-type ExecutionFailureContextAtStageExecutedOptimistic<
+type RefundSteps<S extends ReachableProcessingStageFromStage['ExecutedOptimistic']> =
+  S extends 'CompletedFinal' ? { refundSteps: RefundStep[] } : unknown;
+
+type ExecutionFailureContext<
+  S extends ReachableProcessingStageFromStage['ExecutedOptimistic'],
   EK extends ExecutionFailureKind,
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
   ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > = {
   signedTransactionBorsh64: Base64String;
   transactionDetails: {
-    processingStage: TransactionProcessingStageMap['ExecutedOptimistic'];
+    processingStage: TransactionProcessingStageMap[S];
     transactionHash: CryptoHash;
     error: ExecutionFailure<EK>;
     processingSteps: {
       conversionStep: ConversionStepSuccess<ASF>;
       executionSteps: ExecutionSteps<ESF>;
-    };
+    } & RefundSteps<S>;
   };
 };
 
-type ExecutionFailureContextAtStageExecutedNearlyFinal<
-  EK extends ExecutionFailureKind,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-> = {
-  signedTransactionBorsh64: Base64String;
-  transactionDetails: {
-    processingStage: TransactionProcessingStageMap['ExecutedNearlyFinal'];
-    transactionHash: CryptoHash;
-    error: ExecutionFailure<EK>;
-    processingSteps: {
-      conversionStep: ConversionStepSuccess<ASF>;
-      executionSteps: ExecutionSteps<ESF>;
-    };
-  };
-};
-
-type ExecutionFailureContextAtStageCompletedFinal<
-  EK extends ExecutionFailureKind,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-> = {
-  signedTransactionBorsh64: Base64String;
-  transactionDetails: {
-    processingStage: TransactionProcessingStageMap['CompletedFinal'];
-    transactionHash: CryptoHash;
-    error: ExecutionFailure<EK>;
-    processingSteps: {
-      conversionStep: ConversionStepSuccess<ASF>;
-      executionSteps: ExecutionSteps<ESF>;
-      refundSteps: RefundStep[];
-    };
-  };
-};
-
-type CommonSendSignedTransactionErrorForAllStages =
+type CommonErrorForAllStages =
   | NatError<'Client.SendSignedTransaction.Args.InvalidSchema'>
   | NatError<'Client.SendSignedTransaction.PreferredRpc.NotFound'>
   | NatError<'Client.SendSignedTransaction.Timeout'>
@@ -119,87 +86,37 @@ type CommonSendSignedTransactionErrorForAllStages =
   | NatError<'Client.SendSignedTransaction.DeserializeResultData.Failed'>
   | NatError<'Client.SendSignedTransaction.DeserializeActionSummaries.Failed'>
   | NatError<'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed'>
-  | NatError<'Client.SendSignedTransaction.Internal'>
-  // TODO remove this
-  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound'>
-  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Expired'>
-  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid'>
-  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound'>
-  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signature.Invalid'>
-  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow'>
-  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Timeout'>
-  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist'>
-  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.BelowThreshold'>
-  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.Balance.TooLow'>
-  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.NotFound'>;
+  | NatError<'Client.SendSignedTransaction.Internal'>;
 
-type SendSignedTransactionErrorAtStageConvertedOptimistic =
-  CommonSendSignedTransactionErrorForAllStages;
-
-type SendSignedTransactionErrorAtStageConvertedFinal = CommonSendSignedTransactionErrorForAllStages;
-
-type SendSignedTransactionErrorAtStageExecutedOptimistic<
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-> =
-  | CommonSendSignedTransactionErrorForAllStages
-  | NatError<
-      'Client.SendSignedTransaction.Rpc.Executor.NotFound',
-      ExecutionFailureContextAtStageExecutedOptimistic<'Executor.NotFound', ASF, ESF>
-    >
-  | NatError<
-      'Client.SendSignedTransaction.Rpc.Action.CreateAccount.AlreadyExists',
-      ExecutionFailureContextAtStageExecutedOptimistic<
-        'Action.CreateAccount.AlreadyExists',
-        ASF,
-        ESF
-      >
-    >;
-
-type SendSignedTransactionErrorAtStageExecutedNearlyFinal<
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-> =
-  | CommonSendSignedTransactionErrorForAllStages
-  | NatError<
-      'Client.SendSignedTransaction.Rpc.Executor.NotFound',
-      ExecutionFailureContextAtStageExecutedNearlyFinal<'Executor.NotFound', ASF, ESF>
-    >
-  | NatError<
-      'Client.SendSignedTransaction.Rpc.Action.CreateAccount.AlreadyExists',
-      ExecutionFailureContextAtStageExecutedNearlyFinal<
-        'Action.CreateAccount.AlreadyExists',
-        ASF,
-        ESF
-      >
-    >;
-
-type SendSignedTransactionErrorAtStageCompletedFinal<
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-> =
-  | CommonSendSignedTransactionErrorForAllStages
-  | NatError<
-      'Client.SendSignedTransaction.Rpc.Executor.NotFound',
-      ExecutionFailureContextAtStageCompletedFinal<'Executor.NotFound', ASF, ESF>
-    >
-  | NatError<
-      'Client.SendSignedTransaction.Rpc.Action.CreateAccount.AlreadyExists',
-      ExecutionFailureContextAtStageCompletedFinal<'Action.CreateAccount.AlreadyExists', ASF, ESF>
-    >;
+// Distributes over `ExecutionFailureErrorKind`, producing one `NatError` per
+// kind, whose name and context stay correlated by construction.
+type ExecutionFailureErrorByStage<
+  S extends ReachableProcessingStageFromStage['ExecutedOptimistic'],
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+  EK extends ExecutionFailureKind = ExecutionFailureKind,
+> = EK extends unknown
+  ? NatError<`Client.SendSignedTransaction.Rpc.${EK}`, ExecutionFailureContext<S, EK, ASF, ESF>>
+  : never;
 
 type SendSignedTransactionErrorByStage<
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
 > = {
-  ConvertedOptimistic: SendSignedTransactionErrorAtStageConvertedOptimistic;
-  ConvertedFinal: SendSignedTransactionErrorAtStageConvertedFinal;
-  ExecutedOptimistic: SendSignedTransactionErrorAtStageExecutedOptimistic<ASF, ESF>;
-  ExecutedNearlyFinal: SendSignedTransactionErrorAtStageExecutedNearlyFinal<ASF, ESF>;
-  CompletedFinal: SendSignedTransactionErrorAtStageCompletedFinal<ASF, ESF>;
+  ConvertedOptimistic: CommonErrorForAllStages;
+  ConvertedFinal: CommonErrorForAllStages;
+  ExecutedOptimistic:
+    | CommonErrorForAllStages
+    | ExecutionFailureErrorByStage<'ExecutedOptimistic', ASF, ESF>;
+  ExecutedNearlyFinal:
+    | CommonErrorForAllStages
+    | ExecutionFailureErrorByStage<'ExecutedNearlyFinal', ASF, ESF>;
+  CompletedFinal:
+    | CommonErrorForAllStages
+    | ExecutionFailureErrorByStage<'CompletedFinal', ASF, ESF>;
 };
 
-export type SendSignedTransactionErrorFromStage<
+type SendSignedTransactionErrorFromStage<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
   ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > = {

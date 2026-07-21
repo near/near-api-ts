@@ -33,7 +33,7 @@ export const notFound = (context: TestContext) => async () => {
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
   // TODO rework after rework SendSignedTransaction
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.NotFound');
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.Stake.NotFound');
   await safeSleep(500);
 
   const txResult = await client.getTransactionResult({

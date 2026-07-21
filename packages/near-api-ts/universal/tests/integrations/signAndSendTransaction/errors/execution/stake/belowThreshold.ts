@@ -33,7 +33,7 @@ export const belowThreshold = (context: TestContext) => async () => {
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
   // TODO rework after rework SendSignedTransaction
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.BelowThreshold');
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.Stake.BelowThreshold');
   await safeSleep(500);
 
   const txResult = await client.getTransactionResult({
