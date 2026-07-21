@@ -36,9 +36,7 @@ export type TransactionDetailsAtStageExecutedOptimistic<
 > = {
   processingStage: TransactionProcessingStageMap['ExecutedOptimistic'];
   transactionHash: CryptoHash;
-  result: {
-    data: TransactionSuccessResultData<RDF>;
-  };
+  data: TransactionSuccessResultData<RDF>;
   processingSteps: {
     conversionStep: ConversionStepSuccess<ASF>;
     executionSteps: ExecutionSteps<ESF>;
@@ -52,9 +50,7 @@ export type TransactionDetailsAtStageExecutedNearlyFinal<
 > = {
   processingStage: TransactionProcessingStageMap['ExecutedNearlyFinal'];
   transactionHash: CryptoHash;
-  result: {
-    data: TransactionSuccessResultData<RDF>;
-  };
+  data: TransactionSuccessResultData<RDF>;
   processingSteps: {
     conversionStep: ConversionStepSuccess<ASF>;
     executionSteps: ExecutionSteps<ESF>;
@@ -68,9 +64,7 @@ export type TransactionDetailsAtStageCompletedFinal<
 > = {
   processingStage: TransactionProcessingStageMap['CompletedFinal'];
   transactionHash: CryptoHash;
-  result: {
-    data: TransactionSuccessResultData<RDF>;
-  };
+  data: TransactionSuccessResultData<RDF>;
   processingSteps: {
     conversionStep: ConversionStepSuccess<ASF>;
     executionSteps: ExecutionSteps<ESF>;

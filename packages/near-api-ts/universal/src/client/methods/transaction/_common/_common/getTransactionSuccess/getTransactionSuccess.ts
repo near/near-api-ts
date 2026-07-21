@@ -51,10 +51,8 @@ export const getTransactionSuccess = (
 
   return result.ok({
     transactionHash: transaction.hash.cryptoHash,
-    result: {
-      status: 'Success',
-      data: resultData.value,
-    },
+    status: 'Success',
+    data: resultData.value,
     processingSteps: {
       conversionStep: conversionStepSuccess.value,
       ...nonConversionSteps.value,

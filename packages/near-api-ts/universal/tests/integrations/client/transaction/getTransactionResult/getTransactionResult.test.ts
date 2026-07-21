@@ -130,11 +130,11 @@ describe('CallContractReadFunction', () => {
     });
     log(tx);
 
-    if (tx.result.status === 'Success') {
-      const d = tx.result.data;
+    if (tx.status === 'Success') {
+      const d = tx.data;
+      const as = tx.processingSteps.conversionStep.transactionSummary.actionSummaries;
+      const es = tx.processingSteps.executionSteps;
+      const rf = tx.processingSteps.refundSteps;
     }
-
-    const as = tx.processingSteps.conversionStep.transactionSummary.actionSummaries;
-    const es = tx.processingSteps.executionSteps;
   });
 });

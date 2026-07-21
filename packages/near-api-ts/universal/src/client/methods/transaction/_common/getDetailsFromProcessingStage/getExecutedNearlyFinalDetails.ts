@@ -50,9 +50,7 @@ export const getExecutedNearlyFinalDetails = (args: {
     return result.ok({
       processingStage: 'ExecutedNearlyFinal',
       transactionHash,
-      result: {
-        data: transactionSuccess.value.result.data,
-      },
+      data: transactionSuccess.value.data,
       processingSteps: {
         conversionStep: transactionSuccess.value.processingSteps.conversionStep,
         executionSteps: transactionSuccess.value.processingSteps.executionSteps,

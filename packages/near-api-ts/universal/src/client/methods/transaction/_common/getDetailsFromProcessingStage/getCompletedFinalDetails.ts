@@ -53,9 +53,7 @@ export const getCompletedFinalDetails = (args: {
     return result.ok({
       processingStage: 'CompletedFinal',
       transactionHash,
-      result: {
-        data: transactionSuccess.value.result.data,
-      },
+      data: transactionSuccess.value.data,
       processingSteps: {
         conversionStep: transactionSuccess.value.processingSteps.conversionStep,
         executionSteps: transactionSuccess.value.processingSteps.executionSteps,

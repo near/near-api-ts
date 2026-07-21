@@ -47,10 +47,8 @@ export const getTransactionExecutionFailure = (
 
   return result.ok({
     transactionHash: transaction.hash.cryptoHash,
-    result: {
-      status: 'ExecutionError',
-      error: getExecutionFailure(actionError),
-    },
+    status: 'ExecutionError',
+    error: getExecutionFailure(actionError),
     processingSteps: {
       conversionStep: conversionStepSuccess.value,
       ...nonConversionSteps.value,

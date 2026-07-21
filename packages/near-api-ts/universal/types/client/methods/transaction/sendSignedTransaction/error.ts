@@ -41,6 +41,10 @@ export type SendSignedTransactionError =
   | NatError<'Client.SendSignedTransaction.Timeout'>
   | NatError<'Client.SendSignedTransaction.Aborted'>
   | NatError<'Client.SendSignedTransaction.Exhausted'>
+
+  // TODO remove
+  | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound'>
+
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Expired'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Nonce.Invalid'>
   | NatError<'Client.SendSignedTransaction.Rpc.Transaction.Signer.NotFound'>

@@ -24,10 +24,22 @@ export type TransactionSuccess<
   ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > = {
   transactionHash: CryptoHash;
-  result: {
-    status: 'Success';
-    data: TransactionSuccessResultData<RDF>;
+  status: 'Success';
+  data: TransactionSuccessResultData<RDF>;
+  processingSteps: {
+    conversionStep: ConversionStepSuccess<ASF>;
+    executionSteps: ExecutionSteps<ESF>;
+    refundSteps: RefundStep[];
   };
+};
+
+export type TransactionExecutionFailure<
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
+> = {
+  transactionHash: CryptoHash;
+  status: 'ExecutionError';
+  error: ExecutionFailure;
   processingSteps: {
     conversionStep: ConversionStepSuccess<ASF>;
     executionSteps: ExecutionSteps<ESF>;
@@ -39,30 +51,10 @@ export type TransactionConversionFailure<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
 > = {
   transactionHash: CryptoHash;
-  result: {
-    status: 'ConversionError';
-    error: unknown; // TODO figure out the real type
-  };
+  status: 'ConversionError';
+  error: unknown; // TODO figure out the real type
   processingSteps: {
     conversionStep: ConversionStepFailure<ASF>;
-    executionSteps: null;
-    refundSteps: null;
-  };
-};
-
-export type TransactionExecutionFailure<
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-> = {
-  transactionHash: CryptoHash;
-  result: {
-    status: 'ExecutionError';
-    error: ExecutionFailure;
-  };
-  processingSteps: {
-    conversionStep: ConversionStepSuccess<ASF>;
-    executionSteps: ExecutionSteps<ESF>;
-    refundSteps: RefundStep[];
   };
 };
 

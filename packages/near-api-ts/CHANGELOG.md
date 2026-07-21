@@ -41,6 +41,11 @@
 - Changed `TransactionDetails` -> `ExecutionStep` -> `requiredDataIds: string[]` to
   `requiredData: { dataId: string }[]`
 
+- Flattened `getTransactionResult` output -> removed the `result`
+  wrapper. `status` + `data`/`error` now sit at the top
+  level of the `TransactionResult` union (`tx.result.status` → `tx.status`,
+  `tx.result.data` → `tx.data`, `tx.result.error` → `tx.error`).
+
 ### Removed
 
 ---

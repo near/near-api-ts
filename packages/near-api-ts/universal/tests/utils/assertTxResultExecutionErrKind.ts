@@ -16,9 +16,9 @@ export function assertTxResultExecutionErrKind<K extends ExecutionFailureKind>(
 ): asserts txResult is TransactionResult & {
   result: { status: 'ExecutionError'; error: ExecutionFailure<K> };
 } {
-  expect(txResult.result.status).toBe('ExecutionError');
-  if (txResult.result.status !== 'ExecutionError') {
-    throw new Error(`Expected ExecutionError result, got "${txResult.result.status}"`);
+  expect(txResult.status).toBe('ExecutionError');
+  if (txResult.status !== 'ExecutionError') {
+    throw new Error(`Expected ExecutionError result, got "${txResult.status}"`);
   }
-  expect(txResult.result.error.kind).toBe(kind);
+  expect(txResult.error.kind).toBe(kind);
 }

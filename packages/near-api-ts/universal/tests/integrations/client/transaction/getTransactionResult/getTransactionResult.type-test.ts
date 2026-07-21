@@ -19,18 +19,15 @@ type Equal<A, B> =
 
 type Assert<T extends true> = T;
 
-// Awaited output of getTransactionResult is a TransactionResult union of three members:
-//   - Success -> result: { status: 'Success'; data }
-//   - ConversionError -> result: { status: 'ConversionError'; error }
-//   - ExecutionError -> result: { status: 'ExecutionError'; error }
+// Awaited output of getTransactionResult is a TransactionResult union of three members, each
+// carrying `status`, `data`/`error`, and `processingSteps` at the top level (no `result` wrapper):
+//   - Success -> { status: 'Success'; data }
+//   - ConversionError -> { status: 'ConversionError'; error }
+//   - ExecutionError -> { status: 'ExecutionError'; error }
 // `data` lives only on the Success member; `actionSummaries` is shared by all members via
 // processingSteps.conversionStep.transactionSummary.
 type SuccessData<TPromise> =
-  Awaited<TPromise> extends { result: infer R }
-    ? Extract<R, { status: 'Success' }> extends { data: infer D }
-      ? D
-      : never
-    : never;
+  Extract<Awaited<TPromise>, { status: 'Success' }> extends { data: infer D } ? D : never;
 
 type Summaries<TPromise> =
   Awaited<TPromise> extends {
@@ -39,7 +36,8 @@ type Summaries<TPromise> =
     ? S
     : never;
 
-// `executionSteps` lives on the Success and ExecutionError members (ConversionError holds null);
+// `executionSteps` lives on the Success and ExecutionError members; the ConversionError member
+// carries neither `executionSteps` nor `refundSteps` (only `conversionStep`).
 type MemberExecSteps<TMember> = TMember extends {
   processingSteps: { executionSteps: infer S };
 }
@@ -47,16 +45,20 @@ type MemberExecSteps<TMember> = TMember extends {
   : never;
 
 type ExecSteps<TPromise> = MemberExecSteps<
-  Extract<Awaited<TPromise>, { result: { status: 'Success' } }>
+  Extract<Awaited<TPromise>, { status: 'Success' }>
 >;
 
 type ExecutionErrorExecSteps<TPromise> = MemberExecSteps<
-  Extract<Awaited<TPromise>, { result: { status: 'ExecutionError' } }>
+  Extract<Awaited<TPromise>, { status: 'ExecutionError' }>
 >;
 
-type ConversionErrorExecSteps<TPromise> = MemberExecSteps<
-  Extract<Awaited<TPromise>, { result: { status: 'ConversionError' } }>
->;
+// Keys present on the ConversionError member's processingSteps (expected: only 'conversionStep').
+type ConversionErrorProcessingStepKeys<TPromise> =
+  Extract<Awaited<TPromise>, { status: 'ConversionError' }> extends {
+    processingSteps: infer P;
+  }
+    ? keyof P
+    : never;
 
 // Fixtures
 
@@ -105,7 +107,9 @@ type _A1ExecSteps = Assert<Equal<ExecSteps<typeof a1>, ParsedExecutionStep[]>>;
 type _A1ExecutionErrorExecSteps = Assert<
   Equal<ExecutionErrorExecSteps<typeof a1>, ParsedExecutionStep[]>
 >;
-type _A1ConversionErrorExecSteps = Assert<Equal<ConversionErrorExecSteps<typeof a1>, null>>;
+type _A1ConversionErrorProcessingStepKeys = Assert<
+  Equal<ConversionErrorProcessingStepKeys<typeof a1>, 'conversionStep'>
+>;
 
 const a2 = client.getTransactionResult({ transactionHash, options: {} });
 type _A2Data = Assert<Equal<SuccessData<typeof a2>, unknown>>;
@@ -221,7 +225,9 @@ type _E1ExecSteps = Assert<Equal<ExecSteps<typeof e1>, { stepsCount: number }>>;
 type _E1ExecutionErrorExecSteps = Assert<
   Equal<ExecutionErrorExecSteps<typeof e1>, { stepsCount: number }>
 >;
-type _E1ConversionErrorExecSteps = Assert<Equal<ConversionErrorExecSteps<typeof e1>, null>>;
+type _E1ConversionErrorProcessingStepKeys = Assert<
+  Equal<ConversionErrorProcessingStepKeys<typeof e1>, 'conversionStep'>
+>;
 
 const e2 = client.getTransactionResult<undefined, undefined, CustomDeserializeExecutionSteps>({
   transactionHash,
@@ -290,11 +296,11 @@ const narrowed = await client.getTransactionResult({
   transactionHash,
   options: { deserializeResultData, deserializeActionSummaries },
 });
-if (narrowed.result.status === 'Success') {
-  type _NarrowData = Assert<Equal<typeof narrowed.result.data, { decimals: number }>>;
+if (narrowed.status === 'Success') {
+  type _NarrowData = Assert<Equal<typeof narrowed.data, { decimals: number }>>;
 } else {
   // ConversionError | ExecutionError both carry `error`, never `data`
-  type _NarrowErrorKind = Assert<Equal<typeof narrowed.result.error, unknown>>;
+  type _NarrowErrorKind = Assert<Equal<typeof narrowed.error, unknown>>;
 }
 type _NarrowSummaries = Assert<
   Equal<

@@ -28,14 +28,10 @@ export const getTransactionConversionFailure = (
 
   return result.ok({
     transactionHash: transaction.hash.cryptoHash,
-    result: {
-      status: 'ConversionError',
-      error: getConversionError(invalidTxError),
-    },
+    status: 'ConversionError',
+    error: getConversionError(invalidTxError),
     processingSteps: {
       conversionStep: conversionStepError.value,
-      executionSteps: null,
-      refundSteps: null,
     },
   });
 };

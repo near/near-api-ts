@@ -73,7 +73,7 @@ const CompletedFinal10 = await client.safeSendSignedTransaction({
   signedTransaction,
   minimalProcessingStage: 'CompletedFinal',
 });
-if (CompletedFinal10.ok && CompletedFinal10.value.result.data) {
+if (CompletedFinal10.ok && CompletedFinal10.value.data) {
 }
 
 const CompletedFinal20 = await client.safeSendSignedTransaction({
@@ -83,7 +83,7 @@ const CompletedFinal20 = await client.safeSendSignedTransaction({
     deserializeResultData: () => 1,
   },
 });
-if (CompletedFinal20.ok && CompletedFinal20.value.result.data) {
+if (CompletedFinal20.ok && CompletedFinal20.value.data) {
 }
 
 // type _ConvertedOptimisticStage = Assert<
