@@ -70,6 +70,19 @@ export type TransactionProcessingStage = keyof TransactionProcessingStageMap;
 export type MaybeTransactionProcessingStage = TransactionProcessingStage | undefined;
 
 /**
+ * Which stages are reachable at/after a given minimal stage.
+ * The `Converted*` and `Executed*`
+ * mid-flows are disjoint, so this is not a plain suffix of a single ordering.
+ */
+export type ReachableProcessingStageFromStage = {
+  ConvertedOptimistic: TransactionProcessingStage;
+  ConvertedFinal: 'ConvertedFinal' | 'ExecutedNearlyFinal' | 'CompletedFinal';
+  ExecutedOptimistic: 'ExecutedOptimistic' | 'ExecutedNearlyFinal' | 'CompletedFinal';
+  ExecutedNearlyFinal: 'ExecutedNearlyFinal' | 'CompletedFinal';
+  CompletedFinal: 'CompletedFinal';
+};
+
+/**
  * Maps each nearcore `finalExecutionStatus` (RPC wire vocabulary) to our `TransactionProcessingStage`.
  */
 export type FinalExecutionStatusToProcessingStage = {

@@ -6,6 +6,7 @@ import type {
 } from '../../../../_common/transactionDetails/deserializers';
 import type {
   MaybeTransactionProcessingStage,
+  ReachableProcessingStageFromStage,
   TransactionProcessingStage,
   TransactionProcessingStageMap,
 } from '../../../../_common/transactionDetails/processingStage';
@@ -87,19 +88,8 @@ type TransactionDetailsByStage<
   CompletedFinal: TransactionDetailsAtStageCompletedFinal<RDF, ASF, ESF>;
 };
 
-// Which stages are reachable at/after a given minimal stage — the type-level twin of the runtime
-// `reachableStagesByStage` table in `getDetailsFromStage`. The `Converted*` and `Executed*`
-// mid-flows are disjoint, so this is not a plain suffix of a single ordering.
-type ReachableStageFromStage = {
-  ConvertedOptimistic: TransactionProcessingStage;
-  ConvertedFinal: 'ConvertedFinal' | 'ExecutedNearlyFinal' | 'CompletedFinal';
-  ExecutedOptimistic: 'ExecutedOptimistic' | 'ExecutedNearlyFinal' | 'CompletedFinal';
-  ExecutedNearlyFinal: 'ExecutedNearlyFinal' | 'CompletedFinal';
-  CompletedFinal: 'CompletedFinal';
-};
-
 // Asking to wait for a minimal stage yields a union of that stage and every later reachable one,
-// because by the time the RPC responds the transaction may have progressed further.
+// because by the time the RPC responds, the transaction may have progressed further.
 export type TransactionDetailsFromStage<
   RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
@@ -109,7 +99,7 @@ export type TransactionDetailsFromStage<
     RDF,
     ASF,
     ESF
-  >[ReachableStageFromStage[S]];
+  >[ReachableProcessingStageFromStage[S]];
 };
 
 export type SendSignedTransactionOutput<

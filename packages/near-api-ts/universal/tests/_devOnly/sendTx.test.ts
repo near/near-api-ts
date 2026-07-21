@@ -56,11 +56,21 @@ describe('SendTx', () => {
 
     const tx = await client.safeSendSignedTransaction({
       signedTransaction,
-      // minimalProcessingStage: 'CompletedFinal',
-      // options: {
-      //   deserializeResultData: () => 1
-      // }
+      minimalProcessingStage: 'ConvertedOptimistic',
+      options: {
+        deserializeActionSummaries: () => [1],
+      },
     });
+
+    if (!tx.ok) {
+      if (tx.error.kind === 'Client.SendSignedTransaction.Rpc.Action.CreateAccount.AlreadyExists') {
+        const ad = tx.error.context;
+        // const ad =
+        //   tx.error.context.transactionDetails.processingSteps.conversionStep.transactionSummary
+        //     .actionSummaries;
+      }
+    }
+
     log(tx);
   });
 

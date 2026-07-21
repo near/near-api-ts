@@ -17,7 +17,9 @@ export type SafeSendSignedTransaction = <
   ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 >(
   args: SendSignedTransactionArgs<TPS, RDF, ASF, ESF>,
-) => Promise<Result<SendSignedTransactionOutput<TPS, RDF, ASF, ESF>, SendSignedTransactionError>>;
+) => Promise<
+  Result<SendSignedTransactionOutput<TPS, RDF, ASF, ESF>, SendSignedTransactionError<TPS, ASF, ESF>>
+>;
 
 export type SendSignedTransaction = <
   TPS extends MaybeTransactionProcessingStage = undefined,

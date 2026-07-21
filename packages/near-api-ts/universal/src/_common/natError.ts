@@ -8,12 +8,12 @@ import { result } from './utils/result';
 
 export const NatErrorBrand = Symbol('NatError');
 
-export class NatError<K extends NatErrorKind> extends Error {
+export class NatError<K extends NatErrorKind, C extends ContextFor<K> = ContextFor<K>> extends Error {
   public readonly [NatErrorBrand] = true;
   public readonly kind: K;
-  public readonly context: ContextFor<K>;
+  public readonly context: C;
 
-  constructor(args: CreateNatErrorArgs<K>) {
+  constructor(args: CreateNatErrorArgs<K, C>) {
     super(`<${args.kind}>`);
     this.name = 'NatError';
     this.kind = args.kind;

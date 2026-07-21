@@ -45,9 +45,9 @@ export type NatInternalErrorKind = Extract<keyof NatErrorRegistry, `${string}.In
 export type NatErrorKind = keyof NatErrorRegistry;
 export type ContextFor<K extends NatErrorKind> = NatErrorRegistry[K];
 
-export type CreateNatErrorArgs<K extends NatErrorKind> = {
+export type CreateNatErrorArgs<K extends NatErrorKind, C extends ContextFor<K> = ContextFor<K>> = {
   kind: K;
-  context: ContextFor<K>;
+  context: C;
 };
 
 export type CreateResultNatError = <K extends NatErrorKind>(
