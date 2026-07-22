@@ -1,5 +1,4 @@
 import type { NatError } from '../../../../../src/_common/natError';
-import type { Base64String, CryptoHash } from '../../../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../../_common/natError';
 import type {
   MaybeBaseDeserializeTransactionActionSummariesFn,
@@ -9,22 +8,17 @@ import type {
   MaybeTransactionProcessingStage,
   ReachableProcessingStageFromStage,
   TransactionProcessingStage,
-  TransactionProcessingStageMap,
 } from '../../../../_common/transactionDetails/processingStage';
-import type { ConversionStepSuccess } from '../../../../_common/transactionDetails/processingSteps/conversionStep';
-import type {
-  ExecutionFailure,
-  ExecutionFailureKind,
-} from '../../../../_common/transactionDetails/processingSteps/executionSteps/executionFailure';
-import type { ExecutionSteps } from '../../../../_common/transactionDetails/processingSteps/executionSteps/executionStep';
-import type { RefundStep } from '../../../../_common/transactionDetails/processingSteps/refundStep';
 import type {
   AbortedErrorContext,
   ExhaustedErrorContext,
   PreferredRpcNotFoundErrorContext,
   TimeoutErrorContext,
 } from '../../../transport/sendRequest';
-import type { TransactionDetailsInnerErrorRegistry } from '../_common/innerErrorRegistry';
+import type {
+  ExecutionFailureErrorByStage,
+  TransactionDetailsInnerErrorRegistry,
+} from '../_common/innerErrorRegistry';
 
 export interface SendSignedTransactionPublicErrorRegistry {
   'Client.SendSignedTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -32,6 +26,7 @@ export interface SendSignedTransactionPublicErrorRegistry {
   'Client.SendSignedTransaction.Timeout': TimeoutErrorContext;
   'Client.SendSignedTransaction.Aborted': AbortedErrorContext;
   'Client.SendSignedTransaction.Exhausted': ExhaustedErrorContext;
+
   'Client.SendSignedTransaction.Rpc.Executor.NotFound': unknown;
   'Client.SendSignedTransaction.Rpc.Executor.NotEnoughBalance': unknown;
   'Client.SendSignedTransaction.Rpc.Action.Forbidden': unknown;
@@ -50,32 +45,14 @@ export interface SendSignedTransactionPublicErrorRegistry {
   'Client.SendSignedTransaction.Rpc.Action.DeleteKey.NotFound': unknown;
   'Client.SendSignedTransaction.Rpc.Action.DeleteAccount.Staking': unknown;
   'Client.SendSignedTransaction.Rpc.Action.DeleteAccount.LargeState': unknown;
+
   'Client.SendSignedTransaction.DeserializeResultData.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeResultData.Failed'];
   'Client.SendSignedTransaction.DeserializeActionSummaries.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'];
   'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'];
   'Client.SendSignedTransaction.Internal': InternalErrorContext;
 }
 
-type RefundSteps<S extends ReachableProcessingStageFromStage['ExecutedOptimistic']> =
-  S extends 'CompletedFinal' ? { refundSteps: RefundStep[] } : unknown;
-
-type ExecutionFailureContext<
-  S extends ReachableProcessingStageFromStage['ExecutedOptimistic'],
-  EK extends ExecutionFailureKind,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-> = {
-  signedTransactionBorsh64: Base64String;
-  transactionDetails: {
-    processingStage: TransactionProcessingStageMap[S];
-    transactionHash: CryptoHash;
-    error: ExecutionFailure<EK>;
-    processingSteps: {
-      conversionStep: ConversionStepSuccess<ASF>;
-      executionSteps: ExecutionSteps<ESF>;
-    } & RefundSteps<S>;
-  };
-};
+type ErrorPrefix = 'Client.SendSignedTransaction';
 
 type CommonErrorForAllStages =
   | NatError<'Client.SendSignedTransaction.Args.InvalidSchema'>
@@ -88,17 +65,6 @@ type CommonErrorForAllStages =
   | NatError<'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed'>
   | NatError<'Client.SendSignedTransaction.Internal'>;
 
-// Distributes over `ExecutionFailureErrorKind`, producing one `NatError` per
-// kind, whose name and context stay correlated by construction.
-type ExecutionFailureErrorByStage<
-  S extends ReachableProcessingStageFromStage['ExecutedOptimistic'],
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
-  EK extends ExecutionFailureKind = ExecutionFailureKind,
-> = EK extends unknown
-  ? NatError<`Client.SendSignedTransaction.Rpc.${EK}`, ExecutionFailureContext<S, EK, ASF, ESF>>
-  : never;
-
 type SendSignedTransactionErrorByStage<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
   ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
@@ -107,13 +73,13 @@ type SendSignedTransactionErrorByStage<
   ConvertedFinal: CommonErrorForAllStages;
   ExecutedOptimistic:
     | CommonErrorForAllStages
-    | ExecutionFailureErrorByStage<'ExecutedOptimistic', ASF, ESF>;
+    | ExecutionFailureErrorByStage<'ExecutedOptimistic', ErrorPrefix, ASF, ESF>;
   ExecutedNearlyFinal:
     | CommonErrorForAllStages
-    | ExecutionFailureErrorByStage<'ExecutedNearlyFinal', ASF, ESF>;
+    | ExecutionFailureErrorByStage<'ExecutedNearlyFinal', ErrorPrefix, ASF, ESF>;
   CompletedFinal:
     | CommonErrorForAllStages
-    | ExecutionFailureErrorByStage<'CompletedFinal', ASF, ESF>;
+    | ExecutionFailureErrorByStage<'CompletedFinal', ErrorPrefix, ASF, ESF>;
 };
 
 type SendSignedTransactionErrorFromStage<

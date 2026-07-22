@@ -1,10 +1,11 @@
-import type { Result, TransactionHash } from '../../../../../../types/_common/common';
+import type { Base64String, Result, TransactionHash } from '../../../../../../types/_common/common';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../../types/_common/transactionDetails/deserializers';
 import type { TransactionProcessingStage } from '../../../../../../types/_common/transactionDetails/processingStage';
+import type { ExecutionFailureErrorByStage } from '../../../../../../types/client/methods/transaction/_common/innerErrorRegistry';
 import type { TransactionDetailsFromStage } from '../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import type { NatError } from '../../../../../_common/natError';
 import type {
@@ -24,7 +25,10 @@ import { getExecutedOptimisticDetails } from './getExecutedOptimisticDetails';
 type TransactionDetailsError =
   | NatError<'Inner.Client.TransactionDetails.DeserializeResultData.Failed'>
   | NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
-  | NatError<'Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'>;
+  | NatError<'Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'>
+  | ExecutionFailureErrorByStage<'ExecutedOptimistic', 'Inner.Client.TransactionDetails'>
+  | ExecutionFailureErrorByStage<'ExecutedNearlyFinal', 'Inner.Client.TransactionDetails'>
+  | ExecutionFailureErrorByStage<'CompletedFinal', 'Inner.Client.TransactionDetails'>;
 
 type TransactionDetailsHandlerContext = {
   rpcResult:
@@ -34,6 +38,7 @@ type TransactionDetailsHandlerContext = {
     | RpcExecutedTransactionDetails
     | RpcFinalTransactionDetails;
   transactionHash: TransactionHash;
+  signedTransactionBorsh64: Base64String;
   deserializeResultData?: BaseDeserializeTransactionResultDataFn;
   deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn;
   deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
@@ -100,14 +105,12 @@ export const getDetailsFromProcessingStage = <S extends TransactionProcessingSta
   context: TransactionDetailsHandlerContext,
   minimalProcessingStage: S,
 ): Result<TransactionDetailsFromStage[S], TransactionDetailsError> => {
-  // Convert at the boundary — from here on we only deal with our own stage names.
   const actualProcessingStage = finalExecutionStatusToProcessingStage(
     context.rpcResult.finalExecutionStatus,
   );
 
   // The RPC was awaited with a `wait_until` matching `minimalProcessingStage`, so the actual stage must be
-  // reachable from it. Anything else is a protocol-level surprise — fail loudly rather than return
-  // details for a stage the caller's type doesn't promise.
+  // reachable from it. Anything else is a protocol-level surprise
   if (!reachableStagesByStage[minimalProcessingStage].includes(actualProcessingStage))
     throw new Error(
       `Unexpected stage "${actualProcessingStage}" for minimal stage "${minimalProcessingStage}"`,

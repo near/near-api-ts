@@ -1,18 +1,26 @@
-import type { Result, TransactionHash } from '../../../../../../types/_common/common';
+import type {
+  Base64String,
+  Result,
+  ResultErr,
+  TransactionHash,
+} from '../../../../../../types/_common/common';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../../types/_common/transactionDetails/deserializers';
+import type { ExecutionFailureErrorByStage } from '../../../../../../types/client/methods/transaction/_common/innerErrorRegistry';
 import type { TransactionDetailsAtStageExecutedNearlyFinal } from '../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
-import type { NatError } from '../../../../../_common/natError';
+import { type NatError, resultNatError } from '../../../../../_common/natError';
 import type { RpcExecutedTransactionDetails } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
 import { isRpcTransactionOutcomeSuccess } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
 import { result } from '../../../../../_common/utils/result';
+import { getTransactionExecutionFailure } from '../_common/getTransactionExecutionFailure';
 import { getTransactionSuccess } from '../_common/getTransactionSuccess/getTransactionSuccess';
 
 export const getExecutedNearlyFinalDetails = (args: {
   rpcDetails: RpcExecutedTransactionDetails;
+  signedTransactionBorsh64: Base64String;
   transactionHash: TransactionHash;
   deserializeResultData?: BaseDeserializeTransactionResultDataFn;
   deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn;
@@ -22,6 +30,7 @@ export const getExecutedNearlyFinalDetails = (args: {
   | NatError<'Inner.Client.TransactionDetails.DeserializeResultData.Failed'>
   | NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
   | NatError<'Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'>
+  | ExecutionFailureErrorByStage<'ExecutedNearlyFinal', 'Inner.Client.TransactionDetails'>
 > => {
   const {
     rpcDetails,
@@ -65,8 +74,34 @@ export const getExecutedNearlyFinalDetails = (args: {
     'ActionError' in status.Failure &&
     isRpcTransactionOutcomeSuccess(transactionOutcome)
   ) {
-    // TODO Finish
-    throw new Error('NatError -> ActionError');
+    const executionFailure = getTransactionExecutionFailure(
+      transaction,
+      transactionOutcome,
+      receipts,
+      receiptsOutcome,
+      status.Failure.ActionError,
+      deserializeActionSummaries,
+      deserializeExecutionSteps,
+    );
+    if (!executionFailure.ok) return executionFailure;
+
+    return resultNatError(
+      `Inner.Client.TransactionDetails.Rpc.${executionFailure.value.error.kind}`,
+      {
+        signedTransactionBorsh64: args.signedTransactionBorsh64,
+        transactionDetails: {
+          processingStage: 'ExecutedNearlyFinal',
+          transactionHash,
+          error: executionFailure.value.error,
+          processingSteps: {
+            conversionStep: executionFailure.value.processingSteps.conversionStep,
+            executionSteps: executionFailure.value.processingSteps.executionSteps,
+          },
+        },
+      },
+    ) as ResultErr<
+      ExecutionFailureErrorByStage<'ExecutedNearlyFinal', 'Inner.Client.TransactionDetails'>
+    >;
   }
 
   throw new Error(`Unexpected rpcDetails: ${JSON.stringify(rpcDetails)}`);

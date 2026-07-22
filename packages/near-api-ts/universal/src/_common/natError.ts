@@ -8,7 +8,10 @@ import { result } from './utils/result';
 
 export const NatErrorBrand = Symbol('NatError');
 
-export class NatError<K extends NatErrorKind, C extends ContextFor<K> = ContextFor<K>> extends Error {
+export class NatError<
+  K extends NatErrorKind,
+  C extends ContextFor<K> = ContextFor<K>,
+> extends Error {
   public readonly [NatErrorBrand] = true;
   public readonly kind: K;
   public readonly context: C;
@@ -21,8 +24,9 @@ export class NatError<K extends NatErrorKind, C extends ContextFor<K> = ContextF
   }
 }
 
-export const createNatError = <K extends NatErrorKind>(args: CreateNatErrorArgs<K>): NatError<K> =>
-  new NatError(args);
+export const createNatError = <K extends NatErrorKind, C extends ContextFor<K> = ContextFor<K>>(
+  args: CreateNatErrorArgs<K, C>,
+): NatError<K, C> => new NatError(args);
 
 export const resultNatError: CreateResultNatError = (kind, context) =>
   result.err(new NatError({ kind, context }));

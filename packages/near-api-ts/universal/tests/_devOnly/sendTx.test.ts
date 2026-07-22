@@ -56,14 +56,14 @@ describe('SendTx', () => {
 
     const tx = await client.safeSendSignedTransaction({
       signedTransaction,
-      minimalProcessingStage: 'CompletedFinal',
+      // minimalProcessingStage: 'ConvertedOptimistic',
       // options: {
       //   deserializeActionSummaries: () => [1],
       // },
     });
 
     if (!tx.ok) {
-      if (tx.error.kind === 'Client.SendSignedTransaction.Rpc.Action.AddKey.AlreadyExists') {
+      if (tx.error.kind === 'Client.SendSignedTransaction.Rpc.Action.CreateAccount.ForeignNamespace') {
         const ad = tx.error.context;
         // const ad =
         //   tx.error.context.transactionDetails.processingSteps.conversionStep.transactionSummary

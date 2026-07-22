@@ -95,6 +95,7 @@ export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction = 
           transactionStatusRpcResponse.value,
           minimalProcessingStage,
           args.signedTransaction.transactionHash,
+          args.signedTransaction.signedTransactionBorsh64,
           args.options?.deserializeResultData,
           args.options?.deserializeActionSummaries,
           args.options?.deserializeExecutionSteps,

@@ -50,7 +50,10 @@ export type CreateNatErrorArgs<K extends NatErrorKind, C extends ContextFor<K> =
   context: C;
 };
 
-export type CreateResultNatError = <K extends NatErrorKind>(
+export type CreateResultNatError = <
+  K extends NatErrorKind,
+  C extends ContextFor<K> = ContextFor<K>,
+>(
   kind: K,
-  context: ContextFor<K>,
-) => ResultErr<NatError<K>>;
+  context: C,
+) => ResultErr<NatError<K, C>>;
