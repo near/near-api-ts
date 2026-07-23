@@ -4,6 +4,7 @@ import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../_com
 import type {
   AbortedErrorContext,
   ExhaustedErrorContext,
+  PreferredRpcNotFoundErrorContext,
   TimeoutErrorContext,
 } from '../transport/sendRequest';
 import type { Transport } from '../transport/transport';
@@ -11,6 +12,7 @@ import type { CacheState } from './cache';
 
 export interface GetRecentBlockHashPublicErrorRegistry {
   'Client.GetRecentBlockHash.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'Client.GetRecentBlockHash.PreferredRpc.NotFound': PreferredRpcNotFoundErrorContext  ;
   'Client.GetRecentBlockHash.Timeout': TimeoutErrorContext;
   'Client.GetRecentBlockHash.Aborted': AbortedErrorContext;
   'Client.GetRecentBlockHash.Exhausted': ExhaustedErrorContext;
@@ -26,6 +28,7 @@ export type GetRecentBlockHashArgs = {
 
 type GetRecentBlockHashError =
   | NatError<'Client.GetRecentBlockHash.Args.InvalidSchema'>
+  | NatError<'Client.GetRecentBlockHash.PreferredRpc.NotFound'>
   | NatError<'Client.GetRecentBlockHash.Timeout'>
   | NatError<'Client.GetRecentBlockHash.Aborted'>
   | NatError<'Client.GetRecentBlockHash.Exhausted'>

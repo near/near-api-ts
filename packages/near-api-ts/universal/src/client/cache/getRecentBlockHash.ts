@@ -54,10 +54,6 @@ export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (transport
       signal: args?.options?.signal,
     });
 
-    // This error should never happen because we don't allow configuring transport policy
-    if (!rpcResponse.ok && rpcResponse.error.kind === 'SendRequest.PreferredRpc.NotFound')
-      throw rpcResponse.error;
-
     // If the request failed
     if (!rpcResponse.ok) {
       return repackError({

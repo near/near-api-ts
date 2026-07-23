@@ -5,6 +5,7 @@ import {
   createClient,
   createMemoryKeyService,
   createMemorySignerFactory,
+  createTestnetClient,
   deployContract,
   functionCall,
   keyPair,
@@ -63,7 +64,9 @@ describe('SendTx', () => {
     });
 
     if (!tx.ok) {
-      if (tx.error.kind === 'Client.SendSignedTransaction.Rpc.Action.CreateAccount.ForeignNamespace') {
+      if (
+        tx.error.kind === 'Client.SendSignedTransaction.Rpc.Action.CreateAccount.ForeignNamespace'
+      ) {
         const ad = tx.error.context;
         // const ad =
         //   tx.error.context.transactionDetails.processingSteps.conversionStep.transactionSummary
