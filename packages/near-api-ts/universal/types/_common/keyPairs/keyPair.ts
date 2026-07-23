@@ -19,6 +19,10 @@ export interface KeyPairPublicErrorRegistry {
   'CreateRandomSecp256k1KeyPair.Internal': InternalErrorContext;
   'Secp256k1KeyPair.SignData.Args.InvalidSchema': InvalidSchemaErrorContext;
   'Secp256k1KeyPair.SignData.Internal': InternalErrorContext;
+
+  'CreateRandomMlDsa65KeyPair.Internal': InternalErrorContext;
+  'MlDsa65KeyPair.SignData.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'MlDsa65KeyPair.SignData.Internal': InternalErrorContext;
 }
 
 // *********** SignData *****
@@ -27,7 +31,9 @@ type SignDataError =
   | NatError<'KeyPair.SignData.Args.InvalidSchema'>
   | NatError<'KeyPair.SignData.Internal'>;
 
-export type SafeSignData = (args: KeyPairSignDataArgs) => Promise<Result<SignedData, SignDataError>>;
+export type SafeSignData = (
+  args: KeyPairSignDataArgs,
+) => Promise<Result<SignedData, SignDataError>>;
 export type SignData = (args: KeyPairSignDataArgs) => Promise<SignedData>;
 
 // *********** CreateKeyPair *****

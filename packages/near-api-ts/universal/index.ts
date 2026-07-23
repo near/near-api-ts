@@ -9,7 +9,11 @@ export { PublicKeyZodSchema } from './src/_common/schemas/zod/common/publicKey';
 export { MessageZodSchema } from './src/_common/schemas/zod/message';
 
 // Utils
-export { toEd25519CurveString, toSecp256k1CurveString } from './src/_common/transformers/toCurveString';
+export {
+  toEd25519CurveString,
+  toMlDsa65CurveString,
+  toSecp256k1CurveString,
+} from './src/_common/transformers/toCurveString';
 export { base64ToObject } from './src/_common/utils/base64ToObject';
 export { objectToU8, u8ToObject } from './src/_common/utils/common';
 
@@ -63,6 +67,10 @@ export {
   randomEd25519KeyPair,
   safeRandomEd25519KeyPair,
 } from './src/helpers/keyPairs/randomEd25519KeyPair';
+export {
+  randomMlDsa65KeyPair,
+  safeRandomMlDsa65KeyPair,
+} from './src/helpers/keyPairs/randomMlDsa65KeyPair';
 export {
   randomSecp256k1KeyPair,
   safeRandomSecp256k1KeyPair,

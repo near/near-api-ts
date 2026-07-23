@@ -8,7 +8,7 @@ type StartSandboxArgs = {
 
 export const startSandbox = async (args?: StartSandboxArgs) =>
   await Sandbox.start({
-    version: args?.nearcoreVersion ?? '2.13.0',
+    version: args?.nearcoreVersion ?? '2.13.1',
     config: {
       rpcPort: args?.rpcPort,
       additionalAccounts: [

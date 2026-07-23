@@ -11,6 +11,12 @@ export const BinaryLengths = {
     PublicKey: 64,
     Signature: 65,
   },
+  MlDsa65: {
+    PrivateKey: 4032, // secret-only, no public component
+    SecretKey: 4032,
+    PublicKey: 1952,
+    Signature: 3309,
+  },
 } as const;
 
 export const NearDecimals = 24;
