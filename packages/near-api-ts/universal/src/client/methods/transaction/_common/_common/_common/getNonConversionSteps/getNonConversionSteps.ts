@@ -1,6 +1,6 @@
 import type { Result } from '../../../../../../../../types/_common/common';
 import type { BaseDeserializeTransactionExecutionStepsFn } from '../../../../../../../../types/_common/transactionDetails/deserializers';
-import type { ConversionStepSuccess } from '../../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep';
+import type { ConversionStepSuccess } from '../../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep/conversionStep';
 import type { ExecutionSteps } from '../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
 import type { RefundStep } from '../../../../../../../../types/_common/transactionDetails/processingSteps/refundStep';
 import type { NatError } from '../../../../../../../_common/natError';

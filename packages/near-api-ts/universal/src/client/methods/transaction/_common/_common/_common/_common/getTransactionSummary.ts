@@ -7,7 +7,7 @@ import type {
 import type {
   TransactionActionSummaries,
   TransactionSummary,
-} from '../../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep';
+} from '../../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep/conversionStep';
 import { type NatError, resultNatError } from '../../../../../../../_common/natError';
 import type { RpcTransactionSummary } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
 import { result } from '../../../../../../../_common/utils/result';

@@ -2,13 +2,13 @@ import type { InvalidTxError } from '@near-js/jsonrpc-types';
 import { gas, yoctoNear } from '../../../../../../../index';
 import type { Result } from '../../../../../../../types/_common/common';
 import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../../../../types/_common/transactionDetails/deserializers';
-import type { ConversionStepFailure } from '../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep';
+import type { ConversionStepFailure } from '../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep/conversionStep';
 import { type NatError } from '../../../../../../_common/natError';
 import type { RpcTransactionOutcomeFailure } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
 import type { RpcTransactionSummary } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
 import { result } from '../../../../../../_common/utils/result';
 import { getTransactionSummary } from '../_common/_common/getTransactionSummary';
-import { getConversionError } from './getConversionError';
+import { getConversionFailure } from '../_common/getConversionFailure';
 
 export const getConversionStepFailure = (
   transaction: RpcTransactionSummary,
@@ -25,7 +25,7 @@ export const getConversionStepFailure = (
   return result.ok({
     result: {
       status: 'Error',
-      error: getConversionError(invalidTxError),
+      error: getConversionFailure(invalidTxError),
     },
     executedAt: {
       blockHash: transactionOutcome.blockHash.cryptoHash,

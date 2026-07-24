@@ -1,12 +1,12 @@
-import type { AccountId, BlockHash, ReceiptId, TransactionNonce } from '../../common';
-import type { PublicKey, Signature } from '../../crypto';
-import type { NearGas } from '../../nearGas';
-import type { NearToken } from '../../nearToken';
-import type { ParsedActionSummary } from '../actionSummaries';
+import type { AccountId, BlockHash, ReceiptId, TransactionNonce } from '../../../common';
+import type { PublicKey, Signature } from '../../../crypto';
+import type { NearGas } from '../../../nearGas';
+import type { NearToken } from '../../../nearToken';
+import type { ParsedActionSummary } from '../../actionSummaries';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionActionSummariesFn,
-} from '../deserializers';
+} from '../../deserializers';
 
 export type TransactionActionSummaries<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,

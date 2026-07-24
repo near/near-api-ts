@@ -10,7 +10,7 @@ import type {
   TransactionProcessingStage,
   TransactionProcessingStageMap,
 } from '../../../../_common/transactionDetails/processingStage';
-import type { ConversionStepSuccess } from '../../../../_common/transactionDetails/processingSteps/conversionStep';
+import type { ConversionStepSuccess } from '../../../../_common/transactionDetails/processingSteps/conversionStep/conversionStep';
 import type { ExecutionSteps } from '../../../../_common/transactionDetails/processingSteps/executionSteps/executionStep';
 import type { RefundStep } from '../../../../_common/transactionDetails/processingSteps/refundStep';
 import type { TransactionSuccessResultData } from '../../../../_common/transactionDetails/transactionResult';

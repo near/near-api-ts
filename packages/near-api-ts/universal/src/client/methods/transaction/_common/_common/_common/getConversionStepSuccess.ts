@@ -1,7 +1,7 @@
 import { gas, yoctoNear } from '../../../../../../../index';
 import type { Result } from '../../../../../../../types/_common/common';
 import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../../../../types/_common/transactionDetails/deserializers';
-import type { ConversionStepSuccess } from '../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep';
+import type { ConversionStepSuccess } from '../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep/conversionStep';
 import { type NatError } from '../../../../../../_common/natError';
 import type { RpcTransactionOutcomeSuccess } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
 import type { RpcTransactionSummary } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';

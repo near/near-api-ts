@@ -6,7 +6,7 @@ import type {
   MaybeBaseDeserializeTransactionExecutionStepsFn,
 } from '../../../../_common/transactionDetails/deserializers';
 import type { ReachableProcessingStageFromStage } from '../../../../_common/transactionDetails/processingStage';
-import type { ConversionStepSuccess } from '../../../../_common/transactionDetails/processingSteps/conversionStep';
+import type { ConversionStepSuccess } from '../../../../_common/transactionDetails/processingSteps/conversionStep/conversionStep';
 import type {
   ExecutionFailure,
   ExecutionFailureKind,

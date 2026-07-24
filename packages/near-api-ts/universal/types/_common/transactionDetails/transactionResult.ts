@@ -8,7 +8,7 @@ import type {
 import type {
   ConversionStepFailure,
   ConversionStepSuccess,
-} from './processingSteps/conversionStep';
+} from './processingSteps/conversionStep/conversionStep';
 import type { ExecutionFailure } from './processingSteps/executionSteps/executionFailure';
 import type { ExecutionSteps } from './processingSteps/executionSteps/executionStep';
 import type { RefundStep } from './processingSteps/refundStep';
