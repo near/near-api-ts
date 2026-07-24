@@ -5,12 +5,19 @@ import { type InnerPrivateKey } from '../../../_common/schemas/zod/common/privat
 import { wrapInternalError } from '../../../_common/utils/wrapInternalError';
 import { SignDataArgsZodSchema } from '../_common/_index';
 import { signByEd25519Key } from '../_common/signByEd25519Key';
+import { signByMlDsa65Key } from '../_common/signByMlDsa65Key';
 import { signBySecp256k1Key } from '../_common/signBySecp256k1Key';
 
 const getSecretKey = ({ curve, privateKeyU8 }: InnerPrivateKey) => {
-  const secretKeyLength =
-    curve === 'ed25519' ? BinaryLengths.Ed25519.SecretKey : BinaryLengths.Secp256k1.SecretKey;
-  return privateKeyU8.slice(0, secretKeyLength);
+  switch (curve) {
+    case 'ed25519':
+      return privateKeyU8.slice(0, BinaryLengths.Ed25519.SecretKey);
+    case 'secp256k1':
+      return privateKeyU8.slice(0, BinaryLengths.Secp256k1.SecretKey);
+    // ml-dsa-65 stores secret-only, so the whole private key is the secret
+    case 'ml-dsa-65':
+      return privateKeyU8;
+  }
 };
 
 export const createSafeSignData = (innerPrivateKey: InnerPrivateKey): SafeSignData => {
@@ -24,8 +31,13 @@ export const createSafeSignData = (innerPrivateKey: InnerPrivateKey): SafeSignDa
         zodError: validArgs.error,
       });
 
-    return innerPrivateKey.curve === 'ed25519'
-      ? signByEd25519Key(secretKeyU8, validArgs.data.dataU8)
-      : signBySecp256k1Key(secretKeyU8, validArgs.data.dataU8);
+    switch (innerPrivateKey.curve) {
+      case 'ed25519':
+        return signByEd25519Key(secretKeyU8, validArgs.data.dataU8);
+      case 'secp256k1':
+        return signBySecp256k1Key(secretKeyU8, validArgs.data.dataU8);
+      case 'ml-dsa-65':
+        return signByMlDsa65Key(secretKeyU8, validArgs.data.dataU8);
+    }
   });
 };

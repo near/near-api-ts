@@ -2,7 +2,7 @@ import * as z from 'zod/mini';
 import { BinaryLengths } from '../../../configs/constants';
 import { CurveStringZodSchema } from './curveString';
 
-const { Ed25519, Secp256k1 } = BinaryLengths;
+const { Ed25519, Secp256k1, MlDsa65 } = BinaryLengths;
 
 export const PrivateKeyZodSchema = z
   .pipe(
@@ -15,10 +15,18 @@ export const PrivateKeyZodSchema = z
   )
   .check(
     z.refine(
-      ({ curve, privateKeyU8 }) =>
-        curve === 'ed25519'
-          ? privateKeyU8.length === Ed25519.PrivateKey
-          : privateKeyU8.length === Secp256k1.PrivateKey,
+      ({ curve, privateKeyU8 }) => {
+        switch (curve) {
+          case 'ed25519':
+            return privateKeyU8.length === Ed25519.PrivateKey;
+          case 'secp256k1':
+            return privateKeyU8.length === Secp256k1.PrivateKey;
+          case 'ml-dsa-65':
+            return privateKeyU8.length === MlDsa65.PrivateKey;
+          default:
+            return false;
+        }
+      },
       { error: 'Invalid private key length' },
     ),
   );
