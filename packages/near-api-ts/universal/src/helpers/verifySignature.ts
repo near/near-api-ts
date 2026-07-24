@@ -1,6 +1,7 @@
 import * as ed25519 from '@noble/ed25519';
 import { hmac } from '@noble/hashes/hmac.js';
 import { sha256, sha512 } from '@noble/hashes/sha2.js';
+import { ml_dsa65 } from '@noble/post-quantum/ml-dsa.js';
 import * as secp256k1 from '@noble/secp256k1';
 import * as z from 'zod/mini';
 import type { SafeVerifySignature, VerifySignature } from '../../types/_common/verifySignature';
@@ -37,28 +38,38 @@ export const safeVerifySignature: SafeVerifySignature = wrapInternalError(
       return result.ok(ed25519.verify(signature.signatureU8, message, publicKey.publicKeyU8));
     }
 
-    // NEAR Protocol stores secp256k1 signatures as 65 bytes: [r (32) | s (32) |
-    // recovery_id (1)].
-    //
-    // The recovery byte is only needed to reconstruct the public key, not for
-    // verification, so we strip it with subarray(0, 64).
-    //
-    // Public keys are stored as 64 raw bytes (x || y coordinates) without any prefix,
-    // because NEAR always expects 64-byte keys. However, @noble/curves requires the
-    // standard SEC1 uncompressed point format (65 bytes: 0x04 || x || y),
-    // so we prepend the 0x04 prefix on the fly.
-    //
-    // prehash: false — NEAR passes an already SHA-256-hashed message to sign/verify,
-    // so we must not hash it again inside the library.
+    if (publicKey.curve === 'secp256k1') {
+      // NEAR Protocol stores secp256k1 signatures as 65 bytes: [r (32) | s (32) |
+      // recovery_id (1)].
+      //
+      // The recovery byte is only needed to reconstruct the public key, not for
+      // verification, so we strip it with subarray(0, 64).
+      //
+      // Public keys are stored as 64 raw bytes (x || y coordinates) without any prefix,
+      // because NEAR always expects 64-byte keys. However, @noble/curves requires the
+      // standard SEC1 uncompressed point format (65 bytes: 0x04 || x || y),
+      // so we prepend the 0x04 prefix on the fly.
+      //
+      // prehash: false — NEAR passes an already SHA-256-hashed message to sign/verify,
+      // so we must not hash it again inside the library.
 
-    return result.ok(
-      secp256k1.verify(
-        signature.signatureU8.subarray(0, 64),
-        message,
-        new Uint8Array([0x04, ...publicKey.publicKeyU8]),
-        { prehash: false },
-      ),
-    );
+      return result.ok(
+        secp256k1.verify(
+          signature.signatureU8.subarray(0, 64),
+          message,
+          new Uint8Array([0x04, ...publicKey.publicKeyU8]),
+          { prehash: false },
+        ),
+      );
+    }
+
+    if (publicKey.curve === 'ml-dsa-65') {
+      return result.ok(ml_dsa65.verify(signature.signatureU8, message, publicKey.publicKeyU8));
+    }
+
+    // small trick to raise compile-time error if not all curves are handled
+    throw publicKey.curve satisfies never;
+
   },
 );
 
