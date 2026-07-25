@@ -8,3 +8,4 @@ allowBuilds:
 
 minimumReleaseAgeExclude:
   - '@near-js/jsonrpc-types@1.7.3'
+  - tsdown@0.22.14

@@ -1,4 +1,4 @@
-import type { FinalExecutionStatusToProcessingStage } from '../../../../types/_common/transactionDetails/processingStage';
+import type { FinalExecutionStatusToProcessingStage } from '../../../../types/_common/transactionDetails/_common/processingStage';
 
 const finalExecutionStatusToProcessingStageMap: FinalExecutionStatusToProcessingStage = {
   INCLUDED: 'ConvertedOptimistic',

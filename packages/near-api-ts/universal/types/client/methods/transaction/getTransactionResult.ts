@@ -2,15 +2,14 @@ import type { NatError } from '../../../../src/_common/natError';
 import type { CryptoHash, Result } from '../../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type {
-  BaseDeserializeTransactionActionSummariesFn,
-  BaseDeserializeTransactionExecutionStepsFn,
-  BaseDeserializeTransactionResultDataFn,
   MaybeBaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionExecutionStepsFn,
   MaybeBaseDeserializeTransactionResultDataFn,
-} from '../../../_common/transactionDetails/deserializers';
-import type { TransactionProcessingStageMap } from '../../../_common/transactionDetails/processingStage';
-import type { TransactionResult } from '../../../_common/transactionDetails/transactionResult';
+} from '../../../_common/transactionDetails/_common/_common/deserializers';
+import type { TransactionProcessingStageMap } from '../../../_common/transactionDetails/_common/processingStage';
+import type { ConversionFailure } from '../../../_common/transactionDetails/conversionFailure';
+import type { ExecutionFailure } from '../../../_common/transactionDetails/executionFailure';
+import type { ExecutionSuccess } from '../../../_common/transactionDetails/executionSuccess';
 import type { KeyIf } from '../../../utils';
 import type { ClientContext } from '../../client';
 import type {
@@ -75,26 +74,14 @@ export type GetTransactionResultArgs<
   };
 } & Options<RDF, ASF, ESF>;
 
-// Inside the implementation function we don't care about the particular deserializer result and
-// treat it as unknown data;
-export type InnerGetTransactionResultArgs = {
-  transactionHash: CryptoHash;
-  policies?: {
-    transport?: PartialTransportPolicy;
-  };
-  options?: {
-    signal?: AbortSignal;
-    deserializeResultData?: BaseDeserializeTransactionResultDataFn;
-    deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn;
-    deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
-  };
-};
-
 export type GetTransactionResultOutput<
-  RDF extends MaybeBaseDeserializeTransactionResultDataFn,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
-> = TransactionResult<RDF, ASF, ESF>;
+  RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
+> =
+  | ConversionFailure<ASF>['CompletedFinal']
+  | ExecutionFailure<ASF, ESF>['CompletedFinal']
+  | ExecutionSuccess<RDF, ASF, ESF>['CompletedFinal'];
 
 export type GetTransactionResultError =
   | NatError<'Client.GetTransactionResult.Args.InvalidSchema'>

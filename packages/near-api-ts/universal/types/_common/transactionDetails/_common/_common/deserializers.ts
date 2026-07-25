@@ -1,6 +1,6 @@
-import type { Base64String } from '../common';
+import type { Base64String } from '../../../common';
+import type { RawExecutionStep } from '../executionStep';
 import type { RawActionSummary } from './actionSummaries';
-import type { RawExecutionStep } from './processingSteps/executionSteps/executionStep';
 
 // DeserializeTransactionResultData
 export type DeserializeTransactionResultDataArgs = { rawData: Base64String };

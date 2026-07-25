@@ -10,6 +10,7 @@ export const handleRpcError = (rpcResponse: RpcResponse) => {
     return resultNatError('Client.GetTransactionResult.Exhausted', {
       lastError: createNatError({
         kind: 'SendRequest.Attempt.Response.InvalidSchema',
+        // @ts-ignore
         context: { zodError: rpcError.error },
       }),
     });

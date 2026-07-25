@@ -3,7 +3,7 @@ import type {
   ExecutionStepResult,
   ParsedExecutionStep,
   RawExecutionStep,
-} from '../../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
+} from '../../../../../../../../../types/_common/transactionDetails/_common/executionStep';
 import { tryBase64ToObject } from '../../../../../../../../_common/utils/base64ToObject';
 import { getParsedActionSummary } from '../../_common/_common/getParsedActionSummary';
 

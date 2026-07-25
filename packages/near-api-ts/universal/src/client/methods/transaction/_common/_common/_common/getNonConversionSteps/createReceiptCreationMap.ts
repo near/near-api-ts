@@ -1,5 +1,5 @@
 import type { BlockHash, ReceiptId } from '../../../../../../../../types/_common/common';
-import type { ConversionStepSuccess } from '../../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep/conversionStep';
+import type { ConversionStepSuccess } from '../../../../../../../../types/_common/transactionDetails/_common/conversionStep';
 import type { ReceiptsWithOutcomes } from './getReceiptsWithOutcomes';
 
 export type ReceiptCreationMap = Record<
@@ -22,7 +22,7 @@ export type ReceiptCreationMap = Record<
  * we use this assumption to determine the step kind;
  */
 export const createReceiptCreationMap = (
-  conversionStep: ConversionStepSuccess,
+  conversionStepSuccess: ConversionStepSuccess,
   receiptsWithOutcomes: ReceiptsWithOutcomes,
 ): ReceiptCreationMap => {
   // May contains not all refund receipts
@@ -48,9 +48,9 @@ export const createReceiptCreationMap = (
       return acc;
     },
     {
-      [conversionStep.result.firstExecutionStepId]: {
+      [conversionStepSuccess.result.firstExecutionStepId]: {
         kind: 'Execution',
-        createdAt: { blockHash: conversionStep.executedAt.blockHash },
+        createdAt: { blockHash: conversionStepSuccess.executedAt.blockHash },
       },
     },
   );

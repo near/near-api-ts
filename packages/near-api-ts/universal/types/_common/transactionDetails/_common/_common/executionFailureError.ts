@@ -65,6 +65,6 @@ export interface ExecutionFailureRegistry
 
 export type ExecutionFailureKind = keyof ExecutionFailureRegistry;
 
-export type ExecutionFailure<K extends ExecutionFailureKind = ExecutionFailureKind> = K extends K
+export type ExecutionFailureError<K extends ExecutionFailureKind = ExecutionFailureKind> = K extends K
   ? { kind: K; context: ExecutionFailureRegistry[K] }
   : never;

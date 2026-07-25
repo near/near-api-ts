@@ -1,9 +1,9 @@
 import { expect } from 'vitest';
 import type {
-  ExecutionFailure,
+  ExecutionFailureError,
   ExecutionFailureKind,
-} from '../../types/_common/transactionDetails/processingSteps/executionSteps/executionFailure';
-import type { TransactionResult } from '../../types/_common/transactionDetails/transactionResult';
+} from '../../types/_common/transactionDetails/_common/_common/executionFailureError';
+import type { TransactionResult } from '../../types/_common/transactionDetails/_common/transactionResult';
 
 /**
  * Asserts that a getTransactionResult() result failed during execution with the given
@@ -14,7 +14,7 @@ export function assertTxResultExecutionErrKind<K extends ExecutionFailureKind>(
   txResult: TransactionResult,
   kind: K,
 ): asserts txResult is TransactionResult & {
-  result: { status: 'ExecutionError'; error: ExecutionFailure<K> };
+  result: { status: 'ExecutionError'; error: ExecutionFailureError<K> };
 } {
   expect(txResult.status).toBe('ExecutionError');
   if (txResult.status !== 'ExecutionError') {

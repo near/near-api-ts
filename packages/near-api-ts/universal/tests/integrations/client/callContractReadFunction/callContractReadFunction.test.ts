@@ -96,11 +96,11 @@ describe('CallContractReadFunction', () => {
   });
 
   it('SerializeArgs.InvalidOutput', async () => {
-    // @ts-expect-error
     const res = await client.safeCallContractReadFunction({
       contractAccountId: 'c.nat',
       functionName: 'get_record',
       options: {
+        // @ts-expect-error
         serializeArgs: () => 1,
       },
     });

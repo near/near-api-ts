@@ -1,15 +1,15 @@
 import * as z from 'zod/mini';
-import type { Base64String, Result, TransactionHash } from '../../../../../types/_common/common';
+import type { Base64String, Result, TransactionHash } from '../../../../../../types/_common/common';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
-} from '../../../../../types/_common/transactionDetails/deserializers';
-import type { TransactionProcessingStage } from '../../../../../types/_common/transactionDetails/processingStage';
-import type { ExecutionFailureKind } from '../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionFailure';
-import type { TransactionDetailsFromStage } from '../../../../../types/client/methods/transaction/sendSignedTransaction/output';
-import { createNatError, type NatError, resultNatError } from '../../../../_common/natError';
-import type { RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
+} from '../../../../../../types/_common/transactionDetails/_common/_common/deserializers';
+import type { ExecutionFailureKind } from '../../../../../../types/_common/transactionDetails/_common/_common/executionFailureError';
+import type { TransactionProcessingStage } from '../../../../../../types/_common/transactionDetails/_common/processingStage';
+import type { TransactionDetailsFromStage } from '../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
+import { createNatError, type NatError, resultNatError } from '../../../../../_common/natError';
+import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc/rpc';
 import {
   type RpcExecutedOptimisticTransactionDetails,
   RpcExecutedOptimisticTransactionDetailsZodSchema,
@@ -21,9 +21,9 @@ import {
   RpcIncludedFinalTransactionDetailsZodSchema,
   type RpcIncludedTransactionDetails,
   RpcIncludedTransactionDetailsZodSchema,
-} from '../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
-import { repackError } from '../../../../_common/utils/repackError';
-import { getDetailsFromProcessingStage } from '../_common/getDetailsFromProcessingStage/getDetailsFromProcessingStage';
+} from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
+import { repackError } from '../../../../../_common/utils/repackError';
+import { getDetailsFromProcessingStage } from './getDetailsFromProcessingStage/getDetailsFromProcessingStage';
 
 type RpcResult =
   | RpcIncludedTransactionDetails
@@ -78,11 +78,13 @@ export const handleRpcResult = (
     minimalProcessingStage,
   );
 
-  return details.ok
-    ? details
-    : repackError({
+  if (details.ok) return details;
+
+  return details.error.kind.startsWith('Inner.Client.TransactionDetails')
+    ? repackError({
         error: details.error,
         originPrefix: 'Inner.Client.TransactionDetails',
         targetPrefix: 'Client.SendSignedTransaction',
-      });
+      })
+    : details;
 };

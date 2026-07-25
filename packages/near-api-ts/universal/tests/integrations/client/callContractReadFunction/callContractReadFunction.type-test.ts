@@ -16,9 +16,7 @@ const client = createTestnetClient();
 
 const responseZodSchema = z.object({ decimals: z.number() });
 
-const deserializeResult = (args: {
-  rawResult: Base64String;
-}): z.output<typeof responseZodSchema> =>
+const deserializeResult = (args: { rawResult: Base64String }): z.output<typeof responseZodSchema> =>
   responseZodSchema.parse(base64ToObject(args.rawResult));
 
 type CustomDeserializeResult = (args: { rawResult: Base64String }) => {
@@ -234,11 +232,11 @@ client.callContractReadFunction({
   functionArgs: { bad: 1n },
 });
 
-// @ts-expect-error serializeArgs must return Uint8Array
 client.callContractReadFunction({
   contractAccountId,
   functionName,
   options: {
+    // @ts-expect-error serializeArgs must return Uint8Array
     serializeArgs: () => 1,
   },
 });

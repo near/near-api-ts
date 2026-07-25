@@ -1,4 +1,4 @@
-import type { TransactionProcessingStage } from '../../../../types/_common/transactionDetails/processingStage';
+import type { TransactionProcessingStage } from '../../../../types/_common/transactionDetails/_common/processingStage';
 
 export const processingStageToWaitUntil = (processingStage: TransactionProcessingStage) => {
   if (processingStage === 'ConvertedOptimistic') return 'INCLUDED';

@@ -2,7 +2,7 @@ import { yoctoNear } from '../../../../../../../../index';
 import type {
   RefundStep,
   RefundStepResult,
-} from '../../../../../../../../types/_common/transactionDetails/processingSteps/refundStep';
+} from '../../../../../../../../types/_common/transactionDetails/_common/refundStep';
 import type { RpcActionReceiptTrimmed } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
 import type { RpcReceiptOutcome } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
 import type { ReceiptCreationMap } from './createReceiptCreationMap';

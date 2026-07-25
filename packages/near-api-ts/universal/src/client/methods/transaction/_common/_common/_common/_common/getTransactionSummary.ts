@@ -3,11 +3,11 @@ import type { Result } from '../../../../../../../../types/_common/common';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionActionSummariesFn,
-} from '../../../../../../../../types/_common/transactionDetails/deserializers';
+} from '../../../../../../../../types/_common/transactionDetails/_common/_common/deserializers';
 import type {
   TransactionActionSummaries,
   TransactionSummary,
-} from '../../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep/conversionStep';
+} from '../../../../../../../../types/_common/transactionDetails/_common/conversionStep';
 import { type NatError, resultNatError } from '../../../../../../../_common/natError';
 import type { RpcTransactionSummary } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
 import { result } from '../../../../../../../_common/utils/result';

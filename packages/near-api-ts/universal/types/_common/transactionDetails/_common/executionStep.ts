@@ -5,19 +5,19 @@ import type {
   CryptoHash,
   Log,
   ReceiptId,
-} from '../../../common';
-import type { NearGas } from '../../../nearGas';
-import type { NearToken } from '../../../nearToken';
-import type { ParsedActionSummary, RawActionSummary } from '../../actionSummaries';
+} from '../../common';
+import type { NearGas } from '../../nearGas';
+import type { NearToken } from '../../nearToken';
+import type { ParsedActionSummary, RawActionSummary } from './_common/actionSummaries';
 import type {
   BaseDeserializeTransactionExecutionStepsFn,
   MaybeBaseDeserializeTransactionExecutionStepsFn,
-} from '../../deserializers';
-import type { ExecutionFailure } from './executionFailure';
+} from './_common/deserializers';
+import type { ExecutionFailureError } from './_common/executionFailureError';
 
-export type RequiredData = { dataId: CryptoHash };
+type RequiredDataItem = { dataId: CryptoHash };
 
-export type FutureDataReceiver = {
+type FutureDataReceiver = {
   dataId: CryptoHash;
   receiverAccountId: AccountId;
 };
@@ -32,8 +32,8 @@ export type ExecutionStepResult<RD> =
       nextExecutionStepId: ReceiptId;
     }
   | {
-      status: 'Error';
-      error: ExecutionFailure;
+      status: 'Failure';
+      error: ExecutionFailureError;
     };
 
 type ProducedStep =
@@ -49,7 +49,7 @@ export type ExecutionStep<RD, AS> = {
   executedBy: { accountId: AccountId };
   actionSummaries: AS;
   producedSteps: ProducedStep[];
-  requiredData: RequiredData[];
+  requiredData: RequiredDataItem[];
   futureDataReceivers: FutureDataReceiver[];
   isPromiseYield: boolean;
   gasFee: NearToken;

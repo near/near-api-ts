@@ -1,7 +1,7 @@
 import type {
   ParsedActionSummary,
   RawActionSummary,
-} from '../../../../../../../../../types/_common/transactionDetails/actionSummaries';
+} from '../../../../../../../../../types/_common/transactionDetails/_common/_common/actionSummaries';
 import { tryBase64ToObject } from '../../../../../../../../_common/utils/base64ToObject';
 
 // Default deserialization of the raw action summary - tries to parse functionCall.functionArgs

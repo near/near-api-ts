@@ -14,13 +14,13 @@ import {
 } from '../../../../../index';
 import { safeSleep } from '../../../../../src/_common/utils/sleep';
 import type { Base64String, TransactionHash } from '../../../../../types/_common/common';
-import type { ActionSummary } from '../../../../../types/_common/transactionDetails/actionSummaries';
+import type { ActionSummary } from '../../../../../types/_common/transactionDetails/_common/_common/actionSummaries';
 import type {
   DeserializeTransactionActionSummariesArgs,
   DeserializeTransactionExecutionStepsArgs,
   DeserializeTransactionResultDataArgs,
-} from '../../../../../types/_common/transactionDetails/deserializers';
-import type { ExecutionStep } from '../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
+} from '../../../../../types/_common/transactionDetails/_common/_common/deserializers';
+import type { ExecutionStep } from '../../../../../types/_common/transactionDetails/_common/executionStep';
 import type { MemorySigner } from '../../../../../types/signers/memorySigner/memorySigner';
 import { createDefaultClient, getFileBytes, log } from '../../../../utils/common';
 import { startSandbox } from '../../../../utils/sandbox/startSandbox';

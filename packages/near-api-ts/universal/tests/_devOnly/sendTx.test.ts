@@ -57,22 +57,31 @@ describe('SendTx', () => {
 
     const tx = await client.safeSendSignedTransaction({
       signedTransaction,
-      // minimalProcessingStage: 'ConvertedOptimistic',
+      // minimalProcessingStage: 'ExecutedNearlyFinal',
       // options: {
       //   deserializeActionSummaries: () => [1],
       // },
     });
 
-    if (!tx.ok) {
-      if (
-        tx.error.kind === 'Client.SendSignedTransaction.Rpc.Action.CreateAccount.ForeignNamespace'
-      ) {
-        const ad = tx.error.context;
-        // const ad =
-        //   tx.error.context.transactionDetails.processingSteps.conversionStep.transactionSummary
-        //     .actionSummaries;
-      }
-    }
+    // if (tx.ok) {
+    //   const x = tx.value;
+    // }
+    //
+    // if (!tx.ok) {
+    //   const x = tx.error;
+    //   if (
+    //     tx.error.kind === 'Client.SendSignedTransaction.Rpc.Action.CreateAccount.ForeignNamespace'
+    //   ) {
+    //     const ad = tx.error.context;
+    //
+    //     if (tx.error.context.transactionDetails.processingStage === 'ExecutedNearlyFinal') {
+    //       const adadd = tx.error.context.transactionDetails;
+    //     }
+    //     // const ad =
+    //     //   tx.error.context.transactionDetails.processingSteps.conversionStep.transactionSummary
+    //     //     .actionSummaries;
+    //   }
+    // }
 
     log(tx);
   });

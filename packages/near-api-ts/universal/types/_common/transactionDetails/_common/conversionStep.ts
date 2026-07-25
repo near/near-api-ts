@@ -1,12 +1,13 @@
-import type { AccountId, BlockHash, ReceiptId, TransactionNonce } from '../../../common';
-import type { PublicKey, Signature } from '../../../crypto';
-import type { NearGas } from '../../../nearGas';
-import type { NearToken } from '../../../nearToken';
-import type { ParsedActionSummary } from '../../actionSummaries';
+import type { AccountId, BlockHash, ReceiptId, TransactionNonce } from '../../common';
+import type { PublicKey, Signature } from '../../crypto';
+import type { NearGas } from '../../nearGas';
+import type { NearToken } from '../../nearToken';
+import type { ParsedActionSummary } from './_common/actionSummaries';
+import type { ConversionFailureError } from './_common/conversionFailureError';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionActionSummariesFn,
-} from '../../deserializers';
+} from './_common/deserializers';
 
 export type TransactionActionSummaries<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
@@ -25,29 +26,28 @@ export type TransactionSummary<
   signature: Signature;
 };
 
-type ConversionStepCommon<
+export type ConversionStepSuccess<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
 > = {
+  result: {
+    status: 'Success';
+    firstExecutionStepId: ReceiptId;
+  };
   executedAt: { blockHash: BlockHash };
   transactionSummary: TransactionSummary<ASF>;
   gasFee: NearToken;
   gasUsed: NearGas;
 };
 
-export type ConversionStepSuccess<
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-> = ConversionStepCommon<ASF> & {
-  result: {
-    status: 'Success';
-    firstExecutionStepId: ReceiptId;
-  };
-};
-
 export type ConversionStepFailure<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-> = ConversionStepCommon<ASF> & {
+> = {
   result: {
-    status: 'Error';
-    error: unknown;
+    status: 'Failure';
+    error: ConversionFailureError;
   };
+  executedAt: { blockHash: BlockHash };
+  transactionSummary: TransactionSummary<ASF>;
+  gasFee: NearToken;
+  gasUsed: NearGas;
 };

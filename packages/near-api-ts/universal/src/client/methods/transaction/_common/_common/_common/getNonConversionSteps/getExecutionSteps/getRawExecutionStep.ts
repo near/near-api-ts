@@ -3,11 +3,11 @@ import type { Base64String } from '../../../../../../../../../types/_common/comm
 import type {
   ExecutionStepResult,
   RawExecutionStep,
-} from '../../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionStep';
+} from '../../../../../../../../../types/_common/transactionDetails/_common/executionStep';
 import type { RpcActionReceiptTrimmed } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
 import type { RpcReceiptOutcome } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
 import { getRawActionSummary } from '../../_common/_common/getRawActionSummary';
-import { getExecutionFailure } from '../../_common/getExecutionFailure/getExecutionFailure';
+import { getExecutionFailureError } from '../../_common/getExecutionFailureError/getExecutionFailureError';
 import type { ReceiptCreationMap } from '../createReceiptCreationMap';
 
 const getRawExecutionStepResult = (
@@ -32,8 +32,8 @@ const getRawExecutionStepResult = (
   // one of them may be related to the transaction error
   if (typeof status === 'object' && 'Failure' in status) {
     return {
-      status: 'Error',
-      error: getExecutionFailure(status.Failure.ActionError),
+      status: 'Failure',
+      error: getExecutionFailureError(status.Failure.ActionError),
     };
   }
 

@@ -1,14 +1,18 @@
-import type { ConversionStepSuccess } from '../../../../../../../../types/_common/transactionDetails/processingSteps/conversionStep/conversionStep';
+import type { ConversionStepSuccess } from '../../../../../../../../types/_common/transactionDetails/_common/conversionStep';
 import type { RpcActionReceipt } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
 import type { RpcReceiptOutcome } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
 import type { RpcTransactionSummary } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
 
-export const getReceiptsWithOutcomes = (
-  transaction: RpcTransactionSummary,
-  receipts: RpcActionReceipt[],
-  receiptsOutcome: RpcReceiptOutcome[],
-  conversionStepSuccess: ConversionStepSuccess,
-) => {
+type GetReceiptsWithOutcomesArgs = {
+  transaction: RpcTransactionSummary;
+  receipts: RpcActionReceipt[];
+  receiptsOutcome: RpcReceiptOutcome[];
+  conversionStepSuccess: ConversionStepSuccess;
+};
+
+export const getReceiptsWithOutcomes = (args: GetReceiptsWithOutcomesArgs) => {
+  const { transaction, receipts, receiptsOutcome, conversionStepSuccess } = args;
+
   const hasLocalReceipt = transaction.signerId === transaction.receiverId;
 
   // For historical reasons when signerId = receiverId RPC doesn't return a first receipt but

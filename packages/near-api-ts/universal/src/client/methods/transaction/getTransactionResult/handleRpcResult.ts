@@ -4,8 +4,8 @@ import type {
   BaseDeserializeTransactionActionSummariesFn,
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
-} from '../../../../../types/_common/transactionDetails/deserializers';
-import type { TransactionResult } from '../../../../../types/_common/transactionDetails/transactionResult';
+} from '../../../../../types/_common/transactionDetails/_common/_common/deserializers';
+import type { GetTransactionResultOutput } from '../../../../../types/client/methods/transaction/getTransactionResult';
 import { createNatError, type NatError, resultNatError } from '../../../../_common/natError';
 import type { RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
 import { RpcFinalTransactionDetailsZodSchema } from '../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
@@ -14,9 +14,9 @@ import {
   isRpcTransactionOutcomeSuccess,
 } from '../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
 import { finalExecutionStatusToProcessingStage } from '../../../../_common/transformers/fromNative/processingStage';
-import { getTransactionConversionFailure } from '../_common/_common/getTransactionConversionFailure/getTransactionConversionFailure';
-import { getTransactionExecutionFailure } from '../_common/_common/getTransactionExecutionFailure';
-import { getTransactionSuccess } from '../_common/_common/getTransactionSuccess/getTransactionSuccess';
+import { getConversionFailureCompletedFinal } from '../_common/_common/getConversionFailure';
+import { getExecutionFailureCompletedFinal } from '../_common/_common/getExecutionFailure';
+import { getExecutionSuccessCompletedFinal } from '../_common/_common/getExecutionSuccess';
 
 const RpcResultZodSchema = z.union([
   z.object({ finalExecutionStatus: z.literal('INCLUDED') }),
@@ -33,7 +33,7 @@ export const handleRpcResult = (
   deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn,
   deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn,
 ): Result<
-  TransactionResult,
+  GetTransactionResultOutput,
   | NatError<'Client.GetTransactionResult.Exhausted'>
   | NatError<'Client.GetTransactionResult.Rpc.Transaction.NotCompleted'>
   | NatError<'Inner.Client.TransactionDetails.DeserializeResultData.Failed'>
@@ -63,16 +63,16 @@ export const handleRpcResult = (
 
   // #2: When the transaction execution is successful;
   if ('SuccessValue' in status && isRpcTransactionOutcomeSuccess(transactionOutcome))
-    return getTransactionSuccess(
+    return getExecutionSuccessCompletedFinal({
       transaction,
-      transactionOutcome,
+      transactionOutcomeSuccess: transactionOutcome,
       receipts,
       receiptsOutcome,
-      status.SuccessValue,
+      statusSuccessValue: status.SuccessValue,
       deserializeResultData,
       deserializeActionSummaries,
       deserializeExecutionSteps,
-    );
+    });
 
   // #3: When the transaction was converted into a receipt and included in the chunk
   // but failed during execution
@@ -81,15 +81,15 @@ export const handleRpcResult = (
     'ActionError' in status.Failure &&
     isRpcTransactionOutcomeSuccess(transactionOutcome)
   )
-    return getTransactionExecutionFailure(
+    return getExecutionFailureCompletedFinal({
       transaction,
-      transactionOutcome,
+      transactionOutcomeSuccess: transactionOutcome,
       receipts,
       receiptsOutcome,
-      status.Failure.ActionError,
+      actionError: status.Failure.ActionError,
       deserializeActionSummaries,
       deserializeExecutionSteps,
-    );
+    });
 
   // #4: When the invalid transaction was included in the chunk because
   // chunk provider's bug or intent;
@@ -100,12 +100,12 @@ export const handleRpcResult = (
     'InvalidTxError' in status.Failure &&
     isRpcTransactionOutcomeFailure(transactionOutcome)
   )
-    return getTransactionConversionFailure(
+    return getConversionFailureCompletedFinal({
       transaction,
-      transactionOutcome,
-      status.Failure.InvalidTxError,
+      transactionOutcomeFailure: transactionOutcome,
+      invalidTxError: status.Failure.InvalidTxError,
       deserializeActionSummaries,
-    );
+    });
 
   // For TS only - we checked all possible cases
   throw new Error(`Unexpected data: ${JSON.stringify(rpcResult.data)}`);

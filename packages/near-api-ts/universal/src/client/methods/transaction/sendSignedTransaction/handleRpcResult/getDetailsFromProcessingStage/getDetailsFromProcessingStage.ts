@@ -1,21 +1,25 @@
-import type { Base64String, Result, TransactionHash } from '../../../../../../types/_common/common';
+import type {
+  Base64String,
+  Result,
+  TransactionHash,
+} from '../../../../../../../types/_common/common';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
-} from '../../../../../../types/_common/transactionDetails/deserializers';
-import type { TransactionProcessingStage } from '../../../../../../types/_common/transactionDetails/processingStage';
-import type { ExecutionFailureErrorByStage } from '../../../../../../types/client/methods/transaction/_common/innerErrorRegistry';
-import type { TransactionDetailsFromStage } from '../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
-import type { NatError } from '../../../../../_common/natError';
+} from '../../../../../../../types/_common/transactionDetails/_common/_common/deserializers';
+import type { TransactionProcessingStage } from '../../../../../../../types/_common/transactionDetails/_common/processingStage';
+import type { ExecutionFailureErrorAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
+import type { TransactionDetailsFromStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
+import type { NatError } from '../../../../../../_common/natError';
 import type {
   RpcExecutedOptimisticTransactionDetails,
   RpcExecutedTransactionDetails,
   RpcFinalTransactionDetails,
   RpcIncludedFinalTransactionDetails,
   RpcIncludedTransactionDetails,
-} from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
-import { finalExecutionStatusToProcessingStage } from '../../../../../_common/transformers/fromNative/processingStage';
+} from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
+import { finalExecutionStatusToProcessingStage } from '../../../../../../_common/transformers/fromNative/processingStage';
 import { getCompletedFinalDetails } from './getCompletedFinalDetails';
 import { getConvertedFinalDetails } from './getConvertedFinalDetails';
 import { getConvertedOptimisticDetails } from './getConvertedOptimisticDetails';
@@ -26,9 +30,9 @@ type TransactionDetailsError =
   | NatError<'Inner.Client.TransactionDetails.DeserializeResultData.Failed'>
   | NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
   | NatError<'Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'>
-  | ExecutionFailureErrorByStage<'ExecutedOptimistic', 'Inner.Client.TransactionDetails'>
-  | ExecutionFailureErrorByStage<'ExecutedNearlyFinal', 'Inner.Client.TransactionDetails'>
-  | ExecutionFailureErrorByStage<'CompletedFinal', 'Inner.Client.TransactionDetails'>;
+  | ExecutionFailureErrorAtStage<'ExecutedOptimistic'>
+  | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal'>
+  | ExecutionFailureErrorAtStage<'CompletedFinal'>;
 
 type TransactionDetailsHandlerContext = {
   rpcResult:
@@ -76,9 +80,10 @@ const reachableStagesByStage: Record<TransactionProcessingStage, TransactionProc
 const buildDetails = (
   context: TransactionDetailsHandlerContext,
 ): Result<TransactionDetailsFromStage['ConvertedOptimistic'], TransactionDetailsError> => {
-  const { rpcResult } = context;
+  const { rpcResult, transactionHash } = context;
 
-  if (rpcResult.finalExecutionStatus === 'INCLUDED') return getConvertedOptimisticDetails(context);
+  if (rpcResult.finalExecutionStatus === 'INCLUDED')
+    return getConvertedOptimisticDetails(transactionHash);
 
   if (rpcResult.finalExecutionStatus === 'INCLUDED_FINAL')
     return getConvertedFinalDetails({ ...context, rpcDetails: rpcResult });

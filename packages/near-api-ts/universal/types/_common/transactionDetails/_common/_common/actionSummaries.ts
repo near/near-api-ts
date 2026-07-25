@@ -1,11 +1,11 @@
-import type { AllowedFunctions, GasBudget } from '../accountAccessKey';
-import type { AccountId, Base64String, ContractFunctionName, ContractWasmHash } from '../common';
-import type { PublicKey } from '../crypto';
-import type { NearGas } from '../nearGas';
-import type { NearToken } from '../nearToken';
-import type { CreateAccountAction } from '../transaction/actions/createAccount';
-import type { DeleteAccountAction } from '../transaction/actions/deleteAccount';
-import type { DeleteKeyAction } from '../transaction/actions/deleteKey';
+import type { AllowedFunctions, GasBudget } from '../../../accountAccessKey';
+import type { AccountId, Base64String, ContractFunctionName, ContractWasmHash } from '../../../common';
+import type { PublicKey } from '../../../crypto';
+import type { NearGas } from '../../../nearGas';
+import type { NearToken } from '../../../nearToken';
+import type { CreateAccountAction } from '../../../transaction/actions/createAccount';
+import type { DeleteAccountAction } from '../../../transaction/actions/deleteAccount';
+import type { DeleteKeyAction } from '../../../transaction/actions/deleteKey';
 
 export type CreateAccountActionSummary = CreateAccountAction;
 

@@ -1,10 +1,10 @@
 import type { ActionError } from '@near-js/jsonrpc-types';
 import { yoctoNear } from '../../../../../../../../../index';
 import type { PublicKey } from '../../../../../../../../../types/_common/crypto';
-import type { ExecutionFailure } from '../../../../../../../../../types/_common/transactionDetails/processingSteps/executionSteps/executionFailure';
+import type { ExecutionFailureError } from '../../../../../../../../../types/_common/transactionDetails/_common/_common/executionFailureError';
 import { transformFunctionCallError } from './transformFunctionCallError/transformFunctionCallError';
 
-export const getExecutionFailure = (actionError: ActionError): ExecutionFailure => {
+export const getExecutionFailureError = (actionError: ActionError): ExecutionFailureError => {
   if (typeof actionError.kind === 'object') {
     const { kind } = actionError;
 

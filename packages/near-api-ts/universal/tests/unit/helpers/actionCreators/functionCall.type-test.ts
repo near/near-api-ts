@@ -1,5 +1,5 @@
-import { functionCall, safeFunctionCall, teraGas } from '../../../../index';
 import type { FunctionCallAction } from '../../../../index';
+import { functionCall, safeFunctionCall, teraGas } from '../../../../index';
 
 type Equal<A, B> =
   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;
@@ -82,11 +82,11 @@ functionCall({ functionName, gasLimit, functionArgs: { bad: 1n } });
 // @ts-expect-error gasLimit is required
 functionCall({ functionName });
 
-// @ts-expect-error serializeArgs must return Uint8Array
 functionCall({
   functionName,
   gasLimit,
   options: {
+    // @ts-expect-error serializeArgs must return Uint8Array
     serializeArgs: () => 1,
   },
 });

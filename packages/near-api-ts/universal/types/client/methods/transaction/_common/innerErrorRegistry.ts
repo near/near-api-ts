@@ -1,53 +1,7 @@
-import type { NatError } from '../../../../../src/_common/natError';
 import type { Base64String, CryptoHash } from '../../../../_common/common';
-import type { RawActionSummary } from '../../../../_common/transactionDetails/actionSummaries';
-import type {
-  MaybeBaseDeserializeTransactionActionSummariesFn,
-  MaybeBaseDeserializeTransactionExecutionStepsFn,
-} from '../../../../_common/transactionDetails/deserializers';
-import type { ReachableProcessingStageFromStage } from '../../../../_common/transactionDetails/processingStage';
-import type { ConversionStepSuccess } from '../../../../_common/transactionDetails/processingSteps/conversionStep/conversionStep';
-import type {
-  ExecutionFailure,
-  ExecutionFailureKind,
-} from '../../../../_common/transactionDetails/processingSteps/executionSteps/executionFailure';
-import type {
-  ExecutionSteps,
-  RawExecutionStep,
-} from '../../../../_common/transactionDetails/processingSteps/executionSteps/executionStep';
-import type { RefundStep } from '../../../../_common/transactionDetails/processingSteps/refundStep';
+import type { RawActionSummary } from '../../../../_common/transactionDetails/_common/_common/actionSummaries';
+import type { RawExecutionStep } from '../../../../_common/transactionDetails/_common/executionStep';
 import type { ExhaustedErrorContext } from '../../../transport/sendRequest';
-
-type RefundSteps<S extends ReachableProcessingStageFromStage['ExecutedOptimistic']> =
-  S extends 'CompletedFinal' ? { refundSteps: RefundStep[] } : unknown;
-
-export type ExecutionFailureContext<
-  S extends ReachableProcessingStageFromStage['ExecutedOptimistic'],
-  EK extends ExecutionFailureKind,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-> = {
-  signedTransactionBorsh64: Base64String;
-  transactionDetails: {
-    processingStage: S;
-    transactionHash: CryptoHash;
-    error: ExecutionFailure<EK>;
-    processingSteps: {
-      conversionStep: ConversionStepSuccess<ASF>;
-      executionSteps: ExecutionSteps<ESF>;
-    } & RefundSteps<S>;
-  };
-};
-
-export type ExecutionFailureErrorByStage<
-  S extends ReachableProcessingStageFromStage['ExecutedOptimistic'],
-  P extends 'Client.SendSignedTransaction' | 'Inner.Client.TransactionDetails',
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-  EK extends ExecutionFailureKind = ExecutionFailureKind,
-> = EK extends EK // turn on distributive conditional type
-  ? NatError<`${P}.Rpc.${EK}`, ExecutionFailureContext<S, EK, ASF, ESF>>
-  : never;
 
 // TODO figure out if we will reuse it at all - if not - remove
 interface ExecutionFailureInnerErrorRegistry {
