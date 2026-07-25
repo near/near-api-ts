@@ -3,22 +3,23 @@ import type {
   ExecutionFailureError,
   ExecutionFailureKind,
 } from '../../types/_common/transactionDetails/_common/_common/executionFailureError';
-import type { TransactionResult } from '../../types/_common/transactionDetails/_common/transactionResult';
+import type { ExecutionFailure } from '../../types/_common/transactionDetails/executionFailure';
+import type { GetTransactionResultOutput } from '../../types/client/methods/transaction/getTransactionResult';
 
 /**
  * Asserts that a getTransactionResult() result failed during execution with the given
- * ExecutionError kind, narrowing the result union to the ExecutionError branch so callers can
- * read `txResult.result.error.context` with the kind-specific type.
+ * ExecutionFailure kind, narrowing the result union to the ExecutionFailure branch so callers can
+ * read `txResult.error.context` with the kind-specific type.
  */
 export function assertTxResultExecutionErrKind<K extends ExecutionFailureKind>(
-  txResult: TransactionResult,
+  txResult: GetTransactionResultOutput,
   kind: K,
-): asserts txResult is TransactionResult & {
-  result: { status: 'ExecutionError'; error: ExecutionFailureError<K> };
+): asserts txResult is ExecutionFailure['CompletedFinal'] & {
+  error: ExecutionFailureError<K>;
 } {
-  expect(txResult.status).toBe('ExecutionError');
-  if (txResult.status !== 'ExecutionError') {
-    throw new Error(`Expected ExecutionError result, got "${txResult.status}"`);
+  expect(txResult.status).toBe('ExecutionFailure');
+  if (txResult.status !== 'ExecutionFailure') {
+    throw new Error(`Expected ExecutionFailure result, got "${txResult.status}"`);
   }
   expect(txResult.error.kind).toBe(kind);
 }

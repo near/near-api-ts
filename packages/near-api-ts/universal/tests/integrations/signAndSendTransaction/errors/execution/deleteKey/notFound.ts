@@ -40,7 +40,7 @@ export const notFound = (context: TestContext) => async () => {
   });
 
   assertTxResultExecutionErrKind(txResult, 'Action.DeleteKey.NotFound');
-  expect(txResult.result.error.context).toStrictEqual({
+  expect(txResult.error.context).toStrictEqual({
     accountId: 'nat',
     publicKey: missingPublicKey,
   });

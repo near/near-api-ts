@@ -50,6 +50,6 @@ export const executorNotEnoughBalance = (context: TestContext) => async () => {
   });
 
   assertTxResultExecutionErrKind(txResult, 'Executor.NotEnoughBalance');
-  expect(txResult.result.error.context.executorAccountId).toBe('new.nat');
-  expect(txResult.result.error.context.missingAmount.near).toBe('0.73734');
+  expect(txResult.error.context.executorAccountId).toBe('new.nat');
+  expect(txResult.error.context.missingAmount.near).toBe('0.73734');
 };

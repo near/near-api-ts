@@ -34,7 +34,7 @@ export const implicitAccount = (context: TestContext) => async () => {
   });
   assertTxResultExecutionErrKind(txResult, 'Action.CreateAccount.ImplicitAccount');
 
-  expect(txResult.result.error.context).toStrictEqual({
+  expect(txResult.error.context).toStrictEqual({
     newAccountId: '8a3a2af86f8b2a0d013761565dc6ee86af153f6fa4c7db4bd9a52f63ff072d4c',
   });
 };

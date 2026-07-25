@@ -40,7 +40,7 @@ export const foreignNamespace = (context: TestContext) => async () => {
   log(txResult)
   assertTxResultExecutionErrKind(txResult, 'Action.CreateAccount.ForeignNamespace');
 
-  expect(txResult.result.error.context).toStrictEqual({
+  expect(txResult.error.context).toStrictEqual({
     newAccountId: 'subaccount.alice',
     creatorAccountId: 'nat',
   });

@@ -39,7 +39,7 @@ export const alreadyExists = (context: TestContext) => async () => {
   });
 
   assertTxResultExecutionErrKind(txResult, 'Action.AddKey.AlreadyExists');
-  expect(txResult.result.error.context).toStrictEqual({
+  expect(txResult.error.context).toStrictEqual({
     accountId: 'nat',
     publicKey: DEFAULT_PUBLIC_KEY,
   });

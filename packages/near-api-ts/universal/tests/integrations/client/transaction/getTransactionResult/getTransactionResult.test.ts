@@ -130,7 +130,7 @@ describe('CallContractReadFunction', () => {
     });
     log(tx);
 
-    if (tx.status === 'Success') {
+    if (tx.status === 'ExecutionSuccess') {
       const d = tx.data;
       const as = tx.processingSteps.conversionStep.transactionSummary.actionSummaries;
       const es = tx.processingSteps.executionSteps;

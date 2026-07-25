@@ -41,7 +41,7 @@ export const belowThreshold = (context: TestContext) => async () => {
   });
 
   assertTxResultExecutionErrKind(txResult, 'Action.Stake.BelowThreshold');
-  expect(txResult.result.error.context).toMatchObject({
+  expect(txResult.error.context).toMatchObject({
     accountId: 'nat',
     proposedStake: near('1'),
   });

@@ -41,7 +41,7 @@ export const notEnoughBalance = (context: TestContext) => async () => {
   });
 
   assertTxResultExecutionErrKind(txResult, 'Action.Stake.NotEnoughBalance');
-  expect(txResult.result.error.context).toMatchObject({
+  expect(txResult.error.context).toMatchObject({
     accountId: 'nat',
     proposedStake: near('100000000'),
   });

@@ -41,5 +41,5 @@ export const alreadyExists = (context: TestContext) => async () => {
   });
 
   assertTxResultExecutionErrKind(txResult, 'Action.CreateAccount.AlreadyExists');
-  expect(txResult.result.error.context).toStrictEqual({ newAccountId: 'nat' });
+  expect(txResult.error.context).toStrictEqual({ newAccountId: 'nat' });
 };

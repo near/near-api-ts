@@ -51,5 +51,5 @@ export const staking = (context: TestContext) => async () => {
   });
 
   assertTxResultExecutionErrKind(txResult, 'Action.DeleteAccount.Staking');
-  expect(txResult.result.error.context.accountId).toBe('nat');
+  expect(txResult.error.context.accountId).toBe('nat');
 };

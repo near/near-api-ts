@@ -34,6 +34,6 @@ export const actionForbidden = (context: TestContext) => async () => {
   });
 
   assertTxResultExecutionErrKind(txResult, 'Action.Forbidden');
-  expect(txResult.result.error.context.stepCreatorAccountId).toBe('nat');
-  expect(txResult.result.error.context.executorAccountId).toBe('alice');
+  expect(txResult.error.context.stepCreatorAccountId).toBe('nat');
+  expect(txResult.error.context.executorAccountId).toBe('alice');
 };

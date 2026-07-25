@@ -53,5 +53,5 @@ export const largeState = (context: TestContext) => async () => {
   });
 
   assertTxResultExecutionErrKind(txResult, 'Action.DeleteAccount.LargeState');
-  expect(txResult.result.error.context.accountId).toBe('alice');
+  expect(txResult.error.context.accountId).toBe('alice');
 };

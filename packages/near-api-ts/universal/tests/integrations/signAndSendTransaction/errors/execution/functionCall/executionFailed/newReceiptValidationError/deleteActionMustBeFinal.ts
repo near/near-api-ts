@@ -82,7 +82,7 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
 
   assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.Execution.Failed');
 
-  expect(txResult.result.error.context.cause).toBe(
+  expect(txResult.error.context.cause).toBe(
     '{"NewReceiptValidationError":{"ActionsValidation":"DeleteActionMustBeFinal"}}',
   );
 };

@@ -33,5 +33,5 @@ export const executorNotFound = (context: TestContext) => async () => {
     transactionHash: signedTransaction.transactionHash,
   });
   assertTxResultExecutionErrKind(txResult, 'Executor.NotFound');
-  expect(txResult.result.error.context.executorAccountId).toBe('not-exist');
+  expect(txResult.error.context.executorAccountId).toBe('not-exist');
 };

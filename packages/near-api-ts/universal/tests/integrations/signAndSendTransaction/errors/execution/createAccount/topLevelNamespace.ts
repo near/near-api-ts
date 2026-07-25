@@ -38,7 +38,7 @@ export const topLevelNamespace = (context: TestContext) => async () => {
   });
   assertTxResultExecutionErrKind(txResult, 'Action.CreateAccount.TopLevelNamespace');
 
-  expect(txResult.result.error.context).toStrictEqual({
+  expect(txResult.error.context).toStrictEqual({
     newAccountId: 'top-level-account',
     creatorAccountId: 'nat',
     registrarAccountId: 'registrar',

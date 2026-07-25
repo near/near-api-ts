@@ -51,5 +51,5 @@ export const executionError = (context: TestContext) => async () => {
   log(txResult);
 
   assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.Execution.Failed');
-  expect(txResult.result.error.context.cause).toBe('Exceeded the prepaid gas.');
+  expect(txResult.error.context.cause).toBe('Exceeded the prepaid gas.');
 };
