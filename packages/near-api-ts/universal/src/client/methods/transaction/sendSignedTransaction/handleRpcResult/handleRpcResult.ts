@@ -23,7 +23,12 @@ import {
   RpcIncludedTransactionDetailsZodSchema,
 } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
 import { repackError } from '../../../../../_common/utils/repackError';
-import { getDetailsFromProcessingStage } from './getDetailsFromProcessingStage/getDetailsFromProcessingStage';
+import { result } from '../../../../../_common/utils/result';
+import {
+  getDetailsFromProcessingStage,
+  innerErrorPrefix,
+  isInnerTransactionDetailsError,
+} from './getDetailsFromProcessingStage/getDetailsFromProcessingStage';
 
 type RpcResult =
   | RpcIncludedTransactionDetails
@@ -80,11 +85,15 @@ export const handleRpcResult = (
 
   if (details.ok) return details;
 
-  return details.error.kind.startsWith('Inner.Client.TransactionDetails')
+  // Narrowing `details.error` doesn't narrow `details` itself - `ResultErr<A | B>` is not
+  // `ResultErr<A> | ResultErr<B>` - so the already public errors are rewrapped as is
+  const { error } = details;
+
+  return isInnerTransactionDetailsError(error)
     ? repackError({
-        error: details.error,
-        originPrefix: 'Inner.Client.TransactionDetails',
+        error,
+        originPrefix: innerErrorPrefix,
         targetPrefix: 'Client.SendSignedTransaction',
       })
-    : details;
+    : result.err(error);
 };

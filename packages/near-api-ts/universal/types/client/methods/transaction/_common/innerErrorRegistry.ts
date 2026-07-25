@@ -1,4 +1,4 @@
-import type { Base64String, CryptoHash } from '../../../../_common/common';
+import type { Base64String } from '../../../../_common/common';
 import type { RawActionSummary } from '../../../../_common/transactionDetails/_common/_common/actionSummaries';
 import type { RawExecutionStep } from '../../../../_common/transactionDetails/_common/executionStep';
 import type { ExhaustedErrorContext } from '../../../transport/sendRequest';

@@ -26,13 +26,29 @@ import { getConvertedOptimisticDetails } from './getConvertedOptimisticDetails';
 import { getExecutedNearlyFinalDetails } from './getExecutedNearlyFinalDetails';
 import { getExecutedOptimisticDetails } from './getExecutedOptimisticDetails';
 
-type TransactionDetailsError =
+export const innerErrorPrefix = 'Inner.Client.TransactionDetails';
+
+export type TransactionDetailsError =
   | NatError<'Inner.Client.TransactionDetails.DeserializeResultData.Failed'>
   | NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
   | NatError<'Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'>
   | ExecutionFailureErrorAtStage<'ExecutedOptimistic'>
   | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal'>
   | ExecutionFailureErrorAtStage<'CompletedFinal'>;
+
+type InnerTransactionDetailsError = Extract<
+  TransactionDetailsError,
+  { kind: `${typeof innerErrorPrefix}.${string}` }
+>;
+
+/**
+ * The error union mixes inner errors (to be repacked by the calling method) with the already
+ * public execution failures. `startsWith` alone doesn't narrow a union of literal kinds, so the
+ * split lives here, next to the union it splits.
+ */
+export const isInnerTransactionDetailsError = (
+  error: TransactionDetailsError,
+): error is InnerTransactionDetailsError => error.kind.startsWith(innerErrorPrefix);
 
 type TransactionDetailsHandlerContext = {
   rpcResult:
