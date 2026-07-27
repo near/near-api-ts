@@ -34,9 +34,9 @@ const InvalidTransactionErrorZodSchema = createHandlerErrorZodSchema({
 type InvalidTransactionError = z.infer<typeof InvalidTransactionErrorZodSchema>;
 
 const RpcErrorZodSchema = z.union([
-  RequestValidationErrorZodSchema,
   TimeoutErrorZodSchema,
   InvalidTransactionErrorZodSchema,
+  RequestValidationErrorZodSchema,
   InternalErrorZodSchema,
 ]);
 type RpcError = z.infer<typeof RpcErrorZodSchema>;

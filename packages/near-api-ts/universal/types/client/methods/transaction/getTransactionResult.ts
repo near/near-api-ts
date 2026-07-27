@@ -51,6 +51,7 @@ type Options<
 > = [RDF, ASF, ESF] extends [undefined, undefined, undefined]
   ? {
       options?: {
+        transportPolicy?: PartialTransportPolicy;
         signal?: AbortSignal;
         deserializeResultData?: never;
         deserializeActionSummaries?: never;
@@ -58,7 +59,10 @@ type Options<
       };
     }
   : {
-      options: { signal?: AbortSignal } & KeyIf<'deserializeResultData', RDF> &
+      options: {
+        transportPolicy?: PartialTransportPolicy;
+        signal?: AbortSignal;
+      } & KeyIf<'deserializeResultData', RDF> &
         KeyIf<'deserializeActionSummaries', ASF> &
         KeyIf<'deserializeExecutionSteps', ESF>;
     };
@@ -69,9 +73,6 @@ export type GetTransactionResultArgs<
   ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
 > = {
   transactionHash: CryptoHash;
-  policies?: {
-    transport?: PartialTransportPolicy;
-  };
 } & Options<RDF, ASF, ESF>;
 
 export type GetTransactionResultOutput<

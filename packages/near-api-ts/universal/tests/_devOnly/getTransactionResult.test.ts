@@ -27,7 +27,7 @@ it('getTransactionResult', async () => {
     // transactionHash: 'DSnehcspPKHuX44brwy4gWDhJYBaKwcP21Hq4qqjncE1', // wrap.near - ft_transfer_call - not SIR
     transactionHash: '9usBJmQ3J1e2XTULjjkuyXPrsyRmp3CxDDVtVMd4HWgF', // old HostError::GuestPanic
     // transactionHash: '4NTSNVrJ2YSRKTvywbPd9iHd4EMLjES1CgsRay7LgErY',
-    policies: { transport: { rpcTypePreferences: ['Archival', 'Regular'] } },
+    options: { transportPolicy: { rpcTypePreferences: ['Archival', 'Regular'] } },
   });
 
   log(mainnetTxResult);

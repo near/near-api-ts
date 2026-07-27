@@ -4,18 +4,18 @@ import type {
   SafeGetTransactionResult,
 } from '../../../../../types/client/methods/transaction/getTransactionResult';
 import { resultNatError } from '../../../../_common/natError';
-import { PoliciesZodSchema } from '../../../../_common/schemas/zod/client';
 import { CryptoHashZodSchema } from '../../../../_common/schemas/zod/common/cryptoHash';
 import { repackError } from '../../../../_common/utils/repackError';
 import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
+import { PartialTransportPolicyZodSchema } from '../../../transport/transportPolicy';
 import { handleRpcError } from './handleRpcError';
 import { handleRpcResult } from './handleRpcResult';
 
 const GetTransactionResultArgsZodShema = z.object({
   transactionHash: CryptoHashZodSchema,
-  policies: PoliciesZodSchema,
   options: z.optional(
     z.object({
+      transportPolicy: PartialTransportPolicyZodSchema,
       signal: z.optional(z.instanceof(AbortSignal)),
       deserializeResultData: z.optional(z.instanceof(Function)),
       deserializeActionSummaries: z.optional(z.instanceof(Function)),
@@ -40,7 +40,7 @@ export const createSafeGetTransactionResult: CreateSafeGetTransactionResult = (c
         sender_account_id: 'any', // We expect that RPC tracks all shards, so signerAccountId doesn't matter
         wait_until: 'NONE',
       },
-      transportPolicy: args.policies?.transport,
+      transportPolicy: args.options?.transportPolicy,
       signal: args.options?.signal,
     });
 

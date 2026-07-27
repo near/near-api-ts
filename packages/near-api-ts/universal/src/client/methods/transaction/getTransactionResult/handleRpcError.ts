@@ -1,10 +1,31 @@
-import { ErrorWrapperFor_RpcTransactionErrorSchema } from '@near-js/jsonrpc-types';
+import * as z from 'zod/mini';
 import { createNatError, resultNatError } from '../../../../_common/natError';
-import type { BaseRpcResponse } from '../../../../_common/schemas/zod/rpc/rpcResponse';
+import { CryptoHashZodSchema } from '../../../../_common/schemas/zod/common/cryptoHash';
+import {
+  type BaseRpcResponse,
+  createHandlerErrorZodSchema,
+  InternalErrorZodSchema,
+  RequestValidationErrorZodSchema,
+} from '../../../../_common/schemas/zod/rpc/rpcResponse';
+
+const UnknownTransactionErrorZodSchema = createHandlerErrorZodSchema({
+  cause: z.object({
+    name: z.literal('UNKNOWN_TRANSACTION'),
+    info: z.object({
+      requestedTransactionHash: CryptoHashZodSchema,
+    }),
+  }),
+  data: z.optional(z.unknown()),
+});
+
+const RpcErrorZodSchema = z.union([
+  UnknownTransactionErrorZodSchema,
+  RequestValidationErrorZodSchema,
+  InternalErrorZodSchema,
+]);
 
 export const handleRpcError = (rpcResponse: BaseRpcResponse) => {
-  // TODO replace with own schema - remove dead errors
-  const rpcError = ErrorWrapperFor_RpcTransactionErrorSchema().safeParse(rpcResponse.error);
+  const rpcError = RpcErrorZodSchema.safeParse(rpcResponse.error);
 
   if (!rpcError.success)
     return resultNatError('Client.GetTransactionResult.Exhausted', {
@@ -19,11 +40,9 @@ export const handleRpcError = (rpcResponse: BaseRpcResponse) => {
   if (name === 'HANDLER_ERROR') {
     if (cause.name === 'UNKNOWN_TRANSACTION')
       return resultNatError('Client.GetTransactionResult.Rpc.Transaction.NotFound', {
-        transactionHash: cause.info.requestedTransactionHash,
+        transactionHash: cause.info.requestedTransactionHash.cryptoHash,
       });
   }
 
-  return resultNatError('Client.GetTransactionResult.Internal', {
-    cause: rpcResponse,
-  });
+  return resultNatError('Client.GetTransactionResult.Internal', { cause: rpcResponse });
 };
