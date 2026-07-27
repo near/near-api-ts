@@ -66,6 +66,7 @@ export type TaskQueueContext = {
 };
 
 // ExecuteTransaction
+// TODO Add `Inner` prefix
 type ExecuteTransactionTaskError =
   | NatError<'MemorySigner.KeyPool.AccessKeys.NotLoaded'>
   | NatError<'MemorySigner.KeyPool.Empty'>

@@ -8,7 +8,7 @@ export const hostErrorGuestPanic = () => async () => {
 
   const txResult = await mainnetClient.getTransactionResult({
     transactionHash: '9usBJmQ3J1e2XTULjjkuyXPrsyRmp3CxDDVtVMd4HWgF', // has old HostError::GuestPanic
-    policies: { transport: { rpcTypePreferences: ['Archival', 'Regular'] } },
+    options: { transportPolicy: { rpcTypePreferences: ['Archival', 'Regular'] } },
   });
   log(txResult);
 

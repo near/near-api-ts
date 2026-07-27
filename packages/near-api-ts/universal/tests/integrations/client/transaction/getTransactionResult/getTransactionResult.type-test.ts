@@ -125,7 +125,7 @@ const a3 = client.getTransactionResult({
 type _A3Data = Assert<Equal<ExecutionSuccessData<typeof a3>, unknown>>;
 type _A3Summaries = Assert<Equal<Summaries<typeof a3>, ParsedActionSummary[]>>;
 
-const a4 = client.getTransactionResult({ transactionHash, policies: {} });
+const a4 = client.getTransactionResult({ transactionHash, options: {} });
 type _A4Data = Assert<Equal<ExecutionSuccessData<typeof a4>, unknown>>;
 type _A4Summaries = Assert<Equal<Summaries<typeof a4>, ParsedActionSummary[]>>;
 

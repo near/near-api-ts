@@ -1,11 +1,10 @@
 import type { NatError } from '../../../../src/_common/natError';
 import type { Result } from '../../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
-import type { TransactionErrorContext } from '../../../_common/transaction/rpcTransactionErrorContext';
 import type { TransactionIntent } from '../../../_common/transaction/transaction';
-import type {
-  SendSignedTransactionOutput
-} from '../../../client/methods/transaction/sendSignedTransaction/output';
+import type { ConversionFailureError } from '../../../_common/transactionDetails/_common/_common/conversionFailureError';
+import type { ExecutionFailureError } from '../../../_common/transactionDetails/_common/_common/executionFailureError';
+import type { SendSignedTransactionOutput } from '../../../client/methods/transaction/sendSignedTransaction/output';
 import type {
   AbortedErrorContext,
   ExhaustedErrorContext,
@@ -26,16 +25,15 @@ export interface ExecuteTransactionPublicErrorRegistry {
   'MemorySigner.ExecuteTransaction.Timeout': TimeoutErrorContext;
   'MemorySigner.ExecuteTransaction.Aborted': AbortedErrorContext;
   'MemorySigner.ExecuteTransaction.Exhausted': ExhaustedErrorContext;
-  //
-  'MemorySigner.ExecuteTransaction.Rpc.Transaction.Signer.Balance.TooLow': TransactionErrorContext['Signer']['Balance']['TooLow'];
-  'MemorySigner.ExecuteTransaction.Rpc.Transaction.Receiver.NotFound': TransactionErrorContext['Receiver']['NotFound'];
-  'MemorySigner.ExecuteTransaction.Rpc.Transaction.Timeout': TransactionErrorContext['Timeout'];
-  //
-  'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist': TransactionErrorContext['Action']['CreateAccount']['AlreadyExist'];
-  'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.Stake.BelowThreshold': TransactionErrorContext['Action']['Stake']['BelowThreshold'];
-  'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.Stake.Balance.TooLow': TransactionErrorContext['Action']['Stake']['Balance']['TooLow'];
-  'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.Stake.NotFound': TransactionErrorContext['Action']['Stake']['NotFound'];
-  //
+
+  'MemorySigner.ExecuteTransaction.Rpc.Timeout': null;
+  'MemorySigner.ExecuteTransaction.Rpc.Signer.NotEnoughBalance': ConversionFailureError<'Signer.NotEnoughBalance'>['context'];
+
+  'MemorySigner.ExecuteTransaction.Rpc.Action.CreateAccount.AlreadyExists': ExecutionFailureError<'Action.CreateAccount.AlreadyExists'>['context'];
+  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.BelowThreshold': ExecutionFailureError<'Action.Stake.BelowThreshold'>['context'];
+  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.NotEnoughBalance': ExecutionFailureError<'Action.Stake.NotEnoughBalance'>['context'];
+  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.NotFound': ExecutionFailureError<'Action.Stake.NotFound'>['context'];
+
   'MemorySigner.ExecuteTransaction.Internal': InternalErrorContext;
 }
 
@@ -55,23 +53,22 @@ type ExecuteTransactionError =
   | NatError<'MemorySigner.ExecuteTransaction.Aborted'>
   | NatError<'MemorySigner.ExecuteTransaction.Exhausted'>
   // RPC errors
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Transaction.Signer.Balance.TooLow'>
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Transaction.Receiver.NotFound'>
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Transaction.Timeout'>
-  // Rpc transaction action errors
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist'>
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.Stake.BelowThreshold'>
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.Stake.Balance.TooLow'>
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.Stake.NotFound'>
+  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Signer.NotEnoughBalance'>
+  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Timeout'>
+  // // Rpc transaction action errors
+  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.CreateAccount.AlreadyExists'>
+  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.BelowThreshold'>
+  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.NotEnoughBalance'>
+  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.NotFound'>
   // Stub
   | NatError<'MemorySigner.ExecuteTransaction.Internal'>;
 
 export type SafeExecuteTransaction = (
   args: ExecuteTransactionArgs,
-) => Promise<Result<SendSignedTransactionOutput<any, any, any, any>, ExecuteTransactionError>>;
+) => Promise<Result<SendSignedTransactionOutput, ExecuteTransactionError>>;
 
 export type ExecuteTransaction = (
   args: ExecuteTransactionArgs,
-) => Promise<SendSignedTransactionOutput<any, any, any, any>>;
+) => Promise<SendSignedTransactionOutput>;
 
 export type CreateSafeExecuteTransaction = (context: MemorySignerContext) => SafeExecuteTransaction;

@@ -69,6 +69,6 @@ describe('executeTransaction › Transaction.Signer.Balance.TooLow', () => {
       },
     });
 
-    assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Signer.Balance.TooLow');
+    assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.Signer.NotEnoughBalance');
   });
 });

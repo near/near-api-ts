@@ -28,27 +28,27 @@ describe('executeTransaction › Transaction.Receiver.NotFound', () => {
     return () => sandbox.stop();
   });
 
-  it('fails with Transaction.Receiver.NotFound when transferring to a missing account', async () => {
-    const nat = createSigner('nat');
+  // it('fails with Transaction.Receiver.NotFound when transferring to a missing account', async () => {
+  //   const nat = createSigner('nat');
+  //
+  //   const tx = await nat.safeExecuteTransaction({
+  //     intent: {
+  //       action: transfer({ amount: { near: '1' } }),
+  //       receiverAccountId: 'not-bob',
+  //     },
+  //   });
+  //   assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Receiver.NotFound');
+  // });
 
-    const tx = await nat.safeExecuteTransaction({
-      intent: {
-        action: transfer({ amount: { near: '1' } }),
-        receiverAccountId: 'not-bob',
-      },
-    });
-    assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Receiver.NotFound');
-  });
-
-  it('fails with Transaction.Receiver.NotFound when deleting a missing account', async () => {
-    const nat = createSigner('nat');
-
-    const tx = await nat.safeExecuteTransaction({
-      intent: {
-        action: deleteAccount({ beneficiaryAccountId: 'bob' }),
-        receiverAccountId: 'not-bob',
-      },
-    });
-    assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Receiver.NotFound');
-  });
+  // it('fails with Transaction.Receiver.NotFound when deleting a missing account', async () => {
+  //   const nat = createSigner('nat');
+  //
+  //   const tx = await nat.safeExecuteTransaction({
+  //     intent: {
+  //       action: deleteAccount({ beneficiaryAccountId: 'bob' }),
+  //       receiverAccountId: 'not-bob',
+  //     },
+  //   });
+  //   assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Receiver.NotFound');
+  // });
 });

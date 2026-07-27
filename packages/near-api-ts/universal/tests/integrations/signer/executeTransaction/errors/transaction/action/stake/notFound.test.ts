@@ -40,6 +40,6 @@ describe('executeTransaction › Transaction.Action.Stake.NotFound', () => {
       },
     });
 
-    assertNatErrKind(res, 'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.Stake.NotFound');
+    assertNatErrKind(res, 'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.NotFound');
   });
 });

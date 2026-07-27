@@ -54,13 +54,12 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (conte
           'Client.SendSignedTransaction.Aborted',
           'Client.SendSignedTransaction.Timeout',
           'Client.SendSignedTransaction.Exhausted',
-          'Client.SendSignedTransaction.Rpc.Transaction.Timeout',
-          'Client.SendSignedTransaction.Rpc.Transaction.Receiver.NotFound',
-          'Client.SendSignedTransaction.Rpc.Transaction.Signer.Balance.TooLow',
-          'Client.SendSignedTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist',
-          'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.BelowThreshold',
-          'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.Balance.TooLow',
-          'Client.SendSignedTransaction.Rpc.Transaction.Action.Stake.NotFound',
+          'Client.SendSignedTransaction.Rpc.Timeout',
+          'Client.SendSignedTransaction.Rpc.Signer.NotEnoughBalance',
+          'Client.SendSignedTransaction.Rpc.Action.CreateAccount.AlreadyExists',
+          'Client.SendSignedTransaction.Rpc.Action.Stake.BelowThreshold',
+          'Client.SendSignedTransaction.Rpc.Action.Stake.NotEnoughBalance',
+          'Client.SendSignedTransaction.Rpc.Action.Stake.NotFound',
         ])
       ) {
         return repackError({

@@ -22,7 +22,7 @@ describe('executeTransaction › Transaction.Action.Stake.Balance.TooLow', () =>
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyService = await createMemoryKeyService({
+    keyService = createMemoryKeyService({
       keySource: { privateKey: DEFAULT_PRIVATE_KEY },
     });
     createSigner = createMemorySignerFactory({ client, keyService });
@@ -30,7 +30,7 @@ describe('executeTransaction › Transaction.Action.Stake.Balance.TooLow', () =>
   });
 
   it('fails with Transaction.Action.Stake.Balance.TooLow when staking more than the balance', async () => {
-    const nat = await createSigner('nat');
+    const nat = createSigner('nat');
 
     const res = await nat.safeExecuteTransaction({
       intent: {
@@ -44,7 +44,7 @@ describe('executeTransaction › Transaction.Action.Stake.Balance.TooLow', () =>
 
     assertNatErrKind(
       res,
-      'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.Stake.Balance.TooLow',
+      'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.NotEnoughBalance',
     );
   });
 });

@@ -30,7 +30,7 @@ describe('executeTransaction › Transaction.Action.CreateAccount.AlreadyExist',
 
   it('fails with Transaction.Action.Action.CreateAccount.AlreadyExist when creating an existing account', async () => {
     const errorKind =
-      'MemorySigner.ExecuteTransaction.Rpc.Transaction.Action.CreateAccount.AlreadyExist';
+      'MemorySigner.ExecuteTransaction.Rpc.Action.CreateAccount.AlreadyExists';
     const nat = createSigner('nat');
 
     const tx = await nat.safeExecuteTransaction({
