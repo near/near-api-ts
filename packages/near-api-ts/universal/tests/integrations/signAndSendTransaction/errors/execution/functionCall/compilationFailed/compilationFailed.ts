@@ -6,8 +6,8 @@ import {
   functionCall,
   transfer,
 } from '../../../../../../../index';
-import { safeSleep } from '../../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
+import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from '../functionCall.test';
 
@@ -41,11 +41,16 @@ export const compilationFailed = (context: TestContext) => async () => {
     },
   });
 
-  await client.safeSendSignedTransaction({ signedTransaction });
-  await safeSleep(500);
+  const tx = await client.safeSendSignedTransaction({
+    signedTransaction,
+    minimalProcessingStage: 'CompletedFinal',
+  });
+
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.FunctionCall.Compilation.Failed');
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
+
   assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.Compilation.Failed');
 };

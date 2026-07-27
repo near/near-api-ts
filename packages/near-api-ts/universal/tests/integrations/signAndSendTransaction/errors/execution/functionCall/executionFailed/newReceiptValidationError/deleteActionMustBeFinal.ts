@@ -10,10 +10,9 @@ import {
   signTransaction,
   transfer,
 } from '../../../../../../../../index';
-import { safeSleep } from '../../../../../../../../src/_common/utils/sleep';
 import { createAccount } from '../../../../../../../../src/helpers/actionCreators/createAccount';
+import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../../../utils/assertTxResultExecutionErrKind';
-import { log } from '../../../../../../../utils/common';
 import type { TestContext } from '../../functionCall.test';
 
 export const deleteActionMustBeFinal = (context: TestContext) => async () => {
@@ -51,8 +50,10 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
     },
   });
 
-  await client.safeSendSignedTransaction({ signedTransaction: signedTransaction1 });
-  await safeSleep(500);
+  await client.safeSendSignedTransaction({
+    signedTransaction: signedTransaction1,
+    minimalProcessingStage: 'CompletedFinal',
+  });
 
   // #2 Call contract function for error
   const signedTransaction2 = await signTransaction({
@@ -72,13 +73,16 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
     },
   });
 
-  await client.safeSendSignedTransaction({ signedTransaction: signedTransaction2 });
-  await safeSleep(500);
+  const tx = await client.safeSendSignedTransaction({
+    signedTransaction: signedTransaction2,
+    minimalProcessingStage: 'CompletedFinal',
+  });
+
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.FunctionCall.Execution.Failed');
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction2.transactionHash,
   });
-  log(txResult);
 
   assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.Execution.Failed');
 

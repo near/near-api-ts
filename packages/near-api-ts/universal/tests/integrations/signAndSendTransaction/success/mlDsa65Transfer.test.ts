@@ -59,9 +59,7 @@ describe('ml-dsa-65 Transaction success', () => {
     await expect(
       client.sendSignedTransaction({ signedTransaction: createTx }),
     ).resolves.toMatchObject({
-      rawRpcResult: {
-        status: { SuccessValue: '' },
-      },
+      status: 'ExecutionSuccess',
     });
 
     // Tx 2 — signed by the ml-dsa-65 key itself: proves on-chain sign/verify.
@@ -86,9 +84,7 @@ describe('ml-dsa-65 Transaction success', () => {
     await expect(
       client.sendSignedTransaction({ signedTransaction: transferTx }),
     ).resolves.toMatchObject({
-      rawRpcResult: {
-        status: { SuccessValue: '' },
-      },
+      status: 'ExecutionSuccess',
     });
   });
 });

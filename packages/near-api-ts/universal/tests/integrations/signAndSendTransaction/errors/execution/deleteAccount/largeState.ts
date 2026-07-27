@@ -1,8 +1,8 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
 import { addFullAccessKey, deleteAccount, randomSecp256k1KeyPair } from '../../../../../../index';
-import { safeSleep } from '../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
+import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from './deleteAccount.test';
 
@@ -29,8 +29,10 @@ export const largeState = (context: TestContext) => async () => {
     },
   });
 
-  await client.safeSendSignedTransaction({ signedTransaction: signedTx1 });
-  await safeSleep(500);
+  await client.safeSendSignedTransaction({
+    signedTransaction: signedTx1,
+    minimalProcessingStage: 'CompletedFinal',
+  });
 
   // 2. Try to delete an account
   const signedDeleteAccountTx = await signTransaction({
@@ -45,8 +47,12 @@ export const largeState = (context: TestContext) => async () => {
     },
   });
 
-  await client.safeSendSignedTransaction({ signedTransaction: signedDeleteAccountTx });
-  await safeSleep(500);
+  const tx = await client.safeSendSignedTransaction({
+    signedTransaction: signedDeleteAccountTx,
+    minimalProcessingStage: 'CompletedFinal',
+  });
+
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.DeleteAccount.LargeState');
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedDeleteAccountTx.transactionHash,

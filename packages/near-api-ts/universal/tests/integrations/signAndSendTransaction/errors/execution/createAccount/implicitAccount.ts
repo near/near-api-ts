@@ -1,8 +1,8 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
 import { createAccount } from '../../../../../../index';
-import { safeSleep } from '../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
+import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from './createAccount.test';
 
@@ -26,12 +26,17 @@ export const implicitAccount = (context: TestContext) => async () => {
     },
   });
 
-  await client.safeSendSignedTransaction({ signedTransaction });
-  await safeSleep(500);
+  const tx = await client.safeSendSignedTransaction({
+    signedTransaction,
+    minimalProcessingStage: 'CompletedFinal',
+  });
+
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.CreateAccount.ImplicitAccount');
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
+
   assertTxResultExecutionErrKind(txResult, 'Action.CreateAccount.ImplicitAccount');
 
   expect(txResult.error.context).toStrictEqual({

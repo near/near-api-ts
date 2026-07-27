@@ -1,7 +1,6 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
 import { near, randomEd25519KeyPair, stake } from '../../../../../../index';
-import { safeSleep } from '../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
@@ -30,11 +29,12 @@ export const notEnoughBalance = (context: TestContext) => async () => {
     },
   });
 
-  const tx = await client.safeSendSignedTransaction({ signedTransaction });
+  const tx = await client.safeSendSignedTransaction({
+    signedTransaction,
+    minimalProcessingStage: 'CompletedFinal',
+  });
 
-  // TODO rework after rework SendSignedTransaction
   assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.Stake.NotEnoughBalance');
-  await safeSleep(500);
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,

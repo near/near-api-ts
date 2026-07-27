@@ -1,7 +1,6 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
 import { createAccount } from '../../../../../../index';
-import { safeSleep } from '../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
@@ -27,11 +26,12 @@ export const topLevelNamespace = (context: TestContext) => async () => {
     },
   });
 
-  const tx = await client.safeSendSignedTransaction({ signedTransaction });
+  const tx = await client.safeSendSignedTransaction({
+    signedTransaction,
+    minimalProcessingStage: 'CompletedFinal',
+  });
 
-  // TODO rework after rework SendSignedTransaction
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Internal');
-  await safeSleep(500);
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.CreateAccount.TopLevelNamespace');
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
