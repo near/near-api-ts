@@ -5,7 +5,7 @@ import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from './functionCall.test';
 
-export const wasmNotFound = (context: TestContext) => async () => {
+export const contractWasmNotFound = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -35,11 +35,14 @@ export const wasmNotFound = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.FunctionCall.Wasm.NotFound');
+  assertNatErrKind(
+    tx,
+    'Client.SendSignedTransaction.Rpc.Action.FunctionCall.ContractWasm.NotFound',
+  );
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.Wasm.NotFound');
+  assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.ContractWasm.NotFound');
 };

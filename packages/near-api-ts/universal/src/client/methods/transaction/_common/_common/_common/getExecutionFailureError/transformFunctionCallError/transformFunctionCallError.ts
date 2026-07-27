@@ -6,7 +6,7 @@ import { transformWasmTrap } from './transformWasmTrap';
 export const transformFunctionCallError = (
   rpcFunctionCallError: FunctionCallError,
 ):
-  | ExecutionFailureError<'Action.FunctionCall.Wasm.NotFound'>
+  | ExecutionFailureError<'Action.FunctionCall.ContractWasm.NotFound'>
   | ExecutionFailureError<'Action.FunctionCall.Preparation.Failed'>
   | ExecutionFailureError<'Action.FunctionCall.Function.NotFound'>
   | ExecutionFailureError<'Action.FunctionCall.Execution.Failed'> => {
@@ -28,7 +28,7 @@ export const transformFunctionCallError = (
 
     if ('CodeDoesNotExist' in CompilationError)
       return {
-        kind: 'Action.FunctionCall.Wasm.NotFound',
+        kind: 'Action.FunctionCall.ContractWasm.NotFound',
         context: { contractAccountId: CompilationError.CodeDoesNotExist.accountId },
       };
 
