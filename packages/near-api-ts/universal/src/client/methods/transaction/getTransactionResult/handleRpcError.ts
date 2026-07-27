@@ -1,8 +1,8 @@
 import { ErrorWrapperFor_RpcTransactionErrorSchema } from '@near-js/jsonrpc-types';
 import { createNatError, resultNatError } from '../../../../_common/natError';
-import type { RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
+import type { BaseRpcResponse } from '../../../../_common/schemas/zod/rpc/rpcResponse';
 
-export const handleRpcError = (rpcResponse: RpcResponse) => {
+export const handleRpcError = (rpcResponse: BaseRpcResponse) => {
   // TODO replace with own schema - remove dead errors
   const rpcError = ErrorWrapperFor_RpcTransactionErrorSchema().safeParse(rpcResponse.error);
 
@@ -10,7 +10,6 @@ export const handleRpcError = (rpcResponse: RpcResponse) => {
     return resultNatError('Client.GetTransactionResult.Exhausted', {
       lastError: createNatError({
         kind: 'SendRequest.Attempt.Response.InvalidSchema',
-        // @ts-ignore
         context: { zodError: rpcError.error },
       }),
     });

@@ -3,9 +3,9 @@ import type { Result } from '../../../types/_common/common';
 // TODO Fix: asThrowable doesn't work fine with overload functions
 
 type AsThrowable = {
-  <A extends unknown[], V, E>(safeFn: (...args: A) => Result<V, E>): (...args: A) => V;
-  <A extends unknown[], V, E>(
-    safeFn: (...args: A) => Promise<Result<V, E>>,
+  <A extends unknown[], V>(safeFn: (...args: A) => Result<V, unknown>): (...args: A) => V;
+  <A extends unknown[], V>(
+    safeFn: (...args: A) => Promise<Result<V, unknown>>,
   ): (...args: A) => Promise<V>;
 };
 

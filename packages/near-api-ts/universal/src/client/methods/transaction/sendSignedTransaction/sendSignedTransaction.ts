@@ -12,7 +12,7 @@ import {
 import { repackError } from '../../../../_common/utils/repackError';
 import { wrapInternalError } from '../../../../_common/utils/wrapInternalError';
 import { PartialTransportPolicyZodSchema } from '../../../transport/transportPolicy';
-import { handleRpcError } from './handleRpcError/handleRpcError';
+import { handleRpcError } from './handleRpcError';
 import { handleRpcResult } from './handleRpcResult/handleRpcResult';
 
 const SendSignedTransactionArgsShema = z.object({
@@ -90,7 +90,10 @@ export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction = 
       });
 
     return transactionStatusRpcResponse.value.error
-      ? handleRpcError(transactionStatusRpcResponse.value)
+      ? handleRpcError(
+          transactionStatusRpcResponse.value,
+          args.signedTransaction.signedTransactionBorsh64,
+        )
       : handleRpcResult(
           transactionStatusRpcResponse.value,
           minimalProcessingStage,

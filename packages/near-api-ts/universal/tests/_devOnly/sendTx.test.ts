@@ -46,42 +46,41 @@ describe('SendTx', () => {
     const signedTransaction = await signTransaction({
       signDataProvider: defaultKeyPair,
       transaction: {
-        signerAccountId: 'nat',
+        signerAccountId: 'nat23',
         signerPublicKey: defaultKeyPair.publicKey,
         nonce: accountAccessKey.nonce + 1,
         blockHash,
         actions: [createAccount(), transfer({ amount: { near: '10' } })],
-        receiverAccountId: 'abc.nat',
+        receiverAccountId: 'abc.nat2',
       },
     });
 
     const tx = await client.safeSendSignedTransaction({
       signedTransaction,
-      // minimalProcessingStage: 'ExecutedNearlyFinal',
+      // minimalProcessingStage: 'CompletedFinal',
       // options: {
       //   deserializeActionSummaries: () => [1],
       // },
     });
 
-    // if (tx.ok) {
-    //   const x = tx.value;
-    // }
-    //
-    // if (!tx.ok) {
-    //   const x = tx.error;
-    //   if (
-    //     tx.error.kind === 'Client.SendSignedTransaction.Rpc.Action.CreateAccount.ForeignNamespace'
-    //   ) {
-    //     const ad = tx.error.context;
-    //
-    //     if (tx.error.context.transactionDetails.processingStage === 'ExecutedNearlyFinal') {
-    //       const adadd = tx.error.context.transactionDetails;
-    //     }
-    //     // const ad =
-    //     //   tx.error.context.transactionDetails.processingSteps.conversionStep.transactionSummary
-    //     //     .actionSummaries;
-    //   }
-    // }
+    if (tx.ok) {
+      const x = tx.value;
+    }
+
+    if (!tx.ok) {
+      const x = tx.error;
+      if (tx.error.kind === 'Client.SendSignedTransaction.Rpc.Expired') {
+        const x3 = tx.error;
+      }
+
+      if (tx.error.kind === 'Client.SendSignedTransaction.Rpc.Action.AddKey.AlreadyExists') {
+        const x4 = tx.error;
+      }
+
+      if (tx.error.kind === 'Client.SendSignedTransaction.Rpc.Signer.NotFound') {
+        const x5 = tx.error.context;
+      }
+    }
 
     log(tx);
   });

@@ -1,9 +1,9 @@
 import { ErrorWrapperFor_RpcQueryErrorSchema } from '@near-js/jsonrpc-types';
 import { createNatError } from '../../../../_common/natError';
-import type { RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
+import type { BaseRpcResponse } from '../../../../_common/schemas/zod/rpc/rpcResponse';
 import { result } from '../../../../_common/utils/result';
 
-export const handleError = (rpcResponse: RpcResponse) => {
+export const handleError = (rpcResponse: BaseRpcResponse) => {
   // We use QueryErrorSchema cuz there is no separate 'view_account' method -
   // it's part of 'query'
   const rpcError = ErrorWrapperFor_RpcQueryErrorSchema().safeParse(rpcResponse.error);
@@ -55,22 +55,20 @@ export const handleError = (rpcResponse: RpcResponse) => {
           },
         }),
       );
+
+    // Account-specific errors
+    if (cause.name === 'UNKNOWN_ACCOUNT')
+      return result.err(
+        createNatError({
+          kind: `Client.GetAccountInfo.Rpc.Account.NotFound`,
+          context: {
+            accountId: cause.info.requestedAccountId,
+            blockHash: cause.info.blockHash,
+            blockHeight: cause.info.blockHeight,
+          },
+        }),
+      );
   }
-
-  // Account-specific errors
-  if (cause.name === 'UNKNOWN_ACCOUNT')
-    return result.err(
-      createNatError({
-        kind: `Client.GetAccountInfo.Rpc.Account.NotFound`,
-        context: {
-          accountId: cause.info.requestedAccountId,
-          blockHash: cause.info.blockHash,
-          blockHeight: cause.info.blockHeight,
-        },
-      }),
-    );
-
-  // Stub
 
   return result.err(
     createNatError({

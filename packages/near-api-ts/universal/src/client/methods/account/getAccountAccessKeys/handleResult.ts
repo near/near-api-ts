@@ -3,7 +3,7 @@ import * as z from 'zod/mini';
 import type { GetAccountAccessKeysArgs } from '../../../../../types/client/methods/account/getAccountAccessKeys';
 import type { Prettify } from '../../../../../types/utils';
 import { createNatError } from '../../../../_common/natError';
-import type { RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
+import type { BaseRpcResponse } from '../../../../_common/schemas/zod/rpc/rpcResponse';
 import { result } from '../../../../_common/utils/result';
 import { transformAccessKey } from '../_common/transformAccessKey';
 
@@ -17,7 +17,7 @@ export type RpcQueryAccessKeyListResult = Prettify<
   z.infer<typeof RpcQueryAccessKeyListResultSchema>
 >;
 
-export const handleResult = (rpcResponse: RpcResponse, args: GetAccountAccessKeysArgs) => {
+export const handleResult = (rpcResponse: BaseRpcResponse, args: GetAccountAccessKeysArgs) => {
   const rpcResult = RpcQueryAccessKeyListResultSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)

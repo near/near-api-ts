@@ -1,9 +1,9 @@
 import { ErrorWrapperFor_RpcBlockErrorSchema } from '@near-js/jsonrpc-types';
 import { createNatError } from '../../../../_common/natError';
-import type { RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
+import type { BaseRpcResponse } from '../../../../_common/schemas/zod/rpc/rpcResponse';
 import { result } from '../../../../_common/utils/result';
 
-export const handleError = (rpcResponse: RpcResponse) => {
+export const handleError = (rpcResponse: BaseRpcResponse) => {
   const rpcError = ErrorWrapperFor_RpcBlockErrorSchema().safeParse(rpcResponse.error);
 
   if (!rpcError.success)

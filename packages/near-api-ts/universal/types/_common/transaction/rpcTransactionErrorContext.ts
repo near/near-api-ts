@@ -1,4 +1,4 @@
-import type { RpcResponse } from '../../../src/_common/schemas/zod/rpc/rpc';
+import type { BaseRpcResponse } from '../../../src/_common/schemas/zod/rpc/rpcResponse';
 import type { AccountId, CryptoHash, TransactionNonce } from '../common';
 import type { NearToken } from '../nearToken';
 
@@ -40,7 +40,7 @@ export type TransactionErrorContext = {
   Action: {
     // TODO What is this error about?
     InvalidIndex: {
-      rpcResponse: RpcResponse;
+      rpcResponse: BaseRpcResponse;
     };
     Receiver: {
       NotFound: {

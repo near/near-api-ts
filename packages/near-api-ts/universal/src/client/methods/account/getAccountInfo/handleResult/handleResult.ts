@@ -4,7 +4,7 @@ import type { NearToken } from '../../../../../../types/_common/nearToken';
 import type { GetAccountInfoArgs } from '../../../../../../types/client/methods/account/getAccountInfo';
 import type { Prettify } from '../../../../../../types/utils';
 import { createNatError, resultNatError } from '../../../../../_common/natError';
-import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc/rpc';
+import type { BaseRpcResponse } from '../../../../../_common/schemas/zod/rpc/rpcResponse';
 import { result } from '../../../../../_common/utils/result';
 import { calculateAccountBalance } from './calculateAccountBalance';
 
@@ -17,7 +17,7 @@ const RpcQueryViewAccountResultSchema = z.object({
 export type RpcQueryViewAccountResult = Prettify<z.infer<typeof RpcQueryViewAccountResultSchema>>;
 
 export const handleResult = (
-  rpcResponse: RpcResponse,
+  rpcResponse: BaseRpcResponse,
   storagePricePerByte: NearToken,
   args: GetAccountInfoArgs,
 ) => {

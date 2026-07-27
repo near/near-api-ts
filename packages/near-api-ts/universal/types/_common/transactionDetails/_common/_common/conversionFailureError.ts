@@ -9,7 +9,6 @@ interface ConversionFailureRegistry extends GeneralConversionErrorRegistry {
   'Nonce.Invalid': { transactionNonce: TransactionNonce; accessKeyNonce: TransactionNonce };
   'Signature.Invalid': null;
   Expired: null;
-  Timeout: null;
 }
 
 export type ConversionFailureKind = keyof ConversionFailureRegistry;

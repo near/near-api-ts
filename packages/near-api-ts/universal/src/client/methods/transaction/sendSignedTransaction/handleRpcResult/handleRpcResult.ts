@@ -9,7 +9,7 @@ import type { ExecutionFailureKind } from '../../../../../../types/_common/trans
 import type { TransactionProcessingStage } from '../../../../../../types/_common/transactionDetails/_common/processingStage';
 import type { TransactionDetailsFromStage } from '../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import { createNatError, type NatError, resultNatError } from '../../../../../_common/natError';
-import type { RpcResponse } from '../../../../../_common/schemas/zod/rpc/rpc';
+import type { BaseRpcResponse } from '../../../../../_common/schemas/zod/rpc/rpcResponse';
 import {
   type RpcExecutedOptimisticTransactionDetails,
   RpcExecutedOptimisticTransactionDetailsZodSchema,
@@ -45,7 +45,7 @@ const RpcResultZodSchema: z.ZodMiniType<RpcResult> = z.union([
 ]);
 
 export const handleRpcResult = (
-  rpcResponse: RpcResponse,
+  rpcResponse: BaseRpcResponse,
   minimalProcessingStage: TransactionProcessingStage,
   transactionHash: TransactionHash,
   signedTransactionBorsh64: Base64String,

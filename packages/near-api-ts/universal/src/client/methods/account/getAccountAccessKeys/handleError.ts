@@ -1,11 +1,11 @@
 import { ErrorWrapperFor_RpcQueryErrorSchema } from '@near-js/jsonrpc-types';
 import { createNatError } from '../../../../_common/natError';
-import type { RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
+import type { BaseRpcResponse } from '../../../../_common/schemas/zod/rpc/rpcResponse';
 import { result } from '../../../../_common/utils/result';
 
 // TODO Think how to reuse some errors and reduce the amount of code
 
-export const handleError = (rpcResponse: RpcResponse) => {
+export const handleError = (rpcResponse: BaseRpcResponse) => {
   // We use QueryErrorSchema cuz there is no separate 'view_access_key' method -
   // it's part of 'query'
   const rpcError = ErrorWrapperFor_RpcQueryErrorSchema().safeParse(rpcResponse.error);

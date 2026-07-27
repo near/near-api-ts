@@ -27,3 +27,4 @@ dist-ssr
 /packages/near-api-ts/browser/playwright-test-results
 
 .claude
+.mcp.json

@@ -7,7 +7,7 @@ import type {
 } from '../../../../../types/_common/transactionDetails/_common/_common/deserializers';
 import type { GetTransactionResultOutput } from '../../../../../types/client/methods/transaction/getTransactionResult';
 import { createNatError, type NatError, resultNatError } from '../../../../_common/natError';
-import type { RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
+import type { BaseRpcResponse } from '../../../../_common/schemas/zod/rpc/rpcResponse';
 import { RpcFinalTransactionDetailsZodSchema } from '../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
 import {
   isRpcTransactionOutcomeFailure,
@@ -27,7 +27,7 @@ const RpcResultZodSchema = z.union([
 ]);
 
 export const handleRpcResult = (
-  rpcResponse: RpcResponse,
+  rpcResponse: BaseRpcResponse,
   transactionHash: TransactionHash,
   deserializeResultData?: BaseDeserializeTransactionResultDataFn,
   deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn,

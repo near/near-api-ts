@@ -1,7 +1,7 @@
 import type { Result } from '../../../../../types/_common/common';
 import type { InnerRpcEndpoint } from '../../../../../types/client/transport/transport';
 import { createNatError, type NatError } from '../../../../_common/natError';
-import type { RpcError, RpcResponse } from '../../../../_common/schemas/zod/rpc/rpc';
+import type { BaseRpcError, BaseRpcResponse } from '../../../../_common/schemas/zod/rpc/rpcResponse';
 import { result } from '../../../../_common/utils/result';
 
 export type HighLevelRpcErrors =
@@ -15,7 +15,7 @@ export type HighLevelRpcErrors =
 
 const prefix = 'SendRequest.InnerRpc';
 
-const getErrorKind = ({ name, cause }: RpcError): HighLevelRpcErrors['kind'] | undefined => {
+const getErrorKind = ({ name, cause }: BaseRpcError): HighLevelRpcErrors['kind'] | undefined => {
   // Request Validation Errors
   if (name === 'REQUEST_VALIDATION_ERROR') {
     if (cause.name === 'METHOD_NOT_FOUND') return `${prefix}.MethodNotFound`;
@@ -39,9 +39,9 @@ const getErrorKind = ({ name, cause }: RpcError): HighLevelRpcErrors['kind'] | u
 };
 
 export const extractRpcErrors = (
-  generalRpcResponse: RpcResponse,
+  generalRpcResponse: BaseRpcResponse,
   rpc: InnerRpcEndpoint,
-): Result<RpcResponse, HighLevelRpcErrors> => {
+): Result<BaseRpcResponse, HighLevelRpcErrors> => {
   if ('result' in generalRpcResponse) return result.ok(generalRpcResponse);
 
   const kind = getErrorKind(generalRpcResponse.error);
