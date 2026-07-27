@@ -1,5 +1,5 @@
 import type { FunctionCallError } from '@near-js/jsonrpc-types';
-import type { ExecutionFailureError } from '../../../../../../../../../../types/_common/transactionDetails/_common/_common/executionFailureError';
+import type { ExecutionFailureError } from '../../../../../../../../../types/_common/transactionDetails/_common/_common/executionFailureError';
 import { transformHostError } from './transformHostError';
 import { transformWasmTrap } from './transformWasmTrap';
 
@@ -58,7 +58,7 @@ export const transformFunctionCallError = (
     if (MethodResolveError === 'MethodInvalidSignature')
       return {
         kind: 'Action.FunctionCall.Compilation.Failed',
-        context: { cause: 'InvalidFunctionSignature' }
+        context: { cause: 'InvalidFunctionSignature' },
       };
   }
 

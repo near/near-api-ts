@@ -26,29 +26,31 @@ import { getConvertedOptimisticDetails } from './getConvertedOptimisticDetails';
 import { getExecutedNearlyFinalDetails } from './getExecutedNearlyFinalDetails';
 import { getExecutedOptimisticDetails } from './getExecutedOptimisticDetails';
 
-export const innerErrorPrefix = 'Inner.Client.TransactionDetails';
-
-export type TransactionDetailsError =
-  | NatError<'Inner.Client.TransactionDetails.DeserializeResultData.Failed'>
-  | NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
-  | NatError<'Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'>
-  | ExecutionFailureErrorAtStage<'ExecutedOptimistic'>
-  | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal'>
-  | ExecutionFailureErrorAtStage<'CompletedFinal'>;
-
-type InnerTransactionDetailsError = Extract<
-  TransactionDetailsError,
-  { kind: `${typeof innerErrorPrefix}.${string}` }
->;
-
 /**
  * The error union mixes inner errors (to be repacked by the calling method) with the already
  * public execution failures. `startsWith` alone doesn't narrow a union of literal kinds, so the
  * split lives here, next to the union it splits.
  */
+type InnerTransactionDetailsError = Extract<
+  TransactionDetailsError,
+  { kind: `Inner.Client.TransactionDetails.${string}` }
+>;
+
 export const isInnerTransactionDetailsError = (
   error: TransactionDetailsError,
-): error is InnerTransactionDetailsError => error.kind.startsWith(innerErrorPrefix);
+): error is InnerTransactionDetailsError =>
+  error.kind.startsWith('Inner.Client.TransactionDetails');
+
+export type InnerClientTransactionDetailsError =
+  | NatError<'Inner.Client.TransactionDetails.DeserializeResultData.Failed'>
+  | NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
+  | NatError<'Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'>;
+
+export type TransactionDetailsError =
+  | InnerClientTransactionDetailsError
+  | ExecutionFailureErrorAtStage<'ExecutedOptimistic'>
+  | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal'>
+  | ExecutionFailureErrorAtStage<'CompletedFinal'>;
 
 type TransactionDetailsHandlerContext = {
   rpcResult:
@@ -98,22 +100,18 @@ const buildDetails = (
 ): Result<TransactionDetailsFromStage['ConvertedOptimistic'], TransactionDetailsError> => {
   const { rpcResult, transactionHash } = context;
 
-  if (rpcResult.finalExecutionStatus === 'INCLUDED')
-    return getConvertedOptimisticDetails(transactionHash);
-
-  if (rpcResult.finalExecutionStatus === 'INCLUDED_FINAL')
-    return getConvertedFinalDetails({ ...context, rpcDetails: rpcResult });
-
-  if (rpcResult.finalExecutionStatus === 'EXECUTED_OPTIMISTIC')
-    return getExecutedOptimisticDetails({ ...context, rpcDetails: rpcResult });
-
-  if (rpcResult.finalExecutionStatus === 'EXECUTED')
-    return getExecutedNearlyFinalDetails({ ...context, rpcDetails: rpcResult });
-
-  if (rpcResult.finalExecutionStatus === 'FINAL')
-    return getCompletedFinalDetails({ ...context, rpcDetails: rpcResult });
-
-  throw new Error(`Unexpected rpcResult: ${JSON.stringify(rpcResult)}`);
+  switch (rpcResult.finalExecutionStatus) {
+    case 'INCLUDED':
+      return getConvertedOptimisticDetails(transactionHash);
+    case 'INCLUDED_FINAL':
+      return getConvertedFinalDetails({ ...context, rpcDetails: rpcResult });
+    case 'EXECUTED_OPTIMISTIC':
+      return getExecutedOptimisticDetails({ ...context, rpcDetails: rpcResult });
+    case 'EXECUTED':
+      return getExecutedNearlyFinalDetails({ ...context, rpcDetails: rpcResult });
+    case 'FINAL':
+      return getCompletedFinalDetails({ ...context, rpcDetails: rpcResult });
+  }
 };
 
 /**

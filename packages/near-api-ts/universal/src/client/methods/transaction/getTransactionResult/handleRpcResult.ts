@@ -14,9 +14,9 @@ import {
   isRpcTransactionOutcomeSuccess,
 } from '../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
 import { finalExecutionStatusToProcessingStage } from '../../../../_common/transformers/fromNative/processingStage';
-import { getConversionFailureCompletedFinal } from '../_common/_common/getConversionFailure';
-import { getExecutionFailureCompletedFinal } from '../_common/_common/getExecutionFailure';
-import { getExecutionSuccessCompletedFinal } from '../_common/_common/getExecutionSuccess';
+import { getConversionFailureCompletedFinal } from '../_common/getConversionFailure';
+import { getExecutionFailureCompletedFinal } from '../_common/getExecutionFailure';
+import { getExecutionSuccessCompletedFinal } from '../_common/getExecutionSuccess';
 
 const RpcResultZodSchema = z.union([
   z.object({ finalExecutionStatus: z.literal('INCLUDED') }),

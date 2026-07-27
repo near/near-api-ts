@@ -1,10 +1,10 @@
-import type { Base64String } from '../../../../../../../../../types/_common/common';
+import type { Base64String } from '../../../../../../../../types/_common/common';
 import type {
   ExecutionStepResult,
   ParsedExecutionStep,
   RawExecutionStep,
-} from '../../../../../../../../../types/_common/transactionDetails/_common/executionStep';
-import { tryBase64ToObject } from '../../../../../../../../_common/utils/base64ToObject';
+} from '../../../../../../../../types/_common/transactionDetails/_common/executionStep';
+import { tryBase64ToObject } from '../../../../../../../_common/utils/base64ToObject';
 import { getParsedActionSummary } from '../../_common/_common/getParsedActionSummary';
 
 const getParsedResult = (

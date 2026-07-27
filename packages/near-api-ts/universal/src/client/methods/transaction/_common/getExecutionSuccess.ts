@@ -1,17 +1,17 @@
-import type { Base64String, Result } from '../../../../../../types/_common/common';
+import type { Base64String, Result } from '../../../../../types/_common/common';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
-} from '../../../../../../types/_common/transactionDetails/_common/_common/deserializers';
-import type { ExecutionSuccess } from '../../../../../../types/_common/transactionDetails/executionSuccess';
-import { type NatError, resultNatError } from '../../../../../_common/natError';
-import type { RpcActionReceipt } from '../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
-import type { RpcReceiptOutcome } from '../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
-import type { RpcTransactionOutcomeSuccess } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
-import type { RpcTransactionSummary } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
-import { tryBase64ToObject } from '../../../../../_common/utils/base64ToObject';
-import { result } from '../../../../../_common/utils/result';
+} from '../../../../../types/_common/transactionDetails/_common/_common/deserializers';
+import type { ExecutionSuccess } from '../../../../../types/_common/transactionDetails/executionSuccess';
+import { type NatError, resultNatError } from '../../../../_common/natError';
+import type { RpcActionReceipt } from '../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
+import type { RpcReceiptOutcome } from '../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
+import type { RpcTransactionOutcomeSuccess } from '../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
+import type { RpcTransactionSummary } from '../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
+import { tryBase64ToObject } from '../../../../_common/utils/base64ToObject';
+import { result } from '../../../../_common/utils/result';
 import { getConversionStepSuccess } from './_common/getConversionStepSuccess';
 import { getNonConversionSteps } from './_common/getNonConversionSteps/getNonConversionSteps';
 

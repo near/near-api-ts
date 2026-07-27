@@ -9,8 +9,9 @@ import type { TransactionDetailsAtStage } from '../../../../../../../types/clien
 import { type NatError, resultNatError } from '../../../../../../_common/natError';
 import type { RpcExecutedTransactionDetails } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
 import { isRpcTransactionOutcomeSuccess } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
-import { getExecutionFailureExecutedNearlyFinal } from '../../../_common/_common/getExecutionFailure';
-import { getExecutionSuccessExecutedNearlyFinal } from '../../../_common/_common/getExecutionSuccess';
+import { getExecutionFailureExecutedNearlyFinal } from '../../../_common/getExecutionFailure';
+import { getExecutionSuccessExecutedNearlyFinal } from '../../../_common/getExecutionSuccess';
+import type { InnerClientTransactionDetailsError } from './getDetailsFromProcessingStage';
 
 export const getExecutedNearlyFinalDetails = (args: {
   rpcDetails: RpcExecutedTransactionDetails;
@@ -20,10 +21,7 @@ export const getExecutedNearlyFinalDetails = (args: {
   deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
 }): Result<
   TransactionDetailsAtStage['ExecutedNearlyFinal'],
-  | NatError<'Inner.Client.TransactionDetails.DeserializeResultData.Failed'>
-  | NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
-  | NatError<'Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'>
-  | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal'>
+  InnerClientTransactionDetailsError | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal'>
 > => {
   const {
     rpcDetails,

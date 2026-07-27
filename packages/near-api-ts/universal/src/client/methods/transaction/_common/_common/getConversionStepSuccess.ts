@@ -1,11 +1,11 @@
-import { gas, yoctoNear } from '../../../../../../../index';
-import type { Result } from '../../../../../../../types/_common/common';
-import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../../../../types/_common/transactionDetails/_common/_common/deserializers';
-import type { ConversionStepSuccess } from '../../../../../../../types/_common/transactionDetails/_common/conversionStep';
-import { type NatError } from '../../../../../../_common/natError';
-import type { RpcTransactionOutcomeSuccess } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
-import type { RpcTransactionSummary } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
-import { result } from '../../../../../../_common/utils/result';
+import { gas, yoctoNear } from '../../../../../../index';
+import type { Result } from '../../../../../../types/_common/common';
+import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../../../types/_common/transactionDetails/_common/_common/deserializers';
+import type { ConversionStepSuccess } from '../../../../../../types/_common/transactionDetails/_common/conversionStep';
+import { type NatError } from '../../../../../_common/natError';
+import type { RpcTransactionOutcomeSuccess } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
+import type { RpcTransactionSummary } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
+import { result } from '../../../../../_common/utils/result';
 import { getTransactionSummary } from './_common/getTransactionSummary';
 
 type GetConversionStepSuccessArgs = {

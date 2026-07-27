@@ -12,8 +12,9 @@ import {
   isRpcTransactionOutcomeFailure,
   isRpcTransactionOutcomeSuccess,
 } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
-import { getExecutionFailureExecutedOptimistic } from '../../../_common/_common/getExecutionFailure';
-import { getExecutionSuccessExecutedOptimistic } from '../../../_common/_common/getExecutionSuccess';
+import { getExecutionFailureExecutedOptimistic } from '../../../_common/getExecutionFailure';
+import { getExecutionSuccessExecutedOptimistic } from '../../../_common/getExecutionSuccess';
+import type { InnerClientTransactionDetailsError } from './getDetailsFromProcessingStage';
 
 export const getExecutedOptimisticDetails = (args: {
   rpcDetails: RpcExecutedOptimisticTransactionDetails;
@@ -23,10 +24,7 @@ export const getExecutedOptimisticDetails = (args: {
   deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
 }): Result<
   TransactionDetailsAtStage['ExecutedOptimistic'],
-  | NatError<'Inner.Client.TransactionDetails.DeserializeResultData.Failed'>
-  | NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
-  | NatError<'Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'>
-  | ExecutionFailureErrorAtStage<'ExecutedOptimistic'>
+  InnerClientTransactionDetailsError | ExecutionFailureErrorAtStage<'ExecutedOptimistic'>
 > => {
   const {
     rpcDetails,

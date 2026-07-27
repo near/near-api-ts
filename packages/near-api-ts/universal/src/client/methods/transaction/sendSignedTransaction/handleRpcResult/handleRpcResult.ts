@@ -26,7 +26,6 @@ import { repackError } from '../../../../../_common/utils/repackError';
 import { result } from '../../../../../_common/utils/result';
 import {
   getDetailsFromProcessingStage,
-  innerErrorPrefix,
   isInnerTransactionDetailsError,
 } from './getDetailsFromProcessingStage/getDetailsFromProcessingStage';
 
@@ -92,7 +91,7 @@ export const handleRpcResult = (
   return isInnerTransactionDetailsError(error)
     ? repackError({
         error,
-        originPrefix: innerErrorPrefix,
+        originPrefix: 'Inner.Client.TransactionDetails',
         targetPrefix: 'Client.SendSignedTransaction',
       })
     : result.err(error);

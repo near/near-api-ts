@@ -1,13 +1,13 @@
 import type { InvalidTxError } from '@near-js/jsonrpc-types';
-import { gas } from '../../../../../../index';
-import type { Result } from '../../../../../../types/_common/common';
-import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../../../types/_common/transactionDetails/_common/_common/deserializers';
-import type { ConversionFailure } from '../../../../../../types/_common/transactionDetails/conversionFailure';
-import { type NatError } from '../../../../../_common/natError';
-import type { RpcTransactionOutcomeFailure } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
-import type { RpcTransactionSummary } from '../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
-import { result } from '../../../../../_common/utils/result';
-import { yoctoNear } from '../../../../../helpers/tokens/nearToken';
+import { gas } from '../../../../../index';
+import type { Result } from '../../../../../types/_common/common';
+import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../../types/_common/transactionDetails/_common/_common/deserializers';
+import type { ConversionFailure } from '../../../../../types/_common/transactionDetails/conversionFailure';
+import { type NatError } from '../../../../_common/natError';
+import type { RpcTransactionOutcomeFailure } from '../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
+import type { RpcTransactionSummary } from '../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
+import { result } from '../../../../_common/utils/result';
+import { yoctoNear } from '../../../../helpers/tokens/nearToken';
 import { getTransactionSummary } from './_common/_common/getTransactionSummary';
 import { getConversionFailureError } from './_common/getConversionFailureError';
 

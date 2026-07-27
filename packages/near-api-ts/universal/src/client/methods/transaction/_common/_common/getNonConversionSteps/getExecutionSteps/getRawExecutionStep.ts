@@ -1,11 +1,11 @@
-import { gas, yoctoNear } from '../../../../../../../../../index';
-import type { Base64String } from '../../../../../../../../../types/_common/common';
+import { gas, yoctoNear } from '../../../../../../../../index';
+import type { Base64String } from '../../../../../../../../types/_common/common';
 import type {
   ExecutionStepResult,
   RawExecutionStep,
-} from '../../../../../../../../../types/_common/transactionDetails/_common/executionStep';
-import type { RpcActionReceiptTrimmed } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
-import type { RpcReceiptOutcome } from '../../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
+} from '../../../../../../../../types/_common/transactionDetails/_common/executionStep';
+import type { RpcActionReceiptTrimmed } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/receipt';
+import type { RpcReceiptOutcome } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/receiptOutcome';
 import { getRawActionSummary } from '../../_common/_common/getRawActionSummary';
 import { getExecutionFailureError } from '../../_common/getExecutionFailureError/getExecutionFailureError';
 import type { ReceiptCreationMap } from '../createReceiptCreationMap';

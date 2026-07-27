@@ -3,7 +3,7 @@ import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../..
 import type { ConversionSuccess } from '../../../../../../../types/_common/transactionDetails/conversionSuccess';
 import type { NatError } from '../../../../../../_common/natError';
 import type { RpcIncludedFinalTransactionDetails } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
-import { getConversionSuccessConvertedFinal } from '../../../_common/_common/getConversionSuccess';
+import { getConversionSuccessConvertedFinal } from '../../../_common/getConversionSuccess';
 
 export const getConvertedFinalDetails = (args: {
   rpcDetails: RpcIncludedFinalTransactionDetails;

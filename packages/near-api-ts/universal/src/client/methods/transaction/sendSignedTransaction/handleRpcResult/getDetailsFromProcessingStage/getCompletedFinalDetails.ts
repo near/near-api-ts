@@ -12,8 +12,9 @@ import {
   isRpcTransactionOutcomeFailure,
   isRpcTransactionOutcomeSuccess,
 } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
-import { getExecutionFailureCompletedFinal } from '../../../_common/_common/getExecutionFailure';
-import { getExecutionSuccessCompletedFinal } from '../../../_common/_common/getExecutionSuccess';
+import { getExecutionFailureCompletedFinal } from '../../../_common/getExecutionFailure';
+import { getExecutionSuccessCompletedFinal } from '../../../_common/getExecutionSuccess';
+import type { InnerClientTransactionDetailsError } from './getDetailsFromProcessingStage';
 
 export const getCompletedFinalDetails = (args: {
   rpcDetails: RpcFinalTransactionDetails;
@@ -23,10 +24,7 @@ export const getCompletedFinalDetails = (args: {
   deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
 }): Result<
   TransactionDetailsAtStage['CompletedFinal'],
-  | NatError<'Inner.Client.TransactionDetails.DeserializeResultData.Failed'>
-  | NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
-  | NatError<'Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'>
-  | ExecutionFailureErrorAtStage<'CompletedFinal'>
+  InnerClientTransactionDetailsError | ExecutionFailureErrorAtStage<'CompletedFinal'>
 > => {
   const {
     rpcDetails,

@@ -1,16 +1,16 @@
 import type { ActionView } from '@near-js/jsonrpc-types';
-import type { Result } from '../../../../../../../../types/_common/common';
+import type { Result } from '../../../../../../../types/_common/common';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionActionSummariesFn,
-} from '../../../../../../../../types/_common/transactionDetails/_common/_common/deserializers';
+} from '../../../../../../../types/_common/transactionDetails/_common/_common/deserializers';
 import type {
   TransactionActionSummaries,
   TransactionSummary,
-} from '../../../../../../../../types/_common/transactionDetails/_common/conversionStep';
-import { type NatError, resultNatError } from '../../../../../../../_common/natError';
-import type { RpcTransactionSummary } from '../../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
-import { result } from '../../../../../../../_common/utils/result';
+} from '../../../../../../../types/_common/transactionDetails/_common/conversionStep';
+import { type NatError, resultNatError } from '../../../../../../_common/natError';
+import type { RpcTransactionSummary } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionSummary';
+import { result } from '../../../../../../_common/utils/result';
 import { getParsedActionSummary } from './_common/getParsedActionSummary';
 import { getRawActionSummary } from './_common/getRawActionSummary';
 
