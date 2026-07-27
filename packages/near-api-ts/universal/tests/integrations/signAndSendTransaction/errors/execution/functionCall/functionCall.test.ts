@@ -4,8 +4,8 @@ import { type Client, keyPair } from '../../../../../../index';
 import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
-import { compilationFailed } from './compilationFailed/compilationFailed';
-import { methodInvalidSignature } from './compilationFailed/methodInvalidSignature';
+import { methodInvalidSignature } from './preparationFailed/methodInvalidSignature';
+import { preparationFailed } from './preparationFailed/preparationFailed';
 import { executionError } from './executionFailed/executionError';
 import { hostErrorGuestPanic } from './executionFailed/hostErrorGuestPanic';
 import { deleteActionMustBeFinal } from './executionFailed/newReceiptValidationError/deleteActionMustBeFinal';
@@ -30,9 +30,9 @@ describe('signAndSendTransaction › FunctionCall.* errors', () => {
 
   it('return Action.FunctionCall.Wasm.NotFound', wasmNotFound(context));
   it('return Action.FunctionCall.Function.NotFound', functionNotFound(context));
-  it('return Action.FunctionCall.Compilation.Failed', compilationFailed(context));
+  it('return Action.FunctionCall.Preparation.Failed', preparationFailed(context));
   it(
-    'return Action.FunctionCall.Compilation.Failed: MethodInvalidSignature',
+    'return Action.FunctionCall.Preparation.Failed: MethodInvalidSignature',
     methodInvalidSignature(context),
   );
   it('return Action.FunctionCall.Execution.Failed', executionError(context));

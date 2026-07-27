@@ -7,7 +7,7 @@ export const transformFunctionCallError = (
   rpcFunctionCallError: FunctionCallError,
 ):
   | ExecutionFailureError<'Action.FunctionCall.Wasm.NotFound'>
-  | ExecutionFailureError<'Action.FunctionCall.Compilation.Failed'>
+  | ExecutionFailureError<'Action.FunctionCall.Preparation.Failed'>
   | ExecutionFailureError<'Action.FunctionCall.Function.NotFound'>
   | ExecutionFailureError<'Action.FunctionCall.Execution.Failed'> => {
   if (typeof rpcFunctionCallError === 'string') {
@@ -34,13 +34,13 @@ export const transformFunctionCallError = (
 
     if ('PrepareError' in CompilationError)
       return {
-        kind: 'Action.FunctionCall.Compilation.Failed',
+        kind: 'Action.FunctionCall.Preparation.Failed',
         context: { cause: CompilationError.PrepareError },
       };
 
     if ('WasmerCompileError' in CompilationError)
       return {
-        kind: 'Action.FunctionCall.Compilation.Failed',
+        kind: 'Action.FunctionCall.Preparation.Failed',
         context: { cause: CompilationError.WasmerCompileError.msg },
       };
   }
@@ -57,7 +57,7 @@ export const transformFunctionCallError = (
 
     if (MethodResolveError === 'MethodInvalidSignature')
       return {
-        kind: 'Action.FunctionCall.Compilation.Failed',
+        kind: 'Action.FunctionCall.Preparation.Failed',
         context: { cause: 'InvalidFunctionSignature' },
       };
   }

@@ -15,7 +15,7 @@ import type { TestContext } from '../functionCall.test';
  * wasmBase64 = compiled WAT: (module (func (export "add_record") (param i32)))
  *
  * `add_record` is exported with a param (i32), violating NEAR's required
- * `() -> ()` entrypoint signature -> Compilation.Failed
+ * `() -> ()` entrypoint signature -> Preparation.Failed
  */
 export const methodInvalidSignature = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
@@ -53,11 +53,11 @@ export const methodInvalidSignature = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.FunctionCall.Compilation.Failed');
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.FunctionCall.Preparation.Failed');
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.Compilation.Failed');
+  assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.Preparation.Failed');
 };

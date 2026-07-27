@@ -11,7 +11,7 @@ import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from '../functionCall.test';
 
-export const compilationFailed = (context: TestContext) => async () => {
+export const preparationFailed = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -46,11 +46,11 @@ export const compilationFailed = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.FunctionCall.Compilation.Failed');
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.FunctionCall.Preparation.Failed');
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.Compilation.Failed');
+  assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.Preparation.Failed');
 };

@@ -26,7 +26,7 @@ interface AddKeyErrorRegistry {
 interface FunctionCallErrorRegistry {
   'Action.FunctionCall.Wasm.NotFound': { contractAccountId: AccountId };
   'Action.FunctionCall.Function.NotFound': null;
-  'Action.FunctionCall.Compilation.Failed': { cause: string };
+  'Action.FunctionCall.Preparation.Failed': { cause: string };
   'Action.FunctionCall.Execution.Failed': { cause: string };
 }
 
