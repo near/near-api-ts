@@ -10,6 +10,7 @@ import {
   functionCall,
   keyPair,
   near,
+  randomEd25519KeyPair,
   signTransaction,
   transfer,
 } from '../../index';
@@ -43,11 +44,13 @@ describe('SendTx', () => {
       publicKey: defaultKeyPair.publicKey,
     });
 
+    const randomKp = randomEd25519KeyPair();
+
     const signedTransaction = await signTransaction({
-      signDataProvider: defaultKeyPair,
+      signDataProvider: randomKp,
       transaction: {
-        signerAccountId: 'nat23',
-        signerPublicKey: defaultKeyPair.publicKey,
+        signerAccountId: 'nat',
+        signerPublicKey: randomKp.publicKey,
         nonce: accountAccessKey.nonce + 1,
         blockHash,
         actions: [createAccount(), transfer({ amount: { near: '10' } })],
