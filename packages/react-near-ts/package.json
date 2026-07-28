@@ -1,6 +1,6 @@
 {
   "name": "react-near-ts",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "TypeScript-first toolkit for integrating NEAR Protocol with your React application",
   "type": "module",
   "publishConfig": {
@@ -12,23 +12,23 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "@tanstack/react-query": ">=5.90.21 <6",
-    "react": ">=19.2.0 <20",
-    "react-dom": ">=19.2.0 <20",
-    "zod": ">=4.3.0 <5"
+    "@tanstack/react-query": ">=5.101.4 <6",
+    "react": ">=19.2.8 <20",
+    "react-dom": ">=19.2.8 <20",
+    "zod": ">=4.4.3 <5"
   },
   "dependencies": {
-    "@hot-labs/near-connect": "^0.11.4",
+    "@hot-labs/near-connect": "0.11.4",
     "near-api-ts": "workspace:*",
-    "zustand": "^5.0.11"
+    "zustand": "5.0.14"
   },
   "devDependencies": {
-    "@tanstack/react-query": "^5.90.21",
-    "@types/react": "^19.2.5",
-    "@types/react-dom": "^19.2.3",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "zod": "^4.3.6"
+    "@tanstack/react-query": "5.101.4",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "4.4.3"
   },
   "types": "./dist/index.d.mts",
   "module": "./dist/index.mjs",

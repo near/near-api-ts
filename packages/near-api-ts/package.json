@@ -1,6 +1,6 @@
 {
   "name": "near-api-ts",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Typescript library for interactions with Near Protocol in the browser or Node.js",
   "type": "module",
   "sideEffects": false,
@@ -19,7 +19,7 @@
     "test:all": "vitest run"
   },
   "peerDependencies": {
-    "zod": ">=4.3.6 <5"
+    "zod": ">=4.4.3 <5"
   },
   "dependencies": {
     "@near-js/jsonrpc-types": "^1.8.0",
@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
-    "zod": "^4.3.6"
+    "zod": "4.4.3"
   },
   "exports": {
     ".": {

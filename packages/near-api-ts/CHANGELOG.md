@@ -1,6 +1,16 @@
 # Changelog
 
-## [UNRELEASED] v0.11.0
+## [UNRELEASED] v0.12.0
+
+### Added
+
+### Changed
+
+### Removed
+
+---
+
+## v0.11.0
 
 ### Added
 
@@ -12,9 +22,11 @@
 
 ### Changed
 
-- Now empty `functionArgs` in
-  `TransactionResult -> ActionSummary -> FunctionCall` returns as `null`
-  instead of empty string.
+- Improve `client.getTransactionResult` structure and types
+
+- Rework `client.sendSignedTransaction` structure and types
+  - `signer.executeTransaction` returns the output of `client.sendSignedTransaction` -
+    so it changed as well
 
 - Rework `client.callContractReadFunction`:  \
   Previously:
@@ -39,15 +51,8 @@
 - Rename helper `toJsonBytes` to `objectToU8`
 - Rename helper `fromJsonBytes` to `u8ToObject`
 - Added `signedTransactionBorsh64` to type `SignedTransaction`
-- Changed `TransactionDetails` -> `ExecutionStep` -> `requiredDataIds: string[]` to
-  `requiredData: { dataId: string }[]`
-
-- Flattened `getTransactionResult` output -> removed the `result`
-  wrapper. `status` + `data`/`error` now sit at the top
-  level of the `TransactionResult` union (`tx.result.status` → `tx.status`,
-  `tx.result.data` → `tx.data`, `tx.result.error` → `tx.error`).
-
-### Removed
+- Migrated to TypeScript 7
+- Bump dependencies
 
 ---
 

@@ -14,6 +14,7 @@ import {
   stake,
   transfer,
 } from '../../../../../index';
+import { safeSleep } from '../../../../../src/_common/utils/sleep';
 import { createDefaultClient } from '../../../../utils/common';
 import { startSandbox } from '../../../../utils/sandbox/startSandbox';
 
@@ -25,7 +26,7 @@ describe('Get Account Balance', () => {
   const keyPair1 = randomEd25519KeyPair();
 
   beforeAll(async () => {
-    const sandbox = await startSandbox();
+    const sandbox = await startSandbox({ nearcoreVersion: '2.13.0' });
     client = createDefaultClient(sandbox);
     keyService = createMemoryKeyService({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, { privateKey: keyPair1.privateKey }],
@@ -44,7 +45,7 @@ describe('Get Account Balance', () => {
         receiverAccountId: 'abc1.nat',
       },
     });
-
+    await safeSleep(500);
     const { balance } = await client.getAccountInfo({ accountId: 'abc1.nat' });
 
     expect(balance.total.near).toBe('0');
@@ -62,7 +63,7 @@ describe('Get Account Balance', () => {
         receiverAccountId: 'abc2.nat',
       },
     });
-
+    await safeSleep(2000);
     const info1 = await client.getAccountInfo({ accountId: 'abc2.nat' });
     const { balance: balance1 } = info1;
 
@@ -81,7 +82,7 @@ describe('Get Account Balance', () => {
         receiverAccountId: 'nat',
       },
     });
-
+    await safeSleep(2000);
     const info2 = await client.getAccountInfo({ accountId: 'abc2.nat' });
     const { balance: balance2 } = info2;
 

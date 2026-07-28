@@ -233,11 +233,11 @@ useContractReadFunction({
   functionArgs: { bad: 1n },
 });
 
-// @ts-expect-error serializeArgs must return Uint8Array
 useContractReadFunction({
   contractAccountId,
   functionName,
   options: {
+    // @ts-expect-error serializeArgs must return Uint8Array
     serializeArgs: () => 1,
   },
 });

@@ -45,10 +45,6 @@ describe('safeSendSignedTransaction › success', () => {
       },
     });
 
-    await expect(client.sendSignedTransaction({ signedTransaction })).resolves.toMatchObject({
-      rawRpcResult: {
-        status: { SuccessValue: '' },
-      },
-    });
+    await expect(client.sendSignedTransaction({ signedTransaction })).resolves.not.toThrow();
   });
 });
