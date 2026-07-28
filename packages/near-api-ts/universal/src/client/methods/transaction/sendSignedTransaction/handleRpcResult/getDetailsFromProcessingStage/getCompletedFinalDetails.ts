@@ -1,17 +1,21 @@
-import type { Base64String, Result } from '../../../../../../../types/_common/common';
+import type { Base64String, Result, ResultErr } from '../../../../../../../types/_common/common';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../../../types/_common/transactionDetails/_common/_common/deserializers';
-import type { ExecutionFailureErrorAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
+import type {
+  ConversionFailureNatError,
+  ExecutionFailureErrorAtStage,
+} from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
 import type { TransactionDetailsAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
-import { NatError, resultNatError } from '../../../../../../_common/natError';
+import { resultNatError } from '../../../../../../_common/natError';
 import type { RpcFinalTransactionDetails } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
 import {
   isRpcTransactionOutcomeFailure,
   isRpcTransactionOutcomeSuccess,
 } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
+import { getConversionFailureError } from '../../../_common/_common/getConversionFailureError';
 import { getExecutionFailureCompletedFinal } from '../../../_common/getExecutionFailure';
 import { getExecutionSuccessCompletedFinal } from '../../../_common/getExecutionSuccess';
 import type { InnerClientTransactionDetailsError } from './getDetailsFromProcessingStage';
@@ -24,7 +28,9 @@ export const getCompletedFinalDetails = (args: {
   deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
 }): Result<
   TransactionDetailsAtStage['CompletedFinal'],
-  InnerClientTransactionDetailsError | ExecutionFailureErrorAtStage<'CompletedFinal'>
+  | InnerClientTransactionDetailsError
+  | ConversionFailureNatError
+  | ExecutionFailureErrorAtStage<'CompletedFinal'>
 > => {
   const {
     rpcDetails,
@@ -67,8 +73,8 @@ export const getCompletedFinalDetails = (args: {
     if (!executionFailure.ok) return executionFailure;
 
     return resultNatError(`Client.SendSignedTransaction.Rpc.${executionFailure.value.error.kind}`, {
-      signedTransactionBorsh64: args.signedTransactionBorsh64,
       transactionDetails: executionFailure.value,
+      signedTransactionBorsh64: args.signedTransactionBorsh64,
     });
   }
 
@@ -81,9 +87,12 @@ export const getCompletedFinalDetails = (args: {
     'InvalidTxError' in status.Failure &&
     isRpcTransactionOutcomeFailure(transactionOutcome)
   ) {
-    // TODO Finish after implement handling handlerError -> INVALID_TRANSACTION
-    // should return the same error
-    throw new Error('NatError -> InvalidTxError');
+    const error = getConversionFailureError(status.Failure.InvalidTxError);
+
+    return resultNatError(`Client.SendSignedTransaction.Rpc.${error.kind}`, {
+      info: error.context,
+      signedTransactionBorsh64: args.signedTransactionBorsh64,
+    }) as ResultErr<ConversionFailureNatError>;
   }
 
   throw new Error(`Unexpected rpcDetails: ${JSON.stringify(rpcDetails)}`);

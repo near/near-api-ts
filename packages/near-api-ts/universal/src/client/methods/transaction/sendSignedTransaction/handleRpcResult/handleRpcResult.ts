@@ -5,8 +5,11 @@ import type {
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../../types/_common/transactionDetails/_common/_common/deserializers';
-import type { ExecutionFailureKind } from '../../../../../../types/_common/transactionDetails/_common/_common/executionFailureError';
 import type { TransactionProcessingStage } from '../../../../../../types/_common/transactionDetails/_common/processingStage';
+import type {
+  ConversionFailureNatError,
+  ExecutionFailureErrorAtStage,
+} from '../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
 import type { TransactionDetailsFromStage } from '../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import { createNatError, type NatError, resultNatError } from '../../../../../_common/natError';
 import type { BaseRpcResponse } from '../../../../../_common/schemas/zod/rpc/rpcResponse';
@@ -58,7 +61,10 @@ export const handleRpcResult = (
   | NatError<'Client.SendSignedTransaction.DeserializeResultData.Failed'>
   | NatError<'Client.SendSignedTransaction.DeserializeActionSummaries.Failed'>
   | NatError<'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed'>
-  | NatError<`Client.SendSignedTransaction.Rpc.${ExecutionFailureKind}`>
+  | ConversionFailureNatError
+  | ExecutionFailureErrorAtStage<'ExecutedOptimistic'>
+  | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal'>
+  | ExecutionFailureErrorAtStage<'CompletedFinal'>
 > => {
   const rpcResult = RpcResultZodSchema.safeParse(rpcResponse.result);
 

@@ -1,7 +1,7 @@
 import { InvalidTxErrorSchema } from '@near-js/jsonrpc-types';
 import * as z from 'zod/mini';
 import type { Base64String, ResultErr } from '../../../../../types/_common/common';
-import type { ConversionFailureKind } from '../../../../../types/_common/transactionDetails/_common/_common/conversionFailureError';
+import type { ConversionFailureNatError } from '../../../../../types/client/methods/transaction/sendSignedTransaction/error';
 import { createNatError, NatError, resultNatError } from '../../../../_common/natError';
 import {
   type BaseRpcResponse,
@@ -54,7 +54,7 @@ export const handleRpcError = (
   | NatError<'Client.SendSignedTransaction.Exhausted'>
   | NatError<'Client.SendSignedTransaction.Rpc.Timeout'>
   | NatError<'Client.SendSignedTransaction.Internal'>
-  | NatError<`Client.SendSignedTransaction.Rpc.${ConversionFailureKind}`>
+  | ConversionFailureNatError
 > => {
   const rpcError = RpcErrorZodSchema.safeParse(rpcResponse.error);
 
@@ -74,7 +74,7 @@ export const handleRpcError = (
     return resultNatError(`Client.SendSignedTransaction.Rpc.${error.kind}`, {
       info: error.context,
       signedTransactionBorsh64,
-    });
+    }) as ResultErr<ConversionFailureNatError>;
   }
 
   return resultNatError('Client.SendSignedTransaction.Internal', { cause: rpcResponse });

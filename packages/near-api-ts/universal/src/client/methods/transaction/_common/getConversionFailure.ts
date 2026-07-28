@@ -60,8 +60,8 @@ export const getConversionFailureExecutedOptimistic = (
   if (!baseConversionFailure.ok) return baseConversionFailure;
 
   return result.ok({
-    ...baseConversionFailure.value,
     processingStage: 'ExecutedOptimistic' as const,
+    ...baseConversionFailure.value,
   });
 };
 
@@ -72,7 +72,7 @@ export const getConversionFailureCompletedFinal = (
   if (!baseConversionFailure.ok) return baseConversionFailure;
 
   return result.ok({
-    ...baseConversionFailure.value,
     processingStage: 'CompletedFinal' as const,
+    ...baseConversionFailure.value,
   });
 };

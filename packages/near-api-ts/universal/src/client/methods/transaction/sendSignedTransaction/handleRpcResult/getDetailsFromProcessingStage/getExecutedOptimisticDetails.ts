@@ -1,10 +1,13 @@
-import type { Base64String, Result } from '../../../../../../../types/_common/common';
+import type { Base64String, Result, ResultErr } from '../../../../../../../types/_common/common';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../../../types/_common/transactionDetails/_common/_common/deserializers';
-import type { ExecutionFailureErrorAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
+import type {
+  ExecutionFailureErrorAtStage,
+  ConversionFailureNatError,
+} from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
 import type { TransactionDetailsAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import { type NatError, resultNatError } from '../../../../../../_common/natError';
 import type { RpcExecutedOptimisticTransactionDetails } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionDetails';
@@ -12,6 +15,7 @@ import {
   isRpcTransactionOutcomeFailure,
   isRpcTransactionOutcomeSuccess,
 } from '../../../../../../_common/schemas/zod/rpc/transactionDetails/transactionOutcome';
+import { getConversionFailureError } from '../../../_common/_common/getConversionFailureError';
 import { getExecutionFailureExecutedOptimistic } from '../../../_common/getExecutionFailure';
 import { getExecutionSuccessExecutedOptimistic } from '../../../_common/getExecutionSuccess';
 import type { InnerClientTransactionDetailsError } from './getDetailsFromProcessingStage';
@@ -24,7 +28,9 @@ export const getExecutedOptimisticDetails = (args: {
   deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
 }): Result<
   TransactionDetailsAtStage['ExecutedOptimistic'],
-  InnerClientTransactionDetailsError | ExecutionFailureErrorAtStage<'ExecutedOptimistic'>
+  | InnerClientTransactionDetailsError
+  | ConversionFailureNatError
+  | ExecutionFailureErrorAtStage<'ExecutedOptimistic'>
 > => {
   const {
     rpcDetails,
@@ -67,8 +73,8 @@ export const getExecutedOptimisticDetails = (args: {
     if (!executionFailure.ok) return executionFailure;
 
     return resultNatError(`Client.SendSignedTransaction.Rpc.${executionFailure.value.error.kind}`, {
-      signedTransactionBorsh64: args.signedTransactionBorsh64,
       transactionDetails: executionFailure.value,
+      signedTransactionBorsh64: args.signedTransactionBorsh64,
     });
   }
 
@@ -81,9 +87,12 @@ export const getExecutedOptimisticDetails = (args: {
     'InvalidTxError' in status.Failure &&
     isRpcTransactionOutcomeFailure(transactionOutcome)
   ) {
-    // TODO Finish after implement handling handlerError -> INVALID_TRANSACTION
-    // should return the same error
-    throw new Error('NatError -> InvalidTxError');
+    const error = getConversionFailureError(status.Failure.InvalidTxError);
+
+    return resultNatError(`Client.SendSignedTransaction.Rpc.${error.kind}`, {
+      info: error.context,
+      signedTransactionBorsh64: args.signedTransactionBorsh64,
+    }) as ResultErr<ConversionFailureNatError>;
   }
 
   throw new Error(`Unexpected rpcDetails: ${JSON.stringify(rpcDetails)}`);

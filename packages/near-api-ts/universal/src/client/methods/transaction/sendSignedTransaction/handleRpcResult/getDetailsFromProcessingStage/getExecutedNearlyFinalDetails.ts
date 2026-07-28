@@ -64,8 +64,8 @@ export const getExecutedNearlyFinalDetails = (args: {
     if (!executionFailure.ok) return executionFailure;
 
     return resultNatError(`Client.SendSignedTransaction.Rpc.${executionFailure.value.error.kind}`, {
-      signedTransactionBorsh64: args.signedTransactionBorsh64,
       transactionDetails: executionFailure.value,
+      signedTransactionBorsh64: args.signedTransactionBorsh64,
     });
   }
 

@@ -9,7 +9,10 @@ import type {
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../../../types/_common/transactionDetails/_common/_common/deserializers';
 import type { TransactionProcessingStage } from '../../../../../../../types/_common/transactionDetails/_common/processingStage';
-import type { ExecutionFailureErrorAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
+import type {
+  ConversionFailureNatError,
+  ExecutionFailureErrorAtStage,
+} from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
 import type { TransactionDetailsFromStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import type { NatError } from '../../../../../../_common/natError';
 import type {
@@ -48,6 +51,7 @@ export type InnerClientTransactionDetailsError =
 
 export type TransactionDetailsError =
   | InnerClientTransactionDetailsError
+  | ConversionFailureNatError
   | ExecutionFailureErrorAtStage<'ExecutedOptimistic'>
   | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal'>
   | ExecutionFailureErrorAtStage<'CompletedFinal'>;
