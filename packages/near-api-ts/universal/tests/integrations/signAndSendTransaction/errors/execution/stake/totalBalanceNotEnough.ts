@@ -6,7 +6,7 @@ import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from './stake.test';
 
-export const notEnoughBalance = (context: TestContext) => async () => {
+export const totalBalanceNotEnough = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -34,13 +34,13 @@ export const notEnoughBalance = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.Stake.NotEnoughBalance');
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.Stake.TotalBalance.NotEnough');
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Action.Stake.NotEnoughBalance');
+  assertTxResultExecutionErrKind(txResult, 'Action.Stake.TotalBalance.NotEnough');
   expect(txResult.error.context).toMatchObject({
     accountId: 'nat',
     proposedStake: near('100000000'),

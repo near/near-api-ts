@@ -23,22 +23,21 @@ export const getConversionFailureError = (
       });
 
     if ('NotEnoughBalance' in invalidTxError)
-      return formErrorObject('Signer.NotEnoughBalance', {
-        transactionCost: yoctoNear(invalidTxError.NotEnoughBalance.cost),
+      return formErrorObject('TransactionCost.NotCovered', {
         signerAccountId: invalidTxError.NotEnoughBalance.signerId,
+        transactionCost: yoctoNear(invalidTxError.NotEnoughBalance.cost),
+        // What the balance was short of the cost the node quoted. The cost of the next attempt
+        // depends on the gas price of its block, so this is only the minimal top up.
+        minimalMissingAmount: yoctoNear(invalidTxError.NotEnoughBalance.cost).sub(
+          yoctoNear(invalidTxError.NotEnoughBalance.balance),
+        ),
       });
 
-    // if ('LackBalanceForState' in invalidTxError)
-    //   return formErrorObject('Signer.NotEnoughBalance', {
-    //     // transactionCost: yoctoNear(invalidTxError.LackBalanceForState.amount),
-    //     signerAccountId: invalidTxError.LackBalanceForState.signerId,
-    //   });
-
-    // if ('' in invalidTxError)
-    //   return formErrorObject('Signer.NotEnoughBalance', {
-    //     transactionCost: yoctoNear(invalidTxError.NotEnoughBalance.cost),
-    //     signerAccountId: invalidTxError.NotEnoughBalance.signerId,
-    //   });
+    if ('LackBalanceForState' in invalidTxError)
+      return formErrorObject('Signer.StorageUsage.NotCovered', {
+        signerAccountId: invalidTxError.LackBalanceForState.signerId,
+        missingAmount: yoctoNear(invalidTxError.LackBalanceForState.amount),
+      });
   }
 
   throw new Error(`Unexpected invalidTxError: ${JSON.stringify(invalidTxError)}`);

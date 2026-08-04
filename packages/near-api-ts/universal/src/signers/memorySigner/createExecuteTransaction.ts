@@ -55,10 +55,10 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (conte
           'Client.SendSignedTransaction.Timeout',
           'Client.SendSignedTransaction.Exhausted',
           'Client.SendSignedTransaction.Rpc.Timeout',
-          'Client.SendSignedTransaction.Rpc.Signer.NotEnoughBalance',
+          'Client.SendSignedTransaction.Rpc.TransactionCost.NotCovered',
           'Client.SendSignedTransaction.Rpc.Action.CreateAccount.AlreadyExists',
           'Client.SendSignedTransaction.Rpc.Action.Stake.BelowThreshold',
-          'Client.SendSignedTransaction.Rpc.Action.Stake.NotEnoughBalance',
+          'Client.SendSignedTransaction.Rpc.Action.Stake.TotalBalance.NotEnough',
           'Client.SendSignedTransaction.Rpc.Action.Stake.NotFound',
         ])
       ) {

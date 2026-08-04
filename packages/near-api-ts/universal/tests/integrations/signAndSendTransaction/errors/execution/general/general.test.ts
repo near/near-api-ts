@@ -5,8 +5,8 @@ import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 import { actionForbidden } from './actionForbidden';
-import { executorNotEnoughBalance } from './executorNotEnoughBalance';
 import { executorNotFound } from './executorNotFound';
+import { executorStorageUsageNotCovered } from './executorStorageUsageNotCovered';
 
 export type TestContext = {
   client: Client;
@@ -25,7 +25,7 @@ describe('signAndSendTransaction › General execution step errors', () => {
   });
 
   it('fails with Executor.NotFound', executorNotFound(context));
-  it('fails with Executor.NotEnoughBalance', executorNotEnoughBalance(context));
+  it('fails with Executor.StorageUsage.NotCovered', executorStorageUsageNotCovered(context));
 
   it(
     'fails with Action.Forbidden when try to perform self-only actions on the foreign account',

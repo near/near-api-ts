@@ -14,7 +14,7 @@ import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../../../../../utils/common';
 import { startSandbox } from '../../../../../../../utils/sandbox/startSandbox';
 
-describe('executeTransaction › Transaction.Action.Stake.Balance.TooLow', () => {
+describe('executeTransaction › Action.Stake.TotalBalance.NotEnough', () => {
   let client: Client;
   let keyService: MemoryKeyService;
   let createSigner: MemorySignerFactory;
@@ -29,7 +29,7 @@ describe('executeTransaction › Transaction.Action.Stake.Balance.TooLow', () =>
     return () => sandbox.stop();
   });
 
-  it('fails with Transaction.Action.Stake.Balance.TooLow when staking more than the balance', async () => {
+  it('fails with Action.Stake.TotalBalance.NotEnough when staking more than the balance', async () => {
     const nat = createSigner('nat');
 
     const res = await nat.safeExecuteTransaction({
@@ -44,7 +44,7 @@ describe('executeTransaction › Transaction.Action.Stake.Balance.TooLow', () =>
 
     assertNatErrKind(
       res,
-      'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.NotEnoughBalance',
+      'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.TotalBalance.NotEnough',
     );
   });
 });

@@ -4,7 +4,7 @@ import type { NearToken } from '../../../nearToken';
 
 interface GeneralExecutionErrorRegistry {
   'Executor.NotFound': { executorAccountId: AccountId };
-  'Executor.NotEnoughBalance': { executorAccountId: AccountId; missingAmount: NearToken };
+  'Executor.StorageUsage.NotCovered': { executorAccountId: AccountId; missingAmount: NearToken };
   'Action.Forbidden': { stepCreatorAccountId: AccountId; executorAccountId: AccountId };
 }
 
@@ -36,7 +36,7 @@ interface StakeErrorRegistry {
     proposedStake: NearToken;
     minimumStake: NearToken;
   };
-  'Action.Stake.NotEnoughBalance': {
+  'Action.Stake.TotalBalance.NotEnough': {
     accountId: AccountId;
     proposedStake: NearToken;
     totalBalance: NearToken;
@@ -65,6 +65,5 @@ export interface ExecutionFailureRegistry
 
 export type ExecutionFailureKind = keyof ExecutionFailureRegistry;
 
-export type ExecutionFailureError<K extends ExecutionFailureKind = ExecutionFailureKind> = K extends K
-  ? { kind: K; context: ExecutionFailureRegistry[K] }
-  : never;
+export type ExecutionFailureError<K extends ExecutionFailureKind = ExecutionFailureKind> =
+  K extends K ? { kind: K; context: ExecutionFailureRegistry[K] } : never;

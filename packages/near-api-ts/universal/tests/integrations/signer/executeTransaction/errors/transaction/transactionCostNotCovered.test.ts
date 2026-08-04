@@ -16,7 +16,7 @@ import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 
-describe('executeTransaction › Transaction.Signer.Balance.TooLow', () => {
+describe('executeTransaction › TransactionCost.NotCovered', () => {
   let client: Client;
   let keyService: MemoryKeyService;
   let createSigner: MemorySignerFactory;
@@ -32,7 +32,7 @@ describe('executeTransaction › Transaction.Signer.Balance.TooLow', () => {
     return () => sandbox.stop();
   });
 
-  it('fails with Transaction.Signer.Balance.TooLow when transferring more than the balance', async () => {
+  it('fails with TransactionCost.NotCovered when transferring more than the balance', async () => {
     const nat = createSigner('nat');
 
     // 1. Create an account with 10 FA keys
@@ -69,6 +69,6 @@ describe('executeTransaction › Transaction.Signer.Balance.TooLow', () => {
       },
     });
 
-    assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.Signer.NotEnoughBalance');
+    assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.TransactionCost.NotCovered');
   });
 });

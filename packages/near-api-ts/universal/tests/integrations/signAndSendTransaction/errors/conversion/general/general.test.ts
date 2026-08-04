@@ -6,12 +6,12 @@ import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 import { costOverflow } from './costOverflow';
 import { expired } from './expired';
-import { lackBalanceForState } from './lackBalanceForState';
 import { nonceInvalid } from './nonceInvalid';
 import { nonceTooLarge } from './nonceTooLarge';
 import { signatureInvalid } from './signatureInvalid';
-import { signerNotEnoughBalance } from './signerNotEnoughBalance';
 import { signerNotFound } from './signerNotFound';
+import { signerStorageUsageNotCovered } from './signerStorageUsageNotCovered';
+import { transactionCostNotCovered } from './transactionCostNotCovered';
 import { transactionSizeExceeded } from './transactionSizeExceeded';
 
 export type TestContext = {
@@ -69,18 +69,18 @@ describe('signAndSendTransaction › General conversion errors', () => {
   it('fails with Signer.NotFound when the signer account does not exist', signerNotFound(context));
 
   it(
-    'fails with Signer.NotEnoughBalance when the signer cannot cover the transaction cost',
-    signerNotEnoughBalance(context),
+    'fails with TransactionCost.NotCovered when the signer cannot cover the transaction cost',
+    transactionCostNotCovered(context),
+  );
+
+  it(
+    'fails with Signer.StorageUsage.NotCovered when the signer can no longer pay for its storage',
+    signerStorageUsageNotCovered(context),
   );
 
   // Unmapped errors -------------------------------------------------------------------
 
   it('fails with CostOverflow when the transaction cost does not fit u128', costOverflow(context));
-
-  it(
-    'fails with LackBalanceForState when the signer can no longer pay for its storage',
-    lackBalanceForState(context),
-  );
 
   // Skipped: a transaction big enough to fail the check no longer fits into the request
   // body the node accepts, so it can't be delivered at all — see `transactionSizeExceeded`.

@@ -27,11 +27,11 @@ export interface ExecuteTransactionPublicErrorRegistry {
   'MemorySigner.ExecuteTransaction.Exhausted': ExhaustedErrorContext;
 
   'MemorySigner.ExecuteTransaction.Rpc.Timeout': null;
-  'MemorySigner.ExecuteTransaction.Rpc.Signer.NotEnoughBalance': ConversionFailureError<'Signer.NotEnoughBalance'>['context'];
+  'MemorySigner.ExecuteTransaction.Rpc.TransactionCost.NotCovered': ConversionFailureError<'TransactionCost.NotCovered'>['context'];
 
   'MemorySigner.ExecuteTransaction.Rpc.Action.CreateAccount.AlreadyExists': ExecutionFailureError<'Action.CreateAccount.AlreadyExists'>['context'];
   'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.BelowThreshold': ExecutionFailureError<'Action.Stake.BelowThreshold'>['context'];
-  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.NotEnoughBalance': ExecutionFailureError<'Action.Stake.NotEnoughBalance'>['context'];
+  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.TotalBalance.NotEnough': ExecutionFailureError<'Action.Stake.TotalBalance.NotEnough'>['context'];
   'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.NotFound': ExecutionFailureError<'Action.Stake.NotFound'>['context'];
 
   'MemorySigner.ExecuteTransaction.Internal': InternalErrorContext;
@@ -53,12 +53,12 @@ type ExecuteTransactionError =
   | NatError<'MemorySigner.ExecuteTransaction.Aborted'>
   | NatError<'MemorySigner.ExecuteTransaction.Exhausted'>
   // RPC errors
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Signer.NotEnoughBalance'>
+  | NatError<'MemorySigner.ExecuteTransaction.Rpc.TransactionCost.NotCovered'>
   | NatError<'MemorySigner.ExecuteTransaction.Rpc.Timeout'>
   // // Rpc transaction action errors
   | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.CreateAccount.AlreadyExists'>
   | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.BelowThreshold'>
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.NotEnoughBalance'>
+  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.TotalBalance.NotEnough'>
   | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.NotFound'>
   // Stub
   | NatError<'MemorySigner.ExecuteTransaction.Internal'>;

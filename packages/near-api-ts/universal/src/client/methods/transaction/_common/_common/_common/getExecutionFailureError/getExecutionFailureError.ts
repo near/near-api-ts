@@ -19,7 +19,7 @@ export const getExecutionFailureError = (actionError: ActionError): ExecutionFai
 
     if ('LackBalanceForState' in kind)
       return {
-        kind: 'Executor.NotEnoughBalance',
+        kind: 'Executor.StorageUsage.NotCovered',
         context: {
           executorAccountId: kind.LackBalanceForState.accountId,
           missingAmount: yoctoNear(kind.LackBalanceForState.amount),
@@ -111,7 +111,7 @@ export const getExecutionFailureError = (actionError: ActionError): ExecutionFai
       const missingAmount = proposedStake.sub(totalBalance);
 
       return {
-        kind: 'Action.Stake.NotEnoughBalance',
+        kind: 'Action.Stake.TotalBalance.NotEnough',
         context: {
           accountId: kind.TriesToStake.accountId,
           proposedStake,

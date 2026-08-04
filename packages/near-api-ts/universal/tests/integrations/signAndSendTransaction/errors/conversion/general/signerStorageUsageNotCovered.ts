@@ -7,7 +7,7 @@ import {
   transfer,
 } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertUnmappedInvalidTxError } from '../../../../../utils/assertUnmappedInvalidTxError';
+import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import type { TestContext } from './general.test';
 
 // `ZERO_BALANCE_ACCOUNT_STORAGE_LIMIT` from `runtime/runtime/src/verifier.rs` — an account
@@ -21,7 +21,7 @@ const EXTRA_KEYS_COUNT = 5;
 
 const ACCOUNT_ID = 'storage.nat';
 
-export const lackBalanceForState = (context: TestContext) => async () => {
+export const signerStorageUsageNotCovered = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const accountKeyPair = randomEd25519KeyPair();
@@ -104,11 +104,8 @@ export const lackBalanceForState = (context: TestContext) => async () => {
     signedTransaction: drainAccountTransaction,
   });
 
-  assertUnmappedInvalidTxError(tx, {
-    LackBalanceForState: {
-      signerId: ACCOUNT_ID,
-      // The missing amount is the transaction cost, which depends on the current gas price.
-      amount: expect.any(String),
-    },
-  });
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Signer.StorageUsage.NotCovered');
+  expect(tx.error.context.info.signerAccountId).toBe(ACCOUNT_ID);
+  // The missing amount is the transaction cost, which depends on the current gas price.
+  expect(tx.error.context.info.missingAmount.yoctoNear).toBeGreaterThan(0n);
 };
