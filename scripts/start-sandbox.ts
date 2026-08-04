@@ -11,7 +11,7 @@ const sandbox = await Sandbox.start({
     ],
     additionalGenesis: {
       epoch_length: 500,
-      transaction_validity_period: 1000
+      transaction_validity_period: 1000,
     },
   },
 });

@@ -32,6 +32,6 @@ describe('memoryKeyService.hasKey', () => {
       // @ts-expect-error
       publicKey: 1,
     });
-    assertNatErrKind(result, 'MemoryKeyService.HasKey.Args.InvalidSchema')
+    assertNatErrKind(result, 'MemoryKeyService.HasKey.Args.InvalidSchema');
   });
 });

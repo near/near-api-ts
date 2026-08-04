@@ -69,7 +69,6 @@ export const safeVerifySignature: SafeVerifySignature = wrapInternalError(
 
     // small trick to raise compile-time error if not all curves are handled
     throw publicKey.curve satisfies never;
-
   },
 );
 

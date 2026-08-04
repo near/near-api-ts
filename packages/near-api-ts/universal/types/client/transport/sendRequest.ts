@@ -84,4 +84,6 @@ export type SendRequestError =
   | NatError<'SendRequest.Aborted'>
   | NatError<'SendRequest.Exhausted'>;
 
-export type SendRequest = (args: SendRequestArgs) => Promise<Result<BaseRpcResponse, SendRequestError>>;
+export type SendRequest = (
+  args: SendRequestArgs,
+) => Promise<Result<BaseRpcResponse, SendRequestError>>;

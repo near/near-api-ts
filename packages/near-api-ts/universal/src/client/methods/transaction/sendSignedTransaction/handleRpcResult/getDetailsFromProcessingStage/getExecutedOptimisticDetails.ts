@@ -5,8 +5,8 @@ import type {
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../../../types/_common/transactionDetails/_common/_common/deserializers';
 import type {
-  ExecutionFailureErrorAtStage,
   ConversionFailureNatError,
+  ExecutionFailureErrorAtStage,
 } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
 import type { TransactionDetailsAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import { type NatError, resultNatError } from '../../../../../../_common/natError';

@@ -12,7 +12,7 @@ import type { CacheState } from './cache';
 
 export interface GetRecentBlockHashPublicErrorRegistry {
   'Client.GetRecentBlockHash.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'Client.GetRecentBlockHash.PreferredRpc.NotFound': PreferredRpcNotFoundErrorContext  ;
+  'Client.GetRecentBlockHash.PreferredRpc.NotFound': PreferredRpcNotFoundErrorContext;
   'Client.GetRecentBlockHash.Timeout': TimeoutErrorContext;
   'Client.GetRecentBlockHash.Aborted': AbortedErrorContext;
   'Client.GetRecentBlockHash.Exhausted': ExhaustedErrorContext;

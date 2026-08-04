@@ -10,7 +10,7 @@ interface GeneralConversionErrorRegistry {
   'Signer.StorageUsage.NotCovered': { signerAccountId: AccountId; missingAmount: NearToken };
   'Nonce.Invalid': { transactionNonce: TransactionNonce; accessKeyNonce: TransactionNonce };
   'Signature.Invalid': null;
-  'Expired': null; // TODO rename
+  Expired: null; // TODO rename
   'BlockHash.NotOnChain': null;
   'TransactionCost.Overflow': null;
   'TransactionCost.NotCovered': {

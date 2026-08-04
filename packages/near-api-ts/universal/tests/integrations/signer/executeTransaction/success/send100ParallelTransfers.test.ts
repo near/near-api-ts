@@ -62,8 +62,6 @@ describe('executeTransaction › success', () => {
 
     // log(sendNearTokensResults);
 
-    sendNearTokensResults.forEach((result) =>
-      console.log(result.transactionHash, result),
-    );
+    sendNearTokensResults.forEach((result) => console.log(result.transactionHash, result));
   });
 });

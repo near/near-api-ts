@@ -1,5 +1,5 @@
 import type { MutateOptions } from '@tanstack/react-query';
-import type { Message, SignedMessage, AccountId } from 'near-api-ts';
+import type { AccountId, Message, SignedMessage } from 'near-api-ts';
 import type { Prettify } from '../../../_common/common.ts';
 import type { BaseUseMutationResult, MutationOptions } from '../../_common/tanstackMutation.ts';
 

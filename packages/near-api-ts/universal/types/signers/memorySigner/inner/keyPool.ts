@@ -1,6 +1,6 @@
 import type { NatError } from '../../../../src/_common/natError';
 import type { FunctionCallKey } from '../../../_common/accountAccessKey';
-import type { AccountId, TransactionNonce, Result } from '../../../_common/common';
+import type { AccountId, Result, TransactionNonce } from '../../../_common/common';
 import type { PublicKey } from '../../../_common/crypto';
 import type { MemorySignerErrorContext } from '../_common/errorContext';
 import type { MemorySignerContext } from '../memorySigner';

@@ -42,9 +42,6 @@ describe('executeTransaction › Transaction.Action.Stake.BelowThreshold', () =>
       },
     });
 
-    assertNatErrKind(
-      res,
-      'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.BelowThreshold',
-    );
+    assertNatErrKind(res, 'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.BelowThreshold');
   });
 });

@@ -14,9 +14,7 @@ import {
   transfer,
 } from '../../index';
 import { safeSleep } from '../../src/_common/utils/sleep';
-import {
-  executeTransaction
-} from '../../src/signers/memorySigner/tasker/executeTask/executors/executeTransaction';
+import { executeTransaction } from '../../src/signers/memorySigner/tasker/executeTask/executors/executeTransaction';
 import { createDefaultClient, getFileBytes, log } from '../utils/common';
 import { startSandbox } from '../utils/sandbox/startSandbox';
 
@@ -31,7 +29,7 @@ describe('yield contract', () => {
   });
 
   it('test', async () => {
-    const testnetClient = createTestnetClient()
+    const testnetClient = createTestnetClient();
 
     const keyService = createMemoryKeyService({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
@@ -49,7 +47,7 @@ describe('yield contract', () => {
         receiverAccountId: 'yield.nat',
       },
     });
-    log(res)
+    log(res);
     // // #1: Create yield contract
     // await nat.executeTransaction({
     //   intent: {

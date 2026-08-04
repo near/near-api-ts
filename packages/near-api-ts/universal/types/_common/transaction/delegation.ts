@@ -1,10 +1,7 @@
 import type { Prettify } from '../../utils';
 import type { AccountId, Base64String, BlockHash, BlockHeight, TransactionNonce } from '../common';
 import type { PublicKey, Signature } from '../crypto';
-import type {
-  AddFullAccessKeyAction,
-  AddFunctionCallKeyAction,
-} from './actions/addKey';
+import type { AddFullAccessKeyAction, AddFunctionCallKeyAction } from './actions/addKey';
 import type { CreateAccountAction } from './actions/createAccount';
 import type { DeleteAccountAction } from './actions/deleteAccount';
 import type { DeleteKeyAction } from './actions/deleteKey';

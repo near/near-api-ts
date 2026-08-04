@@ -5,8 +5,8 @@ import React from 'react';
 import { Topbar } from './_components/Topbar/Topbar';
 import './globals.css';
 import '@mantine/core/styles.css';
-import { Navigation } from './_components/Navigation/Navigation';
 import { CustomNearProvider } from '@/app/CustomNearProvider.tsx';
+import { Navigation } from './_components/Navigation/Navigation';
 
 const displayFont = Playfair_Display({
   subsets: ['latin'],

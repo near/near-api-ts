@@ -1,7 +1,10 @@
 import type { Result } from '../../../../../types/_common/common';
 import type { InnerRpcEndpoint } from '../../../../../types/client/transport/transport';
 import { createNatError, type NatError } from '../../../../_common/natError';
-import type { BaseRpcError, BaseRpcResponse } from '../../../../_common/schemas/zod/rpc/rpcResponse';
+import type {
+  BaseRpcError,
+  BaseRpcResponse,
+} from '../../../../_common/schemas/zod/rpc/rpcResponse';
 import { result } from '../../../../_common/utils/result';
 
 export type HighLevelRpcErrors =

@@ -43,7 +43,6 @@ export type KeyIf<K extends PropertyKey, V> = [V] extends [undefined]
  */
 export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
-
 /**
  * Stricter version of the built-in `Exclude<T, U>`.
  *
