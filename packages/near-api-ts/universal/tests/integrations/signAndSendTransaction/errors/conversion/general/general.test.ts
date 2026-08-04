@@ -32,15 +32,14 @@ export type TestContext = {
  *   comes back as `SignerDoesNotExist` instead — the case right above.
  * - `InvalidReceiverId` — nothing in 2.13.2 constructs it anymore; only its `Display` arm is
  *   left in `core/primitives/src/errors.rs`.
- * - `InvalidChain` — `validity_period_validate_is_ancestor` reports it when the block the
- *   transaction is built on is not an ancestor of the current head, so it takes a fork; a
- *   single-node sandbox only ever has one chain.
  * - `InvalidTransactionVersion` — `check_valid_for_config` gates transactions that need
  *   `GasKeys`, `StrictNonce` or `PostQuantumSignatures`; all three are live from protocol
  *   version 85 and the sandbox runs 86, so no transaction can be too new for it.
  * - `StorageError` — an internal trie or database failure of the node itself.
  * - `ShardCongested` / `ShardStuck` — both need a shard to be in a state a healthy sandbox
  *   never reaches on its own, so they live in the `congestion` group, which builds it.
+ * - `InvalidChain` — needs a node whose head trails the block the transaction was built on,
+ *   which `invalidChain.test.ts` arranges.
  * - `InvalidNonceIndex`, `NotEnoughGasKeyBalance`, `NotEnoughBalanceForDeposit` — produced
  *   only by `verify_and_charge_gas_key_tx_ephemeral`, i.e. for transactions signed with a gas
  *   key, which the library doesn't build.
