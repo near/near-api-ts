@@ -5,6 +5,13 @@ import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 import { costOverflow } from './costOverflow';
+import { expired } from './expired';
+import { lackBalanceForState } from './lackBalanceForState';
+import { nonceInvalid } from './nonceInvalid';
+import { nonceTooLarge } from './nonceTooLarge';
+import { signatureInvalid } from './signatureInvalid';
+import { signerNotEnoughBalance } from './signerNotEnoughBalance';
+import { signerNotFound } from './signerNotFound';
 import { transactionSizeExceeded } from './transactionSizeExceeded';
 
 export type TestContext = {
@@ -12,6 +19,37 @@ export type TestContext = {
   defaultKeyPair: KeyPair;
 };
 
+/**
+ * The `InvalidTxError` variants that don't belong to `InvalidAccessKeyError` or
+ * `ActionsValidationError`. The first group is already mapped to our own errors, the rest
+ * still arrives as the raw nearcore payload — see `assertUnmappedInvalidTxError`.
+ *
+ * The variants the enum has left over never reach a client talking to a stock node:
+ *
+ * - `InvalidSignerId` — the account-not-found error of the chunk application path
+ *   (`Runtime::apply`, `runtime/runtime/src/lib.rs`), for a transaction that is already inside
+ *   a chunk. Everything that goes through `send_tx` is checked against the state first and
+ *   comes back as `SignerDoesNotExist` instead — the case right above.
+ * - `InvalidReceiverId` — nothing in 2.13.2 constructs it anymore; only its `Display` arm is
+ *   left in `core/primitives/src/errors.rs`.
+ * - `InvalidChain` — `validity_period_validate_is_ancestor` reports it when the block the
+ *   transaction is built on is not an ancestor of the current head, so it takes a fork; a
+ *   single-node sandbox only ever has one chain.
+ * - `InvalidTransactionVersion` — `check_valid_for_config` gates transactions that need
+ *   `GasKeys`, `StrictNonce` or `PostQuantumSignatures`; all three are live from protocol
+ *   version 85 and the sandbox runs 86, so no transaction can be too new for it.
+ * - `StorageError` — an internal trie or database failure of the node itself.
+ * - `ShardCongested` / `ShardStuck` — the receiving shard stops accepting transactions once
+ *   its congestion level reaches `reject_tx_congestion_threshold` (0.8). For `ShardStuck` that
+ *   means 100 missed chunks (0.8 of `max_congestion_missed_chunks`, 125), which a single node
+ *   producing every chunk never accumulates. For `ShardCongested` it means 320 Pgas of delayed
+ *   receipts (0.8 of `max_congestion_incoming_gas`, 400 Pgas): reproducible, but only by
+ *   flooding the shard with hundreds of gas-burning calls for about a minute, so it is left to
+ *   a manual experiment rather than a test in this suite.
+ * - `InvalidNonceIndex`, `NotEnoughGasKeyBalance`, `NotEnoughBalanceForDeposit` — produced
+ *   only by `verify_and_charge_gas_key_tx_ephemeral`, i.e. for transactions signed with a gas
+ *   key, which the library doesn't build.
+ */
 describe('signAndSendTransaction › General conversion errors', () => {
   const context = {
     defaultKeyPair: keyPair(DEFAULT_PRIVATE_KEY),
@@ -23,6 +61,33 @@ describe('signAndSendTransaction › General conversion errors', () => {
     return () => sandbox.stop();
   });
 
+  // Mapped errors ---------------------------------------------------------------------
+
+  it(
+    'fails with Signature.Invalid when the signature does not match the signer public key',
+    signatureInvalid(context),
+  );
+
+  it('fails with Nonce.Invalid when the nonce is already used', nonceInvalid(context));
+
+  it('fails with Expired when the block hash is not on the chain anymore', expired(context));
+
+  it('fails with Signer.NotFound when the signer account does not exist', signerNotFound(context));
+
+  it(
+    'fails with Signer.NotEnoughBalance when the signer cannot cover the transaction cost',
+    signerNotEnoughBalance(context),
+  );
+
+  // Unmapped errors -------------------------------------------------------------------
+
+  it('fails with CostOverflow when the transaction cost does not fit u128', costOverflow(context));
+
+  it(
+    'fails with LackBalanceForState when the signer can no longer pay for its storage',
+    lackBalanceForState(context),
+  );
+
   // Skipped: a transaction big enough to fail the check no longer fits into the request
   // body the node accepts, so it can't be delivered at all — see `transactionSizeExceeded`.
   it.skip(
@@ -30,5 +95,10 @@ describe('signAndSendTransaction › General conversion errors', () => {
     transactionSizeExceeded(context),
   );
 
-  it('fails with CostOverflow when the transaction cost does not fit u128', costOverflow(context));
+  // Skipped: the node skips the nonce upper bound check while it validates an incoming
+  // transaction, so the error never reaches the client — see `nonceTooLarge`.
+  it.skip(
+    'fails with NonceTooLarge when the nonce is above the upper bound of the current block',
+    nonceTooLarge(context),
+  );
 });

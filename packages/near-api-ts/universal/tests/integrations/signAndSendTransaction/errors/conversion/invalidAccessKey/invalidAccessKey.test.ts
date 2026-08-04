@@ -16,6 +16,12 @@ export type TestContext = {
   defaultKeyPair: KeyPair;
 };
 
+/**
+ * `InvalidTxError::InvalidAccessKeyError` wraps `InvalidAccessKeyError`. Its remaining two
+ * variants — `DelegateActionRequiresGasKey` and `DelegateActionRequiresNonGasKey` — decide
+ * which kind of key may sign a delegate action, and the library doesn't build delegate
+ * actions yet, so no transaction it produces can reach them.
+ */
 describe('signAndSendTransaction › InvalidAccessKey.* conversion errors', () => {
   const context = {
     defaultKeyPair: keyPair(DEFAULT_PRIVATE_KEY),
