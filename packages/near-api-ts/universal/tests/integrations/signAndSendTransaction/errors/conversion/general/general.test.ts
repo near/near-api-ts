@@ -39,13 +39,8 @@ export type TestContext = {
  *   `GasKeys`, `StrictNonce` or `PostQuantumSignatures`; all three are live from protocol
  *   version 85 and the sandbox runs 86, so no transaction can be too new for it.
  * - `StorageError` — an internal trie or database failure of the node itself.
- * - `ShardCongested` / `ShardStuck` — the receiving shard stops accepting transactions once
- *   its congestion level reaches `reject_tx_congestion_threshold` (0.8). For `ShardStuck` that
- *   means 100 missed chunks (0.8 of `max_congestion_missed_chunks`, 125), which a single node
- *   producing every chunk never accumulates. For `ShardCongested` it means 320 Pgas of delayed
- *   receipts (0.8 of `max_congestion_incoming_gas`, 400 Pgas): reproducible, but only by
- *   flooding the shard with hundreds of gas-burning calls for about a minute, so it is left to
- *   a manual experiment rather than a test in this suite.
+ * - `ShardCongested` / `ShardStuck` — both need a shard to be in a state a healthy sandbox
+ *   never reaches on its own, so they live in the `congestion` group, which builds it.
  * - `InvalidNonceIndex`, `NotEnoughGasKeyBalance`, `NotEnoughBalanceForDeposit` — produced
  *   only by `verify_and_charge_gas_key_tx_ephemeral`, i.e. for transactions signed with a gas
  *   key, which the library doesn't build.

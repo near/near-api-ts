@@ -24,12 +24,18 @@ const VALIDATOR_BALANCE = near('0');
 const TREASURY_BALANCE = near('100000');
 const DEFAULT_TEST_BALANCE = near('10000');
 
-const TOTAL_SUPPLY = yoctoNear(
-  VALIDATOR_BALANCE.yoctoNear * 2n +
-    VALIDATOR_STAKE.yoctoNear * 2n +
-    TREASURY_BALANCE.yoctoNear +
-    DEFAULT_TEST_BALANCE.yoctoNear * 4n,
-);
+const DEFAULT_EPOCH_LENGTH = 60;
+const DEFAULT_BLOCK_PRODUCTION_DELAY_MS = 600;
+const DEFAULT_MAX_BLOCK_PRODUCTION_DELAY_MS = 2000;
+
+const totalSupply = (stakes: readonly [NearToken, NearToken]) =>
+  yoctoNear(
+    VALIDATOR_BALANCE.yoctoNear * 2n +
+      stakes[0].yoctoNear +
+      stakes[1].yoctoNear +
+      TREASURY_BALANCE.yoctoNear +
+      DEFAULT_TEST_BALANCE.yoctoNear * 4n,
+  );
 
 const accountRecord = (accountId: string, amount: NearToken, locked?: NearToken) => ({
   Account: {
@@ -55,7 +61,13 @@ const accessKeyRecord = (accountId: string, publicKey = DEFAULT_PUBLIC_KEY) => (
   },
 });
 
-const additionalGenesis = {
+const createGenesis = ({
+  stakes,
+  epochLength,
+}: {
+  stakes: readonly [NearToken, NearToken];
+  epochLength: number;
+}) => ({
   protocol_version: 83,
   genesis_time: '2026-05-05T10:53:26.971459Z',
   chain_id: 'shardnet',
@@ -63,20 +75,20 @@ const additionalGenesis = {
   num_block_producer_seats: 2,
   num_block_producer_seats_per_shard: [1, 1],
   avg_hidden_validator_seats_per_shard: [],
-  epoch_length: 60,
+  epoch_length: epochLength,
   validators: [
     {
       account_id: 'node0',
       public_key: NODE0_PUBLIC_KEY,
-      amount: VALIDATOR_STAKE.yoctoNear.toString(),
+      amount: stakes[0].yoctoNear.toString(),
     },
     {
       account_id: 'node1',
       public_key: NODE1_PUBLIC_KEY,
-      amount: VALIDATOR_STAKE.yoctoNear.toString(),
+      amount: stakes[1].yoctoNear.toString(),
     },
   ],
-  total_supply: TOTAL_SUPPLY.yoctoNear.toString(),
+  total_supply: totalSupply(stakes).yoctoNear.toString(),
   protocol_treasury_account: 'sandbox',
   shard_layout: {
     V2: {
@@ -98,9 +110,9 @@ const additionalGenesis = {
   minimum_validators_per_shard: 1,
   shuffle_shard_assignment_for_chunk_producers: false,
   records: [
-    accountRecord('node0', VALIDATOR_BALANCE, VALIDATOR_STAKE),
+    accountRecord('node0', VALIDATOR_BALANCE, stakes[0]),
     accessKeyRecord('node0', NODE0_PUBLIC_KEY),
-    accountRecord('node1', VALIDATOR_BALANCE, VALIDATOR_STAKE),
+    accountRecord('node1', VALIDATOR_BALANCE, stakes[1]),
     accessKeyRecord('node1', NODE1_PUBLIC_KEY),
     accountRecord('sandbox', TREASURY_BALANCE),
     accessKeyRecord('sandbox'),
@@ -113,7 +125,7 @@ const additionalGenesis = {
     accountRecord('relay', DEFAULT_TEST_BALANCE),
     accessKeyRecord('relay', 'ed25519:AkTn58AmaJcF7L15WqKUUfm8fv5gwzSymHXg3EDRpC44'),
   ],
-};
+});
 
 const additionalAccounts = [
   new GenesisAccount(
@@ -148,6 +160,9 @@ const createNodeConfig = ({
   nodeKey,
   validatorKey,
   trackedShard,
+  genesis,
+  blockProductionDelayMs,
+  maxBlockProductionDelayMs,
   bootNodes = '',
 }: {
   rpcPort?: number;
@@ -155,6 +170,9 @@ const createNodeConfig = ({
   nodeKey: Record<string, string>;
   validatorKey: Record<string, string>;
   trackedShard: string;
+  genesis: ReturnType<typeof createGenesis>;
+  blockProductionDelayMs: number;
+  maxBlockProductionDelayMs: number;
   bootNodes?: string;
 }): SandboxConfig => ({
   rpcPort,
@@ -162,7 +180,7 @@ const createNodeConfig = ({
   nodeKey,
   validatorKey,
   additionalAccounts,
-  additionalGenesis,
+  additionalGenesis: genesis,
   additionalConfig: {
     network: {
       boot_nodes: bootNodes,
@@ -177,11 +195,11 @@ const createNodeConfig = ({
       },
       min_block_production_delay: {
         secs: 0,
-        nanos: 600000000,
+        nanos: blockProductionDelayMs * 1_000_000,
       },
       max_block_production_delay: {
-        secs: 2,
-        nanos: 0,
+        secs: 0,
+        nanos: maxBlockProductionDelayMs * 1_000_000,
       },
       produce_empty_blocks: true,
     },
@@ -193,11 +211,46 @@ const createNodeConfig = ({
 type StartShardedSandboxOptions = {
   rpcPorts?: readonly [node0: number, node1: number];
   netPorts?: readonly [node0: number, node1: number];
+  /**
+   * Which shard each node tracks. Both nodes are validators, and a validator can only
+   * produce chunks for a shard it tracks — pointing both of them at the same shard leaves
+   * the other one without a chunk producer while the chain keeps producing blocks.
+   */
+  trackedShards?: readonly [node0: string, node1: string];
+  /**
+   * Genesis stake of each validator. Block production needs approvals from more than two
+   * thirds of the stake, so giving one node the bulk of it keeps the chain running when the
+   * other one is stopped.
+   */
+  validatorStakes?: readonly [node0: NearToken, node1: NearToken];
+  /**
+   * Blocks per epoch. The validator set — and with it the chunk producer of every shard — is
+   * only recomputed between epochs, so a long epoch keeps a stopped node responsible for its
+   * shard for the whole test.
+   */
+  epochLength?: number;
+  /** `min_block_production_delay` of both nodes, in milliseconds. Defaults to 600. */
+  blockProductionDelayMs?: number;
+  /**
+   * `max_block_production_delay` of both nodes, in milliseconds. Defaults to 2000. This is how
+   * long a block producer waits for the approvals of a node that is gone, so it sets the pace
+   * of a chain that lost one of its validators.
+   */
+  maxBlockProductionDelayMs?: number;
 };
 
 export const startShardedSandbox = async (options: StartShardedSandboxOptions = {}) => {
   const [node0RpcPort, node1RpcPort] = options.rpcPorts ?? [];
   const [node0NetPort, node1NetPort] = options.netPorts ?? (await getAvailablePorts(2));
+  const [node0TrackedShard, node1TrackedShard] = options.trackedShards ?? ['s0.v0', 's1.v0'];
+  const blockProductionDelayMs =
+    options.blockProductionDelayMs ?? DEFAULT_BLOCK_PRODUCTION_DELAY_MS;
+  const maxBlockProductionDelayMs =
+    options.maxBlockProductionDelayMs ?? DEFAULT_MAX_BLOCK_PRODUCTION_DELAY_MS;
+  const genesis = createGenesis({
+    stakes: options.validatorStakes ?? [VALIDATOR_STAKE, VALIDATOR_STAKE],
+    epochLength: options.epochLength ?? DEFAULT_EPOCH_LENGTH,
+  });
   const node0BootNode = `${NODE0_PUBLIC_KEY}@${LOCALHOST}:${node0NetPort}`;
 
   const node0 = await Sandbox.start({
@@ -215,7 +268,10 @@ export const startShardedSandbox = async (options: StartShardedSandboxOptions = 
         public_key: NODE0_PUBLIC_KEY,
         secret_key: NODE0_PRIVATE_KEY,
       },
-      trackedShard: 's0.v0',
+      trackedShard: node0TrackedShard,
+      genesis,
+      blockProductionDelayMs,
+      maxBlockProductionDelayMs,
     }),
   });
 
@@ -236,7 +292,10 @@ export const startShardedSandbox = async (options: StartShardedSandboxOptions = 
           public_key: NODE1_PUBLIC_KEY,
           secret_key: NODE1_PRIVATE_KEY,
         },
-        trackedShard: 's1.v0',
+        trackedShard: node1TrackedShard,
+        genesis,
+        blockProductionDelayMs,
+        maxBlockProductionDelayMs,
         bootNodes: node0BootNode,
       }),
     });
