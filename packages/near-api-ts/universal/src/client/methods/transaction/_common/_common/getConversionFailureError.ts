@@ -98,6 +98,29 @@ export const getConversionFailureError = (
           });
       }
     }
+
+    // Shard
+    // `shard_accepts_transactions` (`core/primitives/src/congestion_info.rs`) turns the incoming
+    // receipts, the outgoing ones, the memory they hold and the missed chunks of the receiver
+    // shard into four fractions of their limits, and rejects the transaction once the largest of
+    // them reaches `reject_tx_congestion_threshold` (0.8). `congestionLevel` is that largest
+    // fraction, which here is one of the first three — the node reports the missed chunks as
+    // `Shard.Stuck` instead.
+    if ('ShardCongested' in invalidTxError)
+      return formErrorObject('Shard.Congested', {
+        shardId: invalidTxError.ShardCongested.shardId,
+        congestionLevel: invalidTxError.ShardCongested.congestionLevel,
+      });
+
+    // The same check when the missed chunks are the largest fraction: the shard hasn't included
+    // a chunk for `missedChunksCount` blocks out of the `max_congestion_missed_chunks` (125) it
+    // takes to be fully congested, so it isn't working through a backlog — it isn't making
+    // progress at all.
+    if ('ShardStuck' in invalidTxError)
+      return formErrorObject('Shard.Stuck', {
+        shardId: invalidTxError.ShardStuck.shardId,
+        missedChunksCount: invalidTxError.ShardStuck.missedChunks,
+      });
   }
 
   throw new Error(`Unexpected invalidTxError: ${JSON.stringify(invalidTxError)}`);

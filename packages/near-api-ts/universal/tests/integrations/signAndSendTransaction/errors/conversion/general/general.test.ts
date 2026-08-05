@@ -33,7 +33,7 @@ export type TestContext = {
  *   version 85 and the sandbox runs 86, so no transaction can be too new for it.
  * - `StorageError` — an internal trie or database failure of the node itself.
  * - `ShardCongested` / `ShardStuck` — both need a shard to be in a state a healthy sandbox
- *   never reaches on its own, so they live in the `congestion` group, which builds it.
+ *   never reaches on its own, so they live in the `shard` group, which builds it.
  * - `InvalidChain` — needs a node whose head trails the block the transaction was built on,
  *   which `blockHashNotAncestor.test.ts` arranges.
  * - `InvalidNonceIndex`, `NotEnoughGasKeyBalance`, `NotEnoughBalanceForDeposit` — produced

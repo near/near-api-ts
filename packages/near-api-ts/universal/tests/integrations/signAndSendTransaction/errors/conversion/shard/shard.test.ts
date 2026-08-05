@@ -4,7 +4,7 @@ import { type Client, keyPair } from '../../../../../../index';
 import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
-import { shardCongested } from './shardCongested';
+import { congested } from './congested';
 
 export type TestContext = {
   client: Client;
@@ -13,15 +13,15 @@ export type TestContext = {
 };
 
 /**
- * Congestion control errors: the node turns a transaction down because of the state of the
- * receiving shard rather than anything about the transaction itself. Both of them are things
- * a mainnet user can run into, so the case below builds the condition on purpose — it floods
- * a sandbox shard until it stops accepting transactions, which takes about a minute.
+ * Nothing is wrong with the transaction — the receiving shard can't take it right now. Both
+ * `InvalidTxError` variants of the block are mapped to a `ShardErrorRegistry` kind, and both are
+ * things a mainnet user can run into, so the cases build the state on purpose: the one below
+ * floods a sandbox shard until it stops accepting transactions, which takes about a minute.
  *
- * Its sibling `ShardStuck` (100 missed chunks) is covered separately, in `shardStuck.test.ts`,
+ * Its sibling `Shard.Stuck` (100 missed chunks) is covered separately, in `stuck.test.ts`,
  * because it needs a chain whose shard has lost its chunk producer.
  */
-describe('signAndSendTransaction › Congestion conversion errors', () => {
+describe('signAndSendTransaction › Shard conversion errors', () => {
   const context = {
     defaultKeyPair: keyPair(DEFAULT_PRIVATE_KEY),
   } as TestContext;
@@ -34,8 +34,8 @@ describe('signAndSendTransaction › Congestion conversion errors', () => {
   });
 
   it(
-    'fails with ShardCongested when the receiving shard is working through a receipt backlog',
+    'fails with Shard.Congested when the receiving shard is working through a receipt backlog',
     { timeout: 180_000 },
-    shardCongested(context),
+    congested(context),
   );
 });

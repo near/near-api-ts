@@ -19,7 +19,7 @@ const CONTRACT_ACCOUNT_ID = 'burner.nat';
 const CHUNK_GAS_LIMIT = 5_000_000_000_000_000;
 
 // Kept far below the ~320 queued receipts that would congest the shard and mask the error
-// under `ShardCongested`: the queue only has to stay non-empty, not grow.
+// under `Shard.Congested`: the queue only has to stay non-empty, not grow.
 const INITIAL_CALLS = 30;
 const TOP_UP_CALLS = 12;
 const TOP_UP_EVERY = 3;

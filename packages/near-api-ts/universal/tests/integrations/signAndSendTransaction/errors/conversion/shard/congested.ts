@@ -8,17 +8,20 @@ import {
 } from '../../../../../../index';
 import { safeSleep } from '../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertUnmappedInvalidTxError } from '../../../../../utils/assertUnmappedInvalidTxError';
 import { GAS_BURNER_FUNCTION_NAME, GAS_BURNER_WASM } from '../../../../../utils/wasm/gasBurner';
-import type { TestContext } from './congestion.test';
+import type { TestContext } from './shard.test';
 
 const CONTRACT_ACCOUNT_ID = 'burner.nat';
+
+// `reject_tx_congestion_threshold`: the shard stops accepting transactions once its congestion
+// level reaches this fraction of a fully congested one.
+const REJECT_TX_CONGESTION_THRESHOLD = 0.8;
 
 // `max_total_prepaid_gas`, and with it the congestion every queued receipt is worth.
 const PREPAID_TERA_GAS = '1000';
 
-// `reject_tx_congestion_threshold` (0.8) of `max_congestion_incoming_gas` (400 Pgas) is
-// 320 Pgas of delayed receipts, so at 1000 TGas apiece the queue has to hold 320 of them.
+// That threshold of `max_congestion_incoming_gas` (400 Pgas) is 320 Pgas of delayed receipts,
+// so at 1000 TGas apiece the queue has to hold 320 of them.
 const CALLS_PER_ROUND = 400;
 const ROUNDS = 12;
 
@@ -31,7 +34,7 @@ const ROUNDS = 12;
  * counts with its full prepaid gas, and once the queue passes the threshold
  * `congestion_control_accepts_transaction` turns down anything addressed to the shard.
  */
-export const shardCongested = (context: TestContext) => async () => {
+export const congested = (context: TestContext) => async () => {
   const { client, defaultKeyPair, rpcUrl } = context;
 
   const natKey = await client.getAccountAccessKey({
@@ -131,16 +134,15 @@ export const shardCongested = (context: TestContext) => async () => {
     });
 
     const tx = await client.safeSendSignedTransaction({ signedTransaction: probe });
-    const cause = tx.ok ? undefined : (tx.error.context as { cause?: Error }).cause;
 
-    if (cause?.message.includes('ShardCongested')) {
-      assertUnmappedInvalidTxError(tx, {
-        ShardCongested: {
-          // The single shard of the sandbox, and whatever the queue has grown to.
-          shardId: 0,
-          congestionLevel: expect.any(Number),
-        },
-      });
+    if (!tx.ok && tx.error.kind === 'Client.SendSignedTransaction.Rpc.Shard.Congested') {
+      const { info } = tx.error.context;
+
+      // The single shard of the sandbox, congested by however much the queue has grown past
+      // the threshold the node turns transactions down at.
+      expect(info.shardId).toBe(0);
+      expect(info.congestionLevel).toBeGreaterThanOrEqual(REJECT_TX_CONGESTION_THRESHOLD);
+      expect(info.congestionLevel).toBeLessThanOrEqual(1);
       return;
     }
   }

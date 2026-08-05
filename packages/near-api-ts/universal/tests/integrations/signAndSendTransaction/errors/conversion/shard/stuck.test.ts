@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { keyPair, near, transfer } from '../../../../../../index';
 import { safeSleep } from '../../../../../../src/_common/utils/sleep';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertUnmappedInvalidTxError } from '../../../../../utils/assertUnmappedInvalidTxError';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startShardedSandbox } from '../../../../../utils/sandbox/sharded/startShardedSandbox';
 
@@ -28,8 +27,8 @@ const POLL_ATTEMPTS = 90;
  * `alice` sorts before the boundary account `ggggg` and so lives on shard 0, `nat` after it on
  * shard 1: the transaction is signed on the healthy shard and addressed to the stuck one.
  */
-describe('signAndSendTransaction › ShardStuck conversion error', () => {
-  it('fails with ShardStuck when the receiving shard has no chunk producer left', {
+describe('signAndSendTransaction › Shard.Stuck conversion error', () => {
+  it('fails with Shard.Stuck when the receiving shard has no chunk producer left', {
     timeout: 300_000,
   }, async () => {
     const defaultKeyPair = keyPair(DEFAULT_PRIVATE_KEY);
@@ -76,17 +75,14 @@ describe('signAndSendTransaction › ShardStuck conversion error', () => {
         });
 
         const tx = await client.safeSendSignedTransaction({ signedTransaction });
-        const cause = tx.ok ? undefined : (tx.error.context as { cause?: Error }).cause;
 
-        if (cause?.message.includes('ShardStuck')) {
-          assertUnmappedInvalidTxError(tx, {
-            ShardStuck: {
-              shardId: 1,
-              // The counter keeps growing for as long as the shard has no chunk producer,
-              // so only the threshold it had to cross is worth asserting.
-              missedChunks: expect.any(Number),
-            },
-          });
+        if (!tx.ok && tx.error.kind === 'Client.SendSignedTransaction.Rpc.Shard.Stuck') {
+          const { info } = tx.error.context;
+
+          expect(info.shardId).toBe(1);
+          // The counter keeps growing for as long as the shard has no chunk producer, so only
+          // the threshold it had to cross is worth asserting.
+          expect(info.missedChunksCount).toBeGreaterThanOrEqual(MISSED_CHUNKS_TO_REJECT);
           return;
         }
 
