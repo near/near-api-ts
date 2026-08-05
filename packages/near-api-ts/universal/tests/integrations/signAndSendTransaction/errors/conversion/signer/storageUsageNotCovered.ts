@@ -8,7 +8,7 @@ import {
 } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
-import type { TestContext } from './general.test';
+import type { TestContext } from './signer.test';
 
 // `ZERO_BALANCE_ACCOUNT_STORAGE_LIMIT` from `runtime/runtime/src/verifier.rs` — an account
 // that fits into it is a zero balance account and never pays for its storage, which is why
@@ -21,7 +21,7 @@ const EXTRA_KEYS_COUNT = 5;
 
 const ACCOUNT_ID = 'storage.nat';
 
-export const signerStorageUsageNotCovered = (context: TestContext) => async () => {
+export const storageUsageNotCovered = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const accountKeyPair = randomEd25519KeyPair();

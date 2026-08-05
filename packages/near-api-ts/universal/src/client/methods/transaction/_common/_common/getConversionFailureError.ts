@@ -1,4 +1,5 @@
 import type { InvalidTxError } from '@near-js/jsonrpc-types';
+import type { PublicKey } from '../../../../../../types/_common/crypto';
 import type { ConversionFailureError } from '../../../../../../types/_common/transactionDetails/_common/_common/conversionFailureError';
 import { yoctoNear } from '../../../../../helpers/tokens/nearToken';
 
@@ -7,6 +8,7 @@ const formErrorObject = <K, C>(kind: K, context: C) => ({ kind, context });
 export const getConversionFailureError = (
   invalidTxError: InvalidTxError,
 ): ConversionFailureError => {
+  // General
   if (invalidTxError === 'InvalidSignature') return formErrorObject('Signature.Invalid', null);
 
   // `check_transaction_validity_period` (`chain/chain/src/store/utils.rs`) doesn't know the
@@ -28,11 +30,6 @@ export const getConversionFailureError = (
         accessKeyNonce: invalidTxError.InvalidNonce.akNonce,
       });
 
-    if ('SignerDoesNotExist' in invalidTxError)
-      return formErrorObject('Signer.NotFound', {
-        signerAccountId: invalidTxError.SignerDoesNotExist.signerId,
-      });
-
     if ('NotEnoughBalance' in invalidTxError)
       return formErrorObject('TransactionCost.NotCovered', {
         signerAccountId: invalidTxError.NotEnoughBalance.signerId,
@@ -44,11 +41,63 @@ export const getConversionFailureError = (
         ),
       });
 
+    // Signer
+    if ('SignerDoesNotExist' in invalidTxError)
+      return formErrorObject('Signer.NotFound', {
+        signerAccountId: invalidTxError.SignerDoesNotExist.signerId,
+      });
+
     if ('LackBalanceForState' in invalidTxError)
       return formErrorObject('Signer.StorageUsage.NotCovered', {
         signerAccountId: invalidTxError.LackBalanceForState.signerId,
         missingAmount: yoctoNear(invalidTxError.LackBalanceForState.amount),
       });
+
+    if ('InvalidAccessKeyError' in invalidTxError) {
+      const accessKeyError = invalidTxError.InvalidAccessKeyError;
+
+      // The key the transaction is signed with is a function-call key, and the transaction
+      // carries something other than a single FunctionCall action.
+      if (accessKeyError === 'RequiresFullAccess')
+        return formErrorObject('Signer.AccessKey.NotFullAccess', null);
+
+      // A function-call key can never attach a deposit, not even to a function it may call.
+      if (accessKeyError === 'DepositWithFunctionCall')
+        return formErrorObject('Signer.AccessKey.AttachedDeposit.NotAllowed', null);
+
+      if (typeof accessKeyError === 'object') {
+        if ('AccessKeyNotFound' in accessKeyError)
+          return formErrorObject('Signer.AccessKey.NotFound', {
+            signerAccountId: accessKeyError.AccessKeyNotFound.accountId,
+            signerPublicKey: accessKeyError.AccessKeyNotFound.publicKey as PublicKey,
+          });
+
+        if ('ReceiverMismatch' in accessKeyError)
+          return formErrorObject('Signer.AccessKey.Receiver.NotAllowed', {
+            transactionReceiverAccountId: accessKeyError.ReceiverMismatch.txReceiver,
+            accessKeyContractAccountId: accessKeyError.ReceiverMismatch.akReceiver,
+          });
+
+        if ('MethodNameMismatch' in accessKeyError)
+          return formErrorObject('Signer.AccessKey.Function.NotAllowed', {
+            functionName: accessKeyError.MethodNameMismatch.methodName,
+          });
+
+        // `transactionCost` is the same `total_cost` the node charges the signer balance with
+        // (`TransactionCost.NotCovered` reports it too) — the burnt fees plus the prepaid gas at
+        // the current gas price, plus the deposits. A function-call key may not attach a deposit,
+        // but `check_and_compute_new_allowance` runs before that check
+        // (`runtime/runtime/src/verifier.rs`), so a key with a deposit fails here — with the
+        // deposit counted into the cost — instead of with `AttachedDeposit.NotAllowed`.
+        if ('NotEnoughAllowance' in accessKeyError)
+          return formErrorObject('Signer.AccessKey.GasBudget.NotEnough', {
+            signerAccountId: accessKeyError.NotEnoughAllowance.accountId,
+            signerPublicKey: accessKeyError.NotEnoughAllowance.publicKey as PublicKey,
+            gasBudget: yoctoNear(accessKeyError.NotEnoughAllowance.allowance),
+            transactionCost: yoctoNear(accessKeyError.NotEnoughAllowance.cost),
+          });
+      }
+    }
   }
 
   throw new Error(`Unexpected invalidTxError: ${JSON.stringify(invalidTxError)}`);

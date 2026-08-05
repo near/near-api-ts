@@ -8,10 +8,10 @@ import {
   functionCall,
   keyPair,
   transfer,
-} from '../../../../../index';
-import { signTransaction } from '../../../../../src/helpers/signTransaction';
-import { createDefaultClient } from '../../../../utils/common';
-import { GAS_BURNER_FUNCTION_NAME, GAS_BURNER_WASM } from '../../../../utils/wasm/gasBurner';
+} from '../../../../../../index';
+import { signTransaction } from '../../../../../../src/helpers/signTransaction';
+import { createDefaultClient } from '../../../../../utils/common';
+import { GAS_BURNER_FUNCTION_NAME, GAS_BURNER_WASM } from '../../../../../utils/wasm/gasBurner';
 
 const CONTRACT_ACCOUNT_ID = 'burner.nat';
 

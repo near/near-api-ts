@@ -2,11 +2,11 @@ import { expect } from 'vitest';
 import { randomEd25519KeyPair, transfer } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
-import type { TestContext } from './general.test';
+import type { TestContext } from './signer.test';
 
 const SIGNER_ACCOUNT_ID = 'ghost.nat';
 
-export const signerNotFound = (context: TestContext) => async () => {
+export const notFound = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   // The account was never created, so the node has neither an account record nor an access

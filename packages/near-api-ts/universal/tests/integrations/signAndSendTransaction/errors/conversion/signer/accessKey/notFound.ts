@@ -1,9 +1,10 @@
-import { randomEd25519KeyPair, transfer } from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertUnmappedInvalidTxError } from '../../../../../utils/assertUnmappedInvalidTxError';
-import type { TestContext } from './invalidAccessKey.test';
+import { expect } from 'vitest';
+import { randomEd25519KeyPair, transfer } from '../../../../../../../index';
+import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
+import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import type { TestContext } from '../signer.test';
 
-export const accessKeyNotFound = (context: TestContext) => async () => {
+export const notFound = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   // A freshly generated key pair is not attached to `nat`. The signature is still
@@ -30,12 +31,9 @@ export const accessKeyNotFound = (context: TestContext) => async () => {
 
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
-  assertUnmappedInvalidTxError(tx, {
-    InvalidAccessKeyError: {
-      AccessKeyNotFound: {
-        accountId: 'nat',
-        publicKey: detachedKeyPair.publicKey,
-      },
-    },
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Signer.AccessKey.NotFound');
+  expect(tx.error.context.info).toStrictEqual({
+    signerAccountId: 'nat',
+    signerPublicKey: detachedKeyPair.publicKey,
   });
 };

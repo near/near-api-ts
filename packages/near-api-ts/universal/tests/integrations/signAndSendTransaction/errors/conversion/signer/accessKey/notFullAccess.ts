@@ -1,10 +1,11 @@
-import { transfer } from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertUnmappedInvalidTxError } from '../../../../../utils/assertUnmappedInvalidTxError';
+import { expect } from 'vitest';
+import { transfer } from '../../../../../../../index';
+import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
+import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import type { TestContext } from '../signer.test';
 import { attachFunctionCallKey } from './_common/attachFunctionCallKey';
-import type { TestContext } from './invalidAccessKey.test';
 
-export const requiresFullAccess = (context: TestContext) => async () => {
+export const notFullAccess = (context: TestContext) => async () => {
   const { client } = context;
 
   // A function-call key may only sign a single FunctionCall action, so any other
@@ -34,5 +35,6 @@ export const requiresFullAccess = (context: TestContext) => async () => {
 
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
-  assertUnmappedInvalidTxError(tx, { InvalidAccessKeyError: 'RequiresFullAccess' });
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Signer.AccessKey.NotFullAccess');
+  expect(tx.error.context.info).toBe(null);
 };

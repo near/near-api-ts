@@ -1,10 +1,11 @@
-import { functionCall } from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertUnmappedInvalidTxError } from '../../../../../utils/assertUnmappedInvalidTxError';
+import { expect } from 'vitest';
+import { functionCall } from '../../../../../../../index';
+import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
+import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import type { TestContext } from '../signer.test';
 import { attachFunctionCallKey } from './_common/attachFunctionCallKey';
-import type { TestContext } from './invalidAccessKey.test';
 
-export const depositWithFunctionCall = (context: TestContext) => async () => {
+export const attachedDepositNotAllowed = (context: TestContext) => async () => {
   const { client } = context;
 
   // A function-call key can never attach a deposit, even to a function it is allowed
@@ -38,5 +39,9 @@ export const depositWithFunctionCall = (context: TestContext) => async () => {
 
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
-  assertUnmappedInvalidTxError(tx, { InvalidAccessKeyError: 'DepositWithFunctionCall' });
+  assertNatErrKind(
+    tx,
+    'Client.SendSignedTransaction.Rpc.Signer.AccessKey.AttachedDeposit.NotAllowed',
+  );
+  expect(tx.error.context.info).toBe(null);
 };

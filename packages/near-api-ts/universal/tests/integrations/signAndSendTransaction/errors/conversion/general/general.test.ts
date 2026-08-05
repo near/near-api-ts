@@ -8,8 +8,6 @@ import { blockHashExpired } from './blockHashExpired';
 import { nonceInvalid } from './nonceInvalid';
 import { nonceTooLarge } from './nonceTooLarge';
 import { signatureInvalid } from './signatureInvalid';
-import { signerNotFound } from './signerNotFound';
-import { signerStorageUsageNotCovered } from './signerStorageUsageNotCovered';
 import { transactionCostNotCovered } from './transactionCostNotCovered';
 import { transactionCostOverflow } from './transactionCostOverflow';
 import { transactionSizeExceeded } from './transactionSizeExceeded';
@@ -20,17 +18,14 @@ export type TestContext = {
 };
 
 /**
- * The `InvalidTxError` variants that don't belong to `InvalidAccessKeyError` or
- * `ActionsValidationError`. Every one of them that a client can actually reach is mapped to a
+ * The `InvalidTxError` variants that blame the transaction as a whole — not the signer or its
+ * access key (the `signer` group), not the action list (`ActionsValidationError`), not a shard.
+ * Every one of them that a client can actually reach is mapped to a
  * `GeneralConversionErrorRegistry` kind; the two cases below it are registered as skipped
  * because the node never answers with them over JSON-RPC.
  *
  * The variants the enum has left over never reach a client talking to a stock node:
  *
- * - `InvalidSignerId` — the account-not-found error of the chunk application path
- *   (`Runtime::apply`, `runtime/runtime/src/lib.rs`), for a transaction that is already inside
- *   a chunk. Everything that goes through `send_tx` is checked against the state first and
- *   comes back as `SignerDoesNotExist` instead — the case right above.
  * - `InvalidReceiverId` — nothing in 2.13.2 constructs it anymore; only its `Display` arm is
  *   left in `core/primitives/src/errors.rs`.
  * - `InvalidTransactionVersion` — `check_valid_for_config` gates transactions that need
@@ -68,16 +63,9 @@ describe('signAndSendTransaction › General conversion errors', () => {
     blockHashExpired(context),
   );
 
-  it('fails with Signer.NotFound when the signer account does not exist', signerNotFound(context));
-
   it(
     'fails with TransactionCost.NotCovered when the signer cannot cover the transaction cost',
     transactionCostNotCovered(context),
-  );
-
-  it(
-    'fails with Signer.StorageUsage.NotCovered when the signer can no longer pay for its storage',
-    signerStorageUsageNotCovered(context),
   );
 
   it(

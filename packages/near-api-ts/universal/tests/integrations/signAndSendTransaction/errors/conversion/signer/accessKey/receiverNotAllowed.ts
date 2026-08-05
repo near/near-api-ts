@@ -1,10 +1,11 @@
-import { functionCall } from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertUnmappedInvalidTxError } from '../../../../../utils/assertUnmappedInvalidTxError';
+import { expect } from 'vitest';
+import { functionCall } from '../../../../../../../index';
+import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
+import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import type { TestContext } from '../signer.test';
 import { attachFunctionCallKey } from './_common/attachFunctionCallKey';
-import type { TestContext } from './invalidAccessKey.test';
 
-export const receiverMismatch = (context: TestContext) => async () => {
+export const receiverNotAllowed = (context: TestContext) => async () => {
   const { client } = context;
 
   // The key may only call `alice`, but the transaction is addressed to `bob`.
@@ -33,9 +34,9 @@ export const receiverMismatch = (context: TestContext) => async () => {
 
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
-  assertUnmappedInvalidTxError(tx, {
-    InvalidAccessKeyError: {
-      ReceiverMismatch: { txReceiver: 'bob', akReceiver: 'alice' },
-    },
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Signer.AccessKey.Receiver.NotAllowed');
+  expect(tx.error.context.info).toStrictEqual({
+    transactionReceiverAccountId: 'bob',
+    accessKeyContractAccountId: 'alice',
   });
 };

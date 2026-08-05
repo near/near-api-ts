@@ -4,33 +4,31 @@ import type { PublicKey } from '../../../crypto';
 import type { NearGas } from '../../../nearGas';
 import type { NearToken } from '../../../nearToken';
 
-// The transaction as a whole: whatever the signer put into a top level field of it.
 interface GeneralConversionErrorRegistry {
-  'Signer.NotFound': { signerAccountId: AccountId };
-  'Signer.StorageUsage.NotCovered': { signerAccountId: AccountId; missingAmount: NearToken };
   'Nonce.Invalid': { transactionNonce: TransactionNonce; accessKeyNonce: TransactionNonce };
   'Signature.Invalid': null;
   'BlockHash.Expired': null;
   'BlockHash.NotAncestor': null;
   'TransactionCost.Overflow': null;
-  'TransactionCost.NotCovered': {
+  'TransactionCost.NotCovered': /*TODO or Signer.AvailableBalance.NotEnough ?*/ {
     signerAccountId: AccountId;
     transactionCost: NearToken;
     minimalMissingAmount: NearToken;
   };
 }
 
-// The access key the transaction is signed with doesn't permit what the transaction asks for.
-interface SignerKeyErrorRegistry {
-  'SignerKey.NotFound': { signerAccountId: AccountId; signerPublicKey: PublicKey };
-  'SignerKey.FullAccessRequired': null;
-  'SignerKey.ReceiverMismatch': {
+interface SignerErrorRegistry {
+  'Signer.NotFound': { signerAccountId: AccountId };
+  'Signer.StorageUsage.NotCovered': { signerAccountId: AccountId; missingAmount: NearToken };
+  'Signer.AccessKey.NotFound': { signerAccountId: AccountId; signerPublicKey: PublicKey };
+  'Signer.AccessKey.NotFullAccess': null;
+  'Signer.AccessKey.Receiver.NotAllowed': {
     transactionReceiverAccountId: AccountId;
     accessKeyContractAccountId: AccountId;
   };
-  'SignerKey.Function.NotAllowed': { functionName: ContractFunctionName };
-  'SignerKey.AttachedDeposit.NotAllowed': null;
-  'SignerKey.GasBudget.NotEnough': {
+  'Signer.AccessKey.Function.NotAllowed': { functionName: ContractFunctionName };
+  'Signer.AccessKey.AttachedDeposit.NotAllowed': null; // TODO maybe AttachedPayment is a better name?
+  'Signer.AccessKey.GasBudget.NotEnough': /* TODO: could have problems with GasBudget cuz GasKey?*/ {
     signerAccountId: AccountId;
     signerPublicKey: PublicKey;
     gasBudget: NearToken;
@@ -38,7 +36,6 @@ interface SignerKeyErrorRegistry {
   };
 }
 
-// The action list as a whole — no single action is to blame.
 interface ActionsValidationErrorRegistry {
   'Actions.CountExceeded': { actionsCount: number; maximumActionsCount: number };
   'Actions.DeployContract.CountExceeded': {
@@ -47,10 +44,6 @@ interface ActionsValidationErrorRegistry {
   };
   'Actions.TotalGasLimit.Exceeded': { totalGasLimit: NearGas; maximumTotalGasLimit: NearGas };
   'Actions.TotalGasLimit.Overflow': null;
-}
-
-// One action of the list, under the same `Action.<Kind>.*` prefix its execution errors use.
-interface ActionValidationErrorRegistry {
   'Action.DeleteAccount.NotFinal': null;
   'Action.FunctionCall.ZeroGasLimit': null;
   'Action.AddKey.AllowedFunctionsSizeExceeded': {
@@ -68,9 +61,8 @@ interface ShardErrorRegistry {
 
 interface ConversionFailureRegistry
   extends GeneralConversionErrorRegistry,
-    SignerKeyErrorRegistry,
+    SignerErrorRegistry,
     ActionsValidationErrorRegistry,
-    ActionValidationErrorRegistry,
     ShardErrorRegistry {}
 
 export type ConversionFailureKind = keyof ConversionFailureRegistry;
