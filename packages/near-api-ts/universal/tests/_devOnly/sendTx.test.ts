@@ -72,7 +72,7 @@ describe('SendTx', () => {
 
     if (!tx.ok) {
       const x = tx.error;
-      if (tx.error.kind === 'Client.SendSignedTransaction.Rpc.Expired') {
+      if (tx.error.kind === 'Client.SendSignedTransaction.Rpc.BlockHash.Expired') {
         const x3 = tx.error;
       }
 

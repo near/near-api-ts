@@ -9,7 +9,7 @@ export const transactionCostNotCovered = (context: TestContext) => async () => {
 
   const { balance } = await client.getAccountInfo({ accountId: 'nat' });
   // Everything the account holds plus one NEAR — the cost still fits u128, so the node
-  // reports the plain shortage instead of `CostOverflow`.
+  // reports the plain shortage instead of `TransactionCost.Overflow`.
   const amount = balance.total.yoctoNear + 10n ** 24n;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({

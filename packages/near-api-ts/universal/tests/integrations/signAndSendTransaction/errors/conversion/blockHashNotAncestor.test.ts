@@ -1,5 +1,5 @@
 import { DEFAULT_PRIVATE_KEY, GenesisAccount, Sandbox } from 'near-sandbox';
-import { beforeAll, describe, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addFullAccessKey,
   type Client,
@@ -10,7 +10,6 @@ import {
   transfer,
 } from '../../../../../index';
 import { signTransaction } from '../../../../../src/helpers/signTransaction';
-import { assertUnmappedInvalidTxError } from '../../../../utils/assertUnmappedInvalidTxError';
 import { createDefaultClient } from '../../../../utils/common';
 import { GAS_BURNER_FUNCTION_NAME, GAS_BURNER_WASM } from '../../../../utils/wasm/gasBurner';
 
@@ -33,7 +32,8 @@ const PROBE_ATTEMPTS = 20;
  * `process_tx_internal` (`chain/client/src/rpc_handler.rs`) checks an incoming transaction
  * against `chain_store.head()`, and `validity_period_validate_is_ancestor` answers
  * `InvalidChain` as soon as the base block sits above that head — a higher block cannot be its
- * ancestor. (A block the node has never seen at all is `Expired` instead, one branch earlier.)
+ * ancestor. (A block the node has never seen at all is `BlockHash.Expired` instead, one branch
+ * earlier.)
  * On mainnet this is what a client gets when it takes a block hash from one RPC node and
  * submits the transaction to another one that is still catching up.
  *
@@ -44,7 +44,7 @@ const PROBE_ATTEMPTS = 20;
  * kept non-empty: applying a chunk then takes seconds, and the window stays open long enough
  * for the transaction below to land inside it.
  */
-describe('signAndSendTransaction › InvalidChain conversion error', () => {
+describe('signAndSendTransaction › BlockHash.NotAncestor conversion error', () => {
   let client: Client;
   let rpcUrl: string;
   const defaultKeyPair = keyPair(DEFAULT_PRIVATE_KEY);
@@ -65,7 +65,7 @@ describe('signAndSendTransaction › InvalidChain conversion error', () => {
     return () => sandbox.stop();
   });
 
-  it('fails with InvalidChain when the block of the transaction is ahead of the node head', {
+  it('fails with BlockHash.NotAncestor when the transaction block is ahead of the node head', {
     timeout: 180_000,
   }, async () => {
     const natKey = await client.getAccountAccessKey({
@@ -160,10 +160,9 @@ describe('signAndSendTransaction › InvalidChain conversion error', () => {
       });
 
       const tx = await client.safeSendSignedTransaction({ signedTransaction });
-      const cause = tx.ok ? undefined : (tx.error.context as { cause?: Error }).cause;
 
-      if (cause?.message.includes('InvalidChain')) {
-        assertUnmappedInvalidTxError(tx, 'InvalidChain');
+      if (!tx.ok && tx.error.kind === 'Client.SendSignedTransaction.Rpc.BlockHash.NotAncestor') {
+        expect(tx.error.context.info).toBe(null);
         return;
       }
     }

@@ -7,7 +7,7 @@ import type { TestContext } from './general.test';
 // A well-formed hash of a block the chain has never seen.
 const UNKNOWN_BLOCK_HASH = '11111111111111111111111111111112';
 
-export const expired = (context: TestContext) => async () => {
+export const blockHashExpired = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey } = await client.getAccountAccessKey({
@@ -33,6 +33,6 @@ export const expired = (context: TestContext) => async () => {
 
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Expired');
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.BlockHash.Expired');
   expect(tx.error.context.info).toBe(null);
 };

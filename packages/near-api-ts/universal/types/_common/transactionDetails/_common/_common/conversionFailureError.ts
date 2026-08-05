@@ -10,8 +10,8 @@ interface GeneralConversionErrorRegistry {
   'Signer.StorageUsage.NotCovered': { signerAccountId: AccountId; missingAmount: NearToken };
   'Nonce.Invalid': { transactionNonce: TransactionNonce; accessKeyNonce: TransactionNonce };
   'Signature.Invalid': null;
-  Expired: null; // TODO rename
-  'BlockHash.NotOnChain': null;
+  'BlockHash.Expired': null;
+  'BlockHash.NotAncestor': null;
   'TransactionCost.Overflow': null;
   'TransactionCost.NotCovered': {
     signerAccountId: AccountId;
@@ -77,11 +77,3 @@ export type ConversionFailureKind = keyof ConversionFailureRegistry;
 
 export type ConversionFailureError<K extends ConversionFailureKind = ConversionFailureKind> =
   K extends K ? { kind: K; context: ConversionFailureRegistry[K] } : never;
-
-/*
- // 'Signer.AvailableBalance.NotEnough': {
-  //   signerAccountId: AccountId;
-  //   transactionCost: NearToken;
-  //   minimalMissingAmount: NearToken;
-  // };
- */

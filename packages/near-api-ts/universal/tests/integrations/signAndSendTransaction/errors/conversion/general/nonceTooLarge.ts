@@ -21,9 +21,9 @@ const ACCESS_KEY_NONCE_RANGE_MULTIPLIER = 1_000_000;
  *
  * From the client the transaction therefore looks like one that never made it into a chunk:
  * `safeSendSignedTransaction` waits for it and ends up with
- * `Client.SendSignedTransaction.Rpc.Expired` once the validity period is over. Measured on
- * 2.13.2; the assertion below is what the node would report if the check ever ran on the
- * submission path.
+ * `Client.SendSignedTransaction.Rpc.BlockHash.Expired` once the validity period is over.
+ * Measured on 2.13.2; the assertion below is what the node would report if the check ever ran
+ * on the submission path.
  */
 export const nonceTooLarge = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;

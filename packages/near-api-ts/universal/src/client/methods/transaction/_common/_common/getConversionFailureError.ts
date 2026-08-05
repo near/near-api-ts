@@ -8,7 +8,18 @@ export const getConversionFailureError = (
   invalidTxError: InvalidTxError,
 ): ConversionFailureError => {
   if (invalidTxError === 'InvalidSignature') return formErrorObject('Signature.Invalid', null);
-  if (invalidTxError === 'Expired') return formErrorObject('Expired', null);
+
+  // `check_transaction_validity_period` (`chain/chain/src/store/utils.rs`) doesn't know the
+  // block: either the node has never seen it, or it is more than `transaction_validity_period`
+  // blocks (100 on mainnet) behind the head.
+  if (invalidTxError === 'Expired') return formErrorObject('BlockHash.Expired', null);
+
+  // The same check knows the block but can't reach it from the head — it sits on a fork, or
+  // above the head of a node that is still catching up.
+  if (invalidTxError === 'InvalidChain') return formErrorObject('BlockHash.NotAncestor', null);
+
+  // The deposits and the fees of the transaction don't add up to a u128 anymore.
+  if (invalidTxError === 'CostOverflow') return formErrorObject('TransactionCost.Overflow', null);
 
   if (typeof invalidTxError === 'object') {
     if ('InvalidNonce' in invalidTxError)

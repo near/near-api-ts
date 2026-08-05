@@ -1,13 +1,14 @@
+import { expect } from 'vitest';
 import { transfer } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertUnmappedInvalidTxError } from '../../../../../utils/assertUnmappedInvalidTxError';
+import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import type { TestContext } from './general.test';
 
 // The largest balance that fits into u128, so adding the gas cost on top of it overflows
 // while the node computes the transaction cost.
 const MAX_YOCTO_NEAR = 2n ** 128n - 1n;
 
-export const costOverflow = (context: TestContext) => async () => {
+export const transactionCostOverflow = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -29,5 +30,6 @@ export const costOverflow = (context: TestContext) => async () => {
 
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
-  assertUnmappedInvalidTxError(tx, 'CostOverflow');
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.TransactionCost.Overflow');
+  expect(tx.error.context.info).toBe(null);
 };
