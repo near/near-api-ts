@@ -14,7 +14,7 @@ import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../../../../../utils/common';
 import { startSandbox } from '../../../../../../../utils/sandbox/startSandbox';
 
-describe('executeTransaction › Transaction.Action.Stake.BelowThreshold', () => {
+describe('executeTransaction › Transaction.Action.Stake.ProposedStake.BelowThreshold', () => {
   let client: Client;
   let keyService: MemoryKeyService;
   let createSigner: MemorySignerFactory;
@@ -29,7 +29,7 @@ describe('executeTransaction › Transaction.Action.Stake.BelowThreshold', () =>
     return () => sandbox.stop();
   });
 
-  it('fails with Transaction.Action.Stake.BelowThreshold when the stake is below the seat price', async () => {
+  it('fails with Transaction.Action.Stake.ProposedStake.BelowThreshold when the stake is below the seat price', async () => {
     const nat = await createSigner('nat');
 
     const res = await nat.safeExecuteTransaction({
@@ -42,6 +42,9 @@ describe('executeTransaction › Transaction.Action.Stake.BelowThreshold', () =>
       },
     });
 
-    assertNatErrKind(res, 'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.BelowThreshold');
+    assertNatErrKind(
+      res,
+      'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ProposedStake.BelowThreshold',
+    );
   });
 });

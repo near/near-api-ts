@@ -1,4 +1,3 @@
-import type { ShardId } from '@near-js/jsonrpc-types';
 import type { AccountId, ContractFunctionName, TransactionNonce } from '../../../common';
 import type { PublicKey } from '../../../crypto';
 import type { NearGas } from '../../../nearGas';
@@ -8,18 +7,12 @@ interface GeneralConversionErrorRegistry {
   'Nonce.Invalid': { transactionNonce: TransactionNonce; accessKeyNonce: TransactionNonce };
   'Signature.Invalid': null;
   'BlockHash.Expired': null;
-  'BlockHash.NotAncestor': null;
   'TransactionCost.Overflow': null;
-  'TransactionCost.NotCovered': /*TODO or Signer.AvailableBalance.NotEnough ?*/ {
-    signerAccountId: AccountId;
-    transactionCost: NearToken;
-    minimalMissingAmount: NearToken;
-  };
 }
 
 interface SignerErrorRegistry {
   'Signer.NotFound': { signerAccountId: AccountId };
-  'Signer.StorageUsage.NotCovered': { signerAccountId: AccountId; missingAmount: NearToken };
+  'Signer.Budget.NotEnough': { signerAccountId: AccountId; minimalMissingAmount: NearToken };
   'Signer.AccessKey.NotFound': { signerAccountId: AccountId; signerPublicKey: PublicKey };
   'Signer.AccessKey.NotFullAccess': null;
   'Signer.AccessKey.Receiver.NotAllowed': {
@@ -53,17 +46,10 @@ interface ActionsValidationErrorRegistry {
   'Action.Stake.InvalidValidatorKey': { validatorPublicKey: PublicKey };
 }
 
-// Nothing is wrong with the transaction — the receiver shard can't take it right now.
-interface ShardErrorRegistry {
-  'Shard.Congested': { shardId: ShardId; congestionLevel: number };
-  'Shard.Stuck': { shardId: ShardId; missedChunksCount: number };
-}
-
 interface ConversionFailureRegistry
   extends GeneralConversionErrorRegistry,
     SignerErrorRegistry,
-    ActionsValidationErrorRegistry,
-    ShardErrorRegistry {}
+    ActionsValidationErrorRegistry {}
 
 export type ConversionFailureKind = keyof ConversionFailureRegistry;
 

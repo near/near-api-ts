@@ -16,10 +16,6 @@ export const getConversionFailureError = (
   // blocks (100 on mainnet) behind the head.
   if (invalidTxError === 'Expired') return formErrorObject('BlockHash.Expired', null);
 
-  // The same check knows the block but can't reach it from the head — it sits on a fork, or
-  // above the head of a node that is still catching up.
-  if (invalidTxError === 'InvalidChain') return formErrorObject('BlockHash.NotAncestor', null);
-
   // The deposits and the fees of the transaction don't add up to a u128 anymore.
   if (invalidTxError === 'CostOverflow') return formErrorObject('TransactionCost.Overflow', null);
 
@@ -30,27 +26,29 @@ export const getConversionFailureError = (
         accessKeyNonce: invalidTxError.InvalidNonce.akNonce,
       });
 
-    if ('NotEnoughBalance' in invalidTxError)
-      return formErrorObject('TransactionCost.NotCovered', {
-        signerAccountId: invalidTxError.NotEnoughBalance.signerId,
-        transactionCost: yoctoNear(invalidTxError.NotEnoughBalance.cost),
-        // What the balance was short of the cost the node quoted. The cost of the next attempt
-        // depends on the gas price of its block, so this is only the minimal top up.
-        minimalMissingAmount: yoctoNear(invalidTxError.NotEnoughBalance.cost).sub(
-          yoctoNear(invalidTxError.NotEnoughBalance.balance),
-        ),
-      });
-
     // Signer
     if ('SignerDoesNotExist' in invalidTxError)
       return formErrorObject('Signer.NotFound', {
         signerAccountId: invalidTxError.SignerDoesNotExist.signerId,
       });
 
+    // The signer can't cover what the transaction needs — either its cost (deposits plus fees)
+    // outright, or the balance the signer account is left with can't cover its own storage
+    // anymore. Both boil down to the same thing for the caller: the signer's budget is short by
+    // `minimalMissingAmount`. The cost of the next attempt depends on the gas price of its
+    // block, so this is only the minimal top up.
+    if ('NotEnoughBalance' in invalidTxError)
+      return formErrorObject('Signer.Budget.NotEnough', {
+        signerAccountId: invalidTxError.NotEnoughBalance.signerId,
+        minimalMissingAmount: yoctoNear(invalidTxError.NotEnoughBalance.cost).sub(
+          yoctoNear(invalidTxError.NotEnoughBalance.balance),
+        ),
+      });
+
     if ('LackBalanceForState' in invalidTxError)
-      return formErrorObject('Signer.StorageUsage.NotCovered', {
+      return formErrorObject('Signer.Budget.NotEnough', {
         signerAccountId: invalidTxError.LackBalanceForState.signerId,
-        missingAmount: yoctoNear(invalidTxError.LackBalanceForState.amount),
+        minimalMissingAmount: yoctoNear(invalidTxError.LackBalanceForState.amount),
       });
 
     if ('InvalidAccessKeyError' in invalidTxError) {
@@ -84,11 +82,12 @@ export const getConversionFailureError = (
           });
 
         // `transactionCost` is the same `total_cost` the node charges the signer balance with
-        // (`TransactionCost.NotCovered` reports it too) — the burnt fees plus the prepaid gas at
-        // the current gas price, plus the deposits. A function-call key may not attach a deposit,
-        // but `check_and_compute_new_allowance` runs before that check
-        // (`runtime/runtime/src/verifier.rs`), so a key with a deposit fails here — with the
-        // deposit counted into the cost — instead of with `AttachedDeposit.NotAllowed`.
+        // (`Signer.Budget.NotEnough` reports it too, folded into `minimalMissingAmount`) — the
+        // burnt fees plus the prepaid gas at the current gas price, plus the deposits. A
+        // function-call key may not attach a deposit, but `check_and_compute_new_allowance` runs
+        // before that check (`runtime/runtime/src/verifier.rs`), so a key with a deposit fails
+        // here — with the deposit counted into the cost — instead of with
+        // `AttachedDeposit.NotAllowed`.
         if ('NotEnoughAllowance' in accessKeyError)
           return formErrorObject('Signer.AccessKey.GasBudget.NotEnough', {
             signerAccountId: accessKeyError.NotEnoughAllowance.accountId,
@@ -98,29 +97,6 @@ export const getConversionFailureError = (
           });
       }
     }
-
-    // Shard
-    // `shard_accepts_transactions` (`core/primitives/src/congestion_info.rs`) turns the incoming
-    // receipts, the outgoing ones, the memory they hold and the missed chunks of the receiver
-    // shard into four fractions of their limits, and rejects the transaction once the largest of
-    // them reaches `reject_tx_congestion_threshold` (0.8). `congestionLevel` is that largest
-    // fraction, which here is one of the first three — the node reports the missed chunks as
-    // `Shard.Stuck` instead.
-    if ('ShardCongested' in invalidTxError)
-      return formErrorObject('Shard.Congested', {
-        shardId: invalidTxError.ShardCongested.shardId,
-        congestionLevel: invalidTxError.ShardCongested.congestionLevel,
-      });
-
-    // The same check when the missed chunks are the largest fraction: the shard hasn't included
-    // a chunk for `missedChunksCount` blocks out of the `max_congestion_missed_chunks` (125) it
-    // takes to be fully congested, so it isn't working through a backlog — it isn't making
-    // progress at all.
-    if ('ShardStuck' in invalidTxError)
-      return formErrorObject('Shard.Stuck', {
-        shardId: invalidTxError.ShardStuck.shardId,
-        missedChunksCount: invalidTxError.ShardStuck.missedChunks,
-      });
   }
 
   throw new Error(`Unexpected invalidTxError: ${JSON.stringify(invalidTxError)}`);

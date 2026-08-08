@@ -59,8 +59,8 @@ try {
     },
   });
 } catch (e) {
-  if (isNatError(e, 'MemorySigner.ExecuteTransaction.Rpc.TransactionCost.NotCovered')) {
-    console.log(e.context.transactionCost);
+  if (isNatError(e, 'MemorySigner.ExecuteTransaction.Rpc.Signer.Budget.NotEnough')) {
+    console.log(e.context.minimalMissingAmount);
   }
 }
 

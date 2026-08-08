@@ -27,12 +27,12 @@ export interface ExecuteTransactionPublicErrorRegistry {
   'MemorySigner.ExecuteTransaction.Exhausted': ExhaustedErrorContext;
 
   'MemorySigner.ExecuteTransaction.Rpc.Timeout': null;
-  'MemorySigner.ExecuteTransaction.Rpc.TransactionCost.NotCovered': ConversionFailureError<'TransactionCost.NotCovered'>['context'];
+  'MemorySigner.ExecuteTransaction.Rpc.Signer.Budget.NotEnough': ConversionFailureError<'Signer.Budget.NotEnough'>['context'];
 
   'MemorySigner.ExecuteTransaction.Rpc.Action.CreateAccount.AlreadyExists': ExecutionFailureError<'Action.CreateAccount.AlreadyExists'>['context'];
-  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.BelowThreshold': ExecutionFailureError<'Action.Stake.BelowThreshold'>['context'];
+  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ProposedStake.BelowThreshold': ExecutionFailureError<'Action.Stake.ProposedStake.BelowThreshold'>['context'];
   'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.TotalBalance.NotEnough': ExecutionFailureError<'Action.Stake.TotalBalance.NotEnough'>['context'];
-  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.NotFound': ExecutionFailureError<'Action.Stake.NotFound'>['context'];
+  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero': ExecutionFailureError<'Action.Stake.ValidatorStake.AlreadyZero'>['context'];
 
   'MemorySigner.ExecuteTransaction.Internal': InternalErrorContext;
 }
@@ -53,13 +53,13 @@ type ExecuteTransactionError =
   | NatError<'MemorySigner.ExecuteTransaction.Aborted'>
   | NatError<'MemorySigner.ExecuteTransaction.Exhausted'>
   // RPC errors
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.TransactionCost.NotCovered'>
+  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Signer.Budget.NotEnough'>
   | NatError<'MemorySigner.ExecuteTransaction.Rpc.Timeout'>
   // // Rpc transaction action errors
   | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.CreateAccount.AlreadyExists'>
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.BelowThreshold'>
+  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ProposedStake.BelowThreshold'>
   | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.TotalBalance.NotEnough'>
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.NotFound'>
+  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero'>
   // Stub
   | NatError<'MemorySigner.ExecuteTransaction.Internal'>;
 

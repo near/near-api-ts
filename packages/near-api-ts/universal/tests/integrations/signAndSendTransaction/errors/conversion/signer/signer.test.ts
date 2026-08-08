@@ -10,8 +10,9 @@ import { gasBudgetNotEnough } from './accessKey/gasBudgetNotEnough';
 import { notFound as accessKeyNotFound } from './accessKey/notFound';
 import { notFullAccess } from './accessKey/notFullAccess';
 import { receiverNotAllowed } from './accessKey/receiverNotAllowed';
+import { budgetNotEnough } from './budgetNotEnough/budgetNotEnough';
+import { budgetNotEnoughStorage } from './budgetNotEnough/budgetNotEnoughStorage';
 import { notFound } from './notFound';
-import { storageUsageNotCovered } from './storageUsageNotCovered';
 
 export type TestContext = {
   client: Client;
@@ -23,6 +24,12 @@ export type TestContext = {
  * and the access key the transaction is signed with. The account cases come straight from
  * `InvalidTxError`, the key cases from the `InvalidAccessKeyError` it wraps — every variant of
  * both that a client can actually reach is mapped to a `SignerErrorRegistry` kind.
+ *
+ * `Signer.Budget.NotEnough` covers two `InvalidTxError` variants at once: `NotEnoughBalance`
+ * (the signer can't cover the transaction cost outright — `budgetNotEnough`) and
+ * `LackBalanceForState` (the signer's balance after the transaction can't cover its own storage
+ * anymore — `budgetNotEnoughStorage`). Both boil down to the same thing for the caller, so they
+ * share a kind and only differ in how `minimalMissingAmount` gets computed.
  *
  * The variants the two enums have left over never reach a client talking to a stock node:
  *
@@ -47,8 +54,13 @@ describe('signAndSendTransaction › Signer conversion errors', () => {
   it('fails with Signer.NotFound when the signer account does not exist', notFound(context));
 
   it(
-    'fails with Signer.StorageUsage.NotCovered when the signer can no longer pay for its storage',
-    storageUsageNotCovered(context),
+    'fails with Signer.Budget.NotEnough when the signer cannot cover the transaction cost',
+    budgetNotEnough(context),
+  );
+
+  it(
+    'fails with Signer.Budget.NotEnough when the signer can no longer pay for its storage',
+    budgetNotEnoughStorage(context),
   );
 
   it(

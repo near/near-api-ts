@@ -4,7 +4,7 @@ import type { NearToken } from '../../../nearToken';
 
 interface GeneralExecutionErrorRegistry {
   'Executor.NotFound': { executorAccountId: AccountId };
-  'Executor.StorageUsage.NotCovered': { executorAccountId: AccountId; missingAmount: NearToken };
+  'Executor.Budget.NotEnough': { executorAccountId: AccountId; minimalMissingAmount: NearToken };
   'Action.Forbidden': { stepCreatorAccountId: AccountId; executorAccountId: AccountId };
 }
 
@@ -31,7 +31,7 @@ interface FunctionCallErrorRegistry {
 }
 
 interface StakeErrorRegistry {
-  'Action.Stake.BelowThreshold': {
+  'Action.Stake.ProposedStake.BelowThreshold': {
     accountId: AccountId;
     proposedStake: NearToken;
     minimumStake: NearToken;
@@ -42,7 +42,7 @@ interface StakeErrorRegistry {
     totalBalance: NearToken;
     missingAmount: NearToken;
   };
-  'Action.Stake.NotFound': { accountId: AccountId };
+  'Action.Stake.ValidatorStake.AlreadyZero': { accountId: AccountId };
 }
 
 interface DeleteKeyErrorRegistry {

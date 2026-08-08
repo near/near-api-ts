@@ -34,13 +34,16 @@ export const belowThreshold = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.Stake.BelowThreshold');
+  assertNatErrKind(
+    tx,
+    'Client.SendSignedTransaction.Rpc.Action.Stake.ProposedStake.BelowThreshold',
+  );
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Action.Stake.BelowThreshold');
+  assertTxResultExecutionErrKind(txResult, 'Action.Stake.ProposedStake.BelowThreshold');
   expect(txResult.error.context).toMatchObject({
     accountId: 'nat',
     proposedStake: near('1'),

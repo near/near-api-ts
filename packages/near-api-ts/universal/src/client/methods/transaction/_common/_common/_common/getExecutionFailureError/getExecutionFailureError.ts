@@ -19,10 +19,10 @@ export const getExecutionFailureError = (actionError: ActionError): ExecutionFai
 
     if ('LackBalanceForState' in kind)
       return {
-        kind: 'Executor.StorageUsage.NotCovered',
+        kind: 'Executor.Budget.NotEnough',
         context: {
           executorAccountId: kind.LackBalanceForState.accountId,
-          missingAmount: yoctoNear(kind.LackBalanceForState.amount),
+          minimalMissingAmount: yoctoNear(kind.LackBalanceForState.amount),
         },
       };
 
@@ -95,7 +95,7 @@ export const getExecutionFailureError = (actionError: ActionError): ExecutionFai
     // Stake action
     if ('InsufficientStake' in kind)
       return {
-        kind: 'Action.Stake.BelowThreshold',
+        kind: 'Action.Stake.ProposedStake.BelowThreshold',
         context: {
           accountId: kind.InsufficientStake.accountId,
           proposedStake: yoctoNear(kind.InsufficientStake.stake),
@@ -123,7 +123,7 @@ export const getExecutionFailureError = (actionError: ActionError): ExecutionFai
 
     if ('TriesToUnstake' in kind)
       return {
-        kind: 'Action.Stake.NotFound',
+        kind: 'Action.Stake.ValidatorStake.AlreadyZero',
         context: { accountId: kind.TriesToUnstake.accountId },
       };
 

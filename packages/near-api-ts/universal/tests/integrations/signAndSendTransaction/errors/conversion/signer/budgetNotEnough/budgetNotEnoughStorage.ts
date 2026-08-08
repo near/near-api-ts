@@ -5,10 +5,10 @@ import {
   createAccount,
   randomEd25519KeyPair,
   transfer,
-} from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
-import type { TestContext } from './signer.test';
+} from '../../../../../../../index';
+import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
+import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import type { TestContext } from '../signer.test';
 
 // `ZERO_BALANCE_ACCOUNT_STORAGE_LIMIT` from `runtime/runtime/src/verifier.rs` — an account
 // that fits into it is a zero balance account and never pays for its storage, which is why
@@ -21,7 +21,7 @@ const EXTRA_KEYS_COUNT = 5;
 
 const ACCOUNT_ID = 'storage.nat';
 
-export const storageUsageNotCovered = (context: TestContext) => async () => {
+export const budgetNotEnoughStorage = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const accountKeyPair = randomEd25519KeyPair();
@@ -104,8 +104,8 @@ export const storageUsageNotCovered = (context: TestContext) => async () => {
     signedTransaction: drainAccountTransaction,
   });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Signer.StorageUsage.NotCovered');
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Signer.Budget.NotEnough');
   expect(tx.error.context.info.signerAccountId).toBe(ACCOUNT_ID);
   // The missing amount is the transaction cost, which depends on the current gas price.
-  expect(tx.error.context.info.missingAmount.yoctoNear).toBeGreaterThan(0n);
+  expect(tx.error.context.info.minimalMissingAmount.yoctoNear).toBeGreaterThan(0n);
 };

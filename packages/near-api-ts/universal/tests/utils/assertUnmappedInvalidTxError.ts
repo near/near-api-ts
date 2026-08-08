@@ -1,7 +1,28 @@
 import { expect } from 'vitest';
 import type { Result } from '../../types/_common/common';
 
-const THROWN_ERROR_PREFIX = 'Unexpected invalidTxError: ';
+export const THROWN_ERROR_PREFIX = 'Unexpected invalidTxError: ';
+
+/**
+ * Non-throwing counterpart of `assertUnmappedInvalidTxError`: peeks at a result and, if it looks
+ * like the `Internal` error `getConversionFailureError` throws for an `InvalidTxError` variant it
+ * doesn't map, returns the parsed (camel-cased) nearcore payload — otherwise `undefined`.
+ *
+ * Useful when the variant carries fields that can't be known ahead of time (e.g. a congestion
+ * level), so the exact value can't be asserted against until it has actually been observed.
+ */
+export const getUnmappedInvalidTxError = (
+  res: Result<unknown, { kind: string; context: unknown }>,
+): unknown | undefined => {
+  if (res.ok) return undefined;
+  if (res.error.kind !== 'Client.SendSignedTransaction.Internal') return undefined;
+
+  const { cause } = res.error.context as { cause: unknown };
+  if (!(cause instanceof Error)) return undefined;
+  if (!cause.message.startsWith(THROWN_ERROR_PREFIX)) return undefined;
+
+  return JSON.parse(cause.message.slice(THROWN_ERROR_PREFIX.length));
+};
 
 /**
  * `getConversionFailureError` throws on the `InvalidTxError` variants it doesn't map yet,

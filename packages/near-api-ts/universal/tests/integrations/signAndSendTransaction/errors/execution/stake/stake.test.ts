@@ -5,8 +5,8 @@ import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 import { belowThreshold } from './belowThreshold';
-import { notFound } from './notFound';
 import { totalBalanceNotEnough } from './totalBalanceNotEnough';
+import { validatorStakeAlreadyZero } from './validatorStakeAlreadyZero';
 
 export type TestContext = {
   client: Client;
@@ -30,12 +30,12 @@ describe('signAndSendTransaction › Stake.* errors', () => {
   );
 
   it(
-    'fails with Action.Stake.BelowThreshold when the stake is below the seat price',
+    'fails with Action.Stake.ProposedStake.BelowThreshold when the stake is below the seat price',
     belowThreshold(context),
   );
 
   it(
-    'fails with Action.Stake.NotFound when staking zero with an unknown validator key',
-    notFound(context),
+    'fails with Action.Stake.ValidatorStake.AlreadyZero when staking zero with an unknown validator key',
+    validatorStakeAlreadyZero(context),
   );
 });

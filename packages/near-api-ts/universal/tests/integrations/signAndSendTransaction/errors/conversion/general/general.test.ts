@@ -8,7 +8,6 @@ import { blockHashExpired } from './blockHashExpired';
 import { nonceInvalid } from './nonceInvalid';
 import { nonceTooLarge } from './nonceTooLarge';
 import { signatureInvalid } from './signatureInvalid';
-import { transactionCostNotCovered } from './transactionCostNotCovered';
 import { transactionCostOverflow } from './transactionCostOverflow';
 import { transactionSizeExceeded } from './transactionSizeExceeded';
 
@@ -24,6 +23,10 @@ export type TestContext = {
  * `GeneralConversionErrorRegistry` kind; the two cases below it are registered as skipped
  * because the node never answers with them over JSON-RPC.
  *
+ * `NotEnoughBalance` also blames the transaction as a whole, but it is folded into
+ * `Signer.Budget.NotEnough` together with `LackBalanceForState`, so it is tested in the
+ * `signer` group instead (`budgetNotEnough.ts`).
+ *
  * The variants the enum has left over never reach a client talking to a stock node:
  *
  * - `InvalidReceiverId` — nothing in 2.13.2 constructs it anymore; only its `Display` arm is
@@ -33,9 +36,12 @@ export type TestContext = {
  *   version 85 and the sandbox runs 86, so no transaction can be too new for it.
  * - `StorageError` — an internal trie or database failure of the node itself.
  * - `ShardCongested` / `ShardStuck` — both need a shard to be in a state a healthy sandbox
- *   never reaches on its own, so they live in the `shard` group, which builds it.
+ *   never reaches on its own, and neither has a `ConversionFailureRegistry` kind of its own:
+ *   both are transient and clear on their own, so they deliberately fall to `Internal` instead
+ *   of a dedicated kind — see `shard.test.ts` / `stuck.test.ts`.
  * - `InvalidChain` — needs a node whose head trails the block the transaction was built on,
- *   which `blockHashNotAncestor.test.ts` arranges.
+ *   which `blockHashNotAncestor.test.ts` arranges; also transient and deliberately unmapped, for
+ *   the same reason.
  * - `InvalidNonceIndex`, `NotEnoughGasKeyBalance`, `NotEnoughBalanceForDeposit` — produced
  *   only by `verify_and_charge_gas_key_tx_ephemeral`, i.e. for transactions signed with a gas
  *   key, which the library doesn't build.
@@ -61,11 +67,6 @@ describe('signAndSendTransaction › General conversion errors', () => {
   it(
     'fails with BlockHash.Expired when the block hash is not on the chain anymore',
     blockHashExpired(context),
-  );
-
-  it(
-    'fails with TransactionCost.NotCovered when the signer cannot cover the transaction cost',
-    transactionCostNotCovered(context),
   );
 
   it(

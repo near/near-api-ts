@@ -6,7 +6,7 @@ import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from './stake.test';
 
-export const notFound = (context: TestContext) => async () => {
+export const validatorStakeAlreadyZero = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -34,12 +34,12 @@ export const notFound = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.Stake.NotFound');
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero');
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Action.Stake.NotFound');
+  assertTxResultExecutionErrKind(txResult, 'Action.Stake.ValidatorStake.AlreadyZero');
   expect(txResult.error.context).toStrictEqual({ accountId: 'nat' });
 };

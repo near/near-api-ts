@@ -16,7 +16,7 @@ import type { TestContext } from './general.test';
  * the new account fails because the deposited balance can't cover the contract's storage
  * (~0.84 NEAR at the default storage_amount_per_byte of 1e19 yocto/byte).
  */
-export const executorStorageUsageNotCovered = (context: TestContext) => async () => {
+export const executorBudgetNotEnough = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -47,13 +47,13 @@ export const executorStorageUsageNotCovered = (context: TestContext) => async ()
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Executor.StorageUsage.NotCovered');
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Executor.Budget.NotEnough');
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Executor.StorageUsage.NotCovered');
+  assertTxResultExecutionErrKind(txResult, 'Executor.Budget.NotEnough');
   expect(txResult.error.context.executorAccountId).toBe('new.nat');
-  expect(txResult.error.context.missingAmount.near).toBe('0.73734');
+  expect(txResult.error.context.minimalMissingAmount.near).toBe('0.73734');
 };

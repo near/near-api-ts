@@ -14,7 +14,7 @@ import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../../../../../utils/common';
 import { startSandbox } from '../../../../../../../utils/sandbox/startSandbox';
 
-describe('executeTransaction › Transaction.Action.Stake.NotFound', () => {
+describe('executeTransaction › Transaction.Action.Stake.ValidatorStake.AlreadyZero', () => {
   let client: Client;
   let keyService: MemoryKeyService;
   let createSigner: MemorySignerFactory;
@@ -27,7 +27,7 @@ describe('executeTransaction › Transaction.Action.Stake.NotFound', () => {
     return () => sandbox.stop();
   });
 
-  it('fails with Transaction.Action.Stake.NotFound when staking zero with an unknown validator key', async () => {
+  it('fails with Transaction.Action.Stake.ValidatorStake.AlreadyZero when staking zero with an unknown validator key', async () => {
     const nat = createSigner('nat');
 
     const res = await nat.safeExecuteTransaction({
@@ -40,6 +40,9 @@ describe('executeTransaction › Transaction.Action.Stake.NotFound', () => {
       },
     });
 
-    assertNatErrKind(res, 'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.NotFound');
+    assertNatErrKind(
+      res,
+      'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero',
+    );
   });
 });
