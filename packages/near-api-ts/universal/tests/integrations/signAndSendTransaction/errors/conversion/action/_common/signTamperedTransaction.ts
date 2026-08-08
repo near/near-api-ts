@@ -7,10 +7,9 @@ import { getTransactionHash } from '../../../../../../../src/_common/utils/getTr
 import type { KeyPair } from '../../../../../../../types/_common/keyPairs/keyPair';
 
 /**
- * Some `ActionsValidationError` variants guard a field our own schemas guard too — a method name
- * longer than the node's limit, an account id the node wouldn't parse. `signTransaction` runs
- * `TransactionZodSchema` over the whole transaction before signing it, so a case for one of those
- * variants can't go through it.
+ * Some `ActionsValidationError` variants guard a field our own schemas guard too — an account id
+ * the node wouldn't parse, for one. `signTransaction` runs `TransactionZodSchema` over the whole
+ * transaction before signing it, so a case for one of those variants can't go through it.
  *
  * This is the same routine with the schema check left out: the transaction is parsed while it is
  * still valid, `tamper` rewrites the field afterwards, and the tampered body is what gets signed.

@@ -34,7 +34,7 @@ export type GasBudget = 'Unlimited' | NearToken;
  * The set of contract functions this function-call key is permitted to invoke.
  * - `'AllNonPayable'` — the key may call any non-payable function on the contract.
  * - {@link ContractFunctionName}[] — restricts the key to an explicit list of functions.
- *   Each name is limited to {@link ContractFunctionName 256 characters}.
+ *   Each name has a max length limit, and so does the list as a whole — see protocol config.
  *
  *  The function list cannot be updated after the key is created. To change it, the key
  *  must be deleted and re-created with a new list.

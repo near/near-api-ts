@@ -7,8 +7,8 @@ import type { TestContext } from '../action.test';
 // `max_number_bytes_method_names` from the runtime config.
 const MAX_NUMBER_BYTES_METHOD_NAMES = 2000;
 
-// Every name stays under `max_length_method_name` (256), the per-name limit our
-// `ContractFunctionNameZodSchema` already enforces, so only the total trips the node.
+// Every name stays under `max_length_method_name` (256), the per-name limit, so only the
+// total trips the node.
 const FUNCTION_NAME_LENGTH = 250;
 const FUNCTION_NAMES_COUNT = 10;
 

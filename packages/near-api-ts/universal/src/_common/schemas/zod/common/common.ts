@@ -7,6 +7,8 @@ export const BlockIdZodSchema = z.union([BlockHeightZodSchema, BlockHashZodSchem
 
 export const TransactionNonceZodSchema = z.number().check(z.int(), z.nonnegative());
 
-export const ContractFunctionNameZodSchema = z.string().check(z.minLength(1), z.maxLength(256));
+// No upper bound on the length: `max_length_method_name` lives in the protocol config and can
+// change, so the node is left to be the one that rejects an over-long name.
+export const ContractFunctionNameZodSchema = z.string().check(z.minLength(1));
 
 export const JsonValueZodSchema = z.json();

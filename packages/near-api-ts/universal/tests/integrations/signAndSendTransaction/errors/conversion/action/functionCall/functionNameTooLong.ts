@@ -1,13 +1,12 @@
 import { expect } from 'vitest';
 import { functionCall } from '../../../../../../../index';
-import type { InnerTransaction } from '../../../../../../../src/_common/schemas/zod/transaction/transaction';
+import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
-import { signTamperedTransaction } from '../_common/signTamperedTransaction';
 import type { TestContext } from '../action.test';
 
-// `max_length_method_name` from the runtime config, which our `ContractFunctionNameZodSchema`
-// mirrors as its own upper bound — so the name that trips the node is one character past what
-// the action creator accepts, and this case has to be assembled without the schema check.
+// `max_length_method_name` from the runtime config. Our schemas don't mirror it — the config
+// owns the number and can change it — so the over-long name goes through the action creator
+// untouched and the node is the one that rejects it.
 const MAX_FUNCTION_NAME_LENGTH = 256;
 const FUNCTION_NAME = 'a'.repeat(MAX_FUNCTION_NAME_LENGTH + 1);
 
@@ -19,24 +18,19 @@ export const functionNameTooLong = (context: TestContext) => async () => {
     publicKey: defaultKeyPair.publicKey,
   });
 
-  const signedTransaction = await signTamperedTransaction(
-    defaultKeyPair,
-    {
+  const signedTransaction = await signTransaction({
+    signDataProvider: defaultKeyPair,
+    transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: accountAccessKey.nonce + 1,
       blockHash,
       // The gas has to be non-zero: `validate_function_call_action` looks at it first, and
       // `FunctionCallZeroAttachedGas` would hide the name check.
-      action: functionCall({ functionName: 'any_function', gasLimit: { teraGas: '10' } }),
+      action: functionCall({ functionName: FUNCTION_NAME, gasLimit: { teraGas: '10' } }),
       receiverAccountId: 'alice',
     },
-    (transaction) =>
-      ({
-        ...transaction,
-        action: { ...transaction.action, functionName: FUNCTION_NAME },
-      }) as InnerTransaction,
-  );
+  });
 
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 

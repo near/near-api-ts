@@ -1,13 +1,12 @@
 import { expect } from 'vitest';
 import { addFunctionCallKey, randomEd25519KeyPair } from '../../../../../../../index';
-import type { InnerTransaction } from '../../../../../../../src/_common/schemas/zod/transaction/transaction';
+import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
-import { signTamperedTransaction } from '../_common/signTamperedTransaction';
 import type { TestContext } from '../action.test';
 
 // `max_length_method_name` from the runtime config — the same limit `functionCall`'s own name
-// is held to, and the same one our `ContractFunctionNameZodSchema` enforces, so this case also
-// has to be assembled without the schema check.
+// is held to. The config owns the number, so our schemas don't mirror it and the node is the
+// one that rejects the name.
 const MAX_FUNCTION_NAME_LENGTH = 256;
 const FUNCTION_NAME = 'a'.repeat(MAX_FUNCTION_NAME_LENGTH + 1);
 
@@ -19,9 +18,9 @@ export const allowedFunctionsFunctionNameTooLong = (context: TestContext) => asy
     publicKey: defaultKeyPair.publicKey,
   });
 
-  const signedTransaction = await signTamperedTransaction(
-    defaultKeyPair,
-    {
+  const signedTransaction = await signTransaction({
+    signDataProvider: defaultKeyPair,
+    transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: accountAccessKey.nonce + 1,
@@ -30,16 +29,11 @@ export const allowedFunctionsFunctionNameTooLong = (context: TestContext) => asy
         publicKey: randomEd25519KeyPair().publicKey,
         contractAccountId: 'alice',
         gasBudget: 'Unlimited',
-        allowedFunctions: ['ping'],
+        allowedFunctions: [FUNCTION_NAME],
       }),
       receiverAccountId: 'nat',
     },
-    (transaction) =>
-      ({
-        ...transaction,
-        action: { ...transaction.action, allowedFunctions: [FUNCTION_NAME] },
-      }) as InnerTransaction,
-  );
+  });
 
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
