@@ -1,7 +1,6 @@
-import { expect } from 'vitest';
 import { functionCall } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
-import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import { assertUnmappedInvalidTxError } from '../../../../../../utils/assertUnmappedInvalidTxError';
 import type { TestContext } from '../action.test';
 
 // `max_arguments_length` from the runtime config.
@@ -9,9 +8,12 @@ const MAX_FUNCTION_ARGS_SIZE_BYTES = 4_194_304;
 const FUNCTION_ARGS_SIZE_BYTES = MAX_FUNCTION_ARGS_SIZE_BYTES + 1;
 
 /**
- * Unreachable over JSON-RPC, so the case is registered as skipped (see `action.test.ts`) —
- * for the same reason as its `deployContract/contractWasmTooLarge` sibling: the 4 MiB limit is
- * past the 2 MiB request body the node accepts, so the transaction is never delivered.
+ * Unreachable over JSON-RPC, so the case is registered as skipped (see `action.test.ts`) and
+ * `FunctionCallArgumentsLengthExceeded` is left out of `ConversionFailureKind` — for the same
+ * reason as its `deployContract/contractWasmTooLarge` sibling, which documents it in full: the
+ * 4 MiB limit is past the 2 MiB request body the node accepts, so the transaction is never
+ * delivered, and neither limit can be moved from the outside because both are baked into
+ * `neard` at build time.
  */
 export const functionArgsTooLarge = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
@@ -43,12 +45,12 @@ export const functionArgsTooLarge = (context: TestContext) => async () => {
 
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
-  assertNatErrKind(
-    tx,
-    'Client.SendSignedTransaction.Rpc.Action.FunctionCall.FunctionArgs.TooLarge',
-  );
-  expect(tx.error.context.info).toStrictEqual({
-    functionArgsSizeBytes: FUNCTION_ARGS_SIZE_BYTES,
-    maximumFunctionArgsSizeBytes: MAX_FUNCTION_ARGS_SIZE_BYTES,
+  assertUnmappedInvalidTxError(tx, {
+    ActionsValidation: {
+      FunctionCallArgumentsLengthExceeded: {
+        length: FUNCTION_ARGS_SIZE_BYTES,
+        limit: MAX_FUNCTION_ARGS_SIZE_BYTES,
+      },
+    },
   });
 };

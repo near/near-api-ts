@@ -43,17 +43,9 @@ interface ActionsValidationErrorRegistry {
 }
 
 interface ActionValidationErrorRegistry {
-  'Action.DeployContract.ContractWasm.TooLarge': {
-    contractWasmSizeBytes: number;
-    maximumContractWasmSizeBytes: number;
-  };
   'Action.FunctionCall.FunctionName.TooLong': {
     functionNameLength: number;
     maximumFunctionNameLength: number;
-  };
-  'Action.FunctionCall.FunctionArgs.TooLarge': {
-    functionArgsSizeBytes: number;
-    maximumFunctionArgsSizeBytes: number;
   };
   'Action.FunctionCall.ZeroGasLimit': null;
   'Action.AddKey.AllowedFunctions.FunctionName.TooLong': {

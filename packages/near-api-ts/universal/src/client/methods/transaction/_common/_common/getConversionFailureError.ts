@@ -142,22 +142,10 @@ export const getConversionFailureError = (
             maximumTotalGasLimit: throwableGas(actionsError.TotalPrepaidGasExceeded.limit),
           });
 
-        if ('ContractSizeExceeded' in actionsError)
-          return formErrorObject('Action.DeployContract.ContractWasm.TooLarge', {
-            contractWasmSizeBytes: actionsError.ContractSizeExceeded.size,
-            maximumContractWasmSizeBytes: actionsError.ContractSizeExceeded.limit,
-          });
-
         if ('FunctionCallMethodNameLengthExceeded' in actionsError)
           return formErrorObject('Action.FunctionCall.FunctionName.TooLong', {
             functionNameLength: actionsError.FunctionCallMethodNameLengthExceeded.length,
             maximumFunctionNameLength: actionsError.FunctionCallMethodNameLengthExceeded.limit,
-          });
-
-        if ('FunctionCallArgumentsLengthExceeded' in actionsError)
-          return formErrorObject('Action.FunctionCall.FunctionArgs.TooLarge', {
-            functionArgsSizeBytes: actionsError.FunctionCallArgumentsLengthExceeded.length,
-            maximumFunctionArgsSizeBytes: actionsError.FunctionCallArgumentsLengthExceeded.limit,
           });
 
         if ('AddKeyMethodNameLengthExceeded' in actionsError)

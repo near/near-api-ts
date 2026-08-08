@@ -85,16 +85,17 @@ describe('signAndSendTransaction › Action.* conversion errors', () => {
   );
 
   // Skipped: the 4 MiB wasm needed to fail the check doesn't fit into the request body the node
-  // accepts, so it can't be delivered at all — see `contractWasmTooLarge`.
+  // accepts, and neither of the two limits can be moved through the sandbox config, so it can't
+  // be delivered at all — see `contractWasmTooLarge`. `ContractSizeExceeded` is left unmapped.
   it.skip(
-    'fails with Action.DeployContract.ContractWasm.TooLarge when the contract wasm is over the limit',
+    'fails with ContractSizeExceeded when the contract wasm is over the limit',
     contractWasmTooLarge(context),
   );
 
   // Skipped: 4 MiB of arguments run into the same request body ceiling — see
-  // `functionArgsTooLarge`.
+  // `functionArgsTooLarge`. `FunctionCallArgumentsLengthExceeded` is left unmapped too.
   it.skip(
-    'fails with Action.FunctionCall.FunctionArgs.TooLarge when the function arguments are over the limit',
+    'fails with FunctionCallArgumentsLengthExceeded when the function arguments are over the limit',
     functionArgsTooLarge(context),
   );
 
