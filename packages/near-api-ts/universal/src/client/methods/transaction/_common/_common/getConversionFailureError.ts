@@ -1,6 +1,7 @@
 import type { InvalidTxError } from '@near-js/jsonrpc-types';
 import type { PublicKey } from '../../../../../../types/_common/crypto';
 import type { ConversionFailureError } from '../../../../../../types/_common/transactionDetails/_common/_common/conversionFailureError';
+import { throwableGas } from '../../../../../helpers/nearGas';
 import { yoctoNear } from '../../../../../helpers/tokens/nearToken';
 
 const formErrorObject = <K, C>(kind: K, context: C) => ({ kind, context });
@@ -94,6 +95,90 @@ export const getConversionFailureError = (
             signerPublicKey: accessKeyError.NotEnoughAllowance.publicKey as PublicKey,
             gasBudget: yoctoNear(accessKeyError.NotEnoughAllowance.allowance),
             transactionCost: yoctoNear(accessKeyError.NotEnoughAllowance.cost),
+          });
+      }
+    }
+
+    // Actions validation — `validate_actions_with_mode`
+    // (`runtime/runtime/src/action_validation.rs`) blaming either the action list as a whole
+    // (`Actions.*`) or one action in it (`Action.*`).
+    if ('ActionsValidation' in invalidTxError) {
+      const actionsError = invalidTxError.ActionsValidation;
+
+      // Only a FunctionCall action carries gas — `get_prepaid_gas` is zero for every other one
+      // — so the sum that overflows a u64 here is theirs alone.
+      if (actionsError === 'IntegerOverflow')
+        return formErrorObject('Actions.FunctionCall.TotalGasLimit.Overflow', null);
+
+      // A call with no gas could never do any work, so it is turned down before the node even
+      // looks at the function name and the arguments.
+      if (actionsError === 'FunctionCallZeroAttachedGas')
+        return formErrorObject('Action.FunctionCall.ZeroGasLimit', null);
+
+      // The account is gone once the deletion executes, so nothing may follow it.
+      if (actionsError === 'DeleteActionMustBeFinal')
+        return formErrorObject('Action.DeleteAccount.NotFinal', null);
+
+      if (typeof actionsError === 'object') {
+        if ('TotalNumberOfActionsExceeded' in actionsError)
+          return formErrorObject('Actions.TooMany', {
+            actionsCount: actionsError.TotalNumberOfActionsExceeded.totalNumberOfActions,
+            maximumActionsCount: actionsError.TotalNumberOfActionsExceeded.limit,
+          });
+
+        // The node counts `DeployContract` and `DeployGlobalContract` actions together against
+        // one `max_deploy_actions_per_receipt`.
+        if ('TotalNumberOfDeployActionsExceeded' in actionsError)
+          return formErrorObject('Actions.DeployContract.TooMany', {
+            deployContractActionsCount:
+              actionsError.TotalNumberOfDeployActionsExceeded.numberOfDeployActions,
+            maximumDeployContractActionsCount:
+              actionsError.TotalNumberOfDeployActionsExceeded.limit,
+          });
+
+        if ('TotalPrepaidGasExceeded' in actionsError)
+          return formErrorObject('Actions.FunctionCall.TotalGasLimit.Exceeded', {
+            totalGasLimit: throwableGas(actionsError.TotalPrepaidGasExceeded.totalPrepaidGas),
+            maximumTotalGasLimit: throwableGas(actionsError.TotalPrepaidGasExceeded.limit),
+          });
+
+        if ('ContractSizeExceeded' in actionsError)
+          return formErrorObject('Action.DeployContract.ContractWasm.TooLarge', {
+            contractWasmSizeBytes: actionsError.ContractSizeExceeded.size,
+            maximumContractWasmSizeBytes: actionsError.ContractSizeExceeded.limit,
+          });
+
+        if ('FunctionCallMethodNameLengthExceeded' in actionsError)
+          return formErrorObject('Action.FunctionCall.FunctionName.TooLong', {
+            functionNameLength: actionsError.FunctionCallMethodNameLengthExceeded.length,
+            maximumFunctionNameLength: actionsError.FunctionCallMethodNameLengthExceeded.limit,
+          });
+
+        if ('FunctionCallArgumentsLengthExceeded' in actionsError)
+          return formErrorObject('Action.FunctionCall.FunctionArgs.TooLarge', {
+            functionArgsSizeBytes: actionsError.FunctionCallArgumentsLengthExceeded.length,
+            maximumFunctionArgsSizeBytes: actionsError.FunctionCallArgumentsLengthExceeded.limit,
+          });
+
+        if ('AddKeyMethodNameLengthExceeded' in actionsError)
+          return formErrorObject('Action.AddKey.AllowedFunctions.FunctionName.TooLong', {
+            functionNameLength: actionsError.AddKeyMethodNameLengthExceeded.length,
+            maximumFunctionNameLength: actionsError.AddKeyMethodNameLengthExceeded.limit,
+          });
+
+        // `totalSizeBytes` isn't the bytes of the names alone: the node adds a terminating byte
+        // after each one before it compares the total against the limit.
+        if ('AddKeyMethodNamesNumberOfBytesExceeded' in actionsError)
+          return formErrorObject('Action.AddKey.AllowedFunctions.TotalSize.Exceeded', {
+            totalSizeBytes: actionsError.AddKeyMethodNamesNumberOfBytesExceeded.totalNumberOfBytes,
+            maximumTotalSizeBytes: actionsError.AddKeyMethodNamesNumberOfBytesExceeded.limit,
+          });
+
+        // `is_valid_staking_key` takes ed25519 keys only, and only those whose bytes decompress
+        // to a torsion-free point it can turn into a ristretto one.
+        if ('UnsuitableStakingKey' in actionsError)
+          return formErrorObject('Action.Stake.ValidatorKey.Invalid', {
+            validatorPublicKey: actionsError.UnsuitableStakingKey.publicKey as PublicKey,
           });
       }
     }

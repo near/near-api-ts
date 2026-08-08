@@ -1,9 +1,10 @@
-import { deleteAccount, transfer } from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertUnmappedInvalidTxError } from '../../../../../utils/assertUnmappedInvalidTxError';
-import type { TestContext } from './actionsValidation.test';
+import { expect } from 'vitest';
+import { deleteAccount, transfer } from '../../../../../../../index';
+import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
+import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import type { TestContext } from '../action.test';
 
-export const deleteActionMustBeFinal = (context: TestContext) => async () => {
+export const notFinal = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -30,5 +31,6 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
 
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
-  assertUnmappedInvalidTxError(tx, { ActionsValidation: 'DeleteActionMustBeFinal' });
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.DeleteAccount.NotFinal');
+  expect(tx.error.context.info).toBe(null);
 };

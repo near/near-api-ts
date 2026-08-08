@@ -1,9 +1,10 @@
-import { functionCall } from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/helpers/signTransaction';
-import { assertUnmappedInvalidTxError } from '../../../../../utils/assertUnmappedInvalidTxError';
-import type { TestContext } from './actionsValidation.test';
+import { expect } from 'vitest';
+import { functionCall } from '../../../../../../../index';
+import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
+import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import type { TestContext } from '../action.test';
 
-export const functionCallZeroAttachedGas = (context: TestContext) => async () => {
+export const zeroGasLimit = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
@@ -27,5 +28,6 @@ export const functionCallZeroAttachedGas = (context: TestContext) => async () =>
 
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
-  assertUnmappedInvalidTxError(tx, { ActionsValidation: 'FunctionCallZeroAttachedGas' });
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.FunctionCall.ZeroGasLimit');
+  expect(tx.error.context.info).toBe(null);
 };
