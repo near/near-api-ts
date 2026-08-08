@@ -37,6 +37,6 @@ export const receiverNotAllowed = (context: TestContext) => async () => {
   assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Signer.AccessKey.Receiver.NotAllowed');
   expect(tx.error.context.info).toStrictEqual({
     transactionReceiverAccountId: 'bob',
-    accessKeyContractAccountId: 'alice',
+    allowedContractAccountId: 'alice',
   });
 };

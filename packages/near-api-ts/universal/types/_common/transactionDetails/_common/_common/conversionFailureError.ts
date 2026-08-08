@@ -17,7 +17,7 @@ interface SignerErrorRegistry {
   'Signer.AccessKey.NotFullAccess': null;
   'Signer.AccessKey.Receiver.NotAllowed': {
     transactionReceiverAccountId: AccountId;
-    accessKeyContractAccountId: AccountId;
+    allowedContractAccountId: AccountId;
   };
   'Signer.AccessKey.Function.NotAllowed': { functionName: ContractFunctionName };
   'Signer.AccessKey.AttachedDeposit.NotAllowed': null; // TODO maybe AttachedPayment is a better name?

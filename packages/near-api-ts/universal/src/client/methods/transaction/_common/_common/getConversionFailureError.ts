@@ -73,7 +73,7 @@ export const getConversionFailureError = (
         if ('ReceiverMismatch' in accessKeyError)
           return formErrorObject('Signer.AccessKey.Receiver.NotAllowed', {
             transactionReceiverAccountId: accessKeyError.ReceiverMismatch.txReceiver,
-            accessKeyContractAccountId: accessKeyError.ReceiverMismatch.akReceiver,
+            allowedContractAccountId: accessKeyError.ReceiverMismatch.akReceiver,
           });
 
         if ('MethodNameMismatch' in accessKeyError)
