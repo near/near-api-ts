@@ -14,9 +14,13 @@ import {
   stake,
   transfer,
 } from '../../../../../index';
-import { safeSleep } from '../../../../../src/_common/utils/sleep';
 import { createDefaultClient } from '../../../../utils/common';
-import { startSandbox } from '../../../../utils/sandbox/startSandbox';
+import { MIN_GAS_PURCHASE_PRICE, startSandbox } from '../../../../utils/sandbox/startSandbox';
+
+// Fee of a single transfer transaction at `MIN_GAS_PURCHASE_PRICE`:
+// (223_182_562_500 gas burnt on conversion + 223_182_562_500 gas attached to the
+// receipt) * 1e9 yoctoNEAR.
+const TRANSFER_FEE = { near: '0.000446365125' };
 
 describe('Get Account Balance', () => {
   let client: Client;
@@ -26,7 +30,9 @@ describe('Get Account Balance', () => {
   const keyPair1 = randomEd25519KeyPair();
 
   beforeAll(async () => {
-    const sandbox = await startSandbox({ nearcoreVersion: '2.13.0' });
+    // Every assertion below compares exact balances, so the sandbox runs with a
+    // gas price that produces no price-difference refund receipts.
+    const sandbox = await startSandbox({ gasPrice: MIN_GAS_PURCHASE_PRICE });
     client = createDefaultClient(sandbox);
     keyService = createMemoryKeyService({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, { privateKey: keyPair1.privateKey }],
@@ -45,7 +51,7 @@ describe('Get Account Balance', () => {
         receiverAccountId: 'abc1.nat',
       },
     });
-    await safeSleep(500);
+
     const { balance } = await client.getAccountInfo({ accountId: 'abc1.nat' });
 
     expect(balance.total.near).toBe('0');
@@ -63,7 +69,7 @@ describe('Get Account Balance', () => {
         receiverAccountId: 'abc2.nat',
       },
     });
-    await safeSleep(2000);
+
     const info1 = await client.getAccountInfo({ accountId: 'abc2.nat' });
     const { balance: balance1 } = info1;
 
@@ -77,12 +83,12 @@ describe('Get Account Balance', () => {
     await abc.executeTransaction({
       intent: {
         action: transfer({
-          amount: near('1').sub({ near: '0.0000446365125' }),
+          amount: near('1').sub(TRANSFER_FEE),
         }),
         receiverAccountId: 'nat',
       },
     });
-    await safeSleep(2000);
+
     const info2 = await client.getAccountInfo({ accountId: 'abc2.nat' });
     const { balance: balance2 } = info2;
 
@@ -132,15 +138,15 @@ describe('Get Account Balance', () => {
     const info2 = await client.getAccountInfo({ accountId: 'abc3.nat' });
     const { balance: balance2 } = info2;
 
-    expect(balance2.total.near).toBe('1999.99995399476875');
-    expect(balance2.available.near).toBe('499.99995399476875');
+    expect(balance2.total.near).toBe('1999.9995399476875');
+    expect(balance2.available.near).toBe('499.9995399476875');
     expect(balance2.locked.total.near).toBe('1500');
 
     // 3. Transfer all NEAR tokens
     await abc.executeTransaction({
       intent: {
         action: transfer({
-          amount: near('499.99995399476875').sub({ near: '0.0000446365125' }),
+          amount: near('499.9995399476875').sub(TRANSFER_FEE),
         }),
         receiverAccountId: 'nat',
       },
@@ -194,15 +200,15 @@ describe('Get Account Balance', () => {
     const info2 = await client.getAccountInfo({ accountId: 'abc4.nat' });
     const { balance: balance2 } = info2;
 
-    expect(balance2.total.near).toBe('0.99994040945');
-    expect(balance2.available.near).toBe('0.99994040945');
+    expect(balance2.total.near).toBe('0.9994040945');
+    expect(balance2.available.near).toBe('0.9994040945');
     expect(balance2.locked.total.near).toBe('0');
 
     // 3. Transfer all NEAR tokens
     await abc.executeTransaction({
       intent: {
         action: transfer({
-          amount: near('0.99994040945').sub({ near: '0.0000446365125' }), // Gas price for transfer
+          amount: near('0.9994040945').sub(TRANSFER_FEE),
         }),
         receiverAccountId: 'nat',
       },
