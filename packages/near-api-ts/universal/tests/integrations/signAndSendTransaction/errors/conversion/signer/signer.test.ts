@@ -31,12 +31,15 @@ export type TestContext = {
  * anymore — `budgetNotEnoughStorage`). Both boil down to the same thing for the caller, so they
  * share a kind and only differ in how `minimalMissingAmount` gets computed.
  *
+ * `Signer.NotFound` likewise covers two variants: `SignerDoesNotExist` (what `send_tx` and the
+ * chunk producer return, and the only one this suite can reach) and `InvalidSignerId` — the same
+ * account-not-found verdict raised by `Runtime::process_transactions`
+ * (`runtime/runtime/src/lib.rs`) for a transaction that is already inside a chunk. Only a chunk
+ * producer skipping runtime verification puts one there, so it is covered by the sibling
+ * `signerMalicious.test.ts` against the adversarial binary instead of here.
+ *
  * The variants the two enums have left over never reach a client talking to a stock node:
  *
- * - `InvalidSignerId` — the account-not-found error of the chunk application path
- *   (`Runtime::apply`, `runtime/runtime/src/lib.rs`), for a transaction that is already inside
- *   a chunk. Everything that goes through `send_tx` is checked against the state first and
- *   comes back as `SignerDoesNotExist`, i.e. `Signer.NotFound`.
  * - `DelegateActionRequiresGasKey` / `DelegateActionRequiresNonGasKey` — they decide which kind
  *   of key may sign a delegate action, and the library doesn't build delegate actions yet.
  */

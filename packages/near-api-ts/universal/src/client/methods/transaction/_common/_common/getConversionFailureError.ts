@@ -33,6 +33,22 @@ export const getConversionFailureError = (
         signerAccountId: invalidTxError.SignerDoesNotExist.signerId,
       });
 
+    // The same "no account record in the trie" verdict as `SignerDoesNotExist`, reached on the
+    // other code path: `SignerDoesNotExist` comes from `get_signer_and_access_key`
+    // (`runtime/runtime/src/verifier.rs`), which both `send_tx` and the chunk producer run before
+    // a transaction is admitted, while this one comes from `Runtime::process_transactions`
+    // (`runtime/runtime/src/lib.rs`) when a transaction is already inside a chunk. A stock node
+    // never lets it get that far, so it takes a chunk producer skipping runtime verification —
+    // possible on a public network, and recorded on chain as a failed outcome since PV83
+    // (`InvalidTxGenerateOutcomes`) rather than invalidating the whole chunk. Note the nearcore
+    // doc comment ("signer_id is not a valid AccountId") describes a check deleted back when
+    // `AccountId` became strictly typed: borsh rejects a malformed account id long before the
+    // runtime, so the variant only ever carries the account-not-found meaning.
+    if ('InvalidSignerId' in invalidTxError)
+      return formErrorObject('Signer.NotFound', {
+        signerAccountId: invalidTxError.InvalidSignerId.signerId,
+      });
+
     // The signer can't cover what the transaction needs — either its cost (deposits plus fees)
     // outright, or the balance the signer account is left with can't cover its own storage
     // anymore. Both boil down to the same thing for the caller: the signer's budget is short by
