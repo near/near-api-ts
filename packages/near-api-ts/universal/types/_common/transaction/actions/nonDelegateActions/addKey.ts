@@ -1,7 +1,7 @@
 import type { NatError } from '../../../../../src/_common/_common/_common/natError';
 import type { AllowedFunctions } from '../../../accountAccessKey';
 import type { AccountId, ContractFunctionName, Result } from '../../../common';
-import type { NativePublicKey, PublicKey } from '../../../crypto';
+import type { NearcorePublicKey, PublicKey } from '../../../crypto';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';
 import type { NearTokenArgs } from '../../../nearToken';
 
@@ -67,13 +67,13 @@ export type CreateAddFunctionCallKeyAction = (
   args: CreateAddFunctionCallKeyActionArgs,
 ) => AddFunctionCallKeyAction;
 
-// ****** NATIVE ********
+// ****** NEARCORE ********
 
-type NativeFullAccessPermission = {
+type NearcoreFullAccessPermission = {
   fullAccess: {};
 };
 
-type NativeFunctionCallPermission = {
+type NearcoreFunctionCallPermission = {
   functionCall: {
     receiverId: AccountId;
     allowance: bigint | null;
@@ -81,12 +81,12 @@ type NativeFunctionCallPermission = {
   };
 };
 
-export type NativeAddKeyAction = {
+export type NearcoreAddKeyAction = {
   addKey: {
-    publicKey: NativePublicKey;
+    publicKey: NearcorePublicKey;
     accessKey: {
       nonce: bigint;
-      permission: NativeFullAccessPermission | NativeFunctionCallPermission;
+      permission: NearcoreFullAccessPermission | NearcoreFunctionCallPermission;
     };
   };
 };

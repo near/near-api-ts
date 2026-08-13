@@ -1,11 +1,11 @@
-import type { NativeFunctionCallAction } from '../../../../../types/_common/transaction/actions/nonDelegateActions/functionCall';
+import type { NearcoreFunctionCallAction } from '../../../../../types/_common/transaction/actions/nonDelegateActions/functionCall';
 import { nearGas } from '../../../../_common/nearGas';
 import { nearToken } from '../../../../_common/nearToken';
 import type { InnerFunctionCallAction } from '../../zodSchemas/actions/functionCall';
 
-export const toNativeFunctionCallAction = (
+export const toNearcoreFunctionCallAction = (
   action: InnerFunctionCallAction,
-): NativeFunctionCallAction => {
+): NearcoreFunctionCallAction => {
   const { functionName, attachedDeposit, gasLimit, functionArgs } = action;
   return {
     functionCall: {

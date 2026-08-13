@@ -7,7 +7,7 @@ import { createNatError } from '../../../../_common/_common/_common/natError';
 import { repackError } from '../../../../_common/_common/repackError';
 import { result } from '../../../../_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
-import { toNativeBlockReference } from '../../../../signServices/signTransaction/toNative/blockReference';
+import { toNearcoreBlockReference } from '../../_common/toNearcoreBlockReference';
 import {
   BaseOptionsZodSchema,
   BlockReferenceZodSchema,
@@ -38,7 +38,7 @@ export const createSafeGetBlock: CreateSafeGetBlock = (context) =>
 
     const rpcResponse = await context.sendRequest({
       method: 'block',
-      params: toNativeBlockReference(args?.blockReference),
+      params: toNearcoreBlockReference(args?.blockReference),
       transportPolicy: args?.policies?.transport,
       signal: args?.options?.signal,
     });

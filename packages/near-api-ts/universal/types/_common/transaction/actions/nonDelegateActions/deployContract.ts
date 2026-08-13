@@ -29,9 +29,9 @@ export type CreateDeployContractAction = (
   args: CreateDeployContractActionArgs,
 ) => DeployContractAction;
 
-// ****** NATIVE ********
+// ****** NEARCORE ********
 
-export type NativeDeployContractAction = {
+export type NearcoreDeployContractAction = {
   deployContract: {
     code: Uint8Array;
   };

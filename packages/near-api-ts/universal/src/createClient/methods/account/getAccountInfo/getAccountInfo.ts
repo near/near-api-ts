@@ -8,7 +8,7 @@ import { repackError } from '../../../../_common/_common/repackError';
 import { result } from '../../../../_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
 import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
-import { toNativeBlockReference } from '../../../../signServices/signTransaction/toNative/blockReference';
+import { toNearcoreBlockReference } from '../../_common/toNearcoreBlockReference';
 import {
   BaseOptionsZodSchema,
   BlockReferenceZodSchema,
@@ -46,7 +46,7 @@ export const createSafeGetAccountInfo: CreateSafeGetAccountInfo = (context) =>
           params: {
             request_type: 'view_account',
             account_id: accountId,
-            ...toNativeBlockReference(args.atMomentOf),
+            ...toNearcoreBlockReference(args.atMomentOf),
           },
           transportPolicy: policies?.transport,
           signal: options?.signal,

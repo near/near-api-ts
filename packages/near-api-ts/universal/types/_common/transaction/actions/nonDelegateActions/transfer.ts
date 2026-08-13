@@ -27,9 +27,9 @@ export type SafeCreateTransferAction = (
 
 export type CreateTransferAction = (args: CreateTransferActionArgs) => TransferAction;
 
-// ****** NATIVE ********
+// ****** NEARCORE ********
 
-export type NativeTransferAction = {
+export type NearcoreTransferAction = {
   transfer: {
     deposit: bigint;
   };

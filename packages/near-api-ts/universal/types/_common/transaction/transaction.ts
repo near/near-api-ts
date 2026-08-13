@@ -1,18 +1,33 @@
 import type { Prettify } from '../../utils';
 import type { AccountId, Base64String, BlockHash, CryptoHash, TransactionNonce } from '../common';
-import type { NativePublicKey, NativeSignature, PublicKey, Signature } from '../crypto';
+import type { NearcorePublicKey, NearcoreSignature, PublicKey, Signature } from '../crypto';
 import type {
   AddFullAccessKeyAction,
   AddFunctionCallKeyAction,
-  NativeAddKeyAction,
+  NearcoreAddKeyAction,
 } from './actions/nonDelegateActions/addKey';
-import type { CreateAccountAction, NativeCreateAccountAction } from './actions/nonDelegateActions/createAccount';
-import type { DeleteAccountAction, NativeDeleteAccountAction } from './actions/nonDelegateActions/deleteAccount';
-import type { DeleteKeyAction, NativeDeleteKeyAction } from './actions/nonDelegateActions/deleteKey';
-import type { DeployContractAction, NativeDeployContractAction } from './actions/nonDelegateActions/deployContract';
-import type { FunctionCallAction, NativeFunctionCallAction } from './actions/nonDelegateActions/functionCall';
-import type { NativeStakeAction, StakeAction } from './actions/nonDelegateActions/stake';
-import type { NativeTransferAction, TransferAction } from './actions/nonDelegateActions/transfer';
+import type {
+  CreateAccountAction,
+  NearcoreCreateAccountAction,
+} from './actions/nonDelegateActions/createAccount';
+import type {
+  DeleteAccountAction,
+  NearcoreDeleteAccountAction,
+} from './actions/nonDelegateActions/deleteAccount';
+import type {
+  DeleteKeyAction,
+  NearcoreDeleteKeyAction,
+} from './actions/nonDelegateActions/deleteKey';
+import type {
+  DeployContractAction,
+  NearcoreDeployContractAction,
+} from './actions/nonDelegateActions/deployContract';
+import type {
+  FunctionCallAction,
+  NearcoreFunctionCallAction,
+} from './actions/nonDelegateActions/functionCall';
+import type { NearcoreStakeAction, StakeAction } from './actions/nonDelegateActions/stake';
+import type { NearcoreTransferAction, TransferAction } from './actions/nonDelegateActions/transfer';
 
 export type Action =
   | CreateAccountAction
@@ -54,28 +69,28 @@ export type SignedTransaction = {
   signedTransactionBorsh64: Base64String;
 };
 
-// Native Transaction
+// Nearcore Transaction
 
-export type NativeAction =
-  | NativeCreateAccountAction
-  | NativeTransferAction
-  | NativeAddKeyAction
-  | NativeDeployContractAction
-  | NativeFunctionCallAction
-  | NativeStakeAction
-  | NativeDeleteKeyAction
-  | NativeDeleteAccountAction;
+export type NearcoreAction =
+  | NearcoreCreateAccountAction
+  | NearcoreTransferAction
+  | NearcoreAddKeyAction
+  | NearcoreDeployContractAction
+  | NearcoreFunctionCallAction
+  | NearcoreStakeAction
+  | NearcoreDeleteKeyAction
+  | NearcoreDeleteAccountAction;
 
-export type NativeTransaction = {
+export type NearcoreTransaction = {
   signerId: AccountId;
-  publicKey: NativePublicKey;
-  actions: NativeAction[];
+  publicKey: NearcorePublicKey;
+  actions: NearcoreAction[];
   receiverId: AccountId;
   nonce: bigint;
   blockHash: Uint8Array;
 };
 
-export type NativeSignedTransaction = {
-  transaction: NativeTransaction;
-  signature: NativeSignature;
+export type NearcoreSignedTransaction = {
+  transaction: NearcoreTransaction;
+  signature: NearcoreSignature;
 };

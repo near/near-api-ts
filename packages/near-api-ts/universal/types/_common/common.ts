@@ -11,7 +11,7 @@ export type LatestBlock = 'LatestOptimisticBlock' | 'LatestNearFinalBlock' | 'La
 export type SyncCheckpoint = 'EarliestAvailableBlock' | 'GenesisBlock';
 export type BlockReference = LatestBlock | SyncCheckpoint | BlockId;
 
-export type NativeBlockReference =
+export type NearcoreBlockReference =
   | { block_id: BlockHash | BlockHeight }
   | { finality: 'optimistic' | 'near-final' | 'final' }
   | { sync_checkpoint: 'genesis' | 'earliest_available' };

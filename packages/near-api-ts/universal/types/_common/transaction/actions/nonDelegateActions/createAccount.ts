@@ -2,8 +2,8 @@ export type CreateAccountAction = {
   actionType: 'CreateAccount';
 };
 
-// ****** NATIVE ********
+// ****** NEARCORE ********
 
-export type NativeCreateAccountAction = {
+export type NearcoreCreateAccountAction = {
   createAccount: {};
 };

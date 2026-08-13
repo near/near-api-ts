@@ -1,6 +1,6 @@
 import type { NatError } from '../../../../../src/_common/_common/_common/natError';
 import type { Result } from '../../../common';
-import type { NativePublicKey, PublicKey } from '../../../crypto';
+import type { NearcorePublicKey, PublicKey } from '../../../crypto';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';
 import type { NearTokenArgs } from '../../../nearToken';
 
@@ -30,11 +30,11 @@ export type SafeCreateStakeAction = (
 
 export type CreateStakeAction = (args: CreateStakeActionArgs) => StakeAction;
 
-// ****** NATIVE ********
+// ****** NEARCORE ********
 
-export type NativeStakeAction = {
+export type NearcoreStakeAction = {
   stake: {
     stake: bigint;
-    publicKey: NativePublicKey;
+    publicKey: NearcorePublicKey;
   };
 };

@@ -5,14 +5,14 @@ import {
   SignedTransactionBorshSchema,
   TransactionBorshSchema,
 } from '../../../../../../../src/signServices/signTransaction/borsh/transaction';
-import { toNativeSignature } from '../../../../../../../src/signServices/signTransaction/toNative/signature';
-import { toNativeTransaction } from '../../../../../../../src/signServices/signTransaction/toNative/transaction';
+import { toNearcoreSignature } from '../../../../../../../src/signServices/signTransaction/toNearcore/signature';
+import { toNearcoreTransaction } from '../../../../../../../src/signServices/signTransaction/toNearcore/transaction';
 import {
   type InnerTransaction,
   TransactionZodSchema,
 } from '../../../../../../../src/signServices/signTransaction/zodSchemas/transaction';
 import type { KeyPair } from '../../../../../../../types/_common/keyPairs/keyPair';
-import type { NativeSignedTransaction } from '../../../../../../../types/_common/transaction/transaction';
+import type { NearcoreSignedTransaction } from '../../../../../../../types/_common/transaction/transaction';
 
 /**
  * Some `ActionsValidationError` variants guard a field our own schemas guard too — an account id
@@ -31,21 +31,21 @@ export const signInvalidTransaction = async (
 ) => {
   const tamperedTransaction = tamper(TransactionZodSchema.parse(transaction));
 
-  const nativeTransaction = toNativeTransaction(tamperedTransaction);
-  const transactionBorshU8 = serialize(TransactionBorshSchema, nativeTransaction);
+  const nearcoreTransaction = toNearcoreTransaction(tamperedTransaction);
+  const transactionBorshU8 = serialize(TransactionBorshSchema, nearcoreTransaction);
   const transactionHashU8 = sha256(transactionBorshU8);
   const transactionHash = base58.encode(transactionHashU8);
 
   const signedData = await signDataProvider.signData({ dataU8: transactionHashU8 });
 
-  const nativeSignedTransaction: NativeSignedTransaction = {
-    transaction: nativeTransaction,
-    signature: toNativeSignature(signedData),
+  const nearcoreSignedTransaction: NearcoreSignedTransaction = {
+    transaction: nearcoreTransaction,
+    signature: toNearcoreSignature(signedData),
   };
 
   const signedTransactionBorsh64 = serialize(
     SignedTransactionBorshSchema,
-    nativeSignedTransaction,
+    nearcoreSignedTransaction,
   ).toBase64();
 
   return {

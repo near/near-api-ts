@@ -5,7 +5,7 @@ import type {
   GetContractStateArgs,
   GetContractStateResult,
 } from '../../../../types/client/methods/contract/getContractState';
-import { toNativeBlockReference } from '../../../signServices/signTransaction/toNative/blockReference';
+import { toNearcoreBlockReference } from '../_common/toNearcoreBlockReference';
 
 const RpcQueryViewStateResponseSchema = z.object({
   ...ViewStateResultSchema().shape,
@@ -40,7 +40,7 @@ export const createGetContractState: CreateGetContractState =
         account_id: args.contractAccountId,
         prefix_base64: base64KeyPrefix,
         include_proof: args.includeProof ?? false,
-        ...toNativeBlockReference(args.atMomentOf),
+        ...toNearcoreBlockReference(args.atMomentOf),
       },
       transportPolicy: args.policies?.transport,
       signal: args.options?.signal,

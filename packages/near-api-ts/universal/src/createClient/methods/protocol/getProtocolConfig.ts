@@ -5,7 +5,7 @@ import {
 } from '@near-js/jsonrpc-types';
 import * as z from 'zod/mini';
 import type { CreateGetProtocolConfig } from '../../../../types/client/methods/protocol/getProtocolConfig';
-import { toNativeBlockReference } from '../../../signServices/signTransaction/toNative/blockReference';
+import { toNearcoreBlockReference } from '../_common/toNearcoreBlockReference';
 
 // TODO Use jsonrpc-types RpcProtocolConfigResponseSchema after 2.8.0
 const TemporaryProtocolConfigShema = z.object({
@@ -27,7 +27,7 @@ export const createGetProtocolConfig: CreateGetProtocolConfig =
   async (args) => {
     const result = await sendRequest({
       method: 'EXPERIMENTAL_protocol_config',
-      params: toNativeBlockReference(args?.atMomentOf),
+      params: toNearcoreBlockReference(args?.atMomentOf),
       transportPolicy: args?.policies?.transport,
       signal: args?.options?.signal,
     });

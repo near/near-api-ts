@@ -15,18 +15,18 @@ export type Secp256k1Signature = Secp256k1CurveString;
 export type MlDsa65Signature = MlDsa65CurveString;
 export type Signature = Ed25519Signature | Secp256k1Signature | MlDsa65Signature;
 
-type NativeEd25519PublicKey = { ed25519Key: { data: Uint8Array } };
-type NativeSecp256k1PublicKey = { secp256k1Key: { data: Uint8Array } };
-type NativeMlDsa65PublicKey = { mlDsa65Key: { data: Uint8Array } };
-export type NativePublicKey =
-  | NativeEd25519PublicKey
-  | NativeSecp256k1PublicKey
-  | NativeMlDsa65PublicKey;
+type NearcoreEd25519PublicKey = { ed25519Key: { data: Uint8Array } };
+type NearcoreSecp256k1PublicKey = { secp256k1Key: { data: Uint8Array } };
+type NearcoreMlDsa65PublicKey = { mlDsa65Key: { data: Uint8Array } };
+export type NearcorePublicKey =
+  | NearcoreEd25519PublicKey
+  | NearcoreSecp256k1PublicKey
+  | NearcoreMlDsa65PublicKey;
 
-type NativeEd25519Signature = { ed25519Signature: { data: Uint8Array } };
-type NativeSecp256k1Signature = { secp256k1Signature: { data: Uint8Array } };
-type NativeMlDsa65Signature = { mlDsa65Signature: { data: Uint8Array } };
-export type NativeSignature =
-  | NativeEd25519Signature
-  | NativeSecp256k1Signature
-  | NativeMlDsa65Signature;
+type NearcoreEd25519Signature = { ed25519Signature: { data: Uint8Array } };
+type NearcoreSecp256k1Signature = { secp256k1Signature: { data: Uint8Array } };
+type NearcoreMlDsa65Signature = { mlDsa65Signature: { data: Uint8Array } };
+export type NearcoreSignature =
+  | NearcoreEd25519Signature
+  | NearcoreSecp256k1Signature
+  | NearcoreMlDsa65Signature;

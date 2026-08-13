@@ -1,6 +1,6 @@
 import type { NatError } from '../../../../../src/_common/_common/_common/natError';
 import type { Result } from '../../../common';
-import type { NativePublicKey, PublicKey } from '../../../crypto';
+import type { NearcorePublicKey, PublicKey } from '../../../crypto';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';
 
 export interface CreateDeleteKeyActionPublicErrorRegistry {
@@ -27,10 +27,10 @@ export type SafeCreateDeleteKeyAction = (
 
 export type CreateDeleteKeyAction = (args: CreateDeleteKeyActionArgs) => DeleteKeyAction;
 
-// ****** NATIVE ********
+// ****** NEARCORE ********
 
-export type NativeDeleteKeyAction = {
+export type NearcoreDeleteKeyAction = {
   deleteKey: {
-    publicKey: NativePublicKey;
+    publicKey: NearcorePublicKey;
   };
 };

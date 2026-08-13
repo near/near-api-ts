@@ -1,6 +1,8 @@
-import type { BlockReference, NativeBlockReference } from '../../../../types/_common/common';
+import type { BlockReference, NearcoreBlockReference } from '../../../../types/_common/common';
 
-export const toNativeBlockReference = (blockReference?: BlockReference): NativeBlockReference => {
+export const toNearcoreBlockReference = (
+  blockReference?: BlockReference,
+): NearcoreBlockReference => {
   if (blockReference === 'LatestOptimisticBlock') return { finality: 'optimistic' };
   if (blockReference === 'LatestNearFinalBlock') return { finality: 'near-final' };
   if (blockReference === 'LatestFinalBlock') return { finality: 'final' };

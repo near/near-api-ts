@@ -1,11 +1,11 @@
-import type { NativeAddKeyAction } from '../../../../../types/_common/transaction/actions/nonDelegateActions/addKey';
+import type { NearcoreAddKeyAction } from '../../../../../types/_common/transaction/actions/nonDelegateActions/addKey';
 import { nearToken } from '../../../../_common/nearToken';
 import type { InnerAddKeyAction } from '../../zodSchemas/actions/addKey';
-import { toNativePublicKey } from '../publicKey';
+import { toNearcorePublicKey } from '../publicKey';
 
 const getPermission = (
   action: InnerAddKeyAction,
-): NativeAddKeyAction['addKey']['accessKey']['permission'] => {
+): NearcoreAddKeyAction['addKey']['accessKey']['permission'] => {
   if (action.accessType === 'FullAccess') return { fullAccess: {} };
 
   const { contractAccountId, gasBudget, allowedFunctions } = action;
@@ -19,9 +19,9 @@ const getPermission = (
   };
 };
 
-export const toNativeAddKeyAction = (action: InnerAddKeyAction): NativeAddKeyAction => ({
+export const toNearcoreAddKeyAction = (action: InnerAddKeyAction): NearcoreAddKeyAction => ({
   addKey: {
-    publicKey: toNativePublicKey(action.publicKey),
+    publicKey: toNearcorePublicKey(action.publicKey),
     accessKey: {
       nonce: 0n, // Placeholder; It's not usable anymore: https://gov.near.org/t/issue-with-access-key-nonce/749
       permission: getPermission(action),

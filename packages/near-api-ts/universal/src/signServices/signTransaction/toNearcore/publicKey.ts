@@ -1,7 +1,7 @@
-import type { NativePublicKey } from '../../../../types/_common/crypto';
+import type { NearcorePublicKey } from '../../../../types/_common/crypto';
 import type { InnerPublicKey } from '../../../_common/zodSchemas/publicKey';
 
-export const toNativePublicKey = ({ publicKeyU8, curve }: InnerPublicKey): NativePublicKey => {
+export const toNearcorePublicKey = ({ publicKeyU8, curve }: InnerPublicKey): NearcorePublicKey => {
   switch (curve) {
     case 'ed25519':
       return { ed25519Key: { data: publicKeyU8 } };

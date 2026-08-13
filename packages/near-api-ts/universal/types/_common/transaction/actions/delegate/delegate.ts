@@ -2,21 +2,21 @@
 // import type { NatError } from '../../../../src/_common/natError';
 // import type { Prettify } from '../../../utils';
 // import type { AccountId, BlockHash, BlockHeight, TransactionNonce, Result } from '../../common';
-// import type { NativePublicKey, PublicKey, Signature } from '../../crypto';
+// import type { NearcorePublicKey, PublicKey, Signature } from '../../crypto';
 // import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../natError';
-// import type { Action, NativeAction } from '../transaction';
+// import type { Action, NearcoreAction } from '../transaction';
 // import type {
 //   AddFullAccessKeyAction,
 //   AddFunctionCallKeyAction,
-//   NativeAddKeyAction,
+//   NearcoreAddKeyAction,
 // } from './addKey';
-// import type { CreateAccountAction, NativeCreateAccountAction } from './createAccount';
-// import type { DeleteAccountAction, NativeDeleteAccountAction } from './deleteAccount';
-// import type { DeleteKeyAction, NativeDeleteKeyAction } from './deleteKey';
-// import type { DeployContractAction, NativeDeployContractAction } from './deployContract';
-// import type { FunctionCallAction, NativeFunctionCallAction } from './functionCall';
-// import type { NativeStakeAction, StakeAction } from './stake';
-// import type { NativeTransferAction, TransferAction } from './transfer';
+// import type { CreateAccountAction, NearcoreCreateAccountAction } from './createAccount';
+// import type { DeleteAccountAction, NearcoreDeleteAccountAction } from './deleteAccount';
+// import type { DeleteKeyAction, NearcoreDeleteKeyAction } from './deleteKey';
+// import type { DeployContractAction, NearcoreDeployContractAction } from './deployContract';
+// import type { FunctionCallAction, NearcoreFunctionCallAction } from './functionCall';
+// import type { NearcoreStakeAction, StakeAction } from './stake';
+// import type { NearcoreTransferAction, TransferAction } from './transfer';
 
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';
 
@@ -48,30 +48,30 @@ export interface CreateSignedDelegateActionPublicErrorRegistry {
 //   args: CreateSignedDelegateActionArgs,
 // ) => SignedDelegateAction;
 //
-// // ****** NATIVE ********
+// // ****** NEARCORE ********
 //
-// export type NativeDelegatedAction =
-//   | NativeCreateAccountAction
-//   | NativeTransferAction
-//   | NativeAddKeyAction
-//   | NativeDeployContractAction
-//   | NativeFunctionCallAction
-//   | NativeStakeAction
-//   | NativeDeleteKeyAction
-//   | NativeDeleteAccountAction;
+// export type NearcoreDelegatedAction =
+//   | NearcoreCreateAccountAction
+//   | NearcoreTransferAction
+//   | NearcoreAddKeyAction
+//   | NearcoreDeployContractAction
+//   | NearcoreFunctionCallAction
+//   | NearcoreStakeAction
+//   | NearcoreDeleteKeyAction
+//   | NearcoreDeleteAccountAction;
 //
-// export type NativeDelegateAction = {
+// export type NearcoreDelegateAction = {
 //   senderId: AccountId;
-//   publicKey: NativePublicKey;
-//   actions: NativeDelegatedAction[];
+//   publicKey: NearcorePublicKey;
+//   actions: NearcoreDelegatedAction[];
 //   receiverId: AccountId;
 //   nonce: bigint;
 //   blockHash: Uint8Array;
 //   maxBlockHeight: bigint;
 // };
 //
-// export type NativeSignedDelegateAction = {
+// export type NearcoreSignedDelegateAction = {
 //   signedDelegate: {
-//     publicKey: NativePublicKey;
+//     publicKey: NearcorePublicKey;
 //   };
 // };

@@ -12,7 +12,7 @@ import {
   ContractFunctionNameZodSchema
 } from '../../../../_common/_common/zodSchemas/contractFunctionName';
 import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
-import { toNativeBlockReference } from '../../../../signServices/signTransaction/toNative/blockReference';
+import { toNearcoreBlockReference } from '../../_common/toNearcoreBlockReference';
 import { BlockReferenceZodSchema, PoliciesZodSchema } from '../../_common/zodSchemas';
 import { handleRpcError } from './handleRpcError';
 import { handleRpcResult } from './handleRpcResult/handleRpcResult';
@@ -58,7 +58,7 @@ export const createSafeCallContractReadFunction: CreateSafeCallContractReadFunct
           account_id: args.contractAccountId,
           method_name: args.functionName,
           args_base64: functionArgs.value.toBase64(),
-          ...toNativeBlockReference(args.withStateAt),
+          ...toNearcoreBlockReference(args.withStateAt),
         },
         transportPolicy: args.policies?.transport,
         signal: args.options?.signal,

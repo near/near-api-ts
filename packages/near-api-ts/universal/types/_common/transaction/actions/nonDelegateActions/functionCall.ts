@@ -74,9 +74,9 @@ export type InnerCreateFunctionCallActionArgs = BaseFunctionCallActionArgs & {
   };
 };
 
-// ****** NATIVE ********
+// ****** NEARCORE ********
 
-export type NativeFunctionCallAction = {
+export type NearcoreFunctionCallAction = {
   functionCall: {
     methodName: string;
     args: Uint8Array;

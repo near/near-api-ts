@@ -9,7 +9,7 @@ import { result } from '../../../../_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
 import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
 import { PublicKeyZodSchema } from '../../../../_common/zodSchemas/publicKey';
-import { toNativeBlockReference } from '../../../../signServices/signTransaction/toNative/blockReference';
+import { toNearcoreBlockReference } from '../../_common/toNearcoreBlockReference';
 import {
   BaseOptionsZodSchema,
   BlockReferenceZodSchema,
@@ -46,7 +46,7 @@ export const createSafeGetAccountAccessKey: CreateSafeGetAccountAccessKey = (con
           request_type: 'view_access_key',
           account_id: args.accountId,
           public_key: args.publicKey,
-          ...toNativeBlockReference(args.atMomentOf),
+          ...toNearcoreBlockReference(args.atMomentOf),
         },
         transportPolicy: args.policies?.transport,
         signal: args.options?.signal,

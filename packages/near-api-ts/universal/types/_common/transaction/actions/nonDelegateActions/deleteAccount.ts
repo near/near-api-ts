@@ -28,9 +28,9 @@ export type CreateDeleteAccountAction = (
   args: CreateDeleteAccountActionArgs,
 ) => DeleteAccountAction;
 
-// ****** NATIVE ********
+// ****** NEARCORE ********
 
-export type NativeDeleteAccountAction = {
+export type NearcoreDeleteAccountAction = {
   deleteAccount: {
     beneficiaryId: AccountId;
   };
