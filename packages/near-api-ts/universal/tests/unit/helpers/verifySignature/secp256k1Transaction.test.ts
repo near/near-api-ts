@@ -1,15 +1,13 @@
+import { base58 } from '@scure/base';
 import { expect, test } from 'vitest';
-import { createMemoryKeyService, randomSecp256k1KeyPair, verifySignature } from '../../../../index';
-import { getTransactionHash } from '../../../../src/signServices/signTransaction/getTransactionHash';
+import { randomSecp256k1KeyPair, verifySignature } from '../../../../index';
 import { signTransaction } from '../../../../src/signServices/signTransaction/signTransaction';
-import { TransactionZodSchema } from '../../../../src/signServices/signTransaction/zodSchemas/transaction';
 
 test('secp256k1 transaction verification', async () => {
   const keyPair = randomSecp256k1KeyPair();
-  const keyService = createMemoryKeyService({ keySource: keyPair });
 
   const signedTransaction = await signTransaction({
-    signDataProvider: keyService,
+    signDataProvider: keyPair,
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: keyPair.publicKey,
@@ -23,12 +21,9 @@ test('secp256k1 transaction verification', async () => {
     },
   });
 
-  const innerTx = TransactionZodSchema.parse(signedTransaction.transaction);
-  const { transactionHashU8 } = getTransactionHash(innerTx);
-
   const isValid = verifySignature({
     publicKey: keyPair.publicKey,
-    message: transactionHashU8,
+    message: base58.decode(signedTransaction.transactionHash),
     signature: signedTransaction.signature,
   });
 

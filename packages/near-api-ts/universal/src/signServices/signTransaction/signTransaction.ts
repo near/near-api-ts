@@ -1,10 +1,18 @@
+import { sha256 } from '@noble/hashes/sha2.js';
+import { base58 } from '@scure/base';
+import { serialize } from 'borsh';
 import * as z from 'zod/mini';
-import type { SafeSignTransaction, SignTransaction } from '../../../types/_common/transaction/signTransaction';
+import type {
+  SafeSignTransaction,
+  SignTransaction,
+} from '../../../types/_common/transaction/signTransaction';
+import type { NativeSignedTransaction } from '../../../types/_common/transaction/transaction';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { result, resultNatError } from '../../_common/_common/result';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
-import { getTransactionHash } from './getTransactionHash';
-import { getSignedTransactionBorsh } from './toBorshBytes/transaction';
+import { SignedTransactionBorshSchema, TransactionBorshSchema } from './borsh/transaction';
+import { toNativeSignature } from './toNative/signature';
+import { toNativeTransaction } from './toNative/transaction';
 import { TransactionZodSchema } from './zodSchemas/transaction';
 
 const SignTransactionArgsSchema = z.object({
@@ -29,7 +37,10 @@ export const safeSignTransaction: SafeSignTransaction = wrapInternalError(
 
     // #1: Sign transaction
     const { transaction: innerTransaction } = validArgs.data;
-    const { transactionHash, transactionHashU8 } = getTransactionHash(innerTransaction);
+
+    const nativeTransaction = toNativeTransaction(innerTransaction);
+    const transactionBorshU8 = serialize(TransactionBorshSchema, nativeTransaction);
+    const transactionHashU8 = sha256(transactionBorshU8);
 
     const signedData = await args.signDataProvider.safeSignData({
       publicKey: innerTransaction.signerPublicKey.publicKey,
@@ -39,18 +50,23 @@ export const safeSignTransaction: SafeSignTransaction = wrapInternalError(
     if (!signedData.ok)
       return resultNatError('SignTransaction.SignData.Failed', { cause: signedData.error });
 
-    // #2: Serialize signed transaction into Borsh -> Base64
-    const signedTransactionBorsh64 = getSignedTransactionBorsh(
-      innerTransaction,
-      signedData.value,
-    ).toBase64();
+    // #2: Serialize signed transaction into borsh
+    const nativeSignedTransaction: NativeSignedTransaction = {
+      transaction: nativeTransaction,
+      signature: toNativeSignature(signedData.value),
+    };
+
+    const signedTransactionBorshU8 = serialize(
+      SignedTransactionBorshSchema,
+      nativeSignedTransaction,
+    );
 
     // #3: Return signed transaction
     return result.ok({
-      transactionHash,
+      transactionHash: base58.encode(transactionHashU8),
       transaction: args.transaction,
       signature: signedData.value.signature,
-      signedTransactionBorsh64,
+      signedTransactionBorsh64: signedTransactionBorshU8.toBase64(),
     });
   },
 );

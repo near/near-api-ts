@@ -42,11 +42,3 @@ export const toNativeTransaction = (transaction: InnerTransaction): NativeTransa
   nonce: BigInt(transaction.nonce),
   blockHash: transaction.blockHash.cryptoHashU8,
 });
-
-export const toNativeSignedTransaction = (
-  transaction: InnerTransaction,
-  signature: InnerSignature,
-): NativeSignedTransaction => ({
-  transaction: toNativeTransaction(transaction),
-  signature: toNativeSignature(signature),
-});
