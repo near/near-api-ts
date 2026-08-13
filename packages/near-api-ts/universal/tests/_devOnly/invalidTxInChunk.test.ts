@@ -11,7 +11,7 @@ import {
   transfer,
 } from '../../index';
 import type { Client } from '../../types/client/client';
-import type { MemorySigner } from '../../types/signers/memorySigner/memorySigner';
+import type { MemorySigner } from '../../types/signer/memorySigner';
 import { createDefaultClient, log } from '../utils/common';
 import { startMaliciousSandbox } from '../utils/sandbox/maliciousChunkProducer/startMaliciousSandbox';
 

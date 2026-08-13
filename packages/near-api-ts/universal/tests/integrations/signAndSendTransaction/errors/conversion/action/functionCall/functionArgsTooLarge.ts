@@ -1,5 +1,5 @@
 import { functionCall } from '../../../../../../../index';
-import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
+import { signTransaction } from '../../../../../../../src/signServices/signTransaction/signTransaction';
 import { assertUnmappedInvalidTxError } from '../../../../../../utils/assertUnmappedInvalidTxError';
 import type { TestContext } from '../action.test';
 

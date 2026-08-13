@@ -10,7 +10,7 @@ import {
   near,
   transfer,
 } from '../../../../index';
-import { objectToU8 } from '../../../../src/_common/utils/common';
+import { convertObjectToU8 } from '../../../../src/_common/convertObjectToU8';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 import { createDefaultClient, getFileBytes } from '../../../utils/common';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
@@ -70,7 +70,7 @@ describe('CallContractReadFunction', () => {
       functionName: 'get_record',
       functionArgs: { recordId: 0 },
       options: {
-        serializeArgs: (args) => objectToU8({ record_id: args.functionArgs.recordId }),
+        serializeArgs: (args) => convertObjectToU8({ record_id: args.functionArgs.recordId }),
       },
     });
     expect(res.result).toBe('Hello');

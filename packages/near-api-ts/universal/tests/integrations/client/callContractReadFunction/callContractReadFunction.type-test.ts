@@ -1,5 +1,5 @@
 import * as z from 'zod/mini';
-import { base64ToObject, createTestnetClient } from '../../../../index';
+import { convertBase64ToObject, createTestnetClient } from '../../../../index';
 import type { Base64String } from '../../../../types/_common/common';
 
 type Equal<A, B> =
@@ -17,7 +17,7 @@ const client = createTestnetClient();
 const responseZodSchema = z.object({ decimals: z.number() });
 
 const deserializeResult = (args: { rawResult: Base64String }): z.output<typeof responseZodSchema> =>
-  responseZodSchema.parse(base64ToObject(args.rawResult));
+  responseZodSchema.parse(convertBase64ToObject(args.rawResult));
 
 type CustomDeserializeResult = (args: { rawResult: Base64String }) => {
   decimals: number;

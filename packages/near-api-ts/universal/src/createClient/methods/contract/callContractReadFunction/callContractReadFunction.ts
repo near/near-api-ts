@@ -1,0 +1,78 @@
+import * as z from 'zod/mini';
+import type {
+  CreateSafeCallContractReadFunction,
+  InnerCallContractReadFunctionArgs,
+  SafeCallContractReadFunction,
+} from '../../../../../types/client/methods/contract/callContractReadFunction';
+import { createNatError } from '../../../../_common/_common/_common/natError';
+import { repackError } from '../../../../_common/_common/repackError';
+import { result } from '../../../../_common/_common/result';
+import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
+import {
+  ContractFunctionNameZodSchema
+} from '../../../../_common/_common/zodSchemas/contractFunctionName';
+import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
+import { toNativeBlockReference } from '../../../../signServices/signTransaction/toNative/blockReference';
+import { BlockReferenceZodSchema, PoliciesZodSchema } from '../../_common/zodSchemas';
+import { handleRpcError } from './handleRpcError';
+import { handleRpcResult } from './handleRpcResult/handleRpcResult';
+import { serializeFunctionArgs } from './serializeFunctionArgs';
+
+const GetAccountAccessKeyArgsSchema = z.object({
+  contractAccountId: AccountIdZodSchema,
+  functionName: ContractFunctionNameZodSchema,
+  functionArgs: z.optional(z.unknown()),
+  withStateAt: z.optional(BlockReferenceZodSchema),
+  policies: PoliciesZodSchema,
+  options: z.optional(
+    z.object({
+      serializeArgs: z.optional(z.instanceof(Function)),
+      deserializeResult: z.optional(z.instanceof(Function)),
+      signal: z.optional(z.instanceof(AbortSignal)),
+    }),
+  ),
+});
+
+export const createSafeCallContractReadFunction: CreateSafeCallContractReadFunction = (context) =>
+  wrapInternalError(
+    'Client.CallContractReadFunction.Internal',
+    async (args: InnerCallContractReadFunctionArgs): ReturnType<SafeCallContractReadFunction> => {
+      const validArgs = GetAccountAccessKeyArgsSchema.safeParse(args);
+
+      if (!validArgs.success)
+        return result.err(
+          createNatError({
+            kind: 'Client.CallContractReadFunction.Args.InvalidSchema',
+            context: { zodError: validArgs.error },
+          }),
+        );
+
+      // Try to serialize args to bytes;
+      const functionArgs = serializeFunctionArgs(args);
+      if (!functionArgs.ok) return functionArgs;
+
+      const rpcResponse = await context.sendRequest({
+        method: 'query',
+        params: {
+          request_type: 'call_function',
+          account_id: args.contractAccountId,
+          method_name: args.functionName,
+          args_base64: functionArgs.value.toBase64(),
+          ...toNativeBlockReference(args.withStateAt),
+        },
+        transportPolicy: args.policies?.transport,
+        signal: args.options?.signal,
+      });
+
+      if (!rpcResponse.ok)
+        return repackError({
+          error: rpcResponse.error,
+          originPrefix: 'SendRequest',
+          targetPrefix: 'Client.CallContractReadFunction',
+        });
+
+      return rpcResponse.value.error
+        ? handleRpcError(rpcResponse.value)
+        : handleRpcResult(rpcResponse.value, args);
+    },
+  );

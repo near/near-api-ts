@@ -1,0 +1,75 @@
+import * as z from 'zod/mini';
+import type { CreateSafeExecuteTransaction } from '../../types/signer/public/createExecuteTransaction';
+import { createNatError, isNatErrorOf } from '../_common/_common/_common/natError';
+import { repackError } from '../_common/_common/repackError';
+import { result } from '../_common/_common/result';
+import { wrapInternalError } from '../_common/_common/wrapInternalError';
+import { TransactionIntentZodSchema } from '../signServices/signTransaction/zodSchemas/transaction';
+
+const SignTransactionArgsSchema = z.object({
+  intent: TransactionIntentZodSchema,
+});
+
+export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (context) =>
+  wrapInternalError('MemorySigner.ExecuteTransaction.Internal', async (args) => {
+    const validArgs = SignTransactionArgsSchema.safeParse(args);
+
+    if (!validArgs.success)
+      return result.err(
+        createNatError({
+          kind: 'MemorySigner.ExecuteTransaction.Args.InvalidSchema',
+          context: { zodError: validArgs.error },
+        }),
+      );
+
+    const taskResult = await context.taskQueue.addExecuteTransactionTask(args.intent);
+    if (taskResult.ok) return taskResult;
+
+    if (
+      isNatErrorOf(taskResult.error, [
+        'MemorySigner.KeyPool.AccessKeys.NotLoaded',
+        'MemorySigner.KeyPool.Empty',
+        'MemorySigner.KeyPool.SigningKey.NotFound',
+        'MemorySigner.TaskQueue.Timeout',
+      ])
+    )
+      return repackError({
+        error: taskResult.error,
+        originPrefix: 'MemorySigner',
+        targetPrefix: 'MemorySigner.ExecuteTransaction',
+      });
+
+    // When we get some errors from the RPC, we want to repack particular errors
+    // (which ones can actually happen) and return everything else as .Internal
+    // The main goal here - return only errors, which can actually happen during
+    // .executeTransaction call;
+    // And return everything else under .Internal
+    if (
+      taskResult.error.kind ===
+      'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction'
+    ) {
+      if (
+        isNatErrorOf(taskResult.error.context.cause, [
+          'Client.SendSignedTransaction.PreferredRpc.NotFound',
+          'Client.SendSignedTransaction.Aborted',
+          'Client.SendSignedTransaction.Timeout',
+          'Client.SendSignedTransaction.Exhausted',
+          'Client.SendSignedTransaction.Rpc.Timeout',
+          'Client.SendSignedTransaction.Rpc.Signer.Budget.NotEnough',
+          'Client.SendSignedTransaction.Rpc.Action.CreateAccount.AlreadyExists',
+          'Client.SendSignedTransaction.Rpc.Action.Stake.ProposedStake.BelowThreshold',
+          'Client.SendSignedTransaction.Rpc.Action.Stake.TotalBalance.NotEnough',
+          'Client.SendSignedTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero',
+        ])
+      ) {
+        return repackError({
+          error: taskResult.error.context.cause,
+          originPrefix: 'Client.SendSignedTransaction',
+          targetPrefix: 'MemorySigner.ExecuteTransaction',
+        });
+      }
+      throw taskResult.error.context.cause;
+    }
+
+    return result.err(taskResult.error);
+  });

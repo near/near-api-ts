@@ -1,5 +1,5 @@
-import type { NatError } from '../../src/_common/natError';
-import { type RepackTargetPrefixError, repackError } from '../../src/_common/utils/repackError';
+import type { NatError } from '../../src/_common/_common/_common/natError';
+import { type RepackTargetPrefixError, repackError } from '../../src/_common/_common/repackError';
 import type { ResultErr } from '../../types/_common/common';
 import type { GetAccountInfoError } from '../../types/client/methods/account/getAccountInfo';
 

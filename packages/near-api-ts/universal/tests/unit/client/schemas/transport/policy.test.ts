@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import * as z from 'zod/mini';
 import {
+  PartialTransportPolicyZodSchema
+} from '../../../../../src/createClient/_common/zodSchemas/transportPolicy';
+import {
   defaultTransportPolicy,
-  PartialTransportPolicyZodSchema,
-} from '../../../../../src/client/transport/transportPolicy';
+
+} from '../../../../../src/createClient/transport/transportPolicy';
 import type { PartialTransportPolicy } from '../../../../../types/client/transport/transport';
 
 z.config(z.locales.en());

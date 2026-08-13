@@ -1,4 +1,4 @@
-import type { NatError } from '../../../src/_common/natError';
+import type { NatError } from '../../../src/_common/_common/_common/natError';
 import type { Result } from '../common';
 import type { Secp256k1PrivateKey, Secp256k1PublicKey, Secp256k1Signature } from '../crypto';
 import type { Secp256k1Curve } from '../curveString';

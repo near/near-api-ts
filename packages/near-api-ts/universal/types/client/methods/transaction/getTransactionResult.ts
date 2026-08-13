@@ -1,15 +1,6 @@
-import type { NatError } from '../../../../src/_common/natError';
+import type { NatError } from '../../../../src/_common/_common/_common/natError';
 import type { CryptoHash, Result } from '../../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
-import type {
-  MaybeBaseDeserializeTransactionActionSummariesFn,
-  MaybeBaseDeserializeTransactionExecutionStepsFn,
-  MaybeBaseDeserializeTransactionResultDataFn,
-} from '../../../_common/transactionDetails/_common/_common/deserializers';
-import type { TransactionProcessingStageMap } from '../../../_common/transactionDetails/_common/processingStage';
-import type { ConversionFailure } from '../../../_common/transactionDetails/conversionFailure';
-import type { ExecutionFailure } from '../../../_common/transactionDetails/executionFailure';
-import type { ExecutionSuccess } from '../../../_common/transactionDetails/executionSuccess';
 import type { KeyIf } from '../../../utils';
 import type { ClientContext } from '../../client';
 import type {
@@ -20,6 +11,15 @@ import type {
 } from '../../transport/sendRequest';
 import type { PartialTransportPolicy } from '../../transport/transport';
 import type { TransactionDetailsInnerErrorRegistry } from './_common/innerErrorRegistry';
+import type {
+  MaybeBaseDeserializeTransactionActionSummariesFn,
+  MaybeBaseDeserializeTransactionExecutionStepsFn,
+  MaybeBaseDeserializeTransactionResultDataFn,
+} from './_common/transactionDetails/_common/_common/deserializers';
+import type { TransactionProcessingStageMap } from './_common/transactionDetails/_common/processingStage';
+import type { ConversionFailure } from './_common/transactionDetails/conversionFailure';
+import type { ExecutionFailure } from './_common/transactionDetails/executionFailure';
+import type { ExecutionSuccess } from './_common/transactionDetails/executionSuccess';
 
 export interface GetTransactionResultPublicErrorRegistry {
   'Client.GetTransactionResult.Args.InvalidSchema': InvalidSchemaErrorContext;

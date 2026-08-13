@@ -1,5 +1,5 @@
-import type { NatError } from '../../../src/_common/natError';
-import type { BaseRpcResponse } from '../../../src/_common/schemas/zod/rpc/rpcResponse';
+import type { NatError } from '../../../src/_common/_common/_common/natError';
+import type { BaseRpcResponse } from '../../../src/createClient/_common/zodSchemas/baseRpcResponse';
 import type { JsonValue, Milliseconds, Result } from '../../_common/common';
 import type { InvalidSchemaErrorContext } from '../../_common/natError';
 import type {

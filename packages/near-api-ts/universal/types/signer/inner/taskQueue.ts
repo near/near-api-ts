@@ -1,0 +1,112 @@
+import type { UUID } from 'crypto';
+import type { NatError } from '../../../src/_common/_common/_common/natError';
+import type {
+  AccountId,
+  ContractFunctionName,
+  Milliseconds,
+  Result,
+  TimeoutId,
+} from '../../_common/common';
+import type {
+  SignedTransaction,
+  TransactionIntent,
+} from '../../_common/transaction/transaction';
+import type { SendSignedTransactionError } from '../../client/methods/transaction/sendSignedTransaction/error';
+import type { SendSignedTransactionOutput } from '../../client/methods/transaction/sendSignedTransaction/output';
+import type { MemorySignerErrorContext } from '../_common/errorContext';
+import type { CreateMemorySignerArgs } from '../createMemorySigner';
+import type { MemorySignerContext } from '../memorySigner';
+import type { PoolKey } from './keyPool';
+
+export interface TaskQueueInnerErrorRegistry {
+  'MemorySigner.TaskQueue.Timeout': MemorySignerErrorContext['TaskQueue']['Timeout'];
+  'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction': {
+    cause: SendSignedTransactionError;
+  };
+}
+
+export type FullAccessKeyPriority = { accessType: 'FullAccess' };
+
+export type FunctionCallKeyPriority = {
+  accessType: 'FunctionCall';
+  contractAccountId: AccountId;
+  calledFnName: ContractFunctionName;
+};
+
+export type AccessTypePriority =
+  | [FullAccessKeyPriority | FunctionCallKeyPriority]
+  | [FullAccessKeyPriority, FunctionCallKeyPriority]
+  | [FunctionCallKeyPriority, FullAccessKeyPriority];
+
+export type TaskId = UUID;
+
+type SignTransactionTask = {
+  taskType: 'SignTransaction';
+  taskId: TaskId;
+  transactionIntent: TransactionIntent;
+  accessTypePriority: AccessTypePriority;
+};
+
+type ExecuteTransactionTask = {
+  taskType: 'ExecuteTransaction';
+  taskId: TaskId;
+  transactionIntent: TransactionIntent;
+  accessTypePriority: AccessTypePriority;
+};
+
+export type Task = SignTransactionTask | ExecuteTransactionTask;
+
+export type RemoveTask = (taskId: TaskId) => void;
+
+export type TaskQueueContext = {
+  queue: Task[];
+  cleaners: Record<TaskId, TimeoutId>;
+  signerContext: MemorySignerContext;
+  timeoutMs: Milliseconds;
+};
+
+// ExecuteTransaction
+// TODO Add `Inner` prefix
+type ExecuteTransactionTaskError =
+  | NatError<'MemorySigner.KeyPool.AccessKeys.NotLoaded'>
+  | NatError<'MemorySigner.KeyPool.Empty'>
+  | NatError<'MemorySigner.KeyPool.SigningKey.NotFound'>
+  | NatError<'MemorySigner.TaskQueue.Timeout'>
+  | NatError<'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction'>
+  | NatError<'MemorySigner.ExecuteTransaction.Internal'>;
+
+export type AddExecuteTransactionTask = (
+  intent: TransactionIntent,
+) => Promise<Result<SendSignedTransactionOutput<any, any, any, any>, ExecuteTransactionTaskError>>;
+
+export type CreateAddExecuteTransactionTask = (
+  context: TaskQueueContext,
+) => AddExecuteTransactionTask;
+
+// SignTransaction
+export type SignTransactionTaskError =
+  | NatError<'MemorySigner.KeyPool.AccessKeys.NotLoaded'>
+  | NatError<'MemorySigner.KeyPool.Empty'>
+  | NatError<'MemorySigner.KeyPool.SigningKey.NotFound'>
+  | NatError<'MemorySigner.TaskQueue.Timeout'>
+  | NatError<'MemorySigner.SignTransaction.Internal'>;
+
+export type AddSignTransactionTask = (
+  intent: TransactionIntent,
+) => Promise<Result<SignedTransaction, SignTransactionTaskError>>;
+
+export type CreateAddSignTransactionTask = (context: TaskQueueContext) => AddSignTransactionTask;
+
+export type FindTaskForKey = (key: PoolKey) => Task | undefined;
+
+export type TaskQueue = {
+  addExecuteTransactionTask: AddExecuteTransactionTask;
+  addSignTransactionTask: AddSignTransactionTask;
+  findTaskForKey: FindTaskForKey;
+  removeTask: RemoveTask;
+};
+
+export type CreateTaskQueue = (
+  signerContext: MemorySignerContext,
+  createMemorySignerArgs: CreateMemorySignerArgs,
+) => TaskQueue;

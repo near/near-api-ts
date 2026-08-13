@@ -9,13 +9,13 @@ type SignDelegationVariables = {
 
 // TODO replace with SignedDelegation in the future
 
-type SingDelegationOutput = { signedDelegationBorsh64: string };
-type SingDelegationError = Error;
+type SignDelegationOutput = { signedDelegationBorsh64: string };
+type SignDelegationError = Error;
 
 type UseSignDelegationArgs<OnMutateResult> = {
   mutation?: MutationOptions<
-    SingDelegationOutput,
-    SingDelegationError,
+    SignDelegationOutput,
+    SignDelegationError,
     SignDelegationVariables,
     OnMutateResult
   >;
@@ -24,8 +24,8 @@ type UseSignDelegationArgs<OnMutateResult> = {
 type SignDelegationArgs<OnMutateResult> = Prettify<
   SignDelegationVariables & {
     mutate?: MutateOptions<
-      SingDelegationOutput,
-      SingDelegationError,
+      SignDelegationOutput,
+      SignDelegationError,
       SignDelegationVariables,
       OnMutateResult
     >;
@@ -34,10 +34,10 @@ type SignDelegationArgs<OnMutateResult> = Prettify<
 
 type UseSignDelegationOutput<OnMutateResult> = {
   signDelegation: (args: SignDelegationArgs<OnMutateResult>) => void;
-  signDelegationAsync: (args: SignDelegationArgs<OnMutateResult>) => Promise<SingDelegationOutput>;
+  signDelegationAsync: (args: SignDelegationArgs<OnMutateResult>) => Promise<SignDelegationOutput>;
 } & BaseUseMutationResult<
-  SingDelegationOutput,
-  SingDelegationError,
+  SignDelegationOutput,
+  SignDelegationError,
   SignDelegationVariables,
   OnMutateResult
 >;

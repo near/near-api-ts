@@ -1,4 +1,4 @@
-import { ClientBrand } from '../../src/client/createClient';
+import { ClientBrand } from '../../src/createClient/createClient';
 import type { Cache } from './cache/cache';
 import type {
   GetRecentBlockHash,

@@ -1,6 +1,6 @@
 import { expect } from 'vitest';
 import { randomSecp256k1KeyPair, stake } from '../../../../../../../index';
-import { signTransaction } from '../../../../../../../src/helpers/signTransaction';
+import { signTransaction } from '../../../../../../../src/signServices/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import type { TestContext } from '../action.test';
 

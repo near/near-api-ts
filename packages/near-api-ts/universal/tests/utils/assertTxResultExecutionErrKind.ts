@@ -2,8 +2,8 @@ import { expect } from 'vitest';
 import type {
   ExecutionFailureError,
   ExecutionFailureKind,
-} from '../../types/_common/transactionDetails/_common/_common/executionFailureError';
-import type { ExecutionFailure } from '../../types/_common/transactionDetails/executionFailure';
+} from '../../types/client/methods/transaction/_common/transactionDetails/_common/_common/executionFailureError';
+import type { ExecutionFailure } from '../../types/client/methods/transaction/_common/transactionDetails/executionFailure';
 import type { GetTransactionResultOutput } from '../../types/client/methods/transaction/getTransactionResult';
 
 /**

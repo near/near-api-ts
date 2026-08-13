@@ -4,22 +4,15 @@ import { type Schema, serialize } from 'borsh';
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import { type AccountId, type Client, keyPair } from '../../index';
-import { DelegateActionBorshSchema } from '../../src/_common/schemas/borsh/delegateAction';
+import { DelegationBorshSchema } from '../../src/signServices/signTransaction/borsh/actions/delegate/delegation';
 import {
   SignedTransactionBorshSchema,
   TransactionBorshSchema,
-} from '../../src/_common/schemas/borsh/transaction';
+} from '../../src/signServices/signTransaction/borsh/transaction';
 import { createDefaultClient, log } from '../utils/common';
 import { startSandbox } from '../utils/sandbox/startSandbox';
 
 const kp = keyPair(DEFAULT_PRIVATE_KEY);
-
-const schema: Schema = {
-  struct: {
-    tag: 'u32',
-    ...(DelegateActionBorshSchema as any).struct,
-  },
-};
 
 const signDelegation = async (senderId: AccountId, deposit: bigint) => {
   const delegation = {
@@ -32,14 +25,13 @@ const signDelegation = async (senderId: AccountId, deposit: bigint) => {
     publicKey: { ed25519Key: { data: kp.publicKeyU8 } },
   };
 
-  const delegateActionBorsh = serialize(schema, delegation);
-
-  const delegateActionHashU8 = sha256(delegateActionBorsh);
-  const { signatureU8 } = await kp.signData({ dataU8: delegateActionHashU8 });
+  const delegationBorsh = serialize(DelegationBorshSchema, delegation);
+  const delegationHashU8 = sha256(delegationBorsh);
+  const { signatureU8 } = await kp.signData({ dataU8: delegationHashU8 });
 
   return {
     delegate: {
-      delegateAction: delegation,
+      delegation,
       signature: { ed25519Signature: { data: signatureU8 } },
     },
   };
@@ -80,6 +72,8 @@ describe('Full-scale delegation test', async () => {
       blockHash: base58.decode(blockHash),
       actions: [await signDelegation('alice', 500000000000000000000000000n)], // 500 NEAR
     };
+
+    log(transaction);
 
     const transactionBorsh = serialize(TransactionBorshSchema, transaction);
     const transactionHashU8 = sha256(transactionBorsh);

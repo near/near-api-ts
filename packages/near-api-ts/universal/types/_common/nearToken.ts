@@ -1,5 +1,5 @@
-import type { NatError } from '../../src/_common/natError';
-import type { Result, Tokens, Units } from './common';
+import type { NatError } from '../../src/_common/_common/_common/natError';
+import type { Decimal, Result, Units } from './common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from './natError';
 
 export interface NearTokenPublicErrorRegistry {
@@ -12,7 +12,7 @@ export interface NearTokenPublicErrorRegistry {
 }
 
 export type YoctoNearInput = Units;
-export type NearInput = Tokens;
+export type NearInput = Decimal;
 
 // CreateNearToken --------------------------------------------------------
 

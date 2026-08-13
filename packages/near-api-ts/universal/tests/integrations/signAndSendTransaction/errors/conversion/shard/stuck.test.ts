@@ -1,8 +1,8 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { describe, expect, it } from 'vitest';
 import { keyPair, near, transfer } from '../../../../../../index';
-import { safeSleep } from '../../../../../../src/_common/utils/sleep';
-import { signTransaction } from '../../../../../../src/helpers/signTransaction';
+import { safeSleep } from '../../../../../../src/createClient/transport/sendRequest/_common/sleep';
+import { signTransaction } from '../../../../../../src/signServices/signTransaction/signTransaction';
 import {
   assertUnmappedInvalidTxError,
   getUnmappedInvalidTxError,

@@ -11,14 +11,15 @@ import {
   keyPair,
   near,
   randomEd25519KeyPair,
+  safeSignTransaction,
   signTransaction,
   stake,
   transfer,
 } from '../../index';
-import { safeSleep } from '../../src/_common/utils/sleep';
-import { createAccount } from '../../src/helpers/actionCreators/createAccount';
+import { createAccount } from '../../src/actionCreators/createAccount';
+import { safeSleep } from '../../src/createClient/transport/sendRequest/_common/sleep';
 import type { Client } from '../../types/client/client';
-import type { MemorySignerFactory } from '../../types/signers/memorySigner/public/createMemorySigner';
+import type { MemorySignerFactory } from '../../types/signer/createMemorySigner';
 import { createDefaultClient, log } from '../utils/common';
 import { startSandbox } from '../utils/sandbox/startSandbox';
 

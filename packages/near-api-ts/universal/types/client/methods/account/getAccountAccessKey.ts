@@ -1,5 +1,5 @@
-import type { NatError } from '../../../../src/_common/natError';
-import type { RpcQueryViewAccessKeyOkResult } from '../../../../src/client/methods/account/getAccountAccessKey/handleResult';
+import type { NatError } from '../../../../src/_common/_common/_common/natError';
+import type { RpcQueryViewAccessKeyOkResult } from '../../../../src/createClient/methods/account/getAccountAccessKey/handleResult';
 import type { AccountAccessKey } from '../../../_common/accountAccessKey';
 import type {
   AccountId,

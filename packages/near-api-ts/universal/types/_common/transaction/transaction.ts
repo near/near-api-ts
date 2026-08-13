@@ -5,14 +5,14 @@ import type {
   AddFullAccessKeyAction,
   AddFunctionCallKeyAction,
   NativeAddKeyAction,
-} from './actions/addKey';
-import type { CreateAccountAction, NativeCreateAccountAction } from './actions/createAccount';
-import type { DeleteAccountAction, NativeDeleteAccountAction } from './actions/deleteAccount';
-import type { DeleteKeyAction, NativeDeleteKeyAction } from './actions/deleteKey';
-import type { DeployContractAction, NativeDeployContractAction } from './actions/deployContract';
-import type { FunctionCallAction, NativeFunctionCallAction } from './actions/functionCall';
-import type { NativeStakeAction, StakeAction } from './actions/stake';
-import type { NativeTransferAction, TransferAction } from './actions/transfer';
+} from './actions/nonDelegateActions/addKey';
+import type { CreateAccountAction, NativeCreateAccountAction } from './actions/nonDelegateActions/createAccount';
+import type { DeleteAccountAction, NativeDeleteAccountAction } from './actions/nonDelegateActions/deleteAccount';
+import type { DeleteKeyAction, NativeDeleteKeyAction } from './actions/nonDelegateActions/deleteKey';
+import type { DeployContractAction, NativeDeployContractAction } from './actions/nonDelegateActions/deployContract';
+import type { FunctionCallAction, NativeFunctionCallAction } from './actions/nonDelegateActions/functionCall';
+import type { NativeStakeAction, StakeAction } from './actions/nonDelegateActions/stake';
+import type { NativeTransferAction, TransferAction } from './actions/nonDelegateActions/transfer';
 
 export type Action =
   | CreateAccountAction

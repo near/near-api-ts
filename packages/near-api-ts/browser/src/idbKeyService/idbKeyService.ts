@@ -1,9 +1,9 @@
 // import * as z from 'zod/mini';
 
 import type { PublicKey } from '../../../universal';
-import { asThrowable } from '../../../universal/src/_common/utils/asThrowable';
-import { result } from '../../../universal/src/_common/utils/result';
-import { wrapInternalError } from '../../../universal/src/_common/utils/wrapInternalError';
+import { asThrowable } from '../../../universal/src/_common/_common/asThrowable';
+import { result } from '../../../universal/src/_common/_common/result';
+import { wrapInternalError } from '../../../universal/src/_common/_common/wrapInternalError';
 import type { Result } from '../../../universal/types/_common/common';
 import type { KeyPair } from '../../../universal/types/_common/keyPairs/keyPair';
 import { createGetKeyPair } from './private/getKeyPair';

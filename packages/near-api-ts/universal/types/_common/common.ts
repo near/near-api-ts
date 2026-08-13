@@ -34,14 +34,14 @@ export type Log = string;
 export type ContractFunctionName = string;
 
 /**
- * Smallest part of cryptocurrency token, used for math operations, f.e
- * 1 yoctoNear or 1 satoshi
+ * Smallest indivisible part of a measured value, used for math operations, f.e
+ * 1 yoctoNear, 1 satoshi or 1 gas
  */
 export type Units = bigint | string;
 /**
- * Human-readable token amount, f.e 1 NEAR or 1 Bitcoin
+ * Human-readable amount as a decimal string, f.e "1.5" NEAR or "30" TeraGas
  */
-export type Tokens = string;
+export type Decimal = string;
 
 type JsonObject = { [key: string]: JsonValue };
 type JsonArray = JsonValue[];

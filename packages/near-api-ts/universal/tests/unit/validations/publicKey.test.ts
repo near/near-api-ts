@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PublicKeyZodSchema } from '../../../src/_common/schemas/zod/common/publicKey';
+import { PublicKeyZodSchema } from '../../../src/_common/zodSchemas/publicKey';
 
 const privateKey =
   'ed25519:3kDMsPd8EsgPNV2yarJFtKMvCtV4fN4MkwhaW5BXcNx4a2NhMjE8ycVb3Vu1yrhqZc31dCPHNNUYJV3UK9GbFFd6';

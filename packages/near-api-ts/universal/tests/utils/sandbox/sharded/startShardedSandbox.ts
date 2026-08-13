@@ -6,7 +6,7 @@ import {
   type SandboxConfig,
 } from 'near-sandbox';
 import { type NearToken, near, yoctoNear } from '../../../../index';
-import { safeSleep } from '../../../../src/_common/utils/sleep';
+import { safeSleep } from '../../../../src/createClient/transport/sendRequest/_common/sleep';
 import { getAvailablePorts } from './getAvailablePorts';
 
 const SANDBOX_VERSION = '2.12.0';

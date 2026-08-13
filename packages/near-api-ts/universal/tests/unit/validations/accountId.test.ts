@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import * as z from 'zod/mini';
-import { AccountIdZodSchema } from '../../../src/_common/schemas/zod/common/accountId';
+import { AccountIdZodSchema } from '../../../src/_common/zodSchemas/accountId';
 
 z.config(z.locales.en());
 

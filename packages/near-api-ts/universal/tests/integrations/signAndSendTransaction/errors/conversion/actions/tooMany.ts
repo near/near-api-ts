@@ -1,6 +1,6 @@
 import { expect } from 'vitest';
 import { transfer } from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/helpers/signTransaction';
+import { signTransaction } from '../../../../../../src/signServices/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import type { TestContext } from './actions.test';
 

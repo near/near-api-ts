@@ -10,7 +10,7 @@ import {
   signTransaction,
   transfer,
 } from '../../../../../../../../index';
-import { createAccount } from '../../../../../../../../src/helpers/actionCreators/createAccount';
+import { createAccount } from '../../../../../../../../src/actionCreators/createAccount';
 import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from '../../functionCall.test';

@@ -1,11 +1,11 @@
 import type { Result } from '../../../../_common/common';
+import type { ClientContext } from '../../../client';
 import type {
   MaybeBaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionExecutionStepsFn,
   MaybeBaseDeserializeTransactionResultDataFn,
-} from '../../../../_common/transactionDetails/_common/_common/deserializers';
-import type { MaybeTransactionProcessingStage } from '../../../../_common/transactionDetails/_common/processingStage';
-import type { ClientContext } from '../../../client';
+} from '../_common/transactionDetails/_common/_common/deserializers';
+import type { MaybeTransactionProcessingStage } from '../_common/transactionDetails/_common/processingStage';
 import type { SendSignedTransactionArgs } from './args';
 import type { SendSignedTransactionError } from './error';
 import type { SendSignedTransactionOutput } from './output';

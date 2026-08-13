@@ -2,8 +2,8 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import * as z from 'zod/mini';
 import {
-  base64ToObject,
   type Client,
+  convertBase64ToObject,
   createAccount,
   createMemoryKeyService,
   createMemorySigner,
@@ -12,16 +12,16 @@ import {
   near,
   transfer,
 } from '../../../../../index';
-import { safeSleep } from '../../../../../src/_common/utils/sleep';
+import { safeSleep } from '../../../../../src/createClient/transport/sendRequest/_common/sleep';
 import type { Base64String, TransactionHash } from '../../../../../types/_common/common';
-import type { ActionSummary } from '../../../../../types/_common/transactionDetails/_common/_common/actionSummaries';
+import type { ActionSummary } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
 import type {
   DeserializeTransactionActionSummariesArgs,
   DeserializeTransactionExecutionStepsArgs,
   DeserializeTransactionResultDataArgs,
-} from '../../../../../types/_common/transactionDetails/_common/_common/deserializers';
-import type { ExecutionStep } from '../../../../../types/_common/transactionDetails/_common/executionStep';
-import type { MemorySigner } from '../../../../../types/signers/memorySigner/memorySigner';
+} from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { ExecutionStep } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/executionStep';
+import type { MemorySigner } from '../../../../../types/signer/memorySigner';
 import { createDefaultClient, getFileBytes, log } from '../../../../utils/common';
 import { startSandbox } from '../../../../utils/sandbox/startSandbox';
 
@@ -78,7 +78,7 @@ describe('CallContractReadFunction', () => {
   it('Ok', async () => {
     // Just return some parsed result
     const deserializeResultData = (args: DeserializeTransactionResultDataArgs) =>
-      base64ToObject(args.rawData);
+      convertBase64ToObject(args.rawData);
 
     // We can validate that we called a write_record method with a valid WriteRecordArgs type functionArgs;
     const deserializeActionSummaries = (
@@ -92,7 +92,7 @@ describe('CallContractReadFunction', () => {
           return {
             ...rawActionSummary,
             functionArgs: WriteRecordArgsZodShema.parse(
-              base64ToObject(rawActionSummary.functionArgs),
+              convertBase64ToObject(rawActionSummary.functionArgs),
             ),
           };
         }

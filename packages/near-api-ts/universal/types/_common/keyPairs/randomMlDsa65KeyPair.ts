@@ -1,4 +1,4 @@
-import type { NatError } from '../../../src/_common/natError';
+import type { NatError } from '../../../src/_common/_common/_common/natError';
 import type { Result } from '../common';
 import type { MlDsa65PrivateKey, MlDsa65PublicKey, MlDsa65Signature } from '../crypto';
 import type { MlDsa65Curve } from '../curveString';

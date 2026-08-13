@@ -1,0 +1,47 @@
+import { AccessKeyListSchema } from '@near-js/jsonrpc-types';
+import * as z from 'zod/mini';
+import type { GetAccountAccessKeysArgs } from '../../../../../types/client/methods/account/getAccountAccessKeys';
+import type { Prettify } from '../../../../../types/utils';
+import { createNatError } from '../../../../_common/_common/_common/natError';
+import { result } from '../../../../_common/_common/result';
+import type { BaseRpcResponse } from '../../../_common/zodSchemas/baseRpcResponse';
+import { transformAccessKey } from '../_common/transformAccessKey';
+
+const RpcQueryAccessKeyListResultSchema = z.object({
+  ...AccessKeyListSchema().shape,
+  blockHash: z.string(),
+  blockHeight: z.number(),
+});
+
+export type RpcQueryAccessKeyListResult = Prettify<
+  z.infer<typeof RpcQueryAccessKeyListResultSchema>
+>;
+
+export const handleResult = (rpcResponse: BaseRpcResponse, args: GetAccountAccessKeysArgs) => {
+  const rpcResult = RpcQueryAccessKeyListResultSchema.safeParse(rpcResponse.result);
+
+  if (!rpcResult.success)
+    return result.err(
+      createNatError({
+        kind: 'Client.GetAccountAccessKeys.Exhausted',
+        context: {
+          lastError: createNatError({
+            kind: 'SendRequest.Attempt.Response.InvalidSchema',
+            context: { zodError: rpcResult.error },
+          }),
+        },
+      }),
+    );
+
+  const { blockHash, blockHeight } = rpcResult.data;
+
+  const output = {
+    blockHash,
+    blockHeight,
+    accountId: args.accountId,
+    accountAccessKeys: rpcResult.data.keys.map(transformAccessKey),
+    rawRpcResult: rpcResult.data,
+  };
+
+  return result.ok(output);
+};

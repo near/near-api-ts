@@ -1,4 +1,4 @@
-import { createTestnetClient } from '../../../../../src/client/presets/testnet';
+import { createTestnetClient } from '../../../../../src/createClient/presets/testnet';
 
 type Equal<A, B> =
   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;

@@ -1,5 +1,5 @@
 import {
-  base64ToObject,
+  convertBase64ToObject,
   type DeserializeResultFnArgs,
   useConnectedAccount,
   useContractReadFunction,
@@ -10,7 +10,7 @@ import { ContractAccountId } from './config';
 const ResultSchema = z.array(z.string());
 
 const deserializeResult = (args: DeserializeResultFnArgs) =>
-  ResultSchema.parse(base64ToObject(args.rawResult));
+  ResultSchema.parse(convertBase64ToObject(args.rawResult));
 
 export const useReadRecords = () => {
   const { connectedAccountId, isConnectedAccount } = useConnectedAccount();

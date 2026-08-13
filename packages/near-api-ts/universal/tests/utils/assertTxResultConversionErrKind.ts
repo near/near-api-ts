@@ -2,8 +2,8 @@ import { expect } from 'vitest';
 import type {
   ConversionFailureError,
   ConversionFailureKind,
-} from '../../types/_common/transactionDetails/_common/_common/conversionFailureError';
-import type { ConversionFailure } from '../../types/_common/transactionDetails/conversionFailure';
+} from '../../types/client/methods/transaction/_common/transactionDetails/_common/_common/conversionFailureError';
+import type { ConversionFailure } from '../../types/client/methods/transaction/_common/transactionDetails/conversionFailure';
 import type { GetTransactionResultOutput } from '../../types/client/methods/transaction/getTransactionResult';
 
 /**

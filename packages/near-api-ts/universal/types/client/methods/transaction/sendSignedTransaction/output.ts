@@ -2,14 +2,14 @@ import type {
   MaybeBaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionExecutionStepsFn,
   MaybeBaseDeserializeTransactionResultDataFn,
-} from '../../../../_common/transactionDetails/_common/_common/deserializers';
+} from '../_common/transactionDetails/_common/_common/deserializers';
 import type {
   MaybeTransactionProcessingStage,
   ReachableProcessingStageFromStage,
   TransactionProcessingStage,
-} from '../../../../_common/transactionDetails/_common/processingStage';
-import type { ConversionSuccess } from '../../../../_common/transactionDetails/conversionSuccess';
-import type { ExecutionSuccess } from '../../../../_common/transactionDetails/executionSuccess';
+} from '../_common/transactionDetails/_common/processingStage';
+import type { ConversionSuccess } from '../_common/transactionDetails/conversionSuccess';
+import type { ExecutionSuccess } from '../_common/transactionDetails/executionSuccess';
 
 // Maps each processing stage to the concrete detail shape observed at exactly that stage.
 // Every `TransactionDetailsAtStage*` carries a `processingStage` tag, so these remain distinct

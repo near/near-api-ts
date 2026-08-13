@@ -1,7 +1,7 @@
 import { addFunctionCallKey, randomEd25519KeyPair } from '../../../../../../../index';
-import type { InnerTransaction } from '../../../../../../../src/_common/schemas/zod/transaction/transaction';
+import type { InnerTransaction } from '../../../../../../../src/signServices/signTransaction/zodSchemas/transaction';
 import { assertUnmappedInvalidTxError } from '../../../../../../utils/assertUnmappedInvalidTxError';
-import { signTamperedTransaction } from '../_common/signTamperedTransaction';
+import { signInvalidTransaction } from '../_common/signInvalidTransaction';
 import type { TestContext } from '../action.test';
 
 // Uppercase letters are not allowed in an account id, so `AccountId::validate` turns this down.
@@ -35,7 +35,7 @@ export const invalidAccountId = (context: TestContext) => async () => {
     publicKey: defaultKeyPair.publicKey,
   });
 
-  const signedTransaction = await signTamperedTransaction(
+  const signedTransaction = await signInvalidTransaction(
     defaultKeyPair,
     {
       signerAccountId: 'nat',

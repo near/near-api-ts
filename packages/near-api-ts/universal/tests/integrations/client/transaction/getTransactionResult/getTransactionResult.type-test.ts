@@ -1,20 +1,20 @@
 import * as z from 'zod/mini';
-import { createTestnetClient } from '../../../../../src/client/presets/testnet';
+import { createTestnetClient } from '../../../../../src/createClient/presets/testnet';
 import type {
   ParsedActionSummary,
   RawActionSummary,
-} from '../../../../../types/_common/transactionDetails/_common/_common/actionSummaries';
-import type { ConversionFailureKind } from '../../../../../types/_common/transactionDetails/_common/_common/conversionFailureError';
+} from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
+import type { ConversionFailureKind } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/conversionFailureError';
 import type {
   DeserializeTransactionActionSummariesArgs,
   DeserializeTransactionExecutionStepsArgs,
   DeserializeTransactionResultDataArgs,
-} from '../../../../../types/_common/transactionDetails/_common/_common/deserializers';
-import type { ExecutionFailureKind } from '../../../../../types/_common/transactionDetails/_common/_common/executionFailureError';
+} from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { ExecutionFailureKind } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/executionFailureError';
 import type {
   ParsedExecutionStep,
   RawExecutionStep,
-} from '../../../../../types/_common/transactionDetails/_common/executionStep';
+} from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/executionStep';
 
 type Equal<A, B> =
   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;

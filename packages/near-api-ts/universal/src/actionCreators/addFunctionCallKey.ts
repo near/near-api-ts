@@ -1,0 +1,46 @@
+import * as z from 'zod/mini';
+import type {
+  CreateAddFunctionCallKeyAction,
+  SafeCreateAddFunctionCallKeyAction,
+} from '../../types/_common/transaction/actions/nonDelegateActions/addKey';
+import { createNatError } from '../_common/_common/_common/natError';
+import { asThrowable } from '../_common/_common/asThrowable';
+import { result } from '../_common/_common/result';
+import { wrapInternalError } from '../_common/_common/wrapInternalError';
+import { AllowedFunctionsSchema, GasBudgetZodSchema } from '../_common/zodSchemas/accessKey';
+import { AccountIdZodSchema } from '../_common/zodSchemas/accountId';
+import { PublicKeyZodSchema } from '../_common/zodSchemas/publicKey';
+
+export const CreateAddFunctionCallKeyActionArgsSchema = z.object({
+  publicKey: PublicKeyZodSchema,
+  contractAccountId: AccountIdZodSchema,
+  gasBudget: GasBudgetZodSchema,
+  allowedFunctions: AllowedFunctionsSchema,
+});
+
+export const safeAddFunctionCallKey: SafeCreateAddFunctionCallKeyAction = wrapInternalError(
+  'CreateAction.AddFunctionCallKey.Internal',
+  (args) => {
+    const validArgs = CreateAddFunctionCallKeyActionArgsSchema.safeParse(args);
+
+    if (!validArgs.success)
+      return result.err(
+        createNatError({
+          kind: 'CreateAction.AddFunctionCallKey.Args.InvalidSchema',
+          context: { zodError: validArgs.error },
+        }),
+      );
+
+    return result.ok({
+      actionType: 'AddKey' as const,
+      accessType: 'FunctionCall' as const,
+      publicKey: args.publicKey,
+      contractAccountId: args.contractAccountId,
+      gasBudget: args.gasBudget,
+      allowedFunctions: args.allowedFunctions,
+    });
+  },
+);
+
+export const throwableAddFunctionCallKey: CreateAddFunctionCallKeyAction =
+  asThrowable(safeAddFunctionCallKey);

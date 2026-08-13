@@ -1,95 +1,41 @@
 // Configs
-export { constants } from './src/_common/configs/constants';
+export { constants } from './src/_common/_common/_common/constants';
 // Errors
-export { isNatError } from './src/_common/natError';
-// Zod Schemas
-export { AccountIdZodSchema } from './src/_common/schemas/zod/common/accountId';
-export { Base64StringZodSchema } from './src/_common/schemas/zod/common/base64String';
-export { PublicKeyZodSchema } from './src/_common/schemas/zod/common/publicKey';
-export { MessageZodSchema } from './src/_common/schemas/zod/message';
-
+export { isNatError } from './src/_common/_common/_common/natError';
+export { convertObjectToU8 } from './src/_common/convertObjectToU8';
 // Utils
 export {
   toEd25519CurveString,
   toMlDsa65CurveString,
   toSecp256k1CurveString,
-} from './src/_common/transformers/toCurveString';
-export { base64ToObject } from './src/_common/utils/base64ToObject';
-export { objectToU8, u8ToObject } from './src/_common/utils/common';
-
-// Clients
-export {
-  safeCreateClient,
-  throwableCreateClient as createClient,
-} from './src/client/createClient';
-export { createMainnetClient } from './src/client/presets/mainnet';
-export { createTestnetClient } from './src/client/presets/testnet';
-// Action Creators
-export {
-  safeAddFullAccessKey,
-  throwableAddFullAccessKey as addFullAccessKey,
-} from './src/helpers/actionCreators/addFullAccessKey';
-export {
-  safeAddFunctionCallKey,
-  throwableAddFunctionCallKey as addFunctionCallKey,
-} from './src/helpers/actionCreators/addFunctionCallKey';
-export { createAccount } from './src/helpers/actionCreators/createAccount';
-export {
-  safeDeleteAccount,
-  throwableDeleteAccount as deleteAccount,
-} from './src/helpers/actionCreators/deleteAccount';
-export {
-  safeDeleteKey,
-  throwableDeleteKey as deleteKey,
-} from './src/helpers/actionCreators/deleteKey';
-export {
-  safeDeployContract,
-  throwableDeployContract as deployContract,
-} from './src/helpers/actionCreators/deployContract';
-export {
-  safeFunctionCall,
-  throwableFunctionCall as functionCall,
-} from './src/helpers/actionCreators/functionCall';
-export {
-  safeStake,
-  throwableStake as stake,
-} from './src/helpers/actionCreators/stake';
-export {
-  safeTransfer,
-  throwableTransfer as transfer,
-} from './src/helpers/actionCreators/transfer';
+} from './src/_common/keyPairs/_common/_common/toCurveString';
 // KeyPair
 export {
   keyPair,
   safeKeyPair,
-} from './src/helpers/keyPairs/keyPair/keyPair';
+} from './src/_common/keyPairs/keyPair/keyPair';
 export {
   randomEd25519KeyPair,
   safeRandomEd25519KeyPair,
-} from './src/helpers/keyPairs/randomEd25519KeyPair';
+} from './src/_common/keyPairs/randomEd25519KeyPair';
 export {
   randomMlDsa65KeyPair,
   safeRandomMlDsa65KeyPair,
-} from './src/helpers/keyPairs/randomMlDsa65KeyPair';
+} from './src/_common/keyPairs/randomMlDsa65KeyPair';
 export {
   randomSecp256k1KeyPair,
   safeRandomSecp256k1KeyPair,
-} from './src/helpers/keyPairs/randomSecp256k1KeyPair';
-// Nep413 Message
-export { createMessage, safeCreateMessage } from './src/helpers/message/createMessage';
-export { safeVerifyMessage, verifyMessage } from './src/helpers/message/verifyMessage';
+} from './src/_common/keyPairs/randomSecp256k1KeyPair';
 // NearGas
 export {
+  gas,
   isNearGas,
+  nearGas,
   safeGas,
   safeNearGas,
   safeTeraGas,
-  throwableGas as gas,
-  throwableNearGas as nearGas,
-  throwableTeraGas as teraGas,
-} from './src/helpers/nearGas';
-// Helpers
-export { safeSignTransaction, signTransaction } from './src/helpers/signTransaction';
+  teraGas,
+} from './src/_common/nearGas';
 // Near Token
 export {
   isNearToken,
@@ -99,20 +45,81 @@ export {
   safeNearToken,
   safeYoctoNear,
   yoctoNear,
-} from './src/helpers/tokens/nearToken';
-export { safeVerifySignature, verifySignature } from './src/helpers/verifySignature';
+} from './src/_common/nearToken';
+// Zod Schemas
+export { AccountIdZodSchema } from './src/_common/zodSchemas/accountId';
+export { PublicKeyZodSchema } from './src/_common/zodSchemas/publicKey';
+// Action Creators
+export {
+  addFullAccessKey,
+  safeAddFullAccessKey,
+} from './src/actionCreators/addFullAccessKey';
+export {
+  safeAddFunctionCallKey,
+  throwableAddFunctionCallKey as addFunctionCallKey,
+} from './src/actionCreators/addFunctionCallKey';
+export { createAccount } from './src/actionCreators/createAccount';
+export {
+  safeDeleteAccount,
+  throwableDeleteAccount as deleteAccount,
+} from './src/actionCreators/deleteAccount';
+export {
+  safeDeleteKey,
+  throwableDeleteKey as deleteKey,
+} from './src/actionCreators/deleteKey';
+export {
+  safeDeployContract,
+  throwableDeployContract as deployContract,
+} from './src/actionCreators/deployContract';
+export {
+  safeFunctionCall,
+  throwableFunctionCall as functionCall,
+} from './src/actionCreators/functionCall';
+export {
+  safeStake,
+  throwableStake as stake,
+} from './src/actionCreators/stake';
+export {
+  safeTransfer,
+  throwableTransfer as transfer,
+} from './src/actionCreators/transfer';
+// Clients
+export {
+  safeCreateClient,
+  throwableCreateClient as createClient,
+} from './src/createClient/createClient';
+export { convertBase64ToObject } from './src/createClient/methods/_common/base64ToObject';
+export { createMainnetClient } from './src/createClient/presets/mainnet';
+export { createTestnetClient } from './src/createClient/presets/testnet';
 // Key Services
 export {
+  createMemoryKeyService as createMemoryKeyService,
   safeCreateMemoryKeyService,
-  throwableCreateMemoryKeyService as createMemoryKeyService,
-} from './src/keyServices/memoryKeyService/memoryKeyService';
+} from './src/createMemoryKeyService/createMemoryKeyService';
 // Signers
 export {
+  createMemorySigner as createMemorySigner,
+  createMemorySignerFactory as createMemorySignerFactory,
   createSafeMemorySignerFactory,
-  createThrowableMemorySignerFactory as createMemorySignerFactory,
   safeCreateMemorySigner,
-  throwableCreateMemorySigner as createMemorySigner,
-} from './src/signers/memorySigner/createMemorySigner';
+} from './src/createSigner/createSigner';
+// Nep413 Message
+export { createMessage, safeCreateMessage } from './src/offchainMessage/createMessage';
+export {
+  safeVerifyMessage,
+  verifyMessage,
+} from './src/offchainMessage/verifyMessage/verifyMessage';
+export {
+  safeVerifySignature,
+  verifySignature,
+} from './src/offchainMessage/verifyMessage/verifySignature';
+export { Base64StringZodSchema } from './src/offchainMessage/verifyMessage/zodSchemas/base64String';
+export { MessageZodSchema } from './src/offchainMessage/verifyMessage/zodSchemas/message';
+// Helpers
+export {
+  safeSignTransaction,
+  signTransaction,
+} from './src/signServices/signTransaction/signTransaction';
 
 // Types
 
@@ -143,13 +150,13 @@ export type {
   NearToken,
   NearTokenArgs,
 } from './types/_common/nearToken';
-export type { FunctionCallAction } from './types/_common/transaction/actions/functionCall';
-export type { TransferAction } from './types/_common/transaction/actions/transfer';
 export type {
   Delegation,
   DelegationIntent,
   SignedDelegation,
-} from './types/_common/transaction/delegation';
+} from './types/_common/transaction/actions/delegate/delegation';
+export type { FunctionCallAction } from './types/_common/transaction/actions/nonDelegateActions/functionCall';
+export type { TransferAction } from './types/_common/transaction/actions/nonDelegateActions/transfer';
 export type {
   Action,
   SignedTransaction,
@@ -177,9 +184,9 @@ export type {
   SafeCallContractReadFunction,
 } from './types/client/methods/contract/callContractReadFunction';
 export type { PartialTransportPolicy } from './types/client/transport/transport';
-export type { MemoryKeyService } from './types/keyServices/memoryKeyService/memoryKeyService';
-export type { MemorySigner } from './types/signers/memorySigner/memorySigner';
+export type { MemoryKeyService } from './types/memoryKeyService/memoryKeyService';
 export type {
   MemorySignerFactory,
   SafeMemorySignerFactory,
-} from './types/signers/memorySigner/public/createMemorySigner';
+} from './types/signer/createMemorySigner';
+export type { MemorySigner } from './types/signer/memorySigner';

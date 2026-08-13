@@ -1,12 +1,12 @@
 import type { Base64String, TransactionHash } from '../../../../_common/common';
+import type { KeyIf } from '../../../../utils';
+import type { PartialTransportPolicy } from '../../../transport/transport';
 import type {
   MaybeBaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionExecutionStepsFn,
   MaybeBaseDeserializeTransactionResultDataFn,
-} from '../../../../_common/transactionDetails/_common/_common/deserializers';
-import type { MaybeTransactionProcessingStage } from '../../../../_common/transactionDetails/_common/processingStage';
-import type { KeyIf } from '../../../../utils';
-import type { PartialTransportPolicy } from '../../../transport/transport';
+} from '../_common/transactionDetails/_common/_common/deserializers';
+import type { MaybeTransactionProcessingStage } from '../_common/transactionDetails/_common/processingStage';
 
 type Options<
   RDF extends MaybeBaseDeserializeTransactionResultDataFn,

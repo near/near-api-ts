@@ -1,18 +1,19 @@
 import type { $ZodError } from 'zod/v4/core';
-import type { NatError } from '../../src/_common/natError';
+import type { NatError } from '../../src/_common/_common/_common/natError';
 import type { ClientInnerErrorRegistry, ClientPublicErrorRegistry } from '../client/client';
-import type { SignTransactionPublicErrorRegistry } from '../helpers/signTransaction';
-import type { MemoryKeyServicePublicErrorRegistry } from '../keyServices/memoryKeyService/memoryKeyService';
+import type { MemoryKeyServicePublicErrorRegistry } from '../memoryKeyService/memoryKeyService';
 import type {
   MemorySignerInnerErrorRegistry,
   MemorySignerPublicErrorRegistry,
-} from '../signers/memorySigner/memorySigner';
+} from '../signer/memorySigner';
 import type { ResultErr } from './common';
 import type { KeyPairPublicErrorRegistry } from './keyPairs/keyPair';
 import type { MessagePublicErrorRegistry } from './message';
 import type { NearGasPublicErrorRegistry } from './nearGas';
 import type { NearTokenPublicErrorRegistry } from './nearToken';
-import type { ActionsPublicErrorRegistry } from './transaction/actions/actions';
+import type { ActionsPublicErrorRegistry } from './transaction/actions/nonDelegateActions/actions';
+import type { SignDelegationPublicErrorRegistry } from './transaction/signDelegation';
+import type { SignTransactionPublicErrorRegistry } from './transaction/signTransaction';
 import type { VerifySignaturePublicErrorRegistry } from './verifySignature';
 
 export type InternalErrorContext = { cause: unknown };
@@ -32,6 +33,7 @@ export interface NatPublicErrorRegistry
     ActionsPublicErrorRegistry,
     KeyPairPublicErrorRegistry,
     SignTransactionPublicErrorRegistry,
+    SignDelegationPublicErrorRegistry,
     VerifySignaturePublicErrorRegistry,
     MessagePublicErrorRegistry,
     NearTokenPublicErrorRegistry,

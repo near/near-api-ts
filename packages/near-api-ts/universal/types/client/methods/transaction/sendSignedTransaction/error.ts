@@ -1,21 +1,6 @@
-import type { NatError } from '../../../../../src/_common/natError';
+import type { NatError } from '../../../../../src/_common/_common/_common/natError';
 import type { Base64String } from '../../../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../../_common/natError';
-import type {
-  ConversionFailureError,
-  ConversionFailureKind,
-} from '../../../../_common/transactionDetails/_common/_common/conversionFailureError';
-import type {
-  MaybeBaseDeserializeTransactionActionSummariesFn,
-  MaybeBaseDeserializeTransactionExecutionStepsFn,
-} from '../../../../_common/transactionDetails/_common/_common/deserializers';
-import type { ExecutionFailureKind } from '../../../../_common/transactionDetails/_common/_common/executionFailureError';
-import type {
-  MaybeTransactionProcessingStage,
-  ReachableProcessingStageFromStage,
-  TransactionProcessingStage,
-} from '../../../../_common/transactionDetails/_common/processingStage';
-import type { ExecutionFailure } from '../../../../_common/transactionDetails/executionFailure';
 import type {
   AbortedErrorContext,
   ExhaustedErrorContext,
@@ -23,6 +8,21 @@ import type {
   TimeoutErrorContext,
 } from '../../../transport/sendRequest';
 import type { TransactionDetailsInnerErrorRegistry } from '../_common/innerErrorRegistry';
+import type {
+  ConversionFailureError,
+  ConversionFailureKind,
+} from '../_common/transactionDetails/_common/_common/conversionFailureError';
+import type {
+  MaybeBaseDeserializeTransactionActionSummariesFn,
+  MaybeBaseDeserializeTransactionExecutionStepsFn,
+} from '../_common/transactionDetails/_common/_common/deserializers';
+import type { ExecutionFailureKind } from '../_common/transactionDetails/_common/_common/executionFailureError';
+import type {
+  MaybeTransactionProcessingStage,
+  ReachableProcessingStageFromStage,
+  TransactionProcessingStage,
+} from '../_common/transactionDetails/_common/processingStage';
+import type { ExecutionFailure } from '../_common/transactionDetails/executionFailure';
 
 // Every conversion failure kind is surfaced as its own `Rpc.<kind>` error. The context is the
 // conversion failure context flattened next to `signedTransactionBorsh64` (see `handleRpcError`).

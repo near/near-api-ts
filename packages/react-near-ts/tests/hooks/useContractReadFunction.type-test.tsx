@@ -1,5 +1,5 @@
 import * as z from 'zod/mini';
-import { base64ToObject, useContractReadFunction } from '../../src';
+import { convertBase64ToObject, useContractReadFunction } from '../../src';
 
 type Equal<A, B> =
   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;
@@ -17,7 +17,7 @@ const functionName = 'ft_balance_of';
 const responseZodSchema = z.object({ decimals: z.number() });
 
 const deserializeResult = (args: { rawResult: string }): { decimals: number } =>
-  responseZodSchema.parse(base64ToObject(args.rawResult));
+  responseZodSchema.parse(convertBase64ToObject(args.rawResult));
 
 type CustomDeserializeResult = (args: { rawResult: string }) => {
   decimals: number;

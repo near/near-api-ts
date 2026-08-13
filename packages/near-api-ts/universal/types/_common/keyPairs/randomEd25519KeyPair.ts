@@ -1,4 +1,4 @@
-import type { NatError } from '../../../src/_common/natError';
+import type { NatError } from '../../../src/_common/_common/_common/natError';
 import type { Result } from '../common';
 import type { Ed25519PrivateKey, Ed25519PublicKey, Ed25519Signature } from '../crypto';
 import type { Ed25519Curve } from '../curveString';

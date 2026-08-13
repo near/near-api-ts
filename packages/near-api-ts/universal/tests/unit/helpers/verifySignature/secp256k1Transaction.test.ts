@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest';
 import { createMemoryKeyService, randomSecp256k1KeyPair, verifySignature } from '../../../../index';
-import { TransactionZodSchema } from '../../../../src/_common/schemas/zod/transaction/transaction';
-import { getTransactionHash } from '../../../../src/_common/utils/getTransactionHash';
-import { signTransaction } from '../../../../src/helpers/signTransaction';
+import { getTransactionHash } from '../../../../src/signServices/signTransaction/getTransactionHash';
+import { signTransaction } from '../../../../src/signServices/signTransaction/signTransaction';
+import { TransactionZodSchema } from '../../../../src/signServices/signTransaction/zodSchemas/transaction';
 
 test('secp256k1 transaction verification', async () => {
   const keyPair = randomSecp256k1KeyPair();

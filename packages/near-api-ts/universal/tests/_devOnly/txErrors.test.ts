@@ -12,10 +12,10 @@ import {
   randomEd25519KeyPair,
   transfer,
 } from '../../index';
-import { createAccount } from '../../src/helpers/actionCreators/createAccount';
+import { createAccount } from '../../src/actionCreators/createAccount';
 import type { Client } from '../../types/client/client';
-import type { MemorySigner } from '../../types/signers/memorySigner/memorySigner';
-import type { MemorySignerFactory } from '../../types/signers/memorySigner/public/createMemorySigner';
+import type { MemorySignerFactory } from '../../types/signer/createMemorySigner';
+import type { MemorySigner } from '../../types/signer/memorySigner';
 import { createDefaultClient, getFileBytes, log } from '../utils/common';
 import { startSandbox } from '../utils/sandbox/startSandbox';
 

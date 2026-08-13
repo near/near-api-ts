@@ -1,0 +1,69 @@
+import type { AccountId } from '../../../../../../../_common/common';
+import type { PublicKey } from '../../../../../../../_common/crypto';
+import type { NearToken } from '../../../../../../../_common/nearToken';
+
+interface GeneralExecutionErrorRegistry {
+  'Executor.NotFound': { executorAccountId: AccountId };
+  'Executor.Budget.NotEnough': { executorAccountId: AccountId; minimalMissingAmount: NearToken };
+  'Action.Forbidden': { stepCreatorAccountId: AccountId; executorAccountId: AccountId };
+}
+
+interface CreateAccountErrorRegistry {
+  'Action.CreateAccount.AlreadyExists': { newAccountId: AccountId };
+  'Action.CreateAccount.TopLevelNamespace': {
+    newAccountId: AccountId;
+    creatorAccountId: AccountId;
+    registrarAccountId: AccountId;
+  };
+  'Action.CreateAccount.ForeignNamespace': { newAccountId: AccountId; creatorAccountId: AccountId };
+  'Action.CreateAccount.ImplicitAccount': { newAccountId: AccountId };
+}
+
+interface AddKeyErrorRegistry {
+  'Action.AddKey.AlreadyExists': { accountId: AccountId; publicKey: PublicKey };
+}
+
+interface FunctionCallErrorRegistry {
+  'Action.FunctionCall.ContractWasm.NotFound': { contractAccountId: AccountId };
+  'Action.FunctionCall.Function.NotFound': null;
+  'Action.FunctionCall.Preparation.Failed': { cause: string };
+  'Action.FunctionCall.Execution.Failed': { cause: string };
+}
+
+interface StakeErrorRegistry {
+  'Action.Stake.ProposedStake.BelowThreshold': {
+    accountId: AccountId;
+    proposedStake: NearToken;
+    minimumStake: NearToken;
+  };
+  'Action.Stake.TotalBalance.NotEnough': {
+    accountId: AccountId;
+    proposedStake: NearToken;
+    totalBalance: NearToken;
+    missingAmount: NearToken;
+  };
+  'Action.Stake.ValidatorStake.AlreadyZero': { accountId: AccountId };
+}
+
+interface DeleteKeyErrorRegistry {
+  'Action.DeleteKey.NotFound': { accountId: AccountId; publicKey: PublicKey };
+}
+
+interface DeleteAccountErrorRegistry {
+  'Action.DeleteAccount.Staking': { accountId: AccountId };
+  'Action.DeleteAccount.LargeState': { accountId: AccountId };
+}
+
+export interface ExecutionFailureRegistry
+  extends GeneralExecutionErrorRegistry,
+    CreateAccountErrorRegistry,
+    AddKeyErrorRegistry,
+    FunctionCallErrorRegistry,
+    StakeErrorRegistry,
+    DeleteKeyErrorRegistry,
+    DeleteAccountErrorRegistry {}
+
+export type ExecutionFailureKind = keyof ExecutionFailureRegistry;
+
+export type ExecutionFailureError<K extends ExecutionFailureKind = ExecutionFailureKind> =
+  K extends K ? { kind: K; context: ExecutionFailureRegistry[K] } : never;
