@@ -1,5 +1,5 @@
 import { addFunctionCallKey, randomEd25519KeyPair } from '../../../../../../../index';
-import type { InnerTransaction } from '../../../../../../../src/signServices/signTransaction/zodSchemas/transaction';
+import type { InnerTransaction } from '../../../../../../../src/createMemorySignService/signTransaction/zodSchemas/transaction';
 import { assertUnmappedInvalidTxError } from '../../../../../../utils/assertUnmappedInvalidTxError';
 import { signInvalidTransaction } from '../_common/signInvalidTransaction';
 import type { TestContext } from '../action.test';

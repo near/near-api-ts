@@ -1,7 +1,7 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { type Client, randomEd25519KeyPair, transfer } from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/signServices/signTransaction/signTransaction';
+import { signTransaction } from '../../../../../../src/createMemorySignService/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultConversionErrKind } from '../../../../../utils/assertTxResultConversionErrKind';
 import { createDefaultClient } from '../../../../../utils/common';

@@ -9,7 +9,7 @@ import type { MemorySignerContext } from '../../../../../types/signer/memorySign
 import type { NatError } from '../../../../_common/_common/_common/natError';
 import { result } from '../../../../_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
-import { signTransaction as signTransactionHelper } from '../../../../signServices/signTransaction/signTransaction';
+import { signTransaction as signTransactionHelper } from '../../../../createMemorySignService/signTransaction/signTransaction';
 
 type Execute = () => Promise<
   Result<SignedTransaction, NatError<'MemorySigner.SignTransaction.Internal'>>

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createMemoryKeyService, randomEd25519KeyPair } from '../../../../index';
-import { safeSignTransaction, signTransaction } from '../../../../src/signServices/signTransaction/signTransaction';
+import { safeSignTransaction, signTransaction } from '../../../../src/createMemorySignService/signTransaction/signTransaction';
 import type { Transaction } from '../../../../types/_common/transaction/transaction';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 

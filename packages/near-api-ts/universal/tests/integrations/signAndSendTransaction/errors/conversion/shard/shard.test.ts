@@ -9,7 +9,7 @@ import {
   transfer,
 } from '../../../../../../index';
 import { safeSleep } from '../../../../../../src/createClient/transport/sendRequest/_common/sleep';
-import { signTransaction } from '../../../../../../src/signServices/signTransaction/signTransaction';
+import { signTransaction } from '../../../../../../src/createMemorySignService/signTransaction/signTransaction';
 import {
   assertUnmappedInvalidTxError,
   getUnmappedInvalidTxError,

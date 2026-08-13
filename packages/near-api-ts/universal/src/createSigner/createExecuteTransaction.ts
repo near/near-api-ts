@@ -4,7 +4,7 @@ import { createNatError, isNatErrorOf } from '../_common/_common/_common/natErro
 import { repackError } from '../_common/_common/repackError';
 import { result } from '../_common/_common/result';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
-import { TransactionIntentZodSchema } from '../signServices/signTransaction/zodSchemas/transaction';
+import { TransactionIntentZodSchema } from '../createMemorySignService/signTransaction/zodSchemas/transaction';
 
 const SignTransactionArgsSchema = z.object({
   intent: TransactionIntentZodSchema,

@@ -9,7 +9,7 @@ import {
   keyPair,
   transfer,
 } from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/signServices/signTransaction/signTransaction';
+import { signTransaction } from '../../../../../../src/createMemorySignService/signTransaction/signTransaction';
 import { assertUnmappedInvalidTxError } from '../../../../../utils/assertUnmappedInvalidTxError';
 import { createDefaultClient } from '../../../../../utils/common';
 import { GAS_BURNER_FUNCTION_NAME, GAS_BURNER_WASM } from '../../../../../utils/wasm/gasBurner';

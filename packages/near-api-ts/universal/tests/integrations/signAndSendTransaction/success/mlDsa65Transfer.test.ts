@@ -9,7 +9,7 @@ import {
   randomMlDsa65KeyPair,
   transfer,
 } from '../../../../index';
-import { signTransaction } from '../../../../src/signServices/signTransaction/signTransaction';
+import { signTransaction } from '../../../../src/createMemorySignService/signTransaction/signTransaction';
 import { createDefaultClient } from '../../../utils/common';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
 

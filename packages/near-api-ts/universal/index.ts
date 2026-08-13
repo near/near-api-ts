@@ -95,7 +95,12 @@ export { createTestnetClient } from './src/createClient/presets/testnet';
 export {
   createMemoryKeyService as createMemoryKeyService,
   safeCreateMemoryKeyService,
-} from './src/createMemoryKeyService/createMemoryKeyService';
+} from './src/createMemoryKeyVault/createMemoryKeyService';
+// Helpers
+export {
+  safeSignTransaction,
+  signTransaction,
+} from './src/createMemorySignService/signTransaction/signTransaction';
 // Signers
 export {
   createMemorySigner as createMemorySigner,
@@ -115,11 +120,6 @@ export {
 } from './src/offchainMessage/verifyMessage/verifySignature';
 export { Base64StringZodSchema } from './src/offchainMessage/verifyMessage/zodSchemas/base64String';
 export { MessageZodSchema } from './src/offchainMessage/verifyMessage/zodSchemas/message';
-// Helpers
-export {
-  safeSignTransaction,
-  signTransaction,
-} from './src/signServices/signTransaction/signTransaction';
 
 // Types
 
