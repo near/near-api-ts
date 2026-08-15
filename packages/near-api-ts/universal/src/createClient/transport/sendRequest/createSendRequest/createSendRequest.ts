@@ -3,8 +3,8 @@ import type {
   SendRequestContext,
 } from '../../../../../types/client/transport/sendRequest';
 import type { TransportContext } from '../../../../../types/client/transport/transport';
-import { createNatError, isNatErrorOf } from '../../../../_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/result';
+import { createNatError, isNatErrorOf } from '../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../_common/_common/_common/result';
 import { mergeTransportPolicy } from '../../transportPolicy';
 import { tryMultipleRounds } from '../tryMultipleRounds';
 import { getAvailableRpcs } from './_common/getAvailableRpcs';

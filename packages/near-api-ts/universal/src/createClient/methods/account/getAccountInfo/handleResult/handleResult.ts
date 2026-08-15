@@ -3,8 +3,8 @@ import * as z from 'zod/mini';
 import type { NearToken } from '../../../../../../types/_common/nearToken';
 import type { GetAccountInfoArgs } from '../../../../../../types/client/methods/account/getAccountInfo';
 import type { Prettify } from '../../../../../../types/utils';
-import { createNatError } from '../../../../../_common/_common/_common/natError';
-import { result, resultNatError } from '../../../../../_common/_common/result';
+import { createNatError } from '../../../../../_common/_common/_common/_common/natError';
+import { result, resultNatError } from '../../../../../_common/_common/_common/result';
 import type { BaseRpcResponse } from '../../../../_common/zodSchemas/baseRpcResponse';
 import { calculateAccountBalance } from './calculateAccountBalance';
 

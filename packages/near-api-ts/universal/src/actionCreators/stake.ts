@@ -3,9 +3,9 @@ import type {
   CreateStakeAction,
   SafeCreateStakeAction,
 } from '../../types/_common/transaction/actions/nonDelegateActions/stake';
-import { createNatError } from '../_common/_common/_common/natError';
+import { createNatError } from '../_common/_common/_common/_common/natError';
+import { result } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
-import { result } from '../_common/_common/result';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { NearTokenArgsZodSchema } from '../_common/_common/zodSchemas/nearToken';
 import { PublicKeyZodSchema } from '../_common/zodSchemas/publicKey';

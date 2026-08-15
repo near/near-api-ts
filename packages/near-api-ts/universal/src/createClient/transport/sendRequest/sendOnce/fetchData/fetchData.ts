@@ -1,8 +1,12 @@
 import type { JsonValue, Result } from '../../../../../../types/_common/common';
 import type { SendRequestContext } from '../../../../../../types/client/transport/sendRequest';
 import type { InnerRpcEndpoint } from '../../../../../../types/client/transport/transport';
-import { createNatError, isNatErrorOf, type NatError } from '../../../../../_common/_common/_common/natError';
-import { result } from '../../../../../_common/_common/result';
+import {
+  createNatError,
+  isNatErrorOf,
+  type NatError,
+} from '../../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../../_common/_common/_common/result';
 import { combineAbortSignals } from '../../_common/combineAbortSignals';
 import { createAttemptTimeout } from './createAttemptTimeout';
 

@@ -1,4 +1,4 @@
-import { result } from '../../../../universal/src/_common/_common/result';
+import { result } from '../../../../universal/src/_common/_common/_common/result';
 import type { IdbKeyServiceContext } from '../idbKeyService';
 
 export const createSafeHasKey = (context: IdbKeyServiceContext) => async (args: any) => {

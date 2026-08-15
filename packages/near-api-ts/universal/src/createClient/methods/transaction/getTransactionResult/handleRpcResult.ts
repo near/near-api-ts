@@ -6,8 +6,11 @@ import type {
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
 import type { GetTransactionResultOutput } from '../../../../../types/client/methods/transaction/getTransactionResult';
-import { createNatError, type NatError } from '../../../../_common/_common/_common/natError';
-import { resultNatError } from '../../../../_common/_common/result';
+import {
+  createNatError,
+  type NatError,
+} from '../../../../_common/_common/_common/_common/natError';
+import { resultNatError } from '../../../../_common/_common/_common/result';
 import type { BaseRpcResponse } from '../../../_common/zodSchemas/baseRpcResponse';
 import { finalExecutionStatusToProcessingStage } from '../_common/finalExecutionStatusToProcessingStage';
 import { getConversionFailureCompletedFinal } from '../_common/getConversionFailure';

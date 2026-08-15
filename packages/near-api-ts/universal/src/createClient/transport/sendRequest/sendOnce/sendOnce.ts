@@ -1,8 +1,11 @@
 import type { Result } from '../../../../../types/_common/common';
 import type { SendRequestContext } from '../../../../../types/client/transport/sendRequest';
 import type { InnerRpcEndpoint } from '../../../../../types/client/transport/transport';
-import { createNatError, type NatError } from '../../../../_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/result';
+import {
+  createNatError,
+  type NatError,
+} from '../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../_common/_common/_common/result';
 import {
   type BaseRpcResponse,
   BaseRpcResponseZodSchema,

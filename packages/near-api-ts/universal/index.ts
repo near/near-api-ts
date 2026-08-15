@@ -1,31 +1,9 @@
 // Configs
-export { constants } from './src/_common/_common/_common/constants';
+
 // Errors
-export { isNatError } from './src/_common/_common/_common/natError';
+export { isNatError } from './src/_common/_common/_common/_common/natError';
+export { constants } from './src/_common/_common/_common/constants';
 export { convertObjectToU8 } from './src/_common/convertObjectToU8';
-// Utils
-export {
-  toEd25519CurveString,
-  toMlDsa65CurveString,
-  toSecp256k1CurveString,
-} from './src/_common/keyPairs/_common/_common/toCurveString';
-// KeyPair
-export {
-  keyPair,
-  safeKeyPair,
-} from './src/_common/keyPairs/keyPair/keyPair';
-export {
-  randomEd25519KeyPair,
-  safeRandomEd25519KeyPair,
-} from './src/_common/keyPairs/randomEd25519KeyPair';
-export {
-  randomMlDsa65KeyPair,
-  safeRandomMlDsa65KeyPair,
-} from './src/_common/keyPairs/randomMlDsa65KeyPair';
-export {
-  randomSecp256k1KeyPair,
-  safeRandomSecp256k1KeyPair,
-} from './src/_common/keyPairs/randomSecp256k1KeyPair';
 // NearGas
 export {
   gas,
@@ -95,7 +73,30 @@ export { createTestnetClient } from './src/createClient/presets/testnet';
 export {
   createMemoryKeyService as createMemoryKeyService,
   safeCreateMemoryKeyService,
-} from './src/createMemoryKeyVault/createMemoryKeyService';
+} from './src/createMemoryKeyService/createMemoryKeyService';
+// Utils
+export {
+  toEd25519CurveString,
+  toMlDsa65CurveString,
+  toSecp256k1CurveString,
+} from './src/createMemoryKeyService/toKeyPairs/keyPairs/_common/_common/toCurveString';
+// KeyPair
+export {
+  keyPair,
+  safeKeyPair,
+} from './src/createMemoryKeyService/toKeyPairs/keyPairs/keyPair/keyPair';
+export {
+  randomEd25519KeyPair,
+  safeRandomEd25519KeyPair,
+} from './src/createMemoryKeyService/toKeyPairs/keyPairs/randomEd25519KeyPair';
+export {
+  randomMlDsa65KeyPair,
+  safeRandomMlDsa65KeyPair,
+} from './src/createMemoryKeyService/toKeyPairs/keyPairs/randomMlDsa65KeyPair';
+export {
+  randomSecp256k1KeyPair,
+  safeRandomSecp256k1KeyPair,
+} from './src/createMemoryKeyService/toKeyPairs/keyPairs/randomSecp256k1KeyPair';
 // Helpers
 export {
   safeSignTransaction,

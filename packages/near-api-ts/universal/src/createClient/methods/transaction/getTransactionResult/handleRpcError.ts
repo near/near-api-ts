@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
-import { createNatError } from '../../../../_common/_common/_common/natError';
-import { resultNatError } from '../../../../_common/_common/result';
+import { createNatError } from '../../../../_common/_common/_common/_common/natError';
+import { resultNatError } from '../../../../_common/_common/_common/result';
 import { CryptoHashZodSchema } from '../../../../_common/zodSchemas/cryptoHash';
 import {
   type BaseRpcResponse,

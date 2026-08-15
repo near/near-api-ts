@@ -1,4 +1,4 @@
-import { createNatError } from '../../../../_common/_common/_common/natError';
+import { createNatError } from '../../../../_common/_common/_common/_common/natError';
 
 /**
  * This function creates a proxy controller that intercepts a user-provided AbortSignal

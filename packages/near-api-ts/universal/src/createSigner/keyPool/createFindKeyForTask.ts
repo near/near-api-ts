@@ -1,13 +1,9 @@
-import type {
-  FindKeyForTask,
-  KeyPoolContext,
-  PoolKeys,
-} from '../../../types/signer/inner/keyPool';
+import type { FindKeyForTask, KeyPoolContext, PoolKeys } from '../../../types/signer/inner/keyPool';
 import type {
   FullAccessKeyPriority,
   FunctionCallKeyPriority,
 } from '../../../types/signer/inner/taskQueue';
-import { result } from '../../_common/_common/result';
+import { result } from '../../_common/_common/_common/result';
 
 const findSigningKey = (
   keyPriority: FullAccessKeyPriority | FunctionCallKeyPriority,

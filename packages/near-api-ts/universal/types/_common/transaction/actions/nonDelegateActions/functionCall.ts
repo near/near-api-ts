@@ -1,4 +1,4 @@
-import type { NatError } from '../../../../../src/_common/_common/_common/natError';
+import type { NatError } from '../../../../../src/_common/_common/_common/_common/natError';
 import type { KeyIf } from '../../../../utils';
 import type { ContractFunctionName, MaybeJsonValue, Result } from '../../../common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';

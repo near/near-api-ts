@@ -1,6 +1,6 @@
 import type { SendRequestContext } from '../../../../types/client/transport/sendRequest';
 import type { InnerRpcEndpoint } from '../../../../types/client/transport/transport';
-import { isNatErrorOf, NatError } from '../../../_common/_common/_common/natError';
+import { isNatErrorOf, NatError } from '../../../_common/_common/_common/_common/natError';
 import { combineAbortSignals } from './_common/combineAbortSignals';
 import { safeSleep } from './_common/sleep';
 import { type SendOnceResult, sendOnce } from './sendOnce/sendOnce';

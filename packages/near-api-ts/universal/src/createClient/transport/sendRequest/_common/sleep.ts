@@ -1,5 +1,5 @@
 import type { Result } from '../../../../../types/_common/common';
-import { result } from '../../../../_common/_common/result';
+import { result } from '../../../../_common/_common/_common/result';
 
 export const safeSleep = <E>(ms: number, signal?: AbortSignal): Promise<Result<true, E>> =>
   new Promise((resolve) => {

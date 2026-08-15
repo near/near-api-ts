@@ -1,7 +1,7 @@
 import type { Result } from '../../../../../types/_common/common';
 import type { InnerCallContractReadFunctionArgs } from '../../../../../types/client/methods/contract/callContractReadFunction';
-import { createNatError, NatError } from '../../../../_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/result';
+import { createNatError, NatError } from '../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../_common/_common/_common/result';
 import { convertObjectToU8 } from '../../../../_common/convertObjectToU8';
 import { JsonValueZodSchema } from '../../../../_common/zodSchemas/jsonValue';
 

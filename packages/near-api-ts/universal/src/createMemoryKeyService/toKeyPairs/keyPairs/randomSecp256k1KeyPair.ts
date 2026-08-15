@@ -3,14 +3,14 @@ import type {
   CreateRandomSecp256k1KeyPair,
   SafeCreateRandomSecp256k1KeyPair,
   SafeSignData,
-} from '../../../types/_common/keyPairs/randomSecp256k1KeyPair';
-import { BinaryLengths } from '../_common/_common/constants';
-import { asThrowable } from '../_common/asThrowable';
-import { result, resultNatError } from '../_common/result';
-import { wrapInternalError } from '../_common/wrapInternalError';
+} from '../../../../types/_common/keyPairs/randomSecp256k1KeyPair';
+import { BinaryLengths } from '../../../_common/_common/_common/constants';
+import { result, resultNatError } from '../../../_common/_common/_common/result';
+import { asThrowable } from '../../../_common/_common/asThrowable';
+import { wrapInternalError } from '../../../_common/_common/wrapInternalError';
 import { toSecp256k1CurveString } from './_common/_common/toCurveString';
-import { SignDataArgsZodSchema } from './_common/_common/zodSchemas';
 import { signBySecp256k1Key } from './_common/signBySecp256k1Key';
+import { SignDataArgsZodSchema } from './_common/zodSchemas';
 
 const createSafeSignData = (privateKeyU8: Uint8Array): SafeSignData => {
   const secretKeyU8 = privateKeyU8.slice(0, BinaryLengths.Secp256k1.SecretKey);

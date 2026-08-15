@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
 import { keyPair } from '../../../../universal/index';
-import { result } from '../../../../universal/src/_common/_common/result';
+import { result } from '../../../../universal/src/_common/_common/_common/result';
 
 export const createSafeAddKeyPair = (context: any) => async (args: any) => {
   const key = keyPair(args.privateKey);

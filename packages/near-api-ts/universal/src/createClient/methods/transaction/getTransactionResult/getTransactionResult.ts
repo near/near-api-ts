@@ -3,9 +3,9 @@ import type {
   CreateSafeGetTransactionResult,
   SafeGetTransactionResult,
 } from '../../../../../types/client/methods/transaction/getTransactionResult';
-import { repackError } from '../../../../_common/_common/repackError';
-import { resultNatError } from '../../../../_common/_common/result';
+import { resultNatError } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
+import { repackError } from '../../../../_common/repackError';
 import { CryptoHashZodSchema } from '../../../../_common/zodSchemas/cryptoHash';
 import { PartialTransportPolicyZodSchema } from '../../../_common/zodSchemas/transportPolicy';
 import { handleRpcError } from './handleRpcError';

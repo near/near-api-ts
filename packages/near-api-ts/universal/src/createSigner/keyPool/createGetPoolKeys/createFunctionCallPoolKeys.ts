@@ -1,10 +1,7 @@
-import type {
-  AccountAccessKey,
-  FunctionCallKey,
-} from '../../../../types/_common/accountAccessKey';
+import type { AccountAccessKey, FunctionCallKey } from '../../../../types/_common/accountAccessKey';
 import type { PoolFunctionCallKey } from '../../../../types/signer/inner/keyPool';
 import type { MemorySignerContext } from '../../../../types/signer/memorySigner';
-import { createLock, createSetNonce, createUnlock } from './keyUtils';
+import { createLock, createSetNonce, createUnlock } from './_common/keyUtils';
 
 const transformKey = (functionCallKey: FunctionCallKey): PoolFunctionCallKey => {
   const { publicKey, nonce, contractAccountId, allowedFunctions } = functionCallKey;

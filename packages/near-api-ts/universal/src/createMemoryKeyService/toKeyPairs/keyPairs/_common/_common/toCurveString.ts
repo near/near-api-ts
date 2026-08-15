@@ -3,7 +3,7 @@ import type {
   Ed25519CurveString,
   MlDsa65CurveString,
   Secp256k1CurveString,
-} from '../../../../../types/_common/curveString';
+} from '../../../../../../types/_common/curveString';
 
 export const toEd25519CurveString = (dataU8: Uint8Array): Ed25519CurveString =>
   `ed25519:${base58.encode(dataU8)}`;

@@ -4,13 +4,13 @@ import type {
   MemoryKeyServiceContext,
   SafeCreateMemoryKeyService,
 } from '../../types/memoryKeyService/memoryKeyService';
+import { result, resultNatError } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
-import { result, resultNatError } from '../_common/_common/result';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { PrivateKeyZodSchema } from '../_common/_common/zodSchemas/privateKey';
 import { createSafeHasKey } from './hasKey';
 import { createSafeSignData } from './signData';
-import { toKeyPairs } from './toKeyPairs';
+import { toKeyPairs } from './toKeyPairs/toKeyPairs';
 
 const KeySourceSchema = z.object({
   privateKey: PrivateKeyZodSchema,

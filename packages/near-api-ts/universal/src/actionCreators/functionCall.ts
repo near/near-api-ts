@@ -5,9 +5,9 @@ import type {
   InnerCreateFunctionCallActionArgs,
   SafeCreateFunctionCallAction,
 } from '../../types/_common/transaction/actions/nonDelegateActions/functionCall';
-import { createNatError, NatError } from '../_common/_common/_common/natError';
+import { createNatError, NatError } from '../_common/_common/_common/_common/natError';
+import { result } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
-import { result } from '../_common/_common/result';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { ContractFunctionNameZodSchema } from '../_common/_common/zodSchemas/contractFunctionName';
 import { NearGasArgsZodSchema } from '../_common/_common/zodSchemas/nearGas';

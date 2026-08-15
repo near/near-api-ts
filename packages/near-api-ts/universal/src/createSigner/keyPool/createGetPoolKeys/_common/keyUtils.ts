@@ -1,5 +1,5 @@
-import type { TransactionNonce } from '../../../../types/_common/common';
-import type { PoolKey } from '../../../../types/signer/inner/keyPool';
+import type { TransactionNonce } from '../../../../../types/_common/common';
+import type { PoolKey } from '../../../../../types/signer/inner/keyPool';
 
 export const createLock = (key: PoolKey) => () => {
   key.isLocked = true;

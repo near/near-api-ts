@@ -1,4 +1,4 @@
-import type { NatError } from '../../../../../src/_common/_common/_common/natError';
+import type { NatError } from '../../../../../src/_common/_common/_common/_common/natError';
 import type { AllowedFunctions } from '../../../accountAccessKey';
 import type { AccountId, ContractFunctionName, Result } from '../../../common';
 import type { NearcorePublicKey, PublicKey } from '../../../crypto';

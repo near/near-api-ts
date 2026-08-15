@@ -1,6 +1,6 @@
-import type { KeyPairs } from '../../types/memoryKeyService/memoryKeyService';
-import { keyPair } from '../_common/keyPairs/keyPair/keyPair';
-import type { InnerCreateMemoryKeyServiceArgs } from './createMemoryKeyService';
+import type { KeyPairs } from '../../../types/memoryKeyService/memoryKeyService';
+import type { InnerCreateMemoryKeyServiceArgs } from '../createMemoryKeyService';
+import { keyPair } from './keyPairs/keyPair/keyPair';
 
 export const toKeyPairs = (args: InnerCreateMemoryKeyServiceArgs): KeyPairs => {
   if ('keySource' in args) {

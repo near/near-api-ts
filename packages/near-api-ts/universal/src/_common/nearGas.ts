@@ -13,10 +13,10 @@ import type {
   SafeCreateNearGasFromTeraGas,
   TeraGas,
 } from '../../types/_common/nearGas';
+import { createNatError } from './_common/_common/_common/natError';
 import { TeraGasDecimals } from './_common/_common/constants';
-import { createNatError } from './_common/_common/natError';
+import { result } from './_common/_common/result';
 import { asThrowable } from './_common/asThrowable';
-import { result } from './_common/result';
 import { convertDecimalToUnits } from './_common/unitConverter/convertDecimalToUnits';
 import { convertUnitsToDecimal } from './_common/unitConverter/convertUnitsToDecimal';
 import { wrapInternalError } from './_common/wrapInternalError';

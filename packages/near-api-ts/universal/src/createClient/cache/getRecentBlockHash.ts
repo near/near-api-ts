@@ -1,9 +1,9 @@
 import * as z from 'zod/mini';
 import type { CreateSafeGetRecentBlockHash } from '../../../types/client/cache/getRecentBlockHash';
-import { createNatError } from '../../_common/_common/_common/natError';
-import { repackError } from '../../_common/_common/repackError';
-import { result } from '../../_common/_common/result';
+import { createNatError } from '../../_common/_common/_common/_common/natError';
+import { result } from '../../_common/_common/_common/result';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
+import { repackError } from '../../_common/repackError';
 import { CryptoHashZodSchema } from '../../_common/zodSchemas/cryptoHash';
 
 const PartialBlockResultSchema = z.object({

@@ -1,5 +1,5 @@
 import { rm } from 'fs/promises';
-import { result } from '../../../../universal/src/_common/_common/result';
+import { result } from '../../../../universal/src/_common/_common/_common/result';
 
 export const createSafeClear = (context: any) => async () => {
   try {

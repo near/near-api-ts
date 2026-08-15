@@ -5,8 +5,8 @@ import type {
   BaseDeserializeTransactionExecutionStepsFn,
 } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
 import type { ExecutionFailure } from '../../../../../types/client/methods/transaction/_common/transactionDetails/executionFailure';
-import { type NatError } from '../../../../_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/result';
+import { type NatError } from '../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../_common/_common/_common/result';
 import { getExecutionFailureError } from './_common/_common/getExecutionFailureError/getExecutionFailureError';
 import { getConversionStepSuccess } from './_common/getConversionStepSuccess';
 import { getNonConversionSteps } from './_common/getNonConversionSteps/getNonConversionSteps';

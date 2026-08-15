@@ -2,8 +2,8 @@ import { AccessKeyViewSchema } from '@near-js/jsonrpc-types';
 import * as z from 'zod/mini';
 import type { GetAccountAccessKeyArgs } from '../../../../../types/client/methods/account/getAccountAccessKey';
 import type { Prettify } from '../../../../../types/utils';
-import { createNatError } from '../../../../_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/result';
+import { createNatError } from '../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../_common/_common/_common/result';
 import type { BaseRpcResponse } from '../../../_common/zodSchemas/baseRpcResponse';
 import { transformAccessKey } from '../_common/transformAccessKey';
 

@@ -1,7 +1,7 @@
 import * as z from 'zod/mini';
 import type { InnerCallContractReadFunctionArgs } from '../../../../../../types/client/methods/contract/callContractReadFunction';
-import { createNatError } from '../../../../../_common/_common/_common/natError';
-import { result, resultNatError } from '../../../../../_common/_common/result';
+import { createNatError } from '../../../../../_common/_common/_common/_common/natError';
+import { result, resultNatError } from '../../../../../_common/_common/_common/result';
 import type { BaseRpcResponse } from '../../../../_common/zodSchemas/baseRpcResponse';
 import { deserializeCallResult } from './deserializeCallResult';
 

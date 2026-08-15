@@ -5,8 +5,8 @@ import type {
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
 import type { ExecutionSuccess } from '../../../../../types/client/methods/transaction/_common/transactionDetails/executionSuccess';
-import { type NatError } from '../../../../_common/_common/_common/natError';
-import { result, resultNatError } from '../../../../_common/_common/result';
+import { type NatError } from '../../../../_common/_common/_common/_common/natError';
+import { result, resultNatError } from '../../../../_common/_common/_common/result';
 import { tryBase64ToObject } from '../../_common/base64ToObject';
 import { getConversionStepSuccess } from './_common/getConversionStepSuccess';
 import { getNonConversionSteps } from './_common/getNonConversionSteps/getNonConversionSteps';

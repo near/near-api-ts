@@ -1,5 +1,5 @@
 import type { UUID } from 'crypto';
-import type { NatError } from '../../../src/_common/_common/_common/natError';
+import type { NatError } from '../../../src/_common/_common/_common/_common/natError';
 import type {
   AccountId,
   ContractFunctionName,
@@ -7,10 +7,7 @@ import type {
   Result,
   TimeoutId,
 } from '../../_common/common';
-import type {
-  SignedTransaction,
-  TransactionIntent,
-} from '../../_common/transaction/transaction';
+import type { SignedTransaction, TransactionIntent } from '../../_common/transaction/transaction';
 import type { SendSignedTransactionError } from '../../client/methods/transaction/sendSignedTransaction/error';
 import type { SendSignedTransactionOutput } from '../../client/methods/transaction/sendSignedTransaction/output';
 import type { MemorySignerErrorContext } from '../_common/errorContext';

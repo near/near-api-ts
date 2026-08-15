@@ -1,4 +1,4 @@
-import type { NatError } from '../../../src/_common/_common/_common/natError';
+import type { NatError } from '../../../src/_common/_common/_common/_common/natError';
 import type { Result } from '../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../_common/natError';
 import type { TransactionIntent } from '../../_common/transaction/transaction';

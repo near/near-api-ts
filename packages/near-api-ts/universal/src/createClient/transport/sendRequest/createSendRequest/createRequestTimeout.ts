@@ -1,5 +1,5 @@
 import type { Milliseconds } from '../../../../../types/_common/common';
-import { createNatError } from '../../../../_common/_common/_common/natError';
+import { createNatError } from '../../../../_common/_common/_common/_common/natError';
 
 export const createRequestTimeout = (requestTimeoutMs: Milliseconds) => {
   const controller = new AbortController();

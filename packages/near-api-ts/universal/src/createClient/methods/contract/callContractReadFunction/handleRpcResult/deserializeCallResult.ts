@@ -1,7 +1,10 @@
 import type { Result } from '../../../../../../types/_common/common';
 import type { InnerCallContractReadFunctionArgs } from '../../../../../../types/client/methods/contract/callContractReadFunction';
-import { createNatError, type NatError } from '../../../../../_common/_common/_common/natError';
-import { result } from '../../../../../_common/_common/result';
+import {
+  createNatError,
+  type NatError,
+} from '../../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../../_common/_common/_common/result';
 import { tryBase64ToObject } from '../../../_common/base64ToObject';
 
 export const deserializeCallResult = (

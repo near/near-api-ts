@@ -1,12 +1,10 @@
 import path from 'node:path';
 import process from 'node:process';
 import * as z from 'zod/mini';
+import { result } from '../../../universal/src/_common/_common/_common/result';
 import { asThrowable } from '../../../universal/src/_common/_common/asThrowable';
-import { result } from '../../../universal/src/_common/_common/result';
 import { wrapInternalError } from '../../../universal/src/_common/_common/wrapInternalError';
-import {
-  createSafeSignTransaction
-} from '../../../universal/src/createSigner/createSignTransaction';
+import { createSafeSignTransaction } from '../../../universal/src/createSigner/createSignTransaction';
 import { createGetKeyPair } from './private/getKeyPair';
 import { createSafeAddKeyPair } from './public/addKeyPair';
 import { createSafeClear } from './public/clear';

@@ -1,10 +1,7 @@
-import type { NatError } from '../../../src/_common/_common/_common/natError';
+import type { NatError } from '../../../src/_common/_common/_common/_common/natError';
 import type { Result } from '../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../_common/natError';
-import type {
-  SignedTransaction,
-  TransactionIntent,
-} from '../../_common/transaction/transaction';
+import type { SignedTransaction, TransactionIntent } from '../../_common/transaction/transaction';
 import type { MemorySignerErrorContext } from '../_common/errorContext';
 import type { MemorySignerContext } from '../memorySigner';
 

@@ -5,8 +5,8 @@ import type { BorshBytes } from '../../../types/_common/common';
 import type { Message, SafeVerifyMessage, VerifyMessage } from '../../../types/_common/message';
 import type { SafeGetAccountAccessKeys } from '../../../types/client/methods/account/getAccountAccessKeys';
 import { Nep413Message } from '../../_common/_common/_common/constants';
+import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
-import { result, resultNatError } from '../../_common/_common/result';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { verifySignature } from './verifySignature';
 import { MessageZodSchema, SignedMessageZodSchema } from './zodSchemas/message';
@@ -28,7 +28,6 @@ const toBorshNep413Message = (message: Message): BorshBytes =>
     recipient: message.recipient,
     nonce: Uint8Array.fromBase64(message.nonce),
   });
-
 
 export const VerifyMessageArgsSchema = z.object({
   signedMessage: SignedMessageZodSchema,

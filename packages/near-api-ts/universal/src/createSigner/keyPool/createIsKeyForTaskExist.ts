@@ -7,8 +7,8 @@ import type {
   FullAccessKeyPriority,
   FunctionCallKeyPriority,
 } from '../../../types/signer/inner/taskQueue';
-import { createNatError } from '../../_common/_common/_common/natError';
-import { result } from '../../_common/_common/result';
+import { createNatError } from '../../_common/_common/_common/_common/natError';
+import { result } from '../../_common/_common/_common/result';
 
 const isKeyExist = async (
   keyPriority: FullAccessKeyPriority | FunctionCallKeyPriority,

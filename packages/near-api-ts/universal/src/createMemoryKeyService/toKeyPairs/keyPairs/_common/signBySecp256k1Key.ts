@@ -1,7 +1,7 @@
 import { hmac } from '@noble/hashes/hmac.js';
 import { sha256 } from '@noble/hashes/sha2.js';
 import * as secp256k1 from '@noble/secp256k1';
-import { result } from '../../_common/result';
+import { result } from '../../../../_common/_common/_common/result';
 import { toSecp256k1CurveString } from './_common/toCurveString';
 
 // @noble/secp256k1 requirements

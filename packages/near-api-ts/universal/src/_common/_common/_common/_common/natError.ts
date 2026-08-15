@@ -2,7 +2,7 @@ import type {
   ContextFor,
   CreateNatErrorArgs,
   NatErrorKind,
-} from '../../../../types/_common/natError';
+} from '../../../../../types/_common/natError';
 
 export const NatErrorBrand = Symbol('NatError');
 

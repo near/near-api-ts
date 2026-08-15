@@ -3,10 +3,10 @@ import type {
   CreateSafeGetAccountAccessKey,
   SafeGetAccountAccessKey,
 } from '../../../../../types/client/methods/account/getAccountAccessKey';
-import { createNatError } from '../../../../_common/_common/_common/natError';
-import { repackError } from '../../../../_common/_common/repackError';
-import { result } from '../../../../_common/_common/result';
+import { createNatError } from '../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
+import { repackError } from '../../../../_common/repackError';
 import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
 import { PublicKeyZodSchema } from '../../../../_common/zodSchemas/publicKey';
 import { toNearcoreBlockReference } from '../../_common/toNearcoreBlockReference';

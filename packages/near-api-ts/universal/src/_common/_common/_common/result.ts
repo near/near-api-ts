@@ -1,5 +1,5 @@
-import type { ResultErr, ResultOk } from '../../../types/_common/common';
-import type { CreateResultNatError } from '../../../types/_common/natError';
+import type { ResultErr, ResultOk } from '../../../../types/_common/common';
+import type { CreateResultNatError } from '../../../../types/_common/natError';
 import { createNatError } from './_common/natError';
 
 export const result = {

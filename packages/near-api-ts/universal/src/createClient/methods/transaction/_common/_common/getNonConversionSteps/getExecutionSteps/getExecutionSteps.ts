@@ -1,6 +1,6 @@
 import type { BaseDeserializeTransactionExecutionStepsFn } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
 import type { ExecutionSteps } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/executionStep';
-import { result, resultNatError } from '../../../../../../../_common/_common/result';
+import { result, resultNatError } from '../../../../../../../_common/_common/_common/result';
 import type { ReceiptCreationMap } from '../createReceiptCreationMap';
 import type { ReceiptsWithOutcomes } from '../getReceiptsWithOutcomes';
 import { getParsedExecutionStep } from './getParsedExecutionStep';

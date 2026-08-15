@@ -14,7 +14,7 @@ import type {
   ExecutionFailureErrorAtStage,
 } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
 import type { TransactionDetailsFromStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
-import type { NatError } from '../../../../../../_common/_common/_common/natError';
+import type { NatError } from '../../../../../../_common/_common/_common/_common/natError';
 import { finalExecutionStatusToProcessingStage } from '../../../_common/finalExecutionStatusToProcessingStage';
 import type {
   RpcExecutedOptimisticTransactionDetails,

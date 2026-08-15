@@ -1,9 +1,6 @@
-import type {
-  Task,
-  TaskQueueContext,
-} from '../../../../../types/signer/inner/taskQueue';
-import { createNatError } from '../../../../_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/result';
+import type { Task, TaskQueueContext } from '../../../../../types/signer/inner/taskQueue';
+import { createNatError } from '../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../_common/_common/_common/result';
 
 export const addTask = (task: Task, taskQueueContext: TaskQueueContext) => {
   const { timeoutMs, signerContext, cleaners } = taskQueueContext;

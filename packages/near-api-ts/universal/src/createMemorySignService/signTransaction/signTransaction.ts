@@ -7,8 +7,8 @@ import type {
   SignTransaction,
 } from '../../../types/_common/transaction/signTransaction';
 import type { NearcoreSignedTransaction } from '../../../types/_common/transaction/transaction';
+import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
-import { result, resultNatError } from '../../_common/_common/result';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { SignedTransactionBorshSchema, TransactionBorshSchema } from './borsh/transaction';
 import { toNearcoreSignature } from './toNearcore/signature';

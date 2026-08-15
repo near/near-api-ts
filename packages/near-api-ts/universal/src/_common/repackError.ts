@@ -1,7 +1,7 @@
-import type { ResultErr } from '../../../types/_common/common';
-import type { ContextFor, NatErrorKind } from '../../../types/_common/natError';
-import { createNatError, type NatError } from './_common/natError';
-import { result } from './result';
+import type { ResultErr } from '../../types/_common/common';
+import type { ContextFor, NatErrorKind } from '../../types/_common/natError';
+import { createNatError, type NatError } from './_common/_common/_common/natError';
+import { result } from './_common/_common/result';
 
 // All dot-separated prefixes of an error kind:
 // 'Client.Transport.SendRequest' -> 'Client' | 'Client.Transport' | 'Client.Transport.SendRequest'

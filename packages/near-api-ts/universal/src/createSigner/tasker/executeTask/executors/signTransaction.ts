@@ -6,8 +6,8 @@ import type {
 import type { PoolKey } from '../../../../../types/signer/inner/keyPool';
 import type { Task } from '../../../../../types/signer/inner/taskQueue';
 import type { MemorySignerContext } from '../../../../../types/signer/memorySigner';
-import type { NatError } from '../../../../_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/result';
+import type { NatError } from '../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
 import { signTransaction as signTransactionHelper } from '../../../../createMemorySignService/signTransaction/signTransaction';
 

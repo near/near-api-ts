@@ -1,8 +1,8 @@
 import * as z from 'zod/mini';
 import type { CreateMessage, SafeCreateMessage } from '../../types/_common/message';
 import { Nep413Message } from '../_common/_common/_common/constants';
+import { result, resultNatError } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
-import { result, resultNatError } from '../_common/_common/result';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { JsonValueZodSchema } from '../_common/zodSchemas/jsonValue';
 

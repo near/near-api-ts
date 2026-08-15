@@ -4,8 +4,11 @@ import type { SendSignedTransactionOutput } from '../../../../../types/client/me
 import type { PoolKey } from '../../../../../types/signer/inner/keyPool';
 import type { Task } from '../../../../../types/signer/inner/taskQueue';
 import type { MemorySignerContext } from '../../../../../types/signer/memorySigner';
-import { createNatError, type NatError } from '../../../../_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/result';
+import {
+  createNatError,
+  type NatError,
+} from '../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
 import { signTransaction as signTransactionHelper } from '../../../../createMemorySignService/signTransaction/signTransaction';
 

@@ -4,13 +4,11 @@ import type {
   InnerCallContractReadFunctionArgs,
   SafeCallContractReadFunction,
 } from '../../../../../types/client/methods/contract/callContractReadFunction';
-import { createNatError } from '../../../../_common/_common/_common/natError';
-import { repackError } from '../../../../_common/_common/repackError';
-import { result } from '../../../../_common/_common/result';
+import { createNatError } from '../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
-import {
-  ContractFunctionNameZodSchema
-} from '../../../../_common/_common/zodSchemas/contractFunctionName';
+import { ContractFunctionNameZodSchema } from '../../../../_common/_common/zodSchemas/contractFunctionName';
+import { repackError } from '../../../../_common/repackError';
 import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
 import { toNearcoreBlockReference } from '../../_common/toNearcoreBlockReference';
 import { BlockReferenceZodSchema, PoliciesZodSchema } from '../../_common/zodSchemas';

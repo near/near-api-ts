@@ -3,8 +3,8 @@ import type { BaseDeserializeTransactionExecutionStepsFn } from '../../../../../
 import type { ConversionStepSuccess } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/conversionStep';
 import type { ExecutionSteps } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/executionStep';
 import type { RefundStep } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/refundStep';
-import type { NatError } from '../../../../../../_common/_common/_common/natError';
-import { result } from '../../../../../../_common/_common/result';
+import type { NatError } from '../../../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../../../_common/_common/_common/result';
 import type { RpcActionReceipt } from '../../zodSchemas/rpcActionReceipt';
 import type { RpcReceiptOutcome } from '../../zodSchemas/rpcReceiptOutcome';
 import type { RpcTransactionSummary } from '../../zodSchemas/rpcTransactionSummary';

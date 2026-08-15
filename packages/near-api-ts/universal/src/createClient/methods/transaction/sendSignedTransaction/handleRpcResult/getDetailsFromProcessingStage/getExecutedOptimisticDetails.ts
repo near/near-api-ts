@@ -9,8 +9,8 @@ import type {
   ExecutionFailureErrorAtStage,
 } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
 import type { TransactionDetailsAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
-import { type NatError } from '../../../../../../_common/_common/_common/natError';
-import { resultNatError } from '../../../../../../_common/_common/result';
+import { type NatError } from '../../../../../../_common/_common/_common/_common/natError';
+import { resultNatError } from '../../../../../../_common/_common/_common/result';
 import { getConversionFailureError } from '../../../_common/_common/getConversionFailureError';
 import { getExecutionFailureExecutedOptimistic } from '../../../_common/getExecutionFailure';
 import { getExecutionSuccessExecutedOptimistic } from '../../../_common/getExecutionSuccess';

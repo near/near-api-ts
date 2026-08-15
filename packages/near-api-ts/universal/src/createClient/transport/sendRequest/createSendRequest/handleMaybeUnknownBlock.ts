@@ -1,6 +1,6 @@
 import type { SendRequestContext } from '../../../../../types/client/transport/sendRequest';
 import type { TransportContext } from '../../../../../types/client/transport/transport';
-import { isNatErrorOf } from '../../../../_common/_common/_common/natError';
+import { isNatErrorOf } from '../../../../_common/_common/_common/_common/natError';
 import { mergeTransportPolicy } from '../../transportPolicy';
 import type { SendOnceResult } from '../sendOnce/sendOnce';
 import { tryOneRound } from '../tryOneRound';

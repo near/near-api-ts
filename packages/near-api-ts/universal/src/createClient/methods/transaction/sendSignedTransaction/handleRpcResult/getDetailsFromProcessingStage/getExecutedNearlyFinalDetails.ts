@@ -6,8 +6,8 @@ import type {
 } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
 import type { ExecutionFailureErrorAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
 import type { TransactionDetailsAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
-import { type NatError } from '../../../../../../_common/_common/_common/natError';
-import { resultNatError } from '../../../../../../_common/_common/result';
+import { type NatError } from '../../../../../../_common/_common/_common/_common/natError';
+import { resultNatError } from '../../../../../../_common/_common/_common/result';
 import { getExecutionFailureExecutedNearlyFinal } from '../../../_common/getExecutionFailure';
 import { getExecutionSuccessExecutedNearlyFinal } from '../../../_common/getExecutionSuccess';
 import type { RpcExecutedTransactionDetails } from '../../../_common/zodSchemas/rpcTransactionDetails';

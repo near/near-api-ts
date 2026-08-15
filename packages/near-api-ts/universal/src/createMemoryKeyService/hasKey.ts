@@ -1,7 +1,7 @@
 import * as z from 'zod/mini';
 import type { SafeHasKey } from '../../types/memoryKeyService/hasKey';
 import type { MemoryKeyServiceContext } from '../../types/memoryKeyService/memoryKeyService';
-import { result, resultNatError } from '../_common/_common/result';
+import { result, resultNatError } from '../_common/_common/_common/result';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { PublicKeyZodSchema } from '../_common/zodSchemas/publicKey';
 

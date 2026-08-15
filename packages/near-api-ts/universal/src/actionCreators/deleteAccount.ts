@@ -3,9 +3,9 @@ import type {
   CreateDeleteAccountAction,
   SafeCreateDeleteAccountAction,
 } from '../../types/_common/transaction/actions/nonDelegateActions/deleteAccount';
-import { createNatError } from '../_common/_common/_common/natError';
+import { createNatError } from '../_common/_common/_common/_common/natError';
+import { result } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
-import { result } from '../_common/_common/result';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { AccountIdZodSchema } from '../_common/zodSchemas/accountId';
 

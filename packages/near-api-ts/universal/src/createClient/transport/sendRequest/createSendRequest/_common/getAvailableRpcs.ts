@@ -4,8 +4,11 @@ import type {
   RpcTypePreferences,
   TransportContext,
 } from '../../../../../../types/client/transport/transport';
-import { createNatError, type NatError } from '../../../../../_common/_common/_common/natError';
-import { result } from '../../../../../_common/_common/result';
+import {
+  createNatError,
+  type NatError,
+} from '../../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../../_common/_common/_common/result';
 
 export const getAvailableRpcs = (
   rpcEndpoints: TransportContext['rpcEndpoints'],

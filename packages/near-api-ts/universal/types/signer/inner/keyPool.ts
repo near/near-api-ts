@@ -1,4 +1,4 @@
-import type { NatError } from '../../../src/_common/_common/_common/natError';
+import type { NatError } from '../../../src/_common/_common/_common/_common/natError';
 import type { FunctionCallKey } from '../../_common/accountAccessKey';
 import type { AccountId, Result, TransactionNonce } from '../../_common/common';
 import type { PublicKey } from '../../_common/crypto';

@@ -2,8 +2,8 @@ import { InvalidTxErrorSchema } from '@near-js/jsonrpc-types';
 import * as z from 'zod/mini';
 import type { Base64String, ResultErr } from '../../../../../types/_common/common';
 import type { ConversionFailureNatError } from '../../../../../types/client/methods/transaction/sendSignedTransaction/error';
-import { createNatError, NatError } from '../../../../_common/_common/_common/natError';
-import { resultNatError } from '../../../../_common/_common/result';
+import { createNatError, NatError } from '../../../../_common/_common/_common/_common/natError';
+import { resultNatError } from '../../../../_common/_common/_common/result';
 import {
   type BaseRpcResponse,
   createHandlerErrorZodSchema,

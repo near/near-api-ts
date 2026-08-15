@@ -3,13 +3,13 @@ import type {
   CreateRandomMlDsa65KeyPair,
   SafeCreateRandomMlDsa65KeyPair,
   SafeSignData,
-} from '../../../types/_common/keyPairs/randomMlDsa65KeyPair';
-import { asThrowable } from '../_common/asThrowable';
-import { result, resultNatError } from '../_common/result';
-import { wrapInternalError } from '../_common/wrapInternalError';
+} from '../../../../types/_common/keyPairs/randomMlDsa65KeyPair';
+import { result, resultNatError } from '../../../_common/_common/_common/result';
+import { asThrowable } from '../../../_common/_common/asThrowable';
+import { wrapInternalError } from '../../../_common/_common/wrapInternalError';
 import { toMlDsa65CurveString } from './_common/_common/toCurveString';
-import { SignDataArgsZodSchema } from './_common/_common/zodSchemas';
 import { signByMlDsa65Key } from './_common/signByMlDsa65Key';
+import { SignDataArgsZodSchema } from './_common/zodSchemas';
 
 const createSafeSignData = (privateKeyU8: Uint8Array): SafeSignData => {
   // Storage is secret-only (4032 B): the whole private key IS the secret,

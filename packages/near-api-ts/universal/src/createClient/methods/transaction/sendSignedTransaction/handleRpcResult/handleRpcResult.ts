@@ -11,9 +11,12 @@ import type {
   ExecutionFailureErrorAtStage,
 } from '../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
 import type { TransactionDetailsFromStage } from '../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
-import { createNatError, type NatError } from '../../../../../_common/_common/_common/natError';
-import { repackError } from '../../../../../_common/_common/repackError';
-import { result, resultNatError } from '../../../../../_common/_common/result';
+import {
+  createNatError,
+  type NatError,
+} from '../../../../../_common/_common/_common/_common/natError';
+import { result, resultNatError } from '../../../../../_common/_common/_common/result';
+import { repackError } from '../../../../../_common/repackError';
 import type { BaseRpcResponse } from '../../../../_common/zodSchemas/baseRpcResponse';
 import {
   type RpcExecutedOptimisticTransactionDetails,
