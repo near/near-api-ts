@@ -26,5 +26,7 @@ dist-ssr
 # Playwright
 /packages/near-api-ts/browser/playwright-test-results
 
-.claude
+# Local Claude Code state is private; the skill symlinks into skills/ are shared.
+.claude/*
+!.claude/skills/
 .mcp.json
