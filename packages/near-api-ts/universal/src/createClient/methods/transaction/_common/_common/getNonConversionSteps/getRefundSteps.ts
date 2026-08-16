@@ -1,10 +1,10 @@
-import { yoctoNear } from '../../../../../../../index';
 import type {
   RefundStep,
   RefundStepResult,
 } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/refundStep';
-import type { RpcActionReceiptTrimmed } from '../../zodSchemas/rpcActionReceipt';
-import type { RpcReceiptOutcome } from '../../zodSchemas/rpcReceiptOutcome';
+import { yoctoNear } from '../../../../../../_common/nearToken';
+import type { RpcActionReceiptTrimmed } from '../../zodSchemas/rpcTransactionDetails/rpcActionReceipt';
+import type { RpcReceiptOutcome } from '../../zodSchemas/rpcTransactionDetails/rpcReceiptOutcome';
 import type { ReceiptCreationMap } from './createReceiptCreationMap';
 import type { ReceiptsWithOutcomes } from './getReceiptsWithOutcomes';
 

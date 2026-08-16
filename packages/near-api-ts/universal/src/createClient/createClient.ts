@@ -5,7 +5,7 @@ import { createNatError } from '../_common/_common/_common/_common/natError';
 import { result } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
-import { createCache } from './cache/createCache';
+import { createCache } from './createCache/createCache';
 import { createSafeGetAccountAccessKey } from './methods/account/getAccountAccessKey/getAccountAccessKey';
 import { createSafeGetAccountAccessKeys } from './methods/account/getAccountAccessKeys/getAccountAccessKeys';
 import { createSafeGetAccountInfo } from './methods/account/getAccountInfo/getAccountInfo';
@@ -14,11 +14,6 @@ import { createSafeCallContractReadFunction } from './methods/contract/callContr
 import { createSafeGetTransactionResult } from './methods/transaction/getTransactionResult/getTransactionResult';
 import { createSafeSendSignedTransaction } from './methods/transaction/sendSignedTransaction/sendSignedTransaction';
 import { CreateTransportArgsZodSchema, createTransport } from './transport/createTransport';
-
-export const ClientBrand = Symbol('Client');
-
-export const isClient = (value: unknown): value is Client =>
-  typeof value === 'object' && value !== null && ClientBrand in value;
 
 const CreateClientArgsSchema = z.object({
   transport: CreateTransportArgsZodSchema,
@@ -54,7 +49,6 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
     const safeSendSignedTransaction = createSafeSendSignedTransaction(context);
 
     return result.ok({
-      [ClientBrand]: true as const, // TODO remove
       getAccountInfo: asThrowable(safeGetAccountInfo),
       getAccountAccessKey: asThrowable(safeGetAccountAccessKey),
       getAccountAccessKeys: asThrowable(safeGetAccountAccessKeys),

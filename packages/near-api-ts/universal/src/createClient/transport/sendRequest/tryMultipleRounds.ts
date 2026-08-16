@@ -1,10 +1,10 @@
 import type { SendRequestContext } from '../../../../types/client/transport/sendRequest';
 import type { InnerRpcEndpoint } from '../../../../types/client/transport/transport';
 import { isNatErrorOf, type NatError } from '../../../_common/_common/_common/_common/natError';
-import { combineAbortSignals } from './_common/combineAbortSignals';
-import { safeSleep } from './_common/sleep';
-import type { SendOnceResult } from './sendOnce/sendOnce';
-import { tryOneRound } from './tryOneRound';
+import { combineAbortSignals } from './_common/_common/combineAbortSignals';
+import { safeSleep } from './_common/_common/sleep';
+import type { SendOnceResult } from './_common/tryOneRound/sendWithRetry/sendOnce/sendOnce';
+import { tryOneRound } from './_common/tryOneRound/tryOneRound';
 
 const shouldTryAnotherRound = (sendOnceResult: SendOnceResult): boolean =>
   !sendOnceResult.ok &&

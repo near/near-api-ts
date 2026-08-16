@@ -22,7 +22,7 @@ import type {
   RpcFinalTransactionDetails,
   RpcIncludedFinalTransactionDetails,
   RpcIncludedTransactionDetails,
-} from '../../../_common/zodSchemas/rpcTransactionDetails';
+} from '../../../_common/zodSchemas/rpcTransactionDetails/rpcTransactionDetails';
 import { getCompletedFinalDetails } from './getCompletedFinalDetails';
 import { getConvertedFinalDetails } from './getConvertedFinalDetails';
 import { getConvertedOptimisticDetails } from './getConvertedOptimisticDetails';

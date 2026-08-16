@@ -13,8 +13,8 @@ import {
   randomEd25519KeyPair,
   transfer,
 } from '../../index';
-import { safeSleep } from '../../src/createClient/transport/sendRequest/_common/sleep';
-import { executeTransaction } from '../../src/createSigner/tasker/executeTask/executors/executeTransaction';
+import { safeSleep } from '../../src/createClient/transport/sendRequest/_common/_common/sleep';
+import { executeTransaction } from '../../src/createSigner/createTasker/executeTask/executors/executeTransaction';
 import { createDefaultClient, getFileBytes, log } from '../utils/common';
 import { startSandbox } from '../utils/sandbox/startSandbox';
 

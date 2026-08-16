@@ -1,7 +1,7 @@
 import { type ActionError } from '@near-js/jsonrpc-types';
 import * as z from 'zod/mini';
-import { RpcFinalTransactionDetailsZodSchema } from '../../../../../../src/createClient/methods/transaction/_common/zodSchemas/rpcTransactionDetails';
-import { snakeToCamelCase } from '../../../../../../src/createClient/transport/sendRequest/sendOnce/snakeToCamelCase';
+import { RpcFinalTransactionDetailsZodSchema } from '../../../../../../src/createClient/methods/transaction/_common/zodSchemas/rpcTransactionDetails/rpcTransactionDetails';
+import { snakeToCamelCase } from '../../../../../../src/createClient/transport/sendRequest/_common/tryOneRound/sendWithRetry/sendOnce/snakeToCamelCase';
 
 const convertActionError = (actionError: ActionError) => {
   const { kind } = actionError;

@@ -29,7 +29,7 @@ import {
   RpcIncludedFinalTransactionDetailsZodSchema,
   type RpcIncludedTransactionDetails,
   RpcIncludedTransactionDetailsZodSchema,
-} from '../../_common/zodSchemas/rpcTransactionDetails';
+} from '../../_common/zodSchemas/rpcTransactionDetails/rpcTransactionDetails';
 import {
   getDetailsFromProcessingStage,
   isInnerTransactionDetailsError,

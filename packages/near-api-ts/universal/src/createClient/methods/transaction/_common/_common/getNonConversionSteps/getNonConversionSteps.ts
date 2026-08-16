@@ -5,9 +5,9 @@ import type { ExecutionSteps } from '../../../../../../../types/client/methods/t
 import type { RefundStep } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/refundStep';
 import type { NatError } from '../../../../../../_common/_common/_common/_common/natError';
 import { result } from '../../../../../../_common/_common/_common/result';
-import type { RpcActionReceipt } from '../../zodSchemas/rpcActionReceipt';
-import type { RpcReceiptOutcome } from '../../zodSchemas/rpcReceiptOutcome';
-import type { RpcTransactionSummary } from '../../zodSchemas/rpcTransactionSummary';
+import type { RpcActionReceipt } from '../../zodSchemas/rpcTransactionDetails/rpcActionReceipt';
+import type { RpcReceiptOutcome } from '../../zodSchemas/rpcTransactionDetails/rpcReceiptOutcome';
+import type { RpcTransactionSummary } from '../../zodSchemas/rpcTransactionDetails/rpcTransactionSummary';
 import { createReceiptCreationMap } from './createReceiptCreationMap';
 import { getExecutionSteps } from './getExecutionSteps/getExecutionSteps';
 import { getReceiptsWithOutcomes } from './getReceiptsWithOutcomes';

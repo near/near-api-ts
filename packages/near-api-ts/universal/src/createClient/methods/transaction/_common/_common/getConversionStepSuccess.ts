@@ -1,12 +1,13 @@
-import { gas, yoctoNear } from '../../../../../../index';
 import type { Result } from '../../../../../../types/_common/common';
 import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
 import type { ConversionStepSuccess } from '../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/conversionStep';
 import { type NatError } from '../../../../../_common/_common/_common/_common/natError';
 import { result } from '../../../../../_common/_common/_common/result';
-import type { RpcTransactionOutcomeSuccess } from '../zodSchemas/rpcTransactionOutcome';
-import type { RpcTransactionSummary } from '../zodSchemas/rpcTransactionSummary';
+import { gas } from '../../../../../_common/nearGas';
+import { yoctoNear } from '../../../../../_common/nearToken';
+import type { RpcTransactionSummary } from '../zodSchemas/rpcTransactionDetails/rpcTransactionSummary';
 import { getTransactionSummary } from './_common/getTransactionSummary';
+import type { RpcTransactionOutcomeSuccess } from './zodSchemas/rpcTransactionOutcome';
 
 type GetConversionStepSuccessArgs = {
   transaction: RpcTransactionSummary;

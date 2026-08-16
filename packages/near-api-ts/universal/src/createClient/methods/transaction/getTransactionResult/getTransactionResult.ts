@@ -9,7 +9,7 @@ import { repackError } from '../../../../_common/repackError';
 import { CryptoHashZodSchema } from '../../../../_common/zodSchemas/cryptoHash';
 import { PartialTransportPolicyZodSchema } from '../../../_common/zodSchemas/transportPolicy';
 import { handleRpcError } from './handleRpcError';
-import { handleRpcResult } from './handleRpcResult';
+import { handleRpcResult } from './handleRpcResult/handleRpcResult';
 
 const GetTransactionResultArgsZodShema = z.object({
   transactionHash: CryptoHashZodSchema,

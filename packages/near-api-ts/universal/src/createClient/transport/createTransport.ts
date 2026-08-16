@@ -1,9 +1,9 @@
 import * as z from 'zod/mini';
 import type { CreateTransport, TransportContext } from '../../../types/client/transport/transport';
 import { PartialTransportPolicyZodSchema } from '../_common/zodSchemas/transportPolicy';
+import { defaultTransportPolicy, mergeTransportPolicy } from './_common/transportPolicy';
 import { getInnerRpcEndpoints, RpcEndpointsArgsSchema } from './rpcEndpoints';
-import { createSendRequest } from './sendRequest/createSendRequest/createSendRequest';
-import { defaultTransportPolicy, mergeTransportPolicy } from './transportPolicy';
+import { createSendRequest } from './sendRequest/createSendRequest';
 
 export const CreateTransportArgsZodSchema = z.object({
   rpcEndpoints: RpcEndpointsArgsSchema,

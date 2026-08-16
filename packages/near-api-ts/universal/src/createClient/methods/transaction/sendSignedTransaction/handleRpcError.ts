@@ -10,7 +10,7 @@ import {
   InternalErrorZodSchema,
   RequestValidationErrorZodSchema,
 } from '../../../_common/zodSchemas/baseRpcResponse';
-import { getConversionFailureError } from '../_common/_common/getConversionFailureError';
+import { getConversionFailureError } from '../_common/getConversionFailureError';
 
 const TimeoutErrorZodSchema = createHandlerErrorZodSchema({
   cause: z.object({

@@ -10,7 +10,7 @@ import type {
 } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/conversionStep';
 import { type NatError } from '../../../../../../_common/_common/_common/_common/natError';
 import { result, resultNatError } from '../../../../../../_common/_common/_common/result';
-import type { RpcTransactionSummary } from '../../zodSchemas/rpcTransactionSummary';
+import type { RpcTransactionSummary } from '../../zodSchemas/rpcTransactionDetails/rpcTransactionSummary';
 import { getParsedActionSummary } from './_common/getParsedActionSummary';
 import { getRawActionSummary } from './_common/getRawActionSummary';
 

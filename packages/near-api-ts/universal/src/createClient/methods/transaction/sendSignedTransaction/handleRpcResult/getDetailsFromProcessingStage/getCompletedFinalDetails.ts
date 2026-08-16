@@ -10,14 +10,14 @@ import type {
 } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
 import type { TransactionDetailsAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import { resultNatError } from '../../../../../../_common/_common/_common/result';
-import { getConversionFailureError } from '../../../_common/_common/getConversionFailureError';
-import { getExecutionFailureCompletedFinal } from '../../../_common/getExecutionFailure';
-import { getExecutionSuccessCompletedFinal } from '../../../_common/getExecutionSuccess';
-import type { RpcFinalTransactionDetails } from '../../../_common/zodSchemas/rpcTransactionDetails';
 import {
   isRpcTransactionOutcomeFailure,
   isRpcTransactionOutcomeSuccess,
-} from '../../../_common/zodSchemas/rpcTransactionOutcome';
+} from '../../../_common/_common/zodSchemas/rpcTransactionOutcome';
+import { getConversionFailureError } from '../../../_common/getConversionFailureError';
+import { getExecutionFailureCompletedFinal } from '../../../_common/getExecutionFailure';
+import { getExecutionSuccessCompletedFinal } from '../../../_common/getExecutionSuccess';
+import type { RpcFinalTransactionDetails } from '../../../_common/zodSchemas/rpcTransactionDetails/rpcTransactionDetails';
 import type { InnerClientTransactionDetailsError } from './getDetailsFromProcessingStage';
 
 export const getCompletedFinalDetails = (args: {

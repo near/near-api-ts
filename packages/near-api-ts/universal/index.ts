@@ -119,8 +119,8 @@ export {
   safeVerifySignature,
   verifySignature,
 } from './src/offchainMessage/verifyMessage/verifySignature';
-export { Base64StringZodSchema } from './src/offchainMessage/verifyMessage/zodSchemas/base64String';
-export { MessageZodSchema } from './src/offchainMessage/verifyMessage/zodSchemas/message';
+export { Base64StringZodSchema } from './src/offchainMessage/verifyMessage/zodSchemas/message/base64String';
+export { MessageZodSchema } from './src/offchainMessage/verifyMessage/zodSchemas/message/message';
 
 // Types
 

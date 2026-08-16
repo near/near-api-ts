@@ -1,0 +1,6 @@
+{
+  "encapsulation:src/createSigner/createExecuteTransaction.ts::src/createMemorySignService/signTransaction/zodSchemas/transaction/transaction.ts": "Known deviation: createMemorySignService/ has no entry factory yet, so createSigner reaches into signTransaction/. See SKILL.md, Known deviation.",
+  "encapsulation:src/createSigner/createSignTransaction.ts::src/createMemorySignService/signTransaction/zodSchemas/transaction/transaction.ts": "Known deviation: createMemorySignService/ has no entry factory yet, so createSigner reaches into signTransaction/. See SKILL.md, Known deviation.",
+  "placement:src/createMemorySignService/signTransaction/signTransaction.ts": "Known deviation: createMemorySignService/ has no entry factory yet, so createSigner reaches into signTransaction/. See SKILL.md, Known deviation.",
+  "placement:src/createMemorySignService/signTransaction/zodSchemas/transaction/transaction.ts": "Known deviation: createMemorySignService/ has no entry factory yet, so createSigner reaches into signTransaction/. See SKILL.md, Known deviation."
+}

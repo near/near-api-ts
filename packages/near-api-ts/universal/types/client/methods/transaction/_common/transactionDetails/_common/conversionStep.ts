@@ -1,4 +1,9 @@
-import type { AccountId, BlockHash, ReceiptId, TransactionNonce } from '../../../../../../_common/common';
+import type {
+  AccountId,
+  BlockHash,
+  ReceiptId,
+  TransactionNonce,
+} from '../../../../../../_common/common';
 import type { PublicKey, Signature } from '../../../../../../_common/crypto';
 import type { NearGas } from '../../../../../../_common/nearGas';
 import type { NearToken } from '../../../../../../_common/nearToken';

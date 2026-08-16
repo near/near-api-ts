@@ -1,7 +1,7 @@
 import type { ActionError } from '@near-js/jsonrpc-types';
-import { yoctoNear } from '../../../../../../../../index';
 import type { PublicKey } from '../../../../../../../../types/_common/crypto';
 import type { ExecutionFailureError } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/executionFailureError';
+import { yoctoNear } from '../../../../../../../_common/nearToken';
 import { transformFunctionCallError } from './transformFunctionCallError/transformFunctionCallError';
 
 export const getExecutionFailureError = (actionError: ActionError): ExecutionFailureError => {

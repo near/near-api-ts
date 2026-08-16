@@ -4,13 +4,13 @@ import { serialize } from 'borsh';
 import {
   SignedTransactionBorshSchema,
   TransactionBorshSchema,
-} from '../../../../../../../src/createMemorySignService/signTransaction/borsh/transaction';
+} from '../../../../../../../src/createMemorySignService/signTransaction/borsh/transaction/transaction';
 import { toNearcoreSignature } from '../../../../../../../src/createMemorySignService/signTransaction/toNearcore/signature';
-import { toNearcoreTransaction } from '../../../../../../../src/createMemorySignService/signTransaction/toNearcore/transaction';
+import { toNearcoreTransaction } from '../../../../../../../src/createMemorySignService/signTransaction/toNearcore/transaction/transaction';
 import {
   type InnerTransaction,
   TransactionZodSchema,
-} from '../../../../../../../src/createMemorySignService/signTransaction/zodSchemas/transaction';
+} from '../../../../../../../src/createMemorySignService/signTransaction/zodSchemas/transaction/transaction';
 import type { KeyPair } from '../../../../../../../types/_common/keyPairs/keyPair';
 import type { NearcoreSignedTransaction } from '../../../../../../../types/_common/transaction/transaction';
 

@@ -12,7 +12,7 @@ import {
   near,
   transfer,
 } from '../../../../../index';
-import { safeSleep } from '../../../../../src/createClient/transport/sendRequest/_common/sleep';
+import { safeSleep } from '../../../../../src/createClient/transport/sendRequest/_common/_common/sleep';
 import type { Base64String, TransactionHash } from '../../../../../types/_common/common';
 import type { ActionSummary } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
 import type {

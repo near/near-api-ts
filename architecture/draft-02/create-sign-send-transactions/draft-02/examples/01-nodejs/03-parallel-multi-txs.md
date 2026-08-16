@@ -2,7 +2,7 @@
 
 High level API
 
-When you enable `keyPool` feature, signer will NOT automatically consider `intentions`
+When you enable `createKeyPool` feature, signer will NOT automatically consider `intentions`
 as independent transactions, which may be sent and executed in a random order.
 So if you want to send them in parallel you also need to add a specific field to
 `submitTransactions` and mark them as parallel-ready.

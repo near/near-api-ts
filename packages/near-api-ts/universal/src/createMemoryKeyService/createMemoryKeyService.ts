@@ -7,7 +7,7 @@ import type {
 import { result, resultNatError } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
-import { PrivateKeyZodSchema } from '../_common/_common/zodSchemas/privateKey';
+import { PrivateKeyZodSchema } from './_common/zodSchemas/privateKey';
 import { createSafeHasKey } from './hasKey';
 import { createSafeSignData } from './signData';
 import { toKeyPairs } from './toKeyPairs/toKeyPairs';

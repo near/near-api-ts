@@ -10,10 +10,10 @@ import { result } from '../../../../_common/_common/_common/result';
 import { getExecutionFailureError } from './_common/_common/getExecutionFailureError/getExecutionFailureError';
 import { getConversionStepSuccess } from './_common/getConversionStepSuccess';
 import { getNonConversionSteps } from './_common/getNonConversionSteps/getNonConversionSteps';
-import type { RpcActionReceipt } from './zodSchemas/rpcActionReceipt';
-import type { RpcReceiptOutcome } from './zodSchemas/rpcReceiptOutcome';
-import type { RpcTransactionOutcomeSuccess } from './zodSchemas/rpcTransactionOutcome';
-import type { RpcTransactionSummary } from './zodSchemas/rpcTransactionSummary';
+import type { RpcTransactionOutcomeSuccess } from './_common/zodSchemas/rpcTransactionOutcome';
+import type { RpcActionReceipt } from './zodSchemas/rpcTransactionDetails/rpcActionReceipt';
+import type { RpcReceiptOutcome } from './zodSchemas/rpcTransactionDetails/rpcReceiptOutcome';
+import type { RpcTransactionSummary } from './zodSchemas/rpcTransactionDetails/rpcTransactionSummary';
 
 type GetExecutionFailureArgs = {
   transaction: RpcTransactionSummary;

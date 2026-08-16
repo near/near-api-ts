@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
 import { BinaryLengths } from '../_common/_common/constants';
-import { CurveStringZodSchema } from '../_common/_common/zodSchemas/curveString';
+import { CurveStringZodSchema } from '../_common/zodSchemas/curveString';
 
 const { Ed25519, Secp256k1, MlDsa65 } = BinaryLengths;
 

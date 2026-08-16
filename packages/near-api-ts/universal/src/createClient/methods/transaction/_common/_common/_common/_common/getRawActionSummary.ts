@@ -1,6 +1,8 @@
 import type { ActionView } from '@near-js/jsonrpc-types';
-import { gas, type PublicKey, yoctoNear } from '../../../../../../../../index';
+import type { PublicKey } from '../../../../../../../../types/_common/crypto';
 import type { RawActionSummary } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
+import { gas } from '../../../../../../../_common/nearGas';
+import { yoctoNear } from '../../../../../../../_common/nearToken';
 
 // Assembles the raw action summary from the RPC action - all fields are converted except
 // functionCall.functionArgs which stays a raw base64 string;

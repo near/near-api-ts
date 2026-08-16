@@ -2,7 +2,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { GenesisAccount, Sandbox } from 'near-sandbox';
 import { near } from '../../../../index';
-import { safeSleep } from '../../../../src/createClient/transport/sendRequest/_common/sleep';
+import { safeSleep } from '../../../../src/createClient/transport/sendRequest/_common/_common/sleep';
 
 // A `neard` built from nearcore `--features test_features` with the extra
 // `ADVERSARY_SKIP_TX_VALIDATION` hook (chain/client/src/rpc_handler.rs). It lets

@@ -1,4 +1,11 @@
-import type { AccountId, Base64String, BlockHash, CryptoHash, Log, ReceiptId } from '../../../../../../_common/common';
+import type {
+  AccountId,
+  Base64String,
+  BlockHash,
+  CryptoHash,
+  Log,
+  ReceiptId,
+} from '../../../../../../_common/common';
 import type { NearGas } from '../../../../../../_common/nearGas';
 import type { NearToken } from '../../../../../../_common/nearToken';
 import type { ParsedActionSummary, RawActionSummary } from './_common/actionSummaries';

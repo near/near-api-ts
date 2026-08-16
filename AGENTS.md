@@ -6,10 +6,11 @@ TypeScript monorepo for NEAR Protocol client libraries. pnpm workspaces, Node >=
 
 **[skills/module-placement/SKILL.md](skills/module-placement/SKILL.md) — where a module file belongs.**
 Read it before adding, splitting, moving or renaming any file under
-`packages/near-api-ts/*/src`. Folder structure there is derived mechanically from the
-import graph, not chosen by taste: the document defines what counts as a consumer, when a
-module moves into `_common/`, and how deep the `_common/` chain goes. Placing a file by
-intuition will get it wrong.
+`packages/near-api-ts/universal/src`. Which folder owns a module, and how deep in that
+folder's `_common/` chain it sits, is derived mechanically from the value-import graph —
+not chosen by taste. The document defines what counts as a consumer, what the algorithm
+decides and what is left to cohesion, and how the layers work. Placing a file by intuition
+will get it wrong; run `pnpm check:placement` to find out.
 
 Files under `skills/` are plain markdown and readable by any agent or human. Claude Code
 picks them up through symlinks in `.claude/skills/` (which is git-ignored).
@@ -23,14 +24,11 @@ Run from the repo root:
 | `pnpm build` | build all packages |
 | `pnpm typecheck` | typecheck all packages |
 | `pnpm lint:fix` | format and lint with Biome |
+| `pnpm check:placement` | check `universal/src` against the module-placement convention |
 | `pnpm sandbox:start` / `pnpm sandbox:stop` | local NEAR sandbox for integration tests |
 
-Inside `packages/near-api-ts`: `npx vitest run universal/tests/unit nodejs/tests/unit`
-runs the unit tests without a sandbox. The integration suites need the sandbox running.
 
 ## Notes
 
-- `packages/react-near-ts` currently fails `typecheck` on a pre-existing error in
-  `tests/hooks/useContractReadFunction.type-test.tsx`. It is unrelated to `near-api-ts`.
 - `architecture/` holds design drafts, not current conventions. Do not treat it as a
   description of how the code works today.

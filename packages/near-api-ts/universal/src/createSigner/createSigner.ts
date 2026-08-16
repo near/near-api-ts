@@ -14,12 +14,11 @@ import { asThrowable } from '../_common/_common/asThrowable';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { AccountIdZodSchema } from '../_common/zodSchemas/accountId';
 import { PublicKeyZodSchema } from '../_common/zodSchemas/publicKey';
-import { isClient } from '../createClient/createClient';
 import { createSafeExecuteTransaction } from './createExecuteTransaction';
+import { createKeyPool } from './createKeyPool/createKeyPool';
 import { createSafeSignTransaction } from './createSignTransaction';
-import { createKeyPool } from './keyPool/createKeyPool';
-import { createTasker } from './tasker/createTasker';
-import { createTaskQueue } from './taskQueue/createTaskQueue';
+import { createTasker } from './createTasker/createTasker';
+import { createTaskQueue } from './createTaskQueue/createTaskQueue';
 
 // keyService: z.object({
 //   safeSignData: z.custom<SafeSignData>(
@@ -30,7 +29,7 @@ import { createTaskQueue } from './taskQueue/createTaskQueue';
 
 const CreateMemorySignerArgsSchema = z.object({
   signerAccountId: AccountIdZodSchema,
-  client: z.custom<Client>((value) => isClient(value)), // TODO fix it
+  client: z.custom<Client>((value) => true), // TODO fix it
   keyService: z.custom<MemoryKeyService>((value) => true), // TODO fix it
   keyPool: z.optional(
     z.object({

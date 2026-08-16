@@ -8,10 +8,10 @@ import type { ExecutionFailureErrorAtStage } from '../../../../../../../types/cl
 import type { TransactionDetailsAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import { type NatError } from '../../../../../../_common/_common/_common/_common/natError';
 import { resultNatError } from '../../../../../../_common/_common/_common/result';
+import { isRpcTransactionOutcomeSuccess } from '../../../_common/_common/zodSchemas/rpcTransactionOutcome';
 import { getExecutionFailureExecutedNearlyFinal } from '../../../_common/getExecutionFailure';
 import { getExecutionSuccessExecutedNearlyFinal } from '../../../_common/getExecutionSuccess';
-import type { RpcExecutedTransactionDetails } from '../../../_common/zodSchemas/rpcTransactionDetails';
-import { isRpcTransactionOutcomeSuccess } from '../../../_common/zodSchemas/rpcTransactionOutcome';
+import type { RpcExecutedTransactionDetails } from '../../../_common/zodSchemas/rpcTransactionDetails/rpcTransactionDetails';
 import type { InnerClientTransactionDetailsError } from './getDetailsFromProcessingStage';
 
 export const getExecutedNearlyFinalDetails = (args: {

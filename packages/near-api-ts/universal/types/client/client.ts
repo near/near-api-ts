@@ -1,4 +1,3 @@
-import { ClientBrand } from '../../src/createClient/createClient';
 import type { Cache } from './cache/cache';
 import type {
   GetRecentBlockHash,
@@ -61,7 +60,6 @@ export type ClientContext = {
 };
 
 export type Client = {
-  [ClientBrand]: true; // TODO Remove
   // throwable variants
   getAccountInfo: GetAccountInfo;
   getAccountAccessKey: GetAccountAccessKey;

@@ -4,11 +4,11 @@ import { type Schema, serialize } from 'borsh';
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import { type AccountId, type Client, keyPair } from '../../index';
-import { DelegationBorshSchema } from '../../src/createMemorySignService/signTransaction/borsh/actions/delegate/delegation';
+import { DelegationBorshSchema } from '../../src/createMemorySignService/signTransaction/borsh/transaction/actions/delegate/delegation';
 import {
   SignedTransactionBorshSchema,
   TransactionBorshSchema,
-} from '../../src/createMemorySignService/signTransaction/borsh/transaction';
+} from '../../src/createMemorySignService/signTransaction/borsh/transaction/transaction';
 import { createDefaultClient, log } from '../utils/common';
 import { startSandbox } from '../utils/sandbox/startSandbox';
 

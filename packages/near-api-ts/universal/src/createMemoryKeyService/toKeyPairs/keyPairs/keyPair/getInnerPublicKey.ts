@@ -1,6 +1,6 @@
 import { ml_dsa65 } from '@noble/post-quantum/ml-dsa.js';
 import { BinaryLengths } from '../../../../_common/_common/_common/constants';
-import { type InnerPrivateKey } from '../../../../_common/_common/zodSchemas/privateKey';
+import { type InnerPrivateKey } from '../../../_common/zodSchemas/privateKey';
 import {
   toEd25519CurveString,
   toMlDsa65CurveString,
