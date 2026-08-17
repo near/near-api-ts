@@ -10,18 +10,6 @@ import { RpcTransactionSummaryZodSchema } from './rpcTransactionSummary';
 
 // Transaction Processing Stages
 
-// NONE
-export const RpcNoneTransactionDetailsZodSchema = z.object({
-  finalExecutionStatus: z.literal('NONE'),
-  status: z.optional(z.never()),
-  transaction: z.optional(z.never()),
-  transactionOutcome: z.optional(z.never()),
-  receipts: z.optional(z.never()),
-  receiptsOutcome: z.optional(z.never()),
-});
-
-export type RpcNoneTransactionDetails = z.infer<typeof RpcNoneTransactionDetailsZodSchema>;
-
 // INCLUDED
 
 export const RpcIncludedTransactionDetailsZodSchema = z.union([
