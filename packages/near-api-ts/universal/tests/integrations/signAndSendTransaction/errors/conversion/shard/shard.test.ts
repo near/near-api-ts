@@ -8,7 +8,7 @@ import {
   keyPair,
   transfer,
 } from '../../../../../../index';
-import { safeSleep } from '../../../../../../src/createClient/transport/sendRequest/_common/_common/sleep';
+import { safeSleep } from '../../../../../../src/createClient/createTransport/createSendRequest/_common/_common/sleep';
 import { signTransaction } from '../../../../../../src/createMemorySignService/signTransaction/signTransaction';
 import {
   assertUnmappedInvalidTxError,

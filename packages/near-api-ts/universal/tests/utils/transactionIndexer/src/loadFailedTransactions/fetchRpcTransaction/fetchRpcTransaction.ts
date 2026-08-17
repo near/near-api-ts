@@ -1,5 +1,5 @@
 import type { Logger } from 'pino';
-import { safeSleep } from '../../../../../../src/createClient/transport/sendRequest/_common/_common/sleep';
+import { safeSleep } from '../../../../../../src/createClient/createTransport/createSendRequest/_common/_common/sleep';
 import { pool } from '../../db/db';
 import { getActionErrorKind } from './getActionErrorKind';
 

@@ -51,7 +51,7 @@ module directly, however long the relative path is.
 
 | Kind | How to recognize it | Encapsulation |
 |---|---|---|
-| **Module folder** | Contains an **entry file** named after itself: `getBlock/getBlock.ts`, or the `create` form `cache/createCache.ts` | Entry is visible to the parent scope. Every **other** file or folder in it is private to that folder. |
+| **Module folder** | Contains an **entry file** with the folder's own name: `getBlock/getBlock.ts`, `createCache/createCache.ts` | Entry is visible to the parent scope. Every **other** file or folder in it is private to that folder. |
 | **Group folder** | No entry file: `zodSchemas/`, `actions/`, `methods/`, `keyPairs/` | **Transparent.** A naming device and nothing more — no encapsulation, members addressed individually. Obeys Rules 1–2 like any folder; may own a `_common/`. |
 | **`_common/` layer** | Literally named `_common` | Shared modules owned by the folder **above the whole `_common` chain**. |
 
@@ -91,7 +91,7 @@ src/createClient/methods/account/
 └── getAccountAccessKeys/handleResult.ts ← consumer 2
 ```
 
-The folder's own entry counts as one of the two: `sendRequest/createSendRequest/_common/
+The folder's own entry counts as one of the two: `createSendRequest/_common/
 getAvailableRpcs.ts` is used by `createSendRequest.ts` (the entry) and by
 `handleMaybeUnknownBlock.ts` (a private sibling).
 
@@ -149,10 +149,13 @@ transaction/
 
 Always take the **deepest** consumer.
 
-And note what is *not* in that diagram: the `rpc*` zod schemas. Rule 1 runs before Rule 2 —
-a schema whose only value consumer is `rpcTransactionDetails.ts` is a private member of
-it and never gets a layer at all, however many modules `import type` from it. Type edges
-are not consumers (Rule 0), so they cannot hold a module up at a layer.
+And note how the `rpc*` zod schemas split, because Rule 1 runs before Rule 2.
+`rpcActionReceipt.ts`, `rpcReceiptOutcome.ts` and `rpcTransactionSummary.ts` have exactly
+one value consumer — `rpcTransactionDetails.ts` — so they are private members of
+`_common/zodSchemas/rpcTransactionDetails/` and never get a layer at all, however many
+modules `import type` from them. `rpcTransactionOutcome.ts` is the one with real value
+consumers across the tree, which is why it alone earns a layer (2, above). Type edges are
+not consumers (Rule 0), so they cannot hold a module up at a layer.
 
 ### Nesting does not add layers
 
@@ -222,8 +225,12 @@ Moving a module means rewriting every relative import path to it, in the same ch
   `throwableTransfer` + `CreateTransferActionArgsSchema` is one module.
 - **A file whose exports share no stem is two modules — split it.** `keyUtils.ts`
   exporting `createLock` + `createUnlock` + `createSetNonce` is three files.
-- Module-folder entry: `<folder>.ts`, `create<Folder>.ts`, or `createSafe<Folder>.ts`
-  when the export is a factory (`cache/createCache.ts`, `tasker/createTasker.ts`).
+- **Module-folder entry: `<folder>.ts`, always.** The folder carries the entry's own name,
+  factory or not — `createCache/createCache.ts`, `createTasker/createTasker.ts`,
+  `getBlock/getBlock.ts`. Never `cache/createCache.ts`: a folder whose name differs from
+  its entry reads as a group folder in the tree, and you have to open it to find out
+  otherwise. `pnpm check:placement` accepts the old `create<Folder>.ts` form, so it will
+  not catch a regression here — this one is on review.
 - Feature roots are verb-prefixed factories (`createClient/`); group folders are nouns
   (`actions/`, `zodSchemas/`).
 
@@ -263,7 +270,7 @@ than a feature root. Two consequences, both temporary:
   import. That reaches into `signTransaction/`'s private interior — the only illegal edges
   in the package.
 - `signTransaction/signTransaction.ts` is consumed by two modules in
-  `createSigner/tasker/executeTask/executors/`, so the algorithm would move the whole
+  `createSigner/createTasker/executeTask/executors/`, so the algorithm would move the whole
   `signTransaction/` folder under `executors/_common/`.
 
 Both close the same way: give `createMemorySignService/` its entry factory and have

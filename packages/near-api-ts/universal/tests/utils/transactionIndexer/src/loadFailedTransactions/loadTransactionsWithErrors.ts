@@ -1,4 +1,4 @@
-import { safeSleep } from '../../../../../src/createClient/transport/sendRequest/_common/_common/sleep';
+import { safeSleep } from '../../../../../src/createClient/createTransport/createSendRequest/_common/_common/sleep';
 import { createDayLogger } from '../logger';
 import { fetchRpcTransaction } from './fetchRpcTransaction/fetchRpcTransaction';
 import { getBigqueryTransactions } from './getBigqueryTransactions';

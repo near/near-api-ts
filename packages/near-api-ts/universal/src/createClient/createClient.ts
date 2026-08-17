@@ -6,6 +6,7 @@ import { result } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { createCache } from './createCache/createCache';
+import { CreateTransportArgsZodSchema, createTransport } from './createTransport/createTransport';
 import { createSafeGetAccountAccessKey } from './methods/account/getAccountAccessKey/getAccountAccessKey';
 import { createSafeGetAccountAccessKeys } from './methods/account/getAccountAccessKeys/getAccountAccessKeys';
 import { createSafeGetAccountInfo } from './methods/account/getAccountInfo/getAccountInfo';
@@ -13,7 +14,6 @@ import { createSafeGetBlock } from './methods/block/getBlock/getBlock';
 import { createSafeCallContractReadFunction } from './methods/contract/callContractReadFunction/callContractReadFunction';
 import { createSafeGetTransactionResult } from './methods/transaction/getTransactionResult/getTransactionResult';
 import { createSafeSendSignedTransaction } from './methods/transaction/sendSignedTransaction/sendSignedTransaction';
-import { CreateTransportArgsZodSchema, createTransport } from './transport/createTransport';
 
 const CreateClientArgsSchema = z.object({
   transport: CreateTransportArgsZodSchema,
