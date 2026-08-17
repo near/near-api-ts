@@ -20,14 +20,14 @@ export const BinaryLengths = {
 } as const;
 
 /** Fractional digits between the NEAR and the yoctoNEAR units */
-export const NearDecimals = 24;
+export const NearDecimals = 24 as const;
 /** Fractional digits between the TeraGas and the gas units */
-export const TeraGasDecimals = 12;
+export const TeraGasDecimals = 12 as const;
 
 export const Nep413Message = {
   /** 2**31 + 413 */
   Tag: 2147484061,
   NonceLength: 32,
-};
+} as const;
 
 export const constants = { NearDecimals, TeraGasDecimals, Nep413Message, BinaryLengths };

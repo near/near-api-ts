@@ -151,17 +151,17 @@ export type {
   NearToken,
   NearTokenArgs,
 } from './types/_common/nearToken';
+export type { FunctionCallAction } from './types/_common/transaction/actions/delegableActions/functionCall';
+export type { TransferAction } from './types/_common/transaction/actions/delegableActions/transfer';
 export type {
   Delegation,
   DelegationIntent,
   SignedDelegation,
-} from './types/_common/transaction/actions/delegate/delegation';
-export type { FunctionCallAction } from './types/_common/transaction/actions/nonDelegateActions/functionCall';
-export type { TransferAction } from './types/_common/transaction/actions/nonDelegateActions/transfer';
+} from './types/_common/transaction/actions/executeDelegation/delegation';
 export type {
-  Action,
   SignedTransaction,
   Transaction,
+  TransactionAction,
   TransactionIntent,
 } from './types/_common/transaction/transaction';
 

@@ -1,4 +1,5 @@
 import * as z from 'zod/mini';
+import { BlockHeightZodSchema } from '../../../_common/zodSchemas/blockHeight';
 import { CryptoHashZodSchema } from '../../../_common/zodSchemas/cryptoHash';
 import { PartialTransportPolicyZodSchema } from '../../_common/zodSchemas/transportPolicy';
 
@@ -13,8 +14,6 @@ export const BaseOptionsZodSchema = z.optional(
     signal: z.optional(z.instanceof(AbortSignal)),
   }),
 );
-
-const BlockHeightZodSchema = z.number().check(z.nonnegative());
 
 export const BlockReferenceZodSchema = z.union([
   z.literal('LatestOptimisticBlock'),

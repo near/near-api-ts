@@ -11,7 +11,7 @@ import type { KeyPairPublicErrorRegistry } from './keyPairs/keyPair';
 import type { MessagePublicErrorRegistry } from './message';
 import type { NearGasPublicErrorRegistry } from './nearGas';
 import type { NearTokenPublicErrorRegistry } from './nearToken';
-import type { ActionsPublicErrorRegistry } from './transaction/actions/nonDelegateActions/actions';
+import type { ActionsPublicErrorRegistry } from './transaction/actions/delegableActions/actions';
 import type { SignDelegationPublicErrorRegistry } from './transaction/signDelegation';
 import type { SignTransactionPublicErrorRegistry } from './transaction/signTransaction';
 import type { VerifySignaturePublicErrorRegistry } from './verifySignature';

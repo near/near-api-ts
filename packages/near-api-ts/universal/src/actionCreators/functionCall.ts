@@ -4,7 +4,7 @@ import type {
   CreateFunctionCallAction,
   InnerCreateFunctionCallActionArgs,
   SafeCreateFunctionCallAction,
-} from '../../types/_common/transaction/actions/nonDelegateActions/functionCall';
+} from '../../types/_common/transaction/actions/delegableActions/functionCall';
 import { createNatError, NatError } from '../_common/_common/_common/_common/natError';
 import { result } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';

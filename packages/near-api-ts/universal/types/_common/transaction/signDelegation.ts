@@ -1,8 +1,9 @@
 import type { NatError } from '../../../src/_common/_common/_common/_common/natError';
-import type { Result } from '../common';
+import type { AccountId, BlockHeight, Result, TransactionNonce } from '../common';
+import type { PublicKey } from '../crypto';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
 import type { SafeSignData } from '../signData';
-import type { Delegation, SignedDelegation } from './actions/delegate/delegation';
+import type { DelegatedAction, SignedDelegation } from './actions/executeDelegation/delegation';
 
 export interface SignDelegationPublicErrorRegistry {
   'SignDelegation.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -10,9 +11,29 @@ export interface SignDelegationPublicErrorRegistry {
   'SignDelegation.Internal': InternalErrorContext;
 }
 
+type DelegationArgs =
+  | {
+      senderAccountId: AccountId;
+      senderPublicKey: PublicKey;
+      delegatedAction: DelegatedAction;
+      delegatedActions?: never;
+      receiverAccountId: AccountId;
+      nonce: TransactionNonce;
+      expireAt: { blockHeight: BlockHeight };
+    }
+  | {
+      senderAccountId: AccountId;
+      senderPublicKey: PublicKey;
+      delegatedAction?: never;
+      delegatedActions: DelegatedAction[];
+      receiverAccountId: AccountId;
+      nonce: TransactionNonce;
+      expireAt: { blockHeight: BlockHeight };
+    };
+
 export type SignDelegationArgs<SDE = unknown> = {
+  delegation: DelegationArgs;
   signDataProvider: { safeSignData: SafeSignData<SDE> };
-  delegation: Delegation;
 };
 
 type SignDelegationOutput = SignedDelegation;

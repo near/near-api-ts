@@ -1,5 +1,5 @@
 import type { AccountId } from '../../../../../types/_common/common';
-import type { FunctionCallAction } from '../../../../../types/_common/transaction/actions/nonDelegateActions/functionCall';
+import type { FunctionCallAction } from '../../../../../types/_common/transaction/actions/delegableActions/functionCall';
 import type { TransactionIntent } from '../../../../../types/_common/transaction/transaction';
 import type { AccessTypePriority } from '../../../../../types/signer/inner/taskQueue';
 

@@ -2,7 +2,7 @@ import * as z from 'zod/mini';
 import type {
   CreateAddFunctionCallKeyAction,
   SafeCreateAddFunctionCallKeyAction,
-} from '../../types/_common/transaction/actions/nonDelegateActions/addKey';
+} from '../../types/_common/transaction/actions/delegableActions/addKey';
 import { createNatError } from '../_common/_common/_common/_common/natError';
 import { result } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';

@@ -1,6 +1,6 @@
 import { addFunctionCallKey, randomEd25519KeyPair } from '../../../../../../../../index';
 import { signTransaction } from '../../../../../../../../src/createMemorySignService/signTransaction/signTransaction';
-import type { CreateAddFunctionCallKeyActionArgs } from '../../../../../../../../types/_common/transaction/actions/nonDelegateActions/addKey';
+import type { CreateAddFunctionCallKeyActionArgs } from '../../../../../../../../types/_common/transaction/actions/delegableActions/addKey';
 import type { TestContext } from '../../signer.test';
 
 type AttachFunctionCallKeyArgs = Omit<CreateAddFunctionCallKeyActionArgs, 'publicKey'>;

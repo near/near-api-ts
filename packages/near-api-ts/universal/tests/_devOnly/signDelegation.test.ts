@@ -1,41 +1,14 @@
-import { sha256 } from '@noble/hashes/sha2.js';
-import { base58 } from '@scure/base';
-import { type Schema, serialize } from 'borsh';
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
-import { type AccountId, type Client, keyPair } from '../../index';
-import { DelegationBorshSchema } from '../../src/createMemorySignService/signTransaction/borsh/transaction/actions/delegate/delegation';
+import { type Client, keyPair, signTransaction, transfer } from '../../index';
 import {
-  SignedTransactionBorshSchema,
-  TransactionBorshSchema,
-} from '../../src/createMemorySignService/signTransaction/borsh/transaction/transaction';
+  safeSignDelegation,
+  signDelegation,
+} from '../../src/createMemorySignService/signDelegation/signDelegation';
 import { createDefaultClient, log } from '../utils/common';
 import { startSandbox } from '../utils/sandbox/startSandbox';
 
 const kp = keyPair(DEFAULT_PRIVATE_KEY);
-
-const signDelegation = async (senderId: AccountId, deposit: bigint) => {
-  const delegation = {
-    tag: 1073742190, // (1 << 30) + 366,
-    senderId,
-    receiverId: 'bob123',
-    actions: [{ transfer: { deposit } }],
-    nonce: 5n,
-    maxBlockHeight: 100n,
-    publicKey: { ed25519Key: { data: kp.publicKeyU8 } },
-  };
-
-  const delegationBorsh = serialize(DelegationBorshSchema, delegation);
-  const delegationHashU8 = sha256(delegationBorsh);
-  const { signatureU8 } = await kp.signData({ dataU8: delegationHashU8 });
-
-  return {
-    delegate: {
-      delegation,
-      signature: { ed25519Signature: { data: signatureU8 } },
-    },
-  };
-};
 
 describe('Full-scale delegation test', async () => {
   let client: Client;
@@ -62,52 +35,74 @@ describe('Full-scale delegation test', async () => {
     const aliceBalanceBefore = await client.getAccountInfo({ accountId: 'alice' });
     console.log('alice balance before:', aliceBalanceBefore.balance.total.near);
 
-    // actions: [signDelegation('alice', 100n), { transfer: { deposit: 200n } }],
-
-    const transaction = {
-      signerId: 'relay',
-      publicKey: { ed25519Key: { data: relayKp.publicKeyU8 } },
-      nonce: BigInt(accountAccessKey.nonce + 1),
-      receiverId: 'alice',
-      blockHash: base58.decode(blockHash),
-      actions: [await signDelegation('alice', 500000000000000000000000000n)], // 500 NEAR
-    };
-
-    log(transaction);
-
-    const transactionBorsh = serialize(TransactionBorshSchema, transaction);
-    const transactionHashU8 = sha256(transactionBorsh);
-    const { signatureU8 } = await relayKp.signData({ dataU8: transactionHashU8 });
-
-    const signedTransaction = {
-      transaction,
-      signature: { ed25519Signature: { data: signatureU8 } },
-    };
-
-    const signedTransactionBorsh64 = serialize(
-      SignedTransactionBorshSchema,
-      signedTransaction,
-    ).toBase64();
-
-    // # Send Signed Transaction
-    const response = await fetch('http://localhost:4560', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const signedDelegation = await safeSignDelegation({
+      delegation: {
+        senderAccountId: 'alice', // TODO delegatorAccountId
+        senderPublicKey: kp.publicKey,
+        delegatedAction: transfer({ amount: { near: '1' } }),
+        receiverAccountId: 'bob',
+        nonce: 2,
+        expireAt: { blockHeight: 1000 },
       },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 0,
-        method: 'send_tx',
-        params: {
-          signed_tx_base64: signedTransactionBorsh64,
-          wait_until: 'FINAL',
-        },
-      }),
+      signDataProvider: kp,
     });
-    const json = await response.json();
 
-    log(json);
+    log(signedDelegation);
+
+    return;
+
+    const signedTransaction = await signTransaction({
+      transaction: {
+        signerAccountId: 'relay',
+        signerPublicKey: relayKp.publicKey,
+        nonce: accountAccessKey.nonce + 1,
+        action: {
+          actionType: 'ExecuteDelegation',
+          delegation: signedDelegation.delegation,
+          signature: signedDelegation.signature,
+        },
+        receiverAccountId: signedDelegation.delegation.senderAccountId,
+        blockHash,
+      },
+      signDataProvider: relayKp,
+    });
+
+    const txRes = await client.sendSignedTransaction({ signedTransaction });
+    log(txRes);
+
+    // const transactionBorsh = serialize(TransactionBorshSchema, transaction);
+    // const transactionHashU8 = sha256(transactionBorsh);
+    // const { signatureU8 } = await relayKp.signData({ dataU8: transactionHashU8 });
+    //
+    // const signedTransaction = {
+    //   transaction,
+    //   signature: { ed25519Signature: { data: signatureU8 } },
+    // };
+    //
+    // const signedTransactionBorsh64 = serialize(
+    //   SignedTransactionBorshSchema,
+    //   signedTransaction,
+    // ).toBase64();
+    //
+    // // # Send Signed Transaction
+    // const response = await fetch('http://localhost:4560', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     jsonrpc: '2.0',
+    //     id: 0,
+    //     method: 'send_tx',
+    //     params: {
+    //       signed_tx_base64: signedTransactionBorsh64,
+    //       wait_until: 'FINAL',
+    //     },
+    //   }),
+    // });
+    // const json = await response.json();
+    //
+    // log(json);
 
     const balanceAfter = await client.getAccountInfo({ accountId: 'relay' });
     console.log('relay balance after:', balanceAfter.balance.total.near);

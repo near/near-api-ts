@@ -5,31 +5,35 @@ import type {
   AddFullAccessKeyAction,
   AddFunctionCallKeyAction,
   NearcoreAddKeyAction,
-} from './actions/nonDelegateActions/addKey';
+} from './actions/delegableActions/addKey';
 import type {
   CreateAccountAction,
   NearcoreCreateAccountAction,
-} from './actions/nonDelegateActions/createAccount';
+} from './actions/delegableActions/createAccount';
 import type {
   DeleteAccountAction,
   NearcoreDeleteAccountAction,
-} from './actions/nonDelegateActions/deleteAccount';
+} from './actions/delegableActions/deleteAccount';
 import type {
   DeleteKeyAction,
   NearcoreDeleteKeyAction,
-} from './actions/nonDelegateActions/deleteKey';
+} from './actions/delegableActions/deleteKey';
 import type {
   DeployContractAction,
   NearcoreDeployContractAction,
-} from './actions/nonDelegateActions/deployContract';
+} from './actions/delegableActions/deployContract';
 import type {
   FunctionCallAction,
   NearcoreFunctionCallAction,
-} from './actions/nonDelegateActions/functionCall';
-import type { NearcoreStakeAction, StakeAction } from './actions/nonDelegateActions/stake';
-import type { NearcoreTransferAction, TransferAction } from './actions/nonDelegateActions/transfer';
+} from './actions/delegableActions/functionCall';
+import type { NearcoreStakeAction, StakeAction } from './actions/delegableActions/stake';
+import type { NearcoreTransferAction, TransferAction } from './actions/delegableActions/transfer';
+import type {
+  ExecuteDelegationAction,
+  NearcoreExecuteDelegationAction,
+} from './actions/executeDelegation/executeDelegation';
 
-export type Action =
+export type TransactionAction =
   | CreateAccountAction
   | TransferAction
   | AddFullAccessKeyAction
@@ -38,10 +42,11 @@ export type Action =
   | FunctionCallAction
   | StakeAction
   | DeleteKeyAction
-  | DeleteAccountAction;
+  | DeleteAccountAction
+  | ExecuteDelegationAction;
 
-type SingleAction = { action: Action; actions?: never };
-type MultiActions = { action?: never; actions: Action[] };
+type SingleTransactionAction = { action: TransactionAction; actions?: never };
+type MultiTransactionActions = { action?: never; actions: TransactionAction[] };
 
 type TransactionBase = {
   signerAccountId: AccountId;
@@ -51,15 +56,15 @@ type TransactionBase = {
   blockHash: BlockHash;
 };
 
-type SingleActionTransaction = TransactionBase & SingleAction;
-type MultiActionsTransaction = TransactionBase & MultiActions;
+type SingleActionTransaction = TransactionBase & SingleTransactionAction;
+type MultiActionsTransaction = TransactionBase & MultiTransactionActions;
 
 export type Transaction = SingleActionTransaction | MultiActionsTransaction;
 
 export type TransactionIntent = Prettify<
   {
     receiverAccountId: AccountId;
-  } & (SingleAction | MultiActions)
+  } & (SingleTransactionAction | MultiTransactionActions)
 >;
 
 export type SignedTransaction = {
@@ -71,7 +76,7 @@ export type SignedTransaction = {
 
 // Nearcore Transaction
 
-export type NearcoreAction =
+export type NearcoreTransactionAction =
   | NearcoreCreateAccountAction
   | NearcoreTransferAction
   | NearcoreAddKeyAction
@@ -79,12 +84,13 @@ export type NearcoreAction =
   | NearcoreFunctionCallAction
   | NearcoreStakeAction
   | NearcoreDeleteKeyAction
-  | NearcoreDeleteAccountAction;
+  | NearcoreDeleteAccountAction
+  | NearcoreExecuteDelegationAction;
 
 export type NearcoreTransaction = {
   signerId: AccountId;
   publicKey: NearcorePublicKey;
-  actions: NearcoreAction[];
+  actions: NearcoreTransactionAction[];
   receiverId: AccountId;
   nonce: bigint;
   blockHash: Uint8Array;

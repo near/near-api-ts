@@ -2,7 +2,7 @@ import * as z from 'zod/mini';
 import type {
   CreateDeleteAccountAction,
   SafeCreateDeleteAccountAction,
-} from '../../types/_common/transaction/actions/nonDelegateActions/deleteAccount';
+} from '../../types/_common/transaction/actions/delegableActions/deleteAccount';
 import { createNatError } from '../_common/_common/_common/_common/natError';
 import { result } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';

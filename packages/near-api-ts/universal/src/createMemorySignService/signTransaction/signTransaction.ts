@@ -13,10 +13,10 @@ import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import {
   SignedTransactionBorshSchema,
   TransactionBorshSchema,
-} from './borsh/transaction/transaction';
-import { toNearcoreSignature } from './toNearcore/signature';
-import { toNearcoreTransaction } from './toNearcore/transaction/transaction';
-import { TransactionZodSchema } from './zodSchemas/transaction/transaction';
+} from '../_common/borshSchemas/transaction/transaction';
+import { toNearcoreSignature } from '../_common/toNearcore/_common/toNearcoreSignature';
+import { toNearcoreTransaction } from '../_common/toNearcore/transaction';
+import { TransactionZodSchema } from '../_common/zodSchemas/transaction/transaction';
 
 const SignTransactionArgsSchema = z.object({
   transaction: TransactionZodSchema,
