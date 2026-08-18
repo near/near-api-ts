@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { TransactionZodSchema } from '../../../src/createMemorySignService/_common/zodSchemas/transaction/transaction';
+import { TransactionZodSchema } from '../../../src/transaction/_common/zodSchemas/transaction/transaction';
 
 const signerPublicKey = 'ed25519:AkTn58AmaJcF7L15WqKUUfm8fv5gwzSymHXg3EDRpC44';
 const blockHash = 'EDhhHZrpcbJ4RrswFrcsPjww9oa6LTruF5Q4Hq2dXYwP';

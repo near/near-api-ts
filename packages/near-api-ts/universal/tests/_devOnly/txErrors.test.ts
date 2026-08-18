@@ -12,7 +12,7 @@ import {
   randomEd25519KeyPair,
   transfer,
 } from '../../index';
-import { createAccount } from '../../src/actionCreators/createAccount';
+import { createAccount } from '../../src/transaction/actionCreators/createAccount';
 import type { Client } from '../../types/client/client';
 import type { MemorySignerFactory } from '../../types/signer/createMemorySigner';
 import type { MemorySigner } from '../../types/signer/memorySigner';

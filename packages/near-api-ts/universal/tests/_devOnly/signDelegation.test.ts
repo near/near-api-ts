@@ -1,113 +1,108 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { beforeAll, describe, it } from 'vitest';
-import { type Client, keyPair, signTransaction, transfer } from '../../index';
+import { beforeAll, describe, expect, it } from 'vitest';
 import {
-  safeSignDelegation,
+  type Client,
+  executeDelegation,
+  keyPair,
+  near,
   signDelegation,
-} from '../../src/createMemorySignService/signDelegation/signDelegation';
+  signTransaction,
+  transfer,
+} from '../../index';
 import { createDefaultClient, log } from '../utils/common';
-import { startSandbox } from '../utils/sandbox/startSandbox';
+import { MIN_GAS_PURCHASE_PRICE, startSandbox } from '../utils/sandbox/startSandbox';
 
-const kp = keyPair(DEFAULT_PRIVATE_KEY);
-
-describe('Full-scale delegation test', async () => {
+// `alice` signs a delegation, `relay` pays for it and sends it to the chain.
+describe('Full-scale delegation test', () => {
   let client: Client;
 
+  const aliceKp = keyPair(DEFAULT_PRIVATE_KEY);
+  const relayKp = keyPair(
+    'ed25519:3kDMsPd8EsgPNV2yarJFtKMvCtV4fN4MkwhaW5BXcNx4a2NhMjE8ycVb3Vu1yrhqZc31dCPHNNUYJV3UK9GbFFd6',
+  );
+
   beforeAll(async () => {
-    const sandbox = await startSandbox({ rpcPort: 4560 });
+    const sandbox = await startSandbox({ rpcPort: 4560, gasPrice: MIN_GAS_PURCHASE_PRICE });
     client = createDefaultClient(sandbox);
     return () => sandbox.stop();
   });
 
-  it('test', async () => {
-    const relayKp = keyPair(
-      'ed25519:3kDMsPd8EsgPNV2yarJFtKMvCtV4fN4MkwhaW5BXcNx4a2NhMjE8ycVb3Vu1yrhqZc31dCPHNNUYJV3UK9GbFFd6',
-    );
+  it('executes a delegated transfer paid by the relay', async () => {
+    const amount = near('1');
 
-    const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
-      accountId: 'relay',
-      publicKey: relayKp.publicKey,
+    // #1: The sender signs the delegation. The nonce is the sender's own access
+    // key nonce, the delegation is only valid up to `expireAt.blockHeight`.
+    const aliceAccessKey = await client.getAccountAccessKey({
+      accountId: 'alice',
+      publicKey: aliceKp.publicKey,
     });
+    const { rawRpcResult: block } = await client.getBlock();
 
-    const balanceBefore = await client.getAccountInfo({ accountId: 'relay' });
-    console.log('relay balance before:', balanceBefore.balance.total.near);
-
-    const aliceBalanceBefore = await client.getAccountInfo({ accountId: 'alice' });
-    console.log('alice balance before:', aliceBalanceBefore.balance.total.near);
-
-    const signedDelegation = await safeSignDelegation({
+    const signedDelegation = await signDelegation({
       delegation: {
-        senderAccountId: 'alice', // TODO delegatorAccountId
-        senderPublicKey: kp.publicKey,
+        senderAccountId: 'alice',
+        senderPublicKey: aliceKp.publicKey,
         delegatedAction: transfer({ amount: { near: '1' } }),
         receiverAccountId: 'bob',
-        nonce: 2,
-        expireAt: { blockHeight: 1000 },
+        nonce: aliceAccessKey.accountAccessKey.nonce + 1,
+        expireAt: { blockHeight: block.header.height + 100 },
       },
-      signDataProvider: kp,
+      signDataProvider: aliceKp,
     });
 
     log(signedDelegation);
 
-    return;
+    // #2: The relay wraps the signed delegation in its own transaction. The
+    // transaction receiver must be the delegation sender, or the node answers
+    // with DelegateActionSenderDoesNotMatchTxReceiver.
+    const relayAccessKey = await client.getAccountAccessKey({
+      accountId: 'relay',
+      publicKey: relayKp.publicKey,
+    });
+
+    const balancesBefore = {
+      alice: (await client.getAccountInfo({ accountId: 'alice' })).balance.total,
+      bob: (await client.getAccountInfo({ accountId: 'bob' })).balance.total,
+      relay: (await client.getAccountInfo({ accountId: 'relay' })).balance.total,
+    };
 
     const signedTransaction = await signTransaction({
       transaction: {
         signerAccountId: 'relay',
         signerPublicKey: relayKp.publicKey,
-        nonce: accountAccessKey.nonce + 1,
-        action: {
-          actionType: 'ExecuteDelegation',
-          delegation: signedDelegation.delegation,
-          signature: signedDelegation.signature,
-        },
+        nonce: relayAccessKey.accountAccessKey.nonce + 1,
+        action: executeDelegation({ signedDelegation }),
         receiverAccountId: signedDelegation.delegation.senderAccountId,
-        blockHash,
+        blockHash: relayAccessKey.blockHash,
       },
       signDataProvider: relayKp,
     });
 
-    const txRes = await client.sendSignedTransaction({ signedTransaction });
-    log(txRes);
+    // The delegation spawns a second receipt, so the balances only settle once
+    // every receipt of the transaction is executed.
+    // TODO: the transaction executes, but reading the result back fails - the
+    // client cannot summarize an ExecuteDelegation action yet (nested function
+    // call args need a deserialization story of their own). Until then this
+    // test asserts the on-chain effect instead of the returned details.
+    const txResult = await client.safeSendSignedTransaction({
+      signedTransaction,
+      minimalProcessingStage: 'CompletedFinal',
+    });
 
-    // const transactionBorsh = serialize(TransactionBorshSchema, transaction);
-    // const transactionHashU8 = sha256(transactionBorsh);
-    // const { signatureU8 } = await relayKp.signData({ dataU8: transactionHashU8 });
-    //
-    // const signedTransaction = {
-    //   transaction,
-    //   signature: { ed25519Signature: { data: signatureU8 } },
-    // };
-    //
-    // const signedTransactionBorsh64 = serialize(
-    //   SignedTransactionBorshSchema,
-    //   signedTransaction,
-    // ).toBase64();
-    //
-    // // # Send Signed Transaction
-    // const response = await fetch('http://localhost:4560', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     jsonrpc: '2.0',
-    //     id: 0,
-    //     method: 'send_tx',
-    //     params: {
-    //       signed_tx_base64: signedTransactionBorsh64,
-    //       wait_until: 'FINAL',
-    //     },
-    //   }),
-    // });
-    // const json = await response.json();
-    //
-    // log(json);
+    log(txResult);
 
-    const balanceAfter = await client.getAccountInfo({ accountId: 'relay' });
-    console.log('relay balance after:', balanceAfter.balance.total.near);
+    // #3: The relay prepays everything - both the fees and the delegated
+    // deposit (nearcore `total_deposit`, runtime/runtime/src/config.rs). The
+    // sender only pays if the delegated actions fail and the deposit is
+    // refunded back to it.
+    const balancesAfter = {
+      alice: (await client.getAccountInfo({ accountId: 'alice' })).balance.total,
+      bob: (await client.getAccountInfo({ accountId: 'bob' })).balance.total,
+      relay: (await client.getAccountInfo({ accountId: 'relay' })).balance.total,
+    };
 
-    const aliceBalanceAfter = await client.getAccountInfo({ accountId: 'alice' });
-    console.log('alice balance after:', aliceBalanceAfter.balance.total.near);
+    expect(balancesAfter.bob.yoctoNear).toBe(balancesBefore.bob.add(amount).yoctoNear);
+    expect(balancesAfter.alice.yoctoNear).toBe(balancesBefore.alice.yoctoNear);
+    expect(balancesBefore.relay.sub(balancesAfter.relay).gt(amount)).toBe(true);
   });
 });

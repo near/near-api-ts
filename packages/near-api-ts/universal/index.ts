@@ -27,40 +27,6 @@ export {
 // Zod Schemas
 export { AccountIdZodSchema } from './src/_common/zodSchemas/accountId';
 export { PublicKeyZodSchema } from './src/_common/zodSchemas/publicKey';
-// Action Creators
-export {
-  addFullAccessKey,
-  safeAddFullAccessKey,
-} from './src/actionCreators/addFullAccessKey';
-export {
-  safeAddFunctionCallKey,
-  throwableAddFunctionCallKey as addFunctionCallKey,
-} from './src/actionCreators/addFunctionCallKey';
-export { createAccount } from './src/actionCreators/createAccount';
-export {
-  safeDeleteAccount,
-  throwableDeleteAccount as deleteAccount,
-} from './src/actionCreators/deleteAccount';
-export {
-  safeDeleteKey,
-  throwableDeleteKey as deleteKey,
-} from './src/actionCreators/deleteKey';
-export {
-  safeDeployContract,
-  throwableDeployContract as deployContract,
-} from './src/actionCreators/deployContract';
-export {
-  safeFunctionCall,
-  throwableFunctionCall as functionCall,
-} from './src/actionCreators/functionCall';
-export {
-  safeStake,
-  throwableStake as stake,
-} from './src/actionCreators/stake';
-export {
-  safeTransfer,
-  throwableTransfer as transfer,
-} from './src/actionCreators/transfer';
 // Clients
 export {
   safeCreateClient,
@@ -97,11 +63,6 @@ export {
   randomSecp256k1KeyPair,
   safeRandomSecp256k1KeyPair,
 } from './src/createMemoryKeyService/toKeyPairs/keyPairs/randomSecp256k1KeyPair';
-// Helpers
-export {
-  safeSignTransaction,
-  signTransaction,
-} from './src/createMemorySignService/signTransaction/signTransaction';
 // Signers
 export {
   createMemorySigner as createMemorySigner,
@@ -121,6 +82,53 @@ export {
 } from './src/offchainMessage/verifyMessage/verifySignature';
 export { Base64StringZodSchema } from './src/offchainMessage/verifyMessage/zodSchemas/message/base64String';
 export { MessageZodSchema } from './src/offchainMessage/verifyMessage/zodSchemas/message/message';
+// Action Creators
+export {
+  addFullAccessKey,
+  safeAddFullAccessKey,
+} from './src/transaction/actionCreators/addFullAccessKey';
+export {
+  safeAddFunctionCallKey,
+  throwableAddFunctionCallKey as addFunctionCallKey,
+} from './src/transaction/actionCreators/addFunctionCallKey';
+export { createAccount } from './src/transaction/actionCreators/createAccount';
+export {
+  safeDeleteAccount,
+  throwableDeleteAccount as deleteAccount,
+} from './src/transaction/actionCreators/deleteAccount';
+export {
+  safeDeleteKey,
+  throwableDeleteKey as deleteKey,
+} from './src/transaction/actionCreators/deleteKey';
+export {
+  safeDeployContract,
+  throwableDeployContract as deployContract,
+} from './src/transaction/actionCreators/deployContract';
+export {
+  safeExecuteDelegation,
+  throwableExecuteDelegation as executeDelegation,
+} from './src/transaction/actionCreators/executeDelegation';
+export {
+  safeFunctionCall,
+  throwableFunctionCall as functionCall,
+} from './src/transaction/actionCreators/functionCall';
+export {
+  safeStake,
+  throwableStake as stake,
+} from './src/transaction/actionCreators/stake';
+export {
+  safeTransfer,
+  throwableTransfer as transfer,
+} from './src/transaction/actionCreators/transfer';
+// Helpers
+export {
+  safeSignDelegation,
+  signDelegation,
+} from './src/transaction/signDelegation';
+export {
+  safeSignTransaction,
+  signTransaction,
+} from './src/transaction/signTransaction';
 
 // Types
 
@@ -154,10 +162,12 @@ export type {
 export type { FunctionCallAction } from './types/_common/transaction/actions/delegableActions/functionCall';
 export type { TransferAction } from './types/_common/transaction/actions/delegableActions/transfer';
 export type {
+  DelegatedAction,
   Delegation,
   DelegationIntent,
   SignedDelegation,
 } from './types/_common/transaction/actions/executeDelegation/delegation';
+export type { ExecuteDelegationAction } from './types/_common/transaction/actions/executeDelegation/executeDelegation';
 export type {
   SignedTransaction,
   Transaction,

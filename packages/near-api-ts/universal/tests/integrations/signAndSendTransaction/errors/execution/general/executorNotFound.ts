@@ -1,7 +1,7 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
 import { transfer } from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/createMemorySignService/signTransaction/signTransaction';
+import { signTransaction } from '../../../../../../src/transaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from './general.test';

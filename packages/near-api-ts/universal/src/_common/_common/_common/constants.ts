@@ -24,10 +24,26 @@ export const NearDecimals = 24 as const;
 /** Fractional digits between the TeraGas and the gas units */
 export const TeraGasDecimals = 12 as const;
 
+export const Nep366MetaTransaction = {
+  /**
+   * `(1 << 30) + 366` - the delegation message tag. NEP-461 defines the tagging
+   * scheme (a u32 prefix over the borsh message, `1 << 30` being the start of
+   * the on-chain range), NEP-366 contributes the number that goes into it. The
+   * tag prefixes the bytes that get signed, never the bytes that go on the wire.
+   */
+  Tag: 1073742190,
+} as const;
+
 export const Nep413Message = {
   /** 2**31 + 413 */
   Tag: 2147484061,
   NonceLength: 32,
 } as const;
 
-export const constants = { NearDecimals, TeraGasDecimals, Nep413Message, BinaryLengths };
+export const constants = {
+  NearDecimals,
+  TeraGasDecimals,
+  Nep413Message,
+  Nep366MetaTransaction,
+  BinaryLengths,
+};

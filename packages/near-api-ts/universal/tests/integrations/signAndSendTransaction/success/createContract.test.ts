@@ -10,7 +10,7 @@ import {
   type MemoryKeyService,
   transfer,
 } from '../../../../index';
-import { signTransaction } from '../../../../src/createMemorySignService/signTransaction/signTransaction';
+import { signTransaction } from '../../../../src/transaction/signTransaction';
 import { createDefaultClient, getFileBytes, log } from '../../../utils/common';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
 import { testKeys } from '../../../utils/testKeys';

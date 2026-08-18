@@ -1,7 +1,7 @@
 import { base58 } from '@scure/base';
 import { expect, test } from 'vitest';
 import { randomEd25519KeyPair, verifySignature } from '../../../../index';
-import { signTransaction } from '../../../../src/createMemorySignService/signTransaction/signTransaction';
+import { signTransaction } from '../../../../src/transaction/signTransaction';
 
 test('ed25519 transaction verification', async () => {
   const keyPair = randomEd25519KeyPair();

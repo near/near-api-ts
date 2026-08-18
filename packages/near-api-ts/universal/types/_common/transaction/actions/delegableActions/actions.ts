@@ -1,4 +1,4 @@
-import type { CreateSignedDelegateActionPublicErrorRegistry } from '../executeDelegation/executeDelegation';
+import type { CreateExecuteDelegationActionPublicErrorRegistry } from '../executeDelegation/executeDelegation';
 import type { CreateAddKeyActionPublicErrorRegistry } from './addKey';
 import type { CreateDeleteActionPublicErrorRegistry } from './deleteAccount';
 import type { CreateDeleteKeyActionPublicErrorRegistry } from './deleteKey';
@@ -15,4 +15,4 @@ export interface ActionsPublicErrorRegistry
     CreateDeployContractActionPublicErrorRegistry,
     CreateDeleteKeyActionPublicErrorRegistry,
     CreateDeleteActionPublicErrorRegistry,
-    CreateSignedDelegateActionPublicErrorRegistry {}
+    CreateExecuteDelegationActionPublicErrorRegistry {}

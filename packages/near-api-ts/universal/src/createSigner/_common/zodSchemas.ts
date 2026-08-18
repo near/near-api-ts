@@ -3,7 +3,7 @@ import { AccountIdZodSchema } from '../../_common/zodSchemas/accountId';
 import {
   MultiTransactionActionsZodSchema,
   SingleTransactionActionZodSchema,
-} from '../../createMemorySignService/_common/zodSchemas/transaction/transaction';
+} from '../../transaction/_common/zodSchemas/transaction/transaction';
 
 export const TransactionIntentZodSchema = z.union([
   z.object({

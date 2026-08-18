@@ -16,8 +16,8 @@ import {
   stake,
   transfer,
 } from '../../index';
-import { createAccount } from '../../src/actionCreators/createAccount';
 import { safeSleep } from '../../src/createClient/createTransport/createSendRequest/_common/_common/sleep';
+import { createAccount } from '../../src/transaction/actionCreators/createAccount';
 import type { Client } from '../../types/client/client';
 import type { MemorySignerFactory } from '../../types/signer/createMemorySigner';
 import { createDefaultClient, log } from '../utils/common';

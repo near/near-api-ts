@@ -54,16 +54,23 @@ export type MultiDelegatedActions = {
   delegatedActions: DelegatedAction[];
 };
 
+type DelegationBase = {
+  senderAccountId: AccountId;
+  senderPublicKey: PublicKey;
+  receiverAccountId: AccountId;
+  nonce: TransactionNonce;
+  expireAt: { blockHeight: BlockHeight };
+};
+
+export type Delegation = Prettify<DelegationBase & (SingleDelegatedAction | MultiDelegatedActions)>;
+
 export type SignedDelegation = {
-  delegation: {
-    tag: number;
-    senderAccountId: AccountId;
-    senderPublicKey: PublicKey;
-    delegatedActions: DelegatedAction[];
-    receiverAccountId: AccountId;
-    nonce: TransactionNonce;
-    expireAt: { blockHeight: BlockHeight };
-  };
+  /**
+   * The signed delegation, normalized - whichever of `delegatedAction` /
+   * `delegatedActions` was passed in, the signed value carries the action list.
+   * `tag` is the message tag the signature was made over.
+   */
+  delegation: Prettify<{ tag: number; delegatedActions: DelegatedAction[] } & DelegationBase>;
   signature: Signature;
   signedDelegationBorsh64: Base64String;
 };
@@ -89,14 +96,16 @@ export type NearcoreDelegableAction =
   | NearcoreDeleteKeyAction
   | NearcoreDeleteAccountAction;
 
+// Field order follows the nearcore `DelegateAction` declaration, which is the
+// order the borsh schemas serialize these in. `tag` is the signing-only prefix.
 export type NearcoreDelegation = {
   tag: number;
-  signerId: AccountId;
-  publicKey: NearcorePublicKey;
-  actions: NearcoreDelegableAction[];
+  senderId: AccountId;
   receiverId: AccountId;
+  actions: NearcoreDelegableAction[];
   nonce: bigint;
   maxBlockHeight: number;
+  publicKey: NearcorePublicKey;
 };
 
 export type NearcoreSignedDelegation = {

@@ -4,13 +4,13 @@ import { serialize } from 'borsh';
 import {
   SignedTransactionBorshSchema,
   TransactionBorshSchema,
-} from '../../../../../../../src/createMemorySignService/_common/borshSchemas/transaction/transaction';
-import { toNearcoreSignature } from '../../../../../../../src/createMemorySignService/_common/toNearcore/_common/toNearcoreSignature';
-import { toNearcoreTransaction } from '../../../../../../../src/createMemorySignService/_common/toNearcore/transaction';
+} from '../../../../../../../src/transaction/_common/borshSchemas/transaction/transaction';
+import { toNearcoreSignature } from '../../../../../../../src/transaction/_common/toNearcore/_common/signature';
+import { toNearcoreTransaction } from '../../../../../../../src/transaction/_common/toNearcore/transaction';
 import {
   type InnerTransaction,
   TransactionZodSchema,
-} from '../../../../../../../src/createMemorySignService/_common/zodSchemas/transaction/transaction';
+} from '../../../../../../../src/transaction/_common/zodSchemas/transaction/transaction';
 import type { KeyPair } from '../../../../../../../types/_common/keyPairs/keyPair';
 import type { NearcoreSignedTransaction } from '../../../../../../../types/_common/transaction/transaction';
 
