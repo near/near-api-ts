@@ -6,7 +6,7 @@ import {
   functionCall,
   transfer,
 } from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/transaction/signTransaction';
+import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import { getFileBytes } from '../../../../../utils/common';

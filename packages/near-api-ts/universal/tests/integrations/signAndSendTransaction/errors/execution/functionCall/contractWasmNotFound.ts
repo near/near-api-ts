@@ -1,6 +1,6 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { functionCall } from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/transaction/signTransaction';
+import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import type { TestContext } from './functionCall.test';

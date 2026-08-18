@@ -128,7 +128,7 @@ export {
 export {
   safeSignTransaction,
   signTransaction,
-} from './src/transaction/signTransaction';
+} from './src/transaction/signTransaction/signTransaction';
 
 // Types
 

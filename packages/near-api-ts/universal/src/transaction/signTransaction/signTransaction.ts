@@ -5,18 +5,18 @@ import * as z from 'zod/mini';
 import type {
   SafeSignTransaction,
   SignTransaction,
-} from '../../types/_common/transaction/signTransaction';
-import type { NearcoreSignedTransaction } from '../../types/_common/transaction/transaction';
-import { result, resultNatError } from '../_common/_common/_common/result';
-import { asThrowable } from '../_common/_common/asThrowable';
-import { wrapInternalError } from '../_common/_common/wrapInternalError';
+} from '../../../types/_common/transaction/signTransaction';
+import type { NearcoreSignedTransaction } from '../../../types/_common/transaction/transaction';
+import { result, resultNatError } from '../../_common/_common/_common/result';
+import { asThrowable } from '../../_common/_common/asThrowable';
+import { wrapInternalError } from '../../_common/_common/wrapInternalError';
+import { toNearcoreSignature } from '../_common/toNearcore/signature';
+import { TransactionZodSchema } from '../_common/zodSchemas/transaction/transaction';
 import {
   SignedTransactionBorshSchema,
   TransactionBorshSchema,
-} from './_common/borshSchemas/transaction/transaction';
-import { toNearcoreSignature } from './_common/toNearcore/_common/signature';
-import { toNearcoreTransaction } from './_common/toNearcore/transaction';
-import { TransactionZodSchema } from './_common/zodSchemas/transaction/transaction';
+} from './borshSchemas/transaction/transaction';
+import { toNearcoreTransaction } from './toNearcore/transaction/transaction';
 
 const SignTransactionArgsSchema = z.object({
   transaction: TransactionZodSchema,

@@ -1,5 +1,5 @@
 import { deployContract } from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/transaction/signTransaction';
+import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertUnmappedInvalidTxError } from '../../../../../utils/assertUnmappedInvalidTxError';
 import type { TestContext } from './general.test';
 

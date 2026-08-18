@@ -1,4 +1,4 @@
-import { PublicKeyBorshSchema } from '../_common/publicKey';
+import { PublicKeyBorshSchema } from '../../_common/borshSchemas/publicKey';
 
 export const DeleteKeyActionBorshSchema = {
   struct: {

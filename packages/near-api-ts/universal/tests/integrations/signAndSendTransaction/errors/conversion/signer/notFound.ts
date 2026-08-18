@@ -1,6 +1,6 @@
 import { expect } from 'vitest';
 import { randomEd25519KeyPair, transfer } from '../../../../../../index';
-import { signTransaction } from '../../../../../../src/transaction/signTransaction';
+import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import type { TestContext } from './signer.test';
 

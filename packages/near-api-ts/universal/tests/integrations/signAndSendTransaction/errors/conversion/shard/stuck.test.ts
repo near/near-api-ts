@@ -2,7 +2,7 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { describe, expect, it } from 'vitest';
 import { keyPair, near, transfer } from '../../../../../../index';
 import { safeSleep } from '../../../../../../src/createClient/createTransport/createSendRequest/_common/_common/sleep';
-import { signTransaction } from '../../../../../../src/transaction/signTransaction';
+import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import {
   assertUnmappedInvalidTxError,
   getUnmappedInvalidTxError,

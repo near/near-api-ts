@@ -262,23 +262,38 @@ Depth means foundational, not obscure.
 
 ## Known deviation
 
-`createMemorySignService/` has no entry file yet, so it is currently a group folder rather
-than a feature root. Two consequences, both temporary:
+`src/transaction/` groups the action creators, `signTransaction/`, `signDelegation/` and
+the schema trees all three share. It is a feature root without an entry file, so it stays
+a group folder, and `createSigner` reaches past that into its interior. Two consequences,
+both temporary:
 
-- `signTransaction/zodSchemas/transaction/transaction.ts` exports `TransactionIntentZodSchema`,
-  which `createSigner/createSignTransaction.ts` and `createSigner/createExecuteTransaction.ts`
-  import. That reaches into `signTransaction/`'s private interior — the only illegal edges
-  in the package.
+- `_common/zodSchemas/transaction/transaction.ts` exports `TransactionIntentZodSchema`,
+  which `createSigner/createSignTransaction.ts`, `createSigner/createExecuteTransaction.ts`
+  and `createSigner/_common/zodSchemas.ts` import. That reaches into `transaction/`'s
+  `_common` — the only illegal edges in the package. It is also the fourth consumer that
+  keeps that module from sinking into `signTransaction/`.
 - `signTransaction/signTransaction.ts` is consumed by two modules in
   `createSigner/createTasker/executeTask/executors/`, so the algorithm would move the whole
   `signTransaction/` folder under `executors/_common/`.
 
-Both close the same way: give `createMemorySignService/` its entry factory and have
-`createSigner` consume that instead of reaching in. Until then, do not restructure around
-these two, and do not add new cross-feature imports like them.
+Both close the same way: give `transaction/` an entry factory and have `createSigner`
+consume that instead of reaching in. Until then, do not restructure around these two, and
+do not add new cross-feature imports like them. They are the five entries in
+`scripts/modulePlacement.allow.json`; everything else conforms.
+
+Why the grouping matters: while the action creators sat at `src/actionCreators/`, the
+schemas they share with the sign modules had their LCA at `src/`, which lands them in
+`src/_common/`'s ladder — at layer 3, importing `accountId` and `nearToken`, which their
+own layer-0 consumers pin at layer 1. That is unsatisfiable without sinking the primitive
+ladder. Under one feature root the schema ladder is owned by `src/transaction` and is never
+compared against `src`'s, since the layering check only spans same-owner edges. When a
+module is wanted both by feature code and by something inside `src/_common/`, move the
+consumers under a shared root rather than hoisting the module up.
 
 ## Self-check
 
 1. Did I classify every import as value vs type-only *before* counting consumers?
 2. Did I rewrite every relative import path to the modules I moved, in the same change?
-3. Did I re-run `pnpm check:placement` and get the same finding count I started with?
+3. Did I re-run `pnpm check:placement` and get `conforms` back? The tree has no findings
+   outside the allowlist, so any new one is mine to fix — and a move can shift a module
+   whose own consumers never changed, so re-run until it stops reporting.

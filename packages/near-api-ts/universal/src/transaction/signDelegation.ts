@@ -14,9 +14,9 @@ import { DelegationZodSchema } from './_common/_common/zodSchemas/delegation';
 import {
   DelegationBorshSchema,
   SignedDelegationBorshSchema,
-} from './_common/borshSchemas/transaction/executeDelegation/delegation';
-import { toNearcoreSignature } from './_common/toNearcore/_common/signature';
-import { toNearcoreDelegation } from './_common/toNearcore/executeDelegation/delegation';
+} from './_common/borshSchemas/delegation';
+import { toNearcoreDelegation } from './_common/toNearcore/delegation';
+import { toNearcoreSignature } from './_common/toNearcore/signature';
 
 const SignDelegationArgsSchema = z.object({
   delegation: DelegationZodSchema,

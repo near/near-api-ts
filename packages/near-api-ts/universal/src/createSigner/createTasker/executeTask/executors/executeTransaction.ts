@@ -10,7 +10,7 @@ import {
 } from '../../../../_common/_common/_common/_common/natError';
 import { result } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
-import { signTransaction as signTransactionHelper } from '../../../../transaction/signTransaction';
+import { signTransaction as signTransactionHelper } from '../../../../transaction/signTransaction/signTransaction';
 
 type Attempt = (
   attemptIndex: number,

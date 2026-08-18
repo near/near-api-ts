@@ -1,5 +1,5 @@
-import type { NearcoreSignature } from '../../../../../types/_common/crypto';
-import type { InnerSignature } from '../../../../_common/zodSchemas/signature';
+import type { NearcoreSignature } from '../../../../types/_common/crypto';
+import type { InnerSignature } from '../../../_common/zodSchemas/signature';
 
 export const toNearcoreSignature = ({ signatureU8, curve }: InnerSignature): NearcoreSignature => {
   switch (curve) {

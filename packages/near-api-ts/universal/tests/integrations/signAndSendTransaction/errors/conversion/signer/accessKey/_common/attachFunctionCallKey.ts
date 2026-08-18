@@ -1,5 +1,5 @@
 import { addFunctionCallKey, randomEd25519KeyPair } from '../../../../../../../../index';
-import { signTransaction } from '../../../../../../../../src/transaction/signTransaction';
+import { signTransaction } from '../../../../../../../../src/transaction/signTransaction/signTransaction';
 import type { CreateAddFunctionCallKeyActionArgs } from '../../../../../../../../types/_common/transaction/actions/delegableActions/addKey';
 import type { TestContext } from '../../signer.test';
 

@@ -1,6 +1,6 @@
 import { expect } from 'vitest';
 import { functionCall, teraGas } from '../../../../../../../index';
-import { signTransaction } from '../../../../../../../src/transaction/signTransaction';
+import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import type { TestContext } from '../actions.test';
 
