@@ -7,19 +7,20 @@
 //   placement     — Rule 1 (ownership) + Rule 2 (layer depth)
 //   layering      — a _common module imports from an equal-or-shallower layer of the same owner
 //
-// Known non-conformances live in scripts/modulePlacement.allow.json. An entry that no
-// longer matches a finding is itself an error, so the allowlist deletes itself as the
-// tree is fixed.
+// Known non-conformances live in allow.json next to this file. An entry that no longer
+// matches a finding is itself an error, so the allowlist deletes itself as the tree is
+// fixed.
 //
-// Usage: node scripts/checkModulePlacement.mjs [--json] [--list]
+// Usage: node scripts/checkModulePlacement/checkModulePlacement.mjs [--json] [--list]
 
 import fs from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
 
-const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..');
+const HERE = path.dirname(url.fileURLToPath(import.meta.url));
+const ROOT = path.resolve(HERE, '../..');
 const PKG = path.join(ROOT, 'packages/near-api-ts/universal');
-const ALLOW_FILE = path.join(ROOT, 'scripts/modulePlacement.allow.json');
+const ALLOW_FILE = path.join(HERE, 'allow.json');
 const JSON_OUT = process.argv.includes('--json');
 const LIST = process.argv.includes('--list');
 

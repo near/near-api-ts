@@ -283,7 +283,7 @@ both temporary:
 Both close the same way: give `transaction/` an entry factory and have `createSigner`
 consume that instead of reaching in. Until then, do not restructure around these two, and
 do not add new cross-feature imports like them. They are the three entries in
-`scripts/modulePlacement.allow.json`; everything else conforms.
+`scripts/checkModulePlacement/allow.json`; everything else conforms.
 
 Why the grouping matters: while the action creators sat at `src/actionCreators/`, the
 schemas they share with the sign modules had their LCA at `src/`, which lands them in

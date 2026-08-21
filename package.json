@@ -7,7 +7,7 @@
     "dev": "pnpm -r --parallel dev",
     "typecheck": "pnpm -r typecheck",
     "lint:fix": "biome check --write .",
-    "check:placement": "node scripts/checkModulePlacement.mjs",
+    "check:placement": "node scripts/checkModulePlacement/checkModulePlacement.mjs",
     "sandbox:start": "tsx scripts/start-sandbox.ts",
     "sandbox:stop": "kill-port 4567"
   },
