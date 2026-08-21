@@ -267,18 +267,20 @@ the schema trees all three share. It is a feature root without an entry file, so
 a group folder, and `createSigner` reaches past that into its interior. Two consequences,
 both temporary:
 
-- `_common/zodSchemas/transaction/transaction.ts` exports `TransactionIntentZodSchema`,
-  which `createSigner/createSignTransaction.ts`, `createSigner/createExecuteTransaction.ts`
-  and `createSigner/_common/zodSchemas.ts` import. That reaches into `transaction/`'s
-  `_common` — the only illegal edges in the package. It is also the fourth consumer that
-  keeps that module from sinking into `signTransaction/`.
+- `createSigner/_common/zodSchemas.ts` builds `TransactionIntentZodSchema` out of
+  `SingleTransactionActionZodSchema` and `MultiTransactionActionsZodSchema`, which
+  `_common/zodSchemas/transaction/transaction.ts` exports. That reaches into
+  `transaction/`'s `_common` — the only illegal edge in the package. It is also the second
+  value consumer that keeps that module from sinking into `signTransaction/`: the only
+  other one is `signTransaction.ts` itself, since `toNearcore/transaction/transaction.ts`
+  imports from it `type`-only and so is not a consumer at all.
 - `signTransaction/signTransaction.ts` is consumed by two modules in
   `createSigner/createTasker/executeTask/executors/`, so the algorithm would move the whole
   `signTransaction/` folder under `executors/_common/`.
 
 Both close the same way: give `transaction/` an entry factory and have `createSigner`
 consume that instead of reaching in. Until then, do not restructure around these two, and
-do not add new cross-feature imports like them. They are the five entries in
+do not add new cross-feature imports like them. They are the three entries in
 `scripts/modulePlacement.allow.json`; everything else conforms.
 
 Why the grouping matters: while the action creators sat at `src/actionCreators/`, the
