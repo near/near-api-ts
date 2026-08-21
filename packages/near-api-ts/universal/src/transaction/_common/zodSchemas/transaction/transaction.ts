@@ -57,14 +57,3 @@ export const TransactionZodSchema = z.union([
 ]);
 
 export type InnerTransaction = z.infer<typeof TransactionZodSchema>;
-
-export const TransactionIntentZodSchema = z.union([
-  z.object({
-    receiverAccountId: AccountIdZodSchema,
-    ...SingleTransactionActionZodSchema.shape,
-  }),
-  z.object({
-    receiverAccountId: AccountIdZodSchema,
-    ...MultiTransactionActionsZodSchema.shape,
-  }),
-]);
