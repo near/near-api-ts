@@ -1,5 +1,5 @@
 import * as z from 'zod/mini';
-import { PublicKeyZodSchema } from '../../../../../../_common/zodSchemas/publicKey';
+import { PublicKeyZodSchema } from '../../../../_common/zodSchemas/publicKey';
 
 export const DeleteKeyActionZodSchema = z.object({
   actionType: z.literal('DeleteKey'),

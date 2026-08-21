@@ -1,16 +1,16 @@
 import type { Schema } from 'borsh';
 import { PublicKeyBorshSchema } from '../_common/_common/borshSchemas/publicKey';
-import { AddKeyActionBorshSchema } from '../_common/borshSchemas/delegableActions/addKey';
-import { CreateAccountActionBorshSchema } from '../_common/borshSchemas/delegableActions/createAccount';
-import { DeleteAccountActionBorshSchema } from '../_common/borshSchemas/delegableActions/deleteAccount';
-import { DeleteKeyActionBorshSchema } from '../_common/borshSchemas/delegableActions/deleteKey';
-import { DeployContractActionBorshSchema } from '../_common/borshSchemas/delegableActions/deployContract';
-import { DeployGlobalContractActionBorshSchema } from '../_common/borshSchemas/delegableActions/deployGlobalContract';
-import { FunctionCallActionBorshSchema } from '../_common/borshSchemas/delegableActions/functionCall';
-import { StakeActionBorshSchema } from '../_common/borshSchemas/delegableActions/stake';
-import { TransferActionBorshSchema } from '../_common/borshSchemas/delegableActions/transfer';
-import { UseGlobalContractActionBorshSchema } from '../_common/borshSchemas/delegableActions/useGlobalContract';
+import { AddKeyActionBorshSchema } from '../_common/borshSchemas/addKey';
+import { CreateAccountActionBorshSchema } from '../_common/borshSchemas/createAccount';
+import { DeleteAccountActionBorshSchema } from '../_common/borshSchemas/deleteAccount';
+import { DeleteKeyActionBorshSchema } from '../_common/borshSchemas/deleteKey';
+import { DeployContractActionBorshSchema } from '../_common/borshSchemas/deployContract';
+import { DeployGlobalContractActionBorshSchema } from '../_common/borshSchemas/deployGlobalContract';
+import { FunctionCallActionBorshSchema } from '../_common/borshSchemas/functionCall';
 import { SignatureBorshSchema } from '../_common/borshSchemas/signature';
+import { StakeActionBorshSchema } from '../_common/borshSchemas/stake';
+import { TransferActionBorshSchema } from '../_common/borshSchemas/transfer';
+import { UseGlobalContractActionBorshSchema } from '../_common/borshSchemas/useGlobalContract';
 
 // Delegation cannot contain another ExecuteDelegation action;
 // But we have to keep it to make sure that the enum is the same as in nearcore

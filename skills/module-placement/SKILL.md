@@ -269,11 +269,13 @@ both temporary:
 
 - `createSigner/_common/zodSchemas.ts` builds `TransactionIntentZodSchema` out of
   `SingleTransactionActionZodSchema` and `MultiTransactionActionsZodSchema`, which
-  `_common/zodSchemas/transaction/transaction.ts` exports. That reaches into
-  `transaction/`'s `_common` — the only illegal edge in the package. It is also the second
-  value consumer that keeps that module from sinking into `signTransaction/`: the only
-  other one is `signTransaction.ts` itself, since `toNearcore/transaction/transaction.ts`
-  imports from it `type`-only and so is not a consumer at all.
+  `signTransaction/zodSchemas/transaction/transaction.ts` exports. That reaches into
+  `signTransaction/`'s interior — the only illegal edge in the package. The module sits
+  there because of its one legitimate consumer, `signTransaction.ts` (Rule 1, `|C| == 1`);
+  `toNearcoreTransaction/toNearcoreTransaction.ts` imports from it `type`-only and so is
+  not a consumer at all. Counting the `createSigner` edge instead would put the LCA at
+  `src/` and drag the whole zod ladder into `src/_common/`'s — see "Why the grouping
+  matters" below.
 - `signTransaction/signTransaction.ts` is consumed by two modules in
   `createSigner/createTasker/executeTask/executors/`, so the algorithm would move the whole
   `signTransaction/` folder under `executors/_common/`.

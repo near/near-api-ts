@@ -12,7 +12,7 @@ import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
 import {
   AllowedFunctionsSchema,
   GasBudgetZodSchema,
-} from '../_common/_common/_common/_common/zodSchemas/accessKey';
+} from '../_common/_common/_common/zodSchemas/accessKey';
 
 export const CreateAddFunctionCallKeyActionArgsSchema = z.object({
   publicKey: PublicKeyZodSchema,

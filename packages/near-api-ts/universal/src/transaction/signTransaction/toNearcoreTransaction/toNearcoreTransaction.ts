@@ -1,21 +1,21 @@
 import type {
   NearcoreTransaction,
   NearcoreTransactionAction,
-} from '../../../../../types/_common/transaction/transaction';
-import { toNearcorePublicKey } from '../../../_common/_common/_common/toNearcore/publicKey';
-import { toNearcoreAddKeyAction } from '../../../_common/_common/toNearcore/delegableActions/addKey';
-import { toNearcoreCreateAccountAction } from '../../../_common/_common/toNearcore/delegableActions/createAccount';
-import { toNearcoreDeleteAccountAction } from '../../../_common/_common/toNearcore/delegableActions/deleteAccount';
-import { toNearcoreDeleteKeyAction } from '../../../_common/_common/toNearcore/delegableActions/deleteKey';
-import { toNearcoreDeployContractAction } from '../../../_common/_common/toNearcore/delegableActions/deployContract';
-import { toNearcoreFunctionCallAction } from '../../../_common/_common/toNearcore/delegableActions/functionCall';
-import { toNearcoreStakeAction } from '../../../_common/_common/toNearcore/delegableActions/stake';
-import { toNearcoreTransferAction } from '../../../_common/_common/toNearcore/delegableActions/transfer';
+} from '../../../../types/_common/transaction/transaction';
+import { toNearcorePublicKey } from '../../_common/_common/_common/toNearcore/toNearcorePublicKey';
+import { toNearcoreAddKeyAction } from '../../_common/_common/toNearcore/toNearcoreAddKey';
+import { toNearcoreCreateAccountAction } from '../../_common/_common/toNearcore/toNearcoreCreateAccount';
+import { toNearcoreDeleteAccountAction } from '../../_common/_common/toNearcore/toNearcoreDeleteAccount';
+import { toNearcoreDeleteKeyAction } from '../../_common/_common/toNearcore/toNearcoreDeleteKey';
+import { toNearcoreDeployContractAction } from '../../_common/_common/toNearcore/toNearcoreDeployContract';
+import { toNearcoreFunctionCallAction } from '../../_common/_common/toNearcore/toNearcoreFunctionCall';
+import { toNearcoreStakeAction } from '../../_common/_common/toNearcore/toNearcoreStake';
+import { toNearcoreTransferAction } from '../../_common/_common/toNearcore/toNearcoreTransfer';
 import type {
   InnerTransaction,
   InnerTransactionAction,
-} from '../../../_common/zodSchemas/transaction/transaction';
-import { toNearcoreExecuteDelegation } from './executeDelegation';
+} from '../zodSchemas/transaction/transaction';
+import { toNearcoreExecuteDelegation } from './toNearcoreExecuteDelegation';
 
 const toNearcoreTransactionAction = (action: InnerTransactionAction): NearcoreTransactionAction => {
   switch (action.actionType) {

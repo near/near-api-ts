@@ -1,5 +1,5 @@
 import * as z from 'zod/mini';
-import { AccountIdZodSchema } from '../../../../../../_common/zodSchemas/accountId';
+import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
 
 export const DeleteAccountActionZodSchema = z.object({
   actionType: z.literal('DeleteAccount'),

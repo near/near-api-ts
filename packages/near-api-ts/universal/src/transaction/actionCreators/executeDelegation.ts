@@ -7,7 +7,7 @@ import { createNatError } from '../../_common/_common/_common/_common/natError';
 import { result } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
-import { SignedDelegationZodSchema } from '../_common/_common/zodSchemas/delegation';
+import { SignedDelegationZodSchema } from '../_common/zodSchemas/delegation';
 
 export const CreateExecuteDelegationActionArgsSchema = z.object({
   signedDelegation: SignedDelegationZodSchema,

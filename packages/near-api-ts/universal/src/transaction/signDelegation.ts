@@ -10,13 +10,13 @@ import { constants } from '../_common/_common/_common/constants';
 import { result, resultNatError } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
-import { DelegationZodSchema } from './_common/_common/zodSchemas/delegation';
 import {
   DelegationBorshSchema,
   SignedDelegationBorshSchema,
 } from './_common/borshSchemas/delegation';
-import { toNearcoreDelegation } from './_common/toNearcore/delegation';
-import { toNearcoreSignature } from './_common/toNearcore/signature';
+import { toNearcoreDelegation } from './_common/toNearcore/toNearcoreDelegation';
+import { toNearcoreSignature } from './_common/toNearcore/toNearcoreSignature';
+import { DelegationZodSchema } from './_common/zodSchemas/delegation';
 
 const SignDelegationArgsSchema = z.object({
   delegation: DelegationZodSchema,

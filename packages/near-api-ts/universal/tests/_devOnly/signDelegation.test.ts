@@ -44,7 +44,7 @@ describe('Full-scale delegation test', () => {
         delegatedAction: transfer({ amount: { near: '1' } }),
         receiverAccountId: 'bob',
         nonce: aliceAccessKey.accountAccessKey.nonce + 1,
-        expireAt: { blockHeight:aliceAccessKey.blockHeight + 100 },
+        expireAt: { blockHeight: aliceAccessKey.blockHeight + 100 },
       },
       signDataProvider: aliceKp,
     });

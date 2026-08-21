@@ -1,7 +1,7 @@
-import type { NearcoreFunctionCallAction } from '../../../../../../types/_common/transaction/actions/delegableActions/functionCall';
-import { nearGas } from '../../../../../_common/nearGas';
-import { nearToken } from '../../../../../_common/nearToken';
-import type { InnerFunctionCallAction } from '../../../_common/_common/zodSchemas/delegableActions/functionCall';
+import type { NearcoreFunctionCallAction } from '../../../../../types/_common/transaction/actions/delegableActions/functionCall';
+import { nearGas } from '../../../../_common/nearGas';
+import { nearToken } from '../../../../_common/nearToken';
+import type { InnerFunctionCallAction } from '../zodSchemas/functionCall';
 
 export const toNearcoreFunctionCallAction = (
   action: InnerFunctionCallAction,

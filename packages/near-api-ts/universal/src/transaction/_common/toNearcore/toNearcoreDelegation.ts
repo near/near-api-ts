@@ -3,16 +3,16 @@ import type {
   NearcoreDelegation,
 } from '../../../../types/_common/transaction/actions/executeDelegation/delegation';
 import { constants } from '../../../_common/_common/_common/constants';
-import { toNearcorePublicKey } from '../_common/_common/toNearcore/publicKey';
-import { toNearcoreAddKeyAction } from '../_common/toNearcore/delegableActions/addKey';
-import { toNearcoreCreateAccountAction } from '../_common/toNearcore/delegableActions/createAccount';
-import { toNearcoreDeleteAccountAction } from '../_common/toNearcore/delegableActions/deleteAccount';
-import { toNearcoreDeleteKeyAction } from '../_common/toNearcore/delegableActions/deleteKey';
-import { toNearcoreDeployContractAction } from '../_common/toNearcore/delegableActions/deployContract';
-import { toNearcoreFunctionCallAction } from '../_common/toNearcore/delegableActions/functionCall';
-import { toNearcoreStakeAction } from '../_common/toNearcore/delegableActions/stake';
-import { toNearcoreTransferAction } from '../_common/toNearcore/delegableActions/transfer';
-import type { InnerDelegatedAction, InnerDelegation } from '../_common/zodSchemas/delegation';
+import { toNearcorePublicKey } from '../_common/_common/toNearcore/toNearcorePublicKey';
+import { toNearcoreAddKeyAction } from '../_common/toNearcore/toNearcoreAddKey';
+import { toNearcoreCreateAccountAction } from '../_common/toNearcore/toNearcoreCreateAccount';
+import { toNearcoreDeleteAccountAction } from '../_common/toNearcore/toNearcoreDeleteAccount';
+import { toNearcoreDeleteKeyAction } from '../_common/toNearcore/toNearcoreDeleteKey';
+import { toNearcoreDeployContractAction } from '../_common/toNearcore/toNearcoreDeployContract';
+import { toNearcoreFunctionCallAction } from '../_common/toNearcore/toNearcoreFunctionCall';
+import { toNearcoreStakeAction } from '../_common/toNearcore/toNearcoreStake';
+import { toNearcoreTransferAction } from '../_common/toNearcore/toNearcoreTransfer';
+import type { InnerDelegatedAction, InnerDelegation } from '../zodSchemas/delegation';
 
 const toNearcoreDelegableAction = (action: InnerDelegatedAction): NearcoreDelegableAction => {
   switch (action.actionType) {

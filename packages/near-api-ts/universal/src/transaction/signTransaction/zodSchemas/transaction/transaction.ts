@@ -3,14 +3,14 @@ import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
 import { CryptoHashZodSchema } from '../../../../_common/zodSchemas/cryptoHash';
 import { PublicKeyZodSchema } from '../../../../_common/zodSchemas/publicKey';
 import { TransactionNonceZodSchema } from '../../../../_common/zodSchemas/transactionNonce';
-import { AddKeyActionZodSchema } from '../../_common/_common/zodSchemas/delegableActions/addKey';
-import { CreateAccountActionZodSchema } from '../../_common/_common/zodSchemas/delegableActions/createAccount';
-import { DeleteAccountActionZodSchema } from '../../_common/_common/zodSchemas/delegableActions/deleteAccount';
-import { DeleteKeyActionZodSchema } from '../../_common/_common/zodSchemas/delegableActions/deleteKey';
-import { DeployContractActionZodSchema } from '../../_common/_common/zodSchemas/delegableActions/deployContract';
-import { FunctionCallActionZodSchema } from '../../_common/_common/zodSchemas/delegableActions/functionCall';
-import { StakeActionZodSchema } from '../../_common/_common/zodSchemas/delegableActions/stake';
-import { TransferActionZodSchema } from '../../_common/_common/zodSchemas/delegableActions/transfer';
+import { AddKeyActionZodSchema } from '../../../_common/_common/zodSchemas/addKey';
+import { CreateAccountActionZodSchema } from '../../../_common/_common/zodSchemas/createAccount';
+import { DeleteAccountActionZodSchema } from '../../../_common/_common/zodSchemas/deleteAccount';
+import { DeleteKeyActionZodSchema } from '../../../_common/_common/zodSchemas/deleteKey';
+import { DeployContractActionZodSchema } from '../../../_common/_common/zodSchemas/deployContract';
+import { FunctionCallActionZodSchema } from '../../../_common/_common/zodSchemas/functionCall';
+import { StakeActionZodSchema } from '../../../_common/_common/zodSchemas/stake';
+import { TransferActionZodSchema } from '../../../_common/_common/zodSchemas/transfer';
 import { ExecuteDelegationActionZodSchema } from './executeDelegation';
 
 const TransactionActionZodSchema = z.union([
