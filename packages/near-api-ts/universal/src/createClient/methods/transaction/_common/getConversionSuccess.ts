@@ -1,15 +1,11 @@
-import type {
-  Result,
-  ResultOk,
-  TransactionHash,
-} from '../../../../../../../../types/_common/common';
-import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
-import type { ConversionSuccess } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/conversionSuccess';
-import { type NatError } from '../../../../../../../_common/_common/_common/_common/natError';
-import { result } from '../../../../../../../_common/_common/_common/result';
-import { getConversionStepSuccess } from '../../../../_common/_common/getConversionStepSuccess';
-import type { RpcTransactionOutcomeSuccess } from '../../../../_common/_common/zodSchemas/rpcTransactionOutcome';
-import type { RpcTransactionSummary } from '../../../../_common/zodSchemas/rpcTransactionDetails/rpcTransactionSummary';
+import type { Result, ResultOk, TransactionHash } from '../../../../../types/_common/common';
+import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { ConversionSuccess } from '../../../../../types/client/methods/transaction/_common/transactionDetails/conversionSuccess';
+import { type NatError } from '../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../_common/_common/_common/result';
+import { getConversionStepSuccess } from './_common/getConversionStepSuccess';
+import type { RpcTransactionOutcomeSuccess } from './_common/zodSchemas/rpcTransactionOutcome';
+import type { RpcTransactionSummary } from './zodSchemas/rpcTransactionDetails/rpcTransactionSummary';
 
 export const getConversionSuccessConvertedOptimistic = (
   transactionHash: TransactionHash,

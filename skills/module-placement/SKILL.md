@@ -260,7 +260,12 @@ src/_common/_common/_common/_common/natError.ts                    layer 4
 because everything depends on it — including `result`, which `wrapInternalError` consumes.
 Depth means foundational, not obscure.
 
-## Known deviation
+## Known deviations
+
+Two, from unrelated causes. Both are recorded in `scripts/checkModulePlacement/allow.json`
+— three entries for the first, one for the second — and everything else conforms.
+
+### `createSigner` reaches into `src/transaction/`
 
 `src/transaction/` groups the action creators, `signTransaction/`, `signDelegation/` and
 the schema trees all three share. It is a feature root without an entry file, so it stays
@@ -282,8 +287,24 @@ both temporary:
 
 Both close the same way: give `transaction/` an entry factory and have `createSigner`
 consume that instead of reaching in. Until then, do not restructure around these two, and
-do not add new cross-feature imports like them. They are the three entries in
-`scripts/checkModulePlacement/allow.json`; everything else conforms.
+do not add new cross-feature imports like them.
+
+### `getConversionSuccess.ts` is placed for a method that does not exist yet
+
+`createClient/methods/transaction/_common/` holds the builders the transaction methods
+share — `getExecutionSuccess`, `getExecutionFailure`, `getConversionFailureError`,
+`finalExecutionStatusToProcessingStage`. Each is consumed from both `sendSignedTransaction/`
+and `getTransactionResult/`, which puts their LCA at `transaction/` and earns them that
+folder. `getConversionSuccess.ts` belongs to the same family, but today only
+`sendSignedTransaction/handleRpcResult/getDetailsFromProcessingStage/` builds
+`ConversionSuccess` details, so with `|C| == 2` inside one subtree the algorithm wants it
+in that folder's `_common/` instead.
+
+It stays with its siblings. This closes when `client.awaitTransactionDetails` is added: it
+is the second method that will build `ConversionSuccess` details, and its edge raises the
+LCA to `transaction/`, which makes the current placement the derived one. Until then, do
+not sink it into `getDetailsFromProcessingStage/_common/` — the move would only have to be
+undone, and it would split one family of builders across two folders on the way.
 
 Why the grouping matters: while the action creators sat at `src/actionCreators/`, the
 schemas they share with the sign modules had their LCA at `src/`, which lands them in
