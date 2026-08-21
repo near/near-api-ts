@@ -47,7 +47,7 @@ export const safeSignDelegation: SafeSignDelegation = wrapInternalError(
     const delegationHashU8 = sha256(delegationBorshU8);
 
     const signedData = await args.signDataProvider.safeSignData({
-      publicKey: innerDelegation.senderPublicKey.publicKey,
+      publicKey: innerDelegation.delegatorPublicKey.publicKey,
       dataU8: delegationHashU8,
     });
 

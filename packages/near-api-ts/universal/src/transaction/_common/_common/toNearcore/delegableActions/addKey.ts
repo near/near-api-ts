@@ -1,7 +1,7 @@
 import type { NearcoreAddKeyAction } from '../../../../../../types/_common/transaction/actions/delegableActions/addKey';
 import { nearToken } from '../../../../../_common/nearToken';
-import type { InnerAddKeyAction } from '../../../_common/_common/zodSchemas/delegableActions/addKey';
 import { toNearcorePublicKey } from '../../_common/toNearcore/publicKey';
+import type { InnerAddKeyAction } from '../../_common/zodSchemas/delegableActions/addKey';
 
 const getPermission = (
   action: InnerAddKeyAction,

@@ -30,22 +30,21 @@ describe('Full-scale delegation test', () => {
   it('executes a delegated transfer paid by the relay', async () => {
     const amount = near('1');
 
-    // #1: The sender signs the delegation. The nonce is the sender's own access
-    // key nonce, the delegation is only valid up to `expireAt.blockHeight`.
+    // #1: The delegator signs the delegation. The nonce is the delegator's own
+    // access key nonce, the delegation is only valid up to `expireAt.blockHeight`.
     const aliceAccessKey = await client.getAccountAccessKey({
       accountId: 'alice',
       publicKey: aliceKp.publicKey,
     });
-    const { rawRpcResult: block } = await client.getBlock();
 
     const signedDelegation = await signDelegation({
       delegation: {
-        senderAccountId: 'alice',
-        senderPublicKey: aliceKp.publicKey,
+        delegatorAccountId: 'alice',
+        delegatorPublicKey: aliceKp.publicKey,
         delegatedAction: transfer({ amount: { near: '1' } }),
         receiverAccountId: 'bob',
         nonce: aliceAccessKey.accountAccessKey.nonce + 1,
-        expireAt: { blockHeight: block.header.height + 100 },
+        expireAt: { blockHeight:aliceAccessKey.blockHeight + 100 },
       },
       signDataProvider: aliceKp,
     });
@@ -53,8 +52,8 @@ describe('Full-scale delegation test', () => {
     log(signedDelegation);
 
     // #2: The relay wraps the signed delegation in its own transaction. The
-    // transaction receiver must be the delegation sender, or the node answers
-    // with DelegateActionSenderDoesNotMatchTxReceiver.
+    // transaction receiver must be the delegator, or the node answers with
+    // DelegateActionSenderDoesNotMatchTxReceiver.
     const relayAccessKey = await client.getAccountAccessKey({
       accountId: 'relay',
       publicKey: relayKp.publicKey,
@@ -72,7 +71,7 @@ describe('Full-scale delegation test', () => {
         signerPublicKey: relayKp.publicKey,
         nonce: relayAccessKey.accountAccessKey.nonce + 1,
         action: executeDelegation({ signedDelegation }),
-        receiverAccountId: signedDelegation.delegation.senderAccountId,
+        receiverAccountId: signedDelegation.delegation.delegatorAccountId,
         blockHash: relayAccessKey.blockHash,
       },
       signDataProvider: relayKp,
@@ -93,7 +92,7 @@ describe('Full-scale delegation test', () => {
 
     // #3: The relay prepays everything - both the fees and the delegated
     // deposit (nearcore `total_deposit`, runtime/runtime/src/config.rs). The
-    // sender only pays if the delegated actions fail and the deposit is
+    // delegator only pays if the delegated actions fail and the deposit is
     // refunded back to it.
     const balancesAfter = {
       alice: (await client.getAccountInfo({ accountId: 'alice' })).balance.total,

@@ -28,8 +28,8 @@ const DelegatedActionZodSchema = z.union([
 export type InnerDelegatedAction = z.infer<typeof DelegatedActionZodSchema>;
 
 const DelegationBaseZodSchema = z.object({
-  senderAccountId: AccountIdZodSchema,
-  senderPublicKey: PublicKeyZodSchema,
+  delegatorAccountId: AccountIdZodSchema,
+  delegatorPublicKey: PublicKeyZodSchema,
   receiverAccountId: AccountIdZodSchema,
   nonce: TransactionNonceZodSchema,
   expireAt: z.object({

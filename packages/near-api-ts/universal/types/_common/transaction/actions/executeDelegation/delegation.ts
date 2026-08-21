@@ -1,13 +1,6 @@
 import type { Prettify } from '../../../../utils';
-import type {
-  AccountId,
-  Base64String,
-  BlockHash,
-  BlockHeight,
-  TransactionNonce,
-} from '../../../common';
+import type { AccountId, Base64String, BlockHeight, TransactionNonce } from '../../../common';
 import type { NearcorePublicKey, NearcoreSignature, PublicKey, Signature } from '../../../crypto';
-import type { NearcoreTransaction } from '../../transaction';
 import type {
   AddFullAccessKeyAction,
   AddFunctionCallKeyAction,
@@ -55,8 +48,8 @@ export type MultiDelegatedActions = {
 };
 
 type DelegationBase = {
-  senderAccountId: AccountId;
-  senderPublicKey: PublicKey;
+  delegatorAccountId: AccountId;
+  delegatorPublicKey: PublicKey;
   receiverAccountId: AccountId;
   nonce: TransactionNonce;
   expireAt: { blockHeight: BlockHeight };

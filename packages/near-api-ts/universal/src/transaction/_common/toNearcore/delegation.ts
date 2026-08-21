@@ -48,10 +48,10 @@ const toNearcoreDelegableActions = (
 
 export const toNearcoreDelegation = (delegation: InnerDelegation): NearcoreDelegation => ({
   tag: constants.Nep366MetaTransaction.Tag,
-  senderId: delegation.senderAccountId,
+  senderId: delegation.delegatorAccountId,
   receiverId: delegation.receiverAccountId,
   actions: toNearcoreDelegableActions(delegation),
   nonce: BigInt(delegation.nonce),
   maxBlockHeight: delegation.expireAt.blockHeight,
-  publicKey: toNearcorePublicKey(delegation.senderPublicKey),
+  publicKey: toNearcorePublicKey(delegation.delegatorPublicKey),
 });
