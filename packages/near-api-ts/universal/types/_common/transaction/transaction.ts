@@ -75,7 +75,6 @@ export type SignedTransaction = {
 };
 
 // Nearcore Transaction
-
 export type NearcoreTransactionAction =
   | NearcoreCreateAccountAction
   | NearcoreTransferAction

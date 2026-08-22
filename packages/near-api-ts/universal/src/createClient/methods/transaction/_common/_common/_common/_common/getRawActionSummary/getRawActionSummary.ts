@@ -1,12 +1,14 @@
 import type { ActionView } from '@near-js/jsonrpc-types';
-import type { PublicKey } from '../../../../../../../../types/_common/crypto';
-import type { RawActionSummary } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
-import { gas } from '../../../../../../../_common/nearGas';
-import { yoctoNear } from '../../../../../../../_common/nearToken';
+import { base58 } from '@scure/base';
+import type { PublicKey, Signature } from '../../../../../../../../../types/_common/crypto';
+import type { RawTransactionActionSummary } from '../../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
+import { gas } from '../../../../../../../../_common/nearGas';
+import { yoctoNear } from '../../../../../../../../_common/nearToken';
+import { getRawExecuteDelegationActionSummary } from './getRawExecuteDelegationActionSummary';
 
 // Assembles the raw action summary from the RPC action - all fields are converted except
 // functionCall.functionArgs which stays a raw base64 string;
-export const getRawActionSummary = (rpcAction: ActionView): RawActionSummary => {
+export const getRawActionSummary = (rpcAction: ActionView): RawTransactionActionSummary => {
   if (rpcAction === 'CreateAccount') {
     return {
       actionType: 'CreateAccount',
@@ -51,9 +53,12 @@ export const getRawActionSummary = (rpcAction: ActionView): RawActionSummary => 
 
   if ('DeployContract' in rpcAction) {
     const { DeployContract } = rpcAction;
+    const contractWasmHashU8 = Uint8Array.fromBase64(DeployContract.code);
+    const contractWasmHash = base58.encode(contractWasmHashU8);
+
     return {
       actionType: 'DeployContract' as const,
-      contractWasmHash: DeployContract.code,
+      contractWasmHash,
     };
   }
 
@@ -93,5 +98,11 @@ export const getRawActionSummary = (rpcAction: ActionView): RawActionSummary => 
     };
   }
 
-  throw new Error('unreachable');
+  if ('Delegate' in rpcAction)
+    return getRawExecuteDelegationActionSummary(
+      rpcAction.Delegate.delegateAction,
+      rpcAction.Delegate.signature as Signature,
+    );
+
+  throw new Error(`Unsupported action: ${rpcAction}`);
 };

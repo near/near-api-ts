@@ -7,7 +7,7 @@ import { gas } from '../../../../../../../_common/nearGas';
 import { yoctoNear } from '../../../../../../../_common/nearToken';
 import type { RpcActionReceiptTrimmed } from '../../../zodSchemas/rpcTransactionDetails/rpcActionReceipt';
 import type { RpcReceiptOutcome } from '../../../zodSchemas/rpcTransactionDetails/rpcReceiptOutcome';
-import { getRawActionSummary } from '../../_common/_common/getRawActionSummary';
+import { getRawActionSummary } from '../../_common/_common/getRawActionSummary/getRawActionSummary';
 import { getExecutionFailureError } from '../../_common/getExecutionFailureError/getExecutionFailureError';
 import type { ReceiptCreationMap } from '../createReceiptCreationMap';
 

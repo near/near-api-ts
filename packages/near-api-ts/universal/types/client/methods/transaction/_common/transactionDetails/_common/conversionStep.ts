@@ -7,7 +7,7 @@ import type {
 import type { PublicKey, Signature } from '../../../../../../_common/crypto';
 import type { NearGas } from '../../../../../../_common/nearGas';
 import type { NearToken } from '../../../../../../_common/nearToken';
-import type { ParsedActionSummary } from './_common/actionSummaries';
+import type { ParsedTransactionActionSummary } from './_common/actionSummaries';
 import type { ConversionFailureError } from './_common/conversionFailureError';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
@@ -18,7 +18,7 @@ export type TransactionActionSummaries<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
 > = [ASF] extends [BaseDeserializeTransactionActionSummariesFn]
   ? ReturnType<ASF>
-  : ParsedActionSummary[];
+  : ParsedTransactionActionSummary[];
 
 export type TransactionSummary<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,

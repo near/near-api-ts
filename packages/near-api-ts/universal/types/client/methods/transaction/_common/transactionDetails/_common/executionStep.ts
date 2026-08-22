@@ -8,7 +8,10 @@ import type {
 } from '../../../../../../_common/common';
 import type { NearGas } from '../../../../../../_common/nearGas';
 import type { NearToken } from '../../../../../../_common/nearToken';
-import type { ParsedActionSummary, RawActionSummary } from './_common/actionSummaries';
+import type {
+  ParsedTransactionActionSummary,
+  RawTransactionActionSummary,
+} from './_common/actionSummaries';
 import type {
   BaseDeserializeTransactionExecutionStepsFn,
   MaybeBaseDeserializeTransactionExecutionStepsFn,
@@ -57,8 +60,8 @@ export type ExecutionStep<RD, AS> = {
   logs: Log[];
 };
 
-export type ParsedExecutionStep = ExecutionStep<unknown, ParsedActionSummary[]>;
-export type RawExecutionStep = ExecutionStep<Base64String, RawActionSummary[]>;
+export type ParsedExecutionStep = ExecutionStep<unknown, ParsedTransactionActionSummary[]>;
+export type RawExecutionStep = ExecutionStep<Base64String, RawTransactionActionSummary[]>;
 
 export type ExecutionSteps<
   ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,

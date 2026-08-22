@@ -14,7 +14,7 @@ import {
 } from '../../../../../index';
 import { safeSleep } from '../../../../../src/createClient/createTransport/createSendRequest/_common/_common/sleep';
 import type { Base64String, TransactionHash } from '../../../../../types/_common/common';
-import type { ActionSummary } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
+import type { TransactionActionSummary } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
 import type {
   DeserializeTransactionActionSummariesArgs,
   DeserializeTransactionExecutionStepsArgs,
@@ -83,7 +83,7 @@ describe('CallContractReadFunction', () => {
     // We can validate that we called a write_record method with a valid WriteRecordArgs type functionArgs;
     const deserializeActionSummaries = (
       args: DeserializeTransactionActionSummariesArgs,
-    ): ActionSummary<{ record_id: number; record: string } | Base64String>[] =>
+    ): TransactionActionSummary<{ record_id: number; record: string } | Base64String>[] =>
       args.rawActionSummaries.map((rawActionSummary) => {
         if (
           rawActionSummary.actionType === 'FunctionCall' &&
@@ -104,7 +104,7 @@ describe('CallContractReadFunction', () => {
       args: DeserializeTransactionExecutionStepsArgs,
     ): ExecutionStep<
       unknown,
-      ActionSummary<{ record_id: number; record: string } | Base64String>[]
+      TransactionActionSummary<{ record_id: number; record: string } | Base64String>[]
     >[] =>
       args.rawExecutionSteps.map((rawExecutionStep) => ({
         ...rawExecutionStep,

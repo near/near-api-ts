@@ -1,6 +1,6 @@
 import type { Base64String } from '../../../../_common/common';
 import type { ExhaustedErrorContext } from '../../../transport/sendRequest';
-import type { RawActionSummary } from './transactionDetails/_common/_common/actionSummaries';
+import type { RawTransactionActionSummary } from './transactionDetails/_common/_common/actionSummaries';
 import type { RawExecutionStep } from './transactionDetails/_common/executionStep';
 
 export interface TransactionDetailsInnerErrorRegistry {
@@ -11,7 +11,7 @@ export interface TransactionDetailsInnerErrorRegistry {
   };
   'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed': {
     cause: unknown;
-    rawActionSummaries: RawActionSummary[];
+    rawActionSummaries: RawTransactionActionSummary[];
   };
   'Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed': {
     cause: unknown;

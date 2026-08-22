@@ -1,6 +1,6 @@
 import type { Base64String } from '../../../../../../../_common/common';
 import type { RawExecutionStep } from '../executionStep';
-import type { RawActionSummary } from './actionSummaries';
+import type { RawTransactionActionSummary } from './actionSummaries';
 
 // DeserializeTransactionResultData
 export type DeserializeTransactionResultDataArgs = { rawData: Base64String };
@@ -14,7 +14,9 @@ export type MaybeBaseDeserializeTransactionResultDataFn =
   | undefined;
 
 // DeserializeTransactionActionSummaries
-export type DeserializeTransactionActionSummariesArgs = { rawActionSummaries: RawActionSummary[] };
+export type DeserializeTransactionActionSummariesArgs = {
+  rawActionSummaries: RawTransactionActionSummary[];
+};
 
 export type BaseDeserializeTransactionActionSummariesFn = (
   args: DeserializeTransactionActionSummariesArgs,

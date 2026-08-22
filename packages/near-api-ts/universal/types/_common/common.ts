@@ -20,6 +20,7 @@ export type Base58String = string;
 export type Base64String = string;
 
 export type TransactionNonce = number;
+export type DelegationNonce = number;
 export type AccountId = string;
 export type BorshBytes = Uint8Array;
 

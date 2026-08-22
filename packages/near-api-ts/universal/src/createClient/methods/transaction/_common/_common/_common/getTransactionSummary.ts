@@ -12,7 +12,7 @@ import { type NatError } from '../../../../../../_common/_common/_common/_common
 import { result, resultNatError } from '../../../../../../_common/_common/_common/result';
 import type { RpcTransactionSummary } from '../../zodSchemas/rpcTransactionDetails/rpcTransactionSummary';
 import { getParsedActionSummary } from './_common/getParsedActionSummary';
-import { getRawActionSummary } from './_common/getRawActionSummary';
+import { getRawActionSummary } from './_common/getRawActionSummary/getRawActionSummary';
 
 const getTransactionActionSummaries = <
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
