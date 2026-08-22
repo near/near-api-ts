@@ -39,7 +39,7 @@ export const handleResult = (
   // When near account doesn't have a deployed contract on it,
   // it returns the placeholder instead of WASM hash
   const contractWasmHash =
-    accountInfo.codeHash !== '11111111111111111111111111111111' ? null : accountInfo.codeHash;
+    accountInfo.codeHash === '11111111111111111111111111111111' ? null : accountInfo.codeHash;
 
   return result.ok({
     accountId: args.accountId,
