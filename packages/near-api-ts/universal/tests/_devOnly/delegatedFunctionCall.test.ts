@@ -1,10 +1,8 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
   createAccount,
-  createMemoryKeyService,
-  createMemorySigner,
   deployContract,
   executeDelegation,
   functionCall,
@@ -14,9 +12,8 @@ import {
   signTransaction,
   transfer,
 } from '../../index';
-import type { DeserializeTransactionActionSummariesArgs } from '../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
 import { createDefaultClient, getFileBytes, log } from '../utils/common';
-import { MIN_GAS_PURCHASE_PRICE, startSandbox } from '../utils/sandbox/startSandbox';
+import { startSandbox } from '../utils/sandbox/startSandbox';
 
 // `alice` asks the relay to pay for a `write_record` call on the `c.nat`
 // contract: alice signs the delegation, the relay wraps it into its own
@@ -30,31 +27,9 @@ describe('Delegated function call paid by the relay', () => {
     'ed25519:3kDMsPd8EsgPNV2yarJFtKMvCtV4fN4MkwhaW5BXcNx4a2NhMjE8ycVb3Vu1yrhqZc31dCPHNNUYJV3UK9GbFFd6',
   );
 
-  const contractAccountId = 'c.nat';
-
   beforeAll(async () => {
-    const sandbox = await startSandbox({ rpcPort: 4561, gasPrice: MIN_GAS_PURCHASE_PRICE });
+    const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-
-    // The contract itself is deployed by `nat` - the delegation only has to
-    // call it, so nothing here touches alice's or the relay's balance.
-    const nat = createMemorySigner({
-      signerAccountId: 'nat',
-      client,
-      keyService: createMemoryKeyService({ keySource: { privateKey: natKp.privateKey } }),
-    });
-
-    await nat.executeTransaction({
-      intent: {
-        actions: [
-          createAccount(),
-          transfer({ amount: near('50') }),
-          deployContract({ wasmBytes: await getFileBytes('./wasm/write-get-record.wasm') }),
-        ],
-        receiverAccountId: contractAccountId,
-      },
-    });
-
     return () => sandbox.stop();
   });
 
@@ -87,12 +62,10 @@ describe('Delegated function call paid by the relay', () => {
         ],
         receiverAccountId: 'contract.alice',
         nonce: aliceAccessKey.accountAccessKey.nonce + 1,
-        expireAt: { blockHeight: aliceAccessKey.blockHeight + 100 },
+        expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
       },
       signDataProvider: aliceKp,
     });
-
-    // log(signedDelegation);
 
     // #2: The relay wraps the signed delegation into its own transaction. The
     // transaction receiver must be the delegator, or the node answers with

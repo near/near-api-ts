@@ -52,10 +52,10 @@ type DelegationBase = {
   delegatorPublicKey: PublicKey;
   receiverAccountId: AccountId;
   nonce: TransactionNonce;
-  expireAt: { blockHeight: BlockHeight };
+  expiration: { blockHeight: BlockHeight };
 };
 
-export type Delegation = Prettify<DelegationBase & (SingleDelegatedAction | MultiDelegatedActions)>;
+export type Delegation = DelegationBase & (SingleDelegatedAction | MultiDelegatedActions);
 
 export type SignedDelegation = {
   /**
@@ -63,7 +63,7 @@ export type SignedDelegation = {
    * `delegatedActions` was passed in, the signed value carries the action list.
    * `tag` is the message tag the signature was made over.
    */
-  delegation: Prettify<{ tag: number; delegatedActions: DelegatedAction[] } & DelegationBase>;
+  delegation: { tag: number; delegatedActions: DelegatedAction[] } & DelegationBase;
   signature: Signature;
   signedDelegationBorsh64: Base64String;
 };

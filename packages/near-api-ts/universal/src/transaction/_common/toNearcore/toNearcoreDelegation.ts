@@ -52,6 +52,6 @@ export const toNearcoreDelegation = (delegation: InnerDelegation): NearcoreDeleg
   receiverId: delegation.receiverAccountId,
   actions: toNearcoreDelegableActions(delegation),
   nonce: BigInt(delegation.nonce),
-  maxBlockHeight: delegation.expireAt.blockHeight,
+  maxBlockHeight: delegation.expiration.blockHeight,
   publicKey: toNearcorePublicKey(delegation.delegatorPublicKey),
 });

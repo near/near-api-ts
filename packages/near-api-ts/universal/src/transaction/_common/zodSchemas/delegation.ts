@@ -32,7 +32,7 @@ const DelegationBaseZodSchema = z.object({
   delegatorPublicKey: PublicKeyZodSchema,
   receiverAccountId: AccountIdZodSchema,
   nonce: TransactionNonceZodSchema,
-  expireAt: z.object({
+  expiration: z.object({
     blockHeight: BlockHeightZodSchema,
   }),
 });
