@@ -5,6 +5,7 @@ import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 import { testKeys } from '../../../../../utils/testKeys';
+import { executorNotDelegator } from './executorNotDelegator';
 import { expired } from './expired';
 import { invalidSignature } from './invalidSignature';
 import { nonceInvalid } from './nonceInvalid';
@@ -32,4 +33,5 @@ describe('signAndSendTransaction › ExecuteDelegation.* errors', () => {
   it('fails with Action.ExecuteDelegation.Expired', expired(context));
   it('fails with Action.ExecuteDelegation.Nonce.Invalid', nonceInvalid(context));
   it('fails with Action.ExecuteDelegation.Nonce.TooLarge', nonceTooLarge(context));
+  it('fails with Action.ExecuteDelegation.Executor.NotDelegator', executorNotDelegator(context));
 });

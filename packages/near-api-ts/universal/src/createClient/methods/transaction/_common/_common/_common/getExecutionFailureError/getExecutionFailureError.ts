@@ -155,6 +155,17 @@ export const getExecutionFailureError = (actionError: ActionError): ExecutionFai
       };
 
     // ExecuteDelegation action
+    // The delegation is executed on the transaction receiver account, so that account must be
+    // the delegator - nearcore reports its own receiverId here, not the delegation receiver.
+    if ('DelegateActionSenderDoesNotMatchTxReceiver' in kind)
+      return {
+        kind: 'Action.ExecuteDelegation.Executor.NotDelegator',
+        context: {
+          executorAccountId: kind.DelegateActionSenderDoesNotMatchTxReceiver.receiverId,
+          delegatorAccountId: kind.DelegateActionSenderDoesNotMatchTxReceiver.senderId,
+        },
+      };
+
     if ('DelegateActionInvalidNonce' in kind)
       return {
         kind: 'Action.ExecuteDelegation.Nonce.Invalid',

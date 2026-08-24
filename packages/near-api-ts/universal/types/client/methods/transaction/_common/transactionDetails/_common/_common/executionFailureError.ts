@@ -69,6 +69,10 @@ interface ExecuteDelegationErrorRegistry {
     delegationNonce: DelegationNonce;
     maxAllowedNonce: TransactionNonce;
   };
+  'Action.ExecuteDelegation.Executor.NotDelegator': {
+    executorAccountId: AccountId; // nearcore receiverId
+    delegatorAccountId: AccountId; // nearcore senderId
+  };
 }
 
 export interface ExecutionFailureRegistry
