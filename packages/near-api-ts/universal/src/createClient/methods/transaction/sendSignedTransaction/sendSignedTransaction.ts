@@ -8,12 +8,9 @@ import { wrapInternalError } from '../../../../_common/_common/wrapInternalError
 import { repackError } from '../../../../_common/repackError';
 import { CryptoHashZodSchema } from '../../../../_common/zodSchemas/cryptoHash';
 import { PartialTransportPolicyZodSchema } from '../../../_common/zodSchemas/transportPolicy';
+import { processingStageToFinalExecutionStatus } from '../_common/processingStageConverters';
 import { handleRpcError } from './handleRpcError';
 import { handleRpcResult } from './handleRpcResult/handleRpcResult';
-import {
-  processingStageToWaitUntil,
-  withDefaultProcessingStage,
-} from './processingStageToWaitUntil';
 
 const SendSignedTransactionArgsShema = z.object({
   signedTransaction: z.object({
@@ -49,7 +46,7 @@ export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction = 
         zodError: validArgs.error,
       });
 
-    const minimalProcessingStage = withDefaultProcessingStage(args.minimalProcessingStage);
+    const minimalProcessingStage = args.minimalProcessingStage ?? 'ExecutedOptimistic';
 
     // TODO Temporary solution - right now send_tx doesn't return 'receipts' so we have to
     //  make another request to get them.  Fix after nearcore will include 'receipts' into response
@@ -68,7 +65,7 @@ export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction = 
         method: 'EXPERIMENTAL_tx_status',
         params: {
           signed_tx_base64: args.signedTransaction.signedTransactionBorsh64,
-          wait_until: processingStageToWaitUntil(minimalProcessingStage),
+          wait_until: processingStageToFinalExecutionStatus(minimalProcessingStage),
         },
         transportPolicy: args.options?.transportPolicy,
         signal: args.options?.signal,

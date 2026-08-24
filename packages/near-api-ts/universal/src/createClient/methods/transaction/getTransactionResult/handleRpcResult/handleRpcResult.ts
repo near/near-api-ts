@@ -16,9 +16,9 @@ import {
   isRpcTransactionOutcomeFailure,
   isRpcTransactionOutcomeSuccess,
 } from '../../_common/_common/zodSchemas/rpcTransactionOutcome';
-import { finalExecutionStatusToProcessingStage } from '../../_common/finalExecutionStatusToProcessingStage';
 import { getExecutionFailureCompletedFinal } from '../../_common/getExecutionFailure';
 import { getExecutionSuccessCompletedFinal } from '../../_common/getExecutionSuccess';
+import { finalExecutionStatusToProcessingStage } from '../../_common/processingStageConverters';
 import { RpcFinalTransactionDetailsZodSchema } from '../../_common/zodSchemas/rpcTransactionDetails/rpcTransactionDetails';
 import { getConversionFailureCompletedFinal } from './getConversionFailure';
 

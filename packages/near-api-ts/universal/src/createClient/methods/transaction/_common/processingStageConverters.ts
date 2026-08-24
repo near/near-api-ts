@@ -1,4 +1,7 @@
-import type { FinalExecutionStatusToProcessingStage } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/processingStage';
+import type {
+  FinalExecutionStatusToProcessingStage,
+  TransactionProcessingStage,
+} from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/processingStage';
 
 const finalExecutionStatusToProcessingStageMap: FinalExecutionStatusToProcessingStage = {
   INCLUDED: 'ConvertedOptimistic',
@@ -21,3 +24,10 @@ export const finalExecutionStatusToProcessingStage = <
 >(
   status: S,
 ): FinalExecutionStatusToProcessingStage[S] => finalExecutionStatusToProcessingStageMap[status];
+
+export const processingStageToFinalExecutionStatus = (
+  processingStage?: TransactionProcessingStage,
+) =>
+  Object.entries(finalExecutionStatusToProcessingStageMap).filter(
+    ([_, stage]) => stage === processingStage,
+  )[0][0];
