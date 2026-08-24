@@ -5,6 +5,7 @@ import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 import { testKeys } from '../../../../../utils/testKeys';
+import { expired } from './expired';
 import { invalidSignature } from './invalidSignature';
 
 export type TestContext = {
@@ -26,4 +27,5 @@ describe('signAndSendTransaction › ExecuteDelegation.* errors', () => {
   });
 
   it('fails with Action.ExecuteDelegation.Signature.Invalid', invalidSignature(context));
+  it('fails with Action.ExecuteDelegation.Expired', expired(context));
 });

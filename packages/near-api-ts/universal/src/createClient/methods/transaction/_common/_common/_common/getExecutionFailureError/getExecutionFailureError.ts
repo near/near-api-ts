@@ -162,5 +162,11 @@ export const getExecutionFailureError = (actionError: ActionError): ExecutionFai
       context: null,
     };
 
+  if (actionError.kind === 'DelegateActionExpired')
+    return {
+      kind: 'Action.ExecuteDelegation.Expired',
+      context: null,
+    };
+
   throw new Error('Unknown execution error', { cause: actionError });
 };
