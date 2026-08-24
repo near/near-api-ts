@@ -5,6 +5,11 @@ import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 import { testKeys } from '../../../../../utils/testKeys';
+import { attachedDepositNotAllowed } from './accessKey/attachedDepositNotAllowed';
+import { functionNotAllowed } from './accessKey/functionNotAllowed';
+import { notFound } from './accessKey/notFound';
+import { notFullAccess } from './accessKey/notFullAccess';
+import { receiverNotAllowed } from './accessKey/receiverNotAllowed';
 import { executorNotDelegator } from './executorNotDelegator';
 import { expired } from './expired';
 import { invalidSignature } from './invalidSignature';
@@ -34,4 +39,21 @@ describe('signAndSendTransaction › ExecuteDelegation.* errors', () => {
   it('fails with Action.ExecuteDelegation.Nonce.Invalid', nonceInvalid(context));
   it('fails with Action.ExecuteDelegation.Nonce.TooLarge', nonceTooLarge(context));
   it('fails with Action.ExecuteDelegation.Executor.NotDelegator', executorNotDelegator(context));
+  it('fails with Action.ExecuteDelegation.Delegator.AccessKey.NotFound', notFound(context));
+  it(
+    'fails with Action.ExecuteDelegation.Delegator.AccessKey.NotFullAccess',
+    notFullAccess(context),
+  );
+  it(
+    'fails with Action.ExecuteDelegation.Delegator.AccessKey.AttachedDeposit.NotAllowed',
+    attachedDepositNotAllowed(context),
+  );
+  it(
+    'fails with Action.ExecuteDelegation.Delegator.AccessKey.Receiver.NotAllowed',
+    receiverNotAllowed(context),
+  );
+  it(
+    'fails with Action.ExecuteDelegation.Delegator.AccessKey.Function.NotAllowed',
+    functionNotAllowed(context),
+  );
 });

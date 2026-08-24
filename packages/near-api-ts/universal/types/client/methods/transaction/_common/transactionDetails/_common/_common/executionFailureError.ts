@@ -1,5 +1,6 @@
 import type {
   AccountId,
+  ContractFunctionName,
   DelegationNonce,
   TransactionNonce,
 } from '../../../../../../../_common/common';
@@ -70,8 +71,27 @@ interface ExecuteDelegationErrorRegistry {
     maxAllowedNonce: TransactionNonce;
   };
   'Action.ExecuteDelegation.Executor.NotDelegator': {
-    executorAccountId: AccountId; // nearcore receiverId
-    delegatorAccountId: AccountId; // nearcore senderId
+    executorAccountId: AccountId;
+    delegatorAccountId: AccountId;
+  };
+  'Action.ExecuteDelegation.Delegator.AccessKey.NotFound': {
+    delegatorAccountId: AccountId;
+    delegatorPublicKey: PublicKey;
+  };
+  'Action.ExecuteDelegation.Delegator.AccessKey.NotFullAccess': null;
+  'Action.ExecuteDelegation.Delegator.AccessKey.AttachedDeposit.NotAllowed': null;
+  'Action.ExecuteDelegation.Delegator.AccessKey.Receiver.NotAllowed': {
+    delegationReceiverAccountId: AccountId;
+    allowedContractAccountId: AccountId;
+  };
+  'Action.ExecuteDelegation.Delegator.AccessKey.Function.NotAllowed': {
+    functionName: ContractFunctionName;
+  };
+  'Action.ExecuteDelegation.Delegator.AccessKey.GasBudget.NotEnough': {
+    delegatorAccountId: AccountId;
+    delegatorPublicKey: PublicKey;
+    gasBudget: NearToken;
+    transactionCost: NearToken;
   };
 }
 
