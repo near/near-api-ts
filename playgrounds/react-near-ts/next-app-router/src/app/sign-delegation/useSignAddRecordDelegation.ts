@@ -11,13 +11,13 @@ export const useSignAddRecordDelegation = (setRecordInput: Dispatch<SetStateActi
     signAddRecordDelegation: (record: string) => {
       signDelegation({
         intent: {
-          action: functionCall({
+          delegatedAction: functionCall({
             functionName: 'add_record',
             functionArgs: { record },
             gasLimit: { teraGas: '10' },
           }),
           receiverAccountId: ContractAccountId,
-          expiration: { blockOffset: 100 },
+          expireAt: { blockHeight: 100 },
         },
       });
     },

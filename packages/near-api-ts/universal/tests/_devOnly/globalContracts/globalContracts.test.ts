@@ -79,8 +79,7 @@ describe('DeployContract Tests', () => {
     });
     log(tx2);
 
-
-    const info = await client.getAccountInfo({ accountId: 'nat' })
+    const info = await client.getAccountInfo({ accountId: 'nat' });
     log(info);
   });
 });
