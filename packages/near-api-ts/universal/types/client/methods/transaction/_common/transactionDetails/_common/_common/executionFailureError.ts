@@ -1,4 +1,8 @@
-import type { AccountId } from '../../../../../../../_common/common';
+import type {
+  AccountId,
+  DelegationNonce,
+  TransactionNonce,
+} from '../../../../../../../_common/common';
 import type { PublicKey } from '../../../../../../../_common/crypto';
 import type { NearToken } from '../../../../../../../_common/nearToken';
 
@@ -54,6 +58,19 @@ interface DeleteAccountErrorRegistry {
   'Action.DeleteAccount.LargeState': { accountId: AccountId };
 }
 
+interface ExecuteDelegationErrorRegistry {
+  'Action.ExecuteDelegation.Expired': null;
+  'Action.ExecuteDelegation.Signature.Invalid': null;
+  'Action.ExecuteDelegation.Nonce.Invalid': {
+    delegationNonce: DelegationNonce;
+    accessKeyNonce: TransactionNonce;
+  };
+  'Action.ExecuteDelegation.Nonce.TooLarge': {
+    delegationNonce: DelegationNonce;
+    maxPossibleNonce: TransactionNonce;
+  };
+}
+
 export interface ExecutionFailureRegistry
   extends GeneralExecutionErrorRegistry,
     CreateAccountErrorRegistry,
@@ -61,7 +78,8 @@ export interface ExecutionFailureRegistry
     FunctionCallErrorRegistry,
     StakeErrorRegistry,
     DeleteKeyErrorRegistry,
-    DeleteAccountErrorRegistry {}
+    DeleteAccountErrorRegistry,
+    ExecuteDelegationErrorRegistry {}
 
 export type ExecutionFailureKind = keyof ExecutionFailureRegistry;
 

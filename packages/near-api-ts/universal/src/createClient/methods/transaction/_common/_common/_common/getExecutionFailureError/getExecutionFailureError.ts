@@ -155,5 +155,12 @@ export const getExecutionFailureError = (actionError: ActionError): ExecutionFai
       };
   }
 
+  // ExecuteDelegation action
+  if (actionError.kind === 'DelegateActionInvalidSignature')
+    return {
+      kind: 'Action.ExecuteDelegation.Signature.Invalid',
+      context: null,
+    };
+
   throw new Error('Unknown execution error', { cause: actionError });
 };

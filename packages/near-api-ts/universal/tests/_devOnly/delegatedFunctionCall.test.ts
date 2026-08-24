@@ -15,10 +15,7 @@ import {
 import { createDefaultClient, getFileBytes, log } from '../utils/common';
 import { startSandbox } from '../utils/sandbox/startSandbox';
 
-// `alice` asks the relay to pay for a `write_record` call on the `c.nat`
-// contract: alice signs the delegation, the relay wraps it into its own
-// transaction and pays every fee of it.
-describe('Delegated function call paid by the relay', () => {
+describe('Execute delegation', () => {
   let client: Client;
 
   const aliceKp = keyPair(DEFAULT_PRIVATE_KEY);
@@ -32,7 +29,7 @@ describe('Delegated function call paid by the relay', () => {
     return () => sandbox.stop();
   });
 
-  it('writes a record through a delegation the relay pays for', async () => {
+  it('test', async () => {
     // #1: alice signs the delegation. The delegated action is a plain function
     // call, and the delegation receiver is the contract - not the relay.
     const aliceAccessKey = await client.getAccountAccessKey({
@@ -60,7 +57,8 @@ describe('Delegated function call paid by the relay', () => {
           }),
         ],
         receiverAccountId: 'contract.alice',
-        nonce: aliceAccessKey.accountAccessKey.nonce + 1,
+        // nonce: aliceAccessKey.accountAccessKey.nonce + 0,
+        nonce: 15 * 1_000_000,
         expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
       },
       signDataProvider: aliceKp,
@@ -88,7 +86,7 @@ describe('Delegated function call paid by the relay', () => {
 
     // The delegation spawns a second receipt (alice -> contract), so the call
     // only lands once every receipt of the transaction is executed.
-    const txResult = await client.sendSignedTransaction({
+    const txResult = await client.safeSendSignedTransaction({
       signedTransaction,
       minimalProcessingStage: 'CompletedFinal',
       options: {
