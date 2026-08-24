@@ -7,6 +7,8 @@ import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 import { testKeys } from '../../../../../utils/testKeys';
 import { expired } from './expired';
 import { invalidSignature } from './invalidSignature';
+import { nonceInvalid } from './nonceInvalid';
+import { nonceTooLarge } from './nonceTooLarge';
 
 export type TestContext = {
   client: Client;
@@ -28,4 +30,6 @@ describe('signAndSendTransaction › ExecuteDelegation.* errors', () => {
 
   it('fails with Action.ExecuteDelegation.Signature.Invalid', invalidSignature(context));
   it('fails with Action.ExecuteDelegation.Expired', expired(context));
+  it('fails with Action.ExecuteDelegation.Nonce.Invalid', nonceInvalid(context));
+  it('fails with Action.ExecuteDelegation.Nonce.TooLarge', nonceTooLarge(context));
 });

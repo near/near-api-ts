@@ -67,7 +67,7 @@ interface ExecuteDelegationErrorRegistry {
   };
   'Action.ExecuteDelegation.Nonce.TooLarge': {
     delegationNonce: DelegationNonce;
-    maxPossibleNonce: TransactionNonce;
+    maxAllowedNonce: TransactionNonce;
   };
 }
 

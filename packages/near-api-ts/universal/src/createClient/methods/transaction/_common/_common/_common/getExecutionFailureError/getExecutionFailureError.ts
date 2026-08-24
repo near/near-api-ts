@@ -153,9 +153,27 @@ export const getExecutionFailureError = (actionError: ActionError): ExecutionFai
           accountId: kind.DeleteAccountWithLargeState.accountId,
         },
       };
+
+    // ExecuteDelegation action
+    if ('DelegateActionInvalidNonce' in kind)
+      return {
+        kind: 'Action.ExecuteDelegation.Nonce.Invalid',
+        context: {
+          delegationNonce: kind.DelegateActionInvalidNonce.delegateNonce,
+          accessKeyNonce: kind.DelegateActionInvalidNonce.akNonce,
+        },
+      };
+
+    if ('DelegateActionNonceTooLarge' in kind)
+      return {
+        kind: 'Action.ExecuteDelegation.Nonce.TooLarge',
+        context: {
+          delegationNonce: kind.DelegateActionNonceTooLarge.delegateNonce,
+          maxAllowedNonce: kind.DelegateActionNonceTooLarge.upperBound,
+        },
+      };
   }
 
-  // ExecuteDelegation action
   if (actionError.kind === 'DelegateActionInvalidSignature')
     return {
       kind: 'Action.ExecuteDelegation.Signature.Invalid',
