@@ -21,7 +21,6 @@ import { startSandbox } from '../utils/sandbox/startSandbox';
 describe('Delegated function call paid by the relay', () => {
   let client: Client;
 
-  const natKp = keyPair(DEFAULT_PRIVATE_KEY);
   const aliceKp = keyPair(DEFAULT_PRIVATE_KEY);
   const relayKp = keyPair(
     'ed25519:3kDMsPd8EsgPNV2yarJFtKMvCtV4fN4MkwhaW5BXcNx4a2NhMjE8ycVb3Vu1yrhqZc31dCPHNNUYJV3UK9GbFFd6',

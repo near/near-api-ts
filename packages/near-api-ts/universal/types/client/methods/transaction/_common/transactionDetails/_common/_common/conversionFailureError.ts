@@ -39,6 +39,7 @@ interface ActionsValidationErrorRegistry {
     deployContractActionsCount: number;
     maximumDeployContractActionsCount: number;
   };
+  'Actions.ExecuteDelegation.TooMany': null;
   'Actions.FunctionCall.TotalGasLimit.Exceeded': {
     totalGasLimit: NearGas;
     maximumTotalGasLimit: NearGas;

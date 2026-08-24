@@ -1,26 +1,26 @@
 import * as z from 'zod/mini';
-import type { Result, TransactionHash } from '../../../../../../types/_common/common';
+import type { Result, TransactionHash } from '../../../../../types/_common/common';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
-} from '../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
-import type { GetTransactionResultOutput } from '../../../../../../types/client/methods/transaction/getTransactionResult';
+} from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { GetTransactionResultOutput } from '../../../../../types/client/methods/transaction/getTransactionResult';
 import {
   createNatError,
   type NatError,
-} from '../../../../../_common/_common/_common/_common/natError';
-import { resultNatError } from '../../../../../_common/_common/_common/result';
-import type { BaseRpcResponse } from '../../../../_common/zodSchemas/baseRpcResponse';
+} from '../../../../_common/_common/_common/_common/natError';
+import { resultNatError } from '../../../../_common/_common/_common/result';
+import type { BaseRpcResponse } from '../../../_common/zodSchemas/baseRpcResponse';
 import {
   isRpcTransactionOutcomeFailure,
   isRpcTransactionOutcomeSuccess,
-} from '../../_common/_common/zodSchemas/rpcTransactionOutcome';
-import { getExecutionFailureCompletedFinal } from '../../_common/getExecutionFailure';
-import { getExecutionSuccessCompletedFinal } from '../../_common/getExecutionSuccess';
-import { finalExecutionStatusToProcessingStage } from '../../_common/processingStageConverters';
-import { RpcFinalTransactionDetailsZodSchema } from '../../_common/zodSchemas/rpcTransactionDetails/rpcTransactionDetails';
-import { getConversionFailureCompletedFinal } from './getConversionFailure';
+} from '../_common/_common/zodSchemas/rpcTransactionOutcome';
+import { getConversionFailureCompletedFinal } from '../_common/getConversionFailure';
+import { getExecutionFailureCompletedFinal } from '../_common/getExecutionFailure';
+import { getExecutionSuccessCompletedFinal } from '../_common/getExecutionSuccess';
+import { finalExecutionStatusToProcessingStage } from '../_common/processingStageConverters';
+import { RpcFinalTransactionDetailsZodSchema } from '../_common/zodSchemas/rpcTransactionDetails/rpcTransactionDetails';
 
 const RpcResultZodSchema = z.union([
   z.object({ finalExecutionStatus: z.literal('INCLUDED') }),

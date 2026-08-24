@@ -11,11 +11,11 @@ import type {
 import type { TransactionDetailsAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import { type NatError } from '../../../../../../_common/_common/_common/_common/natError';
 import { resultNatError } from '../../../../../../_common/_common/_common/result';
+import { getConversionFailureError } from '../../../_common/_common/getConversionFailureError';
 import {
   isRpcTransactionOutcomeFailure,
   isRpcTransactionOutcomeSuccess,
 } from '../../../_common/_common/zodSchemas/rpcTransactionOutcome';
-import { getConversionFailureError } from '../../../_common/getConversionFailureError';
 import { getExecutionFailureExecutedOptimistic } from '../../../_common/getExecutionFailure';
 import { getExecutionSuccessExecutedOptimistic } from '../../../_common/getExecutionSuccess';
 import type { RpcExecutedOptimisticTransactionDetails } from '../../../_common/zodSchemas/rpcTransactionDetails/rpcTransactionDetails';

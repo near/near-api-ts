@@ -1,8 +1,8 @@
 import type { InvalidTxError } from '@near-js/jsonrpc-types';
-import type { PublicKey } from '../../../../../types/_common/crypto';
-import type { ConversionFailureError } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/conversionFailureError';
-import { gas } from '../../../../_common/nearGas';
-import { yoctoNear } from '../../../../_common/nearToken';
+import type { PublicKey } from '../../../../../../types/_common/crypto';
+import type { ConversionFailureError } from '../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/conversionFailureError';
+import { gas } from '../../../../../_common/nearGas';
+import { yoctoNear } from '../../../../../_common/nearToken';
 
 const formErrorObject = <K, C>(kind: K, context: C) => ({ kind, context });
 
@@ -134,6 +134,9 @@ export const getConversionFailureError = (
       // The account is gone once the deletion executes, so nothing may follow it.
       if (actionsError === 'DeleteActionMustBeFinal')
         return formErrorObject('Action.DeleteAccount.NotFinal', null);
+
+      if (actionsError === 'DelegateActionMustBeOnlyOne')
+        return formErrorObject('Actions.ExecuteDelegation.TooMany', null);
 
       if (typeof actionsError === 'object') {
         if ('TotalNumberOfActionsExceeded' in actionsError)

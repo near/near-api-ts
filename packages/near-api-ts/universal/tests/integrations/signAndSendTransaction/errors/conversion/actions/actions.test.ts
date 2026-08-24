@@ -5,6 +5,7 @@ import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 import { deployContractTooMany } from './deployContract/tooMany';
+import { executeDelegationTooMany } from './executeDelegation/tooMany';
 import { totalGasLimitExceeded } from './functionCall/totalGasLimitExceeded';
 import { totalGasLimitOverflow } from './functionCall/totalGasLimitOverflow';
 import { tooMany } from './tooMany';
@@ -45,6 +46,11 @@ describe('signAndSendTransaction › Actions.* conversion errors', () => {
   it(
     'fails with Actions.DeployContract.TooMany when the transaction carries too many deploy actions',
     deployContractTooMany(context),
+  );
+
+  it(
+    'fails with Actions.ExecuteDelegation.TooMany when the transaction carries 2 or more ExecuteDelegation actions',
+    executeDelegationTooMany(context),
   );
 
   it(

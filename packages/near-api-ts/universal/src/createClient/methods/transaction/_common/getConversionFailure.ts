@@ -1,15 +1,15 @@
 import type { InvalidTxError } from '@near-js/jsonrpc-types';
-import type { Result } from '../../../../../../types/_common/common';
-import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
-import type { ConversionFailure } from '../../../../../../types/client/methods/transaction/_common/transactionDetails/conversionFailure';
-import { type NatError } from '../../../../../_common/_common/_common/_common/natError';
-import { result } from '../../../../../_common/_common/_common/result';
-import { gas } from '../../../../../_common/nearGas';
-import { yoctoNear } from '../../../../../_common/nearToken';
-import { getTransactionSummary } from '../../_common/_common/_common/getTransactionSummary';
-import type { RpcTransactionOutcomeFailure } from '../../_common/_common/zodSchemas/rpcTransactionOutcome';
-import { getConversionFailureError } from '../../_common/getConversionFailureError';
-import type { RpcTransactionSummary } from '../../_common/zodSchemas/rpcTransactionDetails/rpcTransactionSummary';
+import type { Result } from '../../../../../types/_common/common';
+import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { ConversionFailure } from '../../../../../types/client/methods/transaction/_common/transactionDetails/conversionFailure';
+import { type NatError } from '../../../../_common/_common/_common/_common/natError';
+import { result } from '../../../../_common/_common/_common/result';
+import { gas } from '../../../../_common/nearGas';
+import { yoctoNear } from '../../../../_common/nearToken';
+import { getTransactionSummary } from './_common/_common/getTransactionSummary';
+import { getConversionFailureError } from './_common/getConversionFailureError';
+import type { RpcTransactionOutcomeFailure } from './_common/zodSchemas/rpcTransactionOutcome';
+import type { RpcTransactionSummary } from './zodSchemas/rpcTransactionDetails/rpcTransactionSummary';
 
 type GetConversionFailureArgs = {
   transaction: RpcTransactionSummary;
