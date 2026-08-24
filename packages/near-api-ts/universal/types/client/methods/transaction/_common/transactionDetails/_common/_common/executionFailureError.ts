@@ -74,6 +74,9 @@ interface ExecuteDelegationErrorRegistry {
     executorAccountId: AccountId;
     delegatorAccountId: AccountId;
   };
+  // These mirror the `Signer.AccessKey.*` conversion errors except for a `GasBudget.NotEnough`
+  // counterpart: the relayer pays for a delegation, so the delegator key's allowance is never
+  // checked and nearcore has no way to report it here.
   'Action.ExecuteDelegation.Delegator.AccessKey.NotFound': {
     delegatorAccountId: AccountId;
     delegatorPublicKey: PublicKey;
@@ -86,12 +89,6 @@ interface ExecuteDelegationErrorRegistry {
   };
   'Action.ExecuteDelegation.Delegator.AccessKey.Function.NotAllowed': {
     functionName: ContractFunctionName;
-  };
-  'Action.ExecuteDelegation.Delegator.AccessKey.GasBudget.NotEnough': {
-    delegatorAccountId: AccountId;
-    delegatorPublicKey: PublicKey;
-    gasBudget: NearToken;
-    transactionCost: NearToken;
   };
 }
 

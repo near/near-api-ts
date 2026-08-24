@@ -214,20 +214,10 @@ export const getExecutionFailureError = (actionError: ActionError): ExecutionFai
             context: { functionName: accessKeyError.MethodNameMismatch.methodName },
           };
 
-        // Unreachable today: the relayer pays for a delegation, so `validate_delegate_action_key`
-        // (`runtime/runtime/src/actions.rs`) never touches the delegator key's allowance - only
-        // `verify_and_charge_tx_ephemeral` (`runtime/runtime/src/verifier.rs`) does, on the
-        // transaction path. Mapped anyway so it can't turn into a thrown unknown error.
-        if ('NotEnoughAllowance' in accessKeyError)
-          return {
-            kind: 'Action.ExecuteDelegation.Delegator.AccessKey.GasBudget.NotEnough',
-            context: {
-              delegatorAccountId: accessKeyError.NotEnoughAllowance.accountId,
-              delegatorPublicKey: accessKeyError.NotEnoughAllowance.publicKey as PublicKey,
-              gasBudget: yoctoNear(accessKeyError.NotEnoughAllowance.allowance),
-              transactionCost: yoctoNear(accessKeyError.NotEnoughAllowance.cost),
-            },
-          };
+        // `NotEnoughAllowance` is left out on purpose: the relayer pays for a delegation, so
+        // `validate_delegate_action_key` (`runtime/runtime/src/actions.rs`) never touches the
+        // delegator key's allowance - only `verify_and_charge_tx_ephemeral`
+        // (`runtime/runtime/src/verifier.rs`) does, on the transaction path.
       }
     }
 
