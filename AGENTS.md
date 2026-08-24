@@ -30,5 +30,8 @@ Run from the repo root:
 
 ## Notes
 
+- Never interact with a remote repository. Do not run `git push`, `git pull`, `git fetch`,
+  or any other command that reads from or writes to a remote; the user performs all
+  remote repository operations exclusively.
 - `architecture/` holds design drafts, not current conventions. Do not treat it as a
   description of how the code works today.
