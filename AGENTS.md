@@ -4,6 +4,9 @@ TypeScript monorepo for NEAR Protocol client libraries. pnpm workspaces, Node >=
 
 ## Conventions
 
+Use Conventional Commits for every commit message: `<type>(optional-scope): <description>`
+(for example, `fix(transaction): handle expired delegation`).
+
 **[skills/module-placement/SKILL.md](skills/module-placement/SKILL.md) — where a module file belongs.**
 Read it before adding, splitting, moving or renaming any file under
 `packages/near-api-ts/universal/src`. Which folder owns a module, and how deep in that
