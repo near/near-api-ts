@@ -8,4 +8,7 @@ export const result = {
 };
 
 export const resultNatError: CreateResultNatError = (kind, context) =>
-  result.err(createNatError({ kind, context }));
+  // The declared return type spreads a union `kind` into a union of errors, one per kind. That
+  // is the very same object at runtime, but TypeScript can't relate the two while the kind is
+  // still a type parameter, so the error type is handed over as `never`.
+  result.err(createNatError({ kind, context })) as ResultErr<never>;

@@ -52,10 +52,16 @@ export type CreateNatErrorArgs<K extends NatErrorKind, C extends ContextFor<K> =
   context: C;
 };
 
+// A union kind is spread into a union of errors, one per kind - `NatError<'A' | 'B', C>` is a
+// single error whose `kind` happens to be a union, and TypeScript only relates that to a union of
+// per-kind errors while the discriminant cross-product stays under its 25-combination limit,
+// which the execution failure kinds alone already exceed.
+type NatErrorFor<K extends NatErrorKind, C> = K extends K ? NatError<K, C & ContextFor<K>> : never;
+
 export type CreateResultNatError = <
   K extends NatErrorKind,
   C extends ContextFor<K> = ContextFor<K>,
 >(
   kind: K,
   context: C,
-) => ResultErr<NatError<K, C>>;
+) => ResultErr<NatErrorFor<K, C>>;
