@@ -1,8 +1,6 @@
 import type { Result } from '../../../../../types/_common/common';
-import type {
-  SignedTransaction,
-  Transaction,
-} from '../../../../../types/_common/transaction/transaction';
+import type { SignTransactionOutput } from '../../../../../types/_common/transaction/signTransaction';
+import type { Transaction } from '../../../../../types/_common/transaction/transaction';
 import type { PoolKey } from '../../../../../types/signer/inner/keyPool';
 import type { Task } from '../../../../../types/signer/inner/taskQueue';
 import type { MemorySignerContext } from '../../../../../types/signer/memorySigner';
@@ -12,7 +10,7 @@ import { wrapInternalError } from '../../../../_common/_common/wrapInternalError
 import { signTransaction as signTransactionHelper } from '../../../../transaction/signTransaction/signTransaction';
 
 type Execute = () => Promise<
-  Result<SignedTransaction, NatError<'MemorySigner.SignTransaction.Internal'>>
+  Result<SignTransactionOutput, NatError<'MemorySigner.SignTransaction.Internal'>>
 >;
 
 export const signTransaction = async (
@@ -33,13 +31,13 @@ export const signTransaction = async (
     };
 
     // This call will never fail
-    const signedTransaction = await signTransactionHelper({
+    const signTransactionOutput = await signTransactionHelper({
       signDataProvider: signerContext.keyService,
       transaction,
     });
 
     key.setNonce(nextNonce);
-    return result.ok(signedTransaction);
+    return result.ok(signTransactionOutput);
   });
 
   const transactionResult = await execute();

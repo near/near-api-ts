@@ -24,7 +24,7 @@ test('secp256k1 transaction verification', async () => {
   const isValid = verifySignature({
     publicKey: keyPair.publicKey,
     message: base58.decode(signedTransaction.transactionHash),
-    signature: signedTransaction.signature,
+    signature: signedTransaction.signedTransaction.signature,
   });
 
   expect(isValid).toBe(true);

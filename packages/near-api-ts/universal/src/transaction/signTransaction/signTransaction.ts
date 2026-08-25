@@ -23,7 +23,7 @@ const SignTransactionArgsSchema = z.object({
   signDataProvider: z.object({
     safeSignData: z.custom(
       (val) => typeof val === 'function',
-      'keyService.safeSignData must be a function',
+      'signDataProvider.safeSignData must be a function',
     ),
   }),
 });
@@ -64,11 +64,16 @@ export const safeSignTransaction: SafeSignTransaction = wrapInternalError(
       nearcoreSignedTransaction,
     );
 
-    // #3: Return signed transaction
+    // #3: Return signed transaction. The single-action shorthand is normalized into
+    // the action list, so the signed value always has the shape the bytes encode.
+    const { action, actions, ...transactionBase } = args.transaction;
+
     return result.ok({
       transactionHash: base58.encode(transactionHashU8),
-      transaction: args.transaction,
-      signature: signedData.value.signature,
+      signedTransaction: {
+        transaction: { ...transactionBase, actions: action ? [action] : actions },
+        signature: signedData.value.signature,
+      },
       signedTransactionBorsh64: signedTransactionBorshU8.toBase64(),
     });
   },

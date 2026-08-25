@@ -1,5 +1,5 @@
 import type { Prettify } from '../../utils';
-import type { AccountId, Base64String, BlockHash, CryptoHash, TransactionNonce } from '../common';
+import type { AccountId, BlockHash, TransactionNonce } from '../common';
 import type { NearcorePublicKey, NearcoreSignature, PublicKey, Signature } from '../crypto';
 import type {
   AddFullAccessKeyAction,
@@ -56,10 +56,7 @@ type TransactionBase = {
   blockHash: BlockHash;
 };
 
-type SingleActionTransaction = TransactionBase & SingleTransactionAction;
-type MultiActionsTransaction = TransactionBase & MultiTransactionActions;
-
-export type Transaction = SingleActionTransaction | MultiActionsTransaction;
+export type Transaction = TransactionBase & (SingleTransactionAction | MultiTransactionActions);
 
 export type TransactionIntent = Prettify<
   {
@@ -68,10 +65,8 @@ export type TransactionIntent = Prettify<
 >;
 
 export type SignedTransaction = {
-  transactionHash: CryptoHash;
-  transaction: Transaction;
+  transaction: TransactionBase & MultiTransactionActions;
   signature: Signature;
-  signedTransactionBorsh64: Base64String;
 };
 
 // Nearcore Transaction

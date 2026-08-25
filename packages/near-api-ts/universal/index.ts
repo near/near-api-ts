@@ -170,6 +170,8 @@ export type {
   SingleDelegatedAction,
 } from './types/_common/transaction/actions/executeDelegation/delegation';
 export type { ExecuteDelegationAction } from './types/_common/transaction/actions/executeDelegation/executeDelegation';
+export type { SignDelegationOutput } from './types/_common/transaction/signDelegation';
+export type { SignTransactionOutput } from './types/_common/transaction/signTransaction';
 export type {
   SignedTransaction,
   Transaction,

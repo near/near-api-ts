@@ -29,7 +29,7 @@ describe('memoryKeyService.signTransaction', () => {
     const res = await signTransaction({ signDataProvider: keyService, transaction });
 
     expect(res.transactionHash).toBe('HFdRehqc88853UQQZtFibmPAn77i9X64SwvxVSJjFpAa');
-    expect(res.signature).toBe(
+    expect(res.signedTransaction.signature).toBe(
       'ed25519:4j3z7rpKJLeyugziu8oKE9wZJBWXoakhdSUHRt8PHK5wuAdUkyuf3T36tMDF8RrWoiF5MG8Mc3PuAaqcpGAJtFAd',
     );
   });

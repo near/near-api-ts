@@ -1,5 +1,5 @@
 import type { NatError } from '../../../src/_common/_common/_common/_common/natError';
-import type { Result } from '../common';
+import type { Base64String, CryptoHash, Result } from '../common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
 import type { SafeSignData } from '../signData';
 import type { SignedTransaction, Transaction } from './transaction';
@@ -15,7 +15,11 @@ export type SignTransactionArgs<SDE = unknown> = {
   transaction: Transaction;
 };
 
-type SignTransactionOutput = SignedTransaction;
+export type SignTransactionOutput = {
+  transactionHash: CryptoHash;
+  signedTransaction: SignedTransaction;
+  signedTransactionBorsh64: Base64String;
+};
 
 type SignTransactionError<SDE> =
   | NatError<'SignTransaction.Args.InvalidSchema'>

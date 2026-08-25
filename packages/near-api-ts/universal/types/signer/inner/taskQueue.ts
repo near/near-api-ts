@@ -7,7 +7,8 @@ import type {
   Result,
   TimeoutId,
 } from '../../_common/common';
-import type { SignedTransaction, TransactionIntent } from '../../_common/transaction/transaction';
+import type { SignTransactionOutput } from '../../_common/transaction/signTransaction';
+import type { TransactionIntent } from '../../_common/transaction/transaction';
 import type { SendSignedTransactionError } from '../../client/methods/transaction/sendSignedTransaction/error';
 import type { SendSignedTransactionOutput } from '../../client/methods/transaction/sendSignedTransaction/output';
 import type { MemorySignerErrorContext } from '../_common/errorContext';
@@ -90,7 +91,7 @@ export type SignTransactionTaskError =
 
 export type AddSignTransactionTask = (
   intent: TransactionIntent,
-) => Promise<Result<SignedTransaction, SignTransactionTaskError>>;
+) => Promise<Result<SignTransactionOutput, SignTransactionTaskError>>;
 
 export type CreateAddSignTransactionTask = (context: TaskQueueContext) => AddSignTransactionTask;
 
