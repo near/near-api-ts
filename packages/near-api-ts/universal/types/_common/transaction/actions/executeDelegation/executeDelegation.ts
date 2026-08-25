@@ -15,13 +15,12 @@ export type CreateExecuteDelegationActionArgs = {
 
 /**
  * The transaction action a relayer wraps a signed delegation in. It carries the
- * two signed halves; `signedDelegationBorsh64` is dropped because the action is
- * serialized as a part of the relayer's own transaction.
+ * signed delegation itself, not its borsh bytes - the action is serialized as a
+ * part of the relayer's own transaction.
  */
 export type ExecuteDelegationAction = {
   actionType: 'ExecuteDelegation';
-  delegation: SignedDelegation['delegation'];
-  signature: SignedDelegation['signature'];
+  signedDelegation: SignedDelegation;
 };
 
 type CreateExecuteDelegationActionError =

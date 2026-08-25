@@ -163,9 +163,11 @@ export type { FunctionCallAction } from './types/_common/transaction/actions/del
 export type { TransferAction } from './types/_common/transaction/actions/delegableActions/transfer';
 export type {
   DelegatedAction,
-  Delegation,
+  DelegationBase,
   DelegationIntent,
+  MultiDelegatedActions,
   SignedDelegation,
+  SingleDelegatedAction,
 } from './types/_common/transaction/actions/executeDelegation/delegation';
 export type { ExecuteDelegationAction } from './types/_common/transaction/actions/executeDelegation/executeDelegation';
 export type {

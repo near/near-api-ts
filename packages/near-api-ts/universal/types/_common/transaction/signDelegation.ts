@@ -1,8 +1,13 @@
 import type { NatError } from '../../../src/_common/_common/_common/_common/natError';
-import type { Result } from '../common';
+import type { Base64String, Result } from '../common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
 import type { SafeSignData } from '../signData';
-import type { Delegation, SignedDelegation } from './actions/executeDelegation/delegation';
+import type {
+  DelegationBase,
+  MultiDelegatedActions,
+  SignedDelegation,
+  SingleDelegatedAction,
+} from './actions/executeDelegation/delegation';
 
 export interface SignDelegationPublicErrorRegistry {
   'SignDelegation.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -11,11 +16,14 @@ export interface SignDelegationPublicErrorRegistry {
 }
 
 export type SignDelegationArgs<SDE = unknown> = {
-  delegation: Delegation;
+  delegation: DelegationBase & (SingleDelegatedAction | MultiDelegatedActions);
   signDataProvider: { safeSignData: SafeSignData<SDE> };
 };
 
-type SignDelegationOutput = SignedDelegation;
+export type SignDelegationOutput = {
+  signedDelegation: SignedDelegation;
+  signedDelegationBorsh64: Base64String;
+};
 
 type SignDelegationError<SDE> =
   | NatError<'SignDelegation.Args.InvalidSchema'>

@@ -1,5 +1,5 @@
 import type { Prettify } from '../../../../utils';
-import type { AccountId, Base64String, BlockHeight, TransactionNonce } from '../../../common';
+import type { AccountId, BlockHeight, TransactionNonce } from '../../../common';
 import type { NearcorePublicKey, NearcoreSignature, PublicKey, Signature } from '../../../crypto';
 import type {
   AddFullAccessKeyAction,
@@ -47,15 +47,13 @@ export type MultiDelegatedActions = {
   delegatedActions: DelegatedAction[];
 };
 
-type DelegationBase = {
+export type DelegationBase = {
   delegatorAccountId: AccountId;
   delegatorPublicKey: PublicKey;
   receiverAccountId: AccountId;
   nonce: TransactionNonce;
   expiration: { blockHeight: BlockHeight };
 };
-
-export type Delegation = DelegationBase & (SingleDelegatedAction | MultiDelegatedActions);
 
 export type SignedDelegation = {
   /**
@@ -65,7 +63,6 @@ export type SignedDelegation = {
    */
   delegation: { tag: number; delegatedActions: DelegatedAction[] } & DelegationBase;
   signature: Signature;
-  signedDelegationBorsh64: Base64String;
 };
 
 // Intent

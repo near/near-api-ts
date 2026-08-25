@@ -1,6 +1,6 @@
 import { executeDelegation } from '../../../../../../../../index';
 import { signTransaction } from '../../../../../../../../src/transaction/signTransaction/signTransaction';
-import type { SignedDelegation } from '../../../../../../../../types/_common/transaction/actions/executeDelegation/delegation';
+import type { SignDelegationOutput } from '../../../../../../../../types/_common/transaction/signDelegation';
 import type { TestContext } from '../../executeDelegation.test';
 
 /**
@@ -8,7 +8,10 @@ import type { TestContext } from '../../executeDelegation.test';
  * only receiver a delegation may be sent to — and send it. Every access key case shares this
  * step; what they vary is the key the delegation is signed with and what it delegates.
  */
-export const sendDelegation = async (context: TestContext, signedDelegation: SignedDelegation) => {
+export const sendDelegation = async (
+  context: TestContext,
+  signedDelegation: SignDelegationOutput,
+) => {
   const { client, defaultKeyPair } = context;
 
   const { accountAccessKey, blockHash } = await client.getAccountAccessKey({

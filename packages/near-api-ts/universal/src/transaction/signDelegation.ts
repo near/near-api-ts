@@ -70,12 +70,14 @@ export const safeSignDelegation: SafeSignDelegation = wrapInternalError(
     const { delegatedAction, delegatedActions, ...delegationBase } = args.delegation;
 
     return result.ok({
-      delegation: {
-        tag: constants.Nep366MetaTransaction.Tag,
-        ...delegationBase,
-        delegatedActions: delegatedAction ? [delegatedAction] : delegatedActions,
+      signedDelegation: {
+        delegation: {
+          tag: constants.Nep366MetaTransaction.Tag,
+          ...delegationBase,
+          delegatedActions: delegatedAction ? [delegatedAction] : delegatedActions,
+        },
+        signature: signedData.value.signature,
       },
-      signature: signedData.value.signature,
       signedDelegationBorsh64: signedDelegationBorshU8.toBase64(),
     });
   },

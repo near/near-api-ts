@@ -37,7 +37,7 @@ describe('Execute delegation', () => {
       publicKey: aliceKp.publicKey,
     });
 
-    const signedDelegation = await signDelegation({
+    const { signedDelegation, signedDelegationBorsh64 } = await signDelegation({
       delegation: {
         delegatorAccountId: 'alice',
         delegatorPublicKey: aliceKp.publicKey,
@@ -77,7 +77,10 @@ describe('Execute delegation', () => {
         signerAccountId: 'relay',
         signerPublicKey: relayKp.publicKey,
         nonce: relayAccessKey.accountAccessKey.nonce + 1,
-        actions: [executeDelegation(signedDelegation), transfer({ amount: { near: '1' } })],
+        actions: [
+          executeDelegation({ signedDelegationBorsh64 }),
+          transfer({ amount: { near: '1' } }),
+        ],
         receiverAccountId: signedDelegation.delegation.delegatorAccountId,
         blockHash: relayAccessKey.blockHash,
       },

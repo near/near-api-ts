@@ -35,12 +35,9 @@ export const safeExecuteDelegation: SafeCreateExecuteDelegationAction = wrapInte
         signedDelegationBorshU8,
       ) as WireSignedDelegation;
 
-      const { delegation, signature } = fromNearcoreSignedDelegation(wireSignedDelegation);
-
       return result.ok({
         actionType: 'ExecuteDelegation' as const,
-        delegation,
-        signature,
+        signedDelegation: fromNearcoreSignedDelegation(wireSignedDelegation),
       });
     } catch (cause) {
       return resultNatError('CreateAction.ExecuteDelegation.Deserialize.Failed', { cause });

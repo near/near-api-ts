@@ -3,7 +3,7 @@ import { SignedDelegationZodSchema } from '../../../_common/zodSchemas/delegatio
 
 export const ExecuteDelegationActionZodSchema = z.object({
   actionType: z.literal('ExecuteDelegation'),
-  ...SignedDelegationZodSchema.shape,
+  signedDelegation: SignedDelegationZodSchema,
 });
 
 export type InnerExecuteDelegationAction = z.infer<typeof ExecuteDelegationActionZodSchema>;

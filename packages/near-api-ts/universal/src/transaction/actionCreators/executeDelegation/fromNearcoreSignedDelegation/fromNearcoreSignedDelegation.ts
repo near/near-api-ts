@@ -16,7 +16,7 @@ export type WireSignedDelegation = {
 
 export const fromNearcoreSignedDelegation = (
   signedDelegation: WireSignedDelegation,
-): Pick<SignedDelegation, 'delegation' | 'signature'> => ({
+): SignedDelegation => ({
   delegation: fromNearcoreDelegation(signedDelegation.delegation),
   signature: fromNearcoreSignature(signedDelegation.signature),
 });

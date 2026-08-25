@@ -9,7 +9,7 @@ export const toNearcoreExecuteDelegation = (
   executeDelegation: NearcoreSignedDelegation;
 } => ({
   executeDelegation: {
-    delegation: toNearcoreDelegation(action.delegation),
-    signature: toNearcoreSignature(action.signature),
+    delegation: toNearcoreDelegation(action.signedDelegation.delegation),
+    signature: toNearcoreSignature(action.signedDelegation.signature),
   },
 });
