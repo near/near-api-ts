@@ -8,6 +8,7 @@ import { result, resultNatError } from '../../../_common/_common/_common/result'
 import { asThrowable } from '../../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../../_common/_common/wrapInternalError';
 import { SignedDelegationBorshSchema } from '../../_common/borshSchemas/delegation';
+import { SignedDelegationZodSchema } from '../../_common/zodSchemas/delegation';
 import {
   fromNearcoreSignedDelegation,
   type WireSignedDelegation,
@@ -35,12 +36,27 @@ export const safeExecuteDelegation: SafeCreateExecuteDelegationAction = wrapInte
         signedDelegationBorshU8,
       ) as WireSignedDelegation;
 
+      const signedDelegation = fromNearcoreSignedDelegation(wireSignedDelegation);
+
+      // Borsh only proves the bytes match the schema - it says nothing about account ids,
+      // key formats or number ranges. Validate here so a delegation built elsewhere is
+      // rejected by the helper that received it, not later by `signTransaction`, which
+      // would blame the relayer's own transaction. The parse is a gate only: it
+      // transforms keys and signatures into the inner form, while the action carries
+      // the public one, and `signTransaction` parses the transaction on its own anyway.
+      const validSignedDelegation = SignedDelegationZodSchema.safeParse(signedDelegation);
+
+      if (!validSignedDelegation.success)
+        return resultNatError('CreateAction.ExecuteDelegation.SignedDelegation.InvalidSchema', {
+          zodError: validSignedDelegation.error,
+        });
+
       return result.ok({
         actionType: 'ExecuteDelegation' as const,
-        signedDelegation: fromNearcoreSignedDelegation(wireSignedDelegation),
+        signedDelegation,
       });
     } catch (cause) {
-      return resultNatError('CreateAction.ExecuteDelegation.Deserialize.Failed', { cause });
+      return resultNatError('CreateAction.ExecuteDelegation.SignedDelegation.Deserialize.Failed', { cause });
     }
   },
 );

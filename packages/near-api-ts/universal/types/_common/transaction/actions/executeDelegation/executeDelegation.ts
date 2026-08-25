@@ -5,7 +5,8 @@ import type { NearcoreSignedDelegation, SignedDelegation } from './delegation';
 
 export interface CreateExecuteDelegationActionPublicErrorRegistry {
   'CreateAction.ExecuteDelegation.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'CreateAction.ExecuteDelegation.Deserialize.Failed': { cause: unknown };
+  'CreateAction.ExecuteDelegation.SignedDelegation.Deserialize.Failed': { cause: unknown };
+  'CreateAction.ExecuteDelegation.SignedDelegation.InvalidSchema': InvalidSchemaErrorContext;
   'CreateAction.ExecuteDelegation.Internal': InternalErrorContext;
 }
 
@@ -25,7 +26,8 @@ export type ExecuteDelegationAction = {
 
 type CreateExecuteDelegationActionError =
   | NatError<'CreateAction.ExecuteDelegation.Args.InvalidSchema'>
-  | NatError<'CreateAction.ExecuteDelegation.Deserialize.Failed'>
+  | NatError<'CreateAction.ExecuteDelegation.SignedDelegation.Deserialize.Failed'>
+  | NatError<'CreateAction.ExecuteDelegation.SignedDelegation.InvalidSchema'>
   | NatError<'CreateAction.ExecuteDelegation.Internal'>;
 
 export type SafeCreateExecuteDelegationAction = (
