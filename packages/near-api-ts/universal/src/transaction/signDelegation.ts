@@ -23,7 +23,7 @@ const SignDelegationArgsSchema = z.object({
   signDataProvider: z.object({
     safeSignData: z.custom(
       (val) => typeof val === 'function',
-      'keyService.safeSignData must be a function',
+      'signDataProvider.safeSignData must be a function',
     ),
   }),
 });
