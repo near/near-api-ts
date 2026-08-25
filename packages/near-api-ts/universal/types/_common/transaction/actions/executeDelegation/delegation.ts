@@ -94,7 +94,7 @@ export type NearcoreDelegation = {
   receiverId: AccountId;
   actions: NearcoreDelegableAction[];
   nonce: bigint;
-  maxBlockHeight: number;
+  maxBlockHeight: bigint;
   publicKey: NearcorePublicKey;
 };
 
