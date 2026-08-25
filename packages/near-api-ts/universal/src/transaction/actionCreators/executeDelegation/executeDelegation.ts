@@ -56,7 +56,9 @@ export const safeExecuteDelegation: SafeCreateExecuteDelegationAction = wrapInte
         signedDelegation,
       });
     } catch (cause) {
-      return resultNatError('CreateAction.ExecuteDelegation.SignedDelegation.Deserialize.Failed', { cause });
+      return resultNatError('CreateAction.ExecuteDelegation.SignedDelegation.Deserialize.Failed', {
+        cause,
+      });
     }
   },
 );
