@@ -1,7 +1,7 @@
 import type { NearcoreAddKeyAction } from '../../../../../../types/_common/transaction/actions/delegableActions/addKey';
 import type { NearcoreFunctionCallAction } from '../../../../../../types/_common/transaction/actions/delegableActions/functionCall';
 import type {
-  DelegatedAction,
+  DelegableAction,
   NearcoreDelegableAction,
   NearcoreDelegation,
   SignedDelegation,
@@ -14,7 +14,7 @@ const fromNearcoreFunctionCallAction = ({
   args,
   gas,
   deposit,
-}: NearcoreFunctionCallAction['functionCall']): DelegatedAction => ({
+}: NearcoreFunctionCallAction['functionCall']): DelegableAction => ({
   actionType: 'FunctionCall',
   functionName: methodName,
   functionArgs: Uint8Array.from(args),
@@ -25,7 +25,7 @@ const fromNearcoreFunctionCallAction = ({
 const fromNearcoreAddKeyAction = ({
   publicKey,
   accessKey,
-}: NearcoreAddKeyAction['addKey']): DelegatedAction => {
+}: NearcoreAddKeyAction['addKey']): DelegableAction => {
   if ('fullAccess' in accessKey.permission)
     return {
       actionType: 'AddKey',
@@ -46,7 +46,7 @@ const fromNearcoreAddKeyAction = ({
 };
 
 // Borsh deserializes `u8` arrays into plain number arrays, not Uint8Array.
-const fromNearcoreDelegableAction = (action: NearcoreDelegableAction): DelegatedAction => {
+const fromNearcoreDelegableAction = (action: NearcoreDelegableAction): DelegableAction => {
   if ('createAccount' in action) return { actionType: 'CreateAccount' };
 
   if ('transfer' in action)

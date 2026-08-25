@@ -17,7 +17,7 @@ import { UseGlobalContractActionBorshSchema } from '../_common/borshSchemas/useG
 // (for borsh serialization/deserialization). So we use a placeholder struct here -
 // `x: 'bool'`. The field type is not important, it is just used to make sure that
 // the enum is the same.
-const DelegatedActionBorshSchema: Schema = {
+const DelegableActionBorshSchema: Schema = {
   enum: [
     CreateAccountActionBorshSchema,
     DeployContractActionBorshSchema,
@@ -39,7 +39,7 @@ const DelegatedActionBorshSchema: Schema = {
 const DelegationFieldsBorshSchema: Record<string, Schema> = {
   senderId: 'string',
   receiverId: 'string',
-  actions: { array: { type: DelegatedActionBorshSchema } },
+  actions: { array: { type: DelegableActionBorshSchema } },
   nonce: 'u64',
   maxBlockHeight: 'u64',
   publicKey: PublicKeyBorshSchema,

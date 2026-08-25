@@ -12,9 +12,9 @@ import { toNearcoreDeployContractAction } from '../_common/toNearcore/toNearcore
 import { toNearcoreFunctionCallAction } from '../_common/toNearcore/toNearcoreFunctionCall';
 import { toNearcoreStakeAction } from '../_common/toNearcore/toNearcoreStake';
 import { toNearcoreTransferAction } from '../_common/toNearcore/toNearcoreTransfer';
-import type { InnerDelegatedAction, InnerDelegation } from '../zodSchemas/delegation';
+import type { InnerDelegableAction, InnerDelegation } from '../zodSchemas/delegation';
 
-const toNearcoreDelegableAction = (action: InnerDelegatedAction): NearcoreDelegableAction => {
+const toNearcoreDelegableAction = (action: InnerDelegableAction): NearcoreDelegableAction => {
   switch (action.actionType) {
     case 'CreateAccount':
       return toNearcoreCreateAccountAction();

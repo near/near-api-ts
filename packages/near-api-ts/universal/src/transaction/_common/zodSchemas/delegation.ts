@@ -14,7 +14,7 @@ import { FunctionCallActionZodSchema } from '../_common/zodSchemas/functionCall'
 import { StakeActionZodSchema } from '../_common/zodSchemas/stake';
 import { TransferActionZodSchema } from '../_common/zodSchemas/transfer';
 
-const DelegatedActionZodSchema = z.union([
+const DelegableActionZodSchema = z.union([
   CreateAccountActionZodSchema,
   TransferActionZodSchema,
   AddKeyActionZodSchema,
@@ -25,7 +25,7 @@ const DelegatedActionZodSchema = z.union([
   DeleteAccountActionZodSchema,
 ]);
 
-export type InnerDelegatedAction = z.infer<typeof DelegatedActionZodSchema>;
+export type InnerDelegableAction = z.infer<typeof DelegableActionZodSchema>;
 
 const DelegationBaseZodSchema = z.object({
   delegatorAccountId: AccountIdZodSchema,
@@ -38,13 +38,13 @@ const DelegationBaseZodSchema = z.object({
 });
 
 const SingleDelegatedActionZodSchema = z.object({
-  delegatedAction: DelegatedActionZodSchema,
+  delegatedAction: DelegableActionZodSchema,
   delegatedActions: z.optional(z.never()),
 });
 
 const MultiDelegatedActionsZodSchema = z.object({
   delegatedAction: z.optional(z.never()),
-  delegatedActions: z.array(DelegatedActionZodSchema).check(z.minLength(1)),
+  delegatedActions: z.array(DelegableActionZodSchema).check(z.minLength(1)),
 });
 
 export const DelegationZodSchema = z.union([

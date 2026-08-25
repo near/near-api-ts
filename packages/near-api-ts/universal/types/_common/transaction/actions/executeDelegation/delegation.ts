@@ -26,7 +26,7 @@ import type {
 import type { NearcoreStakeAction, StakeAction } from '../delegableActions/stake';
 import type { NearcoreTransferAction, TransferAction } from '../delegableActions/transfer';
 
-export type DelegatedAction =
+export type DelegableAction =
   | CreateAccountAction
   | TransferAction
   | AddFullAccessKeyAction
@@ -38,13 +38,13 @@ export type DelegatedAction =
   | DeleteAccountAction;
 
 export type SingleDelegatedAction = {
-  delegatedAction: DelegatedAction;
+  delegatedAction: DelegableAction;
   delegatedActions?: never;
 };
 
 export type MultiDelegatedActions = {
   delegatedAction?: never;
-  delegatedActions: DelegatedAction[];
+  delegatedActions: DelegableAction[];
 };
 
 export type DelegationBase = {
@@ -61,7 +61,7 @@ export type SignedDelegation = {
    * `delegatedActions` was passed in, the signed value carries the action list.
    * `tag` is the message tag the signature was made over.
    */
-  delegation: { tag: number; delegatedActions: DelegatedAction[] } & DelegationBase;
+  delegation: { tag: number; delegatedActions: DelegableAction[] } & DelegationBase;
   signature: Signature;
 };
 
