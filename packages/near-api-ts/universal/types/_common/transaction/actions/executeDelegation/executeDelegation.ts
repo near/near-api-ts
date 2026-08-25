@@ -1,15 +1,16 @@
 import type { NatError } from '../../../../../src/_common/_common/_common/_common/natError';
-import type { Result } from '../../../common';
+import type { Base64String, Result } from '../../../common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';
 import type { NearcoreSignedDelegation, SignedDelegation } from './delegation';
 
 export interface CreateExecuteDelegationActionPublicErrorRegistry {
   'CreateAction.ExecuteDelegation.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'CreateAction.ExecuteDelegation.Deserialize.Failed': { cause: unknown };
   'CreateAction.ExecuteDelegation.Internal': InternalErrorContext;
 }
 
 export type CreateExecuteDelegationActionArgs = {
-  signedDelegation: SignedDelegation;
+  signedDelegationBorsh64: Base64String;
 };
 
 /**
@@ -25,6 +26,7 @@ export type ExecuteDelegationAction = {
 
 type CreateExecuteDelegationActionError =
   | NatError<'CreateAction.ExecuteDelegation.Args.InvalidSchema'>
+  | NatError<'CreateAction.ExecuteDelegation.Deserialize.Failed'>
   | NatError<'CreateAction.ExecuteDelegation.Internal'>;
 
 export type SafeCreateExecuteDelegationAction = (

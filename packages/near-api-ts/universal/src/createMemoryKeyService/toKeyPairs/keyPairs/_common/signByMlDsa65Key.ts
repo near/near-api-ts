@@ -1,6 +1,6 @@
 import { ml_dsa65 } from '@noble/post-quantum/ml-dsa.js';
 import { result } from '../../../../_common/_common/_common/result';
-import { toMlDsa65CurveString } from './_common/toCurveString';
+import { toMlDsa65CurveString } from '../../../../_common/toCurveString';
 
 export const signByMlDsa65Key = (secretKeyU8: Uint8Array, dataU8: Uint8Array) => {
   // The stored private key is the whole 4032-byte secret (no public component),

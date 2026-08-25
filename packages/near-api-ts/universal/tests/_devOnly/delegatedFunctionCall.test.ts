@@ -77,7 +77,7 @@ describe('Execute delegation', () => {
         signerAccountId: 'relay',
         signerPublicKey: relayKp.publicKey,
         nonce: relayAccessKey.accountAccessKey.nonce + 1,
-        actions: [executeDelegation({ signedDelegation }), transfer({ amount: { near: '1' } })],
+        actions: [executeDelegation(signedDelegation), transfer({ amount: { near: '1' } })],
         receiverAccountId: signedDelegation.delegation.delegatorAccountId,
         blockHash: relayAccessKey.blockHash,
       },

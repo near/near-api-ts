@@ -37,7 +37,7 @@ export const executorNotDelegator = (context: TestContext) => async () => {
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: natAccessKey.accountAccessKey.nonce + 1,
       blockHash: natAccessKey.blockHash,
-      action: executeDelegation({ signedDelegation }),
+      action: executeDelegation(signedDelegation),
       // The delegation must be sent to the delegator ('alice'), not to the account
       // the delegated action targets.
       receiverAccountId: 'bob',
@@ -54,9 +54,7 @@ export const executorNotDelegator = (context: TestContext) => async () => {
     'Client.SendSignedTransaction.Rpc.Action.ExecuteDelegation.Executor.NotDelegator',
   );
 
-  const txResult = await client.getTransactionResult({
-    transactionHash: signedTransaction.transactionHash,
-  });
+  const txResult = await client.getTransactionResult(signedTransaction);
 
   assertTxResultExecutionErrKind(txResult, 'Action.ExecuteDelegation.Executor.NotDelegator');
   expect(txResult.error.context.executorAccountId).toBe('bob');

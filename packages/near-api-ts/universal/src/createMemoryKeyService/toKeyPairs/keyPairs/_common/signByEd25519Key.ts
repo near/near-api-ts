@@ -1,7 +1,7 @@
 import * as ed25519 from '@noble/ed25519';
 import { sha512 } from '@noble/hashes/sha2.js';
 import { result } from '../../../../_common/_common/_common/result';
-import { toEd25519CurveString } from './_common/toCurveString';
+import { toEd25519CurveString } from '../../../../_common/toCurveString';
 
 ed25519.hashes.sha512 = sha512;
 

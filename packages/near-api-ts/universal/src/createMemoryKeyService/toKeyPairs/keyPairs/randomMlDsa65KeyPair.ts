@@ -7,7 +7,7 @@ import type {
 import { result, resultNatError } from '../../../_common/_common/_common/result';
 import { asThrowable } from '../../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../../_common/_common/wrapInternalError';
-import { toMlDsa65CurveString } from './_common/_common/toCurveString';
+import { toMlDsa65CurveString } from '../../../_common/toCurveString';
 import { signByMlDsa65Key } from './_common/signByMlDsa65Key';
 import { SignDataArgsZodSchema } from './_common/zodSchemas';
 

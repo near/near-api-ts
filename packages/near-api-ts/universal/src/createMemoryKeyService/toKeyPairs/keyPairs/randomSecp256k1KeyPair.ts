@@ -8,7 +8,7 @@ import { BinaryLengths } from '../../../_common/_common/_common/constants';
 import { result, resultNatError } from '../../../_common/_common/_common/result';
 import { asThrowable } from '../../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../../_common/_common/wrapInternalError';
-import { toSecp256k1CurveString } from './_common/_common/toCurveString';
+import { toSecp256k1CurveString } from '../../../_common/toCurveString';
 import { signBySecp256k1Key } from './_common/signBySecp256k1Key';
 import { SignDataArgsZodSchema } from './_common/zodSchemas';
 

@@ -23,7 +23,7 @@ export const sendDelegation = async (context: TestContext, signedDelegation: Sig
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: accountAccessKey.nonce + 1,
       blockHash,
-      action: executeDelegation({ signedDelegation }),
+      action: executeDelegation(signedDelegation),
       receiverAccountId: 'alice',
     },
   });

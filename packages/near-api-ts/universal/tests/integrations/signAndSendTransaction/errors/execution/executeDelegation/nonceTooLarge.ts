@@ -40,7 +40,7 @@ export const nonceTooLarge = (context: TestContext) => async () => {
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: natAccessKey.accountAccessKey.nonce + 1,
       blockHash: natAccessKey.blockHash,
-      action: executeDelegation({ signedDelegation }),
+      action: executeDelegation(signedDelegation),
       receiverAccountId: 'alice',
     },
   });
@@ -52,9 +52,7 @@ export const nonceTooLarge = (context: TestContext) => async () => {
 
   assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.ExecuteDelegation.Nonce.TooLarge');
 
-  const txResult = await client.getTransactionResult({
-    transactionHash: signedTransaction.transactionHash,
-  });
+  const txResult = await client.getTransactionResult(signedTransaction);
 
   assertTxResultExecutionErrKind(txResult, 'Action.ExecuteDelegation.Nonce.TooLarge');
   expect(txResult.error.context.delegationNonce).toBe(delegationNonce);

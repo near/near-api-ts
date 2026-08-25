@@ -24,6 +24,12 @@ export {
   safeYoctoNear,
   yoctoNear,
 } from './src/_common/nearToken';
+// Utils
+export {
+  toEd25519CurveString,
+  toMlDsa65CurveString,
+  toSecp256k1CurveString,
+} from './src/_common/toCurveString';
 // Zod Schemas
 export { AccountIdZodSchema } from './src/_common/zodSchemas/accountId';
 export { PublicKeyZodSchema } from './src/_common/zodSchemas/publicKey';
@@ -40,12 +46,6 @@ export {
   createMemoryKeyService as createMemoryKeyService,
   safeCreateMemoryKeyService,
 } from './src/createMemoryKeyService/createMemoryKeyService';
-// Utils
-export {
-  toEd25519CurveString,
-  toMlDsa65CurveString,
-  toSecp256k1CurveString,
-} from './src/createMemoryKeyService/toKeyPairs/keyPairs/_common/_common/toCurveString';
 // KeyPair
 export {
   keyPair,
@@ -107,7 +107,7 @@ export {
 export {
   safeExecuteDelegation,
   throwableExecuteDelegation as executeDelegation,
-} from './src/transaction/actionCreators/executeDelegation';
+} from './src/transaction/actionCreators/executeDelegation/executeDelegation';
 export {
   safeFunctionCall,
   throwableFunctionCall as functionCall,

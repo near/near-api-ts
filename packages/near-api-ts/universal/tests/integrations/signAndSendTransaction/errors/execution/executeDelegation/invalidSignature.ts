@@ -36,7 +36,7 @@ export const invalidSignature = (context: TestContext) => async () => {
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: natAccessKey.accountAccessKey.nonce + 1,
       blockHash: natAccessKey.blockHash,
-      action: executeDelegation({ signedDelegation }),
+      action: executeDelegation(signedDelegation),
       receiverAccountId: 'alice',
     },
   });
@@ -51,9 +51,7 @@ export const invalidSignature = (context: TestContext) => async () => {
     'Client.SendSignedTransaction.Rpc.Action.ExecuteDelegation.Signature.Invalid',
   );
 
-  const txResult = await client.getTransactionResult({
-    transactionHash: signedTransaction.transactionHash,
-  });
+  const txResult = await client.getTransactionResult(signedTransaction);
 
   assertTxResultExecutionErrKind(txResult, 'Action.ExecuteDelegation.Signature.Invalid');
 };

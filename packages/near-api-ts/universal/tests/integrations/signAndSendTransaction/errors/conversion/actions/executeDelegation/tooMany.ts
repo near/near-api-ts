@@ -37,7 +37,7 @@ export const executeDelegationTooMany = (context: TestContext) => async () => {
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: natAccessKey.accountAccessKey.nonce + 1,
       blockHash: natAccessKey.blockHash,
-      actions: [executeDelegation({ signedDelegation }), executeDelegation({ signedDelegation })],
+      actions: [executeDelegation(signedDelegation), executeDelegation(signedDelegation)],
       receiverAccountId: 'nat',
     },
   });
