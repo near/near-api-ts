@@ -27,38 +27,6 @@ describe('DeployContract Tests', () => {
       publicKey: defaultKeyPair.publicKey,
     });
 
-    /*
-    wasmUpdatePolicy: 'ByOwner', // 'Never'
-
-    registerGlobalContract({
-      wasmU8,
-      wasmMutability: 'Mutable', // 'Immutable'
-    });
-
-    linkGlobalContract({ globalContractAccountId });
-    pinGlobalContract({ globalContractWasmHash });
-
-
-    ----
-   type AccountContract =
-  | {
-      status: 'NoContract';
-    }
-  | {
-      status: 'Deployed';
-      localContractWasmHash: ContractWasmHash;
-    }
-  | {
-      status: 'Pinned';
-      globalContractWasmHash: ContractWasmHash;
-    }
-  | {
-      status: 'Linked';
-      globalContractAccountId: AccountId;
-    };
-
-     */
-
     const signedTransaction = await signTransaction({
       transaction: {
         signerAccountId: 'nat',
@@ -110,5 +78,9 @@ describe('DeployContract Tests', () => {
       minimalProcessingStage: 'CompletedFinal',
     });
     log(tx2);
+
+
+    const info = await client.getAccountInfo({ accountId: 'nat' })
+    log(info);
   });
 });
