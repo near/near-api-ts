@@ -70,7 +70,7 @@ interface ExecuteDelegationErrorRegistry {
     delegationNonce: DelegationNonce;
     maxAllowedNonce: TransactionNonce;
   };
-  'Action.ExecuteDelegation.Executor.NotDelegator': {
+  'Action.ExecuteDelegation.Executor.NotAllowed': {
     executorAccountId: AccountId;
     delegatorAccountId: AccountId;
   };

@@ -159,7 +159,7 @@ export const getExecutionFailureError = (actionError: ActionError): ExecutionFai
     // the delegator - nearcore reports its own receiverId here, not the delegation receiver.
     if ('DelegateActionSenderDoesNotMatchTxReceiver' in kind)
       return {
-        kind: 'Action.ExecuteDelegation.Executor.NotDelegator',
+        kind: 'Action.ExecuteDelegation.Executor.NotAllowed',
         context: {
           executorAccountId: kind.DelegateActionSenderDoesNotMatchTxReceiver.receiverId,
           delegatorAccountId: kind.DelegateActionSenderDoesNotMatchTxReceiver.senderId,

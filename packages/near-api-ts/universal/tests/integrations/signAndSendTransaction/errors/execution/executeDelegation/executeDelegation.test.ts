@@ -38,7 +38,7 @@ describe('signAndSendTransaction › ExecuteDelegation.* errors', () => {
   it('fails with Action.ExecuteDelegation.Expired', expired(context));
   it('fails with Action.ExecuteDelegation.Nonce.Invalid', nonceInvalid(context));
   it('fails with Action.ExecuteDelegation.Nonce.TooLarge', nonceTooLarge(context));
-  it('fails with Action.ExecuteDelegation.Executor.NotDelegator', executorNotDelegator(context));
+  it('fails with Action.ExecuteDelegation.Executor.NotAllowed', executorNotDelegator(context));
   it('fails with Action.ExecuteDelegation.Delegator.AccessKey.NotFound', notFound(context));
   it(
     'fails with Action.ExecuteDelegation.Delegator.AccessKey.NotFullAccess',

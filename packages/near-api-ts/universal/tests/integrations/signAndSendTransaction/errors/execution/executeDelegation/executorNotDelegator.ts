@@ -51,12 +51,12 @@ export const executorNotDelegator = (context: TestContext) => async () => {
 
   assertNatErrKind(
     tx,
-    'Client.SendSignedTransaction.Rpc.Action.ExecuteDelegation.Executor.NotDelegator',
+    'Client.SendSignedTransaction.Rpc.Action.ExecuteDelegation.Executor.NotAllowed',
   );
 
   const txResult = await client.getTransactionResult(signedTransaction);
 
-  assertTxResultExecutionErrKind(txResult, 'Action.ExecuteDelegation.Executor.NotDelegator');
+  assertTxResultExecutionErrKind(txResult, 'Action.ExecuteDelegation.Executor.NotAllowed');
   expect(txResult.error.context.executorAccountId).toBe('bob');
   expect(txResult.error.context.delegatorAccountId).toBe('alice');
 };
