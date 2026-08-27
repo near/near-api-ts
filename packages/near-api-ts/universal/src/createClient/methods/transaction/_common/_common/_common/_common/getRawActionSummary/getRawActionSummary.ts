@@ -104,5 +104,5 @@ export const getRawActionSummary = (rpcAction: ActionView): RawTransactionAction
       rpcAction.Delegate.signature as Signature,
     );
 
-  throw new Error(`Unsupported action: ${rpcAction}`);
+  throw new Error(`Unsupported action: ${JSON.stringify(rpcAction)}`);
 };
