@@ -37,7 +37,7 @@ describe('Execute delegation', () => {
       publicKey: aliceKp.publicKey,
     });
 
-    const { signedDelegation, signedDelegationBorsh64 } = await signDelegation({
+    const signedDelegation = await signDelegation({
       delegation: {
         delegatorAccountId: 'alice',
         delegatorPublicKey: aliceKp.publicKey,
@@ -57,8 +57,7 @@ describe('Execute delegation', () => {
           }),
         ],
         receiverAccountId: 'contract.alice',
-        // nonce: aliceAccessKey.accountAccessKey.nonce + 0,
-        nonce: 15 * 1_000_000,
+        nonce: aliceAccessKey.accountAccessKey.nonce + 1,
         expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
       },
       signDataProvider: aliceKp,
@@ -77,27 +76,16 @@ describe('Execute delegation', () => {
         signerAccountId: 'relay',
         signerPublicKey: relayKp.publicKey,
         nonce: relayAccessKey.accountAccessKey.nonce + 1,
-        actions: [
-          executeDelegation({ signedDelegationBorsh64 }),
-          transfer({ amount: { near: '1' } }),
-        ],
-        receiverAccountId: signedDelegation.delegation.delegatorAccountId,
+        actions: [executeDelegation(signedDelegation), transfer({ amount: { near: '1' } })],
+        receiverAccountId: 'alice',
         blockHash: relayAccessKey.blockHash,
       },
       signDataProvider: relayKp,
     });
 
-    // The delegation spawns a second receipt (alice -> contract), so the call
-    // only lands once every receipt of the transaction is executed.
     const txResult = await client.safeSendSignedTransaction({
       signedTransaction,
       minimalProcessingStage: 'CompletedFinal',
-      options: {
-        // deserializeActionSummaries: (args: DeserializeTransactionActionSummariesArgs) => {
-        //   const x = args.rawActionSummaries;
-        //   return 1;
-        // },
-      },
     });
 
     log(txResult);
