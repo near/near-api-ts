@@ -2,10 +2,10 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   functionCall,
+  pinGlobalContract,
   registerGlobalContract,
   signTransaction,
   stake,
-  useGlobalContract,
 } from '../../../index';
 import { safeSleep } from '../../../src/createClient/createTransport/createSendRequest/_common/_common/sleep';
 import { keyPair } from '../../../src/createMemoryKeyService/toKeyPairs/keyPairs/keyPair/keyPair';
@@ -31,9 +31,11 @@ describe('DeployContract Tests', () => {
     });
 
     /*
+    wasmUpdatePolicy: 'ByOwner', // 'Never'
+
     registerGlobalContract({
       wasmU8,
-      wasmUpdatePolicy: 'ByOwner', // 'Never'
+      wasmMutability: 'Mutable', // 'Immutable'
     });
 
     linkGlobalContract({ globalContractAccountId });
@@ -68,9 +70,9 @@ describe('DeployContract Tests', () => {
         blockHash: natKey.blockHash,
         actions: [
           registerGlobalContract({
-            wasmBytes: await getFileBytes('./wasm/write-get-record.wasm'),
-            // referenceBy: 'WasmHash',
-            referenceBy: 'OwnerAccountId',
+            wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
+            // wasmMutability: 'Immutable',
+            wasmMutability: 'Mutable',
           }),
         ],
         receiverAccountId: 'nat',
@@ -95,9 +97,8 @@ describe('DeployContract Tests', () => {
         nonce: natKey.accountAccessKey.nonce + 2,
         blockHash: natKey.blockHash,
         actions: [
-          useGlobalContract({
-            // ownerAccountId: 'nat'
-            wasmHash: 'D6noZ3aDk5ZwPSqp2p8P85dpEg9xhfqKSCo5cniDLkHK',
+          pinGlobalContract({
+            globalContractWasmHash: 'D6noZ3aDk5ZwPSqp2p8P85dpEg9xhfqKSCo5cniDLkHK',
           }),
           functionCall({
             functionName: 'write_record',

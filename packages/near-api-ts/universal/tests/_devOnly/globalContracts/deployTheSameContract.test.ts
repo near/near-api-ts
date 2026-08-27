@@ -1,12 +1,6 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
-import {
-  functionCall,
-  registerGlobalContract,
-  signTransaction,
-  stake,
-  useGlobalContract,
-} from '../../../index';
+import { functionCall, registerGlobalContract, signTransaction, stake } from '../../../index';
 import { keyPair } from '../../../src/createMemoryKeyService/toKeyPairs/keyPairs/keyPair/keyPair';
 import type { Client } from '../../../types/client/client';
 import { createDefaultClient, getFileBytes, log } from '../../utils/common';
@@ -36,8 +30,8 @@ describe('DeployContract Tests', () => {
         blockHash: natKey.blockHash,
         actions: [
           registerGlobalContract({
-            wasmBytes: await getFileBytes('./wasm/write-get-record.wasm'),
-            referenceBy: 'WasmHash',
+            wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
+            wasmMutability: 'Immutable',
           }),
         ],
         receiverAccountId: 'nat',
@@ -67,8 +61,8 @@ describe('DeployContract Tests', () => {
         blockHash: aliceKey.blockHash,
         actions: [
           registerGlobalContract({
-            wasmBytes: await getFileBytes('./wasm/write-get-record.wasm'),
-            referenceBy: 'WasmHash',
+            wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
+            wasmMutability: 'Immutable',
           }),
         ],
         receiverAccountId: 'alice',

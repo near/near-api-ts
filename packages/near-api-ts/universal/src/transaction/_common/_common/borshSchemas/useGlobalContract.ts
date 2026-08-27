@@ -10,6 +10,9 @@ const AccountIdIdentifierBorshSchema = {
   },
 };
 
+// Nearcore has a single `UseGlobalContract` action whose identifier picks the
+// code, so both of our actions - `PinGlobalContract` (code hash) and
+// `LinkGlobalContract` (account id) - serialize through this one enum variant.
 export const UseGlobalContractActionBorshSchema = {
   struct: {
     useGlobalContract: {

@@ -8,37 +8,37 @@ export interface CreateRegisterGlobalContractActionPublicErrorRegistry {
 }
 
 /**
- * How a registered global contract is addressed by the accounts that use it
- * (nearcore `GlobalContractDeployMode`):
+ * Whether the registered code can be replaced later (nearcore
+ * `GlobalContractDeployMode`):
  *
- * - `WasmHash` - the code is addressed by the hash of the wasm itself, which
- *   makes it immutable: registering new code produces a new hash and leaves
- *   every account already using the old one untouched.
- * - `OwnerAccountId` - the code is addressed by the account that registered it.
- *   That account can register new code under the same account id later, and
- *   every account using it picks the new code up.
+ * - `Mutable` - the code is addressed by the account that registered it. That
+ *   account can register new code under the same account id later, and every
+ *   account that linked to it (`LinkGlobalContractAction`) picks the new code up.
+ * - `Immutable` - the code is addressed by the hash of the wasm itself, so it
+ *   can never change: registering new code produces a new hash and leaves every
+ *   account already pinned to the old one (`PinGlobalContractAction`) untouched.
  */
-export type GlobalContractReference = 'WasmHash' | 'OwnerAccountId';
+export type GlobalContractWasmMutability = 'Mutable' | 'Immutable';
 
-type WasmBase64 = { wasmBase64: Base64String; wasmBytes?: never }; // TODO rename to WasmU8
-type WasmBytes = { wasmBase64?: never; wasmBytes: Uint8Array };
+type WasmU8 = { wasmU8: Uint8Array; wasmBase64?: never };
+type WasmBase64 = { wasmU8?: never; wasmBase64: Base64String };
 
 export type CreateRegisterGlobalContractActionArgs = {
-  referenceBy: GlobalContractReference; // TODO maybe referenceTo ?
-} & (WasmBase64 | WasmBytes);
+  wasmMutability: GlobalContractWasmMutability;
+} & (WasmU8 | WasmBase64);
 
 /**
  * Publishes contract code to the chain without attaching it to the registrar's
- * own account, so that any account can adopt it with a `UseGlobalContract`
- * action. Nearcore calls it `DeployGlobalContract`.
+ * own account, so that any account can adopt it with a `LinkGlobalContract` or
+ * a `PinGlobalContract` action. Nearcore calls it `DeployGlobalContract`.
  *
  * The registrar pays for the code storage once, up front, out of its balance -
  * accounts using the contract afterwards pay nothing for it.
  */
 export type RegisterGlobalContractAction = {
   actionType: 'RegisterGlobalContract';
-  wasmBytes: Uint8Array;
-  referenceBy: GlobalContractReference;
+  wasmU8: Uint8Array;
+  wasmMutability: GlobalContractWasmMutability;
 };
 
 type CreateRegisterGlobalContractActionError =

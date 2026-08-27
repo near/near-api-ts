@@ -24,15 +24,19 @@ import type {
   NearcoreFunctionCallAction,
 } from '../delegableActions/functionCall';
 import type {
+  LinkGlobalContractAction,
+  NearcoreLinkGlobalContractAction,
+} from '../delegableActions/linkGlobalContract';
+import type {
+  NearcorePinGlobalContractAction,
+  PinGlobalContractAction,
+} from '../delegableActions/pinGlobalContract';
+import type {
   NearcoreRegisterGlobalContractAction,
   RegisterGlobalContractAction,
 } from '../delegableActions/registerGlobalContract';
 import type { NearcoreStakeAction, StakeAction } from '../delegableActions/stake';
 import type { NearcoreTransferAction, TransferAction } from '../delegableActions/transfer';
-import type {
-  NearcoreUseGlobalContractAction,
-  UseGlobalContractAction,
-} from '../delegableActions/useGlobalContract';
 
 export type DelegableAction =
   | CreateAccountAction
@@ -45,7 +49,8 @@ export type DelegableAction =
   | DeleteKeyAction
   | DeleteAccountAction
   | RegisterGlobalContractAction
-  | UseGlobalContractAction;
+  | LinkGlobalContractAction
+  | PinGlobalContractAction;
 
 export type SingleDelegableAction = {
   delegatedAction: DelegableAction;
@@ -96,7 +101,8 @@ export type NearcoreDelegableAction =
   | NearcoreDeleteKeyAction
   | NearcoreDeleteAccountAction
   | NearcoreRegisterGlobalContractAction
-  | NearcoreUseGlobalContractAction;
+  | NearcoreLinkGlobalContractAction
+  | NearcorePinGlobalContractAction;
 
 // Field order follows the nearcore `DelegateAction` declaration, which is the
 // order the borsh schemas serialize these in. `tag` is the signing-only prefix.

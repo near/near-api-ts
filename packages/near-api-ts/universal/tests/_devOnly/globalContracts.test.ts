@@ -6,9 +6,10 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import {
   functionCall,
   keyPair,
+  linkGlobalContract,
+  pinGlobalContract,
   registerGlobalContract,
   signTransaction,
-  useGlobalContract,
 } from '../../index';
 import type { AccountId } from '../../types/_common/common';
 import type { TransactionAction } from '../../types/_common/transaction/transaction';
@@ -17,17 +18,19 @@ import { createDefaultClient, getFileBytes, log } from '../utils/common';
 import { startSandbox } from '../utils/sandbox/startSandbox';
 
 /**
- * Happy path for the two global contract actions.
+ * Happy path for the global contract actions.
  *
  * A global contract is wasm published to the chain on its own, detached from
  * any account: `RegisterGlobalContract` (nearcore `DeployGlobalContract`) puts
  * the code on chain and charges the registrar for its storage once, and
- * `UseGlobalContract` points an account at that already-stored code instead of
- * carrying a wasm copy of its own.
+ * `PinGlobalContract` / `LinkGlobalContract` (both nearcore
+ * `UseGlobalContract`) point an account at that already-stored code instead of
+ * carrying a wasm copy of its own - by wasm hash and by registrar account id
+ * respectively.
  *
  * Two things worth knowing while reading this test:
  *
- * - Both actions require `signerAccountId === receiverAccountId` (nearcore
+ * - All of them require `signerAccountId === receiverAccountId` (nearcore
  *   `check_actor_permissions`), so every transaction below is self-addressed.
  * - Registering does not publish the code synchronously. The action only emits
  *   a `GlobalContractDistribution` receipt, which nearcore then walks across
@@ -43,7 +46,7 @@ import { startSandbox } from '../utils/sandbox/startSandbox';
 describe('Global contracts', () => {
   let client: Client;
   let rpcUrl: string;
-  let wasmBytes: Uint8Array;
+  let wasmU8: Uint8Array;
   let wasmHash: string;
   const kp = keyPair(DEFAULT_PRIVATE_KEY);
 
@@ -99,18 +102,18 @@ describe('Global contracts', () => {
     const sandbox = await startSandbox();
     rpcUrl = sandbox.rpcUrl;
     client = createDefaultClient(sandbox);
-    wasmBytes = await getFileBytes('./wasm/write-get-record.wasm');
-    // A `referenceBy: 'WasmHash'` contract is addressed by the sha256 of the
-    // wasm itself - nearcore never hands that hash back, the caller derives it.
-    wasmHash = base58.encode(sha256(wasmBytes));
+    wasmU8 = await getFileBytes('./wasm/write-get-record.wasm');
+    // An immutable contract is addressed by the sha256 of the wasm itself -
+    // nearcore never hands that hash back, the caller derives it.
+    wasmHash = base58.encode(sha256(wasmU8));
 
     return () => sandbox.stop();
   });
 
-  it('registered by wasm hash - immutable, addressed by the code hash', async () => {
+  it('registered as immutable - pinned by the code hash', async () => {
     const registerResult = await executeAction(
       'nat',
-      registerGlobalContract({ wasmBytes, referenceBy: 'WasmHash' }),
+      registerGlobalContract({ wasmU8, wasmMutability: 'Immutable' }),
     );
     log(registerResult);
 
@@ -119,7 +122,10 @@ describe('Global contracts', () => {
       code_hash: wasmHash,
     });
 
-    const useResult = await executeAction('alice', useGlobalContract({ wasmHash }));
+    const useResult = await executeAction(
+      'alice',
+      pinGlobalContract({ globalContractWasmHash: wasmHash }),
+    );
     log(useResult);
 
     const alice = await client.getAccountInfo({ accountId: 'alice' });
@@ -146,10 +152,10 @@ describe('Global contracts', () => {
     expect(record.result).toBe('Hello from a global contract');
   });
 
-  it('registered by owner account id - updatable, addressed by the registrar', async () => {
+  it('registered as mutable - linked to the registrar account', async () => {
     const registerResult = await executeAction(
       'nat',
-      registerGlobalContract({ wasmBytes, referenceBy: 'OwnerAccountId' }),
+      registerGlobalContract({ wasmU8, wasmMutability: 'Mutable' }),
     );
     log(registerResult);
 
@@ -158,7 +164,10 @@ describe('Global contracts', () => {
       account_id: 'nat',
     });
 
-    const useResult = await executeAction('bob', useGlobalContract({ ownerAccountId: 'nat' }));
+    const useResult = await executeAction(
+      'bob',
+      linkGlobalContract({ globalContractAccountId: 'nat' }),
+    );
     log(useResult);
 
     const bob = await client.getAccountInfo({ accountId: 'bob' });

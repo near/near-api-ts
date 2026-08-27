@@ -11,10 +11,11 @@ import { DeleteAccountActionZodSchema } from './_common/zodSchemas/deleteAccount
 import { DeleteKeyActionZodSchema } from './_common/zodSchemas/deleteKey';
 import { DeployContractActionZodSchema } from './_common/zodSchemas/deployContract';
 import { FunctionCallActionZodSchema } from './_common/zodSchemas/functionCall';
+import { LinkGlobalContractActionZodSchema } from './_common/zodSchemas/linkGlobalContract';
+import { PinGlobalContractActionZodSchema } from './_common/zodSchemas/pinGlobalContract';
 import { RegisterGlobalContractActionZodSchema } from './_common/zodSchemas/registerGlobalContract';
 import { StakeActionZodSchema } from './_common/zodSchemas/stake';
 import { TransferActionZodSchema } from './_common/zodSchemas/transfer';
-import { UseGlobalContractActionZodSchema } from './_common/zodSchemas/useGlobalContract';
 
 const DelegableActionZodSchema = z.union([
   CreateAccountActionZodSchema,
@@ -26,7 +27,8 @@ const DelegableActionZodSchema = z.union([
   DeleteKeyActionZodSchema,
   DeleteAccountActionZodSchema,
   RegisterGlobalContractActionZodSchema,
-  UseGlobalContractActionZodSchema,
+  LinkGlobalContractActionZodSchema,
+  PinGlobalContractActionZodSchema,
 ]);
 
 export type InnerDelegableAction = z.infer<typeof DelegableActionZodSchema>;

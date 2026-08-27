@@ -4,10 +4,11 @@ import type { CreateDeleteActionPublicErrorRegistry } from './deleteAccount';
 import type { CreateDeleteKeyActionPublicErrorRegistry } from './deleteKey';
 import type { CreateDeployContractActionPublicErrorRegistry } from './deployContract';
 import type { CreateFunctionCallActionPublicErrorRegistry } from './functionCall';
+import type { CreateLinkGlobalContractActionPublicErrorRegistry } from './linkGlobalContract';
+import type { CreatePinGlobalContractActionPublicErrorRegistry } from './pinGlobalContract';
 import type { CreateRegisterGlobalContractActionPublicErrorRegistry } from './registerGlobalContract';
 import type { CreateStakeActionPublicErrorRegistry } from './stake';
 import type { CreateTransferActionPublicErrorRegistry } from './transfer';
-import type { CreateUseGlobalContractActionPublicErrorRegistry } from './useGlobalContract';
 
 export interface ActionsPublicErrorRegistry
   extends CreateAddKeyActionPublicErrorRegistry,
@@ -19,4 +20,5 @@ export interface ActionsPublicErrorRegistry
     CreateDeleteActionPublicErrorRegistry,
     CreateExecuteDelegationActionPublicErrorRegistry,
     CreateRegisterGlobalContractActionPublicErrorRegistry,
-    CreateUseGlobalContractActionPublicErrorRegistry {}
+    CreateLinkGlobalContractActionPublicErrorRegistry,
+    CreatePinGlobalContractActionPublicErrorRegistry {}

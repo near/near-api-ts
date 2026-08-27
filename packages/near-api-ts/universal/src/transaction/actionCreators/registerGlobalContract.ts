@@ -8,21 +8,21 @@ import { result } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 
-const GlobalContractReferenceZodSchema = z.union([
-  z.literal('WasmHash'),
-  z.literal('OwnerAccountId'),
+const GlobalContractWasmMutabilityZodSchema = z.union([
+  z.literal('Mutable'),
+  z.literal('Immutable'),
 ]);
 
 export const CreateRegisterGlobalContractActionArgsSchema = z.union([
   z.object({
-    wasmBase64: z.base64(),
-    wasmBytes: z.optional(z.never()), // TODO rename to wasmU8
-    referenceBy: GlobalContractReferenceZodSchema,
+    wasmU8: z.instanceof(Uint8Array),
+    wasmBase64: z.optional(z.never()),
+    wasmMutability: GlobalContractWasmMutabilityZodSchema,
   }),
   z.object({
-    wasmBase64: z.optional(z.never()),
-    wasmBytes: z.instanceof(Uint8Array),
-    referenceBy: GlobalContractReferenceZodSchema,
+    wasmU8: z.optional(z.never()),
+    wasmBase64: z.base64(),
+    wasmMutability: GlobalContractWasmMutabilityZodSchema,
   }),
 ]);
 
@@ -39,14 +39,14 @@ export const safeRegisterGlobalContract: SafeCreateRegisterGlobalContractAction 
         }),
       );
 
-    const wasmU8 = validArgs.data.wasmBytes
-      ? validArgs.data.wasmBytes
+    const wasmU8 = validArgs.data.wasmU8
+      ? validArgs.data.wasmU8
       : Uint8Array.fromBase64(validArgs.data.wasmBase64);
 
     return result.ok({
       actionType: 'RegisterGlobalContract' as const,
-      wasmBytes: wasmU8,
-      referenceBy: validArgs.data.referenceBy,
+      wasmU8,
+      wasmMutability: validArgs.data.wasmMutability,
     });
   },
 );
