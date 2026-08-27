@@ -5,11 +5,8 @@ import {
   pinGlobalContract,
   registerGlobalContract,
   signTransaction,
-  stake,
 } from '../../../index';
-import { safeSleep } from '../../../src/createClient/createTransport/createSendRequest/_common/_common/sleep';
 import { keyPair } from '../../../src/createMemoryKeyService/toKeyPairs/keyPairs/keyPair/keyPair';
-import { randomEd25519KeyPair } from '../../../src/createMemoryKeyService/toKeyPairs/keyPairs/randomEd25519KeyPair';
 import type { Client } from '../../../types/client/client';
 import { createDefaultClient, getFileBytes, log } from '../../utils/common';
 import { startSandbox } from '../../utils/sandbox/startSandbox';
@@ -71,8 +68,8 @@ describe('DeployContract Tests', () => {
         actions: [
           registerGlobalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
-            // wasmMutability: 'Immutable',
-            wasmMutability: 'Mutable',
+            wasmMutability: 'Immutable',
+            // wasmMutability: 'Mutable',
           }),
         ],
         receiverAccountId: 'nat',
@@ -84,10 +81,7 @@ describe('DeployContract Tests', () => {
       signedTransaction,
       minimalProcessingStage: 'CompletedFinal',
     });
-
-    // log(tx1);
-
-    await safeSleep(5000);
+    log(tx1);
 
     // 2. Try to use it
     const signedTransaction2 = await signTransaction({
@@ -111,9 +105,10 @@ describe('DeployContract Tests', () => {
       signDataProvider: defaultKeyPair,
     });
 
-    await client.safeSendSignedTransaction({
+    const tx2 = await client.safeSendSignedTransaction({
       signedTransaction: signedTransaction2,
       minimalProcessingStage: 'CompletedFinal',
     });
+    log(tx2);
   });
 });
