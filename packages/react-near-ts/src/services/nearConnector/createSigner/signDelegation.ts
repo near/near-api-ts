@@ -4,7 +4,7 @@ import type {
   CreateSafeSignDelegation,
 } from '../../../../types/services/nearConnector.ts';
 import { result } from '../../../_common/utils/result.ts';
-import { toNearConnectActions } from './_common/toNearConnectActions.ts';
+import { toNearConnectDelegableActions } from './_common/toNearConnectActions.ts';
 
 export const createSafeSignDelegation: CreateSafeSignDelegation =
   (connector: NearConnector) => async (args) => {
@@ -15,7 +15,7 @@ export const createSafeSignDelegation: CreateSafeSignDelegation =
       const { signedDelegateActions } = await wallet.signDelegateActions({
         delegateActions: [
           {
-            actions: toNearConnectActions(args.intent),
+            actions: toNearConnectDelegableActions(args.intent),
             receiverId: args.intent.receiverAccountId,
           },
         ],

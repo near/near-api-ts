@@ -1,4 +1,8 @@
-import type { TransactionAction as NatAction, TransactionIntent } from 'near-api-ts';
+import type {
+  DelegationIntent,
+  TransactionAction as NatAction,
+  TransactionIntent,
+} from 'near-api-ts';
 import { nearGas, nearToken } from 'near-api-ts';
 import type { NearConnectorAction } from '../../../../../types/services/nearConnector.ts';
 
@@ -88,5 +92,15 @@ export const toNearConnectActions = (
 ): NearConnectorAction[] => {
   if (intent.action) return [toNearConnectAction(intent.action)];
   if (intent.actions) return intent.actions.map((action) => toNearConnectAction(action));
+  return [];
+};
+
+// A delegation carries the same actions, only under its own field names.
+export const toNearConnectDelegableActions = (
+  intent: Omit<DelegationIntent, 'receiverAccountId' | 'expireAt'>,
+): NearConnectorAction[] => {
+  if (intent.delegatedAction) return [toNearConnectAction(intent.delegatedAction)];
+  if (intent.delegatedActions)
+    return intent.delegatedActions.map((action) => toNearConnectAction(action));
   return [];
 };
