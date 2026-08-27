@@ -53,7 +53,7 @@ const fromNearcoreDelegableAction = (action: NearcoreDelegableAction): Delegable
     return { actionType: 'Transfer', amount: { yoctoNear: action.transfer.deposit } };
 
   if ('deployContract' in action)
-    return { actionType: 'DeployContract', wasmBytes: Uint8Array.from(action.deployContract.code) };
+    return { actionType: 'DeployContract', wasmU8: Uint8Array.from(action.deployContract.code) };
 
   if ('functionCall' in action) return fromNearcoreFunctionCallAction(action.functionCall);
 

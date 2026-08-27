@@ -28,7 +28,7 @@ export const deployContractTooMany = (context: TestContext) => async () => {
       // `validate_number_of_deploy_actions` only counts the deploy actions, and the wasm
       // itself is never compiled at this stage — empty code keeps the transaction small.
       actions: Array.from({ length: deployContractActionsCount }, () =>
-        deployContract({ wasmBytes: new Uint8Array() }),
+        deployContract({ wasmU8: new Uint8Array() }),
       ),
       receiverAccountId: 'nat',
     },

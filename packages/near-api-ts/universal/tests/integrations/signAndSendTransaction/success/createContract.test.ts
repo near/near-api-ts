@@ -49,7 +49,7 @@ describe('safeSendSignedTransaction › success', () => {
           transfer({ amount: { near: '100' } }),
           addFullAccessKey({ publicKey: DEFAULT_PUBLIC_KEY }),
           deployContract({
-            wasmBytes: await getFileBytes('./wasm/write-get-record.wasm'),
+            wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
           }),
           functionCall({
             functionName: 'write_record',

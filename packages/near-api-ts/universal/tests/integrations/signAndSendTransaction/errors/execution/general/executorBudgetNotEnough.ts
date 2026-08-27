@@ -35,7 +35,7 @@ export const executorBudgetNotEnough = (context: TestContext) => async () => {
         createAccount(),
         transfer({ amount: near('0.1') }),
         deployContract({
-          wasmBytes: await getFileBytes('./wasm/write-get-record.wasm'),
+          wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
         }),
       ],
       receiverAccountId: 'new.nat',

@@ -56,7 +56,7 @@ describe('yield contract', () => {
     //       transfer({ amount: { near: '100' } }),
     //       addFullAccessKey({ publicKey: DEFAULT_PUBLIC_KEY }),
     //       deployContract({
-    //         wasmBytes: await getFileBytes('./wasm/pause_continue.wasm'),
+    //         wasmU8: await getFileBytes('./wasm/pause_continue.wasm'),
     //       }),
     //     ],
     //     receiverAccountId: 'yield.nat',

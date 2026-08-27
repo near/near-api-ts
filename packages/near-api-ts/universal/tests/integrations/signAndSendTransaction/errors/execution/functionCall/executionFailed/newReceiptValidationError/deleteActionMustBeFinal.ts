@@ -19,7 +19,7 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   // #1 Deploy test contract
-  const wasmBytes = new Uint8Array(
+  const wasmU8 = new Uint8Array(
     await readFile(
       path.join(
         path.dirname(fileURLToPath(import.meta.url)),
@@ -44,7 +44,7 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
         createAccount(),
         transfer({ amount: { near: '10' } }),
         addFullAccessKey(defaultKeyPair),
-        deployContract({ wasmBytes }),
+        deployContract({ wasmU8 }),
       ],
       receiverAccountId: 'contract.nat',
     },

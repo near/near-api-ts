@@ -49,7 +49,7 @@ export const contractWasmTooLarge = (context: TestContext) => async () => {
       nonce: accountAccessKey.nonce + 1,
       blockHash,
       // The code is never compiled at this stage, only measured, so zeroed bytes are enough.
-      action: deployContract({ wasmBytes: new Uint8Array(CONTRACT_WASM_SIZE_BYTES) }),
+      action: deployContract({ wasmU8: new Uint8Array(CONTRACT_WASM_SIZE_BYTES) }),
       receiverAccountId: 'nat',
     },
   });

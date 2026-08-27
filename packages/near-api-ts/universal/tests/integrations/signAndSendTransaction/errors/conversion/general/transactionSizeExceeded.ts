@@ -54,7 +54,7 @@ export const transactionSizeExceeded = (context: TestContext) => async () => {
       blockHash,
       // Contract code is the cheapest way to push the transaction over the limit; it is
       // never compiled, the size check happens long before execution.
-      action: deployContract({ wasmBytes: new Uint8Array(MAX_TRANSACTION_SIZE + 1) }),
+      action: deployContract({ wasmU8: new Uint8Array(MAX_TRANSACTION_SIZE + 1) }),
       receiverAccountId: 'nat',
     },
   });

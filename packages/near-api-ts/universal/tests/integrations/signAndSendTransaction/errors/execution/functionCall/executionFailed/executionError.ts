@@ -31,7 +31,7 @@ export const executionError = (context: TestContext) => async () => {
       actions: [
         createAccount(),
         transfer({ amount: near('10') }),
-        deployContract({ wasmBytes: await getFileBytes('./wasm/write-get-record.wasm') }),
+        deployContract({ wasmU8: await getFileBytes('./wasm/write-get-record.wasm') }),
         functionCall({
           functionName: 'add_record',
           functionArgs: { record: 'hello' },

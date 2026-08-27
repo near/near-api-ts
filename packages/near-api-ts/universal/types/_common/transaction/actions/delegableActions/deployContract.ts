@@ -7,14 +7,14 @@ export interface CreateDeployContractActionPublicErrorRegistry {
   'CreateAction.DeployContract.Internal': InternalErrorContext;
 }
 
-type WasmBase64 = { wasmBase64: Base64String; wasmBytes?: never }; // TODO rename to WasmU8
-type WasmBytes = { wasmBase64?: never; wasmBytes: Uint8Array };
+type WasmU8 = { wasmU8: Uint8Array; wasmBase64?: never };
+type WasmBase64 = { wasmU8?: never; wasmBase64: Base64String };
 
-export type CreateDeployContractActionArgs = WasmBase64 | WasmBytes;
+export type CreateDeployContractActionArgs = WasmU8 | WasmBase64;
 
 export type DeployContractAction = {
   actionType: 'DeployContract';
-  wasmBytes: Uint8Array;
+  wasmU8: Uint8Array;
 };
 
 type CreateDeployContractActionError =

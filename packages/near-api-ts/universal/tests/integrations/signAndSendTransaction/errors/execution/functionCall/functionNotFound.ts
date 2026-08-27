@@ -31,7 +31,7 @@ export const functionNotFound = (context: TestContext) => async () => {
         createAccount(),
         transfer({ amount: { near: '10' } }),
         addFullAccessKey(defaultKeyPair),
-        deployContract({ wasmBytes: await getFileBytes('./wasm/write-get-record.wasm') }),
+        deployContract({ wasmU8: await getFileBytes('./wasm/write-get-record.wasm') }),
         functionCall({
           functionName: 'not_exist',
           gasLimit: { teraGas: '10' },

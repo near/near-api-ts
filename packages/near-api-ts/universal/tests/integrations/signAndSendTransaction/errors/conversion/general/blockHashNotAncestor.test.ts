@@ -91,7 +91,7 @@ describe.skip('signAndSendTransaction › BlockHash.NotAncestor conversion error
           createAccount(),
           transfer({ amount: { near: '50' } }),
           addFullAccessKey({ publicKey: defaultKeyPair.publicKey }),
-          deployContract({ wasmBytes: GAS_BURNER_WASM }),
+          deployContract({ wasmU8: GAS_BURNER_WASM }),
         ],
         receiverAccountId: CONTRACT_ACCOUNT_ID,
       },

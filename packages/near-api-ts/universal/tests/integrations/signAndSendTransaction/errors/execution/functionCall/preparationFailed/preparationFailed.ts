@@ -30,7 +30,7 @@ export const preparationFailed = (context: TestContext) => async () => {
         createAccount(),
         transfer({ amount: { near: '10' } }),
         addFullAccessKey(defaultKeyPair),
-        deployContract({ wasmBytes: Uint8Array.from([1, 2, 3]) }),
+        deployContract({ wasmU8: Uint8Array.from([1, 2, 3]) }),
         functionCall({
           functionName: 'add_record',
           functionArgs: { record: 'hello' },

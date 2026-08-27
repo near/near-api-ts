@@ -54,7 +54,7 @@ describe('CallContractReadFunction', () => {
           createAccount(),
           transfer({ amount: near('50') }),
           deployContract({
-            wasmBytes: await getFileBytes('./wasm/write-get-record.wasm'),
+            wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
           }),
           functionCall({
             functionName: 'write_record',

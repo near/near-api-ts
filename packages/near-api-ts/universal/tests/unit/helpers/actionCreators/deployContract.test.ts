@@ -3,8 +3,8 @@ import { deployContract, safeDeployContract } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
 describe('deployContract', () => {
-  it('creates an action from wasmBytes or wasmBase64', () => {
-    deployContract({ wasmBytes: Uint8Array.from([1, 2, 3]) });
+  it('creates an action from wasmU8 or wasmBase64', () => {
+    deployContract({ wasmU8: Uint8Array.from([1, 2, 3]) });
     deployContract({ wasmBase64: 'aGVsbG8=' });
   });
 
@@ -14,9 +14,9 @@ describe('deployContract', () => {
     assertNatErrKind(res, 'CreateAction.DeployContract.Args.InvalidSchema');
   });
 
-  it('rejects invalid wasmBytes with Args.InvalidSchema', () => {
+  it('rejects invalid wasmU8 with Args.InvalidSchema', () => {
     // @ts-expect-error
-    const res = safeDeployContract({ wasmBytes: '###' });
+    const res = safeDeployContract({ wasmU8: '###' });
     assertNatErrKind(res, 'CreateAction.DeployContract.Args.InvalidSchema');
   });
 

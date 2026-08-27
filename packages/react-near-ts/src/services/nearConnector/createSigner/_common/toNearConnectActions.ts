@@ -52,7 +52,7 @@ const toNearConnectAction = (action: NatAction): NearConnectorAction => {
   if (action.actionType === 'DeployContract')
     return {
       deployContract: {
-        code: action.wasmBytes,
+        code: action.wasmU8,
       },
     };
 

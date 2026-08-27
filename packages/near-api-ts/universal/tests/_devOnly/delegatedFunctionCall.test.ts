@@ -44,7 +44,7 @@ describe('Execute delegation', () => {
         delegatedActions: [
           createAccount(),
           transfer({ amount: near('50') }),
-          deployContract({ wasmBytes: await getFileBytes('./wasm/write-get-record.wasm') }),
+          deployContract({ wasmU8: await getFileBytes('./wasm/write-get-record.wasm') }),
           functionCall({
             functionName: 'write_record',
             functionArgs: { record_id: 1, record: 'Hi Alice' },
