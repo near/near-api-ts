@@ -44,9 +44,9 @@
         "default": "./dist/browser/index.js"
       },
       "node": {
-        "types": "./dist/node/index.d.mts",
-        "import": "./dist/node/index.mjs",
-        "default": "./dist/node/index.mjs"
+        "types": "./dist/nodejs/index.d.mts",
+        "import": "./dist/nodejs/index.mjs",
+        "default": "./dist/nodejs/index.mjs"
       },
       "default": {
         "types": "./dist/universal/index.d.ts",
@@ -59,10 +59,10 @@
       "import": "./dist/browser/index.js",
       "default": "./dist/browser/index.js"
     },
-    "./node": {
-      "types": "./dist/node/index.d.mts",
-      "import": "./dist/node/index.mjs",
-      "default": "./dist/node/index.mjs"
+    "./nodejs": {
+      "types": "./dist/nodejs/index.d.mts",
+      "import": "./dist/nodejs/index.mjs",
+      "default": "./dist/nodejs/index.mjs"
     }
   },
   "files": [

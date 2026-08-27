@@ -19,13 +19,13 @@ export default defineConfig([
   },
   {
     entry: {
-      index: 'node/index.ts',
+      index: 'nodejs/index.ts',
     },
     root: 'node',
     platform: 'node',
     target: 'esnext',
     format: ['esm'],
-    outDir: 'dist/node',
+    outDir: 'dist/nodejs',
     dts: true,
     sourcemap: true,
     unbundle: true,
