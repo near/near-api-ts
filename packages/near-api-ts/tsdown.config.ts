@@ -21,7 +21,7 @@ export default defineConfig([
     entry: {
       index: 'nodejs/index.ts',
     },
-    root: 'node',
+    root: 'nodejs',
     platform: 'node',
     target: 'esnext',
     format: ['esm'],
