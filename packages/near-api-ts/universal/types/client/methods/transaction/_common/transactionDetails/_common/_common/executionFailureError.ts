@@ -1,6 +1,7 @@
 import type {
   AccountId,
   ContractFunctionName,
+  ContractWasmHash,
   DelegationNonce,
   TransactionNonce,
 } from '../../../../../../../_common/common';
@@ -59,6 +60,15 @@ interface DeleteAccountErrorRegistry {
   'Action.DeleteAccount.LargeState': { accountId: AccountId };
 }
 
+// Nearcore answers both of our actions with one `GlobalContractDoesNotExist`; the identifier it
+// blames is what tells them apart. Registering is asynchronous - the code only becomes usable a
+// block or so after the register transaction succeeds - so a pin or a link sent right after one
+// can land before the code does and fail this way.
+interface GlobalContractErrorRegistry {
+  'Action.PinGlobalContract.GlobalContract.NotFound': { globalContractWasmHash: ContractWasmHash };
+  'Action.LinkGlobalContract.GlobalContract.NotFound': { globalContractAccountId: AccountId };
+}
+
 interface ExecuteDelegationErrorRegistry {
   'Action.ExecuteDelegation.Expired': null;
   'Action.ExecuteDelegation.Signature.Invalid': null;
@@ -100,6 +110,7 @@ export interface ExecutionFailureRegistry
     StakeErrorRegistry,
     DeleteKeyErrorRegistry,
     DeleteAccountErrorRegistry,
+    GlobalContractErrorRegistry,
     ExecuteDelegationErrorRegistry {}
 
 export type ExecutionFailureKind = keyof ExecutionFailureRegistry;

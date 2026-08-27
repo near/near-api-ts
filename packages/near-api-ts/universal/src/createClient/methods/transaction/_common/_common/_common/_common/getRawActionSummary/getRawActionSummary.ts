@@ -98,6 +98,45 @@ export const getRawActionSummary = (rpcAction: ActionView): RawTransactionAction
     };
   }
 
+  // Nearcore splits our `RegisterGlobalContract` in two views by its deploy mode, and hands back
+  // the hash of the registered wasm rather than the wasm itself - the same way it does for
+  // `DeployContract`.
+  if ('DeployGlobalContract' in rpcAction) {
+    const { DeployGlobalContract } = rpcAction;
+    const contractWasmHashU8 = Uint8Array.fromBase64(DeployGlobalContract.code);
+
+    return {
+      actionType: 'RegisterGlobalContract' as const,
+      contractWasmHash: base58.encode(contractWasmHashU8),
+      wasmMutability: 'Immutable' as const,
+    };
+  }
+
+  if ('DeployGlobalContractByAccountId' in rpcAction) {
+    const { DeployGlobalContractByAccountId } = rpcAction;
+    const contractWasmHashU8 = Uint8Array.fromBase64(DeployGlobalContractByAccountId.code);
+
+    return {
+      actionType: 'RegisterGlobalContract' as const,
+      contractWasmHash: base58.encode(contractWasmHashU8),
+      wasmMutability: 'Mutable' as const,
+    };
+  }
+
+  // Nearcore splits our `PinGlobalContract` and `LinkGlobalContract` the same way - one
+  // `UseGlobalContract` action, two views, one per contract identifier.
+  if ('UseGlobalContract' in rpcAction)
+    return {
+      actionType: 'PinGlobalContract' as const,
+      globalContractWasmHash: rpcAction.UseGlobalContract.codeHash,
+    };
+
+  if ('UseGlobalContractByAccountId' in rpcAction)
+    return {
+      actionType: 'LinkGlobalContract' as const,
+      globalContractAccountId: rpcAction.UseGlobalContractByAccountId.accountId,
+    };
+
   if ('Delegate' in rpcAction)
     return getRawExecuteDelegationActionSummary(
       rpcAction.Delegate.delegateAction,

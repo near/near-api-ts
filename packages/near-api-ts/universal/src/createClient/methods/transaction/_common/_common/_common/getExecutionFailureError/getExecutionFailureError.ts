@@ -154,6 +154,23 @@ export const getExecutionFailureError = (actionError: ActionError): ExecutionFai
         },
       };
 
+    // PinGlobalContract / LinkGlobalContract actions
+    // Nearcore executes both as one `UseGlobalContract`, so it has one error for the two - the
+    // identifier it blames is the one the action pointed the account at.
+    if ('GlobalContractDoesNotExist' in kind) {
+      const { identifier } = kind.GlobalContractDoesNotExist;
+
+      return 'hash' in identifier
+        ? {
+            kind: 'Action.PinGlobalContract.GlobalContract.NotFound',
+            context: { globalContractWasmHash: identifier.hash },
+          }
+        : {
+            kind: 'Action.LinkGlobalContract.GlobalContract.NotFound',
+            context: { globalContractAccountId: identifier.accountId },
+          };
+    }
+
     // ExecuteDelegation action
     // The delegation is executed on the transaction receiver account, so that account must be
     // the delegator - nearcore reports its own receiverId here, not the delegation receiver.

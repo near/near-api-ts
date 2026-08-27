@@ -102,7 +102,39 @@ const convertNonDelegateActionToSummary = (
     };
   }
 
-  throw new Error(`Unsupported delegable action: ${nonDelegateAction}`);
+  // Not the same as in getRawActionSummary - a delegated action is the action itself, so it
+  // carries the wasm and the deploy mode instead of being split into a view per mode.
+  if ('DeployGlobalContract' in nonDelegateAction) {
+    const { DeployGlobalContract } = nonDelegateAction;
+
+    const contractWasmU8 = Uint8Array.fromBase64(DeployGlobalContract.code);
+    const contractWasmHashU8 = sha256(contractWasmU8);
+    const contractWasmHash = base58.encode(contractWasmHashU8);
+
+    return {
+      actionType: 'RegisterGlobalContract' as const,
+      contractWasmHash,
+      wasmMutability: DeployGlobalContract.deployMode === 'CodeHash' ? 'Immutable' : 'Mutable',
+    };
+  }
+
+  // Not the same as in getRawActionSummary - the contract identifier is a field here rather than
+  // the variant itself, but it tells our two actions apart the same way.
+  if ('UseGlobalContract' in nonDelegateAction) {
+    const { contractIdentifier } = nonDelegateAction.UseGlobalContract;
+
+    return 'hash' in contractIdentifier
+      ? {
+          actionType: 'PinGlobalContract' as const,
+          globalContractWasmHash: contractIdentifier.hash,
+        }
+      : {
+          actionType: 'LinkGlobalContract' as const,
+          globalContractAccountId: contractIdentifier.accountId,
+        };
+  }
+
+  throw new Error(`Unsupported delegable action: ${JSON.stringify(nonDelegateAction)}`);
 };
 
 export const getRawExecuteDelegationActionSummary = (
