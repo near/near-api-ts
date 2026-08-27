@@ -4,7 +4,7 @@ import type {
   BlockHash,
   BlockHeight,
   BlockReference,
-  CryptoHash,
+  ContractWasmHash,
   Result,
 } from '../../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
@@ -52,6 +52,35 @@ export type GetAccountInfoArgs = {
   };
 };
 
+/**
+ * Which contract code the account runs.
+ *
+ * - `NoContract` - the account has no contract at all.
+ * - `Deployed` - the account carries its own wasm, put there by a
+ *   `DeployContract` action.
+ * - `Pinned` - the account runs one exact global wasm (`PinGlobalContract`).
+ *   Nobody can swap the code under it.
+ * - `Linked` - the account runs whatever code the registrar account currently
+ *   holds (`LinkGlobalContract`), so it changes when the registrar registers new
+ *   code under the same account id.
+ */
+export type AccountContract =
+  | {
+      status: 'NoContract';
+    }
+  | {
+      status: 'Deployed';
+      localContractWasmHash: ContractWasmHash;
+    }
+  | {
+      status: 'Pinned';
+      globalContractWasmHash: ContractWasmHash;
+    }
+  | {
+      status: 'Linked';
+      globalContractAccountId: AccountId;
+    };
+
 export type GetAccountInfoOutput = {
   accountId: AccountId;
   balance: {
@@ -64,9 +93,7 @@ export type GetAccountInfoOutput = {
     };
   };
   usedStorageBytes: number;
-  contractWasmHash: CryptoHash | null;
-  globalContractWasmHash: CryptoHash | null;
-  globalContractAccountId: AccountId | null;
+  contract: AccountContract;
   atMomentOf: {
     blockHash: BlockHash;
     blockHeight: BlockHeight;

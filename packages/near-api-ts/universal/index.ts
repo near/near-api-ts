@@ -200,6 +200,7 @@ export type {
 // Client
 export type { Client } from './types/client/client';
 export type {
+  AccountContract,
   GetAccountInfo,
   GetAccountInfoError,
   GetAccountInfoOutput,
