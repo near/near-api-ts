@@ -1,3 +1,4 @@
+import { base58 } from '@scure/base';
 import type { NearcoreAddKeyAction } from '../../../../../../types/_common/transaction/actions/delegableActions/addKey';
 import type { NearcoreFunctionCallAction } from '../../../../../../types/_common/transaction/actions/delegableActions/functionCall';
 import type {
@@ -78,8 +79,33 @@ const fromNearcoreDelegableAction = (action: NearcoreDelegableAction): Delegable
       beneficiaryAccountId: action.deleteAccount.beneficiaryId,
     };
 
-  // A delegation can carry actions this library cannot represent (ExecuteDelegation,
-  // DeployGlobalContract, UseGlobalContract) only if it was created outside of it.
+  if ('deployGlobalContract' in action)
+    return {
+      actionType: 'RegisterGlobalContract',
+      wasmU8: Uint8Array.from(action.deployGlobalContract.code),
+      wasmMutability:
+        'codeHash' in action.deployGlobalContract.deployMode ? 'Immutable' : 'Mutable',
+    };
+
+  // Nearcore has one `UseGlobalContract` action, so the identifier it carries is what tells our
+  // two actions apart - the same split `toNearcorePinGlobalContractAction` and
+  // `toNearcoreLinkGlobalContractAction` make in the other direction.
+  if ('useGlobalContract' in action) {
+    const { contractIdentifier } = action.useGlobalContract;
+
+    return 'codeHash' in contractIdentifier
+      ? {
+          actionType: 'PinGlobalContract',
+          globalContractWasmHash: base58.encode(Uint8Array.from(contractIdentifier.codeHash)),
+        }
+      : {
+          actionType: 'LinkGlobalContract',
+          globalContractAccountId: contractIdentifier.accountId,
+        };
+  }
+
+  // A delegation can carry an action this library cannot represent (ExecuteDelegation) only if
+  // it was created outside of it.
   throw new Error('Unsupported delegable action', { cause: action });
 };
 
