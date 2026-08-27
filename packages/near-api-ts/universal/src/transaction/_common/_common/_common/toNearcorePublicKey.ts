@@ -1,5 +1,5 @@
-import type { NearcorePublicKey } from '../../../../../../types/_common/crypto';
-import type { InnerPublicKey } from '../../../../../_common/zodSchemas/publicKey';
+import type { NearcorePublicKey } from '../../../../../types/_common/crypto';
+import type { InnerPublicKey } from '../../../../_common/zodSchemas/publicKey';
 
 export const toNearcorePublicKey = ({ publicKeyU8, curve }: InnerPublicKey): NearcorePublicKey => {
   switch (curve) {

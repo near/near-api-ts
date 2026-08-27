@@ -1,18 +1,20 @@
 import type {
   NearcoreDelegableAction,
   NearcoreDelegation,
-} from '../../../../types/_common/transaction/actions/executeDelegation/delegation';
-import { constants } from '../../../_common/_common/_common/constants';
-import { toNearcorePublicKey } from '../_common/_common/toNearcore/toNearcorePublicKey';
-import { toNearcoreAddKeyAction } from '../_common/toNearcore/toNearcoreAddKey';
-import { toNearcoreCreateAccountAction } from '../_common/toNearcore/toNearcoreCreateAccount';
-import { toNearcoreDeleteAccountAction } from '../_common/toNearcore/toNearcoreDeleteAccount';
-import { toNearcoreDeleteKeyAction } from '../_common/toNearcore/toNearcoreDeleteKey';
-import { toNearcoreDeployContractAction } from '../_common/toNearcore/toNearcoreDeployContract';
-import { toNearcoreFunctionCallAction } from '../_common/toNearcore/toNearcoreFunctionCall';
-import { toNearcoreStakeAction } from '../_common/toNearcore/toNearcoreStake';
-import { toNearcoreTransferAction } from '../_common/toNearcore/toNearcoreTransfer';
-import type { InnerDelegableAction, InnerDelegation } from '../zodSchemas/delegation';
+} from '../../../types/_common/transaction/actions/executeDelegation/delegation';
+import { constants } from '../../_common/_common/_common/constants';
+import { toNearcorePublicKey } from './_common/_common/toNearcorePublicKey';
+import { toNearcoreAddKeyAction } from './_common/toNearcore/toNearcoreAddKey';
+import { toNearcoreCreateAccountAction } from './_common/toNearcore/toNearcoreCreateAccount';
+import { toNearcoreDeleteAccountAction } from './_common/toNearcore/toNearcoreDeleteAccount';
+import { toNearcoreDeleteKeyAction } from './_common/toNearcore/toNearcoreDeleteKey';
+import { toNearcoreDeployContractAction } from './_common/toNearcore/toNearcoreDeployContract';
+import { toNearcoreFunctionCallAction } from './_common/toNearcore/toNearcoreFunctionCall';
+import { toNearcoreRegisterGlobalContractAction } from './_common/toNearcore/toNearcoreRegisterGlobalContract';
+import { toNearcoreStakeAction } from './_common/toNearcore/toNearcoreStake';
+import { toNearcoreTransferAction } from './_common/toNearcore/toNearcoreTransfer';
+import { toNearcoreUseGlobalContractAction } from './_common/toNearcore/toNearcoreUseGlobalContract';
+import type { InnerDelegableAction, InnerDelegation } from './delegationZodSchema';
 
 const toNearcoreDelegableAction = (action: InnerDelegableAction): NearcoreDelegableAction => {
   switch (action.actionType) {
@@ -32,6 +34,10 @@ const toNearcoreDelegableAction = (action: InnerDelegableAction): NearcoreDelega
       return toNearcoreDeleteKeyAction(action);
     case 'DeleteAccount':
       return toNearcoreDeleteAccountAction(action);
+    case 'RegisterGlobalContract':
+      return toNearcoreRegisterGlobalContractAction(action);
+    case 'UseGlobalContract':
+      return toNearcoreUseGlobalContractAction(action);
   }
 };
 

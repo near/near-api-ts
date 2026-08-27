@@ -26,8 +26,16 @@ import type {
   FunctionCallAction,
   NearcoreFunctionCallAction,
 } from './actions/delegableActions/functionCall';
+import type {
+  NearcoreRegisterGlobalContractAction,
+  RegisterGlobalContractAction,
+} from './actions/delegableActions/registerGlobalContract';
 import type { NearcoreStakeAction, StakeAction } from './actions/delegableActions/stake';
 import type { NearcoreTransferAction, TransferAction } from './actions/delegableActions/transfer';
+import type {
+  NearcoreUseGlobalContractAction,
+  UseGlobalContractAction,
+} from './actions/delegableActions/useGlobalContract';
 import type {
   ExecuteDelegationAction,
   NearcoreExecuteDelegationAction,
@@ -43,7 +51,9 @@ export type TransactionAction =
   | StakeAction
   | DeleteKeyAction
   | DeleteAccountAction
-  | ExecuteDelegationAction;
+  | ExecuteDelegationAction
+  | RegisterGlobalContractAction
+  | UseGlobalContractAction;
 
 type SingleTransactionAction = { action: TransactionAction; actions?: never };
 type MultiTransactionActions = { action?: never; actions: TransactionAction[] };
@@ -79,7 +89,9 @@ export type NearcoreTransactionAction =
   | NearcoreStakeAction
   | NearcoreDeleteKeyAction
   | NearcoreDeleteAccountAction
-  | NearcoreExecuteDelegationAction;
+  | NearcoreExecuteDelegationAction
+  | NearcoreRegisterGlobalContractAction
+  | NearcoreUseGlobalContractAction;
 
 export type NearcoreTransaction = {
   signerId: AccountId;

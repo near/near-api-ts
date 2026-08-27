@@ -1,12 +1,12 @@
 const CodeHashIdentifierBorshSchema = {
   struct: {
-    CodeHash: { array: { type: 'u8', len: 32 } },
+    codeHash: { array: { type: 'u8', len: 32 } },
   },
 };
 
 const AccountIdIdentifierBorshSchema = {
   struct: {
-    AccountId: 'string',
+    accountId: 'string',
   },
 };
 

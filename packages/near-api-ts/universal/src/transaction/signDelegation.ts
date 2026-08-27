@@ -13,10 +13,10 @@ import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import {
   DelegationBorshSchema,
   SignedDelegationBorshSchema,
-} from './_common/borshSchemas/delegation';
-import { toNearcoreDelegation } from './_common/toNearcore/toNearcoreDelegation';
-import { toNearcoreSignature } from './_common/toNearcore/toNearcoreSignature';
-import { DelegationZodSchema } from './_common/zodSchemas/delegation';
+} from './_common/delegationBorshSchema';
+import { DelegationZodSchema } from './_common/delegationZodSchema';
+import { toNearcoreDelegation } from './_common/toNearcoreDelegation';
+import { toNearcoreSignature } from './_common/toNearcoreSignature';
 
 const SignDelegationArgsSchema = z.object({
   delegation: DelegationZodSchema,

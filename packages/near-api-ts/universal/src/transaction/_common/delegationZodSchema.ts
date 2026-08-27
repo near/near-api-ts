@@ -1,18 +1,20 @@
 import * as z from 'zod/mini';
-import { constants } from '../../../_common/_common/_common/constants';
-import { AccountIdZodSchema } from '../../../_common/zodSchemas/accountId';
-import { BlockHeightZodSchema } from '../../../_common/zodSchemas/blockHeight';
-import { PublicKeyZodSchema } from '../../../_common/zodSchemas/publicKey';
-import { SignatureZodSchema } from '../../../_common/zodSchemas/signature';
-import { TransactionNonceZodSchema } from '../../../_common/zodSchemas/transactionNonce';
-import { AddKeyActionZodSchema } from '../_common/zodSchemas/addKey';
-import { CreateAccountActionZodSchema } from '../_common/zodSchemas/createAccount';
-import { DeleteAccountActionZodSchema } from '../_common/zodSchemas/deleteAccount';
-import { DeleteKeyActionZodSchema } from '../_common/zodSchemas/deleteKey';
-import { DeployContractActionZodSchema } from '../_common/zodSchemas/deployContract';
-import { FunctionCallActionZodSchema } from '../_common/zodSchemas/functionCall';
-import { StakeActionZodSchema } from '../_common/zodSchemas/stake';
-import { TransferActionZodSchema } from '../_common/zodSchemas/transfer';
+import { constants } from '../../_common/_common/_common/constants';
+import { AccountIdZodSchema } from '../../_common/zodSchemas/accountId';
+import { BlockHeightZodSchema } from '../../_common/zodSchemas/blockHeight';
+import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
+import { SignatureZodSchema } from '../../_common/zodSchemas/signature';
+import { TransactionNonceZodSchema } from '../../_common/zodSchemas/transactionNonce';
+import { AddKeyActionZodSchema } from './_common/zodSchemas/addKey';
+import { CreateAccountActionZodSchema } from './_common/zodSchemas/createAccount';
+import { DeleteAccountActionZodSchema } from './_common/zodSchemas/deleteAccount';
+import { DeleteKeyActionZodSchema } from './_common/zodSchemas/deleteKey';
+import { DeployContractActionZodSchema } from './_common/zodSchemas/deployContract';
+import { FunctionCallActionZodSchema } from './_common/zodSchemas/functionCall';
+import { RegisterGlobalContractActionZodSchema } from './_common/zodSchemas/registerGlobalContract';
+import { StakeActionZodSchema } from './_common/zodSchemas/stake';
+import { TransferActionZodSchema } from './_common/zodSchemas/transfer';
+import { UseGlobalContractActionZodSchema } from './_common/zodSchemas/useGlobalContract';
 
 const DelegableActionZodSchema = z.union([
   CreateAccountActionZodSchema,
@@ -23,6 +25,8 @@ const DelegableActionZodSchema = z.union([
   StakeActionZodSchema,
   DeleteKeyActionZodSchema,
   DeleteAccountActionZodSchema,
+  RegisterGlobalContractActionZodSchema,
+  UseGlobalContractActionZodSchema,
 ]);
 
 export type InnerDelegableAction = z.infer<typeof DelegableActionZodSchema>;

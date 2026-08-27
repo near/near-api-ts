@@ -23,8 +23,16 @@ import type {
   FunctionCallAction,
   NearcoreFunctionCallAction,
 } from '../delegableActions/functionCall';
+import type {
+  NearcoreRegisterGlobalContractAction,
+  RegisterGlobalContractAction,
+} from '../delegableActions/registerGlobalContract';
 import type { NearcoreStakeAction, StakeAction } from '../delegableActions/stake';
 import type { NearcoreTransferAction, TransferAction } from '../delegableActions/transfer';
+import type {
+  NearcoreUseGlobalContractAction,
+  UseGlobalContractAction,
+} from '../delegableActions/useGlobalContract';
 
 export type DelegableAction =
   | CreateAccountAction
@@ -35,14 +43,16 @@ export type DelegableAction =
   | FunctionCallAction
   | StakeAction
   | DeleteKeyAction
-  | DeleteAccountAction;
+  | DeleteAccountAction
+  | RegisterGlobalContractAction
+  | UseGlobalContractAction;
 
-export type SingleDelegatedAction = {
+export type SingleDelegableAction = {
   delegatedAction: DelegableAction;
   delegatedActions?: never;
 };
 
-export type MultiDelegatedActions = {
+export type MultiDelegableActions = {
   delegatedAction?: never;
   delegatedActions: DelegableAction[];
 };
@@ -71,7 +81,7 @@ export type DelegationIntent = Prettify<
   {
     receiverAccountId: AccountId;
     expireAt: { blockHeight: BlockHeight };
-  } & (SingleDelegatedAction | MultiDelegatedActions)
+  } & (SingleDelegableAction | MultiDelegableActions)
 >;
 
 // Nearcore
@@ -84,7 +94,9 @@ export type NearcoreDelegableAction =
   | NearcoreFunctionCallAction
   | NearcoreStakeAction
   | NearcoreDeleteKeyAction
-  | NearcoreDeleteAccountAction;
+  | NearcoreDeleteAccountAction
+  | NearcoreRegisterGlobalContractAction
+  | NearcoreUseGlobalContractAction;
 
 // Field order follows the nearcore `DelegateAction` declaration, which is the
 // order the borsh schemas serialize these in. `tag` is the signing-only prefix.

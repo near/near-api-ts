@@ -113,6 +113,10 @@ export {
   throwableFunctionCall as functionCall,
 } from './src/transaction/actionCreators/functionCall';
 export {
+  safeRegisterGlobalContract,
+  throwableRegisterGlobalContract as registerGlobalContract,
+} from './src/transaction/actionCreators/registerGlobalContract';
+export {
   safeStake,
   throwableStake as stake,
 } from './src/transaction/actionCreators/stake';
@@ -120,6 +124,10 @@ export {
   safeTransfer,
   throwableTransfer as transfer,
 } from './src/transaction/actionCreators/transfer';
+export {
+  safeUseGlobalContract,
+  throwableUseGlobalContract as useGlobalContract,
+} from './src/transaction/actionCreators/useGlobalContract';
 // Helpers
 export {
   safeSignDelegation,
@@ -160,14 +168,19 @@ export type {
   NearTokenArgs,
 } from './types/_common/nearToken';
 export type { FunctionCallAction } from './types/_common/transaction/actions/delegableActions/functionCall';
+export type {
+  GlobalContractReference,
+  RegisterGlobalContractAction,
+} from './types/_common/transaction/actions/delegableActions/registerGlobalContract';
 export type { TransferAction } from './types/_common/transaction/actions/delegableActions/transfer';
+export type { UseGlobalContractAction } from './types/_common/transaction/actions/delegableActions/useGlobalContract';
 export type {
   DelegableAction,
   DelegationBase,
   DelegationIntent,
-  MultiDelegatedActions,
+  MultiDelegableActions,
   SignedDelegation,
-  SingleDelegatedAction,
+  SingleDelegableAction,
 } from './types/_common/transaction/actions/executeDelegation/delegation';
 export type { ExecuteDelegationAction } from './types/_common/transaction/actions/executeDelegation/executeDelegation';
 export type { SignDelegationOutput } from './types/_common/transaction/signDelegation';

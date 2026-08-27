@@ -9,10 +9,7 @@ import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { AccountIdZodSchema } from '../../_common/zodSchemas/accountId';
 import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
-import {
-  AllowedFunctionsSchema,
-  GasBudgetZodSchema,
-} from '../_common/_common/_common/zodSchemas/accessKey';
+import { AllowedFunctionsSchema, GasBudgetZodSchema } from '../_common/_common/zodSchemas/addKey';
 
 export const CreateAddFunctionCallKeyActionArgsSchema = z.object({
   publicKey: PublicKeyZodSchema,

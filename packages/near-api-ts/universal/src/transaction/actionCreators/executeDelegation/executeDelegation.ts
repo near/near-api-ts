@@ -7,8 +7,8 @@ import type {
 import { result, resultNatError } from '../../../_common/_common/_common/result';
 import { asThrowable } from '../../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../../_common/_common/wrapInternalError';
-import { SignedDelegationBorshSchema } from '../../_common/borshSchemas/delegation';
-import { SignedDelegationZodSchema } from '../../_common/zodSchemas/delegation';
+import { SignedDelegationBorshSchema } from '../../_common/delegationBorshSchema';
+import { SignedDelegationZodSchema } from '../../_common/delegationZodSchema';
 import {
   fromNearcoreSignedDelegation,
   type WireSignedDelegation,
@@ -31,6 +31,7 @@ export const safeExecuteDelegation: SafeCreateExecuteDelegationAction = wrapInte
     try {
       const signedDelegationBorshU8 = Uint8Array.fromBase64(validArgs.data.signedDelegationBorsh64);
 
+      // TODO Validate here by zod?
       const wireSignedDelegation = deserialize(
         SignedDelegationBorshSchema,
         signedDelegationBorshU8,

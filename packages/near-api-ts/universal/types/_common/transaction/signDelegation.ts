@@ -4,9 +4,9 @@ import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natErro
 import type { SafeSignData } from '../signData';
 import type {
   DelegationBase,
-  MultiDelegatedActions,
+  MultiDelegableActions,
   SignedDelegation,
-  SingleDelegatedAction,
+  SingleDelegableAction,
 } from './actions/executeDelegation/delegation';
 
 export interface SignDelegationPublicErrorRegistry {
@@ -16,7 +16,7 @@ export interface SignDelegationPublicErrorRegistry {
 }
 
 export type SignDelegationArgs<SDE = unknown> = {
-  delegation: DelegationBase & (SingleDelegatedAction | MultiDelegatedActions);
+  delegation: DelegationBase & (SingleDelegableAction | MultiDelegableActions);
   signDataProvider: { safeSignData: SafeSignData<SDE> };
 };
 

@@ -10,13 +10,10 @@ import type { NearcoreSignedTransaction } from '../../../types/_common/transacti
 import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
-import { toNearcoreSignature } from '../_common/toNearcore/toNearcoreSignature';
-import {
-  SignedTransactionBorshSchema,
-  TransactionBorshSchema,
-} from './borshSchemas/transaction/transaction';
-import { toNearcoreTransaction } from './toNearcoreTransaction/toNearcoreTransaction';
-import { TransactionZodSchema } from './zodSchemas/transaction/transaction';
+import { toNearcoreSignature } from '../_common/toNearcoreSignature';
+import { toNearcoreTransaction } from './toNearcoreTransaction';
+import { SignedTransactionBorshSchema, TransactionBorshSchema } from './transactionBorshSchema';
+import { TransactionZodSchema } from './transactionZodSchema';
 
 const SignTransactionArgsSchema = z.object({
   transaction: TransactionZodSchema,
