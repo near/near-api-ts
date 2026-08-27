@@ -10,7 +10,7 @@ const AccountIdDeployModeBorshSchema = {
   },
 };
 
-export const RegisterGlobalContractActionBorshSchema = {
+export const DeployGlobalContractActionBorshSchema = {
   struct: {
     deployGlobalContract: {
       struct: {

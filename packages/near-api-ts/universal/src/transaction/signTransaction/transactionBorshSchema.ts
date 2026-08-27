@@ -5,8 +5,8 @@ import { CreateAccountActionBorshSchema } from '../_common/_common/borshSchemas/
 import { DeleteAccountActionBorshSchema } from '../_common/_common/borshSchemas/deleteAccount';
 import { DeleteKeyActionBorshSchema } from '../_common/_common/borshSchemas/deleteKey';
 import { DeployContractActionBorshSchema } from '../_common/_common/borshSchemas/deployContract';
+import { DeployGlobalContractActionBorshSchema } from '../_common/_common/borshSchemas/deployGlobalContract';
 import { FunctionCallActionBorshSchema } from '../_common/_common/borshSchemas/functionCall';
-import { RegisterGlobalContractActionBorshSchema } from '../_common/_common/borshSchemas/registerGlobalContract';
 import { SignatureBorshSchema } from '../_common/_common/borshSchemas/signature';
 import { StakeActionBorshSchema } from '../_common/_common/borshSchemas/stake';
 import { TransferActionBorshSchema } from '../_common/_common/borshSchemas/transfer';
@@ -32,7 +32,7 @@ export const TransactionActionBorshSchema: Schema = {
     DeleteKeyActionBorshSchema,
     DeleteAccountActionBorshSchema,
     ExecuteDelegationActionBorshSchema,
-    RegisterGlobalContractActionBorshSchema,
+    DeployGlobalContractActionBorshSchema,
     UseGlobalContractActionBorshSchema,
   ],
 };
