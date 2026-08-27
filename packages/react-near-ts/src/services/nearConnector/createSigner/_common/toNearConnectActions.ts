@@ -82,8 +82,18 @@ const toNearConnectAction = (action: NatAction): NearConnectorAction => {
       },
     };
 
-  // Never reached
-  throw new Error(`Unsupported action type: ${action}`);
+  // near-connect has no wire format for these, so a wallet cannot be asked to sign them.
+  if (
+    action.actionType === 'ExecuteDelegation' ||
+    action.actionType === 'RegisterGlobalContract' ||
+    action.actionType === 'LinkGlobalContract' ||
+    action.actionType === 'PinGlobalContract'
+  )
+    throw new Error(`near-connect does not support the ${action.actionType} action`);
+
+  // Never reached - fails to compile once near-api-ts adds an action we do not handle.
+  const unhandledAction: never = action;
+  throw new Error(`Unknown action type: ${JSON.stringify(unhandledAction)}`);
 };
 
 // TODO make sure that it will work only without a sponsor action;
