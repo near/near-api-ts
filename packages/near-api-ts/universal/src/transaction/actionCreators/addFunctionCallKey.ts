@@ -42,5 +42,5 @@ export const safeAddFunctionCallKey: SafeCreateAddFunctionCallKeyAction = wrapIn
   },
 );
 
-export const throwableAddFunctionCallKey: CreateAddFunctionCallKeyAction =
+export const addFunctionCallKey: CreateAddFunctionCallKeyAction =
   asThrowable(safeAddFunctionCallKey);

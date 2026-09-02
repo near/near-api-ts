@@ -33,4 +33,4 @@ export const safeTransfer: SafeCreateTransferAction = wrapInternalError(
   },
 );
 
-export const throwableTransfer: CreateTransferAction = asThrowable(safeTransfer);
+export const transfer: CreateTransferAction = asThrowable(safeTransfer);

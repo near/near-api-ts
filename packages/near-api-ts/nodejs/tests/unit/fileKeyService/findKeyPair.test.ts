@@ -1,14 +1,14 @@
 import { describe, it } from 'vitest';
 import { randomEd25519KeyPair } from '../../../../universal';
 import { log } from '../../../../universal/tests/utils/common';
-import { throwableCreateFileKeyService } from '../../../src/fileKeyService/fileKeyService';
+import { createFileKeyService } from '../../../src/fileKeyService/fileKeyService';
 
 describe('FileKeyService.', () => {
   it('Add key', async () => {
     try {
       const kp1 = randomEd25519KeyPair();
       const kp2 = randomEd25519KeyPair();
-      const keyService = throwableCreateFileKeyService();
+      const keyService = createFileKeyService();
 
       const r1 = await keyService.addKey(kp1);
       console.log(r1);

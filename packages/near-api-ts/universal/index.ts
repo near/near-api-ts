@@ -35,15 +35,15 @@ export { AccountIdZodSchema } from './src/_common/zodSchemas/accountId';
 export { PublicKeyZodSchema } from './src/_common/zodSchemas/publicKey';
 // Clients
 export {
+  createClient,
   safeCreateClient,
-  throwableCreateClient as createClient,
 } from './src/createClient/createClient';
 export { convertBase64ToObject } from './src/createClient/methods/_common/base64ToObject';
 export { createMainnetClient } from './src/createClient/presets/mainnet';
 export { createTestnetClient } from './src/createClient/presets/testnet';
 // Key Services
 export {
-  createMemoryKeyService as createMemoryKeyService,
+  createMemoryKeyService,
   safeCreateMemoryKeyService,
 } from './src/createMemoryKeyService/createMemoryKeyService';
 // KeyPair
@@ -65,8 +65,8 @@ export {
 } from './src/createMemoryKeyService/toKeyPairs/keyPairs/randomSecp256k1KeyPair';
 // Signers
 export {
-  createMemorySigner as createMemorySigner,
-  createMemorySignerFactory as createMemorySignerFactory,
+  createMemorySigner,
+  createMemorySignerFactory,
   createSafeMemorySignerFactory,
   safeCreateMemorySigner,
 } from './src/createSigner/createSigner';
@@ -88,49 +88,49 @@ export {
   safeAddFullAccessKey,
 } from './src/transaction/actionCreators/addFullAccessKey';
 export {
+  addFunctionCallKey,
   safeAddFunctionCallKey,
-  throwableAddFunctionCallKey as addFunctionCallKey,
 } from './src/transaction/actionCreators/addFunctionCallKey';
 export { createAccount } from './src/transaction/actionCreators/createAccount';
 export {
+  deleteAccount,
   safeDeleteAccount,
-  throwableDeleteAccount as deleteAccount,
 } from './src/transaction/actionCreators/deleteAccount';
 export {
+  deleteKey,
   safeDeleteKey,
-  throwableDeleteKey as deleteKey,
 } from './src/transaction/actionCreators/deleteKey';
 export {
+  deployContract,
   safeDeployContract,
-  throwableDeployContract as deployContract,
 } from './src/transaction/actionCreators/deployContract';
 export {
+  executeDelegation,
   safeExecuteDelegation,
-  throwableExecuteDelegation as executeDelegation,
 } from './src/transaction/actionCreators/executeDelegation/executeDelegation';
 export {
+  functionCall,
   safeFunctionCall,
-  throwableFunctionCall as functionCall,
 } from './src/transaction/actionCreators/functionCall';
 export {
+  linkGlobalContract,
   safeLinkGlobalContract,
-  throwableLinkGlobalContract as linkGlobalContract,
 } from './src/transaction/actionCreators/linkGlobalContract';
 export {
+  pinGlobalContract,
   safePinGlobalContract,
-  throwablePinGlobalContract as pinGlobalContract,
 } from './src/transaction/actionCreators/pinGlobalContract';
 export {
+  registerGlobalContract,
   safeRegisterGlobalContract,
-  throwableRegisterGlobalContract as registerGlobalContract,
 } from './src/transaction/actionCreators/registerGlobalContract';
 export {
   safeStake,
-  throwableStake as stake,
+  stake,
 } from './src/transaction/actionCreators/stake';
 export {
   safeTransfer,
-  throwableTransfer as transfer,
+  transfer,
 } from './src/transaction/actionCreators/transfer';
 // Helpers
 export {

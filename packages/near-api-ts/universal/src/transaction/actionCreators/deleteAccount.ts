@@ -33,4 +33,4 @@ export const safeDeleteAccount: SafeCreateDeleteAccountAction = wrapInternalErro
   },
 );
 
-export const throwableDeleteAccount: CreateDeleteAccountAction = asThrowable(safeDeleteAccount);
+export const deleteAccount: CreateDeleteAccountAction = asThrowable(safeDeleteAccount);

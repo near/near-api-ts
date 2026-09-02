@@ -51,6 +51,6 @@ export const safeRegisterGlobalContract: SafeCreateRegisterGlobalContractAction 
   },
 );
 
-export const throwableRegisterGlobalContract: CreateRegisterGlobalContractAction = asThrowable(
+export const registerGlobalContract: CreateRegisterGlobalContractAction = asThrowable(
   safeRegisterGlobalContract,
 );

@@ -8,5 +8,5 @@ export * from '../universal/index';
 
 // export {
 //   safeCreateIdbKeyService,
-//   throwableCreateIdbKeyService as createIdbKeyService,
+//   createIdbKeyService,
 // } from './src/idbKeyService/idbKeyService';

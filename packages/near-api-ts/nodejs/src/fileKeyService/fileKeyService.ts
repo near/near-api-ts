@@ -68,4 +68,4 @@ export const safeCreateFileKeyService: any = wrapInternalError(
   },
 );
 
-export const throwableCreateFileKeyService: any = asThrowable(safeCreateFileKeyService);
+export const createFileKeyService: any = asThrowable(safeCreateFileKeyService);

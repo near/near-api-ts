@@ -60,7 +60,7 @@ export type ClientContext = {
 };
 
 export type Client = {
-  // throwable variants
+  // throwing variants
   getAccountInfo: GetAccountInfo;
   getAccountAccessKey: GetAccountAccessKey;
   getAccountAccessKeys: GetAccountAccessKeys;

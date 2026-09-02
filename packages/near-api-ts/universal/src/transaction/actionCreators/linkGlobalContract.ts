@@ -33,5 +33,5 @@ export const safeLinkGlobalContract: SafeCreateLinkGlobalContractAction = wrapIn
   },
 );
 
-export const throwableLinkGlobalContract: CreateLinkGlobalContractAction =
+export const linkGlobalContract: CreateLinkGlobalContractAction =
   asThrowable(safeLinkGlobalContract);

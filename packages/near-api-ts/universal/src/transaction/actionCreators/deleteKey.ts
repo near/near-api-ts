@@ -33,4 +33,4 @@ export const safeDeleteKey: SafeCreateDeleteKeyAction = wrapInternalError(
   },
 );
 
-export const throwableDeleteKey: CreateDeleteKeyAction = asThrowable(safeDeleteKey);
+export const deleteKey: CreateDeleteKeyAction = asThrowable(safeDeleteKey);

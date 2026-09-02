@@ -1,7 +1,7 @@
-import { throwableCreateClient } from '../createClient';
+import { createClient } from '../createClient';
 
 export const createTestnetClient = () =>
-  throwableCreateClient({
+  createClient({
     transport: {
       rpcEndpoints: {
         regular: [

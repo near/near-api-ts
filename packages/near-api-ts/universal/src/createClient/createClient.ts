@@ -69,4 +69,4 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
   },
 );
 
-export const throwableCreateClient: CreateClient = asThrowable(safeCreateClient);
+export const createClient: CreateClient = asThrowable(safeCreateClient);

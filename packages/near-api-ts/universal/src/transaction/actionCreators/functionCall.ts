@@ -110,6 +110,4 @@ export const safeFunctionCall: SafeCreateFunctionCallAction = wrapInternalError(
   },
 );
 
-export const throwableFunctionCall: CreateFunctionCallAction = asThrowable(
-  safeFunctionCall as any,
-) as any; // TODO fix any
+export const functionCall: CreateFunctionCallAction = asThrowable(safeFunctionCall as any) as any; // TODO fix any

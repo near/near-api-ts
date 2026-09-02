@@ -43,4 +43,4 @@ export const safeDeployContract: SafeCreateDeployContractAction = wrapInternalEr
   },
 );
 
-export const throwableDeployContract: CreateDeployContractAction = asThrowable(safeDeployContract);
+export const deployContract: CreateDeployContractAction = asThrowable(safeDeployContract);

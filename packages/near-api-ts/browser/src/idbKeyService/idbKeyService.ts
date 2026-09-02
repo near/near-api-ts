@@ -53,4 +53,4 @@ export const safeCreateIdbKeyService: any = wrapInternalError(
   },
 );
 
-export const throwableCreateIdbKeyService: any = asThrowable(safeCreateIdbKeyService);
+export const createIdbKeyService: any = asThrowable(safeCreateIdbKeyService);

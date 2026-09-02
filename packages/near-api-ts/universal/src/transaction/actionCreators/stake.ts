@@ -36,4 +36,4 @@ export const safeStake: SafeCreateStakeAction = wrapInternalError(
   },
 );
 
-export const throwableStake: CreateStakeAction = asThrowable(safeStake);
+export const stake: CreateStakeAction = asThrowable(safeStake);

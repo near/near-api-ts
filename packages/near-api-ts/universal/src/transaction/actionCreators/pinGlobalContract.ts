@@ -33,5 +33,4 @@ export const safePinGlobalContract: SafeCreatePinGlobalContractAction = wrapInte
   },
 );
 
-export const throwablePinGlobalContract: CreatePinGlobalContractAction =
-  asThrowable(safePinGlobalContract);
+export const pinGlobalContract: CreatePinGlobalContractAction = asThrowable(safePinGlobalContract);

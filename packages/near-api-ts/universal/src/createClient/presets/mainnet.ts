@@ -1,7 +1,7 @@
-import { throwableCreateClient } from '../createClient';
+import { createClient } from '../createClient';
 
 export const createMainnetClient = () =>
-  throwableCreateClient({
+  createClient({
     transport: {
       rpcEndpoints: {
         regular: [{ url: 'https://rpc.mainnet.fastnear.com' }, { url: 'https://rpc.intea.rs' }],

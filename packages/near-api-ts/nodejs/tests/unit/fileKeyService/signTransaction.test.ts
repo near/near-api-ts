@@ -1,12 +1,12 @@
 import { it } from 'vitest';
 import { randomEd25519KeyPair, transfer } from '../../../../universal/index';
 import { log } from '../../../../universal/tests/utils/common';
-import { throwableCreateFileKeyService } from '../../../src/fileKeyService/fileKeyService';
+import { createFileKeyService } from '../../../src/fileKeyService/fileKeyService';
 
 it('FileKeyService:Sign transaction', async () => {
   try {
     const kp1 = randomEd25519KeyPair();
-    const keyService = throwableCreateFileKeyService();
+    const keyService = createFileKeyService();
 
     await keyService.addKeyPair(kp1);
 

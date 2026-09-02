@@ -64,5 +64,4 @@ export const safeExecuteDelegation: SafeCreateExecuteDelegationAction = wrapInte
   },
 );
 
-export const throwableExecuteDelegation: CreateExecuteDelegationAction =
-  asThrowable(safeExecuteDelegation);
+export const executeDelegation: CreateExecuteDelegationAction = asThrowable(safeExecuteDelegation);
