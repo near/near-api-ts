@@ -2,6 +2,7 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   functionCall,
+  linkGlobalContract,
   pinGlobalContract,
   registerGlobalContract,
   signTransaction,
@@ -37,7 +38,6 @@ describe('DeployContract Tests', () => {
           registerGlobalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
             wasmMutability: 'Immutable',
-            // wasmMutability: 'Mutable',
           }),
         ],
         receiverAccountId: 'nat',
@@ -81,5 +81,19 @@ describe('DeployContract Tests', () => {
 
     const info = await client.getAccountInfo({ accountId: 'nat' });
     log(info);
+
+    // registerGlobalContract({
+    //   wasmU8: new Uint8Array(),
+    //   wasmMutability: 'Immutable', // Mutable
+    // });
+    //
+    // pinGlobalContract({ globalContractWasmHash: 'D6noZ3aDk5ZwPSqp2p8P85dpEg9xhfqKSCo5cniDLkHK' });
+    // linkGlobalContract({ globalContractAccountId: 'nat' });
+    //
+    // const { contract } = await client.getAccountInfo({ accountId: 'nat' });
+    // // { status: 'NoContract' }
+    // // | { status: 'Deployed', localContractWasmHash }
+    // // | { status: 'Pinned',   globalContractWasmHash }
+    // // | { status: 'Linked',   globalContractAccountId }
   });
 });
