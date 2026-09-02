@@ -51,10 +51,10 @@ export const getRawExecutionStep = (
 
   // During execution, an execution step may create new execution steps
   const producedSteps = receiptOutcome.outcome.receiptIds.map(({ cryptoHash }) => {
-    const { kind } = receiptCreationMap[cryptoHash];
-    return kind === 'Execution'
-      ? { kind, executionStepId: cryptoHash }
-      : { kind, refundStepId: cryptoHash };
+    const stepType = receiptCreationMap[cryptoHash].kind;
+    return stepType === 'Execution'
+      ? { stepType, executionStepId: cryptoHash }
+      : { stepType, refundStepId: cryptoHash };
   });
 
   const requiredData = Action.inputDataIds.map((dataId) => ({ dataId }));

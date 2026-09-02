@@ -40,8 +40,8 @@ export type ExecutionStepResult<RD> =
     };
 
 type ProducedStep =
-  | { kind: 'Execution'; executionStepId: ReceiptId }
-  | { kind: 'Refund'; refundStepId: ReceiptId };
+  | { stepType: 'Execution'; executionStepId: ReceiptId }
+  | { stepType: 'Refund'; refundStepId: ReceiptId };
 
 export type ExecutionStep<RD, AS> = {
   executionStepId: ReceiptId;
