@@ -15,6 +15,13 @@ not chosen by taste. The document defines what counts as a consumer, what the al
 decides and what is left to cohesion, and how the layers work. Placing a file by intuition
 will get it wrong; run `pnpm check:placement` to find out.
 
+**[skills/release-changelog/SKILL.md](skills/release-changelog/SKILL.md) — what to put in a
+CHANGELOG entry.** Read it before preparing a release, filling in an `[UNRELEASED]` section,
+or answering what changed since a published version. The public surface of a package is
+what its entry files export and nothing else; the document gives the mechanical diffs that
+derive it, and explains why commit messages and `git diff --stat` mislead over a release
+range.
+
 Files under `skills/` are plain markdown and readable by any agent or human. Claude Code
 picks them up through symlinks in `.claude/skills/` (which is git-ignored).
 
