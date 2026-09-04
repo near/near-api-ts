@@ -59,7 +59,7 @@ const clientCreator = () => createClient({
 const nearStore = createNearStore({
   networkId: 'mainnet',
   clientCreator,
-  serviceCreator: createNearConnectorService({ networkId: 'mainnet' }),
+  serviceCreator: createNearConnectorService(),
 });
 
 export const App = ({ children }: { children: React.ReactNode }) => (
