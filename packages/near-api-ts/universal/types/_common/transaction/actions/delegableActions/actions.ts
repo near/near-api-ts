@@ -6,7 +6,8 @@ import type { CreateDeployContractActionPublicErrorRegistry } from './deployCont
 import type { CreateFunctionCallActionPublicErrorRegistry } from './functionCall';
 import type { CreateLinkGlobalContractActionPublicErrorRegistry } from './linkGlobalContract';
 import type { CreatePinGlobalContractActionPublicErrorRegistry } from './pinGlobalContract';
-import type { CreateRegisterGlobalContractActionPublicErrorRegistry } from './registerGlobalContract';
+import type { CreateRegisterLinkableGlobalContractActionPublicErrorRegistry } from './registerLinkableGlobalContract';
+import type { CreateRegisterPinnableGlobalContractActionPublicErrorRegistry } from './registerPinnableGlobalContract';
 import type { CreateStakeActionPublicErrorRegistry } from './stake';
 import type { CreateTransferActionPublicErrorRegistry } from './transfer';
 
@@ -19,6 +20,7 @@ export interface ActionsPublicErrorRegistry
     CreateDeleteKeyActionPublicErrorRegistry,
     CreateDeleteActionPublicErrorRegistry,
     CreateExecuteDelegationActionPublicErrorRegistry,
-    CreateRegisterGlobalContractActionPublicErrorRegistry,
+    CreateRegisterPinnableGlobalContractActionPublicErrorRegistry,
+    CreateRegisterLinkableGlobalContractActionPublicErrorRegistry,
     CreateLinkGlobalContractActionPublicErrorRegistry,
     CreatePinGlobalContractActionPublicErrorRegistry {}

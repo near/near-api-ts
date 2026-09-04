@@ -12,7 +12,8 @@ import { toNearcoreDeployContractAction } from './_common/toNearcore/toNearcoreD
 import { toNearcoreFunctionCallAction } from './_common/toNearcore/toNearcoreFunctionCall';
 import { toNearcoreLinkGlobalContractAction } from './_common/toNearcore/toNearcoreLinkGlobalContract';
 import { toNearcorePinGlobalContractAction } from './_common/toNearcore/toNearcorePinGlobalContract';
-import { toNearcoreRegisterGlobalContractAction } from './_common/toNearcore/toNearcoreRegisterGlobalContract';
+import { toNearcoreRegisterLinkableGlobalContractAction } from './_common/toNearcore/toNearcoreRegisterLinkableGlobalContract';
+import { toNearcoreRegisterPinnableGlobalContractAction } from './_common/toNearcore/toNearcoreRegisterPinnableGlobalContract';
 import { toNearcoreStakeAction } from './_common/toNearcore/toNearcoreStake';
 import { toNearcoreTransferAction } from './_common/toNearcore/toNearcoreTransfer';
 import type { InnerDelegableAction, InnerDelegation } from './delegationZodSchema';
@@ -35,8 +36,10 @@ const toNearcoreDelegableAction = (action: InnerDelegableAction): NearcoreDelega
       return toNearcoreDeleteKeyAction(action);
     case 'DeleteAccount':
       return toNearcoreDeleteAccountAction(action);
-    case 'RegisterGlobalContract':
-      return toNearcoreRegisterGlobalContractAction(action);
+    case 'RegisterPinnableGlobalContract':
+      return toNearcoreRegisterPinnableGlobalContractAction(action);
+    case 'RegisterLinkableGlobalContract':
+      return toNearcoreRegisterLinkableGlobalContractAction(action);
     case 'LinkGlobalContract':
       return toNearcoreLinkGlobalContractAction(action);
     case 'PinGlobalContract':

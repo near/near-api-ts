@@ -98,17 +98,15 @@ export const getRawActionSummary = (rpcAction: ActionView): RawTransactionAction
     };
   }
 
-  // Nearcore splits our `RegisterGlobalContract` in two views by its deploy mode, and hands back
-  // the hash of the registered wasm rather than the wasm itself - the same way it does for
-  // `DeployContract`.
+  // Nearcore returns the two registration modes as separate views and hands back the hash of the
+  // registered wasm rather than the wasm itself - the same way it does for `DeployContract`.
   if ('DeployGlobalContract' in rpcAction) {
     const { DeployGlobalContract } = rpcAction;
     const contractWasmHashU8 = Uint8Array.fromBase64(DeployGlobalContract.code);
 
     return {
-      actionType: 'RegisterGlobalContract' as const,
+      actionType: 'RegisterPinnableGlobalContract' as const,
       contractWasmHash: base58.encode(contractWasmHashU8),
-      wasmMutability: 'Immutable' as const,
     };
   }
 
@@ -117,9 +115,8 @@ export const getRawActionSummary = (rpcAction: ActionView): RawTransactionAction
     const contractWasmHashU8 = Uint8Array.fromBase64(DeployGlobalContractByAccountId.code);
 
     return {
-      actionType: 'RegisterGlobalContract' as const,
+      actionType: 'RegisterLinkableGlobalContract' as const,
       contractWasmHash: base58.encode(contractWasmHashU8),
-      wasmMutability: 'Mutable' as const,
     };
   }
 

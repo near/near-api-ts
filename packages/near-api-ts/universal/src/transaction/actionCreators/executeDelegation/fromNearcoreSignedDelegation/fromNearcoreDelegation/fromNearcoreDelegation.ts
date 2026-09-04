@@ -79,13 +79,20 @@ const fromNearcoreDelegableAction = (action: NearcoreDelegableAction): Delegable
       beneficiaryAccountId: action.deleteAccount.beneficiaryId,
     };
 
-  if ('deployGlobalContract' in action)
-    return {
-      actionType: 'RegisterGlobalContract',
-      wasmU8: Uint8Array.from(action.deployGlobalContract.code),
-      wasmMutability:
-        'codeHash' in action.deployGlobalContract.deployMode ? 'Immutable' : 'Mutable',
-    };
+  if ('deployGlobalContract' in action) {
+    const { code, deployMode } = action.deployGlobalContract;
+    const wasmU8 = Uint8Array.from(code);
+
+    return 'codeHash' in deployMode
+      ? {
+          actionType: 'RegisterPinnableGlobalContract',
+          wasmU8,
+        }
+      : {
+          actionType: 'RegisterLinkableGlobalContract',
+          wasmU8,
+        };
+  }
 
   // Nearcore has one `UseGlobalContract` action, so the identifier it carries is what tells our
   // two actions apart - the same split `toNearcorePinGlobalContractAction` and

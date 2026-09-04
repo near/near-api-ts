@@ -111,11 +111,15 @@ const convertNonDelegateActionToSummary = (
     const contractWasmHashU8 = sha256(contractWasmU8);
     const contractWasmHash = base58.encode(contractWasmHashU8);
 
-    return {
-      actionType: 'RegisterGlobalContract' as const,
-      contractWasmHash,
-      wasmMutability: DeployGlobalContract.deployMode === 'CodeHash' ? 'Immutable' : 'Mutable',
-    };
+    return DeployGlobalContract.deployMode === 'CodeHash'
+      ? {
+          actionType: 'RegisterPinnableGlobalContract' as const,
+          contractWasmHash,
+        }
+      : {
+          actionType: 'RegisterLinkableGlobalContract' as const,
+          contractWasmHash,
+        };
   }
 
   // Not the same as in getRawActionSummary - the contract identifier is a field here rather than

@@ -11,7 +11,8 @@ import { DeployContractActionZodSchema } from '../_common/_common/zodSchemas/dep
 import { FunctionCallActionZodSchema } from '../_common/_common/zodSchemas/functionCall';
 import { LinkGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/linkGlobalContract';
 import { PinGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/pinGlobalContract';
-import { RegisterGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/registerGlobalContract';
+import { RegisterLinkableGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/registerLinkableGlobalContract';
+import { RegisterPinnableGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/registerPinnableGlobalContract';
 import { StakeActionZodSchema } from '../_common/_common/zodSchemas/stake';
 import { TransferActionZodSchema } from '../_common/_common/zodSchemas/transfer';
 import { SignedDelegationZodSchema } from '../_common/delegationZodSchema';
@@ -33,7 +34,8 @@ const TransactionActionZodSchema = z.union([
   DeleteKeyActionZodSchema,
   DeleteAccountActionZodSchema,
   ExecuteDelegationActionZodSchema,
-  RegisterGlobalContractActionZodSchema,
+  RegisterPinnableGlobalContractActionZodSchema,
+  RegisterLinkableGlobalContractActionZodSchema,
   LinkGlobalContractActionZodSchema,
   PinGlobalContractActionZodSchema,
 ]);

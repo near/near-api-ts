@@ -121,9 +121,13 @@ export {
   safePinGlobalContract,
 } from './src/transaction/actionCreators/pinGlobalContract';
 export {
-  registerGlobalContract,
-  safeRegisterGlobalContract,
-} from './src/transaction/actionCreators/registerGlobalContract';
+  registerLinkableGlobalContract,
+  safeRegisterLinkableGlobalContract,
+} from './src/transaction/actionCreators/registerLinkableGlobalContract';
+export {
+  registerPinnableGlobalContract,
+  safeRegisterPinnableGlobalContract,
+} from './src/transaction/actionCreators/registerPinnableGlobalContract';
 export {
   safeStake,
   stake,
@@ -174,10 +178,8 @@ export type {
 export type { FunctionCallAction } from './types/_common/transaction/actions/delegableActions/functionCall';
 export type { LinkGlobalContractAction } from './types/_common/transaction/actions/delegableActions/linkGlobalContract';
 export type { PinGlobalContractAction } from './types/_common/transaction/actions/delegableActions/pinGlobalContract';
-export type {
-  GlobalContractWasmMutability,
-  RegisterGlobalContractAction,
-} from './types/_common/transaction/actions/delegableActions/registerGlobalContract';
+export type { RegisterLinkableGlobalContractAction } from './types/_common/transaction/actions/delegableActions/registerLinkableGlobalContract';
+export type { RegisterPinnableGlobalContractAction } from './types/_common/transaction/actions/delegableActions/registerPinnableGlobalContract';
 export type { TransferAction } from './types/_common/transaction/actions/delegableActions/transfer';
 export type {
   DelegableAction,

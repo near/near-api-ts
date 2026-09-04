@@ -2,12 +2,12 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   functionCall,
-  linkGlobalContract,
+  keyPair, linkGlobalContract,
   pinGlobalContract,
-  registerGlobalContract,
+  registerLinkableGlobalContract,
+  registerPinnableGlobalContract,
   signTransaction,
 } from '../../../index';
-import { keyPair } from '../../../src/createMemoryKeyService/toKeyPairs/keyPairs/keyPair/keyPair';
 import type { Client } from '../../../types/client/client';
 import { createDefaultClient, getFileBytes, log } from '../../utils/common';
 import { startSandbox } from '../../utils/sandbox/startSandbox';
@@ -35,10 +35,12 @@ describe('DeployContract Tests', () => {
         nonce: natKey.accountAccessKey.nonce + 1,
         blockHash: natKey.blockHash,
         actions: [
-          registerGlobalContract({
+          // registerPinnableGlobalContract({
+          //   wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
+          // }),
+          registerLinkableGlobalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
-            wasmMutability: 'Immutable',
-          }),
+          })
         ],
         receiverAccountId: 'nat',
       },
@@ -59,9 +61,10 @@ describe('DeployContract Tests', () => {
         nonce: natKey.accountAccessKey.nonce + 2,
         blockHash: natKey.blockHash,
         actions: [
-          pinGlobalContract({
-            globalContractWasmHash: 'D6noZ3aDk5ZwPSqp2p8P85dpEg9xhfqKSCo5cniDLkHK',
-          }),
+          // pinGlobalContract({
+          //   globalContractWasmHash: 'D6noZ3aDk5ZwPSqp2p8P85dpEg9xhfqKSCo5cniDLkHK',
+          // }),
+          linkGlobalContract({ globalContractAccountId: 'nat' }),
           functionCall({
             functionName: 'write_record',
             functionArgs: { record_id: 1, record: 'Hi Alice' },
@@ -82,11 +85,6 @@ describe('DeployContract Tests', () => {
     const info = await client.getAccountInfo({ accountId: 'nat' });
     log(info);
 
-    // registerGlobalContract({
-    //   wasmU8: new Uint8Array(),
-    //   wasmMutability: 'Immutable', // Mutable
-    // });
-    //
     // pinGlobalContract({ globalContractWasmHash: 'D6noZ3aDk5ZwPSqp2p8P85dpEg9xhfqKSCo5cniDLkHK' });
     // linkGlobalContract({ globalContractAccountId: 'nat' });
     //

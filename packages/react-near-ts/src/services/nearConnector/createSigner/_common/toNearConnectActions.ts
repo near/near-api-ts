@@ -85,7 +85,8 @@ const toNearConnectAction = (action: NatAction): NearConnectorAction => {
   // near-connect has no wire format for these, so a wallet cannot be asked to sign them.
   if (
     action.actionType === 'ExecuteDelegation' ||
-    action.actionType === 'RegisterGlobalContract' ||
+    action.actionType === 'RegisterPinnableGlobalContract' ||
+    action.actionType === 'RegisterLinkableGlobalContract' ||
     action.actionType === 'LinkGlobalContract' ||
     action.actionType === 'PinGlobalContract'
   )

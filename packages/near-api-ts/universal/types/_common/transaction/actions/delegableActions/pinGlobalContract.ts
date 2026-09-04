@@ -13,8 +13,8 @@ export type CreatePinGlobalContractActionArgs = {
 
 /**
  * Points the receiver account at a global contract registered with
- * `wasmMutability: 'Immutable'`, the way `DeployContract` attaches a wasm blob
- * the transaction carries itself. Nearcore calls it `UseGlobalContract`.
+ * `RegisterPinnableGlobalContract`, the way `DeployContract` attaches a wasm
+ * blob the transaction carries itself. Nearcore calls it `UseGlobalContract`.
  *
  * The account is pinned to that exact wasm - nobody can swap the code under it,
  * because a different wasm has a different hash. Use `LinkGlobalContractAction`

@@ -32,9 +32,13 @@ import type {
   PinGlobalContractAction,
 } from '../delegableActions/pinGlobalContract';
 import type {
-  NearcoreRegisterGlobalContractAction,
-  RegisterGlobalContractAction,
-} from '../delegableActions/registerGlobalContract';
+  NearcoreRegisterLinkableGlobalContractAction,
+  RegisterLinkableGlobalContractAction,
+} from '../delegableActions/registerLinkableGlobalContract';
+import type {
+  NearcoreRegisterPinnableGlobalContractAction,
+  RegisterPinnableGlobalContractAction,
+} from '../delegableActions/registerPinnableGlobalContract';
 import type { NearcoreStakeAction, StakeAction } from '../delegableActions/stake';
 import type { NearcoreTransferAction, TransferAction } from '../delegableActions/transfer';
 
@@ -48,7 +52,8 @@ export type DelegableAction =
   | StakeAction
   | DeleteKeyAction
   | DeleteAccountAction
-  | RegisterGlobalContractAction
+  | RegisterPinnableGlobalContractAction
+  | RegisterLinkableGlobalContractAction
   | LinkGlobalContractAction
   | PinGlobalContractAction;
 
@@ -100,7 +105,8 @@ export type NearcoreDelegableAction =
   | NearcoreStakeAction
   | NearcoreDeleteKeyAction
   | NearcoreDeleteAccountAction
-  | NearcoreRegisterGlobalContractAction
+  | NearcoreRegisterPinnableGlobalContractAction
+  | NearcoreRegisterLinkableGlobalContractAction
   | NearcoreLinkGlobalContractAction
   | NearcorePinGlobalContractAction;
 

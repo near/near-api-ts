@@ -10,7 +10,6 @@ import type {
 import type { PublicKey, Signature } from '../../../../../../../_common/crypto';
 import type { NearGas } from '../../../../../../../_common/nearGas';
 import type { NearToken } from '../../../../../../../_common/nearToken';
-import type { GlobalContractWasmMutability } from '../../../../../../../_common/transaction/actions/delegableActions/registerGlobalContract';
 
 type CreateAccountActionSummary = {
   actionType: 'CreateAccount';
@@ -66,15 +65,17 @@ type DeleteAccountActionSummary = {
 };
 
 /**
- * Nearcore hands back the hash of the registered wasm rather than the wasm itself, the way it
- * does for `DeployContract`. With `wasmMutability: 'Immutable'` that hash is also the identifier
- * a `PinGlobalContract` action takes; a `'Mutable'` contract is addressed by the account id of
- * the account that registered it, which is the receiver of this action.
+ * Nearcore hands back the hash of the registered wasm rather than the wasm itself,
+ * the way it does for `DeployContract`.
  */
-type RegisterGlobalContractActionSummary = {
-  actionType: 'RegisterGlobalContract';
+type RegisterPinnableGlobalContractActionSummary = {
+  actionType: 'RegisterPinnableGlobalContract';
   contractWasmHash: ContractWasmHash;
-  wasmMutability: GlobalContractWasmMutability;
+};
+
+type RegisterLinkableGlobalContractActionSummary = {
+  actionType: 'RegisterLinkableGlobalContract';
+  contractWasmHash: ContractWasmHash;
 };
 
 type LinkGlobalContractActionSummary = {
@@ -96,7 +97,8 @@ export type DelegableActionSummary<FA> =
   | StakeActionSummary
   | DeleteKeyActionSummary
   | DeleteAccountActionSummary
-  | RegisterGlobalContractActionSummary
+  | RegisterPinnableGlobalContractActionSummary
+  | RegisterLinkableGlobalContractActionSummary
   | LinkGlobalContractActionSummary
   | PinGlobalContractActionSummary;
 

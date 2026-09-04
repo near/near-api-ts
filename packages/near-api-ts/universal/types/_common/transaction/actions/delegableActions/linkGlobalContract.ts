@@ -13,8 +13,8 @@ export type CreateLinkGlobalContractActionArgs = {
 
 /**
  * Points the receiver account at a global contract registered with
- * `wasmMutability: 'Mutable'`, the way `DeployContract` attaches a wasm blob the
- * transaction carries itself. Nearcore calls it `UseGlobalContract`.
+ * `RegisterLinkableGlobalContract`, the way `DeployContract` attaches a wasm
+ * blob the transaction carries itself. Nearcore calls it `UseGlobalContract`.
  *
  * The link is by account id, so it follows that account: when the registrar
  * registers new code under the same account id, the receiver runs the new code

@@ -1,6 +1,11 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
-import { functionCall, registerGlobalContract, signTransaction, stake } from '../../../index';
+import {
+  functionCall,
+  registerPinnableGlobalContract,
+  signTransaction,
+  stake,
+} from '../../../index';
 import { keyPair } from '../../../src/createMemoryKeyService/toKeyPairs/keyPairs/keyPair/keyPair';
 import type { Client } from '../../../types/client/client';
 import { createDefaultClient, getFileBytes, log } from '../../utils/common';
@@ -29,9 +34,8 @@ describe('DeployContract Tests', () => {
         nonce: natKey.accountAccessKey.nonce + 1,
         blockHash: natKey.blockHash,
         actions: [
-          registerGlobalContract({
+          registerPinnableGlobalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
-            wasmMutability: 'Immutable',
           }),
         ],
         receiverAccountId: 'nat',
@@ -60,9 +64,8 @@ describe('DeployContract Tests', () => {
         nonce: aliceKey.accountAccessKey.nonce + 1,
         blockHash: aliceKey.blockHash,
         actions: [
-          registerGlobalContract({
+          registerPinnableGlobalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
-            wasmMutability: 'Immutable',
           }),
         ],
         receiverAccountId: 'alice',

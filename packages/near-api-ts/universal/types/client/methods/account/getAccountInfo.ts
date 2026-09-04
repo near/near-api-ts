@@ -62,7 +62,7 @@ export type GetAccountInfoArgs = {
  *   Nobody can swap the code under it.
  * - `Linked` - the account runs whatever code the registrar account currently
  *   holds (`LinkGlobalContract`), so it changes when the registrar registers new
- *   code under the same account id.
+ *   code under the same account id with `RegisterLinkableGlobalContract`.
  */
 export type AccountContract =
   | {

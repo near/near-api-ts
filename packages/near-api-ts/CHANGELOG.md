@@ -59,18 +59,21 @@
 - **Global contracts** – publish a wasm once and let many accounts run it without
   paying for its storage.
 
-  - `registerGlobalContract` / `safeRegisterGlobalContract` –
-    `{ wasmU8 | wasmBase64, wasmMutability: 'Mutable' | 'Immutable' }`.
-    An `Immutable` contract is addressed by the hash of its wasm, a `Mutable` one
-    by the account id that registered it.
+  - `registerPinnableGlobalContract` / `safeRegisterPinnableGlobalContract` –
+    `{ wasmU8 | wasmBase64 }`. The immutable contract is addressed by the hash of
+    its wasm and can be adopted with `pinGlobalContract`.
+  - `registerLinkableGlobalContract` / `safeRegisterLinkableGlobalContract` –
+    `{ wasmU8 | wasmBase64 }`. The replaceable contract is addressed by the
+    account id that registered it and can be adopted with `linkGlobalContract`.
   - `pinGlobalContract` / `safePinGlobalContract` –
     `{ globalContractWasmHash }`. The account runs that exact wasm, and nobody can
     swap the code under it.
   - `linkGlobalContract` / `safeLinkGlobalContract` –
     `{ globalContractAccountId }`. The account follows whatever code the registrar
     currently holds, so it picks up every re-registration.
-  - New types `RegisterGlobalContractAction`, `PinGlobalContractAction`,
-    `LinkGlobalContractAction`, `GlobalContractWasmMutability`.
+  - New types `RegisterPinnableGlobalContractAction`,
+    `RegisterLinkableGlobalContractAction`, `PinGlobalContractAction` and
+    `LinkGlobalContractAction`.
   - New execution errors
     `Action.PinGlobalContract.GlobalContract.NotFound` and
     `Action.LinkGlobalContract.GlobalContract.NotFound`.
@@ -183,10 +186,11 @@
   (`{ stepType: 'Execution' | 'Refund' }`).
 
 - Rename type `Action` → `TransactionAction`. Alongside the previous actions it
-  now also includes `ExecuteDelegationAction`, `RegisterGlobalContractAction`,
-  `LinkGlobalContractAction` and `PinGlobalContractAction` – code that switches
-  exhaustively over an action or over an action summary has new branches to
-  handle.
+  now also includes `ExecuteDelegationAction`,
+  `RegisterPinnableGlobalContractAction`,
+  `RegisterLinkableGlobalContractAction`, `LinkGlobalContractAction` and
+  `PinGlobalContractAction` – code that switches exhaustively over an action or
+  over an action summary has new branches to handle.
 
 - Rework the delegation types. Type `Delegation` was replaced by `DelegationBase`,
   which is combined with `SingleDelegableAction` / `MultiDelegableActions`:
