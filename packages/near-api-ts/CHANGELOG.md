@@ -4,9 +4,220 @@
 
 ### Added
 
+- **Meta transactions (delegations)** – a delegator signs a set of actions, and a
+  relayer pays for them and sends them on chain.
+
+  - New standalone `signDelegation` / `safeSignDelegation` helper.
+    Accepts `{ delegation, signDataProvider: { safeSignData } }` – the same
+    `signDataProvider` contract as `signTransaction`, so a `KeyPair`,
+    a `MemoryKeyService` or any object exposing `safeSignData` can sign – and
+    returns `{ signedDelegation, signedDelegationBorsh64 }`.
+
+    ```ts
+    const signedDelegation = await signDelegation({
+      delegation: {
+        delegatorAccountId: 'alice.testnet',
+        delegatorPublicKey: aliceKeyPair.publicKey,
+        receiverAccountId: 'contract.testnet',
+        nonce: accessKey.nonce + 1,
+        expiration: { blockHeight: blockHeight + 100 },
+        delegatedAction: functionCall({ ... }),
+      },
+      signDataProvider: aliceKeyPair,
+    });
+    ```
+
+  - New `executeDelegation` / `safeExecuteDelegation` action creator – the action
+    a relayer wraps a signed delegation into. It accepts
+    `{ signedDelegationBorsh64 }`, so the whole `signDelegation` output can be
+    passed into it as is. The relayer's transaction `receiverAccountId` must be
+    the delegator's account id.
+
+    ```ts
+    const signedTransaction = await signTransaction({
+      transaction: {
+        signerAccountId: 'relay.testnet',
+        ...
+        receiverAccountId: 'alice.testnet', // the delegator, not the delegation receiver
+        actions: [executeDelegation(signedDelegation)],
+      },
+      signDataProvider: relayKeyPair,
+    });
+    ```
+
+  - New types `DelegableAction`, `DelegationBase`, `SingleDelegableAction`,
+    `MultiDelegableActions`, `ExecuteDelegationAction`, `SignDelegationOutput`.
+  - `getTransactionResult` / `sendSignedTransaction` summarize an
+    `ExecuteDelegation` action, including the summaries of the actions nested in
+    the delegation.
+  - New execution errors: `Action.ExecuteDelegation.Expired`,
+    `.Signature.Invalid`, `.Nonce.Invalid`, `.Nonce.TooLarge`,
+    `.Executor.NotAllowed` and the `.Delegator.AccessKey.*` block
+    (`NotFound`, `NotFullAccess`, `AttachedDeposit.NotAllowed`,
+    `Receiver.NotAllowed`, `Function.NotAllowed`).
+
+- **Global contracts** – publish a wasm once and let many accounts run it without
+  paying for its storage.
+
+  - `registerGlobalContract` / `safeRegisterGlobalContract` –
+    `{ wasmU8 | wasmBase64, wasmMutability: 'Mutable' | 'Immutable' }`.
+    An `Immutable` contract is addressed by the hash of its wasm, a `Mutable` one
+    by the account id that registered it.
+  - `pinGlobalContract` / `safePinGlobalContract` –
+    `{ globalContractWasmHash }`. The account runs that exact wasm, and nobody can
+    swap the code under it.
+  - `linkGlobalContract` / `safeLinkGlobalContract` –
+    `{ globalContractAccountId }`. The account follows whatever code the registrar
+    currently holds, so it picks up every re-registration.
+  - New types `RegisterGlobalContractAction`, `PinGlobalContractAction`,
+    `LinkGlobalContractAction`, `GlobalContractWasmMutability`.
+  - New execution errors
+    `Action.PinGlobalContract.GlobalContract.NotFound` and
+    `Action.LinkGlobalContract.GlobalContract.NotFound`.
+  - Registering is asynchronous – the code becomes usable a block or so after the
+    register transaction succeeds, so a pin/link sent right away can fail with the
+    errors above.
+
+- New conversion errors. A transaction turned down by the node no longer falls
+  through to `Internal` in these cases:
+  - Access key checks: `Signer.AccessKey.NotFound`, `.NotFullAccess`,
+    `.Receiver.NotAllowed`, `.Function.NotAllowed`,
+    `.AttachedDeposit.NotAllowed`, `.GasBudget.NotEnough`.
+  - Action set limits: `Actions.TooMany`, `Actions.DeployContract.TooMany`,
+    `Actions.ExecuteDelegation.TooMany`,
+    `Actions.FunctionCall.TotalGasLimit.Exceeded`,
+    `Actions.FunctionCall.TotalGasLimit.Overflow`.
+  - Single action validation: `Action.FunctionCall.FunctionName.TooLong`,
+    `Action.FunctionCall.ZeroGasLimit`,
+    `Action.AddKey.AllowedFunctions.FunctionName.TooLong`,
+    `Action.AddKey.AllowedFunctions.TotalSize.Exceeded`,
+    `Action.Stake.ValidatorKey.Invalid`, `Action.DeleteAccount.NotFinal`.
+  - `TransactionCost.Overflow`.
+
+  As before, each of them is surfaced by `client.sendSignedTransaction` as
+  `Client.SendSignedTransaction.Rpc.<kind>` and by `client.getTransactionResult`
+  as a `ConversionError`.
+
+- New type `AccountContract` – the `contract` field of `getAccountInfo` output.
+- `constants.TeraGasDecimals` and `constants.Nep366MetaTransaction`.
+
 ### Changed
 
+- Rework `signTransaction` output. `signTransaction` / `safeSignTransaction` and
+  `signer.signTransaction` / `safeSignTransaction` now return
+  `SignTransactionOutput`:  \
+  Previously:
+  ```ts
+  // SignedTransaction
+  { transactionHash, transaction, signature, signedTransactionBorsh64 }
+  ```
+
+  Now:
+  ```ts
+  // SignTransactionOutput
+  { transactionHash, signedTransaction: { transaction, signature }, signedTransactionBorsh64 }
+  ```
+
+  Passing the output into `client.sendSignedTransaction({ signedTransaction })`
+  keeps working unchanged – only reading `transaction` / `signature` off it needs
+  the extra `signedTransaction` hop. `SignedTransaction` is now just
+  `{ transaction, signature }`, and its `transaction.actions` is always the
+  normalized action list, even when the transaction was built with a single
+  `action`.
+
+- Rework `client.getAccountInfo` contract fields:  \
+  Previously:
+  ```ts
+  {
+    contractWasmHash: CryptoHash | null,
+    globalContractWasmHash: CryptoHash | null,
+    globalContractAccountId: AccountId | null,
+  }
+  ```
+
+  Now – a single discriminated union on `contract.status`:
+  ```ts
+  {
+    contract:
+      | { status: 'NoContract' }
+      | { status: 'Deployed'; localContractWasmHash: ContractWasmHash }
+      | { status: 'Pinned'; globalContractWasmHash: ContractWasmHash }
+      | { status: 'Linked'; globalContractAccountId: AccountId },
+  }
+  ```
+
+  This also fixes the inverted check behind the old `contractWasmHash`: an account
+  with a deployed contract returned `null`, and an account without one returned
+  the placeholder hash.
+
+- Rename the `deployContract` wasm argument and the produced action field
+  `wasmBytes` → `wasmU8`. `wasmBase64` is unchanged.
+
+- `safeSignTransaction` no longer leaks the signer's own error into its error
+  union. A failing `signDataProvider.safeSignData` is now wrapped as
+  `SignTransaction.SignData.Failed`, with the original error under
+  `context.cause` – so every failure of the helper is a `NatError` and
+  `isNatError` covers all of them.
+
+- Rename conversion error kinds:
+  - `Signer.NotEnoughBalance` → `Signer.Budget.NotEnough`;
+    its context changed from `{ signerAccountId, transactionCost }` to
+    `{ signerAccountId, minimalMissingAmount }`
+  - `Expired` → `BlockHash.Expired`
+
+- Rename execution error kinds:
+  - `Executor.NotEnoughBalance` → `Executor.Budget.NotEnough`;
+    its context field `missingAmount` → `minimalMissingAmount`
+  - `Action.Stake.BelowThreshold` → `Action.Stake.ProposedStake.BelowThreshold`
+  - `Action.Stake.NotEnoughBalance` → `Action.Stake.TotalBalance.NotEnough`
+  - `Action.Stake.NotFound` → `Action.Stake.ValidatorStake.AlreadyZero`
+
+  The renames propagate to every kind built on top of them, e.g.
+  `MemorySigner.ExecuteTransaction.Rpc.Signer.NotEnoughBalance` →
+  `MemorySigner.ExecuteTransaction.Rpc.Signer.Budget.NotEnough` and
+  `Client.SendSignedTransaction.Rpc.Action.Stake.NotFound` →
+  `Client.SendSignedTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero`.
+
+- Rename the `producedSteps` discriminator in an execution step:
+  `producedSteps[].kind` → `producedSteps[].stepType`
+  (`{ stepType: 'Execution' | 'Refund' }`).
+
+- Rename type `Action` → `TransactionAction`. Alongside the previous actions it
+  now also includes `ExecuteDelegationAction`, `RegisterGlobalContractAction`,
+  `LinkGlobalContractAction` and `PinGlobalContractAction` – code that switches
+  exhaustively over an action or over an action summary has new branches to
+  handle.
+
+- Rework the delegation types. Type `Delegation` was replaced by `DelegationBase`,
+  which is combined with `SingleDelegableAction` / `MultiDelegableActions`:
+  - `senderAccountId` → `delegatorAccountId`
+  - `senderPublicKey` → `delegatorPublicKey`
+  - `action` / `actions` → `delegatedAction` / `delegatedActions`
+  - `expiration: { blockHeight } | { blockOffset }` → `expiration: { blockHeight }`
+  - `blockHash` removed – a delegation expires by block height only
+
+  `DelegationIntent` follows the same renames and its `expiration` field is now
+  called `expireAt`. `SignedDelegation` is now
+  `{ delegation, signature }` – its `borsh64SignedDelegation` field moved out to
+  `SignDelegationOutput.signedDelegationBorsh64` – and its `delegation` always
+  carries the normalized `delegatedActions` list plus the NEP-366 `tag` the
+  signature was made over.
+
+- Rename helper `objectToU8` → `convertObjectToU8`.
+- Rename helper `base64ToObject` → `convertBase64ToObject`.
+
+- Rename the Node.js entry point `near-api-ts/node` → `near-api-ts/nodejs`.
+  The bare `near-api-ts` import resolves to it automatically and does not need to
+  be changed.
+
 ### Removed
+
+- Helper `u8ToObject` – decode the bytes yourself
+  (`JSON.parse(new TextDecoder().decode(u8))`), or use `convertBase64ToObject`
+  when you have a base64 string.
+- Type `Action` – renamed to `TransactionAction`.
+- Type `Delegation` – replaced by `DelegationBase`.
+- The internal brand symbol on the `Client` type.
 
 ---
 
