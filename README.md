@@ -1,7 +1,7 @@
 ## NEAR API TS
 TypeScript library for interactions with Near Protocol in the browser or Node.js
 
-[GitHub Repository](https://github.com/eclipseeer/near-api-ts/tree/main)
+[GitHub Repository](https://github.com/near/near-api-ts/tree/main)
 
 **Installation**
 ```text
@@ -28,7 +28,7 @@ const { balance } = await client.getAccountInfo({
   atMomentOf: 'LatestFinalBlock',
 });
 console.log('Near:', balance.total.near);
-console.log('YoctoNear:',balance.total.yoctoNear);
+console.log('YoctoNear:', balance.total.yoctoNear);
 
 // Send some transaction
 const keyService = createMemoryKeyService({
@@ -58,7 +58,7 @@ try {
   });
 } catch (e) {
   if (isNatError(e, 'MemorySigner.ExecuteTransaction.Rpc.Signer.Budget.NotEnough')) {
-    console.log(e.context.minimalMissingAmount);
+    console.log(e.context.info.minimalMissingAmount);
   }
 }
 
