@@ -1,9 +1,12 @@
 import type { NatError } from '../../../src/_common/_common/_common/_common/natError';
-import type { Result } from '../../_common/common';
+import type { Base64String, Result } from '../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../_common/natError';
 import type { TransactionIntent } from '../../_common/transaction/transaction';
-import type { ConversionFailureError } from '../../client/methods/transaction/_common/transactionDetails/_common/_common/conversionFailureError';
-import type { ExecutionFailureError } from '../../client/methods/transaction/_common/transactionDetails/_common/_common/executionFailureError';
+import type {
+  ConversionFailureError,
+  ConversionFailureKind,
+} from '../../client/methods/transaction/_common/transactionDetails/_common/_common/conversionFailureError';
+import type { ExecutionFailure } from '../../client/methods/transaction/_common/transactionDetails/executionFailure';
 import type { SendSignedTransactionOutput } from '../../client/methods/transaction/sendSignedTransaction/output';
 import type {
   AbortedErrorContext,
@@ -13,6 +16,27 @@ import type {
 } from '../../client/transport/sendRequest';
 import type { MemorySignerErrorContext } from '../_common/errorContext';
 import type { MemorySignerContext } from '../memorySigner';
+
+// TODO Temporary
+// `executeTransaction` forwards these straight from `client.sendSignedTransaction`:
+// `repackError` only swaps the kind prefix and passes the context through untouched,
+// so the contexts below are the ones that method builds.
+
+// A conversion failure keeps its own context under `info`, next to the transaction the
+// node turned down.
+type ConversionFailureContext<CF extends ConversionFailureKind> = {
+  info: ConversionFailureError<CF>['context'];
+  signedTransactionBorsh64: Base64String;
+};
+
+// TODO Temporary
+// An execution failure carries the whole transaction details instead - its `error` field
+// holds the failure itself. The signer always sends with the default processing stage and
+// without deserializers, so unlike the client registry this can name the details' shape.
+type ExecutionFailureContext = {
+  transactionDetails: ExecutionFailure['ExecutedOptimistic'];
+  signedTransactionBorsh64: Base64String;
+};
 
 export interface ExecuteTransactionPublicErrorRegistry {
   'MemorySigner.ExecuteTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -27,12 +51,12 @@ export interface ExecuteTransactionPublicErrorRegistry {
   'MemorySigner.ExecuteTransaction.Exhausted': ExhaustedErrorContext;
 
   'MemorySigner.ExecuteTransaction.Rpc.Timeout': null;
-  'MemorySigner.ExecuteTransaction.Rpc.Signer.Budget.NotEnough': ConversionFailureError<'Signer.Budget.NotEnough'>['context'];
+  'MemorySigner.ExecuteTransaction.Rpc.Signer.Budget.NotEnough': ConversionFailureContext<'Signer.Budget.NotEnough'>;
 
-  'MemorySigner.ExecuteTransaction.Rpc.Action.CreateAccount.AlreadyExists': ExecutionFailureError<'Action.CreateAccount.AlreadyExists'>['context'];
-  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ProposedStake.BelowThreshold': ExecutionFailureError<'Action.Stake.ProposedStake.BelowThreshold'>['context'];
-  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.TotalBalance.NotEnough': ExecutionFailureError<'Action.Stake.TotalBalance.NotEnough'>['context'];
-  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero': ExecutionFailureError<'Action.Stake.ValidatorStake.AlreadyZero'>['context'];
+  'MemorySigner.ExecuteTransaction.Rpc.Action.CreateAccount.AlreadyExists': ExecutionFailureContext;
+  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ProposedStake.BelowThreshold': ExecutionFailureContext;
+  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.TotalBalance.NotEnough': ExecutionFailureContext;
+  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero': ExecutionFailureContext;
 
   'MemorySigner.ExecuteTransaction.Internal': InternalErrorContext;
 }
