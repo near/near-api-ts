@@ -147,7 +147,7 @@ export const toNearConnectActions = (
 
 // A delegation carries the same actions, only under its own field names.
 export const toNearConnectDelegableActions = (
-  intent: Omit<DelegationIntent, 'receiverAccountId' | 'expireAt'>,
+  intent: Omit<DelegationIntent, 'receiverAccountId' | 'expiration'>,
 ): ConnectorAction[] => {
   if (intent.delegatedAction) return [toNearConnectAction(intent.delegatedAction)];
   if (intent.delegatedActions)

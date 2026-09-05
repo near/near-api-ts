@@ -90,7 +90,7 @@ export type SignedDelegation = {
 export type DelegationIntent = Prettify<
   {
     receiverAccountId: AccountId;
-    expireAt: { blockHeight: BlockHeight };
+    expiration: { blockHeight: BlockHeight };
   } & (SingleDelegableAction | MultiDelegableActions)
 >;
 

@@ -17,7 +17,7 @@ export const useSignAddRecordDelegation = (setRecordInput: Dispatch<SetStateActi
             gasLimit: { teraGas: '10' },
           }),
           receiverAccountId: ContractAccountId,
-          expireAt: { blockHeight: 100 },
+          expiration: { blockHeight: 100 },
         },
       });
     },

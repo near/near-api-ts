@@ -200,8 +200,10 @@
   - `expiration: { blockHeight } | { blockOffset }` → `expiration: { blockHeight }`
   - `blockHash` removed – a delegation expires by block height only
 
-  `DelegationIntent` follows the same renames and its `expiration` field is now
-  called `expireAt`. `SignedDelegation` is now
+  `DelegationIntent` picks up the last two of those – `delegatedAction` /
+  `delegatedActions` and the narrowed `expiration` – and keeps its
+  `receiverAccountId`; the delegator, nonce and block fields were never on it.
+  `SignedDelegation` is now
   `{ delegation, signature }` – its `borsh64SignedDelegation` field moved out to
   `SignDelegationOutput.signedDelegationBorsh64` – and its `delegation` always
   carries the normalized `delegatedActions` list plus the NEP-366 `tag` the
