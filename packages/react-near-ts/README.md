@@ -81,6 +81,31 @@ const { signIn } = useNearSignIn();
 <button onClick={() => signIn()}>Sign In</button>
 ```
 
+Pass `additionalAction` to combine the connection with one more step. The hook
+then requires the arguments of that step in `signIn`, and returns its result
+alongside `connectedAccountId`.
+
+```tsx
+// Sign a NEP-413 message while connecting
+const { signInAsync } = useNearSignIn({ additionalAction: 'SignMessage' });
+
+const { connectedAccountId, signedMessage } = await signInAsync({
+  message: createMessage({ message: 'Login', recipient: 'my-app.com' }),
+});
+```
+
+```tsx
+// Add a function call key while connecting
+const { signIn } = useNearSignIn({ additionalAction: 'AddFunctionCallKey' });
+
+signIn({
+  publicKey: 'ed25519:...',
+  contractAccountId: 'react-near-ts.lantstool.testnet',
+  gasBudget: { near: '0.25' },
+  allowedFunctions: ['add_record'],
+});
+```
+
 ### `useNearSignOut`
 
 Disconnect Near Protocol wallet.
@@ -113,7 +138,7 @@ import { useAccountInfo } from 'react-near-ts';
 const accountInfo = useAccountInfo({ accountId: 'example.testnet' });
 
 if (accountInfo.isSuccess) {
-  console.log(accountInfo.data.accountInfo.balance.total.near);
+  console.log(accountInfo.data.balance.total.near);
 }
 ```
 
@@ -124,7 +149,7 @@ Call read-only contract methods.
 ```tsx
 import {
   useContractReadFunction,
-  base64ToObject,
+  convertBase64ToObject,
   type DeserializeResultFnArgs,
 } from 'react-near-ts';
 import * as z from 'zod/mini';
@@ -132,7 +157,7 @@ import * as z from 'zod/mini';
 const ResultSchema = z.array(z.string());
 
 const deserializeResult = (args: DeserializeResultFnArgs) =>
-  ResultSchema.parse(base64ToObject(args.rawResult));
+  ResultSchema.parse(convertBase64ToObject(args.rawResult));
 
 const records = useContractReadFunction({
   contractAccountId: 'react-near-ts.lantstool.testnet',
@@ -179,6 +204,49 @@ executeTransaction({
       context.client.invalidateQueries({ queryKey: ['get_records'] });
     }
   }
+});
+```
+
+### `useSignMessage`
+
+Sign a NEP-413 off-chain message with the connected wallet.
+
+```tsx
+import { createMessage, useSignMessage } from 'react-near-ts';
+
+const { signMessageAsync } = useSignMessage();
+
+const message = createMessage({ message: 'Login', recipient: 'my-app.com' });
+const signedMessage = await signMessageAsync({ message });
+// { signerAccountId, signerPublicKey, message, signature }
+```
+
+### `useSignDelegation`
+
+Sign a meta transaction (delegation) with the connected wallet. The signed
+delegation is returned as borsh base64, ready to be handed to a relayer that
+wraps it into `executeDelegation`.
+
+```tsx
+import { functionCall, useSignDelegation } from 'react-near-ts';
+
+const { signDelegation } = useSignDelegation();
+
+signDelegation({
+  intent: {
+    delegatedAction: functionCall({
+      functionName: 'add_record',
+      functionArgs: { record: 'hello' },
+      gasLimit: { teraGas: '10' },
+    }),
+    receiverAccountId: 'react-near-ts.lantstool.testnet',
+    expiration: { blockHeight: 100 },
+  },
+  mutate: {
+    onSuccess: ({ signedDelegationBorsh64 }) => {
+      // send it to your relayer
+    },
+  },
 });
 ```
 
