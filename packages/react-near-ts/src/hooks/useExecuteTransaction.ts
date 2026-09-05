@@ -15,7 +15,7 @@ const tryOnManySigners = async (args: ExecuteTransactionArgs, context: StoreCont
     if (!canExecute) return executeTransaction(signerIndex + 1);
 
     const result = await signer.safeExecuteTransaction(args);
-    if (result.ok) return result.value;
+    if (result.success) return result.data;
 
     // TODO right now we only support one signer - we will support multiple signers after adding
     // canExecuteTransaction method to all signers

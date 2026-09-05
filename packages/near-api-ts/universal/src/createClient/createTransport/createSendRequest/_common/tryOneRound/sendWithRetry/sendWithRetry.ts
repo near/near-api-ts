@@ -12,7 +12,7 @@ const getBackoffDelay = (cap: number, base: number, sleep: number, multiplier: n
   Math.min(cap, Math.round(getRandomBetween(base, sleep * multiplier)));
 
 const shouldRetry = (sendOnceResult: SendOnceResult): boolean =>
-  !sendOnceResult.ok &&
+  !sendOnceResult.success &&
   isNatErrorOf(sendOnceResult.error, [
     'SendRequest.Attempt.Request.FetchFailed',
     'SendRequest.Attempt.Request.Timeout',
@@ -49,7 +49,7 @@ export const sendWithRetry = async (
       combineAbortSignals([context.externalAbortSignal, context.requestTimeoutSignal]),
     );
 
-    return sleepResult.ok ? attempt(attemptIndex + 1) : sleepResult;
+    return sleepResult.success ? attempt(attemptIndex + 1) : sleepResult;
   };
 
   return attempt(0);

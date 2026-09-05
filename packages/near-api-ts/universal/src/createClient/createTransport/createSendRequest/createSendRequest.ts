@@ -25,7 +25,7 @@ export const createSendRequest =
       transportContext.rpcEndpoints,
       transportPolicy.rpcTypePreferences,
     );
-    if (!rpcs.ok) return rpcs;
+    if (!rpcs.success) return rpcs;
 
     // We want to provide the ability to abort the request;
     const maybeExternalAbortSignal = createExternalAbortSignal(args.signal);
@@ -42,7 +42,7 @@ export const createSendRequest =
     };
 
     // 2. Try to execute the request with fallback and retries;
-    let requestResult = await tryMultipleRounds(context, rpcs.value);
+    let requestResult = await tryMultipleRounds(context, rpcs.data);
 
     // 3. Try to use archival rpc if it's a Block.NotFound/GarbageCollected error;
     requestResult = await handleMaybeUnknownBlock({
@@ -54,7 +54,7 @@ export const createSendRequest =
     clearTimeout(requestTimeout.timeoutId);
 
     // If all ok - return the raw RPC result;
-    if (requestResult.ok) return requestResult;
+    if (requestResult.success) return requestResult;
 
     // Return only transport own errors as ResultErr;
     if (

@@ -52,7 +52,7 @@ export const executeTransaction = async (
       const txResult = await signerContext.client.safeSendSignedTransaction({ signedTransaction });
 
       // If tx executed successfully, update key nonce and return tx execution result;
-      if (txResult.ok) {
+      if (txResult.success) {
         key.setNonce(newNonce);
         return txResult;
       }

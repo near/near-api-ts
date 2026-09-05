@@ -36,7 +36,7 @@ export const createGetPoolKeys =
         atMomentOf: 'LatestOptimisticBlock',
       });
 
-      if (!accountAccessKeys.ok)
+      if (!accountAccessKeys.success)
         return result.err(
           createNatError({
             kind: 'MemorySigner.KeyPool.AccessKeys.NotLoaded',
@@ -46,7 +46,7 @@ export const createGetPoolKeys =
 
       // 4. If a user wants to handle all tasks only by a specific key/s - remove others;
       const allowedAccessKeys = getAllowedAccessKeys(
-        accountAccessKeys.value.accountAccessKeys,
+        accountAccessKeys.data.accountAccessKeys,
         createMemorySignerArgs,
       );
 
@@ -55,7 +55,7 @@ export const createGetPoolKeys =
           createNatError({
             kind: 'MemorySigner.KeyPool.Empty',
             context: {
-              accountAccessKeys: accountAccessKeys.value.accountAccessKeys,
+              accountAccessKeys: accountAccessKeys.data.accountAccessKeys,
               allowedAccessKeys: createMemorySignerArgs.keyPool?.allowedAccessKeys ?? [],
             },
           }),

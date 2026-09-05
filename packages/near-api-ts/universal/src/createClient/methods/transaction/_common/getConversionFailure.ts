@@ -28,7 +28,7 @@ const getBaseConversionFailure = (args: GetConversionFailureArgs) => {
     args;
 
   const transactionSummary = getTransactionSummary(transaction, deserializeActionSummaries);
-  if (!transactionSummary.ok) return transactionSummary;
+  if (!transactionSummary.success) return transactionSummary;
 
   const error = getConversionFailureError(invalidTxError);
 
@@ -45,7 +45,7 @@ const getBaseConversionFailure = (args: GetConversionFailureArgs) => {
         executedAt: {
           blockHash: transactionOutcomeFailure.blockHash.cryptoHash,
         },
-        transactionSummary: transactionSummary.value,
+        transactionSummary: transactionSummary.data,
         gasFee: yoctoNear(transactionOutcomeFailure.outcome.tokensBurnt),
         gasUsed: gas(transactionOutcomeFailure.outcome.gasBurnt),
       },
@@ -57,11 +57,11 @@ export const getConversionFailureExecutedOptimistic = (
   args: GetConversionFailureArgs,
 ): Result<ConversionFailure['ExecutedOptimistic'], GetConversionFailureError> => {
   const baseConversionFailure = getBaseConversionFailure(args);
-  if (!baseConversionFailure.ok) return baseConversionFailure;
+  if (!baseConversionFailure.success) return baseConversionFailure;
 
   return result.ok({
     processingStage: 'ExecutedOptimistic' as const,
-    ...baseConversionFailure.value,
+    ...baseConversionFailure.data,
   });
 };
 
@@ -69,10 +69,10 @@ export const getConversionFailureCompletedFinal = (
   args: GetConversionFailureArgs,
 ): Result<ConversionFailure['CompletedFinal'], GetConversionFailureError> => {
   const baseConversionFailure = getBaseConversionFailure(args);
-  if (!baseConversionFailure.ok) return baseConversionFailure;
+  if (!baseConversionFailure.success) return baseConversionFailure;
 
   return result.ok({
     processingStage: 'CompletedFinal' as const,
-    ...baseConversionFailure.value,
+    ...baseConversionFailure.data,
   });
 };

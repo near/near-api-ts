@@ -44,24 +44,24 @@ export const createSafeGetTransactionResult: CreateSafeGetTransactionResult = (c
       signal: args.options?.signal,
     });
 
-    if (!rpcResponse.ok)
+    if (!rpcResponse.success)
       return repackError({
         error: rpcResponse.error,
         originPrefix: 'SendRequest',
         targetPrefix: 'Client.GetTransactionResult',
       });
 
-    if (rpcResponse.value.error) return handleRpcError(rpcResponse.value);
+    if (rpcResponse.data.error) return handleRpcError(rpcResponse.data);
 
     const details = handleRpcResult(
-      rpcResponse.value,
+      rpcResponse.data,
       args.transactionHash,
       args.options?.deserializeResultData,
       args.options?.deserializeActionSummaries,
       args.options?.deserializeExecutionSteps,
     );
 
-    return details.ok
+    return details.success
       ? details
       : repackError({
           error: details.error,

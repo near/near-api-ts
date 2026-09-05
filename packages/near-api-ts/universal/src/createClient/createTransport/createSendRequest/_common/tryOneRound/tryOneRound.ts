@@ -10,7 +10,7 @@ import type { SendOnceResult } from './sendWithRetry/sendOnce/sendOnce';
 import { sendWithRetry } from './sendWithRetry/sendWithRetry';
 
 const shouldTryAnotherRpc = (sendOnceResult: SendOnceResult): boolean =>
-  !sendOnceResult.ok &&
+  !sendOnceResult.success &&
   isNatErrorOf(sendOnceResult.error, [
     'SendRequest.Attempt.Request.FetchFailed',
     'SendRequest.Attempt.Request.Timeout',
@@ -44,7 +44,7 @@ export const tryOneRound = async (
       combineAbortSignals([context.externalAbortSignal, context.requestTimeoutSignal]),
     );
 
-    return sleepResult.ok ? roundOnRpc(rpcIndex + 1) : sleepResult;
+    return sleepResult.success ? roundOnRpc(rpcIndex + 1) : sleepResult;
   };
 
   return roundOnRpc(0);

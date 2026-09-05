@@ -35,9 +35,9 @@ export const createGetStoragePricePerByte =
       params: { finality: 'near-final' },
       signal: args?.signal,
     });
-    if (!protocolConfig.ok) return protocolConfig;
+    if (!protocolConfig.success) return protocolConfig;
 
-    const rpcResult = PartialProtocolConfigResultSchema.safeParse(protocolConfig.value.result);
+    const rpcResult = PartialProtocolConfigResultSchema.safeParse(protocolConfig.data.result);
 
     if (!rpcResult.success)
       return result.err(

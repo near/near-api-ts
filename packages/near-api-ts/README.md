@@ -107,22 +107,35 @@ Every public function has a `safe*` twin. The throwing one raises a `NatError`; 
 one returns a `Result`:
 
 ```ts
-type Result<V, E> = { ok: true; value: V } | { ok: false; error: E };
+type Result<D, E> =
+  | { success: true; data: D; error?: never }
+  | { success: false; error: E; data?: never };
 ```
 
 ```ts
 const block = await client.getBlock({ blockReference: { blockHeight: 1 } }); // throws
 
-const maybeBlock = await client.safeGetBlock({ blockReference: { blockHeight: 1 } });
-if (!maybeBlock.ok) {
-  console.log(maybeBlock.error.kind); // 'Client.GetBlock.Rpc.Block.GarbageCollected'
+const { success, data, error } = await client.safeGetBlock({
+  blockReference: { blockHeight: 1 },
+});
+if (!success) {
+  console.log(error.kind); // 'Client.GetBlock.Rpc.Block.GarbageCollected'
   return;
 }
-console.log(maybeBlock.value);
+console.log(data);
 ```
 
 The safe variants carry a *narrowed* error union in their type, so your editor lists
 exactly the failures a given call can produce.
+
+Check `success`, not the truthiness of `data`: a successful result can carry `false`,
+`0` or `undefined`. The opposite branch's optional `never` field lets you destructure
+both `data` and `error` before narrowing; that field is omitted at runtime.
+
+**Upgrading from v0.11.0:** replace `ok` with `success` and `value` with `data`,
+including results returned by custom `signDataProvider.safeSignData` implementations.
+This wrapper change does not affect throwing variants. See the
+[changelog](CHANGELOG.md) for the other changes in the next release.
 
 ### Typed errors
 
@@ -630,7 +643,7 @@ before things went wrong.
 ```ts
 const sent = await client.safeSendSignedTransaction({ signedTransaction: signed });
 
-if (!sent.ok) {
+if (!sent.success) {
   switch (sent.error.kind) {
     case 'Client.SendSignedTransaction.Rpc.Signer.Budget.NotEnough':
       sent.error.context.info.minimalMissingAmount.near;

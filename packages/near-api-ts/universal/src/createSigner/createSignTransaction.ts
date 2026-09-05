@@ -24,7 +24,7 @@ export const createSafeSignTransaction: CreateSafeSignTransaction = (context) =>
 
     const signedTransaction = await context.taskQueue.addSignTransactionTask(args.intent);
 
-    if (signedTransaction.ok) return signedTransaction;
+    if (signedTransaction.success) return signedTransaction;
 
     // Repack some errors to make them method-specific
     if (

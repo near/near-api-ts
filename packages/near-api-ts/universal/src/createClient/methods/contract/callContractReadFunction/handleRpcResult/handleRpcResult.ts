@@ -54,10 +54,10 @@ export const handleRpcResult = (
     });
 
   const deserializedResult = deserializeCallResult(args, rpcResult.data.result);
-  if (!deserializedResult.ok) return deserializedResult;
+  if (!deserializedResult.success) return deserializedResult;
 
   return result.ok({
-    result: deserializedResult.value,
+    result: deserializedResult.data,
     logs,
     withStateAt: {
       blockHash,

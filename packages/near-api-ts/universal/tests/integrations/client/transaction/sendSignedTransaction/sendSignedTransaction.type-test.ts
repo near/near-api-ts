@@ -6,14 +6,14 @@ type Equal<A, B> =
 type Assert<T extends true> = T;
 
 // Awaited output of safeSendSignedTransaction is Result<SendSignedTransactionOutput<TPS>, ...>;
-// pull the `processingStage` union off the `ok: true` branch's `value`. Each extraction step
-// distributes over a bare type parameter, so it correctly picks the `ok: true` member out of the
+// pull the `processingStage` union off the `success: true` branch's `data`. Each extraction step
+// distributes over a bare type parameter, so it correctly picks the `success: true` member out of the
 // Result union instead of requiring the whole union to match.
-type ExtractOkValue<TResult> = TResult extends { ok: true; value: infer V } ? V : never;
-type OkValue<TPromise> = ExtractOkValue<Awaited<TPromise>>;
+type ExtractSuccessData<TResult> = TResult extends { success: true; data: infer D } ? D : never;
+type SuccessData<TPromise> = ExtractSuccessData<Awaited<TPromise>>;
 
 type ExtractProcessingStage<TValue> = TValue extends { processingStage: infer S } ? S : never;
-type ProcessingStageOf<TPromise> = ExtractProcessingStage<OkValue<TPromise>>;
+type ProcessingStageOf<TPromise> = ExtractProcessingStage<SuccessData<TPromise>>;
 
 const client = createTestnetClient();
 
@@ -64,7 +64,7 @@ const CO21 = await client.safeSendSignedTransaction<'ConvertedFinal' | 'Executed
   minimalProcessingStage: minimalProcessingStageCO11,
 });
 
-if (CO21.ok && CO21.value.processingStage) {
+if (CO21.success && CO21.data.processingStage) {
 }
 
 // ****
@@ -73,7 +73,7 @@ const CompletedFinal10 = await client.safeSendSignedTransaction({
   signedTransaction,
   minimalProcessingStage: 'CompletedFinal',
 });
-if (CompletedFinal10.ok && CompletedFinal10.value.data) {
+if (CompletedFinal10.success && CompletedFinal10.data.data) {
 }
 
 const CompletedFinal20 = await client.safeSendSignedTransaction({
@@ -83,7 +83,7 @@ const CompletedFinal20 = await client.safeSendSignedTransaction({
     deserializeResultData: () => 1,
   },
 });
-if (CompletedFinal20.ok && CompletedFinal20.value.data) {
+if (CompletedFinal20.success && CompletedFinal20.data.data) {
 }
 
 // type _ConvertedOptimisticStage = Assert<

@@ -43,14 +43,12 @@ export const createSafeGetBlock: CreateSafeGetBlock = (context) =>
       signal: args?.options?.signal,
     });
 
-    if (!rpcResponse.ok)
+    if (!rpcResponse.success)
       return repackError({
         error: rpcResponse.error,
         originPrefix: 'SendRequest',
         targetPrefix: 'Client.GetBlock',
       });
 
-    return rpcResponse.value.error
-      ? handleError(rpcResponse.value)
-      : handleResult(rpcResponse.value);
+    return rpcResponse.data.error ? handleError(rpcResponse.data) : handleResult(rpcResponse.data);
   });

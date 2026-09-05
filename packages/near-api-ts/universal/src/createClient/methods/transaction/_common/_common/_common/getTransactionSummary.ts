@@ -56,14 +56,14 @@ export const getTransactionSummary = (
     transaction.actions,
     deserializeActionSummaries,
   );
-  if (!actionSummaries.ok) return actionSummaries;
+  if (!actionSummaries.success) return actionSummaries;
 
   return result.ok({
     signerAccountId: transaction.signerId,
     signerPublicKey: transaction.publicKey.publicKey,
     nonce: transaction.nonce,
     receiverAccountId: transaction.receiverId,
-    actionSummaries: actionSummaries.value,
+    actionSummaries: actionSummaries.data,
     signature: transaction.signature.signature,
   });
 };

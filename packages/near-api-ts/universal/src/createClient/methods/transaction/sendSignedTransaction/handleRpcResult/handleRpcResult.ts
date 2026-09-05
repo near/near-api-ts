@@ -91,7 +91,7 @@ export const handleRpcResult = (
     minimalProcessingStage,
   );
 
-  if (details.ok) return details;
+  if (details.success) return details;
 
   // Narrowing `details.error` doesn't narrow `details` itself - `ResultErr<A | B>` is not
   // `ResultErr<A> | ResultErr<B>` - so the already public errors are rewrapped as is

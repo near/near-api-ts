@@ -1,6 +1,6 @@
 const tx = {
-  ok: true,
-  value: {
+  success: true,
+  data: {
     transactionHash: 'HoWytDmLdYF4MnmayBSArwxef6Tj6pDYjnuNCVdSEnXe',
     processingStage: 'ExecutedFinal',
     executionOutcome: {

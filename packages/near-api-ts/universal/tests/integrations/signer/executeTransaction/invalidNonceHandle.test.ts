@@ -47,7 +47,7 @@ describe('MemorySigner.executeTransaction', async () => {
         receiverAccountId: 'alice',
       },
     });
-    expect(tx1.ok).toBe(true);
+    expect(tx1.success).toBe(true);
 
     // The first try will fail, then it will update the nonce and resend
     const tx2 = await nat2.safeExecuteTransaction({
@@ -56,6 +56,6 @@ describe('MemorySigner.executeTransaction', async () => {
         receiverAccountId: 'bob',
       },
     });
-    expect(tx2.ok).toBe(true);
+    expect(tx2.success).toBe(true);
   });
 });

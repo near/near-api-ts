@@ -48,7 +48,7 @@ describe('MemorySigner.signTransaction', async () => {
         receiverAccountId: 'bob',
       },
     });
-    expect(tx.ok).toBe(true);
+    expect(tx.success).toBe(true);
   });
 
   it('KeyPool.SigningKey.NotFound', async () => {

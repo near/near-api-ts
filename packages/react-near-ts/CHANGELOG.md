@@ -25,6 +25,30 @@
 
 ### Changed
 
+- **Breaking:** the `safe*` APIs re-exported from near-api-ts and signer-service
+  methods `safeExecuteTransaction`, `safeSignMessage` and `safeSignDelegation`
+  use the new `Result` wrapper.
+
+  Previously:
+  ```ts
+  type Result<V, E> =
+    | { ok: true; value: V }
+    | { ok: false; error: E };
+  ```
+
+  Now:
+  ```ts
+  type Result<D, E> =
+    | { success: true; data: D; error?: never }
+    | { success: false; error: E; data?: never };
+  ```
+
+  Replace `ok` with `success` and `value` with `data` when calling or
+  implementing these methods. The React hooks keep their TanStack Query
+  `isSuccess`, `data` and `error` fields; mutation `onSuccess` callbacks and
+  `*Async` methods still receive the unwrapped payload. No additional `Result`
+  wrapper is exposed by the hooks.
+
 - Migrated to near-api-ts v0.12.0. The package re-exports the whole near-api-ts
   surface, so its renames and removals apply to imports from `react-near-ts`
   too – most notably `Action` → `TransactionAction`, `base64ToObject` →

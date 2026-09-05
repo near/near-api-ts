@@ -55,7 +55,7 @@ export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (transport
     });
 
     // If the request failed
-    if (!rpcResponse.ok) {
+    if (!rpcResponse.success) {
       return repackError({
         error: rpcResponse.error,
         originPrefix: 'SendRequest',
@@ -64,16 +64,16 @@ export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (transport
     }
 
     // Check if RPC error
-    if (rpcResponse.value.error)
+    if (rpcResponse.data.error)
       return result.err(
         createNatError({
           kind: 'Client.GetRecentBlockHash.Internal',
-          context: { cause: rpcResponse.value },
+          context: { cause: rpcResponse.data },
         }),
       );
 
     // Check if a result is valid
-    const rpcResult = PartialBlockResultSchema.safeParse(rpcResponse.value.result);
+    const rpcResult = PartialBlockResultSchema.safeParse(rpcResponse.data.result);
 
     if (!rpcResult.success)
       return result.err(

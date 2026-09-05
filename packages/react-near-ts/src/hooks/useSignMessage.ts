@@ -20,7 +20,7 @@ const tryOnManySigners = async (args: SignMessageArgs, context: StoreContext) =>
     if (!canSign) return signMessage(signerIndex + 1);
 
     const result = await signer.safeSignMessage(args);
-    if (result.ok) return result.value;
+    if (result.success) return result.data;
 
     throw result.error;
   };

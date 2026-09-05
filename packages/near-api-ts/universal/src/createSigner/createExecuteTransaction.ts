@@ -23,7 +23,7 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (conte
       );
 
     const taskResult = await context.taskQueue.addExecuteTransactionTask(args.intent);
-    if (taskResult.ok) return taskResult;
+    if (taskResult.success) return taskResult;
 
     if (
       isNatErrorOf(taskResult.error, [

@@ -45,7 +45,7 @@ export const isNearGas = (value: unknown): value is NearGas =>
 const toGas = (x: NearGasMethodArgs): Result<Gas, CreateNearGasError> => {
   if (isNearGas(x)) return result.ok(x.gas);
   const nearGas = safeNearGas(x);
-  return nearGas.ok ? result.ok(nearGas.value.gas) : nearGas;
+  return nearGas.success ? result.ok(nearGas.data.gas) : nearGas;
 };
 
 /**
@@ -79,7 +79,7 @@ const nearGasProto: ThisType<NearGas> = {
   safeAdd(value: NearGasMethodArgs): Result<NearGas, CreateNearGasError> {
     return wrapInternalError('CreateNearGas.Internal', () => {
       const gas = toGas(value);
-      return gas.ok ? safeNearGas({ gas: this.gas + gas.value }) : gas;
+      return gas.success ? safeNearGas({ gas: this.gas + gas.data }) : gas;
     })();
   },
 
@@ -90,7 +90,7 @@ const nearGasProto: ThisType<NearGas> = {
   safeSub(value: NearGasMethodArgs): Result<NearGas, CreateNearGasError> {
     return wrapInternalError('CreateNearGas.Internal', () => {
       const gas = toGas(value);
-      return gas.ok ? safeNearGas({ gas: this.gas - gas.value }) : gas;
+      return gas.success ? safeNearGas({ gas: this.gas - gas.data }) : gas;
     })();
   },
 
@@ -101,7 +101,7 @@ const nearGasProto: ThisType<NearGas> = {
   safeGt(value: NearGasMethodArgs): Result<boolean, CreateNearGasError> {
     return wrapInternalError('CreateNearGas.Internal', () => {
       const gas = toGas(value);
-      return gas.ok ? result.ok(this.gas > gas.value) : gas;
+      return gas.success ? result.ok(this.gas > gas.data) : gas;
     })();
   },
 
@@ -112,7 +112,7 @@ const nearGasProto: ThisType<NearGas> = {
   safeLt(value: NearGasMethodArgs): Result<boolean, CreateNearGasError> {
     return wrapInternalError('CreateNearGas.Internal', () => {
       const gas = toGas(value);
-      return gas.ok ? result.ok(this.gas < gas.value) : gas;
+      return gas.success ? result.ok(this.gas < gas.data) : gas;
     })();
   },
 

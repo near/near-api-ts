@@ -70,10 +70,10 @@ export const getCompletedFinalDetails = (args: {
       deserializeActionSummaries,
       deserializeExecutionSteps,
     });
-    if (!executionFailure.ok) return executionFailure;
+    if (!executionFailure.success) return executionFailure;
 
-    return resultNatError(`Client.SendSignedTransaction.Rpc.${executionFailure.value.error.kind}`, {
-      transactionDetails: executionFailure.value,
+    return resultNatError(`Client.SendSignedTransaction.Rpc.${executionFailure.data.error.kind}`, {
+      transactionDetails: executionFailure.data,
       signedTransactionBorsh64: args.signedTransactionBorsh64,
     });
   }

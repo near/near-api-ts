@@ -45,7 +45,7 @@ export const isNearToken = (value: unknown): value is NearToken =>
 const toYoctoNear = (x: NearTokenArgs | NearToken): Result<YoctoNear, CreateNearTokenError> => {
   if (isNearToken(x)) return result.ok(x.yoctoNear);
   const nearToken = safeNearToken(x);
-  return nearToken.ok ? result.ok(nearToken.value.yoctoNear) : nearToken;
+  return nearToken.success ? result.ok(nearToken.data.yoctoNear) : nearToken;
 };
 
 /**
@@ -80,8 +80,8 @@ const nearTokenProto: ThisType<NearToken> = {
   safeAdd(value: NearTokenArgs | NearToken): Result<NearToken, CreateNearTokenError> {
     return wrapInternalError('CreateNearToken.Internal', () => {
       const yoctoNear = toYoctoNear(value);
-      return yoctoNear.ok
-        ? safeNearToken({ yoctoNear: this.yoctoNear + yoctoNear.value })
+      return yoctoNear.success
+        ? safeNearToken({ yoctoNear: this.yoctoNear + yoctoNear.data })
         : yoctoNear;
     })();
   },
@@ -93,8 +93,8 @@ const nearTokenProto: ThisType<NearToken> = {
   safeSub(value: NearTokenArgs | NearToken): Result<NearToken, CreateNearTokenError> {
     return wrapInternalError('CreateNearToken.Internal', () => {
       const yoctoNear = toYoctoNear(value);
-      return yoctoNear.ok
-        ? safeNearToken({ yoctoNear: this.yoctoNear - yoctoNear.value })
+      return yoctoNear.success
+        ? safeNearToken({ yoctoNear: this.yoctoNear - yoctoNear.data })
         : yoctoNear;
     })();
   },
@@ -106,7 +106,7 @@ const nearTokenProto: ThisType<NearToken> = {
   safeGt(value: NearTokenArgs | NearToken): Result<boolean, CreateNearTokenError> {
     return wrapInternalError('CreateNearToken.Internal', () => {
       const yoctoNear = toYoctoNear(value);
-      return yoctoNear.ok ? result.ok(this.yoctoNear > yoctoNear.value) : yoctoNear;
+      return yoctoNear.success ? result.ok(this.yoctoNear > yoctoNear.data) : yoctoNear;
     })();
   },
 
@@ -117,7 +117,7 @@ const nearTokenProto: ThisType<NearToken> = {
   safeLt(value: NearTokenArgs | NearToken): Result<boolean, CreateNearTokenError> {
     return wrapInternalError('CreateNearToken.Internal', () => {
       const yoctoNear = toYoctoNear(value);
-      return yoctoNear.ok ? result.ok(this.yoctoNear < yoctoNear.value) : yoctoNear;
+      return yoctoNear.success ? result.ok(this.yoctoNear < yoctoNear.data) : yoctoNear;
     })();
   },
 

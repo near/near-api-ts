@@ -29,10 +29,10 @@ export const createFindKeyForTask =
   (keyPoolContext: KeyPoolContext): FindKeyForTask =>
   async (task) => {
     const poolKeys = await keyPoolContext.getPoolKeys();
-    if (!poolKeys.ok) return poolKeys;
+    if (!poolKeys.success) return poolKeys;
 
     for (const keyPriority of task.accessTypePriority) {
-      const key = findSigningKey(keyPriority, poolKeys.value);
+      const key = findSigningKey(keyPriority, poolKeys.data);
 
       if (key) {
         // We need to lock the key to prevent it from being used by other tasks

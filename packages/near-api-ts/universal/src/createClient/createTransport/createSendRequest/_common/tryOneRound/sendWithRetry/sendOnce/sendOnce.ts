@@ -45,14 +45,14 @@ export const sendOnce = async (
 
   // Try to send a request to the rpc;
   const response = await fetchData(context, rpc, body);
-  if (!response.ok) return response;
+  if (!response.success) return response;
 
   // Try to parse response JSON to an object;
-  const json = await parseJsonResponse(response.value, rpc);
-  if (!json.ok) return json;
+  const json = await parseJsonResponse(response.data, rpc);
+  if (!json.success) return json;
 
   // We receive data from RPC in snake_case format - but we want to use camelCase in the lib;
-  const camelCased = snakeToCamelCase(json.value);
+  const camelCased = snakeToCamelCase(json.data);
 
   // Perform high level check if the RPC response matches the expected format;
   // We will do a precise check inside each client method (it's better for tree-shaking);

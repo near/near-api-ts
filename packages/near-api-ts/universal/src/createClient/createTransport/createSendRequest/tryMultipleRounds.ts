@@ -7,7 +7,7 @@ import type { SendOnceResult } from './_common/tryOneRound/sendWithRetry/sendOnc
 import { tryOneRound } from './_common/tryOneRound/tryOneRound';
 
 const shouldTryAnotherRound = (sendOnceResult: SendOnceResult): boolean =>
-  !sendOnceResult.ok &&
+  !sendOnceResult.success &&
   isNatErrorOf(sendOnceResult.error, [
     'SendRequest.Attempt.Request.FetchFailed',
     'SendRequest.Attempt.Request.Timeout',
@@ -39,7 +39,7 @@ export const tryMultipleRounds = async (
       combineAbortSignals([context.externalAbortSignal, context.requestTimeoutSignal]),
     );
 
-    return sleepResult.ok ? round(roundIndex + 1) : sleepResult;
+    return sleepResult.success ? round(roundIndex + 1) : sleepResult;
   };
 
   return round(0);

@@ -6,7 +6,7 @@ type Equal<A, B> =
 
 type Assert<T extends true> = T;
 
-type OkValue<R> = R extends { ok: true; value: infer V } ? V : never;
+type SuccessData<R> = R extends { success: true; data: infer D } ? D : never;
 
 const functionName = 'create';
 const gasLimit = teraGas('10');
@@ -61,10 +61,10 @@ const a22 = functionCall<(args: { functionArgs: { b: bigint } }) => Uint8Array>(
 });
 type _A22 = Assert<Equal<typeof a22, FunctionCallAction>>;
 
-// safeFunctionCall returns a Result whose ok-branch value is FunctionCallAction.
+// safeFunctionCall returns a Result whose success-branch data is FunctionCallAction.
 
 const s10 = safeFunctionCall({ functionName, gasLimit });
-type _S10 = Assert<Equal<OkValue<typeof s10>, FunctionCallAction>>;
+type _S10 = Assert<Equal<SuccessData<typeof s10>, FunctionCallAction>>;
 
 const s11 = safeFunctionCall({
   functionName,
@@ -72,7 +72,7 @@ const s11 = safeFunctionCall({
   functionArgs: { b: 1n },
   options: { serializeArgs: serializeBigintArgs },
 });
-type _S11 = Assert<Equal<OkValue<typeof s11>, FunctionCallAction>>;
+type _S11 = Assert<Equal<SuccessData<typeof s11>, FunctionCallAction>>;
 
 // ---- Negative cases ----
 

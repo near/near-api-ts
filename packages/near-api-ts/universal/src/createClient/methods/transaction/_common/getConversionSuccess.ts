@@ -25,14 +25,14 @@ export const getConversionSuccessConvertedFinal = (args: {
   NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
 > => {
   const conversionStepSuccess = getConversionStepSuccess(args);
-  if (!conversionStepSuccess.ok) return conversionStepSuccess;
+  if (!conversionStepSuccess.success) return conversionStepSuccess;
 
   return result.ok({
     transactionHash: args.transaction.hash.cryptoHash,
     processingStage: 'ConvertedFinal' as const,
     status: 'ConversionSuccess',
     processingSteps: {
-      conversionStep: conversionStepSuccess.value,
+      conversionStep: conversionStepSuccess.data,
     },
   });
 };

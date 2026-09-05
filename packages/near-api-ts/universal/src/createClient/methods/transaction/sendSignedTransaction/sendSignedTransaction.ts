@@ -72,27 +72,27 @@ export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction = 
       }),
     ]);
 
-    if (!sendTransactionRpcResponse.ok)
+    if (!sendTransactionRpcResponse.success)
       return repackError({
         error: sendTransactionRpcResponse.error,
         originPrefix: 'SendRequest',
         targetPrefix: 'Client.SendSignedTransaction',
       });
 
-    if (!transactionStatusRpcResponse.ok)
+    if (!transactionStatusRpcResponse.success)
       return repackError({
         error: transactionStatusRpcResponse.error,
         originPrefix: 'SendRequest',
         targetPrefix: 'Client.SendSignedTransaction',
       });
 
-    return transactionStatusRpcResponse.value.error
+    return transactionStatusRpcResponse.data.error
       ? handleRpcError(
-          transactionStatusRpcResponse.value,
+          transactionStatusRpcResponse.data,
           args.signedTransaction.signedTransactionBorsh64,
         )
       : handleRpcResult(
-          transactionStatusRpcResponse.value,
+          transactionStatusRpcResponse.data,
           minimalProcessingStage,
           args.signedTransaction.transactionHash,
           args.signedTransaction.signedTransactionBorsh64,

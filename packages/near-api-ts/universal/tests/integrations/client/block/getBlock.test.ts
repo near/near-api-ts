@@ -22,7 +22,7 @@ describe('Get Block', () => {
     const res = await client.safeGetBlock({
       blockReference: { blockHeight: 0 },
     });
-    expect(res.ok).toBe(true);
+    expect(res.success).toBe(true);
   });
 
   it('Block not found', async () => {

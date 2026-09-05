@@ -106,6 +106,29 @@
 
 ### Changed
 
+- **Breaking:** change the `Result` returned by `safe*` APIs: `ok` becomes
+  `success`, and `value` becomes `data`. `error` keeps its name.
+
+  Previously:
+  ```ts
+  type Result<V, E> =
+    | { ok: true; value: V }
+    | { ok: false; error: E };
+  ```
+
+  Now:
+  ```ts
+  type Result<D, E> =
+    | { success: true; data: D; error?: never }
+    | { success: false; error: E; data?: never };
+  ```
+
+  Update property access, destructuring and custom result producers, including
+  `signDataProvider.safeSignData`. You can now destructure `success`, `data` and
+  `error` together and narrow them by checking `success`. The old wrapper is no
+  longer accepted. Payloads, errors and throwing counterparts are unaffected by
+  this wrapper change.
+
 - Rework `signTransaction` output. `signTransaction` / `safeSignTransaction` and
   `signer.signTransaction` / `safeSignTransaction` now return
   `SignTransactionOutput`:  \

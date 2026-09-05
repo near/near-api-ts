@@ -54,25 +54,25 @@ const getBaseExecutionSuccess = (args: GetExecutionSuccessArgs) => {
   const { transaction, statusSuccessValue, deserializeResultData } = args;
 
   const conversionStepSuccess = getConversionStepSuccess(args);
-  if (!conversionStepSuccess.ok) return conversionStepSuccess;
+  if (!conversionStepSuccess.success) return conversionStepSuccess;
 
   const nonConversionSteps = getNonConversionSteps({
     ...args,
-    conversionStepSuccess: conversionStepSuccess.value,
+    conversionStepSuccess: conversionStepSuccess.data,
   });
-  if (!nonConversionSteps.ok) return nonConversionSteps;
+  if (!nonConversionSteps.success) return nonConversionSteps;
 
   const resultData = getResultData(statusSuccessValue, deserializeResultData);
-  if (!resultData.ok) return resultData;
+  if (!resultData.success) return resultData;
 
   return result.ok({
     transactionHash: transaction.hash.cryptoHash,
     status: 'ExecutionSuccess' as const,
-    data: resultData.value,
+    data: resultData.data,
     processingSteps: {
-      conversionStep: conversionStepSuccess.value,
-      executionSteps: nonConversionSteps.value.executionSteps,
-      refundSteps: nonConversionSteps.value.refundSteps,
+      conversionStep: conversionStepSuccess.data,
+      executionSteps: nonConversionSteps.data.executionSteps,
+      refundSteps: nonConversionSteps.data.refundSteps,
     },
   });
 };
@@ -81,9 +81,9 @@ export const getExecutionSuccessExecutedOptimistic = (
   args: GetExecutionSuccessArgs,
 ): Result<ExecutionSuccess['ExecutedOptimistic'], GetExecutionSuccessError> => {
   const baseExecutionSuccess = getBaseExecutionSuccess(args);
-  if (!baseExecutionSuccess.ok) return baseExecutionSuccess;
+  if (!baseExecutionSuccess.success) return baseExecutionSuccess;
 
-  const { transactionHash, data, status, processingSteps } = baseExecutionSuccess.value;
+  const { transactionHash, data, status, processingSteps } = baseExecutionSuccess.data;
 
   return result.ok({
     transactionHash,
@@ -101,9 +101,9 @@ export const getExecutionSuccessExecutedNearlyFinal = (
   args: GetExecutionSuccessArgs,
 ): Result<ExecutionSuccess['ExecutedNearlyFinal'], GetExecutionSuccessError> => {
   const baseExecutionSuccess = getBaseExecutionSuccess(args);
-  if (!baseExecutionSuccess.ok) return baseExecutionSuccess;
+  if (!baseExecutionSuccess.success) return baseExecutionSuccess;
 
-  const { transactionHash, data, status, processingSteps } = baseExecutionSuccess.value;
+  const { transactionHash, data, status, processingSteps } = baseExecutionSuccess.data;
 
   return result.ok({
     transactionHash,
@@ -121,9 +121,9 @@ export const getExecutionSuccessCompletedFinal = (
   args: GetExecutionSuccessArgs,
 ): Result<ExecutionSuccess['CompletedFinal'], GetExecutionSuccessError> => {
   const baseExecutionSuccess = getBaseExecutionSuccess(args);
-  if (!baseExecutionSuccess.ok) return baseExecutionSuccess;
+  if (!baseExecutionSuccess.success) return baseExecutionSuccess;
 
-  const { transactionHash, data, status, processingSteps } = baseExecutionSuccess.value;
+  const { transactionHash, data, status, processingSteps } = baseExecutionSuccess.data;
 
   return result.ok({
     transactionHash,

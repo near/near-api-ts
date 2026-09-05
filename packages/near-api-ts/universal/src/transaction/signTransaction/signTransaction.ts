@@ -47,13 +47,13 @@ export const safeSignTransaction: SafeSignTransaction = wrapInternalError(
       dataU8: transactionHashU8,
     });
 
-    if (!signedData.ok)
+    if (!signedData.success)
       return resultNatError('SignTransaction.SignData.Failed', { cause: signedData.error });
 
     // #2: Serialize signed transaction into borsh
     const nearcoreSignedTransaction: NearcoreSignedTransaction = {
       transaction: nearcoreTransaction,
-      signature: toNearcoreSignature(signedData.value),
+      signature: toNearcoreSignature(signedData.data),
     };
 
     const signedTransactionBorshU8 = serialize(
@@ -69,7 +69,7 @@ export const safeSignTransaction: SafeSignTransaction = wrapInternalError(
       transactionHash: base58.encode(transactionHashU8),
       signedTransaction: {
         transaction: { ...transactionBase, actions: action ? [action] : actions },
-        signature: signedData.value.signature,
+        signature: signedData.data.signature,
       },
       signedTransactionBorsh64: signedTransactionBorshU8.toBase64(),
     });

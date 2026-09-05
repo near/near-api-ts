@@ -30,12 +30,12 @@ export const asThrowable: AsThrowable = (safeFn: any) => {
 
     if (result instanceof Promise) {
       return result.then((res) => {
-        if (res.ok) return res.value;
+        if (res.success) return res.data;
         throw res.error;
       });
     }
 
-    if (result.ok) return result.value;
+    if (result.success) return result.data;
     throw result.error;
   };
 };

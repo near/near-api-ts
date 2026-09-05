@@ -34,10 +34,10 @@ export const createIsKeyForTaskExist =
   (keyPoolContext: KeyPoolContext): IsKeyForTaskExist =>
   async (task) => {
     const poolKeys = await keyPoolContext.getPoolKeys();
-    if (!poolKeys.ok) return poolKeys;
+    if (!poolKeys.success) return poolKeys;
 
     for (const keyPriority of task.accessTypePriority) {
-      const isKey = await isKeyExist(keyPriority, poolKeys.value);
+      const isKey = await isKeyExist(keyPriority, poolKeys.data);
       if (isKey) return result.ok(true);
     }
 
@@ -45,7 +45,7 @@ export const createIsKeyForTaskExist =
       createNatError({
         kind: 'MemorySigner.KeyPool.SigningKey.NotFound',
         context: {
-          poolKeys: poolKeys.value,
+          poolKeys: poolKeys.data,
           accessTypePriority: task.accessTypePriority,
         },
       }),

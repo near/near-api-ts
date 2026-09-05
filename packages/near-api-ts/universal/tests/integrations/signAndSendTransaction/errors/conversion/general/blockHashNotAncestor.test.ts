@@ -168,7 +168,7 @@ describe.skip('signAndSendTransaction › BlockHash.NotAncestor conversion error
 
       const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
-      if (!tx.ok && tx.error.kind === 'Client.SendSignedTransaction.Internal') {
+      if (!tx.success && tx.error.kind === 'Client.SendSignedTransaction.Internal') {
         const { cause } = tx.error.context;
         if (cause instanceof Error && cause.message.includes('"InvalidChain"')) {
           assertUnmappedInvalidTxError(tx, 'InvalidChain');

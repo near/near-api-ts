@@ -26,7 +26,7 @@
 //     const keyPair = await context.getKeyPair(innerTransaction.signerPublicKey.publicKey);
 //
 //     // TODO Think if it's possible to wrap into some helper function
-//     if (!keyPair.ok) {
+//     if (!keyPair.success) {
 //       // if (keyPair.error.kind === 'MemoryKeyService.FindKeyPair.NotFound')
 //       //   return result.err(
 //       //     createNatError({
@@ -42,7 +42,7 @@
 //
 //     const { transactionHash, transactionHashU8 } = getTransactionHash(innerTransaction);
 //
-//     const { signature } = keyPair.value.sign(transactionHashU8); // todo make async?
+//     const { signature } = keyPair.data.sign(transactionHashU8); // todo make async?
 //
 //     return result.ok({
 //       transaction: args.transaction,

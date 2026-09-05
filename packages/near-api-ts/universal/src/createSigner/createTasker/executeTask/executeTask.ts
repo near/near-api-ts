@@ -12,13 +12,13 @@ export const createExecuteTask: CreateExecuteTask = (signerContext) => {
 
     // This should never happen, because we check poolKeys before adding a task to the queue;
     // Will be thrown only if there is a bug in the code; Consider as Internal error;
-    if (!maybeKey.ok) throw maybeKey;
+    if (!maybeKey.success) throw maybeKey;
 
     // If any key is available (doesn't perform any task now) - execute the task;
     // If not - skip the task and wait for the next key to become available;
-    if (!maybeKey.value) return;
+    if (maybeKey.data === undefined) return;
 
-    const key = maybeKey.value;
+    const key = maybeKey.data;
     signerContext.taskQueue.removeTask(task.taskId);
 
     const execute = task.taskType === 'ExecuteTransaction' ? executeTransaction : signTransaction;

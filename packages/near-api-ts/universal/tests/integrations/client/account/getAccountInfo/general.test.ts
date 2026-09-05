@@ -18,7 +18,7 @@
 //       });
 //
 //       const res1 = await client.safeGetAccountInfo({ accountId: 'nat' });
-//       expect(res1.ok);
+//       expect(res1.success);
 //
 //       const res11 = await client.getAccountInfo({ accountId: 'nat' });
 //       expect(res11.rawRpcResult);

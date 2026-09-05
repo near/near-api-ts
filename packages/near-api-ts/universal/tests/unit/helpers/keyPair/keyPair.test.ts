@@ -10,10 +10,10 @@ describe('keyPair', () => {
   it('creates a key pair from a valid private key', () => {
     const kp1 = safeKeyPair(privateKey);
 
-    expect(kp1.ok).toBe(true);
+    expect(kp1.success).toBe(true);
 
-    if (kp1.ok) {
-      expect(kp1.value.publicKey).toBe(publicKey);
+    if (kp1.success) {
+      expect(kp1.data.publicKey).toBe(publicKey);
     }
   });
 

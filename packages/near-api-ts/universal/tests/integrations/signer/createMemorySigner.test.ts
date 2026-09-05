@@ -31,7 +31,7 @@ describe('createMemorySigner', async () => {
       client,
       keyService,
     });
-    expect(signer.ok).toBe(true);
+    expect(signer.success).toBe(true);
   });
 
   it('Ok with config', async () => {
@@ -46,7 +46,7 @@ describe('createMemorySigner', async () => {
         timeoutMs: 1000,
       },
     });
-    expect(signer.ok).toBe(true);
+    expect(signer.success).toBe(true);
   });
 
   it('CreateMemorySigner.Args.InvalidSchema', async () => {

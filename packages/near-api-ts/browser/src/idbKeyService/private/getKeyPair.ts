@@ -23,10 +23,10 @@ export const createGetKeyPair =
 
         // Try to create a key pair from the stored private key
         const kp = safeKeyPair(request.result);
-        if (!kp.ok) return resolve(result.err(kp.error)); // Internal, should never happen
+        if (!kp.success) return resolve(result.err(kp.error)); // Internal, should never happen
 
-        context.keyPairs.set(kp.value.publicKey, kp.value);
-        resolve(result.ok(kp.value));
+        context.keyPairs.set(kp.data.publicKey, kp.data);
+        resolve(result.ok(kp.data));
       };
 
       // https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/get#exceptions

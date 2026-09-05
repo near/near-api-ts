@@ -51,13 +51,13 @@ export const safeSignDelegation: SafeSignDelegation = wrapInternalError(
       dataU8: delegationHashU8,
     });
 
-    if (!signedData.ok)
+    if (!signedData.success)
       return resultNatError('SignDelegation.SignData.Failed', { cause: signedData.error });
 
     // #2: Serialize signed delegation into borsh
     const nearcoreSignedDelegation: NearcoreSignedDelegation = {
       delegation: nearcoreDelegation,
-      signature: toNearcoreSignature(signedData.value),
+      signature: toNearcoreSignature(signedData.data),
     };
 
     const signedDelegationBorshU8 = serialize(
@@ -76,7 +76,7 @@ export const safeSignDelegation: SafeSignDelegation = wrapInternalError(
           ...delegationBase,
           delegatedActions: delegatedAction ? [delegatedAction] : delegatedActions,
         },
-        signature: signedData.value.signature,
+        signature: signedData.data.signature,
       },
       signedDelegationBorsh64: signedDelegationBorshU8.toBase64(),
     });

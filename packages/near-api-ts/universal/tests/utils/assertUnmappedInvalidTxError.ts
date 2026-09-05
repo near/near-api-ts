@@ -14,7 +14,7 @@ export const THROWN_ERROR_PREFIX = 'Unexpected invalidTxError: ';
 export const getUnmappedInvalidTxError = (
   res: Result<unknown, { kind: string; context: unknown }>,
 ): unknown | undefined => {
-  if (res.ok) return undefined;
+  if (res.success) return undefined;
   if (res.error.kind !== 'Client.SendSignedTransaction.Internal') return undefined;
 
   const { cause } = res.error.context as { cause: unknown };
@@ -35,8 +35,8 @@ export const assertUnmappedInvalidTxError = <E extends { kind: string; context: 
   res: Result<unknown, E>,
   invalidTxError: unknown,
 ) => {
-  expect(res.ok).toBe(false);
-  if (res.ok) return;
+  expect(res.success).toBe(false);
+  if (res.success) return;
 
   expect(res.error.kind).toBe('Client.SendSignedTransaction.Internal');
 

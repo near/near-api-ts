@@ -14,7 +14,7 @@ export const createAddExecuteTransactionTask: CreateAddExecuteTransactionTask =
     };
 
     const canHandle = await keyPool.isKeyForTaskExist(task);
-    if (!canHandle.ok) return canHandle;
+    if (!canHandle.success) return canHandle;
 
     addTask(task, taskQueueContext);
 

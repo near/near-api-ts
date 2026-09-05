@@ -3,9 +3,10 @@
 Monorepo for the TypeScript client libraries for [NEAR Protocol](https://near.org) — a
 low-level API for any JavaScript runtime, and a React toolkit built on top of it.
 
-Both packages share one design: everything is typed end to end, every fallible function has
-a `safe*` twin that returns a `Result` instead of throwing, and every failure is a typed
-error with a literal `kind` you can narrow on.
+The core API is typed end to end. Its `safe*` variants return a `Result` with `success`
+and either `data` or `error`, instead of throwing. Core errors carry a literal `kind`
+you can narrow on. React query and mutation hooks keep TanStack Query's `isSuccess`,
+`data` and `error` state rather than exposing a `Result` wrapper.
 
 ## Packages
 

@@ -39,10 +39,10 @@ export const getNonConversionSteps = (
     receiptCreationMap,
     deserializeExecutionSteps,
   );
-  if (!executionSteps.ok) return executionSteps;
+  if (!executionSteps.success) return executionSteps;
 
   return result.ok({
-    executionSteps: executionSteps.value,
+    executionSteps: executionSteps.data,
     refundSteps: getRefundSteps(receiptsWithOutcomes, receiptCreationMap),
   });
 };

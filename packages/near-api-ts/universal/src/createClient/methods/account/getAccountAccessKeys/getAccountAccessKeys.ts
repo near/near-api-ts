@@ -49,15 +49,15 @@ export const createSafeGetAccountAccessKeys: CreateSafeGetAccountAccessKeys = (c
         signal: args.options?.signal,
       });
 
-      if (!rpcResponse.ok)
+      if (!rpcResponse.success)
         return repackError({
           error: rpcResponse.error,
           originPrefix: 'SendRequest',
           targetPrefix: 'Client.GetAccountAccessKeys',
         });
 
-      return rpcResponse.value.error
-        ? handleError(rpcResponse.value)
-        : handleResult(rpcResponse.value, args);
+      return rpcResponse.data.error
+        ? handleError(rpcResponse.data)
+        : handleResult(rpcResponse.data, args);
     },
   );

@@ -98,13 +98,13 @@ export const safeFunctionCall: SafeCreateFunctionCallAction = wrapInternalError(
       );
 
     const functionArgs = serializeFunctionArgs(args);
-    if (!functionArgs.ok) return functionArgs;
+    if (!functionArgs.success) return functionArgs;
 
     return result.ok({
       actionType: 'FunctionCall' as const,
       functionName: args.functionName,
       gasLimit: args.gasLimit,
-      functionArgs: functionArgs.value,
+      functionArgs: functionArgs.data,
       attachedDeposit: args.attachedDeposit,
     });
   },

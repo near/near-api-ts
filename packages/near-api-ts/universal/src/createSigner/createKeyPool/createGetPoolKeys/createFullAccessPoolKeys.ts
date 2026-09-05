@@ -29,7 +29,7 @@ export const createFullAccessPoolKeys = async (
   for (const key of accountKeys) {
     const isKey = await signerContext.keyService.safeHasKey(key);
     // If key exists in the keyService (we can sign data by it) and is full access
-    if (isKey.ok && isKey.value === true && key.accessType === 'FullAccess') {
+    if (isKey.success && isKey.data === true && key.accessType === 'FullAccess') {
       filteredKeys.push(transformKey(key));
     }
   }

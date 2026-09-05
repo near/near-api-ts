@@ -24,7 +24,7 @@ export const getConversionStepSuccess = (
   const { transaction, transactionOutcomeSuccess, deserializeActionSummaries } = args;
 
   const transactionSummary = getTransactionSummary(transaction, deserializeActionSummaries);
-  if (!transactionSummary.ok) return transactionSummary;
+  if (!transactionSummary.success) return transactionSummary;
 
   return result.ok({
     result: {
@@ -32,7 +32,7 @@ export const getConversionStepSuccess = (
       firstExecutionStepId: transactionOutcomeSuccess.outcome.status.SuccessReceiptId.cryptoHash,
     },
     executedAt: { blockHash: transactionOutcomeSuccess.blockHash.cryptoHash },
-    transactionSummary: transactionSummary.value,
+    transactionSummary: transactionSummary.data,
     gasFee: yoctoNear(transactionOutcomeSuccess.outcome.tokensBurnt),
     gasUsed: gas(transactionOutcomeSuccess.outcome.gasBurnt),
   });

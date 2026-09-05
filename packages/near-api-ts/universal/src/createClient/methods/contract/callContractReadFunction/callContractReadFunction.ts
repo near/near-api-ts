@@ -47,7 +47,7 @@ export const createSafeCallContractReadFunction: CreateSafeCallContractReadFunct
 
       // Try to serialize args to bytes;
       const functionArgs = serializeFunctionArgs(args);
-      if (!functionArgs.ok) return functionArgs;
+      if (!functionArgs.success) return functionArgs;
 
       const rpcResponse = await context.sendRequest({
         method: 'query',
@@ -55,22 +55,22 @@ export const createSafeCallContractReadFunction: CreateSafeCallContractReadFunct
           request_type: 'call_function',
           account_id: args.contractAccountId,
           method_name: args.functionName,
-          args_base64: functionArgs.value.toBase64(),
+          args_base64: functionArgs.data.toBase64(),
           ...toNearcoreBlockReference(args.withStateAt),
         },
         transportPolicy: args.policies?.transport,
         signal: args.options?.signal,
       });
 
-      if (!rpcResponse.ok)
+      if (!rpcResponse.success)
         return repackError({
           error: rpcResponse.error,
           originPrefix: 'SendRequest',
           targetPrefix: 'Client.CallContractReadFunction',
         });
 
-      return rpcResponse.value.error
-        ? handleRpcError(rpcResponse.value)
-        : handleRpcResult(rpcResponse.value, args);
+      return rpcResponse.data.error
+        ? handleRpcError(rpcResponse.data)
+        : handleRpcResult(rpcResponse.data, args);
     },
   );

@@ -69,6 +69,10 @@ export const App = ({ children }: { children: React.ReactNode }) => (
 
 ## Hooks
 
+Query and mutation hooks use TanStack Query's `isSuccess`, `data` and `error` fields,
+not a `Result` wrapper. Mutation `*Async` methods resolve to the unwrapped payload
+and reject on failure; `onSuccess` callbacks receive that same payload.
+
 ### `useNearSignIn`
 
 Connect Near Protocol wallet.
@@ -252,7 +256,28 @@ signDelegation({
 
 ## Re-exports from `near-api-ts`
 
-`react-near-ts` re-exports all imports of `near-api-ts`
+`react-near-ts` re-exports the whole public API of `near-api-ts`. Its `safe*`
+functions return a `Result` discriminated by `success`, with `data` on success or
+`error` on failure:
+
+```ts
+import { safeNear } from 'react-near-ts';
+
+const { success, data, error } = safeNear('1');
+
+if (success) {
+  console.log(data.yoctoNear);
+} else {
+  console.log(error.kind);
+}
+```
+
+The same wrapper applies to signer-service methods `safeExecuteTransaction`,
+`safeSignMessage` and `safeSignDelegation` when you call or implement them directly.
+When upgrading from v0.4.0, replace their old `ok` / `value` fields with `success` /
+`data`; the hooks' TanStack Query fields do not change. See the
+[core Result documentation](../near-api-ts/README.md#throwing-and-safe-variants)
+and the [changelog](CHANGELOG.md).
 
 ## Playground
 

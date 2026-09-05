@@ -20,7 +20,7 @@ const tryOnManySigners = async (args: SignDelegationArgs, context: StoreContext)
     if (!canSign) return signDelegation(signerIndex + 1);
 
     const result = await signer.safeSignDelegation(args);
-    if (result.ok) return result.value;
+    if (result.success) return result.data;
 
     throw result.error;
   };

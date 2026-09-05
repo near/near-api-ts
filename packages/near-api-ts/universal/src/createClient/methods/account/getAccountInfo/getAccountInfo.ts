@@ -56,14 +56,14 @@ export const createSafeGetAccountInfo: CreateSafeGetAccountInfo = (context) =>
         }),
       ]);
 
-      if (!rpcResponse.ok)
+      if (!rpcResponse.success)
         return repackError({
           error: rpcResponse.error,
           originPrefix: 'SendRequest',
           targetPrefix: 'Client.GetAccountInfo',
         });
 
-      if (!storagePricePerByte.ok)
+      if (!storagePricePerByte.success)
         return result.err(
           createNatError({
             kind: 'Client.GetAccountInfo.StoragePricePerByte.NotLoaded',
@@ -71,8 +71,8 @@ export const createSafeGetAccountInfo: CreateSafeGetAccountInfo = (context) =>
           }),
         );
 
-      return rpcResponse.value.error
-        ? handleError(rpcResponse.value)
-        : handleResult(rpcResponse.value, storagePricePerByte.value, args);
+      return rpcResponse.data.error
+        ? handleError(rpcResponse.data)
+        : handleResult(rpcResponse.data, storagePricePerByte.data, args);
     },
   );

@@ -34,22 +34,22 @@ const getBaseExecutionFailure = (args: GetExecutionFailureArgs) => {
   const { transaction, actionError } = args;
 
   const conversionStepSuccess = getConversionStepSuccess(args);
-  if (!conversionStepSuccess.ok) return conversionStepSuccess;
+  if (!conversionStepSuccess.success) return conversionStepSuccess;
 
   const nonConversionSteps = getNonConversionSteps({
     ...args,
-    conversionStepSuccess: conversionStepSuccess.value,
+    conversionStepSuccess: conversionStepSuccess.data,
   });
-  if (!nonConversionSteps.ok) return nonConversionSteps;
+  if (!nonConversionSteps.success) return nonConversionSteps;
 
   return result.ok({
     transactionHash: transaction.hash.cryptoHash,
     status: 'ExecutionFailure' as const,
     error: getExecutionFailureError(actionError),
     processingSteps: {
-      conversionStep: conversionStepSuccess.value,
-      executionSteps: nonConversionSteps.value.executionSteps,
-      refundSteps: nonConversionSteps.value.refundSteps,
+      conversionStep: conversionStepSuccess.data,
+      executionSteps: nonConversionSteps.data.executionSteps,
+      refundSteps: nonConversionSteps.data.refundSteps,
     },
   });
 };
@@ -58,9 +58,9 @@ export const getExecutionFailureExecutedOptimistic = (
   args: GetExecutionFailureArgs,
 ): Result<ExecutionFailure['ExecutedOptimistic'], GetExecutionFailureError> => {
   const baseExecutionFailure = getBaseExecutionFailure(args);
-  if (!baseExecutionFailure.ok) return baseExecutionFailure;
+  if (!baseExecutionFailure.success) return baseExecutionFailure;
 
-  const { transactionHash, error, status, processingSteps } = baseExecutionFailure.value;
+  const { transactionHash, error, status, processingSteps } = baseExecutionFailure.data;
 
   return result.ok({
     transactionHash,
@@ -78,9 +78,9 @@ export const getExecutionFailureExecutedNearlyFinal = (
   args: GetExecutionFailureArgs,
 ): Result<ExecutionFailure['ExecutedNearlyFinal'], GetExecutionFailureError> => {
   const baseExecutionFailure = getBaseExecutionFailure(args);
-  if (!baseExecutionFailure.ok) return baseExecutionFailure;
+  if (!baseExecutionFailure.success) return baseExecutionFailure;
 
-  const { transactionHash, error, status, processingSteps } = baseExecutionFailure.value;
+  const { transactionHash, error, status, processingSteps } = baseExecutionFailure.data;
 
   return result.ok({
     transactionHash,
@@ -98,9 +98,9 @@ export const getExecutionFailureCompletedFinal = (
   args: GetExecutionFailureArgs,
 ): Result<ExecutionFailure['CompletedFinal'], GetExecutionFailureError> => {
   const baseExecutionFailure = getBaseExecutionFailure(args);
-  if (!baseExecutionFailure.ok) return baseExecutionFailure;
+  if (!baseExecutionFailure.success) return baseExecutionFailure;
 
-  const { transactionHash, error, status, processingSteps } = baseExecutionFailure.value;
+  const { transactionHash, error, status, processingSteps } = baseExecutionFailure.data;
 
   return result.ok({
     transactionHash,

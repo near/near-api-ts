@@ -57,8 +57,8 @@ describe('SendTx', () => {
       signedTransaction,
     });
 
-    if (tx.ok) {
-      const x = tx.value;
+    if (tx.success) {
+      const x = tx.data;
     }
 
     log(tx);

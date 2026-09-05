@@ -57,10 +57,10 @@ export const safeVerifyMessage: SafeVerifyMessage = wrapInternalError(
       accountId: signedMessage.signerAccountId,
     });
 
-    if (!accessKeys.ok)
+    if (!accessKeys.success)
       return resultNatError('VerifyMessage.AccessKeys.NotLoaded', { cause: accessKeys.error });
 
-    const isAccountFullAccessKey = accessKeys.value.accountAccessKeys.some(
+    const isAccountFullAccessKey = accessKeys.data.accountAccessKeys.some(
       (key) =>
         key.publicKey === signedMessage.signerPublicKey.publicKey &&
         key.accessType === 'FullAccess',
