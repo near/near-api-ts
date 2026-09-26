@@ -39,8 +39,8 @@ importers:
   packages/near-api-ts:
     dependencies:
       '@near-js/jsonrpc-types':
-        specifier: ^1.8.0
-        version: 1.8.0
+        specifier: ^1.9.0
+        version: 1.9.0
       '@noble/ed25519':
         specifier: ^3.1.0
         version: 3.1.0
@@ -651,8 +651,8 @@ packages:
       '@emnapi/core': ^1.7.1
       '@emnapi/runtime': ^1.7.1
 
-  '@near-js/jsonrpc-types@1.8.0':
-    resolution: {integrity: sha512-Sy7G1E7YGIyUANFGM8nAbz3QezX2Ks1bJtJWraZVCZITg0tjmxBHaIM/uPIf9jQY+YOByD3AblJqQJDYPi08Zw==}
+  '@near-js/jsonrpc-types@1.9.0':
+    resolution: {integrity: sha512-9jgnONolYBWRHporvwqET867I2ViAG/Ib291BzJMdfTdJTfP982J1ZhypMpqoXyH0bCQ40XsIB2qtvr4KMkxAg==}
 
   '@next/env@16.3.4':
     resolution: {integrity: sha512-cjWZnUUa6jZq2kFaNe/ZyJdZonOZ/QoN0Zka2nz/FLOrfx14pQuM9c5RaSVkWMqgdt4ksgPAMWPyHSs/CyV48Q==}
@@ -2850,7 +2850,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.3
     optional: true
 
-  '@near-js/jsonrpc-types@1.8.0':
+  '@near-js/jsonrpc-types@1.9.0':
     dependencies:
       zod: 4.4.3
 
