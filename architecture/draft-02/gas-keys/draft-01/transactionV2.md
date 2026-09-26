@@ -9,11 +9,11 @@ type NonceProgression =
 
 type TransactionNonce = {
   scheme: 'RegularNonce', // SignleNonce?
-  value: number,
+  newValue: number,
   progression: 'Consecutive' | 'Increasing'; // or sequence
 } | {
   scheme: 'NonceLane'; // NonceLanes?
-  value: number;
+  newValue: number;
   laneIndex: number;
   progression: 'Consecutive' | 'Increasing', // or sequence
 }

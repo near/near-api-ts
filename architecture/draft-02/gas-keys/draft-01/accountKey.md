@@ -4,6 +4,7 @@
 
 ```typescript
 type PublicKeyId = string;
+type PublicKeyRef = string;
 
 // ── Debit ────────────────────────────────────────────────────
 
@@ -34,7 +35,7 @@ export type DebitFunctionCallKey = {
   };
   nonces: {
     scheme: 'SingleNonce';
-    nonce: number; // or value?
+    nonce: number; 
   };
 };
 
@@ -50,9 +51,18 @@ export type PrepaidFullAccessKey = {
     balance: NearToken;
   };
   nonces: {
-    scheme: 'NonceLanes';
-    nonceLaneCount: number;
+    scheme: 'ConcurrentNonces'; // NonceCapacity ? // MultipleNonces ?? // ConcurrentNonces
+    // nonceLaneCount: number;
+    // nonceConcurencyLimit: 1
+    concurrentNonceLimit: 1
   };
+  
+  // 1 lane / 1 track / l
+  
+  // load balancer ???
+  // ConcurencyLimit ??
+  
+  // max nonces
 };
 
 export type PrepaidFunctionCallKey = {
@@ -75,7 +85,7 @@ export type PrepaidFunctionCallKey = {
 type DebitKey = DebitFullAccessKey | DebitFunctionCallKey;
 type PrepaidKey = PrepaidFullAccessKey | PrepaidFunctionCallKey;
 
-export type AccountKey = DebitKey | PrepaidKey;
+export type AccountAccessKey = DebitKey | PrepaidKey;
 
 // client.getAccountKey / client.getAccountKeys
 ```
