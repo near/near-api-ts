@@ -88,6 +88,23 @@
   object literal, but when it slips through (plain JS, a spread object) the call
   silently falls back to the client's transport policy.
 
+- **Breaking:** `getAccountInfo` output (`GetAccountInfoOutput`) reports the
+  storage the account occupies as `storage.usedBytes` instead of the top-level
+  `usedStorageBytes`:  \
+  Previously:
+  ```ts
+  const { usedStorageBytes } = await client.getAccountInfo({ accountId });
+  ```
+
+  Now:
+  ```ts
+  const { storage } = await client.getAccountInfo({ accountId });
+  storage.usedBytes;
+  ```
+
+  The tokens locked to pay for that storage stay in
+  `balance.locked.storageDeposit`.
+
 - `getRecentBlockHash` returns the hash of the final block rather than the
   near-final one – one block older, which the transaction validity period
   absorbs. Right after a node starts (a fresh sandbox, for example) the

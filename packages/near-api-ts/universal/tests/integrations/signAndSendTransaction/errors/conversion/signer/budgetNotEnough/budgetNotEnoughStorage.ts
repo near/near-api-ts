@@ -81,8 +81,8 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  const { balance, usedStorageBytes } = await client.getAccountInfo({ accountId: ACCOUNT_ID });
-  expect(usedStorageBytes).toBeGreaterThan(ZERO_BALANCE_ACCOUNT_STORAGE_LIMIT);
+  const { balance, storage } = await client.getAccountInfo({ accountId: ACCOUNT_ID });
+  expect(storage.usedBytes).toBeGreaterThan(ZERO_BALANCE_ACCOUNT_STORAGE_LIMIT);
 
   const { blockHash } = natAccessKey;
   const drainAccountTransaction = await signTransaction({

@@ -217,7 +217,7 @@ info.balance.total.near;
 info.balance.available.near; // total minus everything locked
 info.balance.locked.validatorStake.near;
 info.balance.locked.storageDeposit.near;
-info.usedStorageBytes;
+info.storage.usedBytes;
 info.atMomentOf; // { blockHash, blockHeight }
 ```
 

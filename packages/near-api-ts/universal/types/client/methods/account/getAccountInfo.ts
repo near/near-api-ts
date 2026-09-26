@@ -90,7 +90,13 @@ export type GetAccountInfoOutput = {
       storageDeposit: NearToken;
     };
   };
-  usedStorageBytes: number;
+  /**
+   * The on-chain storage the account occupies. The tokens locked to pay for it
+   * are in `balance.locked.storageDeposit`.
+   */
+  storage: {
+    usedBytes: number;
+  };
   contract: AccountContract;
   atMomentOf: {
     blockHash: BlockHash;

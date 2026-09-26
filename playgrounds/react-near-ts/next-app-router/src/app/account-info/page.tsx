@@ -37,7 +37,7 @@ const AccountInfo = () => {
     );
   }
 
-  const { balance, usedStorageBytes } = accountInfo.data;
+  const { balance, storage } = accountInfo.data;
 
   return (
     <Card padding="xl" radius="md" withBorder>
@@ -62,7 +62,7 @@ const AccountInfo = () => {
           <Text size="xs" c="dimmed">
             Storage Used
           </Text>
-          <Text fw={500}>{usedStorageBytes} bytes</Text>
+          <Text fw={500}>{storage.usedBytes} bytes</Text>
         </Paper>
 
         <Paper radius="md" p="xs" withBorder>

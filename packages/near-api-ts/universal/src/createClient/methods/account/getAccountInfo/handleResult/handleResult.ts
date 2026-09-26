@@ -40,7 +40,9 @@ export const handleResult = (
   return result.ok({
     accountId: args.accountId,
     balance: calculateAccountBalance(accountInfo, storagePricePerByte),
-    usedStorageBytes: accountInfo.storageUsage,
+    storage: {
+      usedBytes: accountInfo.storageUsage,
+    },
     contract: getAccountContract(accountInfo),
     atMomentOf: {
       blockHash: accountInfo.blockHash,
