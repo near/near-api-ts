@@ -15,7 +15,7 @@ type KeyA = {
   };
   gasPayment: {
     source: 'AccountBalance';
-    allowance: 'Unlimited';
+    spendingLimit: 'Unlimited'
   };
   replayProtection: {
     scheme: 'SingleNonceSequence';
@@ -32,7 +32,11 @@ type KeyB = {
   }
   gasPayment: {
     source: 'AccountBalance';
-    allowance: 'Unlimited' | NearToken;
+    spendingLimit: 'Unlimited'
+  } | {
+    source: 'AccountBalance';
+    spendingLimit: 'Limited'
+    allowance: NearToken;
   };
   replayProtection: {
     scheme: 'SingleNonceSequence';
