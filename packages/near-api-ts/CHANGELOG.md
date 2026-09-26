@@ -88,6 +88,19 @@
   object literal, but when it slips through (plain JS, a spread object) the call
   silently falls back to the client's transport policy.
 
+- `getRecentBlockHash` returns the hash of the final block rather than the
+  near-final one – one block older, which the transaction validity period
+  absorbs. Right after a node starts (a fresh sandbox, for example) the
+  near-final block does not exist yet, so `getRecentBlockHash` failed with
+  `Client.GetRecentBlockHash.Internal`, a memory signer with
+  `MemorySigner.SignTransaction.Internal` /
+  `MemorySigner.ExecuteTransaction.Internal`, and `getAccountInfo` with
+  `Client.GetAccountInfo.StoragePricePerByte.NotLoaded`.
+
+- Bump `@near-js/jsonrpc-types` from `^1.8.0` to `^1.9.0`. The `rawRpcResult`
+  types of `getBlock`, `getAccountAccessKey` and `getAccountAccessKeys` come
+  from it.
+
 ---
 
 ## v0.12.0

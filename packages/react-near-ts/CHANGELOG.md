@@ -39,6 +39,10 @@
   `callContractReadFunction`, `getBlock`). See the near-api-ts v0.13.0
   changelog.
 
+- The near-api-ts v0.13.0 fix for `getRecentBlockHash` and `getAccountInfo`
+  failing right after a node starts, and its `@near-js/jsonrpc-types` bump to
+  `^1.9.0`, reach this package through the re-export.
+
 ---
 
 ## v0.5.0
