@@ -9,18 +9,13 @@ import { wrapInternalError } from '../../../../_common/_common/wrapInternalError
 import { repackError } from '../../../../_common/repackError';
 import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
 import { toNearcoreBlockReference } from '../../_common/toNearcoreBlockReference';
-import {
-  BaseOptionsZodSchema,
-  BlockReferenceZodSchema,
-  PoliciesZodSchema,
-} from '../../_common/zodSchemas';
+import { BaseOptionsZodSchema, BlockReferenceZodSchema } from '../../_common/zodSchemas';
 import { handleError } from './handleError';
 import { handleResult } from './handleResult';
 
 const GetAccountAccessKeysArgsSchema = z.object({
   accountId: AccountIdZodSchema,
   atMomentOf: z.optional(BlockReferenceZodSchema),
-  policies: PoliciesZodSchema,
   options: BaseOptionsZodSchema,
 });
 
@@ -45,7 +40,7 @@ export const createSafeGetAccountAccessKeys: CreateSafeGetAccountAccessKeys = (c
           account_id: args.accountId,
           ...toNearcoreBlockReference(args.atMomentOf),
         },
-        transportPolicy: args.policies?.transport,
+        transportPolicy: args.options?.transportPolicy,
         signal: args.options?.signal,
       });
 

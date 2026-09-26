@@ -48,10 +48,8 @@ export type GetAccountAccessKeyArgs = {
   accountId: AccountId;
   publicKey: PublicKey;
   atMomentOf?: BlockReference;
-  policies?: {
-    transport?: PartialTransportPolicy;
-  };
   options?: {
+    transportPolicy?: PartialTransportPolicy;
     signal?: AbortSignal;
   };
 };

@@ -5,10 +5,8 @@ import type { PartialTransportPolicy } from '../../transport/transport';
 
 type GetProtocolConfigArgs = {
   atMomentOf?: BlockReference;
-  policies?: {
-    transport?: PartialTransportPolicy;
-  };
   options?: {
+    transportPolicy?: PartialTransportPolicy;
     signal?: AbortSignal;
   };
 };

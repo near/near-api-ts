@@ -5,10 +5,8 @@ import type { PartialTransportPolicy } from '../../transport/transport';
 
 export type GetGasPriceArgs = {
   atMomentOf?: 'LatestOptimisticBlock' | BlockId;
-  policies?: {
-    transport?: PartialTransportPolicy;
-  };
   options?: {
+    transportPolicy?: PartialTransportPolicy;
     signal?: AbortSignal;
   };
 };

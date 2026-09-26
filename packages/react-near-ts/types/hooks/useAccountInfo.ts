@@ -10,8 +10,8 @@ import type {
 type UseAccountInfoArgs = {
   accountId?: AccountId;
   atMomentOf?: BlockReference;
-  policies?: {
-    transport?: PartialTransportPolicy;
+  options?: {
+    transportPolicy?: PartialTransportPolicy;
   };
   query?: {
     enabled?: boolean;

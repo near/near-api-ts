@@ -67,14 +67,12 @@ type BaseFnCallArgs = {
   contractAccountId: AccountId;
   functionName: ContractFunctionName;
   withStateAt?: BlockReference;
-  policies?: {
-    transport?: PartialTransportPolicy;
-  };
 };
 
 export type InnerCallContractReadFunctionArgs = BaseFnCallArgs & {
   functionArgs?: unknown;
   options?: {
+    transportPolicy?: PartialTransportPolicy;
     signal?: AbortSignal;
     serializeArgs?: BaseSerializeArgsFn<unknown>;
     deserializeResult?: BaseDeserializeResultFn;
@@ -82,6 +80,7 @@ export type InnerCallContractReadFunctionArgs = BaseFnCallArgs & {
 };
 
 type BaseOptions = {
+  transportPolicy?: PartialTransportPolicy;
   signal?: AbortSignal;
 };
 

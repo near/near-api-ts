@@ -13,10 +13,8 @@ export type GetContractStateArgs = {
   atMomentOf?: BlockReference;
   keyPrefix?: string;
   includeProof?: boolean;
-  policies?: {
-    transport?: PartialTransportPolicy;
-  };
   options?: {
+    transportPolicy?: PartialTransportPolicy;
     signal?: AbortSignal;
   };
 };

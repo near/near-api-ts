@@ -40,10 +40,8 @@ export interface GetAccountAccessKeysPublicErrorRegistry {
 export type GetAccountAccessKeysArgs = {
   accountId: AccountId;
   atMomentOf?: BlockReference;
-  policies?: {
-    transport?: PartialTransportPolicy;
-  };
   options?: {
+    transportPolicy?: PartialTransportPolicy;
     signal?: AbortSignal;
   };
 };

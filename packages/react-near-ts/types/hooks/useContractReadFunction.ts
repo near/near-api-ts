@@ -18,9 +18,6 @@ export type BaseUseContractReadFunctionArgs = {
   contractAccountId?: AccountId;
   functionName?: ContractFunctionName;
   withStateAt?: BlockReference;
-  policies?: {
-    transport?: PartialTransportPolicy;
-  };
   query?: {
     enabled?: boolean;
   };
@@ -29,6 +26,7 @@ export type BaseUseContractReadFunctionArgs = {
 export type InnerUseContractReadFunctionArgs = BaseUseContractReadFunctionArgs & {
   functionArgs?: any;
   options?: {
+    transportPolicy?: PartialTransportPolicy;
     serializeArgs?: BaseSerializeArgsFn<any>;
     deserializeResult?: BaseDeserializeResultFn;
   };
@@ -39,10 +37,15 @@ type Options<A, SR extends MaybeBaseSerializeArgsFn<A>, DR extends MaybeBaseDese
   DR,
 ] extends [undefined, undefined]
   ? {
-      options?: { serializeArgs?: never; deserializeResult?: never };
+      options?: {
+        transportPolicy?: PartialTransportPolicy;
+        serializeArgs?: never;
+        deserializeResult?: never;
+      };
     }
   : {
-      options: KeyIf<'serializeArgs', SR> & KeyIf<'deserializeResult', DR>;
+      options: { transportPolicy?: PartialTransportPolicy } & KeyIf<'serializeArgs', SR> &
+        KeyIf<'deserializeResult', DR>;
     };
 
 // Return type of functionArgs or undefined

@@ -698,14 +698,16 @@ Requests retry, then fail over to the next endpoint, then start another round. T
 }
 ```
 
-Override them per client (`transport.policy`) or per call (`policies.transport`), and pass
-an `AbortSignal` through `options.signal` when you need to cancel:
+Override them per client (`transport.policy`) or per call (`options.transportPolicy`), and
+pass an `AbortSignal` through `options.signal` when you need to cancel:
 
 ```ts
 const info = await client.getAccountInfo({
   accountId: 'example.testnet',
-  policies: { transport: { timeouts: { requestMs: 5_000 } } },
-  options: { signal: controller.signal },
+  options: {
+    transportPolicy: { timeouts: { requestMs: 5_000 } },
+    signal: controller.signal,
+  },
 });
 ```
 

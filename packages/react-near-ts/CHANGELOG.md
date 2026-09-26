@@ -1,5 +1,34 @@
 # Changelog
 
+## [UNRELEASED] v0.6.0
+
+### Changed
+
+- **Breaking:** `useAccountInfo` and `useContractReadFunction` take the transport
+  policy as `options.transportPolicy` instead of `policies.transport`:  \
+  Previously:
+  ```ts
+  useAccountInfo({
+    accountId: 'alice.testnet',
+    policies: { transport: { rpcTypePreferences: ['Archival'] } },
+  });
+  ```
+
+  Now:
+  ```ts
+  useAccountInfo({
+    accountId: 'alice.testnet',
+    options: { transportPolicy: { rpcTypePreferences: ['Archival'] } },
+  });
+  ```
+
+  The same move applies to the client methods re-exported from near-api-ts
+  (`getAccountInfo`, `getAccountAccessKey`, `getAccountAccessKeys`,
+  `callContractReadFunction`, `getBlock`). See the near-api-ts v0.13.0
+  changelog.
+
+---
+
 ## v0.5.0
 
 ### Added

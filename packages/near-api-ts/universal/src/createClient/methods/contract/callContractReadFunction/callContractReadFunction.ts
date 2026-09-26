@@ -10,8 +10,9 @@ import { wrapInternalError } from '../../../../_common/_common/wrapInternalError
 import { repackError } from '../../../../_common/repackError';
 import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
 import { ContractFunctionNameZodSchema } from '../../../../_common/zodSchemas/contractFunctionName';
+import { PartialTransportPolicyZodSchema } from '../../../_common/zodSchemas/transportPolicy';
 import { toNearcoreBlockReference } from '../../_common/toNearcoreBlockReference';
-import { BlockReferenceZodSchema, PoliciesZodSchema } from '../../_common/zodSchemas';
+import { BlockReferenceZodSchema } from '../../_common/zodSchemas';
 import { handleRpcError } from './handleRpcError';
 import { handleRpcResult } from './handleRpcResult/handleRpcResult';
 import { serializeFunctionArgs } from './serializeFunctionArgs';
@@ -21,9 +22,9 @@ const GetAccountAccessKeyArgsSchema = z.object({
   functionName: ContractFunctionNameZodSchema,
   functionArgs: z.optional(z.unknown()),
   withStateAt: z.optional(BlockReferenceZodSchema),
-  policies: PoliciesZodSchema,
   options: z.optional(
     z.object({
+      transportPolicy: PartialTransportPolicyZodSchema,
       serializeArgs: z.optional(z.instanceof(Function)),
       deserializeResult: z.optional(z.instanceof(Function)),
       signal: z.optional(z.instanceof(AbortSignal)),
@@ -58,7 +59,7 @@ export const createSafeCallContractReadFunction: CreateSafeCallContractReadFunct
           args_base64: functionArgs.data.toBase64(),
           ...toNearcoreBlockReference(args.withStateAt),
         },
-        transportPolicy: args.policies?.transport,
+        transportPolicy: args.options?.transportPolicy,
         signal: args.options?.signal,
       });
 

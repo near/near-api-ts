@@ -1,5 +1,37 @@
 # Changelog
 
+## [UNRELEASED] v0.13.0
+
+### Changed
+
+- **Breaking:** the per-call transport policy moved from `policies.transport` to
+  `options.transportPolicy` – the shape `getTransactionResult` and
+  `sendSignedTransaction` already use. Affects `getAccountInfo`,
+  `getAccountAccessKey`, `getAccountAccessKeys`, `callContractReadFunction` and
+  `getBlock`, together with their `safe*` variants:  \
+  Previously:
+  ```ts
+  await client.getAccountInfo({
+    accountId: 'alice.testnet',
+    policies: { transport: { timeouts: { requestMs: 5_000 } } },
+    options: { signal },
+  });
+  ```
+
+  Now:
+  ```ts
+  await client.getAccountInfo({
+    accountId: 'alice.testnet',
+    options: { transportPolicy: { timeouts: { requestMs: 5_000 } }, signal },
+  });
+  ```
+
+  A leftover `policies` field is no longer read. TypeScript rejects it in an
+  object literal, but when it slips through (plain JS, a spread object) the call
+  silently falls back to the client's transport policy.
+
+---
+
 ## v0.12.0
 
 ### Added

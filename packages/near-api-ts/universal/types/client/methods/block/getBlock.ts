@@ -25,10 +25,8 @@ export interface GetBlockPublicErrorRegistry {
 
 export type GetBlockArgs = {
   blockReference?: BlockReference;
-  policies?: {
-    transport?: PartialTransportPolicy;
-  };
   options?: {
+    transportPolicy?: PartialTransportPolicy;
     signal?: AbortSignal;
   };
 };

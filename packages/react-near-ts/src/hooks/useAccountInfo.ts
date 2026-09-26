@@ -15,7 +15,7 @@ export const useAccountInfo: UseAccountInfo = (args) => {
           context.client.getAccountInfo({
             ...rest,
             accountId,
-            options: { signal: args.signal },
+            options: { ...rest.options, signal: args.signal },
           })
       : skipToken,
     enabled: query?.enabled ?? true,

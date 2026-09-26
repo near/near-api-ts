@@ -38,7 +38,7 @@ export const createGetGasPrice: CreateGetGasPrice =
       params: {
         block_id: getBlockId(args?.atMomentOf),
       },
-      transportPolicy: args?.policies?.transport,
+      transportPolicy: args?.options?.transportPolicy,
       signal: args?.options?.signal,
     });
 

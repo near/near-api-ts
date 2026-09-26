@@ -42,7 +42,7 @@ export const createGetContractState: CreateGetContractState =
         include_proof: args.includeProof ?? false,
         ...toNearcoreBlockReference(args.atMomentOf),
       },
-      transportPolicy: args.policies?.transport,
+      transportPolicy: args.options?.transportPolicy,
       signal: args.options?.signal,
     });
 

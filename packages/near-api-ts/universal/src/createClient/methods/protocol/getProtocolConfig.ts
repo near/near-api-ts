@@ -28,7 +28,7 @@ export const createGetProtocolConfig: CreateGetProtocolConfig =
     const result = await sendRequest({
       method: 'EXPERIMENTAL_protocol_config',
       params: toNearcoreBlockReference(args?.atMomentOf),
-      transportPolicy: args?.policies?.transport,
+      transportPolicy: args?.options?.transportPolicy,
       signal: args?.options?.signal,
     });
 

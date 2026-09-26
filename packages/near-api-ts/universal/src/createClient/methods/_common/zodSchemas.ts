@@ -3,14 +3,9 @@ import { BlockHeightZodSchema } from '../../../_common/zodSchemas/blockHeight';
 import { CryptoHashZodSchema } from '../../../_common/zodSchemas/cryptoHash';
 import { PartialTransportPolicyZodSchema } from '../../_common/zodSchemas/transportPolicy';
 
-export const PoliciesZodSchema = z.optional(
-  z.object({
-    transport: PartialTransportPolicyZodSchema,
-  }),
-);
-
 export const BaseOptionsZodSchema = z.optional(
   z.object({
+    transportPolicy: PartialTransportPolicyZodSchema,
     signal: z.optional(z.instanceof(AbortSignal)),
   }),
 );

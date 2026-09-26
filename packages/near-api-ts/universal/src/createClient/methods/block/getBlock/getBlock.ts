@@ -8,18 +8,13 @@ import { result } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
 import { repackError } from '../../../../_common/repackError';
 import { toNearcoreBlockReference } from '../../_common/toNearcoreBlockReference';
-import {
-  BaseOptionsZodSchema,
-  BlockReferenceZodSchema,
-  PoliciesZodSchema,
-} from '../../_common/zodSchemas';
+import { BaseOptionsZodSchema, BlockReferenceZodSchema } from '../../_common/zodSchemas';
 import { handleError } from './handleError';
 import { handleResult } from './handleResult';
 
 const GetBlockArgsSchema = z.optional(
   z.object({
     blockReference: z.optional(BlockReferenceZodSchema),
-    policies: PoliciesZodSchema,
     options: BaseOptionsZodSchema,
   }),
 );
@@ -39,7 +34,7 @@ export const createSafeGetBlock: CreateSafeGetBlock = (context) =>
     const rpcResponse = await context.sendRequest({
       method: 'block',
       params: toNearcoreBlockReference(args?.blockReference),
-      transportPolicy: args?.policies?.transport,
+      transportPolicy: args?.options?.transportPolicy,
       signal: args?.options?.signal,
     });
 

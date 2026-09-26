@@ -44,10 +44,8 @@ export interface GetAccountInfoPublicErrorRegistry {
 export type GetAccountInfoArgs = {
   accountId: AccountId;
   atMomentOf?: BlockReference;
-  policies?: {
-    transport?: PartialTransportPolicy;
-  };
   options?: {
+    transportPolicy?: PartialTransportPolicy;
     signal?: AbortSignal;
   };
 };
