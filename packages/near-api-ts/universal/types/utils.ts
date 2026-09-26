@@ -61,3 +61,23 @@ export type Prettify<T> = { [K in keyof T]: T[K] } & {};
  * ```
  */
 export type ExcludeStrict<T, U extends T> = Exclude<T, U>;
+
+/**
+ * Recursively makes every property of an object type optional.
+ *
+ * Arrays and tuples are kept whole — their elements are not made optional, so
+ * a partial value either replaces the array entirely or leaves it out.
+ *
+ * Examples:
+ * ```ts
+ * type Policy = { retry: { attempts: number; delayMs: number }; order: ['a', 'b'] };
+ *
+ * type P = PartialDeep<Policy>;
+ * // => { retry?: { attempts?: number; delayMs?: number }; order?: ['a', 'b'] }
+ * ```
+ */
+export type PartialDeep<T> = T extends readonly unknown[]
+  ? T
+  : T extends object
+    ? { [K in keyof T]?: PartialDeep<T[K]> }
+    : T;

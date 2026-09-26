@@ -1,7 +1,10 @@
 import * as z from 'zod/mini';
 import type { CreateTransport, TransportContext } from '../../../types/client/transport/transport';
 import { PartialTransportPolicyZodSchema } from '../_common/zodSchemas/transportPolicy';
-import { defaultTransportPolicy, mergeTransportPolicy } from './_common/transportPolicy';
+import {
+  defaultTransportPolicy,
+  mergeTransportPolicy,
+} from './_common/transportPolicy/transportPolicy';
 import { createSendRequest } from './createSendRequest/createSendRequest';
 import { getInnerRpcEndpoints, RpcEndpointsArgsSchema } from './rpcEndpoints';
 

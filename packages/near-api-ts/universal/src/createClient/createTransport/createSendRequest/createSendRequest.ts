@@ -5,7 +5,7 @@ import type {
 import type { TransportContext } from '../../../../types/client/transport/transport';
 import { createNatError, isNatErrorOf } from '../../../_common/_common/_common/_common/natError';
 import { result } from '../../../_common/_common/_common/result';
-import { mergeTransportPolicy } from '../_common/transportPolicy';
+import { mergeTransportPolicy } from '../_common/transportPolicy/transportPolicy';
 import { getAvailableRpcs } from './_common/getAvailableRpcs';
 import { createExternalAbortSignal } from './createExternalAbortSignal';
 import { createRequestTimeout } from './createRequestTimeout';

@@ -1,5 +1,5 @@
-import type { PartialDeep } from 'type-fest';
 import type { Milliseconds } from '../../_common/common';
+import type { PartialDeep } from '../../utils';
 import type { SendRequest } from './sendRequest';
 
 export type RpcType = 'Regular' | 'Archival';

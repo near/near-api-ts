@@ -1,7 +1,7 @@
 import type { SendRequestContext } from '../../../../types/client/transport/sendRequest';
 import type { TransportContext } from '../../../../types/client/transport/transport';
 import { isNatErrorOf } from '../../../_common/_common/_common/_common/natError';
-import { mergeTransportPolicy } from '../_common/transportPolicy';
+import { mergeTransportPolicy } from '../_common/transportPolicy/transportPolicy';
 import { getAvailableRpcs } from './_common/getAvailableRpcs';
 import type { SendOnceResult } from './_common/tryOneRound/sendWithRetry/sendOnce/sendOnce';
 import { tryOneRound } from './_common/tryOneRound/tryOneRound';
