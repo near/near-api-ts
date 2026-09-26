@@ -2,7 +2,65 @@
 
 ## [UNRELEASED] v0.13.0
 
+### Added
+
+- **`PublicKeyRef`** – how an account refers to its access keys: an ed25519 or
+  secp256k1 key by the public key itself, an ml-dsa-65 key by its hash,
+  `'ml-dsa-65-hash:<base58>'`, since the protocol does not store the full
+  1952-byte key.
+
+  - New type `PublicKeyRef`.
+  - Every key pair carries its own `publicKeyRef` – compare it with the refs an
+    account lists:
+
+    ```ts
+    const { accountAccessKeys } = await client.getAccountAccessKeys({ accountId });
+    const isAccountKey = accountAccessKeys.some(
+      (key) => key.publicKeyRef === keyPair.publicKeyRef,
+    );
+    ```
+
+  - `MemoryKeyService` gains `findPublicKey({ publicKeyRef })` /
+    `safeFindPublicKey`: the full public key when the service holds it,
+    `undefined` otherwise. New error kinds
+    `MemoryKeyService.FindPublicKey.Args.InvalidSchema` and
+    `MemoryKeyService.FindPublicKey.Internal`.
+  - `constants.BinaryLengths.<Curve>.PublicKeyRef` – the decoded length of a
+    ref: 32 bytes for ed25519 and ml-dsa-65, 64 for secp256k1.
+
 ### Changed
+
+- **Breaking:** `AccountAccessKey`, returned by `getAccountAccessKey` and
+  `getAccountAccessKeys`, refers to the key by `publicKeyRef` instead of
+  `publicKey`:  \
+  Previously:
+  ```ts
+  { accessType: 'FullAccess', publicKey: PublicKey, nonce }
+  ```
+
+  Now:
+  ```ts
+  { accessType: 'FullAccess', publicKeyRef: PublicKeyRef, nonce }
+  ```
+
+  The same holds for `accessType: 'FunctionCall'`. For ed25519 and secp256k1
+  keys only the field name changes. For an ml-dsa-65 key the value is now the
+  hash: `getAccountAccessKey` used to return the full key it was asked about,
+  and `getAccountAccessKeys` returned the hash typed as a `PublicKey`. To check
+  whether a key belongs to an account, compare against `keyPair.publicKeyRef`,
+  not `keyPair.publicKey`.
+
+  This also fixes ml-dsa-65 keys wherever the library matched an account's keys
+  against local ones: `createMemorySigner` ignored them – also when they were
+  named in `keyPool.allowedAccessKeys` – so an account that could sign only
+  with such a key could not sign at all, and `verifyMessage` returned `false`
+  for a valid ml-dsa-65 signature.
+
+- **Breaking:** a custom `keyService` passed to `createMemorySigner` or
+  `createMemorySignerFactory` must implement `findPublicKey` and
+  `safeFindPublicKey` – the `MemoryKeyService` type requires both, and the
+  signer calls `safeFindPublicKey` to turn the refs an account lists back into
+  keys it can sign with.
 
 - **Breaking:** the per-call transport policy moved from `policies.transport` to
   `options.transportPolicy` – the shape `getTransactionResult` and

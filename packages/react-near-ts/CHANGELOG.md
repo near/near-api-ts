@@ -2,7 +2,19 @@
 
 ## [UNRELEASED] v0.6.0
 
+### Added
+
+- Everything near-api-ts v0.13.0 adds is re-exported from this package as well –
+  the `PublicKeyRef` type, `publicKeyRef` on every key pair and
+  `MemoryKeyService.findPublicKey` / `safeFindPublicKey`. See the near-api-ts
+  changelog.
+
 ### Changed
+
+- **Breaking:** `AccountAccessKey`, re-exported from near-api-ts, refers to the
+  key by `publicKeyRef` instead of `publicKey`, and a custom `keyService` passed
+  to `createMemorySigner` must implement `findPublicKey` / `safeFindPublicKey`.
+  See the near-api-ts v0.13.0 changelog.
 
 - **Breaking:** `useAccountInfo` and `useContractReadFunction` take the transport
   policy as `options.transportPolicy` instead of `policies.transport`:  \
