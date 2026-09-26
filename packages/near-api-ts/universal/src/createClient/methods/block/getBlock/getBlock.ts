@@ -9,8 +9,8 @@ import { wrapInternalError } from '../../../../_common/_common/wrapInternalError
 import { repackError } from '../../../../_common/repackError';
 import { toNearcoreBlockReference } from '../../_common/toNearcoreBlockReference';
 import { BaseOptionsZodSchema, BlockReferenceZodSchema } from '../../_common/zodSchemas';
-import { handleError } from './handleError';
-import { handleResult } from './handleResult';
+import { handleRpcError } from './handleRpcError';
+import { handleRpcResult } from './handleRpcResult';
 
 const GetBlockArgsSchema = z.optional(
   z.object({
@@ -45,5 +45,7 @@ export const createSafeGetBlock: CreateSafeGetBlock = (context) =>
         targetPrefix: 'Client.GetBlock',
       });
 
-    return rpcResponse.data.error ? handleError(rpcResponse.data) : handleResult(rpcResponse.data);
+    return rpcResponse.data.error
+      ? handleRpcError(rpcResponse.data)
+      : handleRpcResult(rpcResponse.data);
   });

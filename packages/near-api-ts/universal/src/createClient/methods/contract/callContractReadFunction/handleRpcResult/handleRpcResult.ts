@@ -43,7 +43,7 @@ export const handleRpcResult = (
   const { blockHash, blockHeight, logs } = rpcResult.data;
 
   // This will only happen for RpcQueryError::ContractExecutionError error;
-  // All others are going into response.error, and we handle them in handleError;
+  // All others are going into response.error, and we handle them in handleRpcError;
   // https://github.com/near/nearcore/blob/a9557047d1bd45da0d06cf6b880fea6487c35e20/chain/jsonrpc/src/lib.rs#L200C13-L209C17
   if ('error' in rpcResult.data)
     return resultNatError('Client.CallContractReadFunction.Rpc.FunctionCall.Failed', {

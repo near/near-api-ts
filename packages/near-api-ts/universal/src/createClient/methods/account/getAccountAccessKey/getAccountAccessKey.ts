@@ -11,8 +11,8 @@ import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
 import { PublicKeyZodSchema } from '../../../../_common/zodSchemas/publicKey';
 import { toNearcoreBlockReference } from '../../_common/toNearcoreBlockReference';
 import { BaseOptionsZodSchema, BlockReferenceZodSchema } from '../../_common/zodSchemas';
-import { handleError } from './handleError';
-import { handleResult } from './handleResult';
+import { handleRpcError } from './handleRpcError';
+import { handleRpcResult } from './handleRpcResult';
 
 const GetAccountAccessKeyArgsSchema = z.object({
   accountId: AccountIdZodSchema,
@@ -55,7 +55,7 @@ export const createSafeGetAccountAccessKey: CreateSafeGetAccountAccessKey = (con
         });
 
       return rpcResponse.data.error
-        ? handleError(rpcResponse.data)
-        : handleResult(rpcResponse.data, args, validArgs.data.publicKey);
+        ? handleRpcError(rpcResponse.data)
+        : handleRpcResult(rpcResponse.data, args, validArgs.data.publicKey);
     },
   );

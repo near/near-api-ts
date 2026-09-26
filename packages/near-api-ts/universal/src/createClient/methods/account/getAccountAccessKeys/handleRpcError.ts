@@ -5,7 +5,7 @@ import type { BaseRpcResponse } from '../../../_common/zodSchemas/baseRpcRespons
 
 // TODO Think how to reuse some errors and reduce the amount of code
 
-export const handleError = (rpcResponse: BaseRpcResponse) => {
+export const handleRpcError = (rpcResponse: BaseRpcResponse) => {
   // We use QueryErrorSchema cuz there is no separate 'view_access_key' method -
   // it's part of 'query'
   const rpcError = ErrorWrapperFor_RpcQueryErrorSchema().safeParse(rpcResponse.error);

@@ -3,17 +3,15 @@ import { createNatError } from '../../../../_common/_common/_common/_common/natE
 import { result } from '../../../../_common/_common/_common/result';
 import type { BaseRpcResponse } from '../../../_common/zodSchemas/baseRpcResponse';
 
-// TODO Think how to reuse some errors and reduce the amount of code
-
-export const handleError = (rpcResponse: BaseRpcResponse) => {
-  // We use QueryErrorSchema cuz there is no separate 'view_access_key' method -
+export const handleRpcError = (rpcResponse: BaseRpcResponse) => {
+  // We use QueryErrorSchema cuz there is no separate 'view_account' method -
   // it's part of 'query'
   const rpcError = ErrorWrapperFor_RpcQueryErrorSchema().safeParse(rpcResponse.error);
 
   if (!rpcError.success)
     return result.err(
       createNatError({
-        kind: 'Client.GetAccountAccessKey.Exhausted',
+        kind: 'Client.GetAccountInfo.Exhausted',
         context: {
           lastError: createNatError({
             kind: 'SendRequest.Attempt.Response.InvalidSchema',
@@ -30,23 +28,15 @@ export const handleError = (rpcResponse: BaseRpcResponse) => {
     if (cause.name === 'NO_SYNCED_BLOCKS')
       return result.err(
         createNatError({
-          kind: `Client.GetAccountAccessKey.Rpc.NotSynced`,
+          kind: `Client.GetAccountInfo.Rpc.NotSynced`,
           context: null,
-        }),
-      );
-
-    if (cause.name === 'UNAVAILABLE_SHARD')
-      return result.err(
-        createNatError({
-          kind: `Client.GetAccountAccessKey.Rpc.Shard.NotTracked`,
-          context: { shardId: cause.info.requestedShardId },
         }),
       );
 
     if (cause.name === 'GARBAGE_COLLECTED_BLOCK')
       return result.err(
         createNatError({
-          kind: `Client.GetAccountAccessKey.Rpc.Block.GarbageCollected`,
+          kind: `Client.GetAccountInfo.Rpc.Block.GarbageCollected`,
           context: {
             blockHash: cause.info.blockHash,
             blockHeight: cause.info.blockHeight,
@@ -59,19 +49,30 @@ export const handleError = (rpcResponse: BaseRpcResponse) => {
     if (cause.name === 'UNKNOWN_BLOCK' && 'blockId' in cause.info.blockReference)
       return result.err(
         createNatError({
-          kind: `Client.GetAccountAccessKey.Rpc.Block.NotFound`,
+          kind: `Client.GetAccountInfo.Rpc.Block.NotFound`,
           context: {
             blockId: cause.info.blockReference.blockId,
           },
         }),
       );
-  }
 
-  // Stub
+    // Account-specific errors
+    if (cause.name === 'UNKNOWN_ACCOUNT')
+      return result.err(
+        createNatError({
+          kind: `Client.GetAccountInfo.Rpc.Account.NotFound`,
+          context: {
+            accountId: cause.info.requestedAccountId,
+            blockHash: cause.info.blockHash,
+            blockHeight: cause.info.blockHeight,
+          },
+        }),
+      );
+  }
 
   return result.err(
     createNatError({
-      kind: 'Client.GetAccountAccessKey.Internal',
+      kind: 'Client.GetAccountInfo.Internal',
       context: { cause: rpcResponse },
     }),
   );

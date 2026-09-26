@@ -3,7 +3,7 @@ import { createNatError } from '../../../../_common/_common/_common/_common/natE
 import { result } from '../../../../_common/_common/_common/result';
 import type { BaseRpcResponse } from '../../../_common/zodSchemas/baseRpcResponse';
 
-export const handleResult = (rpcResponse: BaseRpcResponse) => {
+export const handleRpcResult = (rpcResponse: BaseRpcResponse) => {
   const rpcResult = RpcBlockResponseSchema().safeParse(rpcResponse.result);
 
   if (!rpcResult.success)

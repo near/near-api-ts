@@ -17,7 +17,7 @@ const RpcQueryViewAccountResultSchema = z.object({
 
 export type RpcQueryViewAccountResult = Prettify<z.infer<typeof RpcQueryViewAccountResultSchema>>;
 
-export const handleResult = (
+export const handleRpcResult = (
   rpcResponse: BaseRpcResponse,
   storagePricePerByte: NearToken,
   args: GetAccountInfoArgs,

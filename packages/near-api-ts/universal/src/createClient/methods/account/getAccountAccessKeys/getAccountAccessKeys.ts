@@ -10,8 +10,8 @@ import { repackError } from '../../../../_common/repackError';
 import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
 import { toNearcoreBlockReference } from '../../_common/toNearcoreBlockReference';
 import { BaseOptionsZodSchema, BlockReferenceZodSchema } from '../../_common/zodSchemas';
-import { handleError } from './handleError';
-import { handleResult } from './handleResult';
+import { handleRpcError } from './handleRpcError';
+import { handleRpcResult } from './handleRpcResult';
 
 const GetAccountAccessKeysArgsSchema = z.object({
   accountId: AccountIdZodSchema,
@@ -52,7 +52,7 @@ export const createSafeGetAccountAccessKeys: CreateSafeGetAccountAccessKeys = (c
         });
 
       return rpcResponse.data.error
-        ? handleError(rpcResponse.data)
-        : handleResult(rpcResponse.data, args);
+        ? handleRpcError(rpcResponse.data)
+        : handleRpcResult(rpcResponse.data, args);
     },
   );

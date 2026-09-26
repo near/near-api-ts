@@ -25,7 +25,7 @@ export type RpcQueryAccessKeyListResult = Prettify<
   z.infer<typeof RpcQueryAccessKeyListResultSchema>
 >;
 
-export const handleResult = (rpcResponse: BaseRpcResponse, args: GetAccountAccessKeysArgs) => {
+export const handleRpcResult = (rpcResponse: BaseRpcResponse, args: GetAccountAccessKeysArgs) => {
   const rpcResult = RpcQueryAccessKeyListResultSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)

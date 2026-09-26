@@ -1,5 +1,5 @@
 import type { AccountContract } from '../../../../../../types/client/methods/account/getAccountInfo';
-import type { RpcQueryViewAccountResult } from './handleResult';
+import type { RpcQueryViewAccountResult } from './handleRpcResult';
 
 // An account with no wasm of its own reports this placeholder instead of a hash:
 // it is base58 of the all-zero hash nearcore falls back to.

@@ -1,6 +1,6 @@
 import type { NearToken } from '../../../../../../types/_common/nearToken';
 import { yoctoNear } from '../../../../../_common/nearToken';
-import type { RpcQueryViewAccountResult } from './handleResult';
+import type { RpcQueryViewAccountResult } from './handleRpcResult';
 
 /**
  * This function calculates account balances;

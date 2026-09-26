@@ -33,7 +33,7 @@ const RpcQueryViewAccessKeyResultSchema = z.union([
   UnknownKeySchema,
 ]);
 
-export const handleResult = (
+export const handleRpcResult = (
   rpcResponse: BaseRpcResponse,
   args: GetAccountAccessKeyArgs,
   publicKey: InnerPublicKey,
@@ -51,7 +51,7 @@ export const handleResult = (
   const { blockHash, blockHeight } = rpcResult.data;
 
   // This will only happen for RpcQueryError::UnknownAccessKey error;
-  // All others are going into response.error, and we handle them in handleError;
+  // All others are going into response.error, and we handle them in handleRpcError;
   // https://github.com/near/nearcore/blob/a9557047d1bd45da0d06cf6b880fea6487c35e20/chain/jsonrpc/src/lib.rs#L210C13-L219C17
   if ('error' in rpcResult.data)
     return result.err(
