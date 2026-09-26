@@ -1,3 +1,4 @@
+import { base58 } from '@scure/base';
 import { describe, expect, it } from 'vitest';
 import {
   createMemoryKeyService,
@@ -41,7 +42,7 @@ describe('memoryKeyService.findPublicKey', () => {
 
   it('rejects a ref of the wrong length with Args.InvalidSchema', async () => {
     const result = await keyService.safeFindPublicKey({
-      publicKeyRef: `${mlDsa65KeyPair.publicKeyRef}1`,
+      publicKeyRef: `ml-dsa-65-hash:${base58.encode(new Uint8Array(31).fill(7))}`,
     });
     assertNatErrKind(result, 'MemoryKeyService.FindPublicKey.Args.InvalidSchema');
   });
