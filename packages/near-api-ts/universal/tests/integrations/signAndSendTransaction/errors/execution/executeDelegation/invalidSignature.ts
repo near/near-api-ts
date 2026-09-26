@@ -2,6 +2,7 @@ import { executeDelegation, signDelegation, transfer } from '../../../../../../i
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
+import { getLastNonce } from '../../../../../utils/getLastNonce';
 import type { TestContext } from './executeDelegation.test';
 
 export const invalidSignature = (context: TestContext) => async () => {
@@ -18,7 +19,7 @@ export const invalidSignature = (context: TestContext) => async () => {
       delegatorPublicKey: defaultKeyPair.publicKey,
       delegatedAction: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
-      nonce: aliceAccessKey.accountAccessKey.nonce + 1,
+      nonce: getLastNonce(aliceAccessKey.accountAccessKey) + 1,
       expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
     },
     signDataProvider: relayKeyPair,
@@ -34,7 +35,7 @@ export const invalidSignature = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: natAccessKey.accountAccessKey.nonce + 1,
+      nonce: getLastNonce(natAccessKey.accountAccessKey) + 1,
       blockHash: natAccessKey.blockHash,
       action: executeDelegation(signedDelegation),
       receiverAccountId: 'alice',

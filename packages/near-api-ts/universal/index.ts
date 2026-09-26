@@ -150,11 +150,13 @@ export {
 
 export type {
   AccountAccessKey,
+  AccountBalanceFullAccessKey,
+  AccountBalanceFunctionCallKey,
   AllowedFunctions,
-  FullAccessKey,
-  FunctionCallKey,
   GasBudget,
   GasBudgetArgs,
+  KeyBalanceFullAccessKey,
+  KeyBalanceFunctionCallKey,
 } from './types/_common/accountAccessKey';
 export type {
   AccountId,

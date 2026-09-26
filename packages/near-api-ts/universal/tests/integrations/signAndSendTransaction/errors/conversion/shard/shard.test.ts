@@ -15,6 +15,7 @@ import {
   getUnmappedInvalidTxError,
 } from '../../../../../utils/assertUnmappedInvalidTxError';
 import { createDefaultClient } from '../../../../../utils/common';
+import { getLastNonce } from '../../../../../utils/getLastNonce';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 import { GAS_BURNER_FUNCTION_NAME, GAS_BURNER_WASM } from '../../../../../utils/wasm/gasBurner';
 
@@ -71,7 +72,7 @@ describe.skip('signAndSendTransaction › Shard.Congested conversion error', () 
         transaction: {
           signerAccountId: 'nat',
           signerPublicKey: defaultKeyPair.publicKey,
-          nonce: natKey.accountAccessKey.nonce + 1,
+          nonce: getLastNonce(natKey.accountAccessKey) + 1,
           blockHash: natKey.blockHash,
           actions: [
             createAccount(),
@@ -88,7 +89,7 @@ describe.skip('signAndSendTransaction › Shard.Congested conversion error', () 
         minimalProcessingStage: 'CompletedFinal',
       });
 
-      let nonce = natKey.accountAccessKey.nonce + 2;
+      let nonce = getLastNonce(natKey.accountAccessKey) + 2;
 
       const currentBlockHash = async () =>
         (

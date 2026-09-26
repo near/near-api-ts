@@ -31,22 +31,53 @@
 ### Changed
 
 - **Breaking:** `AccountAccessKey`, returned by `getAccountAccessKey` and
-  `getAccountAccessKeys`, refers to the key by `publicKeyRef` instead of
-  `publicKey`:  \
+  `getAccountAccessKeys`, has a new shape. What the key may do, who pays for its
+  gas and which nonces it signs with are three separate fields now, and the key
+  is referred to by `publicKeyRef` instead of `publicKey`:  \
   Previously:
   ```ts
   { accessType: 'FullAccess', publicKey: PublicKey, nonce }
+  { accessType: 'FunctionCall', publicKey, nonce, contractAccountId, gasBudget, allowedFunctions }
   ```
 
   Now:
   ```ts
-  { accessType: 'FullAccess', publicKeyRef: PublicKeyRef, nonce }
+  {
+    publicKeyRef: PublicKeyRef,
+    permission: { kind: 'FullAccess' },
+    gasPayment: { source: 'AccountBalance', spendingLimit: 'Unlimited' },
+    replayProtection: { scheme: 'SingleNonceSequence', lastNonce },
+  }
+  {
+    publicKeyRef,
+    permission: { kind: 'FunctionCall', allowedContract, allowedFunctions },
+    gasPayment:
+      | { source: 'AccountBalance', spendingLimit: 'Unlimited' } // was gasBudget: 'Unlimited'
+      | { source: 'AccountBalance', spendingLimit: 'Limited', allowance }, // was gasBudget: NearToken
+    replayProtection: { scheme: 'SingleNonceSequence', lastNonce },
+  }
   ```
 
-  The same holds for `accessType: 'FunctionCall'`. For ed25519 and secp256k1
-  keys only the field name changes. For an ml-dsa-65 key the value is now the
-  hash: `getAccountAccessKey` used to return the full key it was asked about,
-  and `getAccountAccessKeys` returned the hash typed as a `PublicKey`. To check
+  The union also gains gas keys – keys that pay for gas from a balance of their
+  own and keep up to 1024 independent nonce sequences, with either permission:
+  `gasPayment: { source: 'KeyBalance', balance }` and
+  `replayProtection: { scheme: 'NonceSequenceSet', totalSequences }`. Such a key
+  has no `lastNonce`, so check the scheme before reading it:
+
+  ```ts
+  const { replayProtection } = accountAccessKey;
+  if (replayProtection.scheme === 'SingleNonceSequence')
+    nonce = replayProtection.lastNonce + 1;
+  ```
+
+  The exported types `FullAccessKey` and `FunctionCallKey` are renamed to
+  `AccountBalanceFullAccessKey` and `AccountBalanceFunctionCallKey`;
+  `KeyBalanceFullAccessKey` and `KeyBalanceFunctionCallKey` are new.
+
+  For ed25519 and secp256k1 keys `publicKeyRef` holds the same value
+  `publicKey` did. For an ml-dsa-65 key the value is now the hash:
+  `getAccountAccessKey` used to return the full key it was asked about, and
+  `getAccountAccessKeys` returned the hash typed as a `PublicKey`. To check
   whether a key belongs to an account, compare against `keyPair.publicKeyRef`,
   not `keyPair.publicKey`.
 
@@ -104,6 +135,15 @@
 
   The tokens locked to pay for that storage stay in
   `balance.locked.storageDeposit`.
+
+- An account holding a gas key no longer breaks the library:
+  `getAccountAccessKey` failed on such a key and `getAccountAccessKeys` on such an
+  account, and with them `createMemorySigner`
+  (`MemorySigner.KeyPool.AccessKeys.NotLoaded`) and `verifyMessage`
+  (`VerifyMessage.AccessKeys.NotLoaded`). The memory signer still signs only with
+  keys paid from the account balance and leaves gas keys out of its pool, also
+  when `keyPool.allowedAccessKeys` names them. `verifyMessage` accepts a message
+  signed by a gas key with full access, like any other full access key.
 
 - `getRecentBlockHash` returns the hash of the final block rather than the
   near-final one – one block older, which the transaction validity period

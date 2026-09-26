@@ -2,6 +2,7 @@ import { expect } from 'vitest';
 import { functionCall, teraGas } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../actions.test';
 
 // `max_total_prepaid_gas` from the runtime config — raised from 300 to 1000 TGas in protocol
@@ -22,7 +23,7 @@ export const totalGasLimitExceeded = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       // The gas of every action is summed up, so a single call over the limit is enough —
       // the check is the last one `validate_actions_with_mode` performs.

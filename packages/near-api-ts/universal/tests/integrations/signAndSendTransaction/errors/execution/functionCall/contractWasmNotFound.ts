@@ -3,6 +3,7 @@ import { functionCall } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
+import { getLastNonce } from '../../../../../utils/getLastNonce';
 import type { TestContext } from './functionCall.test';
 
 export const contractWasmNotFound = (context: TestContext) => async () => {
@@ -18,7 +19,7 @@ export const contractWasmNotFound = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       action: functionCall({
         functionName: 'add_record',

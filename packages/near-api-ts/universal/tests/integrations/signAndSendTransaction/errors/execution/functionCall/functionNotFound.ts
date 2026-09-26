@@ -10,6 +10,7 @@ import { signTransaction } from '../../../../../../src/transaction/signTransacti
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import { getFileBytes } from '../../../../../utils/common';
+import { getLastNonce } from '../../../../../utils/getLastNonce';
 import type { TestContext } from './functionCall.test';
 
 export const functionNotFound = (context: TestContext) => async () => {
@@ -25,7 +26,7 @@ export const functionNotFound = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       actions: [
         createAccount(),

@@ -21,6 +21,7 @@ import { createAccount } from '../../src/transaction/actionCreators/createAccoun
 import type { Client } from '../../types/client/client';
 import type { MemorySignerFactory } from '../../types/signer/createMemorySigner';
 import { createDefaultClient, log } from '../utils/common';
+import { getLastNonce } from '../utils/getLastNonce';
 import { startSandbox } from '../utils/sandbox/startSandbox';
 
 describe('SendTx', () => {
@@ -46,7 +47,7 @@ describe('SendTx', () => {
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: defaultKeyPair.publicKey,
-        nonce: accountAccessKey.nonce + 1,
+        nonce: getLastNonce(accountAccessKey) + 1,
         blockHash,
         action: stake({ amount: { near: '0' }, validatorPublicKey: randomKp.publicKey }),
         receiverAccountId: 'nat',

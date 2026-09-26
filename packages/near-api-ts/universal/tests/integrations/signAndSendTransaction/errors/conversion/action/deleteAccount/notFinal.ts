@@ -2,6 +2,7 @@ import { expect } from 'vitest';
 import { deleteAccount, transfer } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../action.test';
 
 export const notFinal = (context: TestContext) => async () => {
@@ -17,7 +18,7 @@ export const notFinal = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       // Nothing may follow the deletion — the account is gone by then. The check runs while
       // the actions are validated, so `nat` survives this transaction untouched.

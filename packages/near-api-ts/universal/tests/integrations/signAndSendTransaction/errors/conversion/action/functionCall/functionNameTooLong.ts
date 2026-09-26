@@ -2,6 +2,7 @@ import { expect } from 'vitest';
 import { functionCall } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../action.test';
 
 // `max_length_method_name` from the runtime config. Our schemas don't mirror it — the config
@@ -23,7 +24,7 @@ export const functionNameTooLong = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       // The gas has to be non-zero: `validate_function_call_action` looks at it first, and
       // `FunctionCallZeroAttachedGas` would hide the name check.

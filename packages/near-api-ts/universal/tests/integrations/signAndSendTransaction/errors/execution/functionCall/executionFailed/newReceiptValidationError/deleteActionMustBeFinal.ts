@@ -13,6 +13,7 @@ import {
 import { createAccount } from '../../../../../../../../src/transaction/actionCreators/createAccount';
 import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../../../utils/assertTxResultExecutionErrKind';
+import { getLastNonce } from '../../../../../../../utils/getLastNonce';
 import type { TestContext } from '../../functionCall.test';
 
 export const deleteActionMustBeFinal = (context: TestContext) => async () => {
@@ -38,7 +39,7 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       actions: [
         createAccount(),
@@ -61,7 +62,7 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: accountAccessKey.nonce + 2,
+      nonce: getLastNonce(accountAccessKey) + 2,
       blockHash,
       actions: [
         functionCall({

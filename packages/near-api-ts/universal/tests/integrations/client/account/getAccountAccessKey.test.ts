@@ -29,9 +29,10 @@ describe('Get Account Access Key', () => {
     ).resolves.toMatchObject({
       accountId: 'nat',
       accountAccessKey: {
-        accessType: 'FullAccess',
         publicKeyRef: DEFAULT_PUBLIC_KEY,
-        nonce: 0,
+        permission: { kind: 'FullAccess' },
+        gasPayment: { source: 'AccountBalance', spendingLimit: 'Unlimited' },
+        replayProtection: { scheme: 'SingleNonceSequence', lastNonce: 0 },
       },
     });
   });
@@ -60,9 +61,10 @@ describe('Get Account Access Key', () => {
     });
 
     expect(accountAccessKey).toEqual({
-      accessType: 'FullAccess',
       publicKeyRef: mlDsa65KeyPair.publicKeyRef,
-      nonce: expect.any(Number),
+      permission: { kind: 'FullAccess' },
+      gasPayment: { source: 'AccountBalance', spendingLimit: 'Unlimited' },
+      replayProtection: { scheme: 'SingleNonceSequence', lastNonce: expect.any(Number) },
     });
     expect(accountAccessKey.publicKeyRef).toMatch(/^ml-dsa-65-hash:/);
   });

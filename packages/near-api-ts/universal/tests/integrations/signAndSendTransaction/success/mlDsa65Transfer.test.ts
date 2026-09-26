@@ -11,6 +11,7 @@ import {
 } from '../../../../index';
 import { signTransaction } from '../../../../src/transaction/signTransaction/signTransaction';
 import { createDefaultClient } from '../../../utils/common';
+import { getLastNonce } from '../../../utils/getLastNonce';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
 
 vi.setConfig({ testTimeout: 120000, hookTimeout: 120000 });
@@ -45,7 +46,7 @@ describe('ml-dsa-65 Transaction success', () => {
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: DEFAULT_PUBLIC_KEY,
-        nonce: accountAccessKey.nonce + 1,
+        nonce: getLastNonce(accountAccessKey) + 1,
         blockHash,
         receiverAccountId: newAccountId,
         actions: [
@@ -74,7 +75,7 @@ describe('ml-dsa-65 Transaction success', () => {
       transaction: {
         signerAccountId: newAccountId,
         signerPublicKey: mlDsa65KeyPair.publicKey,
-        nonce: mlDsa65AccessKey.nonce + 1,
+        nonce: getLastNonce(mlDsa65AccessKey) + 1,
         blockHash: mlDsa65BlockHash,
         receiverAccountId: 'bob',
         action: transfer({ amount: { near: '1' } }),

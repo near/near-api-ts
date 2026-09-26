@@ -1,5 +1,8 @@
 import type { AccessKeyView } from '@near-js/jsonrpc-types';
-import type { AccountAccessKey } from '../../../../../types/_common/accountAccessKey';
+import type {
+  AccountAccessKey,
+  AllowedFunctions,
+} from '../../../../../types/_common/accountAccessKey';
 import type { PublicKeyRef } from '../../../../../types/_common/crypto';
 import { yoctoNear } from '../../../../_common/nearToken';
 
@@ -7,6 +10,9 @@ type TransformAccessKeyArgs = {
   publicKeyRef: PublicKeyRef;
   accessKey: AccessKeyView;
 };
+
+const toAllowedFunctions = (methodNames: string[]): AllowedFunctions =>
+  methodNames.length > 0 ? methodNames : 'AllNonPayable';
 
 export const transformAccessKey = ({
   publicKeyRef,
@@ -16,24 +22,56 @@ export const transformAccessKey = ({
 
   if (permission === 'FullAccess')
     return {
-      accessType: 'FullAccess',
       publicKeyRef,
-      nonce,
+      permission: { kind: 'FullAccess' },
+      gasPayment: { source: 'AccountBalance', spendingLimit: 'Unlimited' },
+      replayProtection: { scheme: 'SingleNonceSequence', lastNonce: nonce },
     };
 
   if ('FunctionCall' in permission) {
     const { receiverId, methodNames, allowance } = permission.FunctionCall;
 
-    const gasBudget = typeof allowance === 'string' ? yoctoNear(allowance) : 'Unlimited';
-    const allowedFunctions = methodNames.length > 0 ? methodNames : 'AllNonPayable';
+    return {
+      publicKeyRef,
+      permission: {
+        kind: 'FunctionCall',
+        allowedContract: receiverId,
+        allowedFunctions: toAllowedFunctions(methodNames),
+      },
+      gasPayment:
+        typeof allowance === 'string'
+          ? { source: 'AccountBalance', spendingLimit: 'Limited', allowance: yoctoNear(allowance) }
+          : { source: 'AccountBalance', spendingLimit: 'Unlimited' },
+      replayProtection: { scheme: 'SingleNonceSequence', lastNonce: nonce },
+    };
+  }
+
+  // A gas key signs only through its own nonce sequences, stored apart from the access key;
+  // nearcore never checks the access key nonce for it
+  if ('GasKeyFullAccess' in permission) {
+    const { balance, numNonces } = permission.GasKeyFullAccess;
 
     return {
-      accessType: 'FunctionCall',
       publicKeyRef,
-      nonce,
-      contractAccountId: receiverId,
-      gasBudget,
-      allowedFunctions,
+      permission: { kind: 'FullAccess' },
+      gasPayment: { source: 'KeyBalance', balance: yoctoNear(balance) },
+      replayProtection: { scheme: 'NonceSequenceSet', totalSequences: numNonces },
+    };
+  }
+
+  if ('GasKeyFunctionCall' in permission) {
+    // nearcore rejects an allowance on a gas key, so the view always carries null there
+    const { receiverId, methodNames, balance, numNonces } = permission.GasKeyFunctionCall;
+
+    return {
+      publicKeyRef,
+      permission: {
+        kind: 'FunctionCall',
+        allowedContract: receiverId,
+        allowedFunctions: toAllowedFunctions(methodNames),
+      },
+      gasPayment: { source: 'KeyBalance', balance: yoctoNear(balance) },
+      replayProtection: { scheme: 'NonceSequenceSet', totalSequences: numNonces },
     };
   }
 

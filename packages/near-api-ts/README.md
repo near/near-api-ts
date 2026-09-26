@@ -248,14 +248,33 @@ const { accountAccessKey, blockHash, blockHeight } = await client.getAccountAcce
 });
 
 accountAccessKey.publicKeyRef; // 'ed25519:...'
-accountAccessKey.nonce;
 
-if (accountAccessKey.accessType === 'FunctionCall') {
-  accountAccessKey.contractAccountId;
-  accountAccessKey.gasBudget; // 'Unlimited' | NearToken
-  accountAccessKey.allowedFunctions; // 'AllNonPayable' | string[]
+const { permission, gasPayment, replayProtection } = accountAccessKey;
+
+// What the key may do
+if (permission.kind === 'FunctionCall') {
+  permission.allowedContract;
+  permission.allowedFunctions; // 'AllNonPayable' | string[]
+}
+
+// Who pays for gas
+if (gasPayment.source === 'AccountBalance') {
+  if (gasPayment.spendingLimit === 'Limited') gasPayment.allowance; // NearToken left to spend
+} else {
+  gasPayment.balance; // 'KeyBalance' — the key's own prepaid balance, NearToken
+}
+
+// Which nonces the key signs with
+if (replayProtection.scheme === 'SingleNonceSequence') {
+  replayProtection.lastNonce; // the next transaction needs a bigger one
+} else {
+  replayProtection.totalSequences; // 'NonceSequenceSet' — for transactions in parallel
 }
 ```
+
+The last two go together: a key paid from the account balance keeps a single nonce sequence,
+while a key with a balance of its own (nearcore calls it a gas key) keeps up to 1024 independent
+ones, so it can sign that many transactions in parallel.
 
 An account refers to its keys by `publicKeyRef` rather than by the public key: an ed25519 or
 secp256k1 key is referred to by the key itself, an ML-DSA-65 key by its hash
@@ -344,6 +363,9 @@ const signer = createMemorySigner({
   taskQueue: { timeoutMs: 30_000 },
 });
 ```
+
+The signer signs only with keys paid from the account balance. A key with a balance of its own
+(a gas key) is left out of its pool, even when `allowedAccessKeys` names it.
 
 `createMemorySignerFactory({ client, keyService })` returns
 `(signerAccountId) => MemorySigner` when one key service serves many accounts.

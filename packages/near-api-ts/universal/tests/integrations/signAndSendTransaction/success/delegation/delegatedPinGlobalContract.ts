@@ -6,6 +6,7 @@ import {
   signDelegation,
 } from '../../../../../index';
 import { signTransaction } from '../../../../../src/transaction/signTransaction/signTransaction';
+import { getLastNonce } from '../../../../utils/getLastNonce';
 import { publishPinnableGlobalContract } from '../_common/publishGlobalContract';
 import type { TestContext } from './delegation.test';
 
@@ -40,7 +41,7 @@ export const delegatedPinGlobalContract = (context: TestContext) => async () => 
         }),
       ],
       receiverAccountId: delegatorAccountId,
-      nonce: delegatorAccessKey.accountAccessKey.nonce + 1,
+      nonce: getLastNonce(delegatorAccessKey.accountAccessKey) + 1,
       expiration: { blockHeight: delegatorAccessKey.blockHeight + 100 },
     },
   });
@@ -57,7 +58,7 @@ export const delegatedPinGlobalContract = (context: TestContext) => async () => 
     transaction: {
       signerAccountId: 'relay',
       signerPublicKey: relayKeyPair.publicKey,
-      nonce: relayAccessKey.accountAccessKey.nonce + 1,
+      nonce: getLastNonce(relayAccessKey.accountAccessKey) + 1,
       blockHash: relayAccessKey.blockHash,
       action: executeDelegation(signedDelegation),
       receiverAccountId: delegatorAccountId,

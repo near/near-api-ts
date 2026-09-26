@@ -2,6 +2,7 @@ import { expect } from 'vitest';
 import { functionCall } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../actions.test';
 
 // Gas is a u64 on the wire, so the largest value a single action can carry.
@@ -20,7 +21,7 @@ export const totalGasLimitOverflow = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       // Each action on its own is valid — it is `total_prepaid_gas` summing them with
       // `checked_add` that overflows, which is the only way to reach this variant. The sum

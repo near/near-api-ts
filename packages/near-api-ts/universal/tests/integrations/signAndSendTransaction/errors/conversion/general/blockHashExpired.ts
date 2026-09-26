@@ -2,6 +2,7 @@ import { expect } from 'vitest';
 import { transfer } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
+import { getLastNonce } from '../../../../../utils/getLastNonce';
 import type { TestContext } from './general.test';
 
 // A well-formed hash of a block the chain has never seen.
@@ -20,7 +21,7 @@ export const blockHashExpired = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       // `check_transaction_validity_period` (`chain/chain/src/store/utils.rs`) looks the block
       // up first and answers `Expired` when it isn't in the store — the same error a block
       // hash older than `transaction_validity_period` (100 blocks) gets from the next check,

@@ -1,12 +1,6 @@
-import type { AccountId, ContractFunctionName, TransactionNonce } from './common';
+import type { AccountId, ContractFunctionName, SequentialNonce } from './common';
 import type { PublicKeyRef } from './crypto';
 import type { NearToken, NearTokenArgs } from './nearToken';
-
-export type FullAccessKey = {
-  accessType: 'FullAccess';
-  publicKeyRef: PublicKeyRef;
-  nonce: TransactionNonce;
-};
 
 /**
  * The maximum number of NEAR tokens a function-call key
@@ -47,13 +41,94 @@ export type GasBudget = 'Unlimited' | NearToken;
  */
 export type AllowedFunctions = 'AllNonPayable' | ContractFunctionName[];
 
-export type FunctionCallKey = {
-  accessType: 'FunctionCall';
-  publicKeyRef: PublicKeyRef;
-  nonce: TransactionNonce;
-  contractAccountId: AccountId;
-  gasBudget: GasBudget;
+type FullAccessPermission = {
+  kind: 'FullAccess';
+};
+
+type FunctionCallPermission = {
+  kind: 'FunctionCall';
+  allowedContract: AccountId;
   allowedFunctions: AllowedFunctions;
 };
 
-export type AccountAccessKey = FullAccessKey | FunctionCallKey;
+/**
+ * The key pays for gas from the account balance, as much as the account holds.
+ */
+type UnlimitedAccountBalanceGasPayment = {
+  source: 'AccountBalance';
+  spendingLimit: 'Unlimited';
+};
+
+/**
+ * The key pays for gas from the account balance, but no more than `allowance`.
+ */
+type LimitedAccountBalanceGasPayment = {
+  source: 'AccountBalance';
+  spendingLimit: 'Limited';
+  allowance: NearToken;
+};
+
+/**
+ * The key pays for gas from its own balance, which is funded by a
+ * `TransferToGasKey` action. Nearcore calls such a key a gas key.
+ */
+type KeyBalanceGasPayment = {
+  source: 'KeyBalance';
+  balance: NearToken;
+};
+
+/**
+ * Every transaction the key signs must use a nonce greater than `lastNonce`.
+ */
+type SingleNonceSequence = {
+  scheme: 'SingleNonceSequence';
+  lastNonce: SequentialNonce;
+};
+
+/**
+ * The key keeps `totalSequences` (1..1024) independent nonce sequences, so it can sign
+ * that many transactions in parallel. Each transaction picks one sequence and must use
+ * a nonce greater than the last one in it.
+ */
+type NonceSequenceSet = {
+  scheme: 'NonceSequenceSet';
+  totalSequences: number;
+};
+
+// ── Paid from the account balance ────────────────────────────
+
+export type AccountBalanceFullAccessKey = {
+  publicKeyRef: PublicKeyRef;
+  permission: FullAccessPermission;
+  gasPayment: UnlimitedAccountBalanceGasPayment;
+  replayProtection: SingleNonceSequence;
+};
+
+export type AccountBalanceFunctionCallKey = {
+  publicKeyRef: PublicKeyRef;
+  permission: FunctionCallPermission;
+  gasPayment: UnlimitedAccountBalanceGasPayment | LimitedAccountBalanceGasPayment;
+  replayProtection: SingleNonceSequence;
+};
+
+// ── Paid from the key balance ────────────────────────────────
+
+export type KeyBalanceFullAccessKey = {
+  publicKeyRef: PublicKeyRef;
+  permission: FullAccessPermission;
+  gasPayment: KeyBalanceGasPayment;
+  replayProtection: NonceSequenceSet;
+};
+
+export type KeyBalanceFunctionCallKey = {
+  publicKeyRef: PublicKeyRef;
+  permission: FunctionCallPermission;
+  gasPayment: KeyBalanceGasPayment;
+  replayProtection: NonceSequenceSet;
+};
+
+export type AccountAccessKey =
+  | AccountBalanceFullAccessKey
+  | AccountBalanceFunctionCallKey
+  | KeyBalanceFullAccessKey
+  | KeyBalanceFunctionCallKey;

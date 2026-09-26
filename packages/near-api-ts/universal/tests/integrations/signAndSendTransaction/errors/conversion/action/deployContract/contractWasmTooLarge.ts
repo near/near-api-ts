@@ -1,6 +1,7 @@
 import { deployContract } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertUnmappedInvalidTxError } from '../../../../../../utils/assertUnmappedInvalidTxError';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../action.test';
 
 // `max_contract_size` from the runtime config.
@@ -46,7 +47,7 @@ export const contractWasmTooLarge = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       // The code is never compiled at this stage, only measured, so zeroed bytes are enough.
       action: deployContract({ wasmU8: new Uint8Array(CONTRACT_WASM_SIZE_BYTES) }),

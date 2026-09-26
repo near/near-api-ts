@@ -2,6 +2,7 @@ import { expect } from 'vitest';
 import { functionCall } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../signer.test';
 import { attachFunctionCallKey } from './_common/attachFunctionCallKey';
 
@@ -25,7 +26,7 @@ export const functionNotAllowed = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: functionCallKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       action: functionCall({
         functionName: 'forbidden_function',

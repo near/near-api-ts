@@ -65,7 +65,7 @@ export const safeVerifyMessage: SafeVerifyMessage = wrapInternalError(
     const signerPublicKeyRef = toPublicKeyRef(signedMessage.signerPublicKey);
 
     const isAccountFullAccessKey = accessKeys.data.accountAccessKeys.some(
-      (key) => key.publicKeyRef === signerPublicKeyRef && key.accessType === 'FullAccess',
+      (key) => key.publicKeyRef === signerPublicKeyRef && key.permission.kind === 'FullAccess',
     );
     if (!isAccountFullAccessKey) return result.ok(false);
 

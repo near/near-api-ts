@@ -2,6 +2,7 @@ import { expect } from 'vitest';
 import { transfer } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../signer.test';
 
 export const budgetNotEnough = (context: TestContext) => async () => {
@@ -22,7 +23,7 @@ export const budgetNotEnough = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       action: transfer({ amount: { yoctoNear: amount } }),
       receiverAccountId: 'bob',

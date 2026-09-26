@@ -9,6 +9,7 @@ import {
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../../utils/assertTxResultExecutionErrKind';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../functionCall.test';
 
 /**
@@ -30,7 +31,7 @@ export const methodInvalidSignature = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       actions: [
         createAccount(),

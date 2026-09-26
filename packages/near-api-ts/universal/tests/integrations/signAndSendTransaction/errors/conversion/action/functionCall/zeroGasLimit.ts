@@ -2,6 +2,7 @@ import { expect } from 'vitest';
 import { functionCall } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../action.test';
 
 export const zeroGasLimit = (context: TestContext) => async () => {
@@ -17,7 +18,7 @@ export const zeroGasLimit = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       // A function call with no gas could never do any work, so `validate_function_call_action`
       // rejects it before the method name and the arguments are even looked at.

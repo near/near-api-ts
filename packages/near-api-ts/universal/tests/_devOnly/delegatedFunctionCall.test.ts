@@ -13,6 +13,7 @@ import {
   transfer,
 } from '../../index';
 import { createDefaultClient, getFileBytes, log } from '../utils/common';
+import { getLastNonce } from '../utils/getLastNonce';
 import { startSandbox } from '../utils/sandbox/startSandbox';
 
 describe('Execute delegation', () => {
@@ -57,7 +58,7 @@ describe('Execute delegation', () => {
           }),
         ],
         receiverAccountId: 'contract.alice',
-        nonce: aliceAccessKey.accountAccessKey.nonce + 1,
+        nonce: getLastNonce(aliceAccessKey.accountAccessKey) + 1,
         expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
       },
       signDataProvider: aliceKp,
@@ -75,7 +76,7 @@ describe('Execute delegation', () => {
       transaction: {
         signerAccountId: 'relay',
         signerPublicKey: relayKp.publicKey,
-        nonce: relayAccessKey.accountAccessKey.nonce + 1,
+        nonce: getLastNonce(relayAccessKey.accountAccessKey) + 1,
         actions: [executeDelegation(signedDelegation), transfer({ amount: { near: '1' } })],
         receiverAccountId: 'alice',
         blockHash: relayAccessKey.blockHash,

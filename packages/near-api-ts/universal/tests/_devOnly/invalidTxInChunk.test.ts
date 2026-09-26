@@ -13,6 +13,7 @@ import {
 import type { Client } from '../../types/client/client';
 import type { MemorySigner } from '../../types/signer/memorySigner';
 import { createDefaultClient, log } from '../utils/common';
+import { getLastNonce } from '../utils/getLastNonce';
 import { startMaliciousSandbox } from '../utils/sandbox/maliciousChunkProducer/startMaliciousSandbox';
 
 // Requires the adversarial `neard-2_13_2-malicious` binary. `startMaliciousSandbox`
@@ -49,7 +50,7 @@ describe('invalid transaction included in a chunk', () => {
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: kpd.publicKey,
-        nonce: accountAccessKey.nonce + 1,
+        nonce: getLastNonce(accountAccessKey) + 1,
         blockHash,
         action: transfer({ amount: { near: '200000' } }),
         receiverAccountId: 'bob123',

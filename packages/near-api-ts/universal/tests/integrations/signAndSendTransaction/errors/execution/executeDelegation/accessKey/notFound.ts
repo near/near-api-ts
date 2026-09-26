@@ -2,6 +2,7 @@ import { expect } from 'vitest';
 import { randomEd25519KeyPair, signDelegation, transfer } from '../../../../../../../index';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../../utils/assertTxResultExecutionErrKind';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../executeDelegation.test';
 import { sendDelegation } from './_common/sendDelegation';
 
@@ -23,7 +24,7 @@ export const notFound = (context: TestContext) => async () => {
       delegatorPublicKey: unknownKeyPair.publicKey,
       delegatedAction: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
-      nonce: aliceAccessKey.accountAccessKey.nonce + 1,
+      nonce: getLastNonce(aliceAccessKey.accountAccessKey) + 1,
       expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
     },
     signDataProvider: unknownKeyPair,

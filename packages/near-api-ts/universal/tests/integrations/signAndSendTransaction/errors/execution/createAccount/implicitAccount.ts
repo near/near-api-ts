@@ -4,6 +4,7 @@ import { createAccount } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
+import { getLastNonce } from '../../../../../utils/getLastNonce';
 import type { TestContext } from './createAccount.test';
 
 export const implicitAccount = (context: TestContext) => async () => {
@@ -19,7 +20,7 @@ export const implicitAccount = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       action: createAccount(),
       receiverAccountId: '8a3a2af86f8b2a0d013761565dc6ee86af153f6fa4c7db4bd9a52f63ff072d4c',

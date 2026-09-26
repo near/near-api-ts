@@ -8,6 +8,7 @@ import {
   getUnmappedInvalidTxError,
 } from '../../../../../utils/assertUnmappedInvalidTxError';
 import { createDefaultClient } from '../../../../../utils/common';
+import { getLastNonce } from '../../../../../utils/getLastNonce';
 import { startShardedSandbox } from '../../../../../utils/sandbox/sharded/startShardedSandbox';
 
 // `reject_tx_congestion_threshold` (0.8) of `max_congestion_missed_chunks` (125).
@@ -77,7 +78,7 @@ describe.skip('signAndSendTransaction › Shard.Stuck conversion error', () => {
             signerPublicKey: defaultKeyPair.publicKey,
             // Every attempt needs its own nonce: the first ones are accepted and converted
             // on shard 0, they just never reach `nat`.
-            nonce: accountAccessKey.nonce + 1 + attempt,
+            nonce: getLastNonce(accountAccessKey) + 1 + attempt,
             blockHash: hash,
             action: transfer({ amount: { near: '1' } }),
             receiverAccountId: 'nat',

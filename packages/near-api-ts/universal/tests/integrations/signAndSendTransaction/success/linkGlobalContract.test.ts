@@ -3,6 +3,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { type Client, functionCall, keyPair, linkGlobalContract } from '../../../../index';
 import { signTransaction } from '../../../../src/transaction/signTransaction/signTransaction';
 import { createDefaultClient } from '../../../utils/common';
+import { getLastNonce } from '../../../utils/getLastNonce';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
 import { publishLinkableGlobalContract } from './_common/publishGlobalContract';
 
@@ -35,7 +36,7 @@ describe('signAndSendTransaction › success', () => {
       transaction: {
         signerAccountId: 'alice',
         signerPublicKey: defaultKeyPair.publicKey,
-        nonce: accountAccessKey.nonce + 1,
+        nonce: getLastNonce(accountAccessKey) + 1,
         blockHash,
         actions: [
           linkGlobalContract({ globalContractAccountId }),

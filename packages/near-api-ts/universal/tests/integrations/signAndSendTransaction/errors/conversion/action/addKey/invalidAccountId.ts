@@ -1,6 +1,7 @@
 import { addFunctionCallKey, randomEd25519KeyPair } from '../../../../../../../index';
 import type { InnerTransaction } from '../../../../../../../src/transaction/signTransaction/transactionZodSchema';
 import { assertUnmappedInvalidTxError } from '../../../../../../utils/assertUnmappedInvalidTxError';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import { signInvalidTransaction } from '../_common/signInvalidTransaction';
 import type { TestContext } from '../action.test';
 
@@ -40,7 +41,7 @@ export const invalidAccountId = (context: TestContext) => async () => {
     {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       action: addFunctionCallKey({
         publicKey: randomEd25519KeyPair().publicKey,

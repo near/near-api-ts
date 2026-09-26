@@ -11,6 +11,7 @@ import {
   keyPair,
   type Message,
   type PublicKey,
+  randomEd25519KeyPair,
   randomMlDsa65KeyPair,
   type Signature,
   verifyMessage,
@@ -18,6 +19,7 @@ import {
 import { Nep413Message } from '../../../src/_common/_common/_common/constants';
 import { createDefaultClient } from '../../utils/common';
 import { startSandbox } from '../../utils/sandbox/startSandbox';
+import { startFakeRpc } from '../../utils/startFakeRpc';
 
 // What a wallet does on its side: sign sha256(borsh(NEP-413 payload)).
 const signMessage = async (
@@ -94,5 +96,60 @@ describe('verifyMessage', () => {
   it('rejects a message signed by a key the account does not have', async () => {
     const signedMessage = await signMessage(message, randomMlDsa65KeyPair());
     await expect(verifyMessage({ signedMessage, message, client })).resolves.toBe(false);
+  });
+
+  // A key paid from its own balance (a gas key) has the same permission as any other;
+  // the sandbox cannot add one yet, so a fake node lists them
+  describe('keys paid from the key balance', () => {
+    const fullAccessKeyPair = randomEd25519KeyPair();
+    const functionCallKeyPair = randomEd25519KeyPair();
+
+    const startGasKeysRpc = () =>
+      startFakeRpc({
+        keys: [
+          {
+            public_key: fullAccessKeyPair.publicKey,
+            access_key: {
+              nonce: 0,
+              permission: { GasKeyFullAccess: { balance: '1000', num_nonces: 4 } },
+            },
+          },
+          {
+            public_key: functionCallKeyPair.publicKey,
+            access_key: {
+              nonce: 0,
+              permission: {
+                GasKeyFunctionCall: {
+                  balance: '1000',
+                  num_nonces: 4,
+                  allowance: null,
+                  receiver_id: 'app.near',
+                  method_names: [],
+                },
+              },
+            },
+          },
+        ],
+        block_hash: '11111111111111111111111111111111',
+        block_height: 1,
+      });
+
+    it('accepts a message signed by a full access key', async () => {
+      const { fakeClient, close } = await startGasKeysRpc();
+      const signedMessage = await signMessage(message, fullAccessKeyPair);
+      const isValid = await verifyMessage({ signedMessage, message, client: fakeClient });
+      close();
+
+      expect(isValid).toBe(true);
+    });
+
+    it('rejects a message signed by a function call key', async () => {
+      const { fakeClient, close } = await startGasKeysRpc();
+      const signedMessage = await signMessage(message, functionCallKeyPair);
+      const isValid = await verifyMessage({ signedMessage, message, client: fakeClient });
+      close();
+
+      expect(isValid).toBe(false);
+    });
   });
 });

@@ -8,6 +8,7 @@ import type { KeyPair } from '../../../../../types/_common/keyPairs/keyPair';
 import type { DelegableAction } from '../../../../../types/_common/transaction/actions/executeDelegation/delegation';
 import type { Client } from '../../../../../types/client/client';
 import { getFileBytes } from '../../../../utils/common';
+import { getLastNonce } from '../../../../utils/getLastNonce';
 
 const WASM_PATH = './wasm/write-get-record.wasm';
 
@@ -40,7 +41,7 @@ const sendRegistration = async (args: PublishGlobalContractArgs, action: Delegab
     transaction: {
       signerAccountId: registrarAccountId,
       signerPublicKey: registrarKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       action,
       receiverAccountId: registrarAccountId,

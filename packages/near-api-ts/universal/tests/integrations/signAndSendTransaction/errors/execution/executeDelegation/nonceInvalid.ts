@@ -3,6 +3,7 @@ import { executeDelegation, signDelegation, transfer } from '../../../../../../i
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
+import { getLastNonce } from '../../../../../utils/getLastNonce';
 import type { TestContext } from './executeDelegation.test';
 
 export const nonceInvalid = (context: TestContext) => async () => {
@@ -12,7 +13,7 @@ export const nonceInvalid = (context: TestContext) => async () => {
     accountId: 'alice',
     publicKey: defaultKeyPair.publicKey,
   });
-  const delegationNonce = aliceAccessKey.accountAccessKey.nonce;
+  const delegationNonce = getLastNonce(aliceAccessKey.accountAccessKey);
 
   const signedDelegation = await signDelegation({
     delegation: {
@@ -36,7 +37,7 @@ export const nonceInvalid = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: natAccessKey.accountAccessKey.nonce + 1,
+      nonce: getLastNonce(natAccessKey.accountAccessKey) + 1,
       blockHash: natAccessKey.blockHash,
       action: executeDelegation(signedDelegation),
       receiverAccountId: 'alice',
@@ -55,6 +56,6 @@ export const nonceInvalid = (context: TestContext) => async () => {
   assertTxResultExecutionErrKind(txResult, 'Action.ExecuteDelegation.Nonce.Invalid');
   expect(txResult.error.context).toStrictEqual({
     delegationNonce,
-    accessKeyNonce: aliceAccessKey.accountAccessKey.nonce,
+    accessKeyNonce: getLastNonce(aliceAccessKey.accountAccessKey),
   });
 };

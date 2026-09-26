@@ -2,6 +2,7 @@ import { expect } from 'vitest';
 import { functionCall, signDelegation } from '../../../../../../../index';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../../utils/assertTxResultExecutionErrKind';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../executeDelegation.test';
 import { attachFunctionCallKey } from './_common/attachFunctionCallKey';
 import { sendDelegation } from './_common/sendDelegation';
@@ -30,7 +31,7 @@ export const functionNotAllowed = (context: TestContext) => async () => {
         gasLimit: { teraGas: '10' },
       }),
       receiverAccountId: 'bob',
-      nonce: aliceAccessKey.accountAccessKey.nonce + 1,
+      nonce: getLastNonce(aliceAccessKey.accountAccessKey) + 1,
       expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
     },
     signDataProvider: functionCallKeyPair,

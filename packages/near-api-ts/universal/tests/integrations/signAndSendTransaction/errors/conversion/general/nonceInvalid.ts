@@ -2,6 +2,7 @@ import { expect } from 'vitest';
 import { transfer } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
+import { getLastNonce } from '../../../../../utils/getLastNonce';
 import type { TestContext } from './general.test';
 
 export const nonceInvalid = (context: TestContext) => async () => {
@@ -13,7 +14,7 @@ export const nonceInvalid = (context: TestContext) => async () => {
   });
 
   // Nonces have to grow, so the one the access key already holds is always too small.
-  const nonce = accountAccessKey.nonce;
+  const nonce = getLastNonce(accountAccessKey);
 
   const signedTransaction = await signTransaction({
     signDataProvider: defaultKeyPair,
@@ -32,6 +33,6 @@ export const nonceInvalid = (context: TestContext) => async () => {
   assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Nonce.Invalid');
   expect(tx.error.context.info).toStrictEqual({
     transactionNonce: nonce,
-    accessKeyNonce: accountAccessKey.nonce,
+    accessKeyNonce: getLastNonce(accountAccessKey),
   });
 };

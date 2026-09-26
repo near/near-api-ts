@@ -4,6 +4,7 @@ import { addFullAccessKey, deleteAccount, randomSecp256k1KeyPair } from '../../.
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
+import { getLastNonce } from '../../../../../utils/getLastNonce';
 import type { TestContext } from './deleteAccount.test';
 
 export const largeState = (context: TestContext) => async () => {
@@ -22,7 +23,7 @@ export const largeState = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'alice',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       actions,
       receiverAccountId: 'alice',
@@ -40,7 +41,7 @@ export const largeState = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'alice',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: accountAccessKey.nonce + 2,
+      nonce: getLastNonce(accountAccessKey) + 2,
       blockHash,
       action: deleteAccount({ beneficiaryAccountId: 'nat' }),
       receiverAccountId: 'alice',

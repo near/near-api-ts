@@ -9,6 +9,7 @@ import {
 import { keyPair } from '../../../src/createMemoryKeyService/toKeyPairs/keyPairs/keyPair/keyPair';
 import type { Client } from '../../../types/client/client';
 import { createDefaultClient, getFileBytes, log } from '../../utils/common';
+import { getLastNonce } from '../../utils/getLastNonce';
 import { startSandbox } from '../../utils/sandbox/startSandbox';
 
 describe('DeployContract Tests', () => {
@@ -31,7 +32,7 @@ describe('DeployContract Tests', () => {
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: defaultKeyPair.publicKey,
-        nonce: natKey.accountAccessKey.nonce + 1,
+        nonce: getLastNonce(natKey.accountAccessKey) + 1,
         blockHash: natKey.blockHash,
         actions: [
           registerPinnableGlobalContract({
@@ -61,7 +62,7 @@ describe('DeployContract Tests', () => {
       transaction: {
         signerAccountId: 'alice',
         signerPublicKey: defaultKeyPair.publicKey,
-        nonce: aliceKey.accountAccessKey.nonce + 1,
+        nonce: getLastNonce(aliceKey.accountAccessKey) + 1,
         blockHash: aliceKey.blockHash,
         actions: [
           registerPinnableGlobalContract({

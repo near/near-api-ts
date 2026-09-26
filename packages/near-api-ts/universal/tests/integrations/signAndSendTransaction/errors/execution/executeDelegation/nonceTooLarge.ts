@@ -3,6 +3,7 @@ import { executeDelegation, signDelegation, transfer } from '../../../../../../i
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
+import { getLastNonce } from '../../../../../utils/getLastNonce';
 import type { TestContext } from './executeDelegation.test';
 
 const ACCESS_KEY_NONCE_RANGE_MULTIPLIER = 1_000_000;
@@ -38,7 +39,7 @@ export const nonceTooLarge = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: natAccessKey.accountAccessKey.nonce + 1,
+      nonce: getLastNonce(natAccessKey.accountAccessKey) + 1,
       blockHash: natAccessKey.blockHash,
       action: executeDelegation(signedDelegation),
       receiverAccountId: 'alice',

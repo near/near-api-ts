@@ -1,6 +1,7 @@
 import { addFunctionCallKey, randomEd25519KeyPair } from '../../../../../../../../index';
 import { signTransaction } from '../../../../../../../../src/transaction/signTransaction/signTransaction';
 import type { CreateAddFunctionCallKeyActionArgs } from '../../../../../../../../types/_common/transaction/actions/delegableActions/addKey';
+import { getLastNonce } from '../../../../../../../utils/getLastNonce';
 import type { TestContext } from '../../signer.test';
 
 type AttachFunctionCallKeyArgs = Omit<CreateAddFunctionCallKeyActionArgs, 'publicKey'>;
@@ -27,7 +28,7 @@ export const attachFunctionCallKey = async (
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       action: addFunctionCallKey({ publicKey: functionCallKeyPair.publicKey, ...args }),
       receiverAccountId: 'nat',

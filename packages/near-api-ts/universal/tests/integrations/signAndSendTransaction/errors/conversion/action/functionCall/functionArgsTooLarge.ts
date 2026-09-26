@@ -1,6 +1,7 @@
 import { functionCall } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertUnmappedInvalidTxError } from '../../../../../../utils/assertUnmappedInvalidTxError';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../action.test';
 
 // `max_arguments_length` from the runtime config.
@@ -28,7 +29,7 @@ export const functionArgsTooLarge = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       // The gas has to be non-zero and the name short enough: both are checked before the
       // arguments in `validate_function_call_action`. The default serializer would turn the

@@ -12,6 +12,7 @@ import {
 } from '../../../../index';
 import { signTransaction } from '../../../../src/transaction/signTransaction/signTransaction';
 import { createDefaultClient, getFileBytes, log } from '../../../utils/common';
+import { getLastNonce } from '../../../utils/getLastNonce';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
 import { testKeys } from '../../../utils/testKeys';
 
@@ -42,7 +43,7 @@ describe('safeSendSignedTransaction › success', () => {
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: DEFAULT_PUBLIC_KEY,
-        nonce: accountAccessKey.nonce + 1,
+        nonce: getLastNonce(accountAccessKey) + 1,
         blockHash,
         actions: [
           createAccount(),

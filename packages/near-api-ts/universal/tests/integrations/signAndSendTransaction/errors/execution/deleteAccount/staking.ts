@@ -4,6 +4,7 @@ import { deleteAccount, near, stake } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
+import { getLastNonce } from '../../../../../utils/getLastNonce';
 import type { TestContext } from './deleteAccount.test';
 
 export const staking = (context: TestContext) => async () => {
@@ -20,7 +21,7 @@ export const staking = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       action: stake({ amount: near('1000'), validatorPublicKey: DEFAULT_PUBLIC_KEY }),
       receiverAccountId: 'nat',
@@ -38,7 +39,7 @@ export const staking = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: accountAccessKey.nonce + 2,
+      nonce: getLastNonce(accountAccessKey) + 2,
       blockHash,
       action: deleteAccount({ beneficiaryAccountId: 'alice' }),
       receiverAccountId: 'nat',

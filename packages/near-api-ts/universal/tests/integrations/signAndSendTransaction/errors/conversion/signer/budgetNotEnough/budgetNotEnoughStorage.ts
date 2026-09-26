@@ -8,6 +8,7 @@ import {
 } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../signer.test';
 
 // `ZERO_BALANCE_ACCOUNT_STORAGE_LIMIT` from `runtime/runtime/src/verifier.rs` — an account
@@ -36,7 +37,7 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: natAccessKey.accountAccessKey.nonce + 1,
+      nonce: getLastNonce(natAccessKey.accountAccessKey) + 1,
       blockHash: natAccessKey.blockHash,
       actions: [
         createAccount(),
@@ -62,7 +63,7 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: ACCOUNT_ID,
       signerPublicKey: accountKeyPair.publicKey,
-      nonce: accountAccessKey.accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey.accountAccessKey) + 1,
       blockHash: accountAccessKey.blockHash,
       actions: Array.from({ length: EXTRA_KEYS_COUNT }, () =>
         addFunctionCallKey({
@@ -90,7 +91,7 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: ACCOUNT_ID,
       signerPublicKey: accountKeyPair.publicKey,
-      nonce: accountAccessKey.accountAccessKey.nonce + 2,
+      nonce: getLastNonce(accountAccessKey.accountAccessKey) + 2,
       blockHash,
       // `available` is everything but the storage deposit, so sending it away leaves the
       // account exactly at the required amount — and the transaction cost is charged on top

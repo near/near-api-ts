@@ -11,6 +11,7 @@ import {
 } from '../../../index';
 import type { Client } from '../../../types/client/client';
 import { createDefaultClient, getFileBytes, log } from '../../utils/common';
+import { getLastNonce } from '../../utils/getLastNonce';
 import { startSandbox } from '../../utils/sandbox/startSandbox';
 
 describe('DeployContract Tests', () => {
@@ -33,7 +34,7 @@ describe('DeployContract Tests', () => {
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: defaultKeyPair.publicKey,
-        nonce: natKey.accountAccessKey.nonce + 1,
+        nonce: getLastNonce(natKey.accountAccessKey) + 1,
         blockHash: natKey.blockHash,
         actions: [
           // registerPinnableGlobalContract({
@@ -59,7 +60,7 @@ describe('DeployContract Tests', () => {
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: defaultKeyPair.publicKey,
-        nonce: natKey.accountAccessKey.nonce + 2,
+        nonce: getLastNonce(natKey.accountAccessKey) + 2,
         blockHash: natKey.blockHash,
         actions: [
           // pinGlobalContract({

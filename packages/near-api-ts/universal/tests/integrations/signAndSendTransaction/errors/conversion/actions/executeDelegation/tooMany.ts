@@ -2,6 +2,7 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { executeDelegation, keyPair, signDelegation, transfer } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../actions.test';
 
 export const executeDelegationTooMany = (context: TestContext) => async () => {
@@ -19,7 +20,7 @@ export const executeDelegationTooMany = (context: TestContext) => async () => {
       delegatorPublicKey: defaultKp.publicKey,
       delegatedAction: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
-      nonce: aliceAccessKey.accountAccessKey.nonce + 1,
+      nonce: getLastNonce(aliceAccessKey.accountAccessKey) + 1,
       expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
     },
     signDataProvider: defaultKp,
@@ -35,7 +36,7 @@ export const executeDelegationTooMany = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: natAccessKey.accountAccessKey.nonce + 1,
+      nonce: getLastNonce(natAccessKey.accountAccessKey) + 1,
       blockHash: natAccessKey.blockHash,
       actions: [executeDelegation(signedDelegation), executeDelegation(signedDelegation)],
       receiverAccountId: 'nat',

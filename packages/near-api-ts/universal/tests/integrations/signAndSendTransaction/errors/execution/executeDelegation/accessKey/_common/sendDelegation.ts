@@ -1,6 +1,7 @@
 import { executeDelegation } from '../../../../../../../../index';
 import { signTransaction } from '../../../../../../../../src/transaction/signTransaction/signTransaction';
 import type { SignDelegationOutput } from '../../../../../../../../types/_common/transaction/signDelegation';
+import { getLastNonce } from '../../../../../../../utils/getLastNonce';
 import type { TestContext } from '../../executeDelegation.test';
 
 /**
@@ -24,7 +25,7 @@ export const sendDelegation = async (
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       action: executeDelegation(signedDelegation),
       receiverAccountId: 'alice',

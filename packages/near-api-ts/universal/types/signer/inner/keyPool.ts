@@ -1,5 +1,5 @@
 import type { NatError } from '../../../src/_common/_common/_common/_common/natError';
-import type { FunctionCallKey } from '../../_common/accountAccessKey';
+import type { AllowedFunctions } from '../../_common/accountAccessKey';
 import type { AccountId, Result, TransactionNonce } from '../../_common/common';
 import type { PublicKey } from '../../_common/crypto';
 import type { MemorySignerErrorContext } from '../_common/errorContext';
@@ -29,7 +29,7 @@ export type PoolFullAccessKey = {
 export type PoolFunctionCallKey = {
   accessType: 'FunctionCall';
   contractAccountId: AccountId;
-  allowedFunctions: FunctionCallKey['allowedFunctions'];
+  allowedFunctions: AllowedFunctions;
 } & KeyPoolKeyBase;
 
 export type PoolKey = PoolFullAccessKey | PoolFunctionCallKey;

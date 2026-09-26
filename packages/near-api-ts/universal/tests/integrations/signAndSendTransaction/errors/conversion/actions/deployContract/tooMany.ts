@@ -2,6 +2,7 @@ import { expect } from 'vitest';
 import { deployContract } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
+import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../actions.test';
 
 // `max_deploy_actions_per_receipt` from the runtime config — lowered from 100 to 10 in
@@ -23,7 +24,7 @@ export const deployContractTooMany = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       // `validate_number_of_deploy_actions` only counts the deploy actions, and the wasm
       // itself is never compiled at this stage — empty code keeps the transaction small.

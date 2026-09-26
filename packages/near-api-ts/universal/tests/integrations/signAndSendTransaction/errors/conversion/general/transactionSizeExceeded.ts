@@ -1,6 +1,7 @@
 import { deployContract } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertUnmappedInvalidTxError } from '../../../../../utils/assertUnmappedInvalidTxError';
+import { getLastNonce } from '../../../../../utils/getLastNonce';
 import type { TestContext } from './general.test';
 
 // `max_transaction_size` from the runtime config — the borsh-serialized transaction has
@@ -50,7 +51,7 @@ export const transactionSizeExceeded = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: accountAccessKey.nonce + 1,
+      nonce: getLastNonce(accountAccessKey) + 1,
       blockHash,
       // Contract code is the cheapest way to push the transaction over the limit; it is
       // never compiled, the size check happens long before execution.
