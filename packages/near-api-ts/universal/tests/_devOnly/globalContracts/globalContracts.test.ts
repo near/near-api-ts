@@ -2,7 +2,8 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   functionCall,
-  keyPair, linkGlobalContract,
+  keyPair,
+  linkGlobalContract,
   pinGlobalContract,
   registerLinkableGlobalContract,
   registerPinnableGlobalContract,
@@ -40,7 +41,7 @@ describe('DeployContract Tests', () => {
           // }),
           registerLinkableGlobalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
-          })
+          }),
         ],
         receiverAccountId: 'nat',
       },
