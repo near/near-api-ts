@@ -1,28 +1,35 @@
-import type { AccessKeyInfoView } from '@near-js/jsonrpc-types';
+import type { AccessKeyView } from '@near-js/jsonrpc-types';
 import type { AccountAccessKey } from '../../../../../types/_common/accountAccessKey';
-import type { PublicKey } from '../../../../../types/_common/crypto';
+import type { PublicKeyRef } from '../../../../../types/_common/crypto';
 import { yoctoNear } from '../../../../_common/nearToken';
 
-export const transformAccessKey = (key: AccessKeyInfoView): AccountAccessKey => {
-  const publicKey = key.publicKey as PublicKey;
-  const nonce = key.accessKey.nonce;
+type TransformAccessKeyArgs = {
+  publicKeyRef: PublicKeyRef;
+  accessKey: AccessKeyView;
+};
 
-  if (key.accessKey.permission === 'FullAccess')
+export const transformAccessKey = ({
+  publicKeyRef,
+  accessKey,
+}: TransformAccessKeyArgs): AccountAccessKey => {
+  const { nonce, permission } = accessKey;
+
+  if (permission === 'FullAccess')
     return {
       accessType: 'FullAccess',
-      publicKey,
+      publicKeyRef,
       nonce,
     };
 
-  if ('FunctionCall' in key.accessKey.permission) {
-    const { receiverId, methodNames, allowance } = key.accessKey.permission.FunctionCall;
+  if ('FunctionCall' in permission) {
+    const { receiverId, methodNames, allowance } = permission.FunctionCall;
 
     const gasBudget = typeof allowance === 'string' ? yoctoNear(allowance) : 'Unlimited';
     const allowedFunctions = methodNames.length > 0 ? methodNames : 'AllNonPayable';
 
     return {
       accessType: 'FunctionCall',
-      publicKey,
+      publicKeyRef,
       nonce,
       contractAccountId: receiverId,
       gasBudget,
@@ -30,5 +37,5 @@ export const transformAccessKey = (key: AccessKeyInfoView): AccountAccessKey => 
     };
   }
 
-  throw new Error('Unsupported access key permission', { cause: key });
+  throw new Error('Unsupported access key permission', { cause: accessKey });
 };

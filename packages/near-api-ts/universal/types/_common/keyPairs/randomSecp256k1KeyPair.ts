@@ -29,6 +29,7 @@ export type Secp256k1KeyPair = {
   curve: 'secp256k1';
   publicKey: Secp256k1PublicKey;
   publicKeyU8: Uint8Array;
+  publicKeyRef: Secp256k1PublicKey;
   privateKey: Secp256k1PrivateKey;
   privateKeyU8: Uint8Array;
   signData: SignData;

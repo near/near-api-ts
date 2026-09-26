@@ -3,18 +3,21 @@ export const BinaryLengths = {
     PrivateKey: 64, // SecretKey + PublicKey
     SecretKey: 32,
     PublicKey: 32,
+    PublicKeyRef: 32, // the public key itself
     Signature: 64,
   },
   Secp256k1: {
     PrivateKey: 96, // SecretKey + PublicKey
     SecretKey: 32,
     PublicKey: 64,
+    PublicKeyRef: 64, // the public key itself
     Signature: 65,
   },
   MlDsa65: {
     PrivateKey: 4032, // secret-only, no public component
     SecretKey: 4032,
     PublicKey: 1952,
+    PublicKeyRef: 32, // SHA3-256 of the public key
     Signature: 3309,
   },
 } as const;

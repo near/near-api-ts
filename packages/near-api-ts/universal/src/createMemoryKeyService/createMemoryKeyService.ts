@@ -8,6 +8,7 @@ import { result, resultNatError } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { PrivateKeyZodSchema } from './_common/zodSchemas/privateKey';
+import { createSafeFindPublicKey } from './findPublicKey';
 import { createSafeHasKey } from './hasKey';
 import { createSafeSignData } from './signData';
 import { toKeyPairs } from './toKeyPairs/toKeyPairs';
@@ -46,12 +47,17 @@ export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService = wrapIntern
 
     context.hasKey = hasKey;
 
+    const safeFindPublicKey = createSafeFindPublicKey(context);
+    const findPublicKey = asThrowable(safeFindPublicKey);
+
     const safeSignData = createSafeSignData(context);
     const signData = asThrowable(safeSignData);
 
     return result.ok({
       hasKey,
       safeHasKey,
+      findPublicKey,
+      safeFindPublicKey,
       signData,
       safeSignData,
     });

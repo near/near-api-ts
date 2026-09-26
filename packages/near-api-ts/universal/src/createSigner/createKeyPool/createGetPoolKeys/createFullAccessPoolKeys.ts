@@ -1,10 +1,11 @@
 import type { AccountAccessKey, FullAccessKey } from '../../../../types/_common/accountAccessKey';
+import type { PublicKey } from '../../../../types/_common/crypto';
 import type { PoolFullAccessKey } from '../../../../types/signer/inner/keyPool';
 import type { MemorySignerContext } from '../../../../types/signer/memorySigner';
 import { createLock, createSetNonce, createUnlock } from './_common/keyUtils';
 
-const transformKey = (fullAccessKey: FullAccessKey): PoolFullAccessKey => {
-  const { publicKey, nonce } = fullAccessKey;
+const transformKey = (fullAccessKey: FullAccessKey, publicKey: PublicKey): PoolFullAccessKey => {
+  const { nonce } = fullAccessKey;
 
   const key = {
     accessType: 'FullAccess',
@@ -27,11 +28,15 @@ export const createFullAccessPoolKeys = async (
   const filteredKeys = [];
 
   for (const key of accountKeys) {
-    const isKey = await signerContext.keyService.safeHasKey(key);
-    // If key exists in the keyService (we can sign data by it) and is full access
-    if (isKey.success && isKey.data === true && key.accessType === 'FullAccess') {
-      filteredKeys.push(transformKey(key));
-    }
+    if (key.accessType !== 'FullAccess') continue;
+
+    // The account refers to the key by its ref, and we need the full public key to sign;
+    // the keyService finds it only if it holds the key (we can sign data by it)
+    const publicKey = await signerContext.keyService.safeFindPublicKey({
+      publicKeyRef: key.publicKeyRef,
+    });
+
+    if (publicKey.success && publicKey.data) filteredKeys.push(transformKey(key, publicKey.data));
   }
 
   return filteredKeys;

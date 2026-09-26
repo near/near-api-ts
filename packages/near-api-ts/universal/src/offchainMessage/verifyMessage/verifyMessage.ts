@@ -8,6 +8,7 @@ import { Nep413Message } from '../../_common/_common/_common/constants';
 import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
+import { toPublicKeyRef } from '../../_common/toPublicKeyRef';
 import { verifySignature } from './verifySignature';
 import { MessageZodSchema, SignedMessageZodSchema } from './zodSchemas/message/message';
 
@@ -60,10 +61,11 @@ export const safeVerifyMessage: SafeVerifyMessage = wrapInternalError(
     if (!accessKeys.success)
       return resultNatError('VerifyMessage.AccessKeys.NotLoaded', { cause: accessKeys.error });
 
+    // The account refers to its keys by ref, not by the public key itself
+    const signerPublicKeyRef = toPublicKeyRef(signedMessage.signerPublicKey);
+
     const isAccountFullAccessKey = accessKeys.data.accountAccessKeys.some(
-      (key) =>
-        key.publicKey === signedMessage.signerPublicKey.publicKey &&
-        key.accessType === 'FullAccess',
+      (key) => key.publicKeyRef === signerPublicKeyRef && key.accessType === 'FullAccess',
     );
     if (!isAccountFullAccessKey) return result.ok(false);
 

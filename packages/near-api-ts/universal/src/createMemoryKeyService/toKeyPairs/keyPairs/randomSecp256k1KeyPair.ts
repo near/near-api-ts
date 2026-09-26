@@ -46,6 +46,7 @@ export const safeRandomSecp256k1KeyPair: SafeCreateRandomSecp256k1KeyPair = wrap
       curve: 'secp256k1' as const,
       publicKey,
       publicKeyU8,
+      publicKeyRef: publicKey,
       privateKey,
       privateKeyU8,
       signData: asThrowable(safeSignData),

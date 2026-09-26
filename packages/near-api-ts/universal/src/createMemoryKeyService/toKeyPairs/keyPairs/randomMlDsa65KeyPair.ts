@@ -6,6 +6,7 @@ import type {
 } from '../../../../types/_common/keyPairs/randomMlDsa65KeyPair';
 import { result, resultNatError } from '../../../_common/_common/_common/result';
 import { asThrowable } from '../../../_common/_common/asThrowable';
+import { toMlDsa65PublicKeyHash } from '../../../_common/_common/toMlDsa65PublicKeyHash';
 import { wrapInternalError } from '../../../_common/_common/wrapInternalError';
 import { toMlDsa65CurveString } from '../../../_common/toCurveString';
 import { signByMlDsa65Key } from './_common/signByMlDsa65Key';
@@ -46,6 +47,7 @@ export const safeRandomMlDsa65KeyPair: SafeCreateRandomMlDsa65KeyPair = wrapInte
       curve: 'ml-dsa-65' as const,
       publicKey,
       publicKeyU8,
+      publicKeyRef: toMlDsa65PublicKeyHash(publicKeyU8),
       privateKey,
       privateKeyU8,
       signData: asThrowable(safeSignData),

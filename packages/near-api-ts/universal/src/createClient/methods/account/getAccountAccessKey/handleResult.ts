@@ -3,7 +3,9 @@ import * as z from 'zod/mini';
 import type { GetAccountAccessKeyArgs } from '../../../../../types/client/methods/account/getAccountAccessKey';
 import type { Prettify } from '../../../../../types/utils';
 import { createNatError } from '../../../../_common/_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/_common/result';
+import { result, resultNatError } from '../../../../_common/_common/_common/result';
+import { toPublicKeyRef } from '../../../../_common/toPublicKeyRef';
+import type { InnerPublicKey } from '../../../../_common/zodSchemas/publicKey';
 import type { BaseRpcResponse } from '../../../_common/zodSchemas/baseRpcResponse';
 import { transformAccessKey } from '../_common/transformAccessKey';
 
@@ -31,21 +33,20 @@ const RpcQueryViewAccessKeyResultSchema = z.union([
   UnknownKeySchema,
 ]);
 
-export const handleResult = (rpcResponse: BaseRpcResponse, args: GetAccountAccessKeyArgs) => {
+export const handleResult = (
+  rpcResponse: BaseRpcResponse,
+  args: GetAccountAccessKeyArgs,
+  publicKey: InnerPublicKey,
+) => {
   const rpcResult = RpcQueryViewAccessKeyResultSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)
-    return result.err(
-      createNatError({
-        kind: 'Client.GetAccountAccessKey.Exhausted',
-        context: {
-          lastError: createNatError({
-            kind: 'SendRequest.Attempt.Response.InvalidSchema',
-            context: { zodError: rpcResult.error },
-          }),
-        },
+    return resultNatError('Client.GetAccountAccessKey.Exhausted', {
+      lastError: createNatError({
+        kind: 'SendRequest.Attempt.Response.InvalidSchema',
+        context: { zodError: rpcResult.error },
       }),
-    );
+    });
 
   const { blockHash, blockHeight } = rpcResult.data;
 
@@ -70,8 +71,8 @@ export const handleResult = (rpcResponse: BaseRpcResponse, args: GetAccountAcces
     blockHeight,
     accountId: args.accountId,
     accountAccessKey: transformAccessKey({
+      publicKeyRef: toPublicKeyRef(publicKey),
       accessKey: rpcResult.data,
-      publicKey: args.publicKey,
     }),
     rawRpcResult: rpcResult.data,
   };

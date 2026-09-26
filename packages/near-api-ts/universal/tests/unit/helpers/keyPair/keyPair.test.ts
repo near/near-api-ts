@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { safeKeyPair } from '../../../../index';
+import {
+  keyPair,
+  randomEd25519KeyPair,
+  randomMlDsa65KeyPair,
+  randomSecp256k1KeyPair,
+  safeKeyPair,
+} from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
 const privateKey =
@@ -29,5 +35,22 @@ describe('keyPair', () => {
 
     const kp4 = safeKeyPair('ed25519:№?');
     assertNatErrKind(kp4, 'CreateKeyPair.Args.InvalidSchema');
+  });
+
+  it('refers to an ed25519 or secp256k1 key by the public key itself', () => {
+    for (const randomKeyPair of [randomEd25519KeyPair(), randomSecp256k1KeyPair()]) {
+      const kp = keyPair(randomKeyPair.privateKey);
+      expect(kp.publicKeyRef).toBe(kp.publicKey);
+      expect(randomKeyPair.publicKeyRef).toBe(randomKeyPair.publicKey);
+    }
+  });
+
+  it('refers to an ml-dsa-65 key by its hash', () => {
+    const randomKeyPair = randomMlDsa65KeyPair();
+    const kp = keyPair(randomKeyPair.privateKey);
+
+    expect(randomKeyPair.publicKeyRef).toMatch(/^ml-dsa-65-hash:[1-9A-HJ-NP-Za-km-z]+$/);
+    expect(kp.publicKeyRef).toBe(randomKeyPair.publicKeyRef);
+    expect(randomMlDsa65KeyPair().publicKeyRef).not.toBe(randomKeyPair.publicKeyRef);
   });
 });

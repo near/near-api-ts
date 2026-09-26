@@ -1,6 +1,12 @@
-import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
+import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { type Client } from '../../../../index';
+import {
+  addFullAccessKey,
+  type Client,
+  createMemoryKeyService,
+  createMemorySigner,
+  randomMlDsa65KeyPair,
+} from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../utils/common';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
@@ -24,10 +30,41 @@ describe('Get Account Access Key', () => {
       accountId: 'nat',
       accountAccessKey: {
         accessType: 'FullAccess',
-        publicKey: DEFAULT_PUBLIC_KEY,
+        publicKeyRef: DEFAULT_PUBLIC_KEY,
         nonce: 0,
       },
     });
+  });
+
+  // The node does not return the key, and the output refers to it the same way
+  // client.getAccountAccessKeys does — by the hash for an ml-dsa-65 key
+  it('Ok - ml-dsa-65 key', async () => {
+    const mlDsa65KeyPair = randomMlDsa65KeyPair();
+
+    const signer = createMemorySigner({
+      signerAccountId: 'nat',
+      keyService: createMemoryKeyService({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
+      client,
+    });
+
+    await signer.executeTransaction({
+      intent: {
+        action: addFullAccessKey(mlDsa65KeyPair),
+        receiverAccountId: 'nat',
+      },
+    });
+
+    const { accountAccessKey } = await client.getAccountAccessKey({
+      accountId: 'nat',
+      publicKey: mlDsa65KeyPair.publicKey,
+    });
+
+    expect(accountAccessKey).toEqual({
+      accessType: 'FullAccess',
+      publicKeyRef: mlDsa65KeyPair.publicKeyRef,
+      nonce: expect.any(Number),
+    });
+    expect(accountAccessKey.publicKeyRef).toMatch(/^ml-dsa-65-hash:/);
   });
 
   it('Invalid args', async () => {

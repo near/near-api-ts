@@ -1,6 +1,11 @@
 import type { NatError } from '../../../src/_common/_common/_common/_common/natError';
 import type { Result } from '../common';
-import type { MlDsa65PrivateKey, MlDsa65PublicKey, MlDsa65Signature } from '../crypto';
+import type {
+  MlDsa65PrivateKey,
+  MlDsa65PublicKey,
+  MlDsa65PublicKeyHash,
+  MlDsa65Signature,
+} from '../crypto';
 import type { MlDsa65Curve } from '../curveString';
 import type { KeyPairSignDataArgs } from './_common';
 
@@ -30,6 +35,7 @@ export type MlDsa65KeyPair = {
   curve: 'ml-dsa-65';
   publicKey: MlDsa65PublicKey;
   publicKeyU8: Uint8Array;
+  publicKeyRef: MlDsa65PublicKeyHash;
   privateKey: MlDsa65PrivateKey;
   privateKeyU8: Uint8Array;
   signData: SignData;

@@ -42,6 +42,7 @@ export const safeRandomEd25519KeyPair: SafeCreateRandomEd25519KeyPair = wrapInte
       curve: 'ed25519' as const,
       publicKey,
       publicKeyU8,
+      publicKeyRef: publicKey,
       privateKey,
       privateKeyU8,
       signData: asThrowable(safeSignData),

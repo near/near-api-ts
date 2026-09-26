@@ -30,6 +30,7 @@ export type Ed25519KeyPair = {
   curve: 'ed25519';
   publicKey: Ed25519PublicKey;
   publicKeyU8: Uint8Array;
+  publicKeyRef: Ed25519PublicKey;
   privateKey: Ed25519PrivateKey;
   privateKeyU8: Uint8Array;
   signData: SignData;

@@ -61,6 +61,6 @@ export const createSafeGetAccountAccessKey: CreateSafeGetAccountAccessKey = (con
 
       return rpcResponse.data.error
         ? handleError(rpcResponse.data)
-        : handleResult(rpcResponse.data, args);
+        : handleResult(rpcResponse.data, args, validArgs.data.publicKey);
     },
   );

@@ -1,6 +1,6 @@
 import type { NatError } from '../../../src/_common/_common/_common/_common/natError';
 import type { Result } from '../common';
-import type { PrivateKey, PublicKey } from '../crypto';
+import type { PrivateKey, PublicKey, PublicKeyRef } from '../crypto';
 import type { Curve } from '../curveString';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../natError';
 import type { SignedData } from '../signData';
@@ -46,6 +46,7 @@ export type KeyPair = {
   curve: Curve;
   publicKey: PublicKey;
   publicKeyU8: Uint8Array;
+  publicKeyRef: PublicKeyRef;
   privateKey: PrivateKey;
   privateKeyU8: Uint8Array;
   signData: SignData;

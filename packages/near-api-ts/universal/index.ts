@@ -166,6 +166,7 @@ export type {
 export type {
   PrivateKey,
   PublicKey,
+  PublicKeyRef,
   Signature,
 } from './types/_common/crypto';
 export type { Curve } from './types/_common/curveString';

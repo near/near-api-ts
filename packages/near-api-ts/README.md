@@ -247,6 +247,7 @@ const { accountAccessKey, blockHash, blockHeight } = await client.getAccountAcce
   publicKey: 'ed25519:...',
 });
 
+accountAccessKey.publicKeyRef; // 'ed25519:...'
 accountAccessKey.nonce;
 
 if (accountAccessKey.accessType === 'FunctionCall') {
@@ -255,6 +256,12 @@ if (accountAccessKey.accessType === 'FunctionCall') {
   accountAccessKey.allowedFunctions; // 'AllNonPayable' | string[]
 }
 ```
+
+An account refers to its keys by `publicKeyRef` rather than by the public key: an ed25519 or
+secp256k1 key is referred to by the key itself, an ML-DSA-65 key by its hash
+(`'ml-dsa-65-hash:...'`), since the protocol does not store the full 1952-byte key.
+`getAccountAccessKeys` lists keys by the same refs, and every key pair carries its own
+`publicKeyRef` to compare them with.
 
 ### Read-only contract calls
 
@@ -578,6 +585,8 @@ fresh.curve; // 'ed25519'
 fresh.publicKey; // 'ed25519:...'
 fresh.privateKey;
 fresh.publicKeyU8; // raw bytes when you need them
+fresh.publicKeyRef; // 'ed25519:...' — how an account refers to this key
+postQuantum.publicKeyRef; // 'ml-dsa-65-hash:...'
 
 const { signature, signatureU8 } = await fresh.signData({ dataU8 });
 ```
@@ -593,6 +602,7 @@ const keyService = createMemoryKeyService({
 });
 
 await keyService.hasKey({ publicKey: 'ed25519:...' }); // true
+await keyService.findPublicKey({ publicKeyRef: 'ml-dsa-65-hash:...' }); // the key, or undefined
 await keyService.signData({ publicKey: 'ed25519:...', dataU8 });
 ```
 
