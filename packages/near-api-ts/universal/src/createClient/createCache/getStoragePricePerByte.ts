@@ -30,9 +30,11 @@ export const createGetStoragePricePerByte =
     // required;
     // Also, full protocol config shema may change a lot, and we want to avoid
     // handling breaking changes all the time inside this fn.
+    // We use 'final', not 'near-final': while the head is still genesis, the near-final
+    // block is the zero hash the node doesn't know, and the final head starts at genesis.
     const protocolConfig = await transport.sendRequest({
       method: 'EXPERIMENTAL_protocol_config',
-      params: { finality: 'near-final' },
+      params: { finality: 'final' },
       signal: args?.signal,
     });
     if (!protocolConfig.success) return protocolConfig;

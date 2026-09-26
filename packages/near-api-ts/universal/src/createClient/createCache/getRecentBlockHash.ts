@@ -48,9 +48,12 @@ export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (transport
     // We don't use the getBlock method to avoid
     // a situation when a user will use a CustomClient without this method, but it's
     // required;
+    // We use 'final', not 'near-final': while the head is still genesis, the near-final
+    // block is the zero hash the node doesn't know, and the final head starts at genesis.
+    // A final block is also never reverted, so the transaction stays on the canonical chain;
     const rpcResponse = await transport.sendRequest({
       method: 'block',
-      params: { finality: 'near-final' },
+      params: { finality: 'final' },
       signal: args?.options?.signal,
     });
 
