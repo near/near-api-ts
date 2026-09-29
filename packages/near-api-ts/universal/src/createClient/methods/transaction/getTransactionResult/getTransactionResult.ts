@@ -15,7 +15,7 @@ const GetTransactionResultArgsZodShema = z.object({
   transactionHash: CryptoHashZodSchema,
   options: z.optional(
     z.object({
-      transportPolicy: PartialTransportPolicyZodSchema,
+      transportPolicy: z.optional(PartialTransportPolicyZodSchema),
       signal: z.optional(z.instanceof(AbortSignal)),
       deserializeResultData: z.optional(z.instanceof(Function)),
       deserializeActionSummaries: z.optional(z.instanceof(Function)),

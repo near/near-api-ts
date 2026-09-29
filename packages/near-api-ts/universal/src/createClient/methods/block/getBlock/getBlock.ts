@@ -12,16 +12,16 @@ import { BaseOptionsZodSchema, BlockReferenceZodSchema } from '../../_common/zod
 import { handleRpcError } from './handleRpcError';
 import { handleRpcResult } from './handleRpcResult';
 
-const GetBlockArgsSchema = z.optional(
+const GetBlockArgsZodSchema = z.optional(
   z.object({
     blockReference: z.optional(BlockReferenceZodSchema),
-    options: BaseOptionsZodSchema,
+    options: z.optional(BaseOptionsZodSchema),
   }),
 );
 
 export const createSafeGetBlock: CreateSafeGetBlock = (context) =>
   wrapInternalError('Client.GetBlock.Internal', async (args): ReturnType<SafeGetBlock> => {
-    const validArgs = GetBlockArgsSchema.safeParse(args);
+    const validArgs = GetBlockArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return result.err(

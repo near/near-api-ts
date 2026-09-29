@@ -3,12 +3,10 @@ import { BlockHeightZodSchema } from '../../../_common/zodSchemas/blockHeight';
 import { CryptoHashZodSchema } from '../../../_common/zodSchemas/cryptoHash';
 import { PartialTransportPolicyZodSchema } from '../../_common/zodSchemas/transportPolicy';
 
-export const BaseOptionsZodSchema = z.optional(
-  z.object({
-    transportPolicy: PartialTransportPolicyZodSchema,
-    signal: z.optional(z.instanceof(AbortSignal)),
-  }),
-);
+export const BaseOptionsZodSchema = z.object({
+  transportPolicy: z.optional(PartialTransportPolicyZodSchema),
+  signal: z.optional(z.instanceof(AbortSignal)),
+});
 
 export const BlockReferenceZodSchema = z.union([
   z.literal('LatestOptimisticBlock'),

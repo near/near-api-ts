@@ -42,4 +42,4 @@ const TransportPolicyZodSchema = z.object({
   ),
 });
 
-export const PartialTransportPolicyZodSchema = z.optional(z.partial(TransportPolicyZodSchema));
+export const PartialTransportPolicyZodSchema = z.partial(TransportPolicyZodSchema);

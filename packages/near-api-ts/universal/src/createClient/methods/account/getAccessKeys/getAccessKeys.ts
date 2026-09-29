@@ -13,17 +13,17 @@ import { BaseOptionsZodSchema, BlockReferenceZodSchema } from '../../_common/zod
 import { handleRpcError } from './handleRpcError';
 import { handleRpcResult } from './handleRpcResult';
 
-const GetAccessKeysArgsSchema = z.object({
+const GetAccessKeysArgsZodSchema = z.object({
   accountId: AccountIdZodSchema,
   atMomentOf: z.optional(BlockReferenceZodSchema),
-  options: BaseOptionsZodSchema,
+  options: z.optional(BaseOptionsZodSchema),
 });
 
 export const createSafeGetAccessKeys: CreateSafeGetAccessKeys = (context) =>
   wrapInternalError(
     'Client.GetAccessKeys.Internal',
     async (args): ReturnType<SafeGetAccessKeys> => {
-      const validArgs = GetAccessKeysArgsSchema.safeParse(args);
+      const validArgs = GetAccessKeysArgsZodSchema.safeParse(args);
 
       if (!validArgs.success)
         return result.err(

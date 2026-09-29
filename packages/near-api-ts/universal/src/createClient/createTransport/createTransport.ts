@@ -10,7 +10,7 @@ import { getInnerRpcEndpoints, RpcEndpointsArgsSchema } from './rpcEndpoints';
 
 export const CreateTransportArgsZodSchema = z.object({
   rpcEndpoints: RpcEndpointsArgsSchema,
-  policy: PartialTransportPolicyZodSchema,
+  policy: z.optional(PartialTransportPolicyZodSchema),
 });
 
 export const createTransport: CreateTransport = (args) => {

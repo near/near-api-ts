@@ -13,17 +13,17 @@ import { BaseOptionsZodSchema, BlockReferenceZodSchema } from '../../_common/zod
 import { handleRpcError } from './handleRpcError';
 import { handleRpcResult } from './handleRpcResult/handleRpcResult';
 
-const GetAccountInfoArgsSchema = z.object({
+const GetAccountInfoArgsZodSchema = z.object({
   accountId: AccountIdZodSchema,
   atMomentOf: z.optional(BlockReferenceZodSchema),
-  options: BaseOptionsZodSchema,
+  options: z.optional(BaseOptionsZodSchema),
 });
 
 export const createSafeGetAccountInfo: CreateSafeGetAccountInfo = (context) =>
   wrapInternalError(
     'Client.GetAccountInfo.Internal',
     async (args): ReturnType<SafeGetAccountInfo> => {
-      const validArgs = GetAccountInfoArgsSchema.safeParse(args);
+      const validArgs = GetAccountInfoArgsZodSchema.safeParse(args);
 
       if (!validArgs.success)
         return result.err(

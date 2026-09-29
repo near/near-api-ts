@@ -17,14 +17,14 @@ import { handleRpcError } from './handleRpcError';
 import { handleRpcResult } from './handleRpcResult/handleRpcResult';
 import { serializeFunctionArgs } from './serializeFunctionArgs';
 
-const GetAccessKeyArgsSchema = z.object({
+const CallContractReadFunctionArgsZodSchema = z.object({
   contractAccountId: AccountIdZodSchema,
   functionName: ContractFunctionNameZodSchema,
   functionArgs: z.optional(z.unknown()),
   withStateAt: z.optional(BlockReferenceZodSchema),
   options: z.optional(
     z.object({
-      transportPolicy: PartialTransportPolicyZodSchema,
+      transportPolicy: z.optional(PartialTransportPolicyZodSchema),
       serializeArgs: z.optional(z.instanceof(Function)),
       deserializeResult: z.optional(z.instanceof(Function)),
       signal: z.optional(z.instanceof(AbortSignal)),
@@ -36,7 +36,7 @@ export const createSafeCallContractReadFunction: CreateSafeCallContractReadFunct
   wrapInternalError(
     'Client.CallContractReadFunction.Internal',
     async (args: InnerCallContractReadFunctionArgs): ReturnType<SafeCallContractReadFunction> => {
-      const validArgs = GetAccessKeyArgsSchema.safeParse(args);
+      const validArgs = CallContractReadFunctionArgsZodSchema.safeParse(args);
 
       if (!validArgs.success)
         return result.err(
