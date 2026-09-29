@@ -18,7 +18,10 @@ export const attachFunctionCallKey = async (
 
   const functionCallKeyPair = randomEd25519KeyPair();
 
-  const { accessKey, blockHash } = await client.getAccessKey({
+  const {
+    accessKey,
+    atMomentOf: { blockHash },
+  } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });

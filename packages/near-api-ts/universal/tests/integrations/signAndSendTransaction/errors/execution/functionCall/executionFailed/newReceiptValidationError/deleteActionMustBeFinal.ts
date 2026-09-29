@@ -29,7 +29,10 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
     ),
   );
 
-  const { accessKey, blockHash } = await client.getAccessKey({
+  const {
+    accessKey,
+    atMomentOf: { blockHash },
+  } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: DEFAULT_PUBLIC_KEY,
   });

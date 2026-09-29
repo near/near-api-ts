@@ -13,7 +13,10 @@ export const budgetNotEnough = (context: TestContext) => async () => {
   // reports the plain shortage instead of `TransactionCost.Overflow`.
   const amount = balance.total.yoctoNear + 10n ** 24n;
 
-  const { accessKey, blockHash } = await client.getAccessKey({
+  const {
+    accessKey,
+    atMomentOf: { blockHash },
+  } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });

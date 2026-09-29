@@ -20,7 +20,7 @@ export const expired = (context: TestContext) => async () => {
       delegatedAction: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
       nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
-      expiration: { blockHeight: aliceAccessKey.blockHeight - 1 },
+      expiration: { blockHeight: aliceAccessKey.atMomentOf.blockHeight - 1 },
     },
     signDataProvider: defaultKeyPair,
   });
@@ -36,7 +36,7 @@ export const expired = (context: TestContext) => async () => {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: getLastNonce(natAccessKey.accessKey) + 1,
-      blockHash: natAccessKey.blockHash,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       action: executeDelegation(signedDelegation),
       receiverAccountId: 'alice',
     },

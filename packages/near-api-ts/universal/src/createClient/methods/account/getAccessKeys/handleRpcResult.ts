@@ -1,7 +1,6 @@
 import { AccessKeyInfoViewSchema, AccessKeyListSchema } from '@near-js/jsonrpc-types';
 import * as z from 'zod/mini';
 import type { GetAccessKeysArgs } from '../../../../../types/client/methods/account/getAccessKeys';
-import type { Prettify } from '../../../../../types/utils';
 import { createNatError } from '../../../../_common/_common/_common/_common/natError';
 import { result, resultNatError } from '../../../../_common/_common/_common/result';
 import { PublicKeyRefZodSchema } from '../../../../_common/zodSchemas/publicKeyRef';
@@ -21,10 +20,6 @@ const RpcQueryAccessKeyListResultSchema = z.object({
   blockHeight: z.number(),
 });
 
-export type RpcQueryAccessKeyListResult = Prettify<
-  z.infer<typeof RpcQueryAccessKeyListResultSchema>
->;
-
 export const handleRpcResult = (rpcResponse: BaseRpcResponse, args: GetAccessKeysArgs) => {
   const rpcResult = RpcQueryAccessKeyListResultSchema.safeParse(rpcResponse.result);
 
@@ -36,17 +31,13 @@ export const handleRpcResult = (rpcResponse: BaseRpcResponse, args: GetAccessKey
       }),
     });
 
-  const { blockHash, blockHeight } = rpcResult.data;
+  const { keys, blockHash, blockHeight } = rpcResult.data;
 
-  const output = {
-    blockHash,
-    blockHeight,
+  return result.ok({
     accountId: args.accountId,
-    accessKeys: rpcResult.data.keys.map(({ publicKey, accessKey }) =>
+    accessKeys: keys.map(({ publicKey, accessKey }) =>
       transformAccessKey({ publicKeyRef: publicKey, accessKey }),
     ),
-    rawRpcResult: rpcResult.data,
-  };
-
-  return result.ok(output);
+    atMomentOf: { blockHash, blockHeight },
+  });
 };

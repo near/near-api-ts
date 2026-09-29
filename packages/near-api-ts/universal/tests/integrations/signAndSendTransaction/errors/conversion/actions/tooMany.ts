@@ -15,7 +15,10 @@ export const tooMany = (context: TestContext) => async () => {
   // cheapest action repeated once over the limit is enough — none of them is validated.
   const actionsCount = MAX_ACTIONS_PER_RECEIPT + 1;
 
-  const { accessKey, blockHash } = await client.getAccessKey({
+  const {
+    accessKey,
+    atMomentOf: { blockHash },
+  } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });

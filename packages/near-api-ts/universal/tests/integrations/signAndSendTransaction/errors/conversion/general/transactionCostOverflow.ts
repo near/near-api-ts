@@ -12,7 +12,10 @@ const MAX_YOCTO_NEAR = 2n ** 128n - 1n;
 export const transactionCostOverflow = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const { accessKey, blockHash } = await client.getAccessKey({
+  const {
+    accessKey,
+    atMomentOf: { blockHash },
+  } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });

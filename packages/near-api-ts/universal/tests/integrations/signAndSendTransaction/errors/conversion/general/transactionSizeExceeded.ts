@@ -41,7 +41,10 @@ const MAX_TRANSACTION_SIZE = 1_572_864;
 export const transactionSizeExceeded = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const { accessKey, blockHash } = await client.getAccessKey({
+  const {
+    accessKey,
+    atMomentOf: { blockHash },
+  } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });

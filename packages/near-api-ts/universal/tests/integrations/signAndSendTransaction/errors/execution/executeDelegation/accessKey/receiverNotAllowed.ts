@@ -33,7 +33,7 @@ export const receiverNotAllowed = (context: TestContext) => async () => {
       }),
       receiverAccountId: 'nat',
       nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
-      expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
+      expiration: { blockHeight: aliceAccessKey.atMomentOf.blockHeight + 100 },
     },
     signDataProvider: functionCallKeyPair,
   });

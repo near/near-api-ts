@@ -35,7 +35,10 @@ describe('SendTx', () => {
   });
 
   it('send tx', async () => {
-    const { accessKey, blockHash } = await client.getAccessKey({
+    const {
+      accessKey,
+      atMomentOf: { blockHash },
+    } = await client.getAccessKey({
       accountId: 'nat',
       publicKey: defaultKeyPair.publicKey,
     });

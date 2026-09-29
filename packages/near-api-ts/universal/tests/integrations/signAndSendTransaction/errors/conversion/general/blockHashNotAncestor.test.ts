@@ -87,7 +87,7 @@ describe.skip('signAndSendTransaction › BlockHash.NotAncestor conversion error
         signerAccountId: 'nat',
         signerPublicKey: defaultKeyPair.publicKey,
         nonce: getLastNonce(natKey.accessKey) + 1,
-        blockHash: natKey.blockHash,
+        blockHash: natKey.atMomentOf.blockHash,
         actions: [
           createAccount(),
           transfer({ amount: { near: '50' } }),
@@ -118,7 +118,7 @@ describe.skip('signAndSendTransaction › BlockHash.NotAncestor conversion error
               signerAccountId: 'nat',
               signerPublicKey: defaultKeyPair.publicKey,
               nonce: nonce++,
-              blockHash: natKey.blockHash,
+              blockHash: natKey.atMomentOf.blockHash,
               action: functionCall({
                 functionName: GAS_BURNER_FUNCTION_NAME,
                 gasLimit: { teraGas: '1000' },
@@ -150,7 +150,9 @@ describe.skip('signAndSendTransaction › BlockHash.NotAncestor conversion error
     for (let attempt = 0; attempt < PROBE_ATTEMPTS; attempt++) {
       if (attempt > 0 && attempt % TOP_UP_EVERY === 0) await keepBusy(TOP_UP_CALLS);
 
-      const { blockHash } = await client.getAccessKey({
+      const {
+        atMomentOf: { blockHash },
+      } = await client.getAccessKey({
         accountId: 'nat',
         publicKey: defaultKeyPair.publicKey,
       });

@@ -22,7 +22,7 @@ export const nonceInvalid = (context: TestContext) => async () => {
       delegatedAction: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
       nonce: delegationNonce,
-      expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
+      expiration: { blockHeight: aliceAccessKey.atMomentOf.blockHeight + 100 },
     },
     signDataProvider: defaultKeyPair,
   });
@@ -38,7 +38,7 @@ export const nonceInvalid = (context: TestContext) => async () => {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: getLastNonce(natAccessKey.accessKey) + 1,
-      blockHash: natAccessKey.blockHash,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       action: executeDelegation(signedDelegation),
       receiverAccountId: 'alice',
     },

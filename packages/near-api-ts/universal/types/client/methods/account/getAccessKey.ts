@@ -1,5 +1,4 @@
 import type { NatError } from '../../../../src/_common/_common/_common/_common/natError';
-import type { RpcQueryViewAccessKeyOkResult } from '../../../../src/createClient/methods/account/getAccessKey/handleRpcResult';
 import type { AccessKey } from '../../../_common/accessKey';
 import type {
   AccountId,
@@ -55,11 +54,12 @@ export type GetAccessKeyArgs = {
 };
 
 export type GetAccessKeyOutput = {
-  blockHash: BlockHash;
-  blockHeight: BlockHeight;
   accountId: AccountId;
   accessKey: AccessKey;
-  rawRpcResult: RpcQueryViewAccessKeyOkResult;
+  atMomentOf: {
+    blockHash: BlockHash;
+    blockHeight: BlockHeight;
+  };
 };
 
 type GetAccessKeyError =

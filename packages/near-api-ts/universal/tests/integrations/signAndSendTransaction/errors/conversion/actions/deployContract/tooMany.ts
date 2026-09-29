@@ -14,7 +14,10 @@ export const deployContractTooMany = (context: TestContext) => async () => {
 
   const deployContractActionsCount = MAX_DEPLOY_ACTIONS_PER_RECEIPT + 1;
 
-  const { accessKey, blockHash } = await client.getAccessKey({
+  const {
+    accessKey,
+    atMomentOf: { blockHash },
+  } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });

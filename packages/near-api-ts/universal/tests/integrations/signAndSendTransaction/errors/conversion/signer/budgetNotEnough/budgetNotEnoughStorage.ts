@@ -38,7 +38,7 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: getLastNonce(natAccessKey.accessKey) + 1,
-      blockHash: natAccessKey.blockHash,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       actions: [
         createAccount(),
         transfer({ amount: { near: '1' } }),
@@ -64,7 +64,7 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
       signerAccountId: ACCOUNT_ID,
       signerPublicKey: accountKeyPair.publicKey,
       nonce: getLastNonce(accountAccessKey.accessKey) + 1,
-      blockHash: accountAccessKey.blockHash,
+      blockHash: accountAccessKey.atMomentOf.blockHash,
       actions: Array.from({ length: EXTRA_KEYS_COUNT }, () =>
         addFunctionCallKey({
           publicKey: randomEd25519KeyPair().publicKey,
@@ -85,7 +85,9 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
   const { balance, storage } = await client.getAccountInfo({ accountId: ACCOUNT_ID });
   expect(storage.usedBytes).toBeGreaterThan(ZERO_BALANCE_ACCOUNT_STORAGE_LIMIT);
 
-  const { blockHash } = natAccessKey;
+  const {
+    atMomentOf: { blockHash },
+  } = natAccessKey;
   const drainAccountTransaction = await signTransaction({
     signDataProvider: accountKeyPair,
     transaction: {

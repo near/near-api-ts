@@ -24,7 +24,10 @@ describe('signAndSendTransaction › success', () => {
       registrarKeyPair: defaultKeyPair,
     });
 
-    const { accessKey, blockHash } = await client.getAccessKey({
+    const {
+      accessKey,
+      atMomentOf: { blockHash },
+    } = await client.getAccessKey({
       accountId: 'alice',
       publicKey: defaultKeyPair.publicKey,
     });

@@ -21,7 +21,7 @@ export const executorNotDelegator = (context: TestContext) => async () => {
       delegatedAction: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
       nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
-      expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
+      expiration: { blockHeight: aliceAccessKey.atMomentOf.blockHeight + 100 },
     },
     signDataProvider: defaultKeyPair,
   });
@@ -37,7 +37,7 @@ export const executorNotDelegator = (context: TestContext) => async () => {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: getLastNonce(natAccessKey.accessKey) + 1,
-      blockHash: natAccessKey.blockHash,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       action: executeDelegation(signedDelegation),
       // The delegation must be sent to the delegator ('alice'), not to the account
       // the delegated action targets.

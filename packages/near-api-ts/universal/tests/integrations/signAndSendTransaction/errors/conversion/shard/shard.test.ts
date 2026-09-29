@@ -73,7 +73,7 @@ describe.skip('signAndSendTransaction › Shard.Congested conversion error', () 
           signerAccountId: 'nat',
           signerPublicKey: defaultKeyPair.publicKey,
           nonce: getLastNonce(natKey.accessKey) + 1,
-          blockHash: natKey.blockHash,
+          blockHash: natKey.atMomentOf.blockHash,
           actions: [
             createAccount(),
             transfer({ amount: { near: '50' } }),
@@ -97,7 +97,7 @@ describe.skip('signAndSendTransaction › Shard.Congested conversion error', () 
             accountId: 'nat',
             publicKey: defaultKeyPair.publicKey,
           })
-        ).blockHash;
+        ).atMomentOf.blockHash;
 
       /**
        * The flood has to be fire-and-forget: `sendSignedTransaction` waits for the transaction

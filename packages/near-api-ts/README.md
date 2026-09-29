@@ -242,12 +242,13 @@ switch (info.contract.status) {
 ### Access keys
 
 ```ts
-const { accessKey, blockHash, blockHeight } = await client.getAccessKey({
+const { accessKey, atMomentOf } = await client.getAccessKey({
   accountId: 'example.testnet',
   publicKey: 'ed25519:...',
 });
 
 accessKey.publicKeyRef; // 'ed25519:...'
+atMomentOf; // { blockHash, blockHeight }
 
 const { permission, gasPayment, replayProtection } = accessKey;
 
@@ -416,7 +417,7 @@ import { keyPair, signTransaction, transfer, near } from 'near-api-ts';
 
 const signerKeyPair = keyPair('ed25519:your-private-key');
 
-const { accessKey, blockHash } = await client.getAccessKey({
+const { accessKey, atMomentOf } = await client.getAccessKey({
   accountId: 'example.testnet',
   publicKey: signerKeyPair.publicKey,
 });
@@ -431,7 +432,7 @@ const signed = await signTransaction({
     signerAccountId: 'example.testnet',
     signerPublicKey: signerKeyPair.publicKey,
     nonce: replayProtection.lastNonce + 1,
-    blockHash,
+    blockHash: atMomentOf.blockHash,
     receiverAccountId: 'receiver.testnet',
     action: transfer({ amount: near('1') }),
   },
@@ -509,7 +510,7 @@ delegation into its own transaction and covers the gas.
 import { signDelegation, executeDelegation, functionCall, teraGas } from 'near-api-ts';
 
 // --- delegator side ---
-const { accessKey, blockHeight } = await client.getAccessKey({
+const { accessKey, atMomentOf } = await client.getAccessKey({
   accountId: 'alice.testnet',
   publicKey: aliceKeyPair.publicKey,
 });
@@ -524,7 +525,7 @@ const signedDelegation = await signDelegation({
     delegatorPublicKey: aliceKeyPair.publicKey,
     receiverAccountId: 'contract.testnet',
     nonce: replayProtection.lastNonce + 1,
-    expiration: { blockHeight: blockHeight + 100 },
+    expiration: { blockHeight: atMomentOf.blockHeight + 100 },
     delegatedAction: functionCall({
       functionName: 'add_message',
       functionArgs: { text: 'Paid by somebody else' },

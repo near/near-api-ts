@@ -42,7 +42,7 @@ export const delegatedPinGlobalContract = (context: TestContext) => async () => 
       ],
       receiverAccountId: delegatorAccountId,
       nonce: getLastNonce(delegatorAccessKey.accessKey) + 1,
-      expiration: { blockHeight: delegatorAccessKey.blockHeight + 100 },
+      expiration: { blockHeight: delegatorAccessKey.atMomentOf.blockHeight + 100 },
     },
   });
 
@@ -59,7 +59,7 @@ export const delegatedPinGlobalContract = (context: TestContext) => async () => 
       signerAccountId: 'relay',
       signerPublicKey: relayKeyPair.publicKey,
       nonce: getLastNonce(relayAccessKey.accessKey) + 1,
-      blockHash: relayAccessKey.blockHash,
+      blockHash: relayAccessKey.atMomentOf.blockHash,
       action: executeDelegation(signedDelegation),
       receiverAccountId: delegatorAccountId,
     },

@@ -10,7 +10,10 @@ import type { TestContext } from './deleteAccount.test';
 export const largeState = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const { accessKey, blockHash } = await client.getAccessKey({
+  const {
+    accessKey,
+    atMomentOf: { blockHash },
+  } = await client.getAccessKey({
     accountId: 'alice',
     publicKey: DEFAULT_PUBLIC_KEY,
   });

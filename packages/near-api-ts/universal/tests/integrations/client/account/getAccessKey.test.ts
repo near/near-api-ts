@@ -34,6 +34,7 @@ describe('Get Account Access Key', () => {
         gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
         replayProtection: { scheme: 'SingleNonceSequence', lastNonce: 0 },
       },
+      atMomentOf: { blockHash: expect.any(String), blockHeight: expect.any(Number) },
     });
   });
 

@@ -59,7 +59,7 @@ describe('Execute delegation', () => {
         ],
         receiverAccountId: 'contract.alice',
         nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
-        expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
+        expiration: { blockHeight: aliceAccessKey.atMomentOf.blockHeight + 100 },
       },
       signDataProvider: aliceKp,
     });
@@ -79,7 +79,7 @@ describe('Execute delegation', () => {
         nonce: getLastNonce(relayAccessKey.accessKey) + 1,
         actions: [executeDelegation(signedDelegation), transfer({ amount: { near: '1' } })],
         receiverAccountId: 'alice',
-        blockHash: relayAccessKey.blockHash,
+        blockHash: relayAccessKey.atMomentOf.blockHash,
       },
       signDataProvider: relayKp,
     });

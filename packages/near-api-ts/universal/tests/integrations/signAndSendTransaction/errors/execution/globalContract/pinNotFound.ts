@@ -11,7 +11,10 @@ export const pinNotFound = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
   const globalContractWasmHash = '11111111111111111111111111111111';
 
-  const { accessKey, blockHash } = await client.getAccessKey({
+  const {
+    accessKey,
+    atMomentOf: { blockHash },
+  } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: DEFAULT_PUBLIC_KEY,
   });

@@ -13,7 +13,10 @@ const TOTAL_GAS_LIMIT = MAX_TOTAL_GAS_LIMIT.add({ teraGas: '1' });
 export const totalGasLimitExceeded = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const { accessKey, blockHash } = await client.getAccessKey({
+  const {
+    accessKey,
+    atMomentOf: { blockHash },
+  } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });

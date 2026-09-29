@@ -14,7 +14,10 @@ export const validatorKeyInvalid = (context: TestContext) => async () => {
   // that are not a torsion-free point, which `randomEd25519KeyPair` never produces.
   const secp256k1KeyPair = randomSecp256k1KeyPair();
 
-  const { accessKey, blockHash } = await client.getAccessKey({
+  const {
+    accessKey,
+    atMomentOf: { blockHash },
+  } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });

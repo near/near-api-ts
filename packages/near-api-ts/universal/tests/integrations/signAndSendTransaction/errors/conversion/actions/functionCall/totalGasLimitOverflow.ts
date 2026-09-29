@@ -11,7 +11,10 @@ const MAX_GAS = 2n ** 64n - 1n;
 export const totalGasLimitOverflow = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const { accessKey, blockHash } = await client.getAccessKey({
+  const {
+    accessKey,
+    atMomentOf: { blockHash },
+  } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });

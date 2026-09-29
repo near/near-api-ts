@@ -19,7 +19,10 @@ export const gasBudgetNotEnough = (context: TestContext) => async () => {
     allowedFunctions: 'AllNonPayable',
   });
 
-  const { accessKey, blockHash } = await client.getAccessKey({
+  const {
+    accessKey,
+    atMomentOf: { blockHash },
+  } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: functionCallKeyPair.publicKey,
   });

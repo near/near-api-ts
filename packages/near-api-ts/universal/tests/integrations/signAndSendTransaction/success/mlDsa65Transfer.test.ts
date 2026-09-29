@@ -36,7 +36,10 @@ describe('ml-dsa-65 Transaction success', () => {
   it('creates an ml-dsa-65 account and transfers signed by it', async () => {
     // Tx 1 — signed by `nat` (ed25519 default key): create `mldsa.nat`, fund it,
     // and register the ml-dsa-65 key as a full-access key.
-    const { accessKey, blockHash } = await client.getAccessKey({
+    const {
+      accessKey,
+      atMomentOf: { blockHash },
+    } = await client.getAccessKey({
       accountId: 'nat',
       publicKey: DEFAULT_PUBLIC_KEY,
     });
@@ -64,7 +67,10 @@ describe('ml-dsa-65 Transaction success', () => {
     });
 
     // Tx 2 — signed by the ml-dsa-65 key itself: proves on-chain sign/verify.
-    const { accessKey: mlDsa65AccessKey, blockHash: mlDsa65BlockHash } = await client.getAccessKey({
+    const {
+      accessKey: mlDsa65AccessKey,
+      atMomentOf: { blockHash: mlDsa65BlockHash },
+    } = await client.getAccessKey({
       accountId: newAccountId,
       publicKey: mlDsa65KeyPair.publicKey,
     });

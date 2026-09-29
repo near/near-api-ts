@@ -36,6 +36,10 @@ describe('Get Account Access Keys', () => {
       gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
       replayProtection: { scheme: 'SingleNonceSequence', lastNonce: 0 },
     });
+    expect(res.atMomentOf).toEqual({
+      blockHash: expect.any(String),
+      blockHeight: expect.any(Number),
+    });
   });
 
   // The node lists an ml-dsa-65 key by the hash of the key, and any other key by the key itself

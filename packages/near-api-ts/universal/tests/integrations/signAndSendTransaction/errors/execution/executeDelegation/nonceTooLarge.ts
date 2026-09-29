@@ -15,7 +15,8 @@ export const nonceTooLarge = (context: TestContext) => async () => {
     accountId: 'alice',
     publicKey: defaultKeyPair.publicKey,
   });
-  const delegationNonce = (aliceAccessKey.blockHeight + 100) * ACCESS_KEY_NONCE_RANGE_MULTIPLIER;
+  const delegationNonce =
+    (aliceAccessKey.atMomentOf.blockHeight + 100) * ACCESS_KEY_NONCE_RANGE_MULTIPLIER;
 
   const signedDelegation = await signDelegation({
     delegation: {
@@ -24,7 +25,7 @@ export const nonceTooLarge = (context: TestContext) => async () => {
       delegatedAction: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
       nonce: delegationNonce,
-      expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
+      expiration: { blockHeight: aliceAccessKey.atMomentOf.blockHeight + 100 },
     },
     signDataProvider: defaultKeyPair,
   });
@@ -40,7 +41,7 @@ export const nonceTooLarge = (context: TestContext) => async () => {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: getLastNonce(natAccessKey.accessKey) + 1,
-      blockHash: natAccessKey.blockHash,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       action: executeDelegation(signedDelegation),
       receiverAccountId: 'alice',
     },

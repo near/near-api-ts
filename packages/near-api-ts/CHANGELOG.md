@@ -155,6 +155,24 @@
   The tokens locked to pay for that storage stay in
   `balance.locked.storageDeposit`.
 
+- **Breaking:** `getAccessKey` and `getAccessKeys` report the block they read at
+  as `atMomentOf: { blockHash, blockHeight }` – the shape `getAccountInfo`
+  already uses – instead of top-level `blockHash` and `blockHeight`:  \
+  Previously:
+  ```ts
+  const { blockHash, blockHeight } = await client.getAccessKey({ accountId, publicKey });
+  ```
+
+  Now:
+  ```ts
+  const { atMomentOf } = await client.getAccessKey({ accountId, publicKey });
+  atMomentOf.blockHash;
+  atMomentOf.blockHeight;
+  ```
+
+  Both outputs also drop `rawRpcResult`: read the keys from `accessKey` /
+  `accessKeys` and the block from `atMomentOf`.
+
 - An account holding a gas key no longer breaks the library:
   `getAccountAccessKey` failed on such a key and `getAccountAccessKeys` on such an
   account, and with them `createMemorySigner`
@@ -174,7 +192,7 @@
   `Client.GetAccountInfo.StoragePricePerByte.NotLoaded`.
 
 - Bump `@near-js/jsonrpc-types` from `^1.8.0` to `^1.9.0`. The `rawRpcResult`
-  types of `getBlock`, `getAccessKey` and `getAccessKeys` come from it.
+  type of `getBlock` comes from it.
 
 ---
 

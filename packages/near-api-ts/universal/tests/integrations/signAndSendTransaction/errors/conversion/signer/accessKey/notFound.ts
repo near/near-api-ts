@@ -12,7 +12,9 @@ export const notFound = (context: TestContext) => async () => {
   // signature check and fails while looking up the access key.
   const detachedKeyPair = randomEd25519KeyPair();
 
-  const { blockHash } = await client.getAccessKey({
+  const {
+    atMomentOf: { blockHash },
+  } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });

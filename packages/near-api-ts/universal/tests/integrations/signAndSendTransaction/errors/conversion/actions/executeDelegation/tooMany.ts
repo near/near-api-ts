@@ -21,7 +21,7 @@ export const executeDelegationTooMany = (context: TestContext) => async () => {
       delegatedAction: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
       nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
-      expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
+      expiration: { blockHeight: aliceAccessKey.atMomentOf.blockHeight + 100 },
     },
     signDataProvider: defaultKp,
   });
@@ -37,7 +37,7 @@ export const executeDelegationTooMany = (context: TestContext) => async () => {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: getLastNonce(natAccessKey.accessKey) + 1,
-      blockHash: natAccessKey.blockHash,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       actions: [executeDelegation(signedDelegation), executeDelegation(signedDelegation)],
       receiverAccountId: 'nat',
     },

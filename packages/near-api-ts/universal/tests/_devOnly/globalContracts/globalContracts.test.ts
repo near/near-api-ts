@@ -35,7 +35,7 @@ describe('DeployContract Tests', () => {
         signerAccountId: 'nat',
         signerPublicKey: defaultKeyPair.publicKey,
         nonce: getLastNonce(natKey.accessKey) + 1,
-        blockHash: natKey.blockHash,
+        blockHash: natKey.atMomentOf.blockHash,
         actions: [
           // registerPinnableGlobalContract({
           //   wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
@@ -61,7 +61,7 @@ describe('DeployContract Tests', () => {
         signerAccountId: 'nat',
         signerPublicKey: defaultKeyPair.publicKey,
         nonce: getLastNonce(natKey.accessKey) + 2,
-        blockHash: natKey.blockHash,
+        blockHash: natKey.atMomentOf.blockHash,
         actions: [
           // pinGlobalContract({
           //   globalContractWasmHash: 'D6noZ3aDk5ZwPSqp2p8P85dpEg9xhfqKSCo5cniDLkHK',
