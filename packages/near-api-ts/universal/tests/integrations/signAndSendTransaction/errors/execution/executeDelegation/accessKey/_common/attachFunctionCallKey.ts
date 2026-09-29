@@ -1,10 +1,13 @@
-import { addFunctionCallKey, randomEd25519KeyPair } from '../../../../../../../../index';
+import { addAccessKey, randomEd25519KeyPair } from '../../../../../../../../index';
 import { signTransaction } from '../../../../../../../../src/transaction/signTransaction/signTransaction';
-import type { CreateAddFunctionCallKeyActionArgs } from '../../../../../../../../types/_common/transaction/actions/delegableActions/addKey';
+import type { FunctionCallPermission } from '../../../../../../../../types/_common/accessKey';
+import type { NearTokenArgs } from '../../../../../../../../types/_common/nearToken';
 import { getLastNonce } from '../../../../../../../utils/getLastNonce';
 import type { TestContext } from '../../executeDelegation.test';
 
-type AttachFunctionCallKeyArgs = Omit<CreateAddFunctionCallKeyActionArgs, 'publicKey'>;
+type AttachFunctionCallKeyArgs = Omit<FunctionCallPermission, 'kind'> & {
+  allowance: 'Unlimited' | NearTokenArgs;
+};
 
 /**
  * Attach a fresh function-call access key to `alice` and return its key pair, so a case can sign
@@ -13,7 +16,7 @@ type AttachFunctionCallKeyArgs = Omit<CreateAddFunctionCallKeyActionArgs, 'publi
  */
 export const attachFunctionCallKey = async (
   context: TestContext,
-  args: AttachFunctionCallKeyArgs,
+  { allowance, ...permission }: AttachFunctionCallKeyArgs,
 ) => {
   const { client, defaultKeyPair } = context;
 
@@ -34,7 +37,11 @@ export const attachFunctionCallKey = async (
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: getLastNonce(accessKey) + 1,
       blockHash,
-      action: addFunctionCallKey({ publicKey: functionCallKeyPair.publicKey, ...args }),
+      action: addAccessKey({
+        publicKey: functionCallKeyPair.publicKey,
+        permission: { kind: 'FunctionCall', ...permission },
+        gasPayment: { source: 'AccountBalance', allowance },
+      }),
       receiverAccountId: 'alice',
     },
   });

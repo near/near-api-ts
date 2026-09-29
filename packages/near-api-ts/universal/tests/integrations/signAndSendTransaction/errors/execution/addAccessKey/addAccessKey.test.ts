@@ -11,7 +11,7 @@ export type TestContext = {
   defaultKeyPair: KeyPair;
 };
 
-describe('signAndSendTransaction › AddKey.* errors', () => {
+describe('signAndSendTransaction › AddAccessKey.* errors', () => {
   const context = {
     defaultKeyPair: keyPair(DEFAULT_PRIVATE_KEY),
   } as TestContext;
@@ -22,5 +22,5 @@ describe('signAndSendTransaction › AddKey.* errors', () => {
     return () => sandbox.stop();
   });
 
-  it('fails with Action.AddKey.AlreadyExists', alreadyExists(context));
+  it('fails with Action.AddAccessKey.AlreadyExists', alreadyExists(context));
 });

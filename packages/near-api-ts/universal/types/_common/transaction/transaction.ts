@@ -2,10 +2,9 @@ import type { Prettify } from '../../utils';
 import type { AccountId, BlockHash, TransactionNonce } from '../common';
 import type { NearcorePublicKey, NearcoreSignature, PublicKey, Signature } from '../crypto';
 import type {
-  AddFullAccessKeyAction,
-  AddFunctionCallKeyAction,
-  NearcoreAddKeyAction,
-} from './actions/delegableActions/addKey';
+  AddAccessKeyAction,
+  NearcoreAddAccessKeyAction,
+} from './actions/delegableActions/addAccessKey';
 import type {
   CreateAccountAction,
   NearcoreCreateAccountAction,
@@ -52,8 +51,7 @@ import type {
 export type TransactionAction =
   | CreateAccountAction
   | TransferAction
-  | AddFullAccessKeyAction
-  | AddFunctionCallKeyAction
+  | AddAccessKeyAction
   | DeployContractAction
   | FunctionCallAction
   | StakeAction
@@ -93,7 +91,7 @@ export type SignedTransaction = {
 export type NearcoreTransactionAction =
   | NearcoreCreateAccountAction
   | NearcoreTransferAction
-  | NearcoreAddKeyAction
+  | NearcoreAddAccessKeyAction
   | NearcoreDeployContractAction
   | NearcoreFunctionCallAction
   | NearcoreStakeAction

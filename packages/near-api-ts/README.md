@@ -379,8 +379,7 @@ The signer signs only with keys paid from the account balance. A key with a bala
 | `transfer({ amount })` | sends NEAR |
 | `functionCall({ functionName, functionArgs?, gasLimit, attachedDeposit? })` | calls a contract method |
 | `deployContract({ wasmU8 \| wasmBase64 })` | deploys wasm to the receiver |
-| `addFullAccessKey({ publicKey })` | adds a full-access key |
-| `addFunctionCallKey({ publicKey, contractAccountId, gasBudget, allowedFunctions })` | adds a restricted key |
+| `addAccessKey({ publicKey, permission, gasPayment, replayProtection? })` | adds an access key — see below |
 | `deleteKey({ publicKey })` | removes an access key |
 | `deleteAccount({ beneficiaryAccountId })` | deletes the account, sends the remainder to the beneficiary |
 | `stake({ amount, validatorPublicKey })` | submits a staking proposal |
@@ -389,6 +388,34 @@ The signer signs only with keys paid from the account balance. A key with a bala
 | `registerLinkableGlobalContract({ wasmU8 \| wasmBase64 })` | publishes replaceable global code |
 | `pinGlobalContract({ globalContractWasmHash })` | adopts one exact global wasm |
 | `linkGlobalContract({ globalContractAccountId })` | follows a registrar's current code |
+
+`addAccessKey` describes a key the way `getAccessKey` reports it — what it may do, who pays for
+its gas and, for a key with a balance of its own, how many nonce sequences it keeps:
+
+```ts
+// Paid from the account balance
+addAccessKey({
+  publicKey,
+  permission: { kind: 'FullAccess' },
+  gasPayment: { source: 'AccountBalance' },
+});
+addAccessKey({
+  publicKey,
+  permission: { kind: 'FunctionCall', allowedContract: 'app.near', allowedFunctions: ['vote'] },
+  gasPayment: { source: 'AccountBalance', allowance: near('0.25') }, // or 'Unlimited'
+});
+
+// Paid from the key's own balance (a gas key), either permission
+addAccessKey({
+  publicKey,
+  permission: { kind: 'FullAccess' },
+  gasPayment: { source: 'KeyBalance' },
+  replayProtection: { totalSequences: 16 }, // 1..constants.NonceSequenceSet.MaxTotalSequences (1024)
+});
+```
+
+A gas key is added with an empty balance — the protocol accepts no other — and cannot take an
+`allowance`.
 
 Every creator validates its arguments and has a `safe*` twin (`safeTransfer`,
 `safeFunctionCall`, …) returning a `Result` — except `createAccount`, which takes no

@@ -53,13 +53,13 @@ interface ActionValidationErrorRegistry {
     maximumFunctionNameLength: number;
   };
   'Action.FunctionCall.ZeroGasLimit': null;
-  'Action.AddKey.AllowedFunctions.FunctionName.TooLong': {
+  'Action.AddAccessKey.AllowedFunctions.FunctionName.TooLong': {
     functionNameLength: number;
     maximumFunctionNameLength: number;
   };
   // Not just the bytes of the names: nearcore counts one terminator byte per name on top, so
   // totalSizeBytes is the sum of their lengths plus their count.
-  'Action.AddKey.AllowedFunctions.TotalSize.Exceeded': {
+  'Action.AddAccessKey.AllowedFunctions.TotalSize.Exceeded': {
     totalSizeBytes: number;
     maximumTotalSizeBytes: number;
   };

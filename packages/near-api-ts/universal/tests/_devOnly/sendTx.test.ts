@@ -1,7 +1,7 @@
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
-  addFullAccessKey,
+  addAccessKey,
   createClient,
   createMemoryKeyService,
   createMemorySignerFactory,

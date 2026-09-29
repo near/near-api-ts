@@ -1,7 +1,7 @@
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import {
-  addFullAccessKey,
+  addAccessKey,
   type Client,
   createAccount,
   createMemoryKeyService,
@@ -55,7 +55,11 @@ describe('ml-dsa-65 Transaction success', () => {
         actions: [
           createAccount(),
           transfer({ amount: { near: '10' } }),
-          addFullAccessKey({ publicKey: mlDsa65KeyPair.publicKey }),
+          addAccessKey({
+            publicKey: mlDsa65KeyPair.publicKey,
+            permission: { kind: 'FullAccess' },
+            gasPayment: { source: 'AccountBalance' },
+          }),
         ],
       },
     });

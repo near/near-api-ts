@@ -1,7 +1,6 @@
 import { expect } from 'vitest';
 import {
-  addFullAccessKey,
-  addFunctionCallKey,
+  addAccessKey,
   createAccount,
   randomEd25519KeyPair,
   transfer,
@@ -42,7 +41,11 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
       actions: [
         createAccount(),
         transfer({ amount: { near: '1' } }),
-        addFullAccessKey({ publicKey: accountKeyPair.publicKey }),
+        addAccessKey({
+          publicKey: accountKeyPair.publicKey,
+          permission: { kind: 'FullAccess' },
+          gasPayment: { source: 'AccountBalance' },
+        }),
       ],
       receiverAccountId: ACCOUNT_ID,
     },
@@ -66,11 +69,14 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
       nonce: getLastNonce(accountAccessKey.accessKey) + 1,
       blockHash: accountAccessKey.atMomentOf.blockHash,
       actions: Array.from({ length: EXTRA_KEYS_COUNT }, () =>
-        addFunctionCallKey({
+        addAccessKey({
           publicKey: randomEd25519KeyPair().publicKey,
-          contractAccountId: 'a'.repeat(64),
-          gasBudget: 'Unlimited',
-          allowedFunctions: 'AllNonPayable',
+          permission: {
+            kind: 'FunctionCall',
+            allowedContract: 'a'.repeat(64),
+            allowedFunctions: 'AllNonPayable',
+          },
+          gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
         }),
       ),
       receiverAccountId: ACCOUNT_ID,

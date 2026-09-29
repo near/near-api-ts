@@ -5,7 +5,7 @@ import { BlockHeightZodSchema } from '../../_common/zodSchemas/blockHeight';
 import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
 import { SignatureZodSchema } from '../../_common/zodSchemas/signature';
 import { TransactionNonceZodSchema } from '../../_common/zodSchemas/transactionNonce';
-import { AddKeyActionZodSchema } from './_common/zodSchemas/addKey';
+import { AddAccessKeyActionZodSchema } from './_common/zodSchemas/addAccessKey';
 import { CreateAccountActionZodSchema } from './_common/zodSchemas/createAccount';
 import { DeleteAccountActionZodSchema } from './_common/zodSchemas/deleteAccount';
 import { DeleteKeyActionZodSchema } from './_common/zodSchemas/deleteKey';
@@ -21,7 +21,7 @@ import { TransferActionZodSchema } from './_common/zodSchemas/transfer';
 const DelegableActionZodSchema = z.union([
   CreateAccountActionZodSchema,
   TransferActionZodSchema,
-  AddKeyActionZodSchema,
+  AddAccessKeyActionZodSchema,
   DeployContractActionZodSchema,
   FunctionCallActionZodSchema,
   StakeActionZodSchema,

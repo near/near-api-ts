@@ -4,7 +4,7 @@ import type {
   NearcoreTransactionAction,
 } from '../../../types/_common/transaction/transaction';
 import { toNearcorePublicKey } from '../_common/_common/_common/toNearcorePublicKey';
-import { toNearcoreAddKeyAction } from '../_common/_common/toNearcore/toNearcoreAddKey';
+import { toNearcoreAddAccessKeyAction } from '../_common/_common/toNearcore/toNearcoreAddAccessKey';
 import { toNearcoreCreateAccountAction } from '../_common/_common/toNearcore/toNearcoreCreateAccount';
 import { toNearcoreDeleteAccountAction } from '../_common/_common/toNearcore/toNearcoreDeleteAccount';
 import { toNearcoreDeleteKeyAction } from '../_common/_common/toNearcore/toNearcoreDeleteKey';
@@ -39,8 +39,8 @@ const toNearcoreTransactionAction = (action: InnerTransactionAction): NearcoreTr
   switch (action.actionType) {
     case 'CreateAccount':
       return toNearcoreCreateAccountAction();
-    case 'AddKey':
-      return toNearcoreAddKeyAction(action);
+    case 'AddAccessKey':
+      return toNearcoreAddAccessKeyAction(action);
     case 'Transfer':
       return toNearcoreTransferAction(action);
     case 'DeployContract':

@@ -1,5 +1,4 @@
 import { base58 } from '@scure/base';
-import type { NearcoreAddKeyAction } from '../../../../../../types/_common/transaction/actions/delegableActions/addKey';
 import type { NearcoreFunctionCallAction } from '../../../../../../types/_common/transaction/actions/delegableActions/functionCall';
 import type {
   DelegableAction,
@@ -8,43 +7,9 @@ import type {
   SignedDelegation,
 } from '../../../../../../types/_common/transaction/actions/executeDelegation/delegation';
 import { constants } from '../../../../../_common/_common/_common/constants';
-import { fromNearcorePublicKey } from './fromNearcorePublicKey';
-
-const fromNearcoreFunctionCallAction = ({
-  methodName,
-  args,
-  gas,
-  deposit,
-}: NearcoreFunctionCallAction['functionCall']): DelegableAction => ({
-  actionType: 'FunctionCall',
-  functionName: methodName,
-  functionArgs: Uint8Array.from(args),
-  gasLimit: { gas },
-  attachedDeposit: deposit > 0n ? { yoctoNear: deposit } : undefined,
-});
-
-const fromNearcoreAddKeyAction = ({
-  publicKey,
-  accessKey,
-}: NearcoreAddKeyAction['addKey']): DelegableAction => {
-  if ('fullAccess' in accessKey.permission)
-    return {
-      actionType: 'AddKey',
-      accessType: 'FullAccess',
-      publicKey: fromNearcorePublicKey(publicKey),
-    };
-
-  const { receiverId, allowance, methodNames } = accessKey.permission.functionCall;
-
-  return {
-    actionType: 'AddKey',
-    accessType: 'FunctionCall',
-    publicKey: fromNearcorePublicKey(publicKey),
-    contractAccountId: receiverId,
-    gasBudget: allowance === null ? 'Unlimited' : { yoctoNear: allowance },
-    allowedFunctions: methodNames.length > 0 ? methodNames : 'AllNonPayable',
-  };
-};
+import { fromNearcorePublicKey } from './_common/fromNearcorePublicKey';
+import { fromNearcoreAddAccessKeyAction } from './fromNearcoreAddAccessKeyAction';
+import { fromNearcoreFunctionCallAction } from './fromNearcoreFunctionCallAction';
 
 // Borsh deserializes `u8` arrays into plain number arrays, not Uint8Array.
 const fromNearcoreDelegableAction = (action: NearcoreDelegableAction): DelegableAction => {
@@ -65,7 +30,7 @@ const fromNearcoreDelegableAction = (action: NearcoreDelegableAction): Delegable
       validatorPublicKey: fromNearcorePublicKey(action.stake.publicKey),
     };
 
-  if ('addKey' in action) return fromNearcoreAddKeyAction(action.addKey);
+  if ('addKey' in action) return fromNearcoreAddAccessKeyAction(action.addKey);
 
   if ('deleteKey' in action)
     return {

@@ -1,11 +1,11 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
-import { addFunctionCallKey } from '../../../../../../index';
+import { addAccessKey } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import { getLastNonce } from '../../../../../utils/getLastNonce';
-import type { TestContext } from './addKey.test';
+import type { TestContext } from './addAccessKey.test';
 
 export const alreadyExists = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
@@ -25,11 +25,14 @@ export const alreadyExists = (context: TestContext) => async () => {
       signerPublicKey: DEFAULT_PUBLIC_KEY,
       nonce: getLastNonce(accessKey) + 1,
       blockHash,
-      action: addFunctionCallKey({
+      action: addAccessKey({
         publicKey: DEFAULT_PUBLIC_KEY,
-        contractAccountId: 'alice',
-        gasBudget: { near: '2.25' },
-        allowedFunctions: 'AllNonPayable',
+        permission: {
+          kind: 'FunctionCall',
+          allowedContract: 'alice',
+          allowedFunctions: 'AllNonPayable',
+        },
+        gasPayment: { source: 'AccountBalance', allowance: { near: '2.25' } },
       }),
       receiverAccountId: 'nat',
     },
@@ -40,13 +43,13 @@ export const alreadyExists = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.AddKey.AlreadyExists');
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.AddAccessKey.AlreadyExists');
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Action.AddKey.AlreadyExists');
+  assertTxResultExecutionErrKind(txResult, 'Action.AddAccessKey.AlreadyExists');
   expect(txResult.error.context).toStrictEqual({
     accountId: 'nat',
     publicKey: DEFAULT_PUBLIC_KEY,

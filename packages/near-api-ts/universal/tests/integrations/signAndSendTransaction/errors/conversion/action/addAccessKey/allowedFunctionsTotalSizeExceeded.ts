@@ -1,5 +1,5 @@
 import { expect } from 'vitest';
-import { addFunctionCallKey, randomEd25519KeyPair } from '../../../../../../../index';
+import { addAccessKey, randomEd25519KeyPair } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
@@ -36,11 +36,14 @@ export const allowedFunctionsTotalSizeExceeded = (context: TestContext) => async
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: getLastNonce(accessKey) + 1,
       blockHash,
-      action: addFunctionCallKey({
+      action: addAccessKey({
         publicKey: randomEd25519KeyPair().publicKey,
-        contractAccountId: 'alice',
-        gasBudget: 'Unlimited',
-        allowedFunctions,
+        permission: {
+          kind: 'FunctionCall',
+          allowedContract: 'alice',
+          allowedFunctions: allowedFunctions,
+        },
+        gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
       }),
       receiverAccountId: 'nat',
     },
@@ -50,7 +53,7 @@ export const allowedFunctionsTotalSizeExceeded = (context: TestContext) => async
 
   assertNatErrKind(
     tx,
-    'Client.SendSignedTransaction.Rpc.Action.AddKey.AllowedFunctions.TotalSize.Exceeded',
+    'Client.SendSignedTransaction.Rpc.Action.AddAccessKey.AllowedFunctions.TotalSize.Exceeded',
   );
   expect(tx.error.context.info).toStrictEqual({
     // The node counts a terminating byte after every name.

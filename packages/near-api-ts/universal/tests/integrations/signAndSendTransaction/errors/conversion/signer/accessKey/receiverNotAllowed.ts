@@ -11,8 +11,8 @@ export const receiverNotAllowed = (context: TestContext) => async () => {
 
   // The key may only call `alice`, but the transaction is addressed to `bob`.
   const functionCallKeyPair = await attachFunctionCallKey(context, {
-    contractAccountId: 'alice',
-    gasBudget: 'Unlimited',
+    allowedContract: 'alice',
+    allowance: 'Unlimited',
     allowedFunctions: 'AllNonPayable',
   });
 

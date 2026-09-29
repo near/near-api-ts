@@ -13,8 +13,8 @@ export const receiverNotAllowed = (context: TestContext) => async () => {
   // The key may only call `bob`, but the delegated call is addressed to `nat`. The receiver the
   // key restricts is the delegation receiver, not the relayer transaction's one.
   const functionCallKeyPair = await attachFunctionCallKey(context, {
-    contractAccountId: 'bob',
-    gasBudget: 'Unlimited',
+    allowedContract: 'bob',
+    allowance: 'Unlimited',
     allowedFunctions: 'AllNonPayable',
   });
 

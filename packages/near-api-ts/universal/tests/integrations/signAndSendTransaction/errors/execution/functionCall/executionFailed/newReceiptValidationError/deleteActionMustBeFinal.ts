@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
 import {
-  addFullAccessKey,
+  addAccessKey,
   deployContract,
   functionCall,
   signTransaction,
@@ -47,7 +47,11 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
       actions: [
         createAccount(),
         transfer({ amount: { near: '10' } }),
-        addFullAccessKey(defaultKeyPair),
+        addAccessKey({
+          publicKey: defaultKeyPair.publicKey,
+          permission: { kind: 'FullAccess' },
+          gasPayment: { source: 'AccountBalance' },
+        }),
         deployContract({ wasmU8 }),
       ],
       receiverAccountId: 'contract.nat',

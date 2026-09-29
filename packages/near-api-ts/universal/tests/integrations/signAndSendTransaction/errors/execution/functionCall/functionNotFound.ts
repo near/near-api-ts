@@ -1,6 +1,6 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import {
-  addFullAccessKey,
+  addAccessKey,
   createAccount,
   deployContract,
   functionCall,
@@ -34,7 +34,11 @@ export const functionNotFound = (context: TestContext) => async () => {
       actions: [
         createAccount(),
         transfer({ amount: { near: '10' } }),
-        addFullAccessKey(defaultKeyPair),
+        addAccessKey({
+          publicKey: defaultKeyPair.publicKey,
+          permission: { kind: 'FullAccess' },
+          gasPayment: { source: 'AccountBalance' },
+        }),
         deployContract({ wasmU8: await getFileBytes('./wasm/write-get-record.wasm') }),
         functionCall({
           functionName: 'not_exist',

@@ -72,7 +72,7 @@ export const getExecutionFailureError = (actionError: ActionError): ExecutionFai
     // AddKey
     if ('AddKeyAlreadyExists' in kind)
       return {
-        kind: 'Action.AddKey.AlreadyExists',
+        kind: 'Action.AddAccessKey.AlreadyExists',
         context: {
           accountId: kind.AddKeyAlreadyExists.accountId,
           publicKey: kind.AddKeyAlreadyExists.publicKey as PublicKey, // TODO validate by zod

@@ -3,7 +3,7 @@ import { AccountIdZodSchema } from '../../_common/zodSchemas/accountId';
 import { CryptoHashZodSchema } from '../../_common/zodSchemas/cryptoHash';
 import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
 import { TransactionNonceZodSchema } from '../../_common/zodSchemas/transactionNonce';
-import { AddKeyActionZodSchema } from '../_common/_common/zodSchemas/addKey';
+import { AddAccessKeyActionZodSchema } from '../_common/_common/zodSchemas/addAccessKey';
 import { CreateAccountActionZodSchema } from '../_common/_common/zodSchemas/createAccount';
 import { DeleteAccountActionZodSchema } from '../_common/_common/zodSchemas/deleteAccount';
 import { DeleteKeyActionZodSchema } from '../_common/_common/zodSchemas/deleteKey';
@@ -27,7 +27,7 @@ export type InnerExecuteDelegationAction = z.infer<typeof ExecuteDelegationActio
 const TransactionActionZodSchema = z.union([
   CreateAccountActionZodSchema,
   TransferActionZodSchema,
-  AddKeyActionZodSchema,
+  AddAccessKeyActionZodSchema,
   DeployContractActionZodSchema,
   FunctionCallActionZodSchema,
   StakeActionZodSchema,

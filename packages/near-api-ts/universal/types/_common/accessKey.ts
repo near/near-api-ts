@@ -41,11 +41,11 @@ export type GasBudget = 'Unlimited' | NearToken;
  */
 export type AllowedFunctions = 'AllNonPayable' | ContractFunctionName[];
 
-type FullAccessPermission = {
+export type FullAccessPermission = {
   kind: 'FullAccess';
 };
 
-type FunctionCallPermission = {
+export type FunctionCallPermission = {
   kind: 'FunctionCall';
   allowedContract: AccountId;
   allowedFunctions: AllowedFunctions;

@@ -1,7 +1,7 @@
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
-  addFullAccessKey,
+  addAccessKey,
   type Client,
   createAccount,
   createMemoryKeyService,
@@ -51,7 +51,11 @@ describe('safeSendSignedTransaction › success', () => {
         actions: [
           createAccount(),
           transfer({ amount: { near: '100' } }),
-          addFullAccessKey({ publicKey: DEFAULT_PUBLIC_KEY }),
+          addAccessKey({
+            publicKey: DEFAULT_PUBLIC_KEY,
+            permission: { kind: 'FullAccess' },
+            gasPayment: { source: 'AccountBalance' },
+          }),
           deployContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
           }),

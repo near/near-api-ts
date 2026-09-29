@@ -11,8 +11,8 @@ export const functionNotAllowed = (context: TestContext) => async () => {
 
   // The key is restricted to `allowed_function`, but another function is called.
   const functionCallKeyPair = await attachFunctionCallKey(context, {
-    contractAccountId: 'alice',
-    gasBudget: 'Unlimited',
+    allowedContract: 'alice',
+    allowance: 'Unlimited',
     allowedFunctions: ['allowed_function'],
   });
 

@@ -1,7 +1,7 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it } from 'vitest';
 import {
-  addFullAccessKey,
+  addAccessKey,
   type Client,
   createAccount,
   createMemoryKeyService,
@@ -40,10 +40,20 @@ describe('executeTransaction › Signer.Budget.NotEnough', () => {
       intent: {
         actions: [
           createAccount(),
-          addFullAccessKey(keyPair1),
+          addAccessKey({
+            publicKey: keyPair1.publicKey,
+            permission: { kind: 'FullAccess' },
+            gasPayment: { source: 'AccountBalance' },
+          }),
           ...Array(9)
             .fill(0)
-            .map(() => addFullAccessKey(randomEd25519KeyPair())),
+            .map(() =>
+              addAccessKey({
+                publicKey: randomEd25519KeyPair().publicKey,
+                permission: { kind: 'FullAccess' },
+                gasPayment: { source: 'AccountBalance' },
+              }),
+            ),
           transfer({ amount: { near: '1' } }),
         ],
         receiverAccountId: 'abc.nat',

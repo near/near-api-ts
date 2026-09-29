@@ -28,6 +28,13 @@
   - `constants.BinaryLengths.<Curve>.PublicKeyRef` – the decoded length of a
     ref: 32 bytes for ed25519 and ml-dsa-65, 64 for secp256k1.
 
+- **Gas keys can be added** – `addAccessKey` with `gasPayment: { source: 'KeyBalance' }`
+  and `replayProtection: { totalSequences }` (1..1024) adds a key that pays for gas
+  from a balance of its own and signs up to that many transactions in parallel,
+  with either permission. The key starts with an empty balance – the protocol
+  accepts no other – and takes no `allowance`. The upper limit is
+  `constants.NonceSequenceSet.MaxTotalSequences`.
+
 ### Changed
 
 - **Breaking:** the access key API drops the `Account` prefix:
@@ -105,6 +112,58 @@
   named in `keyPool.allowedAccessKeys` – so an account that could sign only
   with such a key could not sign at all, and `verifyMessage` returned `false`
   for a valid ml-dsa-65 signature.
+
+- **Breaking:** `addFullAccessKey` / `safeAddFullAccessKey` and
+  `addFunctionCallKey` / `safeAddFunctionCallKey` are replaced by one creator,
+  `addAccessKey` / `safeAddAccessKey`, whose arguments follow the `AccessKey`
+  shape:  \
+  Previously:
+  ```ts
+  addFullAccessKey({ publicKey });
+  addFunctionCallKey({ publicKey, contractAccountId, gasBudget, allowedFunctions });
+  ```
+
+  Now:
+  ```ts
+  addAccessKey({
+    publicKey,
+    permission: { kind: 'FullAccess' },
+    gasPayment: { source: 'AccountBalance' },
+  });
+  addAccessKey({
+    publicKey,
+    permission: { kind: 'FunctionCall', allowedContract, allowedFunctions }, // was contractAccountId
+    gasPayment: { source: 'AccountBalance', allowance }, // was gasBudget
+  });
+  ```
+
+  A field that belongs to another kind of key – an `allowance` on a full access
+  key, `replayProtection` on a key paid from the account balance – is rejected
+  rather than ignored.
+
+  - The action they return, and the one a hand-written `actions` entry must
+    have, is `{ actionType: 'AddAccessKey', ...args }` – `actionType: 'AddKey'`
+    is renamed and `accessType` is gone. The types `AddFullAccessKeyAction` and
+    `AddFunctionCallKeyAction` are replaced by `AddAccessKeyAction`.
+  - The action summary in `processingSteps` (also inside an
+    `ExecuteDelegation`) has the same shape – `actionType: 'AddAccessKey'` – with
+    the allowance as a `NearToken`.
+    It covers gas keys too: `getTransactionResult` for a transaction that adds
+    one – built by another library – used to fail with
+    `Client.GetTransactionResult.Internal`.
+  - Error kinds `CreateAction.AddFullAccessKey.*` and
+    `CreateAction.AddFunctionCallKey.*` → `CreateAction.AddAccessKey.Args.InvalidSchema`
+    and `CreateAction.AddAccessKey.Internal`.
+  - The node's errors about the action follow its new name:
+    - `Action.AddKey.AllowedFunctions.FunctionName.TooLong` →
+      `Action.AddAccessKey.AllowedFunctions.FunctionName.TooLong`
+    - `Action.AddKey.AllowedFunctions.TotalSize.Exceeded` →
+      `Action.AddAccessKey.AllowedFunctions.TotalSize.Exceeded`
+    - `Action.AddKey.AlreadyExists` → `Action.AddAccessKey.AlreadyExists`
+
+    The renames propagate to every kind built on top of them, e.g.
+    `Client.SendSignedTransaction.Rpc.Action.AddKey.AlreadyExists` →
+    `Client.SendSignedTransaction.Rpc.Action.AddAccessKey.AlreadyExists`.
 
 - **Breaking:** a custom `keyService` passed to `createMemorySigner` or
   `createMemorySignerFactory` must implement `findPublicKey` and

@@ -1,7 +1,7 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it } from 'vitest';
 import {
-  addFullAccessKey,
+  addAccessKey,
   type Client,
   createAccount,
   createMemoryKeyService,
@@ -47,7 +47,14 @@ describe('Get Account Balance', () => {
 
     await nat.executeTransaction({
       intent: {
-        actions: [createAccount(), addFullAccessKey(randomEd25519KeyPair())],
+        actions: [
+          createAccount(),
+          addAccessKey({
+            publicKey: randomEd25519KeyPair().publicKey,
+            permission: { kind: 'FullAccess' },
+            gasPayment: { source: 'AccountBalance' },
+          }),
+        ],
         receiverAccountId: 'abc1.nat',
       },
     });
@@ -65,7 +72,15 @@ describe('Get Account Balance', () => {
     // 1. Create a new account
     await nat.executeTransaction({
       intent: {
-        actions: [createAccount(), addFullAccessKey(keyPair1), transfer({ amount: { near: '1' } })],
+        actions: [
+          createAccount(),
+          addAccessKey({
+            publicKey: keyPair1.publicKey,
+            permission: { kind: 'FullAccess' },
+            gasPayment: { source: 'AccountBalance' },
+          }),
+          transfer({ amount: { near: '1' } }),
+        ],
         receiverAccountId: 'abc2.nat',
       },
     });
@@ -105,10 +120,20 @@ describe('Get Account Balance', () => {
       intent: {
         actions: [
           createAccount(),
-          addFullAccessKey(keyPair1),
+          addAccessKey({
+            publicKey: keyPair1.publicKey,
+            permission: { kind: 'FullAccess' },
+            gasPayment: { source: 'AccountBalance' },
+          }),
           ...Array(9)
             .fill(0)
-            .map(() => addFullAccessKey(randomEd25519KeyPair())),
+            .map(() =>
+              addAccessKey({
+                publicKey: randomEd25519KeyPair().publicKey,
+                permission: { kind: 'FullAccess' },
+                gasPayment: { source: 'AccountBalance' },
+              }),
+            ),
           transfer({ amount: { near: '2000' } }),
         ],
         receiverAccountId: 'abc3.nat',
@@ -172,8 +197,18 @@ describe('Get Account Balance', () => {
       intent: {
         actions: [
           createAccount(),
-          addFullAccessKey(keyPair1),
-          ...keyPairs.map((keyPair) => addFullAccessKey(keyPair)),
+          addAccessKey({
+            publicKey: keyPair1.publicKey,
+            permission: { kind: 'FullAccess' },
+            gasPayment: { source: 'AccountBalance' },
+          }),
+          ...keyPairs.map((keyPair) =>
+            addAccessKey({
+              publicKey: keyPair.publicKey,
+              permission: { kind: 'FullAccess' },
+              gasPayment: { source: 'AccountBalance' },
+            }),
+          ),
           transfer({ amount: { near: '1' } }),
         ],
         receiverAccountId: 'abc4.nat',

@@ -4,9 +4,9 @@ import { type Client, keyPair } from '../../../../../../index';
 import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
-import { allowedFunctionsFunctionNameTooLong } from './addKey/allowedFunctionsFunctionNameTooLong';
-import { allowedFunctionsTotalSizeExceeded } from './addKey/allowedFunctionsTotalSizeExceeded';
-import { invalidAccountId } from './addKey/invalidAccountId';
+import { allowedFunctionsFunctionNameTooLong } from './addAccessKey/allowedFunctionsFunctionNameTooLong';
+import { allowedFunctionsTotalSizeExceeded } from './addAccessKey/allowedFunctionsTotalSizeExceeded';
+import { invalidAccountId } from './addAccessKey/invalidAccountId';
 import { notFinal } from './deleteAccount/notFinal';
 import { contractWasmTooLarge } from './deployContract/contractWasmTooLarge';
 import { functionArgsTooLarge } from './functionCall/functionArgsTooLarge';
@@ -75,12 +75,12 @@ describe('signAndSendTransaction › Action.* conversion errors', () => {
   );
 
   it(
-    'fails with Action.AddKey.AllowedFunctions.FunctionName.TooLong when one allowed function name is over the limit',
+    'fails with Action.AddAccessKey.AllowedFunctions.FunctionName.TooLong when one allowed function name is over the limit',
     allowedFunctionsFunctionNameTooLong(context),
   );
 
   it(
-    'fails with Action.AddKey.AllowedFunctions.TotalSize.Exceeded when the allowed functions are too long together',
+    'fails with Action.AddAccessKey.AllowedFunctions.TotalSize.Exceeded when the allowed functions are too long together',
     allowedFunctionsTotalSizeExceeded(context),
   );
 

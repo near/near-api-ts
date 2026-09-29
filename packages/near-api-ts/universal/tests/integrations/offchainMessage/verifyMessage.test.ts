@@ -3,7 +3,7 @@ import { serialize } from 'borsh';
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it } from 'vitest';
 import {
-  addFullAccessKey,
+  addAccessKey,
   type Client,
   createMemoryKeyService,
   createMemorySigner,
@@ -74,7 +74,11 @@ describe('verifyMessage', () => {
 
     await signer.executeTransaction({
       intent: {
-        action: addFullAccessKey({ publicKey: mlDsa65KeyPair.publicKey }),
+        action: addAccessKey({
+          publicKey: mlDsa65KeyPair.publicKey,
+          permission: { kind: 'FullAccess' },
+          gasPayment: { source: 'AccountBalance' },
+        }),
         receiverAccountId: 'nat',
       },
     });

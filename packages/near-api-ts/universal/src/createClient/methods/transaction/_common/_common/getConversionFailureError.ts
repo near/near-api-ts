@@ -168,7 +168,7 @@ export const getConversionFailureError = (
           });
 
         if ('AddKeyMethodNameLengthExceeded' in actionsError)
-          return formErrorObject('Action.AddKey.AllowedFunctions.FunctionName.TooLong', {
+          return formErrorObject('Action.AddAccessKey.AllowedFunctions.FunctionName.TooLong', {
             functionNameLength: actionsError.AddKeyMethodNameLengthExceeded.length,
             maximumFunctionNameLength: actionsError.AddKeyMethodNameLengthExceeded.limit,
           });
@@ -176,7 +176,7 @@ export const getConversionFailureError = (
         // `totalSizeBytes` isn't the bytes of the names alone: the node adds a terminating byte
         // after each one before it compares the total against the limit.
         if ('AddKeyMethodNamesNumberOfBytesExceeded' in actionsError)
-          return formErrorObject('Action.AddKey.AllowedFunctions.TotalSize.Exceeded', {
+          return formErrorObject('Action.AddAccessKey.AllowedFunctions.TotalSize.Exceeded', {
             totalSizeBytes: actionsError.AddKeyMethodNamesNumberOfBytesExceeded.totalNumberOfBytes,
             maximumTotalSizeBytes: actionsError.AddKeyMethodNamesNumberOfBytesExceeded.limit,
           });

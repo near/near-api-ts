@@ -1,9 +1,9 @@
-import type { NearcorePublicKey, PublicKey } from '../../../../../../types/_common/crypto';
+import type { NearcorePublicKey, PublicKey } from '../../../../../../../types/_common/crypto';
 import {
   toEd25519CurveString,
   toMlDsa65CurveString,
   toSecp256k1CurveString,
-} from '../../../../../_common/toCurveString';
+} from '../../../../../../_common/toCurveString';
 
 // Borsh deserializes fixed `u8` arrays into plain number arrays, not Uint8Array.
 export const fromNearcorePublicKey = (publicKey: NearcorePublicKey): PublicKey => {

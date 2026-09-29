@@ -84,13 +84,9 @@ export { Base64StringZodSchema } from './src/offchainMessage/verifyMessage/zodSc
 export { MessageZodSchema } from './src/offchainMessage/verifyMessage/zodSchemas/message/message';
 // Action Creators
 export {
-  addFullAccessKey,
-  safeAddFullAccessKey,
-} from './src/transaction/actionCreators/addFullAccessKey';
-export {
-  addFunctionCallKey,
-  safeAddFunctionCallKey,
-} from './src/transaction/actionCreators/addFunctionCallKey';
+  addAccessKey,
+  safeAddAccessKey,
+} from './src/transaction/actionCreators/addAccessKey';
 export { createAccount } from './src/transaction/actionCreators/createAccount';
 export {
   deleteAccount,

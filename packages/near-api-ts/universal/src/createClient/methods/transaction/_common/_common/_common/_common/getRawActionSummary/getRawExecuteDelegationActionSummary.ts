@@ -1,4 +1,10 @@
-import type { DelegateAction, NonDelegateAction } from '@near-js/jsonrpc-types';
+import type {
+  AccessKeyPermission,
+  AccessKeyPermissionView,
+  DelegateAction,
+  GasKeyInfo,
+  NonDelegateAction,
+} from '@near-js/jsonrpc-types';
 import { sha256 } from '@noble/hashes/sha2.js';
 import { base58 } from '@scure/base';
 import type { Base64String } from '../../../../../../../../../types/_common/common';
@@ -7,6 +13,23 @@ import type { DelegableActionSummary } from '../../../../../../../../../types/cl
 import { constants } from '../../../../../../../../_common/_common/_common/constants';
 import { gas } from '../../../../../../../../_common/nearGas';
 import { yoctoNear } from '../../../../../../../../_common/nearToken';
+import { getRawAddAccessKeyActionSummary } from './_common/getRawAddAccessKeyActionSummary';
+
+// Inside a delegation nearcore reports its own AccessKeyPermission rather than the view. They differ
+// in one variant only: GasKeyFunctionCall is a tuple there - the gas key info, then the function
+// call permission - which the view flattens into one object.
+const toAccessKeyPermissionView = (permission: AccessKeyPermission): AccessKeyPermissionView => {
+  if (typeof permission === 'object' && 'GasKeyFunctionCall' in permission) {
+    const [gasKeyInfo, functionCallPermission] = permission.GasKeyFunctionCall as [
+      GasKeyInfo,
+      Extract<AccessKeyPermissionView, { FunctionCall: unknown }>['FunctionCall'],
+    ];
+
+    return { GasKeyFunctionCall: { ...gasKeyInfo, ...functionCallPermission } };
+  }
+
+  return permission;
+};
 
 // TODO try to reuse some action convertors from getRawActionSummary
 const convertNonDelegateActionToSummary = (
@@ -25,31 +48,12 @@ const convertNonDelegateActionToSummary = (
     };
 
   if ('AddKey' in nonDelegateAction) {
-    const { AddKey } = nonDelegateAction;
+    const { publicKey, accessKey } = nonDelegateAction.AddKey;
 
-    if (AddKey.accessKey.permission === 'FullAccess')
-      return {
-        actionType: 'AddKey' as const,
-        accessType: 'FullAccess' as const,
-        publicKey: AddKey.publicKey as PublicKey,
-      };
-
-    if ('FunctionCall' in AddKey.accessKey.permission) {
-      const { allowance, methodNames, receiverId } = AddKey.accessKey.permission.FunctionCall;
-      const gasBudget = typeof allowance === 'string' ? yoctoNear(allowance) : 'Unlimited';
-      const allowedFunctions = methodNames.length > 0 ? methodNames : 'AllNonPayable';
-
-      return {
-        actionType: 'AddKey' as const,
-        accessType: 'FunctionCall' as const,
-        publicKey: AddKey.publicKey as PublicKey,
-        contractAccountId: receiverId,
-        gasBudget,
-        allowedFunctions,
-      };
-    }
-
-    throw new Error('Unsupported access key permission', { cause: AddKey });
+    return getRawAddAccessKeyActionSummary({
+      publicKey,
+      accessKey: { ...accessKey, permission: toAccessKeyPermissionView(accessKey.permission) },
+    });
   }
 
   // Not the same as in getRawActionSummary

@@ -22,6 +22,14 @@
   to `createMemorySigner` must implement `findPublicKey` / `safeFindPublicKey`.
   See the near-api-ts v0.13.0 changelog.
 
+- **Breaking:** the action creators `addFullAccessKey` and `addFunctionCallKey`,
+  re-exported from near-api-ts, are replaced by `addAccessKey`, and the action
+  they created has a new shape, `actionType: 'AddKey'` included – it is
+  `'AddAccessKey'` now, and so are the `Action.AddKey.*` error kinds. See the
+  near-api-ts v0.13.0 changelog. The near-connect signer passes the action on to
+  the wallet as before, but throws for a gas key (`gasPayment.source:
+  'KeyBalance'`) – near-connect has no format for it.
+
 - **Breaking:** `useAccountInfo` and `useContractReadFunction` take the transport
   policy as `options.transportPolicy` instead of `policies.transport`:  \
   Previously:

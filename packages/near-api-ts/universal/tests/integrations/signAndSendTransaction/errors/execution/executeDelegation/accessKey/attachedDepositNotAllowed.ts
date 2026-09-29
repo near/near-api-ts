@@ -13,8 +13,8 @@ export const attachedDepositNotAllowed = (context: TestContext) => async () => {
   // A function-call key can never attach a deposit, even to a function it is allowed to call on
   // the account it is allowed to call.
   const functionCallKeyPair = await attachFunctionCallKey(context, {
-    contractAccountId: 'bob',
-    gasBudget: 'Unlimited',
+    allowedContract: 'bob',
+    allowance: 'Unlimited',
     allowedFunctions: 'AllNonPayable',
   });
 

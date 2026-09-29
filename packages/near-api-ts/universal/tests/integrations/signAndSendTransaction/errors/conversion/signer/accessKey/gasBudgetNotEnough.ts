@@ -14,8 +14,8 @@ export const gasBudgetNotEnough = (context: TestContext) => async () => {
   // The key passes every permission check but its gas budget can't cover even the
   // cheapest transaction, so the node fails while charging the allowance.
   const functionCallKeyPair = await attachFunctionCallKey(context, {
-    contractAccountId: 'alice',
-    gasBudget: { yoctoNear: GAS_BUDGET_YOCTO_NEAR },
+    allowedContract: 'alice',
+    allowance: { yoctoNear: GAS_BUDGET_YOCTO_NEAR },
     allowedFunctions: 'AllNonPayable',
   });
 

@@ -1,6 +1,6 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
-import { addFullAccessKey, deleteAccount, randomSecp256k1KeyPair } from '../../../../../../index';
+import { addAccessKey, deleteAccount, randomSecp256k1KeyPair } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
@@ -19,7 +19,13 @@ export const largeState = (context: TestContext) => async () => {
   });
 
   // 1. Create a large state with more than 10_000 bytes
-  const actions = Array.from({ length: 100 }, () => addFullAccessKey(randomSecp256k1KeyPair()));
+  const actions = Array.from({ length: 100 }, () =>
+    addAccessKey({
+      publicKey: randomSecp256k1KeyPair().publicKey,
+      permission: { kind: 'FullAccess' },
+      gasPayment: { source: 'AccountBalance' },
+    }),
+  );
 
   const signedTx1 = await signTransaction({
     signDataProvider: defaultKeyPair,

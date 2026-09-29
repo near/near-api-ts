@@ -1,5 +1,5 @@
 import type { CreateExecuteDelegationActionPublicErrorRegistry } from '../executeDelegation/executeDelegation';
-import type { CreateAddKeyActionPublicErrorRegistry } from './addKey';
+import type { CreateAddAccessKeyActionPublicErrorRegistry } from './addAccessKey';
 import type { CreateDeleteActionPublicErrorRegistry } from './deleteAccount';
 import type { CreateDeleteKeyActionPublicErrorRegistry } from './deleteKey';
 import type { CreateDeployContractActionPublicErrorRegistry } from './deployContract';
@@ -12,7 +12,7 @@ import type { CreateStakeActionPublicErrorRegistry } from './stake';
 import type { CreateTransferActionPublicErrorRegistry } from './transfer';
 
 export interface ActionsPublicErrorRegistry
-  extends CreateAddKeyActionPublicErrorRegistry,
+  extends CreateAddAccessKeyActionPublicErrorRegistry,
     CreateTransferActionPublicErrorRegistry,
     CreateFunctionCallActionPublicErrorRegistry,
     CreateStakeActionPublicErrorRegistry,

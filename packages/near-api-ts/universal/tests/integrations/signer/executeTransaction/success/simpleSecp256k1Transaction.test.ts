@@ -1,7 +1,7 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
-  addFullAccessKey,
+  addAccessKey,
   type Client,
   createMemoryKeyService,
   createMemorySigner,
@@ -35,7 +35,11 @@ describe('executeTransaction › success', () => {
 
     await signer1.executeTransaction({
       intent: {
-        action: addFullAccessKey(secp256k1KeyPair),
+        action: addAccessKey({
+          publicKey: secp256k1KeyPair.publicKey,
+          permission: { kind: 'FullAccess' },
+          gasPayment: { source: 'AccountBalance' },
+        }),
         receiverAccountId: signer1.signerAccountId,
       },
     });

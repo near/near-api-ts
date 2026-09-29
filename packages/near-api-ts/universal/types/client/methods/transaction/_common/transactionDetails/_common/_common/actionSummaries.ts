@@ -1,4 +1,7 @@
-import type { AllowedFunctions, GasBudget } from '../../../../../../../_common/accessKey';
+import type {
+  FullAccessPermission,
+  FunctionCallPermission,
+} from '../../../../../../../_common/accessKey';
 import type {
   AccountId,
   Base64String,
@@ -20,19 +23,33 @@ type TransferActionSummary = {
   amount: NearToken;
 };
 
-type AddKeyActionSummary =
+// Mirrors `AddAccessKeyAction`. A gas key's balance is left out: nearcore adds it empty, always
+export type AddAccessKeyActionSummary =
   | {
-      actionType: 'AddKey';
-      accessType: 'FullAccess';
+      actionType: 'AddAccessKey';
       publicKey: PublicKey;
+      permission: FullAccessPermission;
+      gasPayment: { source: 'AccountBalance' };
     }
   | {
-      actionType: 'AddKey';
-      accessType: 'FunctionCall';
+      actionType: 'AddAccessKey';
       publicKey: PublicKey;
-      contractAccountId: AccountId;
-      gasBudget: GasBudget;
-      allowedFunctions: AllowedFunctions;
+      permission: FunctionCallPermission;
+      gasPayment: { source: 'AccountBalance'; allowance: 'Unlimited' | NearToken };
+    }
+  | {
+      actionType: 'AddAccessKey';
+      publicKey: PublicKey;
+      permission: FullAccessPermission;
+      gasPayment: { source: 'KeyBalance' };
+      replayProtection: { totalSequences: number };
+    }
+  | {
+      actionType: 'AddAccessKey';
+      publicKey: PublicKey;
+      permission: FunctionCallPermission;
+      gasPayment: { source: 'KeyBalance' };
+      replayProtection: { totalSequences: number };
     };
 
 type DeployContractActionSummary = {
@@ -91,7 +108,7 @@ type PinGlobalContractActionSummary = {
 export type DelegableActionSummary<FA> =
   | CreateAccountActionSummary
   | TransferActionSummary
-  | AddKeyActionSummary
+  | AddAccessKeyActionSummary
   | DeployContractActionSummary
   | FunctionCallActionSummary<FA>
   | StakeActionSummary

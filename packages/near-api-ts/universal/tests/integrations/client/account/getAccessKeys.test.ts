@@ -1,7 +1,7 @@
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it } from 'vitest';
 import {
-  addFullAccessKey,
+  addAccessKey,
   type Client,
   createClient,
   createMemoryKeyService,
@@ -55,7 +55,18 @@ describe('Get Account Access Keys', () => {
 
     await signer.executeTransaction({
       intent: {
-        actions: [addFullAccessKey(mlDsa65KeyPair), addFullAccessKey(secp256k1KeyPair)],
+        actions: [
+          addAccessKey({
+            publicKey: mlDsa65KeyPair.publicKey,
+            permission: { kind: 'FullAccess' },
+            gasPayment: { source: 'AccountBalance' },
+          }),
+          addAccessKey({
+            publicKey: secp256k1KeyPair.publicKey,
+            permission: { kind: 'FullAccess' },
+            gasPayment: { source: 'AccountBalance' },
+          }),
+        ],
         receiverAccountId: 'nat',
       },
     });

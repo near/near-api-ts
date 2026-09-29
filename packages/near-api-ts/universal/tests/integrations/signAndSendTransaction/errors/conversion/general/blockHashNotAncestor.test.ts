@@ -1,7 +1,7 @@
 import { DEFAULT_PRIVATE_KEY, GenesisAccount, Sandbox } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
-  addFullAccessKey,
+  addAccessKey,
   type Client,
   createAccount,
   deployContract,
@@ -91,7 +91,11 @@ describe.skip('signAndSendTransaction › BlockHash.NotAncestor conversion error
         actions: [
           createAccount(),
           transfer({ amount: { near: '50' } }),
-          addFullAccessKey({ publicKey: defaultKeyPair.publicKey }),
+          addAccessKey({
+            publicKey: defaultKeyPair.publicKey,
+            permission: { kind: 'FullAccess' },
+            gasPayment: { source: 'AccountBalance' },
+          }),
           deployContract({ wasmU8: GAS_BURNER_WASM }),
         ],
         receiverAccountId: CONTRACT_ACCOUNT_ID,

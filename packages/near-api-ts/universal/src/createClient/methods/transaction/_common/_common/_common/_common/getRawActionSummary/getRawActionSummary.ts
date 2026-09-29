@@ -4,6 +4,7 @@ import type { PublicKey, Signature } from '../../../../../../../../../types/_com
 import type { RawTransactionActionSummary } from '../../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
 import { gas } from '../../../../../../../../_common/nearGas';
 import { yoctoNear } from '../../../../../../../../_common/nearToken';
+import { getRawAddAccessKeyActionSummary } from './_common/getRawAddAccessKeyActionSummary';
 import { getRawExecuteDelegationActionSummary } from './getRawExecuteDelegationActionSummary';
 
 // Assembles the raw action summary from the RPC action - all fields are converted except
@@ -23,33 +24,7 @@ export const getRawActionSummary = (rpcAction: ActionView): RawTransactionAction
     };
   }
 
-  if ('AddKey' in rpcAction) {
-    const { AddKey } = rpcAction;
-
-    if (AddKey.accessKey.permission === 'FullAccess')
-      return {
-        actionType: 'AddKey' as const,
-        accessType: 'FullAccess' as const,
-        publicKey: AddKey.publicKey as PublicKey,
-      };
-
-    if ('FunctionCall' in AddKey.accessKey.permission) {
-      const { allowance, methodNames, receiverId } = AddKey.accessKey.permission.FunctionCall;
-      const gasBudget = typeof allowance === 'string' ? yoctoNear(allowance) : 'Unlimited';
-      const allowedFunctions = methodNames.length > 0 ? methodNames : 'AllNonPayable';
-
-      return {
-        actionType: 'AddKey' as const,
-        accessType: 'FunctionCall' as const,
-        publicKey: AddKey.publicKey as PublicKey,
-        contractAccountId: receiverId,
-        gasBudget,
-        allowedFunctions,
-      };
-    }
-
-    throw new Error('Unsupported access key permission', { cause: AddKey });
-  }
+  if ('AddKey' in rpcAction) return getRawAddAccessKeyActionSummary(rpcAction.AddKey);
 
   if ('DeployContract' in rpcAction) {
     const { DeployContract } = rpcAction;

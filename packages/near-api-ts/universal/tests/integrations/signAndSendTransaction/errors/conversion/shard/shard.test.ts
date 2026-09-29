@@ -1,7 +1,7 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { describe, expect, it } from 'vitest';
 import {
-  addFullAccessKey,
+  addAccessKey,
   createAccount,
   deployContract,
   functionCall,
@@ -77,7 +77,11 @@ describe.skip('signAndSendTransaction › Shard.Congested conversion error', () 
           actions: [
             createAccount(),
             transfer({ amount: { near: '50' } }),
-            addFullAccessKey({ publicKey: defaultKeyPair.publicKey }),
+            addAccessKey({
+              publicKey: defaultKeyPair.publicKey,
+              permission: { kind: 'FullAccess' },
+              gasPayment: { source: 'AccountBalance' },
+            }),
             deployContract({ wasmU8: GAS_BURNER_WASM }),
           ],
           receiverAccountId: CONTRACT_ACCOUNT_ID,

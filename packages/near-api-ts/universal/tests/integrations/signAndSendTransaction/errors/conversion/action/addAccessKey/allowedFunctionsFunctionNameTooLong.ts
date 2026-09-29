@@ -1,5 +1,5 @@
 import { expect } from 'vitest';
-import { addFunctionCallKey, randomEd25519KeyPair } from '../../../../../../../index';
+import { addAccessKey, randomEd25519KeyPair } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
@@ -29,11 +29,14 @@ export const allowedFunctionsFunctionNameTooLong = (context: TestContext) => asy
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: getLastNonce(accessKey) + 1,
       blockHash,
-      action: addFunctionCallKey({
+      action: addAccessKey({
         publicKey: randomEd25519KeyPair().publicKey,
-        contractAccountId: 'alice',
-        gasBudget: 'Unlimited',
-        allowedFunctions: [FUNCTION_NAME],
+        permission: {
+          kind: 'FunctionCall',
+          allowedContract: 'alice',
+          allowedFunctions: [FUNCTION_NAME],
+        },
+        gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
       }),
       receiverAccountId: 'nat',
     },
@@ -43,7 +46,7 @@ export const allowedFunctionsFunctionNameTooLong = (context: TestContext) => asy
 
   assertNatErrKind(
     tx,
-    'Client.SendSignedTransaction.Rpc.Action.AddKey.AllowedFunctions.FunctionName.TooLong',
+    'Client.SendSignedTransaction.Rpc.Action.AddAccessKey.AllowedFunctions.FunctionName.TooLong',
   );
   // A single name over the limit trips the per-name check inside the loop, before the total
   // the names add up to is compared against `max_number_bytes_method_names`.

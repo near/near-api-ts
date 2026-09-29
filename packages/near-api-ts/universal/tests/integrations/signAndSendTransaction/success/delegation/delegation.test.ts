@@ -5,6 +5,7 @@ import type { KeyPair } from '../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../utils/common';
 import { startSandbox } from '../../../../utils/sandbox/startSandbox';
 import { testKeys } from '../../../../utils/testKeys';
+import { delegatedAddGasKey } from './delegatedAddGasKey';
 import { delegatedLinkGlobalContract } from './delegatedLinkGlobalContract';
 import { delegatedPinGlobalContract } from './delegatedPinGlobalContract';
 
@@ -30,4 +31,5 @@ describe('signAndSendTransaction › delegation › success', () => {
 
   it('links code registered under an account id', delegatedLinkGlobalContract(context));
   it('pins code registered under its wasm hash', delegatedPinGlobalContract(context));
+  it('adds a key paid from its own balance', delegatedAddGasKey(context));
 });

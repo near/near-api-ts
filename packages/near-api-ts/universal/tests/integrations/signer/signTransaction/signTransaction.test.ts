@@ -2,7 +2,7 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it } from 'vitest';
 import * as z from 'zod/mini';
 import {
-  addFunctionCallKey,
+  addAccessKey,
   type Client,
   createAccount,
   createMemoryKeyService,
@@ -63,11 +63,14 @@ describe('MemorySigner.signTransaction', async () => {
       intent: {
         actions: [
           createAccount(),
-          addFunctionCallKey({
+          addAccessKey({
             publicKey: keyPair1.publicKey,
-            contractAccountId: 'abc',
-            gasBudget: 'Unlimited',
-            allowedFunctions: 'AllNonPayable',
+            permission: {
+              kind: 'FunctionCall',
+              allowedContract: 'abc',
+              allowedFunctions: 'AllNonPayable',
+            },
+            gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
           }),
           transfer({ amount: { near: '10' } }),
         ],

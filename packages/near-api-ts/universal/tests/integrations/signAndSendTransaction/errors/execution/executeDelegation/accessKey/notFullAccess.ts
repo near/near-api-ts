@@ -13,8 +13,8 @@ export const notFullAccess = (context: TestContext) => async () => {
   // A function-call key may only delegate a single FunctionCall action, so any other action —
   // a transfer here — demands a full access key.
   const functionCallKeyPair = await attachFunctionCallKey(context, {
-    contractAccountId: 'bob',
-    gasBudget: 'Unlimited',
+    allowedContract: 'bob',
+    allowance: 'Unlimited',
     allowedFunctions: 'AllNonPayable',
   });
 

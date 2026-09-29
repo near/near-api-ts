@@ -1,4 +1,4 @@
-import { addFunctionCallKey, randomEd25519KeyPair } from '../../../../../../../index';
+import { addAccessKey, randomEd25519KeyPair } from '../../../../../../../index';
 import type { InnerTransaction } from '../../../../../../../src/transaction/signTransaction/transactionZodSchema';
 import { assertUnmappedInvalidTxError } from '../../../../../../utils/assertUnmappedInvalidTxError';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
@@ -46,18 +46,24 @@ export const invalidAccountId = (context: TestContext) => async () => {
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: getLastNonce(accessKey) + 1,
       blockHash,
-      action: addFunctionCallKey({
+      action: addAccessKey({
         publicKey: randomEd25519KeyPair().publicKey,
-        contractAccountId: 'alice',
-        gasBudget: 'Unlimited',
-        allowedFunctions: ['ping'],
+        permission: { kind: 'FunctionCall', allowedContract: 'alice', allowedFunctions: ['ping'] },
+        gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
       }),
       receiverAccountId: 'nat',
     },
     (transaction) =>
       ({
         ...transaction,
-        action: { ...transaction.action, contractAccountId: INVALID_CONTRACT_ACCOUNT_ID },
+        action: {
+          ...transaction.action,
+          permission: {
+            kind: 'FunctionCall',
+            allowedContract: INVALID_CONTRACT_ACCOUNT_ID,
+            allowedFunctions: ['ping'],
+          },
+        },
       }) as InnerTransaction,
   );
 

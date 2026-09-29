@@ -25,8 +25,8 @@ interface CreateAccountErrorRegistry {
   'Action.CreateAccount.ImplicitAccount': { newAccountId: AccountId };
 }
 
-interface AddKeyErrorRegistry {
-  'Action.AddKey.AlreadyExists': { accountId: AccountId; publicKey: PublicKey };
+interface AddAccessKeyErrorRegistry {
+  'Action.AddAccessKey.AlreadyExists': { accountId: AccountId; publicKey: PublicKey };
 }
 
 interface FunctionCallErrorRegistry {
@@ -105,7 +105,7 @@ interface ExecuteDelegationErrorRegistry {
 export interface ExecutionFailureRegistry
   extends GeneralExecutionErrorRegistry,
     CreateAccountErrorRegistry,
-    AddKeyErrorRegistry,
+    AddAccessKeyErrorRegistry,
     FunctionCallErrorRegistry,
     StakeErrorRegistry,
     DeleteKeyErrorRegistry,

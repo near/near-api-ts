@@ -2,10 +2,9 @@ import type { Prettify } from '../../../../utils';
 import type { AccountId, BlockHeight, TransactionNonce } from '../../../common';
 import type { NearcorePublicKey, NearcoreSignature, PublicKey, Signature } from '../../../crypto';
 import type {
-  AddFullAccessKeyAction,
-  AddFunctionCallKeyAction,
-  NearcoreAddKeyAction,
-} from '../delegableActions/addKey';
+  AddAccessKeyAction,
+  NearcoreAddAccessKeyAction,
+} from '../delegableActions/addAccessKey';
 import type {
   CreateAccountAction,
   NearcoreCreateAccountAction,
@@ -45,8 +44,7 @@ import type { NearcoreTransferAction, TransferAction } from '../delegableActions
 export type DelegableAction =
   | CreateAccountAction
   | TransferAction
-  | AddFullAccessKeyAction
-  | AddFunctionCallKeyAction
+  | AddAccessKeyAction
   | DeployContractAction
   | FunctionCallAction
   | StakeAction
@@ -99,7 +97,7 @@ export type DelegationIntent = Prettify<
 export type NearcoreDelegableAction =
   | NearcoreCreateAccountAction
   | NearcoreTransferAction
-  | NearcoreAddKeyAction
+  | NearcoreAddAccessKeyAction
   | NearcoreDeployContractAction
   | NearcoreFunctionCallAction
   | NearcoreStakeAction

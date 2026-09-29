@@ -37,7 +37,16 @@ const toNearConnectAction = (action: NatAction): ConnectorAction => {
       params: { deposit: nearToken(action.amount).yoctoNear.toString() },
     };
 
-  if (action.actionType === 'AddKey')
+  if (action.actionType === 'AddAccessKey') {
+    const { permission, gasPayment } = action;
+
+    // near-connect has no wire format for a gas key - a key paid from its own balance
+    if (gasPayment.source === 'KeyBalance')
+      throw new Error('near-connect does not support adding a key paid from its own balance');
+
+    // Unset on a FullAccess key, which has no allowance to limit
+    const { allowance } = gasPayment;
+
     return {
       type: 'AddKey',
       params: {
@@ -45,22 +54,23 @@ const toNearConnectAction = (action: NatAction): ConnectorAction => {
         accessKey: {
           nonce: 0, // deprecated field
           permission:
-            action.accessType === 'FullAccess'
+            permission.kind === 'FullAccess'
               ? 'FullAccess'
               : {
-                  receiverId: action.contractAccountId,
+                  receiverId: permission.allowedContract,
                   allowance:
-                    action.gasBudget === 'Unlimited'
+                    allowance === undefined || allowance === 'Unlimited'
                       ? undefined
-                      : nearToken(action.gasBudget).yoctoNear.toString(),
+                      : nearToken(allowance).yoctoNear.toString(),
                   methodNames:
-                    action.allowedFunctions === 'AllNonPayable'
+                    permission.allowedFunctions === 'AllNonPayable'
                       ? undefined
-                      : action.allowedFunctions,
+                      : permission.allowedFunctions,
                 },
         },
       },
     };
+  }
 
   if (action.actionType === 'FunctionCall')
     return {
