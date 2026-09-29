@@ -8,7 +8,7 @@ import type { CreateGetProtocolConfig } from '../../../../types/client/methods/p
 import { toNearcoreBlockReference } from '../_common/toNearcoreBlockReference';
 
 // TODO Use jsonrpc-types RpcProtocolConfigResponseSchema after 2.8.0
-const TemporaryProtocolConfigShema = z.object({
+const TemporaryProtocolConfigSchema = z.object({
   ...RpcProtocolConfigResponseSchema().shape,
   runtimeConfig: z.object({
     ...RuntimeConfigViewSchema().shape,
@@ -16,10 +16,10 @@ const TemporaryProtocolConfigShema = z.object({
   }),
 });
 
-export type TemporaryProtocolConfig = z.infer<typeof TemporaryProtocolConfigShema>;
+export type TemporaryProtocolConfig = z.infer<typeof TemporaryProtocolConfigSchema>;
 
 const transformResult = (result: unknown): TemporaryProtocolConfig => {
-  return TemporaryProtocolConfigShema.parse(result);
+  return TemporaryProtocolConfigSchema.parse(result);
 };
 
 export const createGetProtocolConfig: CreateGetProtocolConfig =

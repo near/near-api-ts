@@ -12,7 +12,7 @@ import { processingStageToFinalExecutionStatus } from '../_common/processingStag
 import { handleRpcError } from './handleRpcError';
 import { handleRpcResult } from './handleRpcResult/handleRpcResult';
 
-const SendSignedTransactionArgsZodShema = z.object({
+const SendSignedTransactionArgsZodSchema = z.object({
   signedTransaction: z.object({
     signedTransactionBorsh64: z.base64(),
     transactionHash: CryptoHashZodSchema,
@@ -39,7 +39,7 @@ const SendSignedTransactionArgsZodShema = z.object({
 
 export const createSafeSendSignedTransaction: CreateSafeSendSignedTransaction = (context) =>
   wrapInternalError('Client.SendSignedTransaction.Internal', async (args) => {
-    const validArgs = SendSignedTransactionArgsZodShema.safeParse(args);
+    const validArgs = SendSignedTransactionArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('Client.SendSignedTransaction.Args.InvalidSchema', {

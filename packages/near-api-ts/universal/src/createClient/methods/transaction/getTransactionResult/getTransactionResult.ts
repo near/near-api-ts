@@ -11,7 +11,7 @@ import { PartialTransportPolicyZodSchema } from '../../../_common/zodSchemas/tra
 import { handleRpcError } from './handleRpcError';
 import { handleRpcResult } from './handleRpcResult';
 
-const GetTransactionResultArgsZodShema = z.object({
+const GetTransactionResultArgsZodSchema = z.object({
   transactionHash: CryptoHashZodSchema,
   options: z.optional(
     z.object({
@@ -26,7 +26,7 @@ const GetTransactionResultArgsZodShema = z.object({
 
 export const createSafeGetTransactionResult: CreateSafeGetTransactionResult = (context) =>
   wrapInternalError('Client.GetTransactionResult.Internal', async (args) => {
-    const validArgs = GetTransactionResultArgsZodShema.safeParse(args);
+    const validArgs = GetTransactionResultArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('Client.GetTransactionResult.Args.InvalidSchema', {

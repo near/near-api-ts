@@ -3,7 +3,7 @@ import * as z from 'zod/mini';
 import { AccountIdZodSchema } from '../../../../../../_common/zodSchemas/accountId';
 import { CryptoHashZodSchema } from '../../../../../../_common/zodSchemas/cryptoHash';
 
-const GasProfileZodShema = z.array(
+const GasProfileZodSchema = z.array(
   z.object({
     cost: z.string(),
     costCategory: z.union([z.literal('ACTION_COST'), z.literal('WASM_HOST_COST')]),
@@ -31,7 +31,7 @@ export const RpcReceiptOutcomeZodSchema = z.object({
       }),
       z.object({
         version: z.union([z.literal(2), z.literal(3)]),
-        gasProfile: GasProfileZodShema,
+        gasProfile: GasProfileZodSchema,
       }),
       z.object({
         version: z.literal(4),

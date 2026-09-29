@@ -25,7 +25,7 @@ import type { MemorySigner } from '../../../../../types/signer/memorySigner';
 import { createDefaultClient, getFileBytes, log } from '../../../../utils/common';
 import { startSandbox } from '../../../../utils/sandbox/startSandbox';
 
-const WriteRecordArgsZodShema = z.object({
+const WriteRecordArgsZodSchema = z.object({
   record_id: z.number(),
   record: z.string(),
 });
@@ -91,7 +91,7 @@ describe('CallContractReadFunction', () => {
         ) {
           return {
             ...rawActionSummary,
-            functionArgs: WriteRecordArgsZodShema.parse(
+            functionArgs: WriteRecordArgsZodSchema.parse(
               convertBase64ToObject(rawActionSummary.functionArgs),
             ),
           };
