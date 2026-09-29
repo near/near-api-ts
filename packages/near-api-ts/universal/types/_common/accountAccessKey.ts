@@ -56,16 +56,16 @@ type FunctionCallPermission = {
  */
 type UnlimitedAccountBalanceGasPayment = {
   source: 'AccountBalance';
-  spendingLimit: 'Unlimited';
+  allowance: 'Unlimited';
 };
 
 /**
- * The key pays for gas from the account balance, but no more than `allowance`.
+ * The key pays for gas from the account balance: as much as the account holds when
+ * `allowance` is `'Unlimited'`, otherwise no more than `allowance` — the amount it has left.
  */
-type LimitedAccountBalanceGasPayment = {
+type AccountBalanceGasPayment = {
   source: 'AccountBalance';
-  spendingLimit: 'Limited';
-  allowance: NearToken;
+  allowance: 'Unlimited' | NearToken;
 };
 
 /**
@@ -107,7 +107,7 @@ export type AccountBalanceFullAccessKey = {
 export type AccountBalanceFunctionCallKey = {
   publicKeyRef: PublicKeyRef;
   permission: FunctionCallPermission;
-  gasPayment: UnlimitedAccountBalanceGasPayment | LimitedAccountBalanceGasPayment;
+  gasPayment: AccountBalanceGasPayment;
   replayProtection: SingleNonceSequence;
 };
 

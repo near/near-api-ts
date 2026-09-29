@@ -45,15 +45,13 @@
   {
     publicKeyRef: PublicKeyRef,
     permission: { kind: 'FullAccess' },
-    gasPayment: { source: 'AccountBalance', spendingLimit: 'Unlimited' },
+    gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
     replayProtection: { scheme: 'SingleNonceSequence', lastNonce },
   }
   {
     publicKeyRef,
     permission: { kind: 'FunctionCall', allowedContract, allowedFunctions },
-    gasPayment:
-      | { source: 'AccountBalance', spendingLimit: 'Unlimited' } // was gasBudget: 'Unlimited'
-      | { source: 'AccountBalance', spendingLimit: 'Limited', allowance }, // was gasBudget: NearToken
+    gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' | NearToken }, // was gasBudget
     replayProtection: { scheme: 'SingleNonceSequence', lastNonce },
   }
   ```

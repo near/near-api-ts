@@ -33,7 +33,7 @@ describe('Get Account Access Keys', () => {
     expect(res.accountAccessKeys[0]).toEqual({
       publicKeyRef: DEFAULT_PUBLIC_KEY,
       permission: { kind: 'FullAccess' },
-      gasPayment: { source: 'AccountBalance', spendingLimit: 'Unlimited' },
+      gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
       replayProtection: { scheme: 'SingleNonceSequence', lastNonce: 0 },
     });
   });
@@ -134,7 +134,7 @@ describe('Get Account Access Keys', () => {
       {
         publicKeyRef: fullAccess,
         permission: { kind: 'FullAccess' },
-        gasPayment: { source: 'AccountBalance', spendingLimit: 'Unlimited' },
+        gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
         replayProtection: { scheme: 'SingleNonceSequence', lastNonce: 5 },
       },
       {
@@ -144,7 +144,7 @@ describe('Get Account Access Keys', () => {
           allowedContract: 'contract.near',
           allowedFunctions: 'AllNonPayable',
         },
-        gasPayment: { source: 'AccountBalance', spendingLimit: 'Unlimited' },
+        gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
         replayProtection: { scheme: 'SingleNonceSequence', lastNonce: 6 },
       },
       {
@@ -156,7 +156,6 @@ describe('Get Account Access Keys', () => {
         },
         gasPayment: {
           source: 'AccountBalance',
-          spendingLimit: 'Limited',
           allowance: yoctoNear('250000000000000000000000'),
         },
         replayProtection: { scheme: 'SingleNonceSequence', lastNonce: 7 },

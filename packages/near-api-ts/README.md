@@ -259,7 +259,7 @@ if (permission.kind === 'FunctionCall') {
 
 // Who pays for gas
 if (gasPayment.source === 'AccountBalance') {
-  if (gasPayment.spendingLimit === 'Limited') gasPayment.allowance; // NearToken left to spend
+  if (gasPayment.allowance !== 'Unlimited') gasPayment.allowance; // NearToken left to spend
 } else {
   gasPayment.balance; // 'KeyBalance' — the key's own prepaid balance, NearToken
 }

@@ -24,7 +24,7 @@ export const transformAccessKey = ({
     return {
       publicKeyRef,
       permission: { kind: 'FullAccess' },
-      gasPayment: { source: 'AccountBalance', spendingLimit: 'Unlimited' },
+      gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
       replayProtection: { scheme: 'SingleNonceSequence', lastNonce: nonce },
     };
 
@@ -38,10 +38,10 @@ export const transformAccessKey = ({
         allowedContract: receiverId,
         allowedFunctions: toAllowedFunctions(methodNames),
       },
-      gasPayment:
-        typeof allowance === 'string'
-          ? { source: 'AccountBalance', spendingLimit: 'Limited', allowance: yoctoNear(allowance) }
-          : { source: 'AccountBalance', spendingLimit: 'Unlimited' },
+      gasPayment: {
+        source: 'AccountBalance',
+        allowance: typeof allowance === 'string' ? yoctoNear(allowance) : 'Unlimited',
+      },
       replayProtection: { scheme: 'SingleNonceSequence', lastNonce: nonce },
     };
   }
