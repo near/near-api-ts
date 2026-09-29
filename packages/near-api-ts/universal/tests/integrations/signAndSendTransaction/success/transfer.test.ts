@@ -29,7 +29,7 @@ describe('safeSendSignedTransaction › success', () => {
   });
 
   it('sends a native token transfer', async () => {
-    const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+    const { accessKey, blockHash } = await client.getAccessKey({
       accountId: 'nat',
       publicKey: DEFAULT_PUBLIC_KEY,
     });
@@ -39,7 +39,7 @@ describe('safeSendSignedTransaction › success', () => {
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: DEFAULT_PUBLIC_KEY,
-        nonce: getLastNonce(accountAccessKey) + 1,
+        nonce: getLastNonce(accessKey) + 1,
         blockHash,
         action: transfer({ amount: { near: '5' } }),
         receiverAccountId: 'bob',

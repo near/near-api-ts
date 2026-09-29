@@ -13,7 +13,7 @@ export const notFound = (context: TestContext) => async () => {
   // the public key it declares - the node only fails it when it looks the key up.
   const unknownKeyPair = randomEd25519KeyPair();
 
-  const aliceAccessKey = await client.getAccountAccessKey({
+  const aliceAccessKey = await client.getAccessKey({
     accountId: 'alice',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -24,7 +24,7 @@ export const notFound = (context: TestContext) => async () => {
       delegatorPublicKey: unknownKeyPair.publicKey,
       delegatedAction: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
-      nonce: getLastNonce(aliceAccessKey.accountAccessKey) + 1,
+      nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
       expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
     },
     signDataProvider: unknownKeyPair,

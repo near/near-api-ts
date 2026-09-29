@@ -14,8 +14,8 @@
     account lists:
 
     ```ts
-    const { accountAccessKeys } = await client.getAccountAccessKeys({ accountId });
-    const isAccountKey = accountAccessKeys.some(
+    const { accessKeys } = await client.getAccessKeys({ accountId });
+    const isAccountKey = accessKeys.some(
       (key) => key.publicKeyRef === keyPair.publicKeyRef,
     );
     ```
@@ -30,10 +30,31 @@
 
 ### Changed
 
-- **Breaking:** `AccountAccessKey`, returned by `getAccountAccessKey` and
-  `getAccountAccessKeys`, has a new shape. What the key may do, who pays for its
-  gas and which nonces it signs with are three separate fields now, and the key
-  is referred to by `publicKeyRef` instead of `publicKey`:  \
+- **Breaking:** the access key API drops the `Account` prefix:
+
+  - `getAccountAccessKey` / `safeGetAccountAccessKey` → `getAccessKey` /
+    `safeGetAccessKey`; its output field `accountAccessKey` → `accessKey`.
+  - `getAccountAccessKeys` / `safeGetAccountAccessKeys` → `getAccessKeys` /
+    `safeGetAccessKeys`; its output field `accountAccessKeys` → `accessKeys`.
+  - The type `AccountAccessKey` → `AccessKey`.
+  - Error kinds `Client.GetAccountAccessKey.*` → `Client.GetAccessKey.*` and
+    `Client.GetAccountAccessKeys.*` → `Client.GetAccessKeys.*`, including
+    `Client.GetAccountAccessKey.Rpc.AccountAccessKey.NotFound` →
+    `Client.GetAccessKey.Rpc.AccessKey.NotFound`. The `cause` of
+    `VerifyMessage.AccessKeys.NotLoaded` and
+    `MemorySigner.{SignTransaction,ExecuteTransaction}.KeyPool.AccessKeys.NotLoaded`
+    carries the new kinds.
+  - The context of `MemorySigner.SignTransaction.KeyPool.Empty` and
+    `MemorySigner.ExecuteTransaction.KeyPool.Empty`: `accountAccessKeys` →
+    `accessKeys`.
+  - `verifyMessage` calls `client.safeGetAccessKeys` instead of
+    `client.safeGetAccountAccessKeys`. A client from `createClient` has it; a
+    hand-made `client` object has to rename the method.
+
+- **Breaking:** `AccessKey`, returned by `getAccessKey` and `getAccessKeys`, has
+  a new shape. What the key may do, who pays for its gas and which nonces it
+  signs with are three separate fields now, and the key is referred to by
+  `publicKeyRef` instead of `publicKey`:  \
   Previously:
   ```ts
   { accessType: 'FullAccess', publicKey: PublicKey, nonce }
@@ -63,7 +84,7 @@
   has no `lastNonce`, so check the scheme before reading it:
 
   ```ts
-  const { replayProtection } = accountAccessKey;
+  const { replayProtection } = accessKey;
   if (replayProtection.scheme === 'SingleNonceSequence')
     nonce = replayProtection.lastNonce + 1;
   ```
@@ -94,8 +115,8 @@
 - **Breaking:** the per-call transport policy moved from `policies.transport` to
   `options.transportPolicy` – the shape `getTransactionResult` and
   `sendSignedTransaction` already use. Affects `getAccountInfo`,
-  `getAccountAccessKey`, `getAccountAccessKeys`, `callContractReadFunction` and
-  `getBlock`, together with their `safe*` variants:  \
+  `getAccessKey`, `getAccessKeys`, `callContractReadFunction` and `getBlock`,
+  together with their `safe*` variants:  \
   Previously:
   ```ts
   await client.getAccountInfo({
@@ -153,8 +174,7 @@
   `Client.GetAccountInfo.StoragePricePerByte.NotLoaded`.
 
 - Bump `@near-js/jsonrpc-types` from `^1.8.0` to `^1.9.0`. The `rawRpcResult`
-  types of `getBlock`, `getAccountAccessKey` and `getAccountAccessKeys` come
-  from it.
+  types of `getBlock`, `getAccessKey` and `getAccessKeys` come from it.
 
 ---
 

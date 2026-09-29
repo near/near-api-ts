@@ -6,15 +6,15 @@ import type {
 } from './cache/getRecentBlockHash';
 import type { CreateClientPublicErrorRegistry } from './createClient';
 import type {
-  GetAccountAccessKey,
-  GetAccountAccessKeyPublicErrorRegistry,
-  SafeGetAccountAccessKey,
-} from './methods/account/getAccountAccessKey';
+  GetAccessKey,
+  GetAccessKeyPublicErrorRegistry,
+  SafeGetAccessKey,
+} from './methods/account/getAccessKey';
 import type {
-  GetAccountAccessKeys,
-  GetAccountAccessKeysPublicErrorRegistry,
-  SafeGetAccountAccessKeys,
-} from './methods/account/getAccountAccessKeys';
+  GetAccessKeys,
+  GetAccessKeysPublicErrorRegistry,
+  SafeGetAccessKeys,
+} from './methods/account/getAccessKeys';
 import type {
   GetAccountInfo,
   GetAccountInfoPublicErrorRegistry,
@@ -46,8 +46,8 @@ export interface ClientInnerErrorRegistry
 export interface ClientPublicErrorRegistry
   extends CreateClientPublicErrorRegistry,
     GetAccountInfoPublicErrorRegistry,
-    GetAccountAccessKeyPublicErrorRegistry,
-    GetAccountAccessKeysPublicErrorRegistry,
+    GetAccessKeyPublicErrorRegistry,
+    GetAccessKeysPublicErrorRegistry,
     CallContractReadFunctionPublicErrorRegistry,
     GetBlockPublicErrorRegistry,
     GetRecentBlockHashPublicErrorRegistry,
@@ -62,8 +62,8 @@ export type ClientContext = {
 export type Client = {
   // throwing variants
   getAccountInfo: GetAccountInfo;
-  getAccountAccessKey: GetAccountAccessKey;
-  getAccountAccessKeys: GetAccountAccessKeys;
+  getAccessKey: GetAccessKey;
+  getAccessKeys: GetAccessKeys;
   callContractReadFunction: CallContractReadFunction;
   getBlock: GetBlock;
   getRecentBlockHash: GetRecentBlockHash;
@@ -71,8 +71,8 @@ export type Client = {
   sendSignedTransaction: SendSignedTransaction;
   // safe variants
   safeGetAccountInfo: SafeGetAccountInfo;
-  safeGetAccountAccessKey: SafeGetAccountAccessKey;
-  safeGetAccountAccessKeys: SafeGetAccountAccessKeys;
+  safeGetAccessKey: SafeGetAccessKey;
+  safeGetAccessKeys: SafeGetAccessKeys;
   safeCallContractReadFunction: SafeCallContractReadFunction;
   safeGetBlock: SafeGetBlock;
   safeGetRecentBlockHash: SafeGetRecentBlockHash;

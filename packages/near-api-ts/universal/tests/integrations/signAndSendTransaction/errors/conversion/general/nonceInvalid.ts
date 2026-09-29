@@ -8,13 +8,13 @@ import type { TestContext } from './general.test';
 export const nonceInvalid = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+  const { accessKey, blockHash } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
 
   // Nonces have to grow, so the one the access key already holds is always too small.
-  const nonce = getLastNonce(accountAccessKey);
+  const nonce = getLastNonce(accessKey);
 
   const signedTransaction = await signTransaction({
     signDataProvider: defaultKeyPair,
@@ -33,6 +33,6 @@ export const nonceInvalid = (context: TestContext) => async () => {
   assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Nonce.Invalid');
   expect(tx.error.context.info).toStrictEqual({
     transactionNonce: nonce,
-    accessKeyNonce: getLastNonce(accountAccessKey),
+    accessKeyNonce: getLastNonce(accessKey),
   });
 };

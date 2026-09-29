@@ -10,7 +10,7 @@ import type { TestContext } from './deleteAccount.test';
 export const staking = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+  const { accessKey, blockHash } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: DEFAULT_PUBLIC_KEY,
   });
@@ -21,7 +21,7 @@ export const staking = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: getLastNonce(accountAccessKey) + 1,
+      nonce: getLastNonce(accessKey) + 1,
       blockHash,
       action: stake({ amount: near('1000'), validatorPublicKey: DEFAULT_PUBLIC_KEY }),
       receiverAccountId: 'nat',
@@ -39,7 +39,7 @@ export const staking = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: getLastNonce(accountAccessKey) + 2,
+      nonce: getLastNonce(accessKey) + 2,
       blockHash,
       action: deleteAccount({ beneficiaryAccountId: 'alice' }),
       receiverAccountId: 'nat',

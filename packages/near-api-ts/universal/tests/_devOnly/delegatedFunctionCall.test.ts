@@ -33,7 +33,7 @@ describe('Execute delegation', () => {
   it('test', async () => {
     // #1: alice signs the delegation. The delegated action is a plain function
     // call, and the delegation receiver is the contract - not the relay.
-    const aliceAccessKey = await client.getAccountAccessKey({
+    const aliceAccessKey = await client.getAccessKey({
       accountId: 'alice',
       publicKey: aliceKp.publicKey,
     });
@@ -58,7 +58,7 @@ describe('Execute delegation', () => {
           }),
         ],
         receiverAccountId: 'contract.alice',
-        nonce: getLastNonce(aliceAccessKey.accountAccessKey) + 1,
+        nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
         expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
       },
       signDataProvider: aliceKp,
@@ -67,7 +67,7 @@ describe('Execute delegation', () => {
     // #2: The relay wraps the signed delegation into its own transaction. The
     // transaction receiver must be the delegator, or the node answers with
     // DelegateActionSenderDoesNotMatchTxReceiver.
-    const relayAccessKey = await client.getAccountAccessKey({
+    const relayAccessKey = await client.getAccessKey({
       accountId: 'relay',
       publicKey: relayKp.publicKey,
     });
@@ -76,7 +76,7 @@ describe('Execute delegation', () => {
       transaction: {
         signerAccountId: 'relay',
         signerPublicKey: relayKp.publicKey,
-        nonce: getLastNonce(relayAccessKey.accountAccessKey) + 1,
+        nonce: getLastNonce(relayAccessKey.accessKey) + 1,
         actions: [executeDelegation(signedDelegation), transfer({ amount: { near: '1' } })],
         receiverAccountId: 'alice',
         blockHash: relayAccessKey.blockHash,

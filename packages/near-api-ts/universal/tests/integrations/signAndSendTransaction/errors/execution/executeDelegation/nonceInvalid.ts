@@ -9,11 +9,11 @@ import type { TestContext } from './executeDelegation.test';
 export const nonceInvalid = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const aliceAccessKey = await client.getAccountAccessKey({
+  const aliceAccessKey = await client.getAccessKey({
     accountId: 'alice',
     publicKey: defaultKeyPair.publicKey,
   });
-  const delegationNonce = getLastNonce(aliceAccessKey.accountAccessKey);
+  const delegationNonce = getLastNonce(aliceAccessKey.accessKey);
 
   const signedDelegation = await signDelegation({
     delegation: {
@@ -27,7 +27,7 @@ export const nonceInvalid = (context: TestContext) => async () => {
     signDataProvider: defaultKeyPair,
   });
 
-  const natAccessKey = await client.getAccountAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -37,7 +37,7 @@ export const nonceInvalid = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(natAccessKey.accountAccessKey) + 1,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
       blockHash: natAccessKey.blockHash,
       action: executeDelegation(signedDelegation),
       receiverAccountId: 'alice',
@@ -56,6 +56,6 @@ export const nonceInvalid = (context: TestContext) => async () => {
   assertTxResultExecutionErrKind(txResult, 'Action.ExecuteDelegation.Nonce.Invalid');
   expect(txResult.error.context).toStrictEqual({
     delegationNonce,
-    accessKeyNonce: getLastNonce(aliceAccessKey.accountAccessKey),
+    accessKeyNonce: getLastNonce(aliceAccessKey.accessKey),
   });
 };

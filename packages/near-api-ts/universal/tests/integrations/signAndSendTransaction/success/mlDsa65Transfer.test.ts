@@ -36,7 +36,7 @@ describe('ml-dsa-65 Transaction success', () => {
   it('creates an ml-dsa-65 account and transfers signed by it', async () => {
     // Tx 1 — signed by `nat` (ed25519 default key): create `mldsa.nat`, fund it,
     // and register the ml-dsa-65 key as a full-access key.
-    const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+    const { accessKey, blockHash } = await client.getAccessKey({
       accountId: 'nat',
       publicKey: DEFAULT_PUBLIC_KEY,
     });
@@ -46,7 +46,7 @@ describe('ml-dsa-65 Transaction success', () => {
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: DEFAULT_PUBLIC_KEY,
-        nonce: getLastNonce(accountAccessKey) + 1,
+        nonce: getLastNonce(accessKey) + 1,
         blockHash,
         receiverAccountId: newAccountId,
         actions: [
@@ -64,11 +64,10 @@ describe('ml-dsa-65 Transaction success', () => {
     });
 
     // Tx 2 — signed by the ml-dsa-65 key itself: proves on-chain sign/verify.
-    const { accountAccessKey: mlDsa65AccessKey, blockHash: mlDsa65BlockHash } =
-      await client.getAccountAccessKey({
-        accountId: newAccountId,
-        publicKey: mlDsa65KeyPair.publicKey,
-      });
+    const { accessKey: mlDsa65AccessKey, blockHash: mlDsa65BlockHash } = await client.getAccessKey({
+      accountId: newAccountId,
+      publicKey: mlDsa65KeyPair.publicKey,
+    });
 
     const transferTx = await signTransaction({
       signDataProvider: keyService,

@@ -13,7 +13,7 @@ export const budgetNotEnough = (context: TestContext) => async () => {
   // reports the plain shortage instead of `TransactionCost.Overflow`.
   const amount = balance.total.yoctoNear + 10n ** 24n;
 
-  const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+  const { accessKey, blockHash } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -23,7 +23,7 @@ export const budgetNotEnough = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accountAccessKey) + 1,
+      nonce: getLastNonce(accessKey) + 1,
       blockHash,
       action: transfer({ amount: { yoctoNear: amount } }),
       receiverAccountId: 'bob',

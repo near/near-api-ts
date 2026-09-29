@@ -11,7 +11,7 @@ const ACCESS_KEY_NONCE_RANGE_MULTIPLIER = 1_000_000;
 export const nonceTooLarge = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const aliceAccessKey = await client.getAccountAccessKey({
+  const aliceAccessKey = await client.getAccessKey({
     accountId: 'alice',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -29,7 +29,7 @@ export const nonceTooLarge = (context: TestContext) => async () => {
     signDataProvider: defaultKeyPair,
   });
 
-  const natAccessKey = await client.getAccountAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -39,7 +39,7 @@ export const nonceTooLarge = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(natAccessKey.accountAccessKey) + 1,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
       blockHash: natAccessKey.blockHash,
       action: executeDelegation(signedDelegation),
       receiverAccountId: 'alice',

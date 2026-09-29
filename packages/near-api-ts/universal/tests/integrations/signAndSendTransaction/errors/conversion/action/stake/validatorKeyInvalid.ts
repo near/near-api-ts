@@ -14,7 +14,7 @@ export const validatorKeyInvalid = (context: TestContext) => async () => {
   // that are not a torsion-free point, which `randomEd25519KeyPair` never produces.
   const secp256k1KeyPair = randomSecp256k1KeyPair();
 
-  const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+  const { accessKey, blockHash } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -24,7 +24,7 @@ export const validatorKeyInvalid = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accountAccessKey) + 1,
+      nonce: getLastNonce(accessKey) + 1,
       blockHash,
       action: stake({
         amount: { near: '1' },

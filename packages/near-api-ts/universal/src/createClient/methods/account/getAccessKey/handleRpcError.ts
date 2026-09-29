@@ -13,7 +13,7 @@ export const handleRpcError = (rpcResponse: BaseRpcResponse) => {
   if (!rpcError.success)
     return result.err(
       createNatError({
-        kind: 'Client.GetAccountAccessKey.Exhausted',
+        kind: 'Client.GetAccessKey.Exhausted',
         context: {
           lastError: createNatError({
             kind: 'SendRequest.Attempt.Response.InvalidSchema',
@@ -30,7 +30,7 @@ export const handleRpcError = (rpcResponse: BaseRpcResponse) => {
     if (cause.name === 'NO_SYNCED_BLOCKS')
       return result.err(
         createNatError({
-          kind: `Client.GetAccountAccessKey.Rpc.NotSynced`,
+          kind: `Client.GetAccessKey.Rpc.NotSynced`,
           context: null,
         }),
       );
@@ -38,7 +38,7 @@ export const handleRpcError = (rpcResponse: BaseRpcResponse) => {
     if (cause.name === 'UNAVAILABLE_SHARD')
       return result.err(
         createNatError({
-          kind: `Client.GetAccountAccessKey.Rpc.Shard.NotTracked`,
+          kind: `Client.GetAccessKey.Rpc.Shard.NotTracked`,
           context: { shardId: cause.info.requestedShardId },
         }),
       );
@@ -46,7 +46,7 @@ export const handleRpcError = (rpcResponse: BaseRpcResponse) => {
     if (cause.name === 'GARBAGE_COLLECTED_BLOCK')
       return result.err(
         createNatError({
-          kind: `Client.GetAccountAccessKey.Rpc.Block.GarbageCollected`,
+          kind: `Client.GetAccessKey.Rpc.Block.GarbageCollected`,
           context: {
             blockHash: cause.info.blockHash,
             blockHeight: cause.info.blockHeight,
@@ -59,7 +59,7 @@ export const handleRpcError = (rpcResponse: BaseRpcResponse) => {
     if (cause.name === 'UNKNOWN_BLOCK' && 'blockId' in cause.info.blockReference)
       return result.err(
         createNatError({
-          kind: `Client.GetAccountAccessKey.Rpc.Block.NotFound`,
+          kind: `Client.GetAccessKey.Rpc.Block.NotFound`,
           context: {
             blockId: cause.info.blockReference.blockId,
           },
@@ -71,7 +71,7 @@ export const handleRpcError = (rpcResponse: BaseRpcResponse) => {
 
   return result.err(
     createNatError({
-      kind: 'Client.GetAccountAccessKey.Internal',
+      kind: 'Client.GetAccessKey.Internal',
       context: { cause: rpcResponse },
     }),
   );

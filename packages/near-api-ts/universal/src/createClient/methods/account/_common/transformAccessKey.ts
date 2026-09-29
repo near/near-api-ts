@@ -1,8 +1,5 @@
 import type { AccessKeyView } from '@near-js/jsonrpc-types';
-import type {
-  AccountAccessKey,
-  AllowedFunctions,
-} from '../../../../../types/_common/accountAccessKey';
+import type { AccessKey, AllowedFunctions } from '../../../../../types/_common/accessKey';
 import type { PublicKeyRef } from '../../../../../types/_common/crypto';
 import { yoctoNear } from '../../../../_common/nearToken';
 
@@ -17,7 +14,7 @@ const toAllowedFunctions = (methodNames: string[]): AllowedFunctions =>
 export const transformAccessKey = ({
   publicKeyRef,
   accessKey,
-}: TransformAccessKeyArgs): AccountAccessKey => {
+}: TransformAccessKeyArgs): AccessKey => {
   const { nonce, permission } = accessKey;
 
   if (permission === 'FullAccess')

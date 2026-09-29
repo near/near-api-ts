@@ -11,7 +11,7 @@ const ED25519_SIGNATURE_LENGTH = 64;
 export const signatureInvalid = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+  const { accessKey, blockHash } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -21,7 +21,7 @@ export const signatureInvalid = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accountAccessKey) + 1,
+      nonce: getLastNonce(accessKey) + 1,
       blockHash,
       action: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',

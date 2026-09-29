@@ -1,4 +1,4 @@
-import type { AccountAccessKey } from '../../../../types/_common/accountAccessKey';
+import type { AccessKey } from '../../../../types/_common/accessKey';
 import type { TransactionNonce } from '../../../../types/_common/common';
 import type { PublicKey } from '../../../../types/_common/crypto';
 import type { PoolFullAccessKey } from '../../../../types/signer/inner/keyPool';
@@ -21,7 +21,7 @@ const transformKey = (nonce: TransactionNonce, publicKey: PublicKey): PoolFullAc
 };
 
 export const createFullAccessPoolKeys = async (
-  accountKeys: AccountAccessKey[],
+  accountKeys: AccessKey[],
   signerContext: MemorySignerContext,
 ): Promise<PoolFullAccessKey[]> => {
   const filteredKeys = [];

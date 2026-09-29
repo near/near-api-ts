@@ -1,4 +1,4 @@
-import type { AllowedFunctions, GasBudget } from '../../../../../../../_common/accountAccessKey';
+import type { AllowedFunctions, GasBudget } from '../../../../../../../_common/accessKey';
 import type {
   AccountId,
   Base64String,

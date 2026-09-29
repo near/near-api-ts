@@ -1,5 +1,5 @@
 import type { NatError } from '../../../../../src/_common/_common/_common/_common/natError';
-import type { AllowedFunctions } from '../../../accountAccessKey';
+import type { AllowedFunctions } from '../../../accessKey';
 import type { AccountId, ContractFunctionName, Result } from '../../../common';
 import type { NearcorePublicKey, PublicKey } from '../../../crypto';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';

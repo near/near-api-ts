@@ -18,7 +18,7 @@ export const attachedDepositNotAllowed = (context: TestContext) => async () => {
     allowedFunctions: 'AllNonPayable',
   });
 
-  const aliceAccessKey = await client.getAccountAccessKey({
+  const aliceAccessKey = await client.getAccessKey({
     accountId: 'alice',
     publicKey: functionCallKeyPair.publicKey,
   });
@@ -33,7 +33,7 @@ export const attachedDepositNotAllowed = (context: TestContext) => async () => {
         attachedDeposit: { yoctoNear: '1' },
       }),
       receiverAccountId: 'bob',
-      nonce: getLastNonce(aliceAccessKey.accountAccessKey) + 1,
+      nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
       expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
     },
     signDataProvider: functionCallKeyPair,

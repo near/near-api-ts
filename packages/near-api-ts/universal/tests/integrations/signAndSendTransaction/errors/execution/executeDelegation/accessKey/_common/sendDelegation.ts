@@ -15,7 +15,7 @@ export const sendDelegation = async (
 ) => {
   const { client, defaultKeyPair } = context;
 
-  const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+  const { accessKey, blockHash } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -25,7 +25,7 @@ export const sendDelegation = async (
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accountAccessKey) + 1,
+      nonce: getLastNonce(accessKey) + 1,
       blockHash,
       action: executeDelegation(signedDelegation),
       receiverAccountId: 'alice',

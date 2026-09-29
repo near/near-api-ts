@@ -13,7 +13,7 @@ export const notFound = (context: TestContext) => async () => {
   // key to look up — the signature itself is valid for the key stated in the transaction.
   const signerKeyPair = randomEd25519KeyPair();
 
-  const { blockHash } = await client.getAccountAccessKey({
+  const { blockHash } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });

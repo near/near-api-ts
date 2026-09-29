@@ -41,7 +41,7 @@ const MAX_TRANSACTION_SIZE = 1_572_864;
 export const transactionSizeExceeded = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+  const { accessKey, blockHash } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -51,7 +51,7 @@ export const transactionSizeExceeded = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accountAccessKey) + 1,
+      nonce: getLastNonce(accessKey) + 1,
       blockHash,
       // Contract code is the cheapest way to push the transaction over the limit; it is
       // never compiled, the size check happens long before execution.

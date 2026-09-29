@@ -3,7 +3,7 @@ import { type Schema, serialize } from 'borsh';
 import * as z from 'zod/mini';
 import type { BorshBytes } from '../../../types/_common/common';
 import type { Message, SafeVerifyMessage, VerifyMessage } from '../../../types/_common/message';
-import type { SafeGetAccountAccessKeys } from '../../../types/client/methods/account/getAccountAccessKeys';
+import type { SafeGetAccessKeys } from '../../../types/client/methods/account/getAccessKeys';
 import { Nep413Message } from '../../_common/_common/_common/constants';
 import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
@@ -34,9 +34,9 @@ export const VerifyMessageArgsSchema = z.object({
   signedMessage: SignedMessageZodSchema,
   message: MessageZodSchema,
   client: z.object({
-    safeGetAccountAccessKeys: z.custom<SafeGetAccountAccessKeys>(
+    safeGetAccessKeys: z.custom<SafeGetAccessKeys>(
       (val) => typeof val === 'function',
-      'client.safeGetAccountAccessKeys must be a function',
+      'client.safeGetAccessKeys must be a function',
     ),
   }),
 });
@@ -54,7 +54,7 @@ export const safeVerifyMessage: SafeVerifyMessage = wrapInternalError(
     const { signedMessage, client } = validArgs.data;
 
     // 1. Check if a provided public key belongs to the account and is a FullAccess key
-    const accessKeys = await client.safeGetAccountAccessKeys({
+    const accessKeys = await client.safeGetAccessKeys({
       accountId: signedMessage.signerAccountId,
     });
 
@@ -64,7 +64,7 @@ export const safeVerifyMessage: SafeVerifyMessage = wrapInternalError(
     // The account refers to its keys by ref, not by the public key itself
     const signerPublicKeyRef = toPublicKeyRef(signedMessage.signerPublicKey);
 
-    const isAccountFullAccessKey = accessKeys.data.accountAccessKeys.some(
+    const isAccountFullAccessKey = accessKeys.data.accessKeys.some(
       (key) => key.publicKeyRef === signerPublicKeyRef && key.permission.kind === 'FullAccess',
     );
     if (!isAccountFullAccessKey) return result.ok(false);

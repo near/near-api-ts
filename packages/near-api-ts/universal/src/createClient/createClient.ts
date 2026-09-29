@@ -7,8 +7,8 @@ import { asThrowable } from '../_common/_common/asThrowable';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { createCache } from './createCache/createCache';
 import { CreateTransportArgsZodSchema, createTransport } from './createTransport/createTransport';
-import { createSafeGetAccountAccessKey } from './methods/account/getAccountAccessKey/getAccountAccessKey';
-import { createSafeGetAccountAccessKeys } from './methods/account/getAccountAccessKeys/getAccountAccessKeys';
+import { createSafeGetAccessKey } from './methods/account/getAccessKey/getAccessKey';
+import { createSafeGetAccessKeys } from './methods/account/getAccessKeys/getAccessKeys';
 import { createSafeGetAccountInfo } from './methods/account/getAccountInfo/getAccountInfo';
 import { createSafeGetBlock } from './methods/block/getBlock/getBlock';
 import { createSafeCallContractReadFunction } from './methods/contract/callContractReadFunction/callContractReadFunction';
@@ -41,8 +41,8 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
     };
 
     const safeGetAccountInfo = createSafeGetAccountInfo(context);
-    const safeGetAccountAccessKey = createSafeGetAccountAccessKey(context);
-    const safeGetAccountAccessKeys = createSafeGetAccountAccessKeys(context);
+    const safeGetAccessKey = createSafeGetAccessKey(context);
+    const safeGetAccessKeys = createSafeGetAccessKeys(context);
     const safeCallContractReadFunction = createSafeCallContractReadFunction(context);
     const safeGetBlock = createSafeGetBlock(context);
     const safeGetTransactionResult = createSafeGetTransactionResult(context);
@@ -50,16 +50,16 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
 
     return result.ok({
       getAccountInfo: asThrowable(safeGetAccountInfo),
-      getAccountAccessKey: asThrowable(safeGetAccountAccessKey),
-      getAccountAccessKeys: asThrowable(safeGetAccountAccessKeys),
+      getAccessKey: asThrowable(safeGetAccessKey),
+      getAccessKeys: asThrowable(safeGetAccessKeys),
       callContractReadFunction: asThrowable(safeCallContractReadFunction as any) as any, // TODO Fix: asThrowable doesn't work fine with overloads
       getBlock: asThrowable(safeGetBlock),
       getRecentBlockHash: asThrowable(cache.getRecentBlockHash),
       getTransactionResult: asThrowable(safeGetTransactionResult),
       sendSignedTransaction: asThrowable(safeSendSignedTransaction),
       safeGetAccountInfo,
-      safeGetAccountAccessKey,
-      safeGetAccountAccessKeys,
+      safeGetAccessKey,
+      safeGetAccessKeys,
       safeCallContractReadFunction,
       safeGetBlock,
       safeGetRecentBlockHash: cache.getRecentBlockHash,

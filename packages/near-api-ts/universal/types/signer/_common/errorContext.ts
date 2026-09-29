@@ -1,17 +1,17 @@
-import type { AccountAccessKey } from '../../_common/accountAccessKey';
+import type { AccessKey } from '../../_common/accessKey';
 import type { Milliseconds } from '../../_common/common';
 import type { PublicKey } from '../../_common/crypto';
-import type { GetAccountAccessKeysError } from '../../client/methods/account/getAccountAccessKeys';
+import type { GetAccessKeysError } from '../../client/methods/account/getAccessKeys';
 import type { PoolKeys } from '../inner/keyPool';
 import type { AccessTypePriority } from '../inner/taskQueue';
 
 export type MemorySignerErrorContext = {
   KeyPool: {
     AccessKeys: {
-      NotLoaded: { cause: GetAccountAccessKeysError };
+      NotLoaded: { cause: GetAccessKeysError };
     };
     Empty: {
-      accountAccessKeys: AccountAccessKey[];
+      accessKeys: AccessKey[];
       allowedAccessKeys: PublicKey[];
     };
     SigningKey: {

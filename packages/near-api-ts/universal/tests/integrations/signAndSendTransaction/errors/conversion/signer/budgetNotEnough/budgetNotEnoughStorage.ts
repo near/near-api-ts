@@ -27,7 +27,7 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
 
   const accountKeyPair = randomEd25519KeyPair();
 
-  const natAccessKey = await client.getAccountAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -37,7 +37,7 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(natAccessKey.accountAccessKey) + 1,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
       blockHash: natAccessKey.blockHash,
       actions: [
         createAccount(),
@@ -53,7 +53,7 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  const accountAccessKey = await client.getAccountAccessKey({
+  const accountAccessKey = await client.getAccessKey({
     accountId: ACCOUNT_ID,
     publicKey: accountKeyPair.publicKey,
   });
@@ -63,7 +63,7 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: ACCOUNT_ID,
       signerPublicKey: accountKeyPair.publicKey,
-      nonce: getLastNonce(accountAccessKey.accountAccessKey) + 1,
+      nonce: getLastNonce(accountAccessKey.accessKey) + 1,
       blockHash: accountAccessKey.blockHash,
       actions: Array.from({ length: EXTRA_KEYS_COUNT }, () =>
         addFunctionCallKey({
@@ -91,7 +91,7 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: ACCOUNT_ID,
       signerPublicKey: accountKeyPair.publicKey,
-      nonce: getLastNonce(accountAccessKey.accountAccessKey) + 2,
+      nonce: getLastNonce(accountAccessKey.accessKey) + 2,
       blockHash,
       // `available` is everything but the storage deposit, so sending it away leaves the
       // account exactly at the required amount — and the transaction cost is charged on top

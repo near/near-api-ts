@@ -23,7 +23,7 @@ describe('DeployContract Tests', () => {
   });
 
   it('deployTheSameContract.test', async () => {
-    const natKey = await client.getAccountAccessKey({
+    const natKey = await client.getAccessKey({
       accountId: 'nat',
       publicKey: defaultKeyPair.publicKey,
     });
@@ -32,7 +32,7 @@ describe('DeployContract Tests', () => {
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: defaultKeyPair.publicKey,
-        nonce: getLastNonce(natKey.accountAccessKey) + 1,
+        nonce: getLastNonce(natKey.accessKey) + 1,
         blockHash: natKey.blockHash,
         actions: [
           registerPinnableGlobalContract({
@@ -53,7 +53,7 @@ describe('DeployContract Tests', () => {
     log(natInfo);
 
     // 2. Try to use it
-    const aliceKey = await client.getAccountAccessKey({
+    const aliceKey = await client.getAccessKey({
       accountId: 'alice',
       publicKey: defaultKeyPair.publicKey,
     });
@@ -62,7 +62,7 @@ describe('DeployContract Tests', () => {
       transaction: {
         signerAccountId: 'alice',
         signerPublicKey: defaultKeyPair.publicKey,
-        nonce: getLastNonce(aliceKey.accountAccessKey) + 1,
+        nonce: getLastNonce(aliceKey.accessKey) + 1,
         blockHash: aliceKey.blockHash,
         actions: [
           registerPinnableGlobalContract({

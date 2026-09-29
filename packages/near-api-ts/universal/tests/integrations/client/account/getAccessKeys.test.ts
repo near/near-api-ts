@@ -27,10 +27,10 @@ describe('Get Account Access Keys', () => {
   });
 
   it('Ok', async () => {
-    const res = await client.getAccountAccessKeys({
+    const res = await client.getAccessKeys({
       accountId: 'nat',
     });
-    expect(res.accountAccessKeys[0]).toEqual({
+    expect(res.accessKeys[0]).toEqual({
       publicKeyRef: DEFAULT_PUBLIC_KEY,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
@@ -56,9 +56,9 @@ describe('Get Account Access Keys', () => {
       },
     });
 
-    const { accountAccessKeys } = await client.getAccountAccessKeys({ accountId: 'nat' });
+    const { accessKeys } = await client.getAccessKeys({ accountId: 'nat' });
 
-    expect(accountAccessKeys.map(({ publicKeyRef }) => publicKeyRef).sort()).toEqual(
+    expect(accessKeys.map(({ publicKeyRef }) => publicKeyRef).sort()).toEqual(
       [DEFAULT_PUBLIC_KEY, secp256k1KeyPair.publicKey, mlDsa65KeyPair.publicKeyRef].sort(),
     );
     expect(mlDsa65KeyPair.publicKeyRef).toMatch(/^ml-dsa-65-hash:/);
@@ -127,10 +127,10 @@ describe('Get Account Access Keys', () => {
       block_hash: '11111111111111111111111111111111',
       block_height: 1,
     });
-    const { accountAccessKeys } = await fakeClient.getAccountAccessKeys({ accountId: 'nat' });
+    const { accessKeys } = await fakeClient.getAccessKeys({ accountId: 'nat' });
     close();
 
-    expect(accountAccessKeys).toEqual([
+    expect(accessKeys).toEqual([
       {
         publicKeyRef: fullAccess,
         permission: { kind: 'FullAccess' },
@@ -191,21 +191,21 @@ describe('Get Account Access Keys', () => {
       block_hash: '11111111111111111111111111111111',
       block_height: 1,
     });
-    const res = await fakeClient.safeGetAccountAccessKeys({ accountId: 'nat' });
+    const res = await fakeClient.safeGetAccessKeys({ accountId: 'nat' });
     close();
 
-    assertNatErrKind(res, 'Client.GetAccountAccessKeys.Exhausted');
+    assertNatErrKind(res, 'Client.GetAccessKeys.Exhausted');
     expect(
-      isNatError(res.error, 'Client.GetAccountAccessKeys.Exhausted') &&
+      isNatError(res.error, 'Client.GetAccessKeys.Exhausted') &&
         res.error.context.lastError.kind === 'SendRequest.Attempt.Response.InvalidSchema',
     ).toBe(true);
   });
 
   it('Invalid args', async () => {
-    const res = await client.safeGetAccountAccessKeys({
+    const res = await client.safeGetAccessKeys({
       accountId: 'nat###2%',
     });
-    assertNatErrKind(res, 'Client.GetAccountAccessKeys.Args.InvalidSchema');
+    assertNatErrKind(res, 'Client.GetAccessKeys.Args.InvalidSchema');
   });
 
   it(`Fetch failed`, async () => {
@@ -214,21 +214,21 @@ describe('Get Account Access Keys', () => {
         rpcEndpoints: { regular: [{ url: 'http://localhost:0000' }] },
       },
     });
-    const res = await brokenClient.safeGetAccountAccessKeys({
+    const res = await brokenClient.safeGetAccessKeys({
       accountId: 'nat',
     });
-    assertNatErrKind(res, 'Client.GetAccountAccessKeys.Exhausted');
+    assertNatErrKind(res, 'Client.GetAccessKeys.Exhausted');
 
     expect(
-      isNatError(res.error, 'Client.GetAccountAccessKeys.Exhausted') &&
+      isNatError(res.error, 'Client.GetAccessKeys.Exhausted') &&
         res.error.context.lastError.kind === 'SendRequest.Attempt.Request.FetchFailed',
     ).toBe(true);
   });
 
   it('Non-existing account', async () => {
-    const res = await client.getAccountAccessKeys({
+    const res = await client.getAccessKeys({
       accountId: 'nat-non-found',
     });
-    expect(res.accountAccessKeys.length).toBe(0);
+    expect(res.accessKeys.length).toBe(0);
   });
 });

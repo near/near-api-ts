@@ -16,7 +16,7 @@ export const receiverNotAllowed = (context: TestContext) => async () => {
     allowedFunctions: 'AllNonPayable',
   });
 
-  const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+  const { accessKey, blockHash } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: functionCallKeyPair.publicKey,
   });
@@ -26,7 +26,7 @@ export const receiverNotAllowed = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: functionCallKeyPair.publicKey,
-      nonce: getLastNonce(accountAccessKey) + 1,
+      nonce: getLastNonce(accessKey) + 1,
       blockHash,
       action: functionCall({ functionName: 'any_function', gasLimit: { teraGas: '10' } }),
       receiverAccountId: 'bob',

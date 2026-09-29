@@ -19,7 +19,7 @@ const FUNCTION_ARGS_SIZE_BYTES = MAX_FUNCTION_ARGS_SIZE_BYTES + 1;
 export const functionArgsTooLarge = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+  const { accessKey, blockHash } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -29,7 +29,7 @@ export const functionArgsTooLarge = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accountAccessKey) + 1,
+      nonce: getLastNonce(accessKey) + 1,
       blockHash,
       // The gas has to be non-zero and the name short enough: both are checked before the
       // arguments in `validate_function_call_action`. The default serializer would turn the

@@ -46,7 +46,7 @@ describe.skipIf(isUnsupportedPlatform)(
       // valid.
       const signerKeyPair = randomEd25519KeyPair();
 
-      const { blockHash } = await client.getAccountAccessKey({
+      const { blockHash } = await client.getAccessKey({
         accountId: 'nat',
         publicKey: DEFAULT_PUBLIC_KEY,
       });

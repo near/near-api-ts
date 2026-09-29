@@ -32,7 +32,7 @@ export const nonceTooLarge = (context: TestContext) => async () => {
   const upperBound = rawRpcResult.header.height * ACCESS_KEY_NONCE_RANGE_MULTIPLIER;
   const txNonce = upperBound + 1;
 
-  const { blockHash } = await client.getAccountAccessKey({
+  const { blockHash } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });

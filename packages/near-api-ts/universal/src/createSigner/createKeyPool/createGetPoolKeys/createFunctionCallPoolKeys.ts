@@ -1,7 +1,4 @@
-import type {
-  AccountAccessKey,
-  AccountBalanceFunctionCallKey,
-} from '../../../../types/_common/accountAccessKey';
+import type { AccessKey, AccountBalanceFunctionCallKey } from '../../../../types/_common/accessKey';
 import type { TransactionNonce } from '../../../../types/_common/common';
 import type { PublicKey } from '../../../../types/_common/crypto';
 import type { PoolFunctionCallKey } from '../../../../types/signer/inner/keyPool';
@@ -30,7 +27,7 @@ const transformKey = (
 };
 
 export const createFunctionCallPoolKeys = async (
-  accountKeys: AccountAccessKey[],
+  accountKeys: AccessKey[],
   signerContext: MemorySignerContext,
 ): Promise<PoolFunctionCallKey[]> => {
   const filteredKeys = [];

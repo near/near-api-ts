@@ -17,7 +17,7 @@ export const functionNotAllowed = (context: TestContext) => async () => {
     allowedFunctions: ['allowed_function'],
   });
 
-  const aliceAccessKey = await client.getAccountAccessKey({
+  const aliceAccessKey = await client.getAccessKey({
     accountId: 'alice',
     publicKey: functionCallKeyPair.publicKey,
   });
@@ -31,7 +31,7 @@ export const functionNotAllowed = (context: TestContext) => async () => {
         gasLimit: { teraGas: '10' },
       }),
       receiverAccountId: 'bob',
-      nonce: getLastNonce(aliceAccessKey.accountAccessKey) + 1,
+      nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
       expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
     },
     signDataProvider: functionCallKeyPair,

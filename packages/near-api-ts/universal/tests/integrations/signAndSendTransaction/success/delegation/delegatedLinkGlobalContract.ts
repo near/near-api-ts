@@ -20,7 +20,7 @@ export const delegatedLinkGlobalContract = (context: TestContext) => async () =>
     registrarKeyPair: defaultKeyPair,
   });
 
-  const delegatorAccessKey = await client.getAccountAccessKey({
+  const delegatorAccessKey = await client.getAccessKey({
     accountId: delegatorAccountId,
     publicKey: defaultKeyPair.publicKey,
   });
@@ -41,14 +41,14 @@ export const delegatedLinkGlobalContract = (context: TestContext) => async () =>
         }),
       ],
       receiverAccountId: delegatorAccountId,
-      nonce: getLastNonce(delegatorAccessKey.accountAccessKey) + 1,
+      nonce: getLastNonce(delegatorAccessKey.accessKey) + 1,
       expiration: { blockHeight: delegatorAccessKey.blockHeight + 100 },
     },
   });
 
   // `relay` wraps the signed delegation into its own transaction and pays for it. The transaction
   // receiver must be the delegator, the only receiver a delegation may be sent to.
-  const relayAccessKey = await client.getAccountAccessKey({
+  const relayAccessKey = await client.getAccessKey({
     accountId: 'relay',
     publicKey: relayKeyPair.publicKey,
   });
@@ -58,7 +58,7 @@ export const delegatedLinkGlobalContract = (context: TestContext) => async () =>
     transaction: {
       signerAccountId: 'relay',
       signerPublicKey: relayKeyPair.publicKey,
-      nonce: getLastNonce(relayAccessKey.accountAccessKey) + 1,
+      nonce: getLastNonce(relayAccessKey.accessKey) + 1,
       blockHash: relayAccessKey.blockHash,
       action: executeDelegation(signedDelegation),
       receiverAccountId: delegatorAccountId,

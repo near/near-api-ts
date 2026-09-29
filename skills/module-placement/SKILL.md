@@ -86,9 +86,9 @@ misplaced** and must move into that consumer.
 
 ```
 src/createClient/methods/account/
-├── _common/transformAccessKey.ts           ← 2 consumers, LCA = account/
-├── getAccountAccessKey/handleRpcResult.ts  ← consumer 1
-└── getAccountAccessKeys/handleRpcResult.ts ← consumer 2
+├── _common/transformAccessKey.ts    ← 2 consumers, LCA = account/
+├── getAccessKey/handleRpcResult.ts  ← consumer 1
+└── getAccessKeys/handleRpcResult.ts ← consumer 2
 ```
 
 The folder's own entry counts as one of the two: `createSendRequest/_common/

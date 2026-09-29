@@ -57,7 +57,7 @@ describe('executeTransaction › KeyPool.SigningKey.NotFound', async () => {
     // Try to sign FA transaction with an FC key
     const user = createSigner('user.nat');
 
-    // const keys = await client.getAccountAccessKeys({ accountId: 'user.nat' });
+    // const keys = await client.getAccessKeys({ accountId: 'user.nat' });
     // console.log(keys);
 
     const tx2 = await user.safeExecuteTransaction({

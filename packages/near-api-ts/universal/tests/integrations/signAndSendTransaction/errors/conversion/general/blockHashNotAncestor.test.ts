@@ -76,7 +76,7 @@ describe.skip('signAndSendTransaction › BlockHash.NotAncestor conversion error
   it('fails with BlockHash.NotAncestor when the transaction block is ahead of the node head', {
     timeout: 180_000,
   }, async () => {
-    const natKey = await client.getAccountAccessKey({
+    const natKey = await client.getAccessKey({
       accountId: 'nat',
       publicKey: defaultKeyPair.publicKey,
     });
@@ -86,7 +86,7 @@ describe.skip('signAndSendTransaction › BlockHash.NotAncestor conversion error
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: defaultKeyPair.publicKey,
-        nonce: getLastNonce(natKey.accountAccessKey) + 1,
+        nonce: getLastNonce(natKey.accessKey) + 1,
         blockHash: natKey.blockHash,
         actions: [
           createAccount(),
@@ -103,7 +103,7 @@ describe.skip('signAndSendTransaction › BlockHash.NotAncestor conversion error
       minimalProcessingStage: 'CompletedFinal',
     });
 
-    let nonce = getLastNonce(natKey.accountAccessKey) + 2;
+    let nonce = getLastNonce(natKey.accessKey) + 2;
 
     /**
      * Fire and forget: waiting for these would mean waiting for the backlog they create,
@@ -150,7 +150,7 @@ describe.skip('signAndSendTransaction › BlockHash.NotAncestor conversion error
     for (let attempt = 0; attempt < PROBE_ATTEMPTS; attempt++) {
       if (attempt > 0 && attempt % TOP_UP_EVERY === 0) await keepBusy(TOP_UP_CALLS);
 
-      const { blockHash } = await client.getAccountAccessKey({
+      const { blockHash } = await client.getAccessKey({
         accountId: 'nat',
         publicKey: defaultKeyPair.publicKey,
       });

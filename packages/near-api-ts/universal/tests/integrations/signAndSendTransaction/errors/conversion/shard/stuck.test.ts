@@ -57,7 +57,7 @@ describe.skip('signAndSendTransaction › Shard.Stuck conversion error', () => {
     let node1Running = true;
 
     try {
-      const { accountAccessKey } = await client.getAccountAccessKey({
+      const { accessKey } = await client.getAccessKey({
         accountId: 'alice',
         publicKey: defaultKeyPair.publicKey,
       });
@@ -78,7 +78,7 @@ describe.skip('signAndSendTransaction › Shard.Stuck conversion error', () => {
             signerPublicKey: defaultKeyPair.publicKey,
             // Every attempt needs its own nonce: the first ones are accepted and converted
             // on shard 0, they just never reach `nat`.
-            nonce: getLastNonce(accountAccessKey) + 1 + attempt,
+            nonce: getLastNonce(accessKey) + 1 + attempt,
             blockHash: hash,
             action: transfer({ amount: { near: '1' } }),
             receiverAccountId: 'nat',

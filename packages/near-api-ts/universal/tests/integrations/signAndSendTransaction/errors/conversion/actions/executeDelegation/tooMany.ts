@@ -9,7 +9,7 @@ export const executeDelegationTooMany = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
   const defaultKp = keyPair(DEFAULT_PRIVATE_KEY);
 
-  const aliceAccessKey = await client.getAccountAccessKey({
+  const aliceAccessKey = await client.getAccessKey({
     accountId: 'alice',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -20,13 +20,13 @@ export const executeDelegationTooMany = (context: TestContext) => async () => {
       delegatorPublicKey: defaultKp.publicKey,
       delegatedAction: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
-      nonce: getLastNonce(aliceAccessKey.accountAccessKey) + 1,
+      nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
       expiration: { blockHeight: aliceAccessKey.blockHeight + 100 },
     },
     signDataProvider: defaultKp,
   });
 
-  const natAccessKey = await client.getAccountAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'alice',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -36,7 +36,7 @@ export const executeDelegationTooMany = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(natAccessKey.accountAccessKey) + 1,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
       blockHash: natAccessKey.blockHash,
       actions: [executeDelegation(signedDelegation), executeDelegation(signedDelegation)],
       receiverAccountId: 'nat',

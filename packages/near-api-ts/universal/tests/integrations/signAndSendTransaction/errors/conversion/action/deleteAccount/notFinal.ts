@@ -8,7 +8,7 @@ import type { TestContext } from '../action.test';
 export const notFinal = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+  const { accessKey, blockHash } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -18,7 +18,7 @@ export const notFinal = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accountAccessKey) + 1,
+      nonce: getLastNonce(accessKey) + 1,
       blockHash,
       // Nothing may follow the deletion — the account is gone by then. The check runs while
       // the actions are validated, so `nat` survives this transaction untouched.

@@ -1,8 +1,8 @@
 import type { NatError } from '../../src/_common/_common/_common/_common/natError';
 import type {
-  GetAccountAccessKeysError,
-  SafeGetAccountAccessKeys,
-} from '../client/methods/account/getAccountAccessKeys';
+  GetAccessKeysError,
+  SafeGetAccessKeys,
+} from '../client/methods/account/getAccessKeys';
 import type { AccountId, Base64String, JsonValue, Result } from './common';
 import type { PublicKey, Signature } from './crypto';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from './natError';
@@ -11,7 +11,7 @@ export interface MessagePublicErrorRegistry {
   'CreateMessage.Args.InvalidSchema': InvalidSchemaErrorContext;
   'CreateMessage.Internal': InternalErrorContext;
   'VerifyMessage.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'VerifyMessage.AccessKeys.NotLoaded': { cause: GetAccountAccessKeysError };
+  'VerifyMessage.AccessKeys.NotLoaded': { cause: GetAccessKeysError };
   'VerifyMessage.Internal': InternalErrorContext;
 }
 
@@ -56,7 +56,7 @@ type VerifyMessageArgs = {
   signedMessage: SignedMessage;
   message: Message;
   client: {
-    safeGetAccountAccessKeys: SafeGetAccountAccessKeys;
+    safeGetAccessKeys: SafeGetAccessKeys;
   };
 };
 

@@ -31,22 +31,22 @@ export const createGetPoolKeys =
 
     const loadAccessKeys = async () => {
       // 3. Fetch account access keys from the network;
-      const accountAccessKeys = await signerContext.client.safeGetAccountAccessKeys({
+      const accessKeys = await signerContext.client.safeGetAccessKeys({
         accountId: signerContext.signerAccountId,
         atMomentOf: 'LatestOptimisticBlock',
       });
 
-      if (!accountAccessKeys.success)
+      if (!accessKeys.success)
         return result.err(
           createNatError({
             kind: 'MemorySigner.KeyPool.AccessKeys.NotLoaded',
-            context: { cause: accountAccessKeys.error },
+            context: { cause: accessKeys.error },
           }),
         );
 
       // 4. If a user wants to handle all tasks only by a specific key/s - remove others;
       const allowedAccessKeys = getAllowedAccessKeys(
-        accountAccessKeys.data.accountAccessKeys,
+        accessKeys.data.accessKeys,
         createMemorySignerArgs,
       );
 
@@ -55,7 +55,7 @@ export const createGetPoolKeys =
           createNatError({
             kind: 'MemorySigner.KeyPool.Empty',
             context: {
-              accountAccessKeys: accountAccessKeys.data.accountAccessKeys,
+              accessKeys: accessKeys.data.accessKeys,
               allowedAccessKeys: createMemorySignerArgs.keyPool?.allowedAccessKeys ?? [],
             },
           }),

@@ -22,13 +22,13 @@ describe('Get Account Access Key', () => {
 
   it('Ok', async () => {
     await expect(
-      client.getAccountAccessKey({
+      client.getAccessKey({
         accountId: 'nat',
         publicKey: DEFAULT_PUBLIC_KEY,
       }),
     ).resolves.toMatchObject({
       accountId: 'nat',
-      accountAccessKey: {
+      accessKey: {
         publicKeyRef: DEFAULT_PUBLIC_KEY,
         permission: { kind: 'FullAccess' },
         gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
@@ -38,7 +38,7 @@ describe('Get Account Access Key', () => {
   });
 
   // The node does not return the key, and the output refers to it the same way
-  // client.getAccountAccessKeys does — by the hash for an ml-dsa-65 key
+  // client.getAccessKeys does — by the hash for an ml-dsa-65 key
   it('Ok - ml-dsa-65 key', async () => {
     const mlDsa65KeyPair = randomMlDsa65KeyPair();
 
@@ -55,42 +55,42 @@ describe('Get Account Access Key', () => {
       },
     });
 
-    const { accountAccessKey } = await client.getAccountAccessKey({
+    const { accessKey } = await client.getAccessKey({
       accountId: 'nat',
       publicKey: mlDsa65KeyPair.publicKey,
     });
 
-    expect(accountAccessKey).toEqual({
+    expect(accessKey).toEqual({
       publicKeyRef: mlDsa65KeyPair.publicKeyRef,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
       replayProtection: { scheme: 'SingleNonceSequence', lastNonce: expect.any(Number) },
     });
-    expect(accountAccessKey.publicKeyRef).toMatch(/^ml-dsa-65-hash:/);
+    expect(accessKey.publicKeyRef).toMatch(/^ml-dsa-65-hash:/);
   });
 
   it('Invalid args', async () => {
-    const res = await client.safeGetAccountAccessKey({
+    const res = await client.safeGetAccessKey({
       // @ts-expect-error
       accountId2: 'nat-non-found',
       publicKey: 'ed25519:123',
     });
-    assertNatErrKind(res, 'Client.GetAccountAccessKey.Args.InvalidSchema');
+    assertNatErrKind(res, 'Client.GetAccessKey.Args.InvalidSchema');
   });
 
   it('Non-existing account', async () => {
-    const res = await client.safeGetAccountAccessKey({
+    const res = await client.safeGetAccessKey({
       accountId: 'nat-non-found',
       publicKey: 'ed25519:5BGSaf6YjVm7565VzWQHNxoyEjwr3jUpRJSGjREvU9dB',
     });
-    assertNatErrKind(res, 'Client.GetAccountAccessKey.Rpc.AccountAccessKey.NotFound');
+    assertNatErrKind(res, 'Client.GetAccessKey.Rpc.AccessKey.NotFound');
   });
 
   it('Non-existing access key', async () => {
-    const res = await client.safeGetAccountAccessKey({
+    const res = await client.safeGetAccessKey({
       accountId: 'nat',
       publicKey: 'ed25519:5BGSaf6YjVm7565VzWQHNxoyEjwr3jUpRJSGjREvU9d',
     });
-    assertNatErrKind(res, 'Client.GetAccountAccessKey.Rpc.AccountAccessKey.NotFound');
+    assertNatErrKind(res, 'Client.GetAccessKey.Rpc.AccessKey.NotFound');
   });
 });

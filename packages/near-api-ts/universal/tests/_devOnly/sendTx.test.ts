@@ -35,7 +35,7 @@ describe('SendTx', () => {
   });
 
   it('send tx', async () => {
-    const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+    const { accessKey, blockHash } = await client.getAccessKey({
       accountId: 'nat',
       publicKey: defaultKeyPair.publicKey,
     });
@@ -47,7 +47,7 @@ describe('SendTx', () => {
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: defaultKeyPair.publicKey,
-        nonce: getLastNonce(accountAccessKey) + 1,
+        nonce: getLastNonce(accessKey) + 1,
         blockHash,
         action: stake({ amount: { near: '0' }, validatorPublicKey: randomKp.publicKey }),
         receiverAccountId: 'nat',

@@ -149,7 +149,7 @@ export {
 // Types
 
 export type {
-  AccountAccessKey,
+  AccessKey,
   AccountBalanceFullAccessKey,
   AccountBalanceFunctionCallKey,
   AllowedFunctions,
@@ -157,7 +157,7 @@ export type {
   GasBudgetArgs,
   KeyBalanceFullAccessKey,
   KeyBalanceFunctionCallKey,
-} from './types/_common/accountAccessKey';
+} from './types/_common/accessKey';
 export type {
   AccountId,
   BlockReference,

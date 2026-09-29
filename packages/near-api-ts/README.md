@@ -197,8 +197,8 @@ All client methods are available in both flavors (`getAccountInfo` / `safeGetAcc
 | Method | Returns |
 | --- | --- |
 | `getAccountInfo` | balance breakdown, storage usage, contract status, observed block |
-| `getAccountAccessKey` | one access key with its nonce and permissions |
-| `getAccountAccessKeys` | every access key on the account |
+| `getAccessKey` | one access key with its nonce and permissions |
+| `getAccessKeys` | every access key on the account |
 | `callContractReadFunction` | result of a read-only contract call plus its logs |
 | `getBlock` | the raw RPC block response |
 | `getRecentBlockHash` | a cached recent block hash for building transactions |
@@ -242,14 +242,14 @@ switch (info.contract.status) {
 ### Access keys
 
 ```ts
-const { accountAccessKey, blockHash, blockHeight } = await client.getAccountAccessKey({
+const { accessKey, blockHash, blockHeight } = await client.getAccessKey({
   accountId: 'example.testnet',
   publicKey: 'ed25519:...',
 });
 
-accountAccessKey.publicKeyRef; // 'ed25519:...'
+accessKey.publicKeyRef; // 'ed25519:...'
 
-const { permission, gasPayment, replayProtection } = accountAccessKey;
+const { permission, gasPayment, replayProtection } = accessKey;
 
 // What the key may do
 if (permission.kind === 'FunctionCall') {
@@ -279,7 +279,7 @@ ones, so it can sign that many transactions in parallel.
 An account refers to its keys by `publicKeyRef` rather than by the public key: an ed25519 or
 secp256k1 key is referred to by the key itself, an ML-DSA-65 key by its hash
 (`'ml-dsa-65-hash:...'`), since the protocol does not store the full 1952-byte key.
-`getAccountAccessKeys` lists keys by the same refs, and every key pair carries its own
+`getAccessKeys` lists keys by the same refs, and every key pair carries its own
 `publicKeyRef` to compare them with.
 
 ### Read-only contract calls
@@ -416,17 +416,21 @@ import { keyPair, signTransaction, transfer, near } from 'near-api-ts';
 
 const signerKeyPair = keyPair('ed25519:your-private-key');
 
-const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+const { accessKey, blockHash } = await client.getAccessKey({
   accountId: 'example.testnet',
   publicKey: signerKeyPair.publicKey,
 });
+
+// Only a key with a single nonce sequence has a last nonce to continue from — not a gas key
+const { replayProtection } = accessKey;
+if (replayProtection.scheme !== 'SingleNonceSequence') throw new Error('Unexpected gas key');
 
 const signed = await signTransaction({
   signDataProvider: signerKeyPair,
   transaction: {
     signerAccountId: 'example.testnet',
     signerPublicKey: signerKeyPair.publicKey,
-    nonce: accountAccessKey.nonce + 1,
+    nonce: replayProtection.lastNonce + 1,
     blockHash,
     receiverAccountId: 'receiver.testnet',
     action: transfer({ amount: near('1') }),
@@ -505,10 +509,13 @@ delegation into its own transaction and covers the gas.
 import { signDelegation, executeDelegation, functionCall, teraGas } from 'near-api-ts';
 
 // --- delegator side ---
-const { accountAccessKey, blockHeight } = await client.getAccountAccessKey({
+const { accessKey, blockHeight } = await client.getAccessKey({
   accountId: 'alice.testnet',
   publicKey: aliceKeyPair.publicKey,
 });
+
+const { replayProtection } = accessKey;
+if (replayProtection.scheme !== 'SingleNonceSequence') throw new Error('Unexpected gas key');
 
 const signedDelegation = await signDelegation({
   signDataProvider: aliceKeyPair,
@@ -516,7 +523,7 @@ const signedDelegation = await signDelegation({
     delegatorAccountId: 'alice.testnet',
     delegatorPublicKey: aliceKeyPair.publicKey,
     receiverAccountId: 'contract.testnet',
-    nonce: accountAccessKey.nonce + 1,
+    nonce: replayProtection.lastNonce + 1,
     expiration: { blockHeight: blockHeight + 100 },
     delegatedAction: functionCall({
       functionName: 'add_message',
@@ -748,7 +755,7 @@ Requests that need historical state fall back to the archival endpoints on their
 
 Types for everything above are exported too — `Client`, `MemorySigner`, `MemoryKeyService`,
 `NearToken`, `NearGas`, `TransactionAction`, `TransactionIntent`, `SignedTransaction`,
-`SignTransactionOutput`, `DelegationBase`, `SignDelegationOutput`, `AccountAccessKey`,
+`SignTransactionOutput`, `DelegationBase`, `SignDelegationOutput`, `AccessKey`,
 `AccountContract`, `GetAccountInfoOutput`, and the rest.
 
 ---

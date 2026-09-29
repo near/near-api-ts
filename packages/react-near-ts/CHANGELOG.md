@@ -11,8 +11,14 @@
 
 ### Changed
 
-- **Breaking:** `AccountAccessKey`, re-exported from near-api-ts, refers to the
-  key by `publicKeyRef` instead of `publicKey`, and a custom `keyService` passed
+- **Breaking:** the access key API re-exported from near-api-ts drops the
+  `Account` prefix: `AccountAccessKey` is now `AccessKey`, and the client methods
+  `getAccountAccessKey` / `getAccountAccessKeys` are now `getAccessKey` /
+  `getAccessKeys`, returning `accessKey` / `accessKeys`. See the near-api-ts
+  v0.13.0 changelog for the full list, error kinds included.
+
+- **Breaking:** `AccessKey`, re-exported from near-api-ts, refers to the key by
+  `publicKeyRef` instead of `publicKey`, and a custom `keyService` passed
   to `createMemorySigner` must implement `findPublicKey` / `safeFindPublicKey`.
   See the near-api-ts v0.13.0 changelog.
 
@@ -35,9 +41,8 @@
   ```
 
   The same move applies to the client methods re-exported from near-api-ts
-  (`getAccountInfo`, `getAccountAccessKey`, `getAccountAccessKeys`,
-  `callContractReadFunction`, `getBlock`). See the near-api-ts v0.13.0
-  changelog.
+  (`getAccountInfo`, `getAccessKey`, `getAccessKeys`, `callContractReadFunction`,
+  `getBlock`). See the near-api-ts v0.13.0 changelog.
 
 - **Breaking:** the account info returned by `useAccountInfo` reports storage
   usage as `storage.usedBytes` instead of `usedStorageBytes` – the same change

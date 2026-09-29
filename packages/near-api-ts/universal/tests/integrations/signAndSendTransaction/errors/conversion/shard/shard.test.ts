@@ -62,7 +62,7 @@ describe.skip('signAndSendTransaction › Shard.Congested conversion error', () 
     const { rpcUrl } = sandbox;
 
     try {
-      const natKey = await client.getAccountAccessKey({
+      const natKey = await client.getAccessKey({
         accountId: 'nat',
         publicKey: defaultKeyPair.publicKey,
       });
@@ -72,7 +72,7 @@ describe.skip('signAndSendTransaction › Shard.Congested conversion error', () 
         transaction: {
           signerAccountId: 'nat',
           signerPublicKey: defaultKeyPair.publicKey,
-          nonce: getLastNonce(natKey.accountAccessKey) + 1,
+          nonce: getLastNonce(natKey.accessKey) + 1,
           blockHash: natKey.blockHash,
           actions: [
             createAccount(),
@@ -89,11 +89,11 @@ describe.skip('signAndSendTransaction › Shard.Congested conversion error', () 
         minimalProcessingStage: 'CompletedFinal',
       });
 
-      let nonce = getLastNonce(natKey.accountAccessKey) + 2;
+      let nonce = getLastNonce(natKey.accessKey) + 2;
 
       const currentBlockHash = async () =>
         (
-          await client.getAccountAccessKey({
+          await client.getAccessKey({
             accountId: 'nat',
             publicKey: defaultKeyPair.publicKey,
           })

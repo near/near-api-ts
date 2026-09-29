@@ -14,7 +14,7 @@ export const deployContractTooMany = (context: TestContext) => async () => {
 
   const deployContractActionsCount = MAX_DEPLOY_ACTIONS_PER_RECEIPT + 1;
 
-  const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+  const { accessKey, blockHash } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -24,7 +24,7 @@ export const deployContractTooMany = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accountAccessKey) + 1,
+      nonce: getLastNonce(accessKey) + 1,
       blockHash,
       // `validate_number_of_deploy_actions` only counts the deploy actions, and the wasm
       // itself is never compiled at this stage — empty code keeps the transaction small.

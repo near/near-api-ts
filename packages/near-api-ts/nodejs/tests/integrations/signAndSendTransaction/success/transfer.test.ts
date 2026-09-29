@@ -29,7 +29,7 @@
 //   });
 //
 //   it('Transfer', async () => {
-//     const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+//     const { accessKey, blockHash } = await client.getAccessKey({
 //       accountId: 'nat',
 //       publicKey: DEFAULT_PUBLIC_KEY,
 //     });
@@ -38,7 +38,7 @@
 //       transaction: {
 //         signerAccountId: 'nat',
 //         signerPublicKey: DEFAULT_PUBLIC_KEY,
-//         nonce: accountAccessKey.nonce + 1,
+//         nonce: accessKey.nonce + 1,
 //         blockHash,
 //         action: transfer({ amount: { near: '5' } }),
 //         receiverAccountId: 'bob',

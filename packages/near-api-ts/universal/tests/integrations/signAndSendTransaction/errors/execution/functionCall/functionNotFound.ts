@@ -16,7 +16,7 @@ import type { TestContext } from './functionCall.test';
 export const functionNotFound = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+  const { accessKey, blockHash } = await client.getAccessKey({
     accountId: 'nat',
     publicKey: DEFAULT_PUBLIC_KEY,
   });
@@ -26,7 +26,7 @@ export const functionNotFound = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: getLastNonce(accountAccessKey) + 1,
+      nonce: getLastNonce(accessKey) + 1,
       blockHash,
       actions: [
         createAccount(),

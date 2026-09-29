@@ -37,7 +37,7 @@ describe('invalid transaction included in a chunk', () => {
   });
 
   it('test invalidTxInChunk', async () => {
-    const { accountAccessKey, blockHash } = await client.getAccountAccessKey({
+    const { accessKey, blockHash } = await client.getAccessKey({
       accountId: 'nat',
       publicKey: DEFAULT_PUBLIC_KEY,
     });
@@ -50,7 +50,7 @@ describe('invalid transaction included in a chunk', () => {
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: kpd.publicKey,
-        nonce: getLastNonce(accountAccessKey) + 1,
+        nonce: getLastNonce(accessKey) + 1,
         blockHash,
         action: transfer({ amount: { near: '200000' } }),
         receiverAccountId: 'bob123',

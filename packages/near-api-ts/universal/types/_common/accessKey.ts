@@ -127,7 +127,7 @@ export type KeyBalanceFunctionCallKey = {
   replayProtection: NonceSequenceSet;
 };
 
-export type AccountAccessKey =
+export type AccessKey =
   | AccountBalanceFullAccessKey
   | AccountBalanceFunctionCallKey
   | KeyBalanceFullAccessKey
