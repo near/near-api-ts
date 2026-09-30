@@ -42,14 +42,14 @@ export type AddAccessKeyActionSummary =
       publicKey: PublicKey;
       permission: FullAccessPermission;
       gasPayment: { source: 'KeyBalance' };
-      replayProtection: { totalSequences: number };
+      replayProtection: { channelCount: number };
     }
   | {
       actionType: 'AddAccessKey';
       publicKey: PublicKey;
       permission: FunctionCallPermission;
       gasPayment: { source: 'KeyBalance' };
-      replayProtection: { totalSequences: number };
+      replayProtection: { channelCount: number };
     };
 
 type DeployContractActionSummary = {

@@ -34,9 +34,8 @@ export const createFunctionCallPoolKeys = async (
 
   for (const key of accountKeys) {
     const { permission, replayProtection } = key;
-    // The pool tracks one nonce per key, so it leaves out keys with a set of nonce sequences
-    if (permission.kind !== 'FunctionCall' || replayProtection.scheme !== 'SingleNonceSequence')
-      continue;
+    // The pool tracks one nonce per key, so it leaves out keys with a set of nonce channels
+    if (permission.kind !== 'FunctionCall' || replayProtection.scheme !== 'NonceChannel') continue;
 
     // The account refers to the key by its ref, and we need the full public key to sign;
     // the keyService finds it only if it holds the key (we can sign data by it)

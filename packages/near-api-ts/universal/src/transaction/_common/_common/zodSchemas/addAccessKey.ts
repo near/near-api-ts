@@ -20,10 +20,8 @@ const FunctionCallPermissionZodSchema = z.object({
   allowedFunctions: AllowedFunctionsSchema,
 });
 
-const NonceSequenceSetZodSchema = z.object({
-  totalSequences: z
-    .number()
-    .check(z.int(), z.gte(1), z.lte(constants.NonceSequenceSet.MaxTotalSequences)),
+const NonceChannelsZodSchema = z.object({
+  channelCount: z.number().check(z.int(), z.gte(1), z.lte(constants.NonceChannels.MaxChannelCount)),
 });
 
 const KeyBalanceGasPaymentZodSchema = z.object({
@@ -55,14 +53,14 @@ const KeyBalanceFullAccessKeyShape = {
   publicKey: PublicKeyZodSchema,
   permission: FullAccessPermissionZodSchema,
   gasPayment: KeyBalanceGasPaymentZodSchema,
-  replayProtection: NonceSequenceSetZodSchema,
+  replayProtection: NonceChannelsZodSchema,
 };
 
 const KeyBalanceFunctionCallKeyShape = {
   publicKey: PublicKeyZodSchema,
   permission: FunctionCallPermissionZodSchema,
   gasPayment: KeyBalanceGasPaymentZodSchema,
-  replayProtection: NonceSequenceSetZodSchema,
+  replayProtection: NonceChannelsZodSchema,
 };
 
 export const AddAccessKeyArgsZodSchema = z.union([

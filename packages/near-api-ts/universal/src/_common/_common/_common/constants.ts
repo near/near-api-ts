@@ -43,12 +43,12 @@ export const Nep413Message = {
   NonceLength: 32,
 } as const;
 
-export const NonceSequenceSet = {
+export const NonceChannels = {
   /**
-   * The most nonce sequences a key paid from its own balance (a gas key) may keep - nearcore's
+   * The most nonce channels a key paid from its own balance (a gas key) may keep - nearcore's
    * `AccessKeyPermission::MAX_NONCES_FOR_GAS_KEY`, a protocol constant rather than a runtime config.
    */
-  MaxTotalSequences: 1024,
+  MaxChannelCount: 1024,
 } as const;
 
 export const constants = {
@@ -57,5 +57,5 @@ export const constants = {
   Nep413Message,
   Nep366MetaTransaction,
   BinaryLengths,
-  NonceSequenceSet,
+  NonceChannels,
 };

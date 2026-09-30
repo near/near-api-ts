@@ -29,11 +29,11 @@
     ref: 32 bytes for ed25519 and ml-dsa-65, 64 for secp256k1.
 
 - **Gas keys can be added** – `addAccessKey` with `gasPayment: { source: 'KeyBalance' }`
-  and `replayProtection: { totalSequences }` (1..1024) adds a key that pays for gas
+  and `replayProtection: { channelCount }` (1..1024) adds a key that pays for gas
   from a balance of its own and signs up to that many transactions in parallel,
   with either permission. The key starts with an empty balance – the protocol
   accepts no other – and takes no `allowance`. The upper limit is
-  `constants.NonceSequenceSet.MaxTotalSequences`.
+  `constants.NonceChannels.MaxChannelCount`.
 
 ### Changed
 
@@ -74,25 +74,25 @@
     publicKeyRef: PublicKeyRef,
     permission: { kind: 'FullAccess' },
     gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
-    replayProtection: { scheme: 'SingleNonceSequence', lastNonce },
+    replayProtection: { scheme: 'NonceChannel', lastNonce },
   }
   {
     publicKeyRef,
     permission: { kind: 'FunctionCall', allowedContract, allowedFunctions },
     gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' | NearToken }, // was gasBudget
-    replayProtection: { scheme: 'SingleNonceSequence', lastNonce },
+    replayProtection: { scheme: 'NonceChannel', lastNonce },
   }
   ```
 
   The union also gains gas keys – keys that pay for gas from a balance of their
-  own and keep up to 1024 independent nonce sequences, with either permission:
+  own and keep up to 1024 independent nonce channels, with either permission:
   `gasPayment: { source: 'KeyBalance', balance }` and
-  `replayProtection: { scheme: 'NonceSequenceSet', totalSequences }`. Such a key
+  `replayProtection: { scheme: 'NonceChannels', channelCount }`. Such a key
   has no `lastNonce`, so check the scheme before reading it:
 
   ```ts
   const { replayProtection } = accessKey;
-  if (replayProtection.scheme === 'SingleNonceSequence')
+  if (replayProtection.scheme === 'NonceChannel')
     nonce = replayProtection.lastNonce + 1;
   ```
 

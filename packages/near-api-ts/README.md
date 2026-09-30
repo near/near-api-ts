@@ -266,14 +266,14 @@ if (gasPayment.source === 'AccountBalance') {
 }
 
 // Which nonces the key signs with
-if (replayProtection.scheme === 'SingleNonceSequence') {
+if (replayProtection.scheme === 'NonceChannel') {
   replayProtection.lastNonce; // the next transaction needs a bigger one
 } else {
-  replayProtection.totalSequences; // 'NonceSequenceSet' — for transactions in parallel
+  replayProtection.channelCount; // 'NonceChannels' — for transactions in parallel
 }
 ```
 
-The last two go together: a key paid from the account balance keeps a single nonce sequence,
+The last two go together: a key paid from the account balance keeps a single nonce channel,
 while a key with a balance of its own (nearcore calls it a gas key) keeps up to 1024 independent
 ones, so it can sign that many transactions in parallel.
 
@@ -390,7 +390,7 @@ The signer signs only with keys paid from the account balance. A key with a bala
 | `linkGlobalContract({ globalContractAccountId })` | follows a registrar's current code |
 
 `addAccessKey` describes a key the way `getAccessKey` reports it — what it may do, who pays for
-its gas and, for a key with a balance of its own, how many nonce sequences it keeps:
+its gas and, for a key with a balance of its own, how many nonce channels it keeps:
 
 ```ts
 // Paid from the account balance
@@ -410,7 +410,7 @@ addAccessKey({
   publicKey,
   permission: { kind: 'FullAccess' },
   gasPayment: { source: 'KeyBalance' },
-  replayProtection: { totalSequences: 16 }, // 1..constants.NonceSequenceSet.MaxTotalSequences (1024)
+  replayProtection: { channelCount: 16 }, // 1..constants.NonceChannels.MaxChannelCount (1024)
 });
 ```
 
@@ -449,9 +449,9 @@ const { accessKey, atMomentOf } = await client.getAccessKey({
   publicKey: signerKeyPair.publicKey,
 });
 
-// Only a key with a single nonce sequence has a last nonce to continue from — not a gas key
+// Only a key with a single nonce channel has a last nonce to continue from — not a gas key
 const { replayProtection } = accessKey;
-if (replayProtection.scheme !== 'SingleNonceSequence') throw new Error('Unexpected gas key');
+if (replayProtection.scheme !== 'NonceChannel') throw new Error('Unexpected gas key');
 
 const signed = await signTransaction({
   signDataProvider: signerKeyPair,
@@ -543,7 +543,7 @@ const { accessKey, atMomentOf } = await client.getAccessKey({
 });
 
 const { replayProtection } = accessKey;
-if (replayProtection.scheme !== 'SingleNonceSequence') throw new Error('Unexpected gas key');
+if (replayProtection.scheme !== 'NonceChannel') throw new Error('Unexpected gas key');
 
 const signedDelegation = await signDelegation({
   signDataProvider: aliceKeyPair,

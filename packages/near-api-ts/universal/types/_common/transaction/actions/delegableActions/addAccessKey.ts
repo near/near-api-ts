@@ -12,11 +12,11 @@ export interface CreateAddAccessKeyActionPublicErrorRegistry {
 }
 
 /**
- * The key keeps `totalSequences` (1..1024) independent nonce sequences, so it can sign
+ * The key keeps `channelCount` (1..1024) independent nonce channels, so it can sign
  * that many transactions in parallel.
  */
-type NonceSequenceSetArgs = {
-  totalSequences: number;
+type NonceChannelsArgs = {
+  channelCount: number;
 };
 
 // ── Paid from the account balance ────────────────────────────
@@ -50,7 +50,7 @@ type KeyBalanceFullAccessKeyArgs = {
   gasPayment: {
     source: 'KeyBalance';
   };
-  replayProtection: NonceSequenceSetArgs;
+  replayProtection: NonceChannelsArgs;
 };
 
 type KeyBalanceFunctionCallKeyArgs = {
@@ -59,7 +59,7 @@ type KeyBalanceFunctionCallKeyArgs = {
   gasPayment: {
     source: 'KeyBalance';
   };
-  replayProtection: NonceSequenceSetArgs;
+  replayProtection: NonceChannelsArgs;
 };
 
 export type CreateAddAccessKeyActionArgs =

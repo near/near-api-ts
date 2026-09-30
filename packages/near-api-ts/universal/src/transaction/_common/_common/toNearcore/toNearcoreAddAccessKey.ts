@@ -17,10 +17,10 @@ const toNearcoreFunctionCallPermission = (
 });
 
 const getPermission = (action: InnerAddAccessKeyAction): NearcoreAccessKeyPermission => {
-  // Only a key paid from its own balance - a gas key - keeps a set of nonce sequences. Nearcore
+  // Only a key paid from its own balance - a gas key - keeps a set of nonce channels. Nearcore
   // requires it to be added with an empty balance and without an allowance.
   if (action.replayProtection) {
-    const gasKeyInfo = { balance: 0n, numNonces: action.replayProtection.totalSequences };
+    const gasKeyInfo = { balance: 0n, numNonces: action.replayProtection.channelCount };
 
     if (action.permission.kind === 'FullAccess') return { gasKeyFullAccess: gasKeyInfo };
 

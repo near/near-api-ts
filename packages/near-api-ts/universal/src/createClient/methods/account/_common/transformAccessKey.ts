@@ -22,7 +22,7 @@ export const transformAccessKey = ({
       publicKeyRef,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
-      replayProtection: { scheme: 'SingleNonceSequence', lastNonce: nonce },
+      replayProtection: { scheme: 'NonceChannel', lastNonce: nonce },
     };
 
   if ('FunctionCall' in permission) {
@@ -39,11 +39,11 @@ export const transformAccessKey = ({
         source: 'AccountBalance',
         allowance: typeof allowance === 'string' ? yoctoNear(allowance) : 'Unlimited',
       },
-      replayProtection: { scheme: 'SingleNonceSequence', lastNonce: nonce },
+      replayProtection: { scheme: 'NonceChannel', lastNonce: nonce },
     };
   }
 
-  // A gas key signs only through its own nonce sequences, stored apart from the access key;
+  // A gas key signs only through its own nonce channels, stored apart from the access key;
   // nearcore never checks the access key nonce for it
   if ('GasKeyFullAccess' in permission) {
     const { balance, numNonces } = permission.GasKeyFullAccess;
@@ -52,7 +52,7 @@ export const transformAccessKey = ({
       publicKeyRef,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'KeyBalance', balance: yoctoNear(balance) },
-      replayProtection: { scheme: 'NonceSequenceSet', totalSequences: numNonces },
+      replayProtection: { scheme: 'NonceChannels', channelCount: numNonces },
     };
   }
 
@@ -68,7 +68,7 @@ export const transformAccessKey = ({
         allowedFunctions: toAllowedFunctions(methodNames),
       },
       gasPayment: { source: 'KeyBalance', balance: yoctoNear(balance) },
-      replayProtection: { scheme: 'NonceSequenceSet', totalSequences: numNonces },
+      replayProtection: { scheme: 'NonceChannels', channelCount: numNonces },
     };
   }
 

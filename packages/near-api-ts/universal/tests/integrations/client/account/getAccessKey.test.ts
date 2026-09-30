@@ -32,7 +32,7 @@ describe('Get Account Access Key', () => {
         publicKeyRef: DEFAULT_PUBLIC_KEY,
         permission: { kind: 'FullAccess' },
         gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
-        replayProtection: { scheme: 'SingleNonceSequence', lastNonce: 0 },
+        replayProtection: { scheme: 'NonceChannel', lastNonce: 0 },
       },
       atMomentOf: { blockHash: expect.any(String), blockHeight: expect.any(Number) },
     });
@@ -69,7 +69,7 @@ describe('Get Account Access Key', () => {
       publicKeyRef: mlDsa65KeyPair.publicKeyRef,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
-      replayProtection: { scheme: 'SingleNonceSequence', lastNonce: expect.any(Number) },
+      replayProtection: { scheme: 'NonceChannel', lastNonce: expect.any(Number) },
     });
     expect(accessKey.publicKeyRef).toMatch(/^ml-dsa-65-hash:/);
   });

@@ -34,7 +34,7 @@ describe('Get Account Access Keys', () => {
       publicKeyRef: DEFAULT_PUBLIC_KEY,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
-      replayProtection: { scheme: 'SingleNonceSequence', lastNonce: 0 },
+      replayProtection: { scheme: 'NonceChannel', lastNonce: 0 },
     });
     expect(res.atMomentOf).toEqual({
       blockHash: expect.any(String),
@@ -150,7 +150,7 @@ describe('Get Account Access Keys', () => {
         publicKeyRef: fullAccess,
         permission: { kind: 'FullAccess' },
         gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
-        replayProtection: { scheme: 'SingleNonceSequence', lastNonce: 5 },
+        replayProtection: { scheme: 'NonceChannel', lastNonce: 5 },
       },
       {
         publicKeyRef: functionCall,
@@ -160,7 +160,7 @@ describe('Get Account Access Keys', () => {
           allowedFunctions: 'AllNonPayable',
         },
         gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
-        replayProtection: { scheme: 'SingleNonceSequence', lastNonce: 6 },
+        replayProtection: { scheme: 'NonceChannel', lastNonce: 6 },
       },
       {
         publicKeyRef: limitedFunctionCall,
@@ -173,13 +173,13 @@ describe('Get Account Access Keys', () => {
           source: 'AccountBalance',
           allowance: yoctoNear('250000000000000000000000'),
         },
-        replayProtection: { scheme: 'SingleNonceSequence', lastNonce: 7 },
+        replayProtection: { scheme: 'NonceChannel', lastNonce: 7 },
       },
       {
         publicKeyRef: gasKeyFullAccess,
         permission: { kind: 'FullAccess' },
         gasPayment: { source: 'KeyBalance', balance: yoctoNear('1000') },
-        replayProtection: { scheme: 'NonceSequenceSet', totalSequences: 4 },
+        replayProtection: { scheme: 'NonceChannels', channelCount: 4 },
       },
       {
         publicKeyRef: gasKeyFunctionCall,
@@ -189,7 +189,7 @@ describe('Get Account Access Keys', () => {
           allowedFunctions: 'AllNonPayable',
         },
         gasPayment: { source: 'KeyBalance', balance: yoctoNear('2000') },
-        replayProtection: { scheme: 'NonceSequenceSet', totalSequences: 1024 },
+        replayProtection: { scheme: 'NonceChannels', channelCount: 1024 },
       },
     ]);
   });

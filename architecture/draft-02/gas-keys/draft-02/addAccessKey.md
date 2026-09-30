@@ -20,7 +20,7 @@ addAccessKey({
     source: 'KeyBalance'
   },
   replayProtection: {
-    totalSequences: 10,
+    channelCount: 10,
   }
 })
 
@@ -50,7 +50,7 @@ addAccessKey({
     source: 'KeyBalance'
   },
   replayProtection: {
-    totalSequences: 10,
+    channelCount: 10,
   }
 })
 ```

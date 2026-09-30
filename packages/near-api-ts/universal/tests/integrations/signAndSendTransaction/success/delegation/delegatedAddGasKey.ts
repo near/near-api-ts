@@ -31,7 +31,7 @@ export const delegatedAddGasKey = (context: TestContext) => async () => {
         publicKey: gasKeyPair.publicKey,
         permission: { kind: 'FunctionCall', allowedContract: 'bob', allowedFunctions: ['ping'] },
         gasPayment: { source: 'KeyBalance' },
-        replayProtection: { totalSequences: 7 },
+        replayProtection: { channelCount: 7 },
       }),
       receiverAccountId: delegatorAccountId,
       nonce: getLastNonce(delegatorAccessKey.accessKey) + 1,
@@ -75,7 +75,7 @@ export const delegatedAddGasKey = (context: TestContext) => async () => {
               allowedFunctions: ['ping'],
             },
             gasPayment: { source: 'KeyBalance' },
-            replayProtection: { totalSequences: 7 },
+            replayProtection: { channelCount: 7 },
           },
         ],
       },
@@ -90,6 +90,6 @@ export const delegatedAddGasKey = (context: TestContext) => async () => {
   expect(accessKey).toMatchObject({
     permission: { kind: 'FunctionCall', allowedContract: 'bob', allowedFunctions: ['ping'] },
     gasPayment: { source: 'KeyBalance', balance: { yoctoNear: 0n } },
-    replayProtection: { scheme: 'NonceSequenceSet', totalSequences: 7 },
+    replayProtection: { scheme: 'NonceChannels', channelCount: 7 },
   });
 };

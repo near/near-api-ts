@@ -18,7 +18,7 @@ type KeyA = {
     allowance: 'Unlimited'
   };
   replayProtection: {
-    scheme: 'SingleNonceSequence';
+    scheme: 'NonceChannel';
     lastNonce: SequentialNonce;
   };
 };
@@ -35,7 +35,7 @@ type KeyB = {
     allowance: 'Unlimited' | NearToken
   }
   replayProtection: {
-    scheme: 'SingleNonceSequence';
+    scheme: 'NonceChannel';
     lastNonce: SequentialNonce;
   };
 };
@@ -52,8 +52,8 @@ type KeyC = {
     balance: NearToken;
   };
   replayProtection: {
-    scheme: 'NonceSequenceSet';
-    totalSequences: number; // 1..1024
+    scheme: 'NonceChannels';
+    channelCount: number;
   };
 };
 
@@ -69,8 +69,8 @@ export type KeyD = {
     balance: NearToken;
   };
   replayProtection: {
-    scheme: 'NonceSequenceSet';
-    totalSequences: number; // 1..1024
+    scheme: 'NonceChannels';
+    channelCount: number; // 1..1024
   };
 };
 

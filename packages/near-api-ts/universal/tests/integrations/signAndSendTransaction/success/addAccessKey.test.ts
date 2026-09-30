@@ -64,7 +64,7 @@ describe('signAndSendTransaction › addAccessKey', () => {
             publicKey: gasFullAccessKey.publicKey,
             permission: { kind: 'FullAccess' },
             gasPayment: { source: 'KeyBalance' },
-            replayProtection: { totalSequences: 1024 },
+            replayProtection: { channelCount: 1024 },
           }),
           addAccessKey({
             publicKey: gasFunctionCallKey.publicKey,
@@ -74,7 +74,7 @@ describe('signAndSendTransaction › addAccessKey', () => {
               allowedFunctions: 'AllNonPayable',
             },
             gasPayment: { source: 'KeyBalance' },
-            replayProtection: { totalSequences: 3 },
+            replayProtection: { channelCount: 3 },
           }),
         ],
         receiverAccountId: 'nat',
@@ -106,7 +106,7 @@ describe('signAndSendTransaction › addAccessKey', () => {
         publicKey: gasFullAccessKey.publicKey,
         permission: { kind: 'FullAccess' },
         gasPayment: { source: 'KeyBalance' },
-        replayProtection: { totalSequences: 1024 },
+        replayProtection: { channelCount: 1024 },
       },
       {
         actionType: 'AddAccessKey',
@@ -117,7 +117,7 @@ describe('signAndSendTransaction › addAccessKey', () => {
           allowedFunctions: 'AllNonPayable',
         },
         gasPayment: { source: 'KeyBalance' },
-        replayProtection: { totalSequences: 3 },
+        replayProtection: { channelCount: 3 },
       },
     ]);
 
@@ -134,20 +134,20 @@ describe('signAndSendTransaction › addAccessKey', () => {
     expect(findKey(fullAccessKey)).toMatchObject({
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
-      replayProtection: { scheme: 'SingleNonceSequence' },
+      replayProtection: { scheme: 'NonceChannel' },
     });
 
     expect(findKey(functionCallKey)).toMatchObject({
       permission: functionCallPermission,
       gasPayment: { source: 'AccountBalance', allowance: { near: '0.25' } },
-      replayProtection: { scheme: 'SingleNonceSequence' },
+      replayProtection: { scheme: 'NonceChannel' },
     });
 
     // A gas key starts empty: it is funded by a TransferToGasKey action afterwards
     expect(findKey(gasFullAccessKey)).toMatchObject({
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'KeyBalance', balance: { yoctoNear: 0n } },
-      replayProtection: { scheme: 'NonceSequenceSet', totalSequences: 1024 },
+      replayProtection: { scheme: 'NonceChannels', channelCount: 1024 },
     });
 
     expect(findKey(gasFunctionCallKey)).toMatchObject({
@@ -157,7 +157,7 @@ describe('signAndSendTransaction › addAccessKey', () => {
         allowedFunctions: 'AllNonPayable',
       },
       gasPayment: { source: 'KeyBalance', balance: { yoctoNear: 0n } },
-      replayProtection: { scheme: 'NonceSequenceSet', totalSequences: 3 },
+      replayProtection: { scheme: 'NonceChannels', channelCount: 3 },
     });
   });
 });

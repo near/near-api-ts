@@ -78,21 +78,22 @@ type KeyBalanceGasPayment = {
 };
 
 /**
- * Every transaction the key signs must use a nonce greater than `lastNonce`.
+ * The key keeps a single nonce channel: every transaction it signs must use a nonce
+ * greater than `lastNonce`.
  */
-type SingleNonceSequence = {
-  scheme: 'SingleNonceSequence';
+type NonceChannel = {
+  scheme: 'NonceChannel';
   lastNonce: SequentialNonce;
 };
 
 /**
- * The key keeps `totalSequences` (1..1024) independent nonce sequences, so it can sign
- * that many transactions in parallel. Each transaction picks one sequence and must use
+ * The key keeps `channelCount` (1..1024) independent nonce channels, so it can sign
+ * that many transactions in parallel. Each transaction picks one channel and must use
  * a nonce greater than the last one in it.
  */
-type NonceSequenceSet = {
-  scheme: 'NonceSequenceSet';
-  totalSequences: number;
+type NonceChannels = {
+  scheme: 'NonceChannels';
+  channelCount: number;
 };
 
 // ── Paid from the account balance ────────────────────────────
@@ -101,14 +102,14 @@ export type AccountBalanceFullAccessKey = {
   publicKeyRef: PublicKeyRef;
   permission: FullAccessPermission;
   gasPayment: UnlimitedAccountBalanceGasPayment;
-  replayProtection: SingleNonceSequence;
+  replayProtection: NonceChannel;
 };
 
 export type AccountBalanceFunctionCallKey = {
   publicKeyRef: PublicKeyRef;
   permission: FunctionCallPermission;
   gasPayment: AccountBalanceGasPayment;
-  replayProtection: SingleNonceSequence;
+  replayProtection: NonceChannel;
 };
 
 // ── Paid from the key balance ────────────────────────────────
@@ -117,14 +118,14 @@ export type KeyBalanceFullAccessKey = {
   publicKeyRef: PublicKeyRef;
   permission: FullAccessPermission;
   gasPayment: KeyBalanceGasPayment;
-  replayProtection: NonceSequenceSet;
+  replayProtection: NonceChannels;
 };
 
 export type KeyBalanceFunctionCallKey = {
   publicKeyRef: PublicKeyRef;
   permission: FunctionCallPermission;
   gasPayment: KeyBalanceGasPayment;
-  replayProtection: NonceSequenceSet;
+  replayProtection: NonceChannels;
 };
 
 export type AccessKey =

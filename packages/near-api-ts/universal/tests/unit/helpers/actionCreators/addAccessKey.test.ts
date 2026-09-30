@@ -32,13 +32,13 @@ describe('addAccessKey', () => {
         publicKey,
         permission: { kind: 'FullAccess' as const },
         gasPayment: { source: 'KeyBalance' as const },
-        replayProtection: { totalSequences: 1 },
+        replayProtection: { channelCount: 1 },
       },
       {
         publicKey,
         permission: functionCallPermission,
         gasPayment: { source: 'KeyBalance' as const },
-        replayProtection: { totalSequences: 1024 },
+        replayProtection: { channelCount: 1024 },
       },
     ];
 
@@ -99,7 +99,7 @@ describe('addAccessKey', () => {
       publicKey,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'AccountBalance' },
-      replayProtection: { totalSequences: 4 },
+      replayProtection: { channelCount: 4 },
     });
     assertNatErrKind(res, 'CreateAction.AddAccessKey.Args.InvalidSchema');
   });
@@ -121,19 +121,19 @@ describe('addAccessKey', () => {
       permission: functionCallPermission,
       // @ts-expect-error
       gasPayment: { source: 'KeyBalance', allowance: 'Unlimited' },
-      replayProtection: { totalSequences: 4 },
+      replayProtection: { channelCount: 4 },
     });
     assertNatErrKind(res, 'CreateAction.AddAccessKey.Args.InvalidSchema');
   });
 
-  it('rejects totalSequences outside 1..1024 or not an integer', () => {
-    for (const totalSequences of [0, 1025, 1.5])
+  it('rejects channelCount outside 1..1024 or not an integer', () => {
+    for (const channelCount of [0, 1025, 1.5])
       assertNatErrKind(
         safeAddAccessKey({
           publicKey,
           permission: { kind: 'FullAccess' },
           gasPayment: { source: 'KeyBalance' },
-          replayProtection: { totalSequences },
+          replayProtection: { channelCount },
         }),
         'CreateAction.AddAccessKey.Args.InvalidSchema',
       );

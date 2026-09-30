@@ -47,7 +47,7 @@ export const getRawAddAccessKeyActionSummary = ({
       ...base,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'KeyBalance' },
-      replayProtection: { totalSequences: permission.GasKeyFullAccess.numNonces },
+      replayProtection: { channelCount: permission.GasKeyFullAccess.numNonces },
     };
 
   if ('GasKeyFunctionCall' in permission) {
@@ -57,7 +57,7 @@ export const getRawAddAccessKeyActionSummary = ({
       ...base,
       permission: toFunctionCallPermission(receiverId, methodNames),
       gasPayment: { source: 'KeyBalance' },
-      replayProtection: { totalSequences: numNonces },
+      replayProtection: { channelCount: numNonces },
     };
   }
 

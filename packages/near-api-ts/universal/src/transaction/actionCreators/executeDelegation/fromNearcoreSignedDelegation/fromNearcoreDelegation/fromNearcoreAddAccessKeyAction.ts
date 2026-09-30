@@ -48,7 +48,7 @@ export const fromNearcoreAddAccessKeyAction = ({
       ...base,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'KeyBalance' },
-      replayProtection: { totalSequences: permission.gasKeyFullAccess.numNonces },
+      replayProtection: { channelCount: permission.gasKeyFullAccess.numNonces },
     };
 
   const { gasKeyInfo, functionCallPermission } = permission.gasKeyFunctionCall;
@@ -57,6 +57,6 @@ export const fromNearcoreAddAccessKeyAction = ({
     ...base,
     permission: fromNearcoreFunctionCallPermission(functionCallPermission),
     gasPayment: { source: 'KeyBalance' },
-    replayProtection: { totalSequences: gasKeyInfo.numNonces },
+    replayProtection: { channelCount: gasKeyInfo.numNonces },
   };
 };
