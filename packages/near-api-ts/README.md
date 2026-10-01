@@ -278,6 +278,23 @@ The last two go together: a key paid from the account balance keeps a single non
 while a key with a balance of its own (nearcore calls it a gas key) keeps up to 1024 independent
 ones, so it can sign that many transactions in parallel.
 
+A nonce channel — the single one of an ordinary key or any of a gas key's — only moves forward.
+Each transaction leaves a mark at its nonce, and the next one has to land further along, though
+not necessarily on the very next number. `lastNonce` is the last mark so far:
+
+```text
+  key added     tx      tx  tx        tx
+      │          │       │   │         │
+──────┼──────────┼───────┼───┼─────────┼─────────────────────────┤
+                                       │└── next transaction ───┘│
+                                   lastNonce          blockHeight × 1 000 000
+```
+
+The first mark comes from the protocol rather than from a transaction: a key added at block `h`
+starts at `(h - 1) × 1 000 000`, so a key that hasn't signed anything yet already reports a large
+`lastNonce`. The far end moves forward with every block, as a nonce has to stay below
+`blockHeight × 1 000 000`.
+
 `getAccessKey` reports only how many channels such a key has; their nonces come from
 `getAccessKeyNonceChannels`:
 

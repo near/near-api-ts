@@ -78,11 +78,15 @@ type KeyBalanceGasPayment = {
 };
 
 /**
- * The key keeps a single nonce channel: every transaction it signs must use a nonce
- * greater than `lastNonce`.
+ * The key keeps a single nonce channel.
  */
 type NonceChannel = {
   scheme: 'NonceChannel';
+  /**
+   * The channel only moves forward: the next transaction must use a bigger nonce
+   * than `lastNonce`, e.g. `lastNonce + 1`. For a key that hasn't signed anything yet,
+   * `lastNonce` is the starting point the protocol sets when the key is added.
+   */
   lastNonce: SequentialNonce;
 };
 

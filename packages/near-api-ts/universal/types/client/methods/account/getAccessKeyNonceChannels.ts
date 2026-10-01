@@ -62,13 +62,17 @@ export type GetAccessKeyNonceChannelsArgs = {
 
 /**
  * One of the independent nonce channels of a key with `replayProtection.scheme: 'NonceChannels'`.
- * A transaction signed on this channel must use a nonce greater than `lastNonce`.
  */
 export type NonceChannel = {
   /**
    * 0..`channelCount` - 1 of the key
    */
   channelId: number;
+  /**
+   * The channel only moves forward: the next transaction signed on it must use a bigger
+   * nonce than `lastNonce`, e.g. `lastNonce + 1`. Until the first transaction on the
+   * channel, `lastNonce` is the starting point the protocol sets when the key is added.
+   */
   lastNonce: SequentialNonce;
 };
 
