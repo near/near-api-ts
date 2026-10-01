@@ -39,7 +39,15 @@ import type {
   RegisterPinnableGlobalContractAction,
 } from '../delegableActions/registerPinnableGlobalContract';
 import type { NearcoreStakeAction, StakeAction } from '../delegableActions/stake';
+import type {
+  NearcoreTopUpAccessKeyBalanceAction,
+  TopUpAccessKeyBalanceAction,
+} from '../delegableActions/topUpAccessKeyBalance';
 import type { NearcoreTransferAction, TransferAction } from '../delegableActions/transfer';
+import type {
+  NearcoreWithdrawAccessKeyBalanceAction,
+  WithdrawAccessKeyBalanceAction,
+} from '../delegableActions/withdrawAccessKeyBalance';
 
 export type DelegableAction =
   | CreateAccountAction
@@ -53,7 +61,9 @@ export type DelegableAction =
   | RegisterPinnableGlobalContractAction
   | RegisterLinkableGlobalContractAction
   | LinkGlobalContractAction
-  | PinGlobalContractAction;
+  | PinGlobalContractAction
+  | TopUpAccessKeyBalanceAction
+  | WithdrawAccessKeyBalanceAction;
 
 export type SingleDelegableAction = {
   delegatedAction: DelegableAction;
@@ -106,7 +116,9 @@ export type NearcoreDelegableAction =
   | NearcoreRegisterPinnableGlobalContractAction
   | NearcoreRegisterLinkableGlobalContractAction
   | NearcoreLinkGlobalContractAction
-  | NearcorePinGlobalContractAction;
+  | NearcorePinGlobalContractAction
+  | NearcoreTopUpAccessKeyBalanceAction
+  | NearcoreWithdrawAccessKeyBalanceAction;
 
 // Field order follows the nearcore `DelegateAction` declaration, which is the
 // order the borsh schemas serialize these in. `tag` is the signing-only prefix.

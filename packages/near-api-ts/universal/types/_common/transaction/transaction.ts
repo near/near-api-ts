@@ -42,7 +42,15 @@ import type {
   RegisterPinnableGlobalContractAction,
 } from './actions/delegableActions/registerPinnableGlobalContract';
 import type { NearcoreStakeAction, StakeAction } from './actions/delegableActions/stake';
+import type {
+  NearcoreTopUpAccessKeyBalanceAction,
+  TopUpAccessKeyBalanceAction,
+} from './actions/delegableActions/topUpAccessKeyBalance';
 import type { NearcoreTransferAction, TransferAction } from './actions/delegableActions/transfer';
+import type {
+  NearcoreWithdrawAccessKeyBalanceAction,
+  WithdrawAccessKeyBalanceAction,
+} from './actions/delegableActions/withdrawAccessKeyBalance';
 import type {
   ExecuteDelegationAction,
   NearcoreExecuteDelegationAction,
@@ -61,7 +69,9 @@ export type TransactionAction =
   | RegisterPinnableGlobalContractAction
   | RegisterLinkableGlobalContractAction
   | LinkGlobalContractAction
-  | PinGlobalContractAction;
+  | PinGlobalContractAction
+  | TopUpAccessKeyBalanceAction
+  | WithdrawAccessKeyBalanceAction;
 
 type SingleTransactionAction = { action: TransactionAction; actions?: never };
 type MultiTransactionActions = { action?: never; actions: TransactionAction[] };
@@ -101,7 +111,9 @@ export type NearcoreTransactionAction =
   | NearcoreRegisterPinnableGlobalContractAction
   | NearcoreRegisterLinkableGlobalContractAction
   | NearcoreLinkGlobalContractAction
-  | NearcorePinGlobalContractAction;
+  | NearcorePinGlobalContractAction
+  | NearcoreTopUpAccessKeyBalanceAction
+  | NearcoreWithdrawAccessKeyBalanceAction;
 
 export type NearcoreTransaction = {
   signerId: AccountId;

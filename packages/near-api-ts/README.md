@@ -414,6 +414,8 @@ The signer signs only with keys paid from the account balance. A key with a bala
 | `functionCall({ functionName, functionArgs?, gasLimit, attachedDeposit? })` | calls a contract method |
 | `deployContract({ wasmU8 \| wasmBase64 })` | deploys wasm to the receiver |
 | `addAccessKey({ publicKey, permission, gasPayment, replayProtection? })` | adds an access key — see below |
+| `topUpAccessKeyBalance({ publicKey, amount })` | moves NEAR from the account balance to a gas key's balance |
+| `withdrawAccessKeyBalance({ publicKey, amount })` | moves NEAR from a gas key's balance back to the account |
 | `deleteKey({ publicKey })` | removes an access key |
 | `deleteAccount({ beneficiaryAccountId })` | deletes the account, sends the remainder to the beneficiary |
 | `stake({ amount, validatorPublicKey })` | submits a staking proposal |
@@ -449,7 +451,35 @@ addAccessKey({
 ```
 
 A gas key is added with an empty balance — the protocol accepts no other — and cannot take an
-`allowance`.
+`allowance`. Fund it with `topUpAccessKeyBalance`, in the same transaction if you like, and take
+what is left back with `withdrawAccessKeyBalance`:
+
+```ts
+await signer.executeTransaction({
+  intent: {
+    receiverAccountId: 'example.testnet', // the account the key belongs to
+    actions: [
+      addAccessKey({
+        publicKey,
+        permission: { kind: 'FullAccess' },
+        gasPayment: { source: 'KeyBalance' },
+        replayProtection: { channelCount: 16 },
+      }),
+      topUpAccessKeyBalance({ publicKey, amount: near('1') }),
+    ],
+  },
+});
+
+// later — the amount returns to the account balance
+withdrawAccessKeyBalance({ publicKey, amount: near('0.4') });
+```
+
+Anyone can top up a key of any account, the way anyone can transfer to it; only the account
+itself can withdraw, so a withdrawal has to come from the receiver account. Both fail with
+`Action.TopUpAccessKeyBalance.Balance.NotFound` / `Action.WithdrawAccessKeyBalance.Balance.NotFound`
+when the key has no balance of its own — it is paid from the account balance or does not exist at
+all — and withdrawing more than the key holds fails with
+`Action.WithdrawAccessKeyBalance.Balance.NotEnough`.
 
 Every creator validates its arguments and has a `safe*` twin (`safeTransfer`,
 `safeFunctionCall`, …) returning a `Result` — except `createAccount`, which takes no

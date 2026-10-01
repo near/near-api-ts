@@ -129,9 +129,17 @@ export {
   stake,
 } from './src/transaction/actionCreators/stake';
 export {
+  safeTopUpAccessKeyBalance,
+  topUpAccessKeyBalance,
+} from './src/transaction/actionCreators/topUpAccessKeyBalance';
+export {
   safeTransfer,
   transfer,
 } from './src/transaction/actionCreators/transfer';
+export {
+  safeWithdrawAccessKeyBalance,
+  withdrawAccessKeyBalance,
+} from './src/transaction/actionCreators/withdrawAccessKeyBalance';
 // Helpers
 export {
   safeSignDelegation,
@@ -179,7 +187,9 @@ export type { LinkGlobalContractAction } from './types/_common/transaction/actio
 export type { PinGlobalContractAction } from './types/_common/transaction/actions/delegableActions/pinGlobalContract';
 export type { RegisterLinkableGlobalContractAction } from './types/_common/transaction/actions/delegableActions/registerLinkableGlobalContract';
 export type { RegisterPinnableGlobalContractAction } from './types/_common/transaction/actions/delegableActions/registerPinnableGlobalContract';
+export type { TopUpAccessKeyBalanceAction } from './types/_common/transaction/actions/delegableActions/topUpAccessKeyBalance';
 export type { TransferAction } from './types/_common/transaction/actions/delegableActions/transfer';
+export type { WithdrawAccessKeyBalanceAction } from './types/_common/transaction/actions/delegableActions/withdrawAccessKeyBalance';
 export type {
   DelegableAction,
   DelegationBase,

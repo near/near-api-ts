@@ -8,6 +8,7 @@ import type { ExecutionSuccess } from '../../../../../types/client/methods/trans
 import { type NatError } from '../../../../_common/_common/_common/_common/natError';
 import { result, resultNatError } from '../../../../_common/_common/_common/result';
 import { tryBase64ToObject } from '../../_common/base64ToObject';
+import { getReceiptsWithOutcomes } from './_common/_common/getReceiptsWithOutcomes';
 import { getConversionStepSuccess } from './_common/getConversionStepSuccess';
 import { getNonConversionSteps } from './_common/getNonConversionSteps/getNonConversionSteps';
 import type { RpcTransactionOutcomeSuccess } from './_common/zodSchemas/rpcTransactionOutcome';
@@ -51,14 +52,23 @@ export const getResultData = (
 };
 
 const getBaseExecutionSuccess = (args: GetExecutionSuccessArgs) => {
-  const { transaction, statusSuccessValue, deserializeResultData } = args;
+  const { transaction, statusSuccessValue, deserializeResultData, deserializeExecutionSteps } =
+    args;
 
   const conversionStepSuccess = getConversionStepSuccess(args);
   if (!conversionStepSuccess.success) return conversionStepSuccess;
 
-  const nonConversionSteps = getNonConversionSteps({
-    ...args,
+  const receiptsWithOutcomes = getReceiptsWithOutcomes({
+    transaction: args.transaction,
+    receipts: args.receipts,
+    receiptsOutcome: args.receiptsOutcome,
     conversionStepSuccess: conversionStepSuccess.data,
+  });
+
+  const nonConversionSteps = getNonConversionSteps({
+    receiptsWithOutcomes,
+    conversionStepSuccess: conversionStepSuccess.data,
+    deserializeExecutionSteps,
   });
   if (!nonConversionSteps.success) return nonConversionSteps;
 

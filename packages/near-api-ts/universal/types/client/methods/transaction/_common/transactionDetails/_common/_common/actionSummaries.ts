@@ -105,6 +105,18 @@ type PinGlobalContractActionSummary = {
   globalContractWasmHash: ContractWasmHash;
 };
 
+type TopUpAccessKeyBalanceActionSummary = {
+  actionType: 'TopUpAccessKeyBalance';
+  publicKey: PublicKey;
+  amount: NearToken;
+};
+
+type WithdrawAccessKeyBalanceActionSummary = {
+  actionType: 'WithdrawAccessKeyBalance';
+  publicKey: PublicKey;
+  amount: NearToken;
+};
+
 export type DelegableActionSummary<FA> =
   | CreateAccountActionSummary
   | TransferActionSummary
@@ -117,7 +129,9 @@ export type DelegableActionSummary<FA> =
   | RegisterPinnableGlobalContractActionSummary
   | RegisterLinkableGlobalContractActionSummary
   | LinkGlobalContractActionSummary
-  | PinGlobalContractActionSummary;
+  | PinGlobalContractActionSummary
+  | TopUpAccessKeyBalanceActionSummary
+  | WithdrawAccessKeyBalanceActionSummary;
 
 type ExecuteDelegationActionSummary<FA> = {
   actionType: 'ExecuteDelegation';

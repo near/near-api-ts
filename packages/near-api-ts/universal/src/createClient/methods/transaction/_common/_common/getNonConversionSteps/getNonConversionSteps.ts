@@ -5,20 +5,18 @@ import type { ExecutionSteps } from '../../../../../../../types/client/methods/t
 import type { RefundStep } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/refundStep';
 import type { NatError } from '../../../../../../_common/_common/_common/_common/natError';
 import { result } from '../../../../../../_common/_common/_common/result';
-import type { RpcActionReceipt } from '../../zodSchemas/rpcTransactionDetails/rpcActionReceipt';
-import type { RpcReceiptOutcome } from '../../zodSchemas/rpcTransactionDetails/rpcReceiptOutcome';
-import type { RpcTransactionSummary } from '../../zodSchemas/rpcTransactionDetails/rpcTransactionSummary';
+import {
+  getReceiptsWithOutcomes,
+  type ReceiptsWithOutcomes,
+} from '../_common/getReceiptsWithOutcomes';
 import { createReceiptCreationMap } from './createReceiptCreationMap';
 import { getExecutionSteps } from './getExecutionSteps/getExecutionSteps';
-import { getReceiptsWithOutcomes } from './getReceiptsWithOutcomes';
 import { getRefundSteps } from './getRefundSteps';
 
 type NonConversionSteps = { executionSteps: ExecutionSteps; refundSteps: RefundStep[] };
 
 type GetNonConversionStepsArgs = {
-  transaction: RpcTransactionSummary;
-  receipts: RpcActionReceipt[];
-  receiptsOutcome: RpcReceiptOutcome[];
+  receiptsWithOutcomes: ReceiptsWithOutcomes;
   conversionStepSuccess: ConversionStepSuccess;
   deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
 };
@@ -29,9 +27,8 @@ export const getNonConversionSteps = (
   NonConversionSteps,
   NatError<'Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'>
 > => {
-  const { conversionStepSuccess, deserializeExecutionSteps } = args;
+  const { conversionStepSuccess, deserializeExecutionSteps, receiptsWithOutcomes } = args;
 
-  const receiptsWithOutcomes = getReceiptsWithOutcomes(args);
   const receiptCreationMap = createReceiptCreationMap(conversionStepSuccess, receiptsWithOutcomes);
 
   const executionSteps = getExecutionSteps(

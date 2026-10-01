@@ -142,6 +142,24 @@ const convertNonDelegateActionToSummary = (
         };
   }
 
+  if ('TransferToGasKey' in nonDelegateAction) {
+    const { TransferToGasKey } = nonDelegateAction;
+    return {
+      actionType: 'TopUpAccessKeyBalance' as const,
+      publicKey: TransferToGasKey.publicKey as PublicKey, // TODO validate key by zod
+      amount: yoctoNear(TransferToGasKey.deposit),
+    };
+  }
+
+  if ('WithdrawFromGasKey' in nonDelegateAction) {
+    const { WithdrawFromGasKey } = nonDelegateAction;
+    return {
+      actionType: 'WithdrawAccessKeyBalance' as const,
+      publicKey: WithdrawFromGasKey.publicKey as PublicKey, // TODO validate key by zod
+      amount: yoctoNear(WithdrawFromGasKey.amount),
+    };
+  }
+
   throw new Error(`Unsupported delegable action: ${JSON.stringify(nonDelegateAction)}`);
 };
 

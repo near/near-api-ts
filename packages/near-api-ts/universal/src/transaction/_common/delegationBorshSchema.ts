@@ -10,7 +10,9 @@ import { FunctionCallActionBorshSchema } from './_common/borshSchemas/functionCa
 import { SignatureBorshSchema } from './_common/borshSchemas/signature';
 import { StakeActionBorshSchema } from './_common/borshSchemas/stake';
 import { TransferActionBorshSchema } from './_common/borshSchemas/transfer';
+import { TransferToGasKeyActionBorshSchema } from './_common/borshSchemas/transferToGasKey';
 import { UseGlobalContractActionBorshSchema } from './_common/borshSchemas/useGlobalContract';
+import { WithdrawFromGasKeyActionBorshSchema } from './_common/borshSchemas/withdrawFromGasKey';
 
 // Delegation cannot contain another ExecuteDelegation action;
 // But we have to keep it to make sure that the enum is the same as in nearcore
@@ -30,6 +32,11 @@ const DelegableActionBorshSchema: Schema = {
     { struct: { x: 'bool' } },
     DeployGlobalContractActionBorshSchema,
     UseGlobalContractActionBorshSchema,
+    // Slot 11 is nearcore's `DeterministicStateInit` - another unsupported action that has to
+    // keep its place so `TransferToGasKey` and `WithdrawFromGasKey` land on indexes 12 and 13.
+    { struct: { x: 'bool' } },
+    TransferToGasKeyActionBorshSchema,
+    WithdrawFromGasKeyActionBorshSchema,
   ],
 };
 

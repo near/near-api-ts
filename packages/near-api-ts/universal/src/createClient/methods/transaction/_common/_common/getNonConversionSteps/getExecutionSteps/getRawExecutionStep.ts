@@ -13,6 +13,7 @@ import type { ReceiptCreationMap } from '../createReceiptCreationMap';
 
 const getRawExecutionStepResult = (
   status: RpcReceiptOutcome['outcome']['status'],
+  receiptActions: RpcActionReceiptTrimmed['receipt']['Action']['actions'],
 ): ExecutionStepResult<Base64String> => {
   if (typeof status === 'object' && 'SuccessValue' in status) {
     return {
@@ -34,7 +35,7 @@ const getRawExecutionStepResult = (
   if (typeof status === 'object' && 'Failure' in status) {
     return {
       status: 'Failure',
-      error: getExecutionFailureError(status.Failure.ActionError),
+      error: getExecutionFailureError(status.Failure.ActionError, receiptActions),
     };
   }
 
@@ -66,7 +67,7 @@ export const getRawExecutionStep = (
 
   return {
     executionStepId: receipt.receiptId,
-    result: getRawExecutionStepResult(receiptOutcome.outcome.status),
+    result: getRawExecutionStepResult(receiptOutcome.outcome.status, Action.actions),
     createdAt: receiptCreationMap[receipt.receiptId].createdAt,
     createdBy: { accountId: receipt.predecessorId },
     executedAt: { blockHash: receiptOutcome.blockHash.cryptoHash },

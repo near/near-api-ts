@@ -15,7 +15,9 @@ import { toNearcorePinGlobalContractAction } from '../_common/_common/toNearcore
 import { toNearcoreRegisterLinkableGlobalContractAction } from '../_common/_common/toNearcore/toNearcoreRegisterLinkableGlobalContract';
 import { toNearcoreRegisterPinnableGlobalContractAction } from '../_common/_common/toNearcore/toNearcoreRegisterPinnableGlobalContract';
 import { toNearcoreStakeAction } from '../_common/_common/toNearcore/toNearcoreStake';
+import { toNearcoreTopUpAccessKeyBalanceAction } from '../_common/_common/toNearcore/toNearcoreTopUpAccessKeyBalance';
 import { toNearcoreTransferAction } from '../_common/_common/toNearcore/toNearcoreTransfer';
+import { toNearcoreWithdrawAccessKeyBalanceAction } from '../_common/_common/toNearcore/toNearcoreWithdrawAccessKeyBalance';
 import { toNearcoreDelegation } from '../_common/toNearcoreDelegation';
 import { toNearcoreSignature } from '../_common/toNearcoreSignature';
 import type {
@@ -63,6 +65,10 @@ const toNearcoreTransactionAction = (action: InnerTransactionAction): NearcoreTr
       return toNearcoreLinkGlobalContractAction(action);
     case 'PinGlobalContract':
       return toNearcorePinGlobalContractAction(action);
+    case 'TopUpAccessKeyBalance':
+      return toNearcoreTopUpAccessKeyBalanceAction(action);
+    case 'WithdrawAccessKeyBalance':
+      return toNearcoreWithdrawAccessKeyBalanceAction(action);
   }
 };
 

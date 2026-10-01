@@ -9,6 +9,10 @@
   `MemoryKeyService.findPublicKey` / `safeFindPublicKey`. See the near-api-ts
   changelog.
 
+- The gas key actions `topUpAccessKeyBalance` / `withdrawAccessKeyBalance` are
+  re-exported from near-api-ts too. The near-connect signer throws for both –
+  near-connect has no format for them.
+
 ### Changed
 
 - **Breaking:** the access key API re-exported from near-api-ts drops the

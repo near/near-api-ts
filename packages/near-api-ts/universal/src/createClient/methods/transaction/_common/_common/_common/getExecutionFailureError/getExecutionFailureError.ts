@@ -1,10 +1,14 @@
-import type { ActionError } from '@near-js/jsonrpc-types';
+import type { ActionError, ActionView } from '@near-js/jsonrpc-types';
 import type { PublicKey } from '../../../../../../../../types/_common/crypto';
 import type { ExecutionFailureError } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/executionFailureError';
 import { yoctoNear } from '../../../../../../../_common/nearToken';
 import { transformFunctionCallError } from './transformFunctionCallError/transformFunctionCallError';
 
-export const getExecutionFailureError = (actionError: ActionError): ExecutionFailureError => {
+// `failedReceiptActions` are the actions of the receipt that failed - `actionError.index` points into them
+export const getExecutionFailureError = (
+  actionError: ActionError,
+  failedReceiptActions: ActionView[],
+): ExecutionFailureError => {
   if (typeof actionError.kind === 'object') {
     const { kind } = actionError;
 
@@ -169,6 +173,40 @@ export const getExecutionFailureError = (actionError: ActionError): ExecutionFai
             kind: 'Action.LinkGlobalContract.GlobalContract.NotFound',
             context: { globalContractAccountId: identifier.accountId },
           };
+    }
+
+    // TopUpAccessKeyBalance / WithdrawAccessKeyBalance actions
+    // Nearcore executes them as `TransferToGasKey` / `WithdrawFromGasKey` and answers both with one
+    // `GasKeyDoesNotExist`, so the action the error index points at is what tells them apart.
+    if ('GasKeyDoesNotExist' in kind) {
+      const context = {
+        accountId: kind.GasKeyDoesNotExist.accountId,
+        publicKey: kind.GasKeyDoesNotExist.publicKey as PublicKey, // TODO validate by zod
+      };
+      const failedAction =
+        typeof actionError.index === 'number' ? failedReceiptActions[actionError.index] : undefined;
+
+      if (typeof failedAction === 'object' && 'TransferToGasKey' in failedAction)
+        return { kind: 'Action.TopUpAccessKeyBalance.Balance.NotFound', context };
+
+      if (typeof failedAction === 'object' && 'WithdrawFromGasKey' in failedAction)
+        return { kind: 'Action.WithdrawAccessKeyBalance.Balance.NotFound', context };
+    }
+
+    if ('InsufficientGasKeyBalance' in kind) {
+      const keyBalance = yoctoNear(kind.InsufficientGasKeyBalance.balance);
+      const withdrawalAmount = yoctoNear(kind.InsufficientGasKeyBalance.required);
+
+      return {
+        kind: 'Action.WithdrawAccessKeyBalance.Balance.NotEnough',
+        context: {
+          accountId: kind.InsufficientGasKeyBalance.accountId,
+          publicKey: kind.InsufficientGasKeyBalance.publicKey as PublicKey, // TODO validate by zod
+          keyBalance,
+          withdrawalAmount,
+          excessAmount: withdrawalAmount.sub(keyBalance),
+        },
+      };
     }
 
     // ExecuteDelegation action

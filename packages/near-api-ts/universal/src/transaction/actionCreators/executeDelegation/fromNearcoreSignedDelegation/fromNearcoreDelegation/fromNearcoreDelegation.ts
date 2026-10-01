@@ -1,5 +1,4 @@
 import { base58 } from '@scure/base';
-import type { NearcoreFunctionCallAction } from '../../../../../../types/_common/transaction/actions/delegableActions/functionCall';
 import type {
   DelegableAction,
   NearcoreDelegableAction,
@@ -75,6 +74,20 @@ const fromNearcoreDelegableAction = (action: NearcoreDelegableAction): Delegable
           globalContractAccountId: contractIdentifier.accountId,
         };
   }
+
+  if ('transferToGasKey' in action)
+    return {
+      actionType: 'TopUpAccessKeyBalance',
+      publicKey: fromNearcorePublicKey(action.transferToGasKey.publicKey),
+      amount: { yoctoNear: action.transferToGasKey.deposit },
+    };
+
+  if ('withdrawFromGasKey' in action)
+    return {
+      actionType: 'WithdrawAccessKeyBalance',
+      publicKey: fromNearcorePublicKey(action.withdrawFromGasKey.publicKey),
+      amount: { yoctoNear: action.withdrawFromGasKey.amount },
+    };
 
   // A delegation can carry an action this library cannot represent (ExecuteDelegation) only if
   // it was created outside of it.

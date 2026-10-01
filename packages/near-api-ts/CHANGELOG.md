@@ -35,6 +35,31 @@
   accepts no other – and takes no `allowance`. The upper limit is
   `constants.NonceChannels.MaxChannelCount`.
 
+- **Gas keys can be funded and drained** – two new actions move NEAR between an
+  account and the balance of its key with `gasPayment.source: 'KeyBalance'`:
+
+  ```ts
+  topUpAccessKeyBalance({ publicKey, amount: near('1') }); // account → key
+  withdrawAccessKeyBalance({ publicKey, amount: near('0.4') }); // key → account
+  ```
+
+  - Both take a public key and an amount, have `safe*` twins
+    (`safeTopUpAccessKeyBalance`, `safeWithdrawAccessKeyBalance`) and work in a
+    transaction and in a delegation alike. New types
+    `TopUpAccessKeyBalanceAction` and `WithdrawAccessKeyBalanceAction`; new
+    error kinds `CreateAction.{TopUpAccessKeyBalance,WithdrawAccessKeyBalance}.{Args.InvalidSchema,Internal}`.
+  - Anyone can top up a key of any account; only the account itself can
+    withdraw.
+  - Action summaries report them as `{ actionType, publicKey, amount }`.
+  - New execution error kinds, also reachable as
+    `Client.SendSignedTransaction.Rpc.<kind>`:
+    `Action.TopUpAccessKeyBalance.Balance.NotFound` and
+    `Action.WithdrawAccessKeyBalance.Balance.NotFound` – the key has no balance
+    of its own: it is missing or paid from the account balance – with
+    `{ accountId, publicKey }`, and
+    `Action.WithdrawAccessKeyBalance.Balance.NotEnough` with
+    `{ accountId, publicKey, keyBalance, withdrawalAmount, excessAmount }`.
+
 - **`getAccessKeyNonceChannels`** / `safeGetAccessKeyNonceChannels` – the last
   nonce of every channel of a key with `replayProtection.scheme: 'NonceChannels'`,
   which `getAccessKey` reports only as `channelCount`:

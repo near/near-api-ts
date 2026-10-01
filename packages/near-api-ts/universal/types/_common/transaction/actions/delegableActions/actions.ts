@@ -9,7 +9,9 @@ import type { CreatePinGlobalContractActionPublicErrorRegistry } from './pinGlob
 import type { CreateRegisterLinkableGlobalContractActionPublicErrorRegistry } from './registerLinkableGlobalContract';
 import type { CreateRegisterPinnableGlobalContractActionPublicErrorRegistry } from './registerPinnableGlobalContract';
 import type { CreateStakeActionPublicErrorRegistry } from './stake';
+import type { CreateTopUpAccessKeyBalanceActionPublicErrorRegistry } from './topUpAccessKeyBalance';
 import type { CreateTransferActionPublicErrorRegistry } from './transfer';
+import type { CreateWithdrawAccessKeyBalanceActionPublicErrorRegistry } from './withdrawAccessKeyBalance';
 
 export interface ActionsPublicErrorRegistry
   extends CreateAddAccessKeyActionPublicErrorRegistry,
@@ -23,4 +25,6 @@ export interface ActionsPublicErrorRegistry
     CreateRegisterPinnableGlobalContractActionPublicErrorRegistry,
     CreateRegisterLinkableGlobalContractActionPublicErrorRegistry,
     CreateLinkGlobalContractActionPublicErrorRegistry,
-    CreatePinGlobalContractActionPublicErrorRegistry {}
+    CreatePinGlobalContractActionPublicErrorRegistry,
+    CreateTopUpAccessKeyBalanceActionPublicErrorRegistry,
+    CreateWithdrawAccessKeyBalanceActionPublicErrorRegistry {}

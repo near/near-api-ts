@@ -14,7 +14,9 @@ import { PinGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/
 import { RegisterLinkableGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/registerLinkableGlobalContract';
 import { RegisterPinnableGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/registerPinnableGlobalContract';
 import { StakeActionZodSchema } from '../_common/_common/zodSchemas/stake';
+import { TopUpAccessKeyBalanceActionZodSchema } from '../_common/_common/zodSchemas/topUpAccessKeyBalance';
 import { TransferActionZodSchema } from '../_common/_common/zodSchemas/transfer';
+import { WithdrawAccessKeyBalanceActionZodSchema } from '../_common/_common/zodSchemas/withdrawAccessKeyBalance';
 import { SignedDelegationZodSchema } from '../_common/delegationZodSchema';
 
 const ExecuteDelegationActionZodSchema = z.object({
@@ -38,6 +40,8 @@ const TransactionActionZodSchema = z.union([
   RegisterLinkableGlobalContractActionZodSchema,
   LinkGlobalContractActionZodSchema,
   PinGlobalContractActionZodSchema,
+  TopUpAccessKeyBalanceActionZodSchema,
+  WithdrawAccessKeyBalanceActionZodSchema,
 ]);
 
 export type InnerTransactionAction = z.infer<typeof TransactionActionZodSchema>;

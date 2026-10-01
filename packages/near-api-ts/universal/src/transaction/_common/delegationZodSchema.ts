@@ -16,7 +16,9 @@ import { PinGlobalContractActionZodSchema } from './_common/zodSchemas/pinGlobal
 import { RegisterLinkableGlobalContractActionZodSchema } from './_common/zodSchemas/registerLinkableGlobalContract';
 import { RegisterPinnableGlobalContractActionZodSchema } from './_common/zodSchemas/registerPinnableGlobalContract';
 import { StakeActionZodSchema } from './_common/zodSchemas/stake';
+import { TopUpAccessKeyBalanceActionZodSchema } from './_common/zodSchemas/topUpAccessKeyBalance';
 import { TransferActionZodSchema } from './_common/zodSchemas/transfer';
+import { WithdrawAccessKeyBalanceActionZodSchema } from './_common/zodSchemas/withdrawAccessKeyBalance';
 
 const DelegableActionZodSchema = z.union([
   CreateAccountActionZodSchema,
@@ -31,6 +33,8 @@ const DelegableActionZodSchema = z.union([
   RegisterLinkableGlobalContractActionZodSchema,
   LinkGlobalContractActionZodSchema,
   PinGlobalContractActionZodSchema,
+  TopUpAccessKeyBalanceActionZodSchema,
+  WithdrawAccessKeyBalanceActionZodSchema,
 ]);
 
 export type InnerDelegableAction = z.infer<typeof DelegableActionZodSchema>;

@@ -137,8 +137,12 @@ const toNearConnectAction = (action: NatAction): ConnectorAction => {
       params: { contractIdentifier: { accountId: action.globalContractAccountId } },
     };
 
-  // near-connect has no wire format for this one, so a wallet cannot be asked to sign it.
-  if (action.actionType === 'ExecuteDelegation')
+  // near-connect has no wire format for these, so a wallet cannot be asked to sign them.
+  if (
+    action.actionType === 'ExecuteDelegation' ||
+    action.actionType === 'TopUpAccessKeyBalance' ||
+    action.actionType === 'WithdrawAccessKeyBalance'
+  )
     throw new Error(`near-connect does not support the ${action.actionType} action`);
 
   // Never reached - fails to compile once near-api-ts adds an action we do not handle.

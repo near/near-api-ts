@@ -1,6 +1,6 @@
 import type { BlockHash, ReceiptId } from '../../../../../../../types/_common/common';
 import type { ConversionStepSuccess } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/conversionStep';
-import type { ReceiptsWithOutcomes } from './getReceiptsWithOutcomes';
+import type { ReceiptsWithOutcomes } from '../_common/getReceiptsWithOutcomes';
 
 export type ReceiptCreationMap = Record<
   ReceiptId,

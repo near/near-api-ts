@@ -109,6 +109,20 @@ export const getRawActionSummary = (rpcAction: ActionView): RawTransactionAction
       globalContractAccountId: rpcAction.UseGlobalContractByAccountId.accountId,
     };
 
+  if ('TransferToGasKey' in rpcAction)
+    return {
+      actionType: 'TopUpAccessKeyBalance' as const,
+      publicKey: rpcAction.TransferToGasKey.publicKey as PublicKey, // TODO validate key by zod
+      amount: yoctoNear(rpcAction.TransferToGasKey.deposit),
+    };
+
+  if ('WithdrawFromGasKey' in rpcAction)
+    return {
+      actionType: 'WithdrawAccessKeyBalance' as const,
+      publicKey: rpcAction.WithdrawFromGasKey.publicKey as PublicKey, // TODO validate key by zod
+      amount: yoctoNear(rpcAction.WithdrawFromGasKey.amount),
+    };
+
   if ('Delegate' in rpcAction)
     return getRawExecuteDelegationActionSummary(
       rpcAction.Delegate.delegateAction,

@@ -10,7 +10,9 @@ import { FunctionCallActionBorshSchema } from '../_common/_common/borshSchemas/f
 import { SignatureBorshSchema } from '../_common/_common/borshSchemas/signature';
 import { StakeActionBorshSchema } from '../_common/_common/borshSchemas/stake';
 import { TransferActionBorshSchema } from '../_common/_common/borshSchemas/transfer';
+import { TransferToGasKeyActionBorshSchema } from '../_common/_common/borshSchemas/transferToGasKey';
 import { UseGlobalContractActionBorshSchema } from '../_common/_common/borshSchemas/useGlobalContract';
+import { WithdrawFromGasKeyActionBorshSchema } from '../_common/_common/borshSchemas/withdrawFromGasKey';
 import { SignedDelegationBorshSchema } from '../_common/delegationBorshSchema';
 
 const ExecuteDelegationActionBorshSchema = {
@@ -34,6 +36,13 @@ export const TransactionActionBorshSchema: Schema = {
     ExecuteDelegationActionBorshSchema,
     DeployGlobalContractActionBorshSchema,
     UseGlobalContractActionBorshSchema,
+    // Slot 11 is nearcore's `DeterministicStateInit`, which this library does not support yet.
+    // The enum is positional, so the slot has to be filled for `TransferToGasKey` and
+    // `WithdrawFromGasKey` to get the indexes nearcore expects (12 and 13). The placeholder is
+    // never serialized, so its shape is arbitrary - same trick as the one in the delegation schema.
+    { struct: { x: 'bool' } },
+    TransferToGasKeyActionBorshSchema,
+    WithdrawFromGasKeyActionBorshSchema,
   ],
 };
 

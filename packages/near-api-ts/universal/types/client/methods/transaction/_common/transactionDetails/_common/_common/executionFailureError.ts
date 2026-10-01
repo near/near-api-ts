@@ -69,6 +69,27 @@ interface GlobalContractErrorRegistry {
   'Action.LinkGlobalContract.GlobalContract.NotFound': { globalContractAccountId: AccountId };
 }
 
+// Nearcore answers both actions with one `GasKeyDoesNotExist` - for a missing key and for a key
+// paid from the account balance alike. Either way the key has no balance of its own, hence
+// `Balance.NotFound`.
+interface TopUpAccessKeyBalanceErrorRegistry {
+  'Action.TopUpAccessKeyBalance.Balance.NotFound': { accountId: AccountId; publicKey: PublicKey };
+}
+
+interface WithdrawAccessKeyBalanceErrorRegistry {
+  'Action.WithdrawAccessKeyBalance.Balance.NotFound': {
+    accountId: AccountId;
+    publicKey: PublicKey;
+  };
+  'Action.WithdrawAccessKeyBalance.Balance.NotEnough': {
+    accountId: AccountId;
+    publicKey: PublicKey;
+    keyBalance: NearToken;
+    withdrawalAmount: NearToken;
+    excessAmount: NearToken;
+  };
+}
+
 interface ExecuteDelegationErrorRegistry {
   'Action.ExecuteDelegation.Expired': null;
   'Action.ExecuteDelegation.Signature.Invalid': null;
@@ -111,6 +132,8 @@ export interface ExecutionFailureRegistry
     DeleteKeyErrorRegistry,
     DeleteAccountErrorRegistry,
     GlobalContractErrorRegistry,
+    TopUpAccessKeyBalanceErrorRegistry,
+    WithdrawAccessKeyBalanceErrorRegistry,
     ExecuteDelegationErrorRegistry {}
 
 export type ExecutionFailureKind = keyof ExecutionFailureRegistry;
