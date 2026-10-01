@@ -16,10 +16,7 @@ export const functionNotAllowed = (context: TestContext) => async () => {
     allowedFunctions: ['allowed_function'],
   });
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const functionCallAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: functionCallKeyPair.publicKey,
   });
@@ -29,8 +26,8 @@ export const functionNotAllowed = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: functionCallKeyPair.publicKey,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(functionCallAccessKey.accessKey) + 1,
+      blockHash: functionCallAccessKey.atMomentOf.blockHash,
       action: functionCall({
         functionName: 'forbidden_function',
         gasLimit: { teraGas: '10' },

@@ -21,10 +21,7 @@ export const attachFunctionCallKey = async (
 
   const functionCallKeyPair = randomEd25519KeyPair();
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -34,8 +31,8 @@ export const attachFunctionCallKey = async (
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       action: addAccessKey({
         publicKey: functionCallKeyPair.publicKey,
         permission: { kind: 'FunctionCall', ...permission },

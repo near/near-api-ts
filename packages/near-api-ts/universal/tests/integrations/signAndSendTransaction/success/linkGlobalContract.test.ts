@@ -24,10 +24,7 @@ describe('signAndSendTransaction › success', () => {
       registrarKeyPair: defaultKeyPair,
     });
 
-    const {
-      accessKey,
-      atMomentOf: { blockHash },
-    } = await client.getAccessKey({
+    const aliceAccessKey = await client.getAccessKey({
       accountId: 'alice',
       publicKey: defaultKeyPair.publicKey,
     });
@@ -39,8 +36,8 @@ describe('signAndSendTransaction › success', () => {
       transaction: {
         signerAccountId: 'alice',
         signerPublicKey: defaultKeyPair.publicKey,
-        nonce: getLastNonce(accessKey) + 1,
-        blockHash,
+        nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
+        blockHash: aliceAccessKey.atMomentOf.blockHash,
         actions: [
           linkGlobalContract({ globalContractAccountId }),
           functionCall({

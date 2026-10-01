@@ -46,9 +46,7 @@ describe.skipIf(isUnsupportedPlatform)(
       // valid.
       const signerKeyPair = randomEd25519KeyPair();
 
-      const {
-        atMomentOf: { blockHash },
-      } = await client.getAccessKey({
+      const natAccessKey = await client.getAccessKey({
         accountId: 'nat',
         publicKey: DEFAULT_PUBLIC_KEY,
       });
@@ -59,7 +57,7 @@ describe.skipIf(isUnsupportedPlatform)(
           signerAccountId: SIGNER_ACCOUNT_ID,
           signerPublicKey: signerKeyPair.publicKey,
           nonce: 1,
-          blockHash,
+          blockHash: natAccessKey.atMomentOf.blockHash,
           action: transfer({ amount: { near: '1' } }),
           receiverAccountId: 'bob',
         },

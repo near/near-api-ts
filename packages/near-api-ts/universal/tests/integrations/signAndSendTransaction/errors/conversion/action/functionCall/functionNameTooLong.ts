@@ -14,10 +14,7 @@ const FUNCTION_NAME = 'a'.repeat(MAX_FUNCTION_NAME_LENGTH + 1);
 export const functionNameTooLong = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -27,8 +24,8 @@ export const functionNameTooLong = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       // The gas has to be non-zero: `validate_function_call_action` looks at it first, and
       // `FunctionCallZeroAttachedGas` would hide the name check.
       action: functionCall({ functionName: FUNCTION_NAME, gasLimit: { teraGas: '10' } }),

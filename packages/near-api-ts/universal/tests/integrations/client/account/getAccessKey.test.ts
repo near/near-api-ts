@@ -60,18 +60,18 @@ describe('Get Account Access Key', () => {
       },
     });
 
-    const { accessKey } = await client.getAccessKey({
+    const mlDsa65AccessKey = await client.getAccessKey({
       accountId: 'nat',
       publicKey: mlDsa65KeyPair.publicKey,
     });
 
-    expect(accessKey).toEqual({
+    expect(mlDsa65AccessKey.accessKey).toEqual({
       publicKeyRef: mlDsa65KeyPair.publicKeyRef,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
       replayProtection: { scheme: 'NonceChannel', lastNonce: expect.any(Number) },
     });
-    expect(accessKey.publicKeyRef).toMatch(/^ml-dsa-65-hash:/);
+    expect(mlDsa65AccessKey.accessKey.publicKeyRef).toMatch(/^ml-dsa-65-hash:/);
   });
 
   it('Invalid args', async () => {

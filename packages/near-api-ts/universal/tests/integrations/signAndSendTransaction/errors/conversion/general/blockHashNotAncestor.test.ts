@@ -154,9 +154,7 @@ describe.skip('signAndSendTransaction › BlockHash.NotAncestor conversion error
     for (let attempt = 0; attempt < PROBE_ATTEMPTS; attempt++) {
       if (attempt > 0 && attempt % TOP_UP_EVERY === 0) await keepBusy(TOP_UP_CALLS);
 
-      const {
-        atMomentOf: { blockHash },
-      } = await client.getAccessKey({
+      const natAccessKey = await client.getAccessKey({
         accountId: 'nat',
         publicKey: defaultKeyPair.publicKey,
       });
@@ -167,7 +165,7 @@ describe.skip('signAndSendTransaction › BlockHash.NotAncestor conversion error
           signerAccountId: 'nat',
           signerPublicKey: defaultKeyPair.publicKey,
           nonce: nonce++,
-          blockHash,
+          blockHash: natAccessKey.atMomentOf.blockHash,
           action: transfer({ amount: { yoctoNear: '1' } }),
           receiverAccountId: 'alice',
         },

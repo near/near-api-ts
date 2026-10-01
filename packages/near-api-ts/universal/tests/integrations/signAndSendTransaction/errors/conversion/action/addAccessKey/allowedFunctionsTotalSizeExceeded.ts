@@ -21,10 +21,7 @@ export const allowedFunctionsTotalSizeExceeded = (context: TestContext) => async
     (_, i) => `${'a'.repeat(FUNCTION_NAME_LENGTH - String(i).length)}${i}`,
   );
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -34,8 +31,8 @@ export const allowedFunctionsTotalSizeExceeded = (context: TestContext) => async
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       action: addAccessKey({
         publicKey: randomEd25519KeyPair().publicKey,
         permission: {

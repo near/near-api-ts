@@ -31,10 +31,7 @@ export type PublishGlobalContractArgs = {
 const sendRegistration = async (args: PublishGlobalContractArgs, action: DelegableAction) => {
   const { client, registrarAccountId, registrarKeyPair } = args;
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const registrarAccessKey = await client.getAccessKey({
     accountId: registrarAccountId,
     publicKey: registrarKeyPair.publicKey,
   });
@@ -44,8 +41,8 @@ const sendRegistration = async (args: PublishGlobalContractArgs, action: Delegab
     transaction: {
       signerAccountId: registrarAccountId,
       signerPublicKey: registrarKeyPair.publicKey,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(registrarAccessKey.accessKey) + 1,
+      blockHash: registrarAccessKey.atMomentOf.blockHash,
       action,
       receiverAccountId: registrarAccountId,
     },

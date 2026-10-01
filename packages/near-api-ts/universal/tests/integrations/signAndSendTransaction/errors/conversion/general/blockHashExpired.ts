@@ -11,7 +11,7 @@ const UNKNOWN_BLOCK_HASH = '11111111111111111111111111111112';
 export const blockHashExpired = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const { accessKey } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -21,7 +21,7 @@ export const blockHashExpired = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accessKey) + 1,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
       // `check_transaction_validity_period` (`chain/chain/src/store/utils.rs`) looks the block
       // up first and answers `Expired` when it isn't in the store — the same error a block
       // hash older than `transaction_validity_period` (100 blocks) gets from the next check,

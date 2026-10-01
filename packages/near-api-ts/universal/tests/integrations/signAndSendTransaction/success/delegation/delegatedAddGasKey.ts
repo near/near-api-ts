@@ -82,12 +82,12 @@ export const delegatedAddGasKey = (context: TestContext) => async () => {
     },
   ]);
 
-  const { accessKey } = await client.getAccessKey({
+  const gasAccessKey = await client.getAccessKey({
     accountId: delegatorAccountId,
     publicKey: gasKeyPair.publicKey,
   });
 
-  expect(accessKey).toMatchObject({
+  expect(gasAccessKey.accessKey).toMatchObject({
     permission: { kind: 'FunctionCall', allowedContract: 'bob', allowedFunctions: ['ping'] },
     gasPayment: { source: 'KeyBalance', balance: { yoctoNear: 0n } },
     replayProtection: { scheme: 'NonceChannels', channelCount: 7 },

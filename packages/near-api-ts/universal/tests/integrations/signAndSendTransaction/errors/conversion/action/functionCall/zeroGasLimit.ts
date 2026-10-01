@@ -8,10 +8,7 @@ import type { TestContext } from '../action.test';
 export const zeroGasLimit = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -21,8 +18,8 @@ export const zeroGasLimit = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       // A function call with no gas could never do any work, so `validate_function_call_action`
       // rejects it before the method name and the arguments are even looked at.
       action: functionCall({ functionName: 'any_function', gasLimit: { gas: 0n } }),

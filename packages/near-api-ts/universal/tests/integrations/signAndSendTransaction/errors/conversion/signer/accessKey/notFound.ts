@@ -12,9 +12,7 @@ export const notFound = (context: TestContext) => async () => {
   // signature check and fails while looking up the access key.
   const detachedKeyPair = randomEd25519KeyPair();
 
-  const {
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -25,7 +23,7 @@ export const notFound = (context: TestContext) => async () => {
       signerAccountId: 'nat',
       signerPublicKey: detachedKeyPair.publicKey,
       nonce: 1,
-      blockHash,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       action: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
     },

@@ -33,10 +33,7 @@ describe('safeSendSignedTransaction › success', () => {
   });
 
   it('creates, funds, and deploys a contract in one transaction', async () => {
-    const {
-      accessKey,
-      atMomentOf: { blockHash },
-    } = await client.getAccessKey({
+    const natAccessKey = await client.getAccessKey({
       accountId: 'nat',
       publicKey: DEFAULT_PUBLIC_KEY,
     });
@@ -46,8 +43,8 @@ describe('safeSendSignedTransaction › success', () => {
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: DEFAULT_PUBLIC_KEY,
-        nonce: getLastNonce(accessKey) + 1,
-        blockHash,
+        nonce: getLastNonce(natAccessKey.accessKey) + 1,
+        blockHash: natAccessKey.atMomentOf.blockHash,
         actions: [
           createAccount(),
           transfer({ amount: { near: '100' } }),

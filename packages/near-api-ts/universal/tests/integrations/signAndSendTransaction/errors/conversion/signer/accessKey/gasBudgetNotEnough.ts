@@ -19,10 +19,7 @@ export const gasBudgetNotEnough = (context: TestContext) => async () => {
     allowedFunctions: 'AllNonPayable',
   });
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const functionCallAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: functionCallKeyPair.publicKey,
   });
@@ -32,8 +29,8 @@ export const gasBudgetNotEnough = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: functionCallKeyPair.publicKey,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(functionCallAccessKey.accessKey) + 1,
+      blockHash: functionCallAccessKey.atMomentOf.blockHash,
       action: functionCall({
         functionName: 'any_function',
         gasLimit: { teraGas: '10' },

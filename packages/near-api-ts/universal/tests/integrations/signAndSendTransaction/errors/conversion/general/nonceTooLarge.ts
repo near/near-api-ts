@@ -32,9 +32,7 @@ export const nonceTooLarge = (context: TestContext) => async () => {
   const upperBound = rawRpcResult.header.height * ACCESS_KEY_NONCE_RANGE_MULTIPLIER;
   const txNonce = upperBound + 1;
 
-  const {
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -45,7 +43,7 @@ export const nonceTooLarge = (context: TestContext) => async () => {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
       nonce: txNonce,
-      blockHash,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       action: transfer({ amount: { yoctoNear: '1' } }),
       receiverAccountId: 'bob',
     },

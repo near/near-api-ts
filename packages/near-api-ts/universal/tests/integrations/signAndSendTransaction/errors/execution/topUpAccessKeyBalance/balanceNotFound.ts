@@ -12,10 +12,7 @@ import type { TestContext } from './topUpAccessKeyBalance.test';
 export const balanceNotFound = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const aliceAccessKey = await client.getAccessKey({
     accountId: 'alice',
     publicKey: DEFAULT_PUBLIC_KEY,
   });
@@ -25,8 +22,8 @@ export const balanceNotFound = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'alice',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
+      blockHash: aliceAccessKey.atMomentOf.blockHash,
       action: topUpAccessKeyBalance({ publicKey: DEFAULT_PUBLIC_KEY, amount: near('1') }),
       receiverAccountId: 'nat',
     },

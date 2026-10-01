@@ -12,10 +12,7 @@ const MAX_YOCTO_NEAR = 2n ** 128n - 1n;
 export const transactionCostOverflow = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -25,8 +22,8 @@ export const transactionCostOverflow = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       action: transfer({ amount: { yoctoNear: MAX_YOCTO_NEAR } }),
       receiverAccountId: 'bob',
     },

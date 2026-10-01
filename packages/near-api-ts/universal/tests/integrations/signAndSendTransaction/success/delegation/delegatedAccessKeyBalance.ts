@@ -98,12 +98,12 @@ export const delegatedAccessKeyBalance = (context: TestContext) => async () => {
     ],
   });
 
-  const { accessKey } = await client.getAccessKey({
+  const gasAccessKey = await client.getAccessKey({
     accountId: delegatorAccountId,
     publicKey: gasKeyPair.publicKey,
   });
 
-  expect(accessKey.gasPayment).toMatchObject({
+  expect(gasAccessKey.accessKey.gasPayment).toMatchObject({
     source: 'KeyBalance',
     balance: { near: '0.75' },
   });

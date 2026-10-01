@@ -10,7 +10,6 @@ import { withdrawToAccount } from './withdrawToAccount';
 
 export type TestContext = {
   client: Client;
-  /** The genesis key `nat` and `alice` share. */
   defaultKeyPair: KeyPair;
 };
 

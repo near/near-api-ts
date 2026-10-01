@@ -17,10 +17,7 @@ export const balanceNotEnough = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
   const gasKeyPair = randomEd25519KeyPair();
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: DEFAULT_PUBLIC_KEY,
   });
@@ -30,8 +27,8 @@ export const balanceNotEnough = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       actions: [
         addAccessKey({
           publicKey: gasKeyPair.publicKey,

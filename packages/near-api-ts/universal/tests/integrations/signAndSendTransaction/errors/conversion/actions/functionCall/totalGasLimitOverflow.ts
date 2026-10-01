@@ -11,10 +11,7 @@ const MAX_GAS = 2n ** 64n - 1n;
 export const totalGasLimitOverflow = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -24,8 +21,8 @@ export const totalGasLimitOverflow = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       // Each action on its own is valid — it is `total_prepaid_gas` summing them with
       // `checked_add` that overflows, which is the only way to reach this variant. The sum
       // never gets compared against the limit, so this hides `TotalGasLimit.Exceeded`.

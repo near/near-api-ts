@@ -31,10 +31,7 @@ const INVALID_CONTRACT_ACCOUNT_ID = 'Alice';
 export const invalidAccountId = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -44,8 +41,8 @@ export const invalidAccountId = (context: TestContext) => async () => {
     {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       action: addAccessKey({
         publicKey: randomEd25519KeyPair().publicKey,
         permission: { kind: 'FunctionCall', allowedContract: 'alice', allowedFunctions: ['ping'] },

@@ -29,10 +29,7 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
     ),
   );
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: DEFAULT_PUBLIC_KEY,
   });
@@ -42,8 +39,8 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       actions: [
         createAccount(),
         transfer({ amount: { near: '10' } }),
@@ -69,8 +66,8 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: getLastNonce(accessKey) + 2,
-      blockHash,
+      nonce: getLastNonce(natAccessKey.accessKey) + 2,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       actions: [
         functionCall({
           functionName: 'delete_action_must_be_final',

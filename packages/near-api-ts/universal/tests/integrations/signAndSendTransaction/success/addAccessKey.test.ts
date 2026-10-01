@@ -37,18 +37,18 @@ describe('signAndSendTransaction › addAccessKey', () => {
       allowedFunctions: ['ping', 'pong'],
     };
 
-    const {
-      accessKey,
-      atMomentOf: { blockHash },
-    } = await client.getAccessKey({ accountId: 'nat', publicKey: defaultKeyPair.publicKey });
+    const natAccessKey = await client.getAccessKey({
+      accountId: 'nat',
+      publicKey: defaultKeyPair.publicKey,
+    });
 
     const signedTransaction = await signTransaction({
       signDataProvider: defaultKeyPair,
       transaction: {
         signerAccountId: 'nat',
         signerPublicKey: defaultKeyPair.publicKey,
-        nonce: getLastNonce(accessKey) + 1,
-        blockHash,
+        nonce: getLastNonce(natAccessKey.accessKey) + 1,
+        blockHash: natAccessKey.atMomentOf.blockHash,
         actions: [
           addAccessKey({
             publicKey: fullAccessKey.publicKey,

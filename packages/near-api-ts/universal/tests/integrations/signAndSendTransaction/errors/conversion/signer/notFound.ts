@@ -13,9 +13,7 @@ export const notFound = (context: TestContext) => async () => {
   // key to look up — the signature itself is valid for the key stated in the transaction.
   const signerKeyPair = randomEd25519KeyPair();
 
-  const {
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -26,7 +24,7 @@ export const notFound = (context: TestContext) => async () => {
       signerAccountId: SIGNER_ACCOUNT_ID,
       signerPublicKey: signerKeyPair.publicKey,
       nonce: 1,
-      blockHash,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       action: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
     },

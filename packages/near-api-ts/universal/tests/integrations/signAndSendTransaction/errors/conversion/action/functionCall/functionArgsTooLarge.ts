@@ -19,10 +19,7 @@ const FUNCTION_ARGS_SIZE_BYTES = MAX_FUNCTION_ARGS_SIZE_BYTES + 1;
 export const functionArgsTooLarge = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -32,8 +29,8 @@ export const functionArgsTooLarge = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       // The gas has to be non-zero and the name short enough: both are checked before the
       // arguments in `validate_function_call_action`. The default serializer would turn the
       // arguments into JSON, so the raw bytes are handed over as they are.

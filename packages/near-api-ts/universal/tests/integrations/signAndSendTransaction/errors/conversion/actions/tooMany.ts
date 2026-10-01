@@ -15,10 +15,7 @@ export const tooMany = (context: TestContext) => async () => {
   // cheapest action repeated once over the limit is enough — none of them is validated.
   const actionsCount = MAX_ACTIONS_PER_RECEIPT + 1;
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -28,8 +25,8 @@ export const tooMany = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       actions: Array.from({ length: actionsCount }, () => transfer({ amount: { yoctoNear: '1' } })),
       receiverAccountId: 'bob',
     },

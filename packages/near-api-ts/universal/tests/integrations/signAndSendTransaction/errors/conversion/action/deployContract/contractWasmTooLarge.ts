@@ -37,10 +37,7 @@ const CONTRACT_WASM_SIZE_BYTES = MAX_CONTRACT_WASM_SIZE_BYTES + 1;
 export const contractWasmTooLarge = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
-  const {
-    accessKey,
-    atMomentOf: { blockHash },
-  } = await client.getAccessKey({
+  const natAccessKey = await client.getAccessKey({
     accountId: 'nat',
     publicKey: defaultKeyPair.publicKey,
   });
@@ -50,8 +47,8 @@ export const contractWasmTooLarge = (context: TestContext) => async () => {
     transaction: {
       signerAccountId: 'nat',
       signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(accessKey) + 1,
-      blockHash,
+      nonce: getLastNonce(natAccessKey.accessKey) + 1,
+      blockHash: natAccessKey.atMomentOf.blockHash,
       // The code is never compiled at this stage, only measured, so zeroed bytes are enough.
       action: deployContract({ wasmU8: new Uint8Array(CONTRACT_WASM_SIZE_BYTES) }),
       receiverAccountId: 'nat',
