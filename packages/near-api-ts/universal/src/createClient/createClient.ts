@@ -8,6 +8,7 @@ import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { createCache } from './createCache/createCache';
 import { CreateTransportArgsZodSchema, createTransport } from './createTransport/createTransport';
 import { createSafeGetAccessKey } from './methods/account/getAccessKey/getAccessKey';
+import { createSafeGetAccessKeyNonceChannels } from './methods/account/getAccessKeyNonceChannels/getAccessKeyNonceChannels';
 import { createSafeGetAccessKeys } from './methods/account/getAccessKeys/getAccessKeys';
 import { createSafeGetAccountInfo } from './methods/account/getAccountInfo/getAccountInfo';
 import { createSafeGetBlock } from './methods/block/getBlock/getBlock';
@@ -43,6 +44,7 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
     const safeGetAccountInfo = createSafeGetAccountInfo(context);
     const safeGetAccessKey = createSafeGetAccessKey(context);
     const safeGetAccessKeys = createSafeGetAccessKeys(context);
+    const safeGetAccessKeyNonceChannels = createSafeGetAccessKeyNonceChannels(context);
     const safeCallContractReadFunction = createSafeCallContractReadFunction(context);
     const safeGetBlock = createSafeGetBlock(context);
     const safeGetTransactionResult = createSafeGetTransactionResult(context);
@@ -52,6 +54,7 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
       getAccountInfo: asThrowable(safeGetAccountInfo),
       getAccessKey: asThrowable(safeGetAccessKey),
       getAccessKeys: asThrowable(safeGetAccessKeys),
+      getAccessKeyNonceChannels: asThrowable(safeGetAccessKeyNonceChannels),
       callContractReadFunction: asThrowable(safeCallContractReadFunction as any) as any, // TODO Fix: asThrowable doesn't work fine with overloads
       getBlock: asThrowable(safeGetBlock),
       getRecentBlockHash: asThrowable(cache.getRecentBlockHash),
@@ -60,6 +63,7 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
       safeGetAccountInfo,
       safeGetAccessKey,
       safeGetAccessKeys,
+      safeGetAccessKeyNonceChannels,
       safeCallContractReadFunction,
       safeGetBlock,
       safeGetRecentBlockHash: cache.getRecentBlockHash,

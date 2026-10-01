@@ -35,6 +35,25 @@
   accepts no other – and takes no `allowance`. The upper limit is
   `constants.NonceChannels.MaxChannelCount`.
 
+- **`getAccessKeyNonceChannels`** / `safeGetAccessKeyNonceChannels` – the last
+  nonce of every channel of a key with `replayProtection.scheme: 'NonceChannels'`,
+  which `getAccessKey` reports only as `channelCount`:
+
+  ```ts
+  const { nonceChannels, atMomentOf } = await client.getAccessKeyNonceChannels({
+    accountId,
+    publicKey,
+  });
+  nonceChannels; // [{ channelId: 0, lastNonce }, …] – channelId runs 0..channelCount - 1
+  ```
+
+  A missing account, a missing key and a key with a single nonce channel all
+  fail with `Client.GetAccessKeyNonceChannels.Rpc.NonceChannels.NotFound`. The
+  other error kinds match the rest of the client:
+  `Client.GetAccessKeyNonceChannels.{Args.InvalidSchema, PreferredRpc.NotFound,
+  Timeout, Aborted, Exhausted, Rpc.NotSynced, Rpc.Shard.NotTracked,
+  Rpc.Block.GarbageCollected, Rpc.Block.NotFound, Internal}`.
+
 ### Changed
 
 - **Breaking:** the access key API drops the `Account` prefix:

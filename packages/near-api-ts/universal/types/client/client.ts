@@ -11,6 +11,11 @@ import type {
   SafeGetAccessKey,
 } from './methods/account/getAccessKey';
 import type {
+  GetAccessKeyNonceChannels,
+  GetAccessKeyNonceChannelsPublicErrorRegistry,
+  SafeGetAccessKeyNonceChannels,
+} from './methods/account/getAccessKeyNonceChannels';
+import type {
   GetAccessKeys,
   GetAccessKeysPublicErrorRegistry,
   SafeGetAccessKeys,
@@ -48,6 +53,7 @@ export interface ClientPublicErrorRegistry
     GetAccountInfoPublicErrorRegistry,
     GetAccessKeyPublicErrorRegistry,
     GetAccessKeysPublicErrorRegistry,
+    GetAccessKeyNonceChannelsPublicErrorRegistry,
     CallContractReadFunctionPublicErrorRegistry,
     GetBlockPublicErrorRegistry,
     GetRecentBlockHashPublicErrorRegistry,
@@ -64,6 +70,7 @@ export type Client = {
   getAccountInfo: GetAccountInfo;
   getAccessKey: GetAccessKey;
   getAccessKeys: GetAccessKeys;
+  getAccessKeyNonceChannels: GetAccessKeyNonceChannels;
   callContractReadFunction: CallContractReadFunction;
   getBlock: GetBlock;
   getRecentBlockHash: GetRecentBlockHash;
@@ -73,6 +80,7 @@ export type Client = {
   safeGetAccountInfo: SafeGetAccountInfo;
   safeGetAccessKey: SafeGetAccessKey;
   safeGetAccessKeys: SafeGetAccessKeys;
+  safeGetAccessKeyNonceChannels: SafeGetAccessKeyNonceChannels;
   safeCallContractReadFunction: SafeCallContractReadFunction;
   safeGetBlock: SafeGetBlock;
   safeGetRecentBlockHash: SafeGetRecentBlockHash;

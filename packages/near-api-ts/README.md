@@ -199,6 +199,7 @@ All client methods are available in both flavors (`getAccountInfo` / `safeGetAcc
 | `getAccountInfo` | balance breakdown, storage usage, contract status, observed block |
 | `getAccessKey` | one access key with its nonce and permissions |
 | `getAccessKeys` | every access key on the account |
+| `getAccessKeyNonceChannels` | the last nonce of every channel of a key with several nonce channels |
 | `callContractReadFunction` | result of a read-only contract call plus its logs |
 | `getBlock` | the raw RPC block response |
 | `getRecentBlockHash` | a cached recent block hash for building transactions |
@@ -276,6 +277,22 @@ if (replayProtection.scheme === 'NonceChannel') {
 The last two go together: a key paid from the account balance keeps a single nonce channel,
 while a key with a balance of its own (nearcore calls it a gas key) keeps up to 1024 independent
 ones, so it can sign that many transactions in parallel.
+
+`getAccessKey` reports only how many channels such a key has; their nonces come from
+`getAccessKeyNonceChannels`:
+
+```ts
+const { nonceChannels } = await client.getAccessKeyNonceChannels({
+  accountId: 'example.testnet',
+  publicKey: 'ed25519:...',
+});
+
+nonceChannels; // [{ channelId: 0, lastNonce }, { channelId: 1, lastNonce }, …]
+```
+
+Channels are numbered from 0 to `channelCount - 1`. A key with a single nonce channel has no
+channels to report — the method fails with
+`Client.GetAccessKeyNonceChannels.Rpc.NonceChannels.NotFound` for it, just as for a missing key.
 
 An account refers to its keys by `publicKeyRef` rather than by the public key: an ed25519 or
 secp256k1 key is referred to by the key itself, an ML-DSA-65 key by its hash
