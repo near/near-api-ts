@@ -1,20 +1,23 @@
+### Primary option
 
 ```typescript
 // Transaction
+
+type SequentialNonce = number;
 
 type Progression =
   | 'Increasing'  // value > current
   | 'Consecutive'; // value == current + 1
 
 type TransactionReplayProtection = {
-  scheme: 'SingleNonceSequence';
-  nonce: number,
-  nonceProgression: Progression;
+  scheme: 'NonceChannel';
+  nonce: SequentialNonce,
+  nonceProgression?: Progression;
 } | {
-  scheme: 'NonceSequenceSet';
-  sequenceId: number; // which sequence of the set: 1..totalSequences
-  nonce: number; // the number inside that sequence
-  nonceProgression: Progression;
+  scheme: 'NonceChannels';
+  nonceChannelId: number;
+  nonce: SequentialNonce;
+  nonceProgression?: Progression; // default: Consecutive
 }
 
 type Transaction = {
@@ -23,14 +26,14 @@ type Transaction = {
     publicKey: PublicKey,
     replayProtection: TransactionReplayProtection,
   },
-  actions: TransactionAction[]
+  actions: TransactionAction[] // action: TransactionAction
   receiverAccountId: AccountId;
   recentBlockHash: BlockHash;
 };
 ````
 
 
-### Option 1
+### Example
 
 ```typescript
 
@@ -39,10 +42,10 @@ const tx = {
     accountId: 'alice',
     publicKey: 'ed25519:12312312dadad',
     replayProtection: {
-      scheme: 'NonceSequenceSet',
-      sequenceId: 1,
+      scheme: 'NonceChannels',
+      nonceChannelId: 1,
       nonce: 1,
-      nonceProgression: 'Consecutive',
+      nonceProgression: 'Increasing',
     },
   },
   actions: [],
@@ -53,4 +56,15 @@ const tx = {
 ````
 
 
+#### Other options
 
+```typescript
+Stamp
+StampCollections
+
+getStampCollections({ accountId, publicKey })
+
+type Output = {
+  stampCollections: [{ collectionId: 1, lastStamp: 1000 }]
+}
+```
