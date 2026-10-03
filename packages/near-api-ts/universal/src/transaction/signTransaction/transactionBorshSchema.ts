@@ -9,15 +9,25 @@ import { DeployGlobalContractActionBorshSchema } from '../_common/_common/borshS
 import { FunctionCallActionBorshSchema } from '../_common/_common/borshSchemas/functionCall';
 import { SignatureBorshSchema } from '../_common/_common/borshSchemas/signature';
 import { StakeActionBorshSchema } from '../_common/_common/borshSchemas/stake';
+import { TransactionNonceBorshSchema } from '../_common/_common/borshSchemas/transactionNonce';
 import { TransferActionBorshSchema } from '../_common/_common/borshSchemas/transfer';
 import { TransferToGasKeyActionBorshSchema } from '../_common/_common/borshSchemas/transferToGasKey';
 import { UseGlobalContractActionBorshSchema } from '../_common/_common/borshSchemas/useGlobalContract';
 import { WithdrawFromGasKeyActionBorshSchema } from '../_common/_common/borshSchemas/withdrawFromGasKey';
-import { SignedDelegationBorshSchema } from '../_common/delegationBorshSchema';
+import {
+  SignedDelegationV1BorshSchema,
+  SignedDelegationV2BorshSchema,
+} from '../_common/delegationBorshSchema';
 
-const ExecuteDelegationActionBorshSchema = {
+const DelegateActionBorshSchema = {
   struct: {
-    executeDelegation: SignedDelegationBorshSchema,
+    delegate: SignedDelegationV1BorshSchema,
+  },
+};
+
+const DelegateV2ActionBorshSchema = {
+  struct: {
+    delegateV2: SignedDelegationV2BorshSchema,
   },
 };
 
@@ -33,7 +43,7 @@ export const TransactionActionBorshSchema: Schema = {
     AddKeyActionBorshSchema,
     DeleteKeyActionBorshSchema,
     DeleteAccountActionBorshSchema,
-    ExecuteDelegationActionBorshSchema,
+    DelegateActionBorshSchema,
     DeployGlobalContractActionBorshSchema,
     UseGlobalContractActionBorshSchema,
     // Slot 11 is nearcore's `DeterministicStateInit`, which this library does not support yet.
@@ -43,18 +53,28 @@ export const TransactionActionBorshSchema: Schema = {
     { struct: { x: 'bool' } },
     TransferToGasKeyActionBorshSchema,
     WithdrawFromGasKeyActionBorshSchema,
+    DelegateV2ActionBorshSchema,
   ],
 };
 
-// Fields order is important and must follow the nearcore
+// Nearcore `NonceMode`: `Monotonic` is `'Increasing'`, `Strict` is `'Consecutive'`.
+const NonceModeBorshSchema: Schema = {
+  enum: [{ struct: { monotonic: { struct: {} } } }, { struct: { strict: { struct: {} } } }],
+};
+
+// Nearcore `TransactionV1`. Fields order is important and must follow the nearcore.
+// `version` is the `1u8` nearcore writes before the struct to tell it from a `TransactionV0`,
+// which this library no longer sends.
 export const TransactionBorshSchema: Schema = {
   struct: {
+    version: 'u8',
     signerId: 'string',
     publicKey: PublicKeyBorshSchema,
-    nonce: 'u64',
+    nonce: TransactionNonceBorshSchema,
     receiverId: 'string',
     blockHash: { array: { type: 'u8', len: 32 } },
     actions: { array: { type: TransactionActionBorshSchema } },
+    nonceMode: NonceModeBorshSchema,
   },
 };
 

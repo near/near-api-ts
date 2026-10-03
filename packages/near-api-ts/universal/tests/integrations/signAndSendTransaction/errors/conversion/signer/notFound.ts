@@ -21,10 +21,12 @@ export const notFound = (context: TestContext) => async () => {
   const signedTransaction = await signTransaction({
     signDataProvider: signerKeyPair,
     transaction: {
-      signerAccountId: SIGNER_ACCOUNT_ID,
-      signerPublicKey: signerKeyPair.publicKey,
-      nonce: 1,
-      blockHash: natAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: SIGNER_ACCOUNT_ID,
+        publicKey: signerKeyPair.publicKey,
+        replayProtection: { scheme: 'NonceChannel', nonce: 1 },
+      },
+      recentBlockHash: natAccessKey.atMomentOf.blockHash,
       action: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
     },

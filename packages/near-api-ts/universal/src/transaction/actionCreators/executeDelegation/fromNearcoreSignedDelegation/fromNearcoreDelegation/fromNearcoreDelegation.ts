@@ -1,10 +1,13 @@
 import { base58 } from '@scure/base';
 import type {
   DelegableAction,
+  DelegationReplayProtection,
   NearcoreDelegableAction,
-  NearcoreDelegation,
+  NearcoreDelegationV1,
+  NearcoreDelegationV2,
   SignedDelegation,
 } from '../../../../../../types/_common/transaction/actions/executeDelegation/delegation';
+import type { NearcoreTransactionNonce } from '../../../../../../types/_common/transaction/transaction';
 import { constants } from '../../../../../_common/_common/_common/constants';
 import { fromNearcorePublicKey } from './_common/fromNearcorePublicKey';
 import { fromNearcoreAddAccessKeyAction } from './fromNearcoreAddAccessKeyAction';
@@ -94,14 +97,36 @@ const fromNearcoreDelegableAction = (action: NearcoreDelegableAction): Delegable
   throw new Error('Unsupported delegable action', { cause: action });
 };
 
+export type WireDelegation = Omit<NearcoreDelegationV1, 'tag'> | Omit<NearcoreDelegationV2, 'tag'>;
+
+const fromNearcoreTransactionNonce = (
+  nonce: NearcoreTransactionNonce,
+): DelegationReplayProtection =>
+  'gasKeyNonce' in nonce
+    ? {
+        scheme: 'NonceChannels',
+        nonceChannelId: nonce.gasKeyNonce.nonceIndex,
+        nonce: Number(nonce.gasKeyNonce.nonce),
+      }
+    : { scheme: 'NonceChannel', nonce: Number(nonce.nonce.nonce) };
+
+// Only a NEP-611 delegation has `version` - the discriminant of its payload.
 export const fromNearcoreDelegation = (
-  delegation: Omit<NearcoreDelegation, 'tag'>,
-): SignedDelegation['delegation'] => ({
-  tag: constants.Nep366MetaTransaction.Tag,
-  delegatorAccountId: delegation.senderId,
-  delegatorPublicKey: fromNearcorePublicKey(delegation.publicKey),
-  receiverAccountId: delegation.receiverId,
-  nonce: Number(delegation.nonce),
-  expiration: { blockHeight: Number(delegation.maxBlockHeight) },
-  delegatedActions: delegation.actions.map(fromNearcoreDelegableAction),
-});
+  delegation: WireDelegation,
+): SignedDelegation['delegation'] => {
+  const isNep611 = 'version' in delegation;
+
+  return {
+    tag: isNep611 ? constants.Delegation.Nep611Tag : constants.Delegation.Nep366Tag,
+    delegator: {
+      accountId: delegation.senderId,
+      publicKey: fromNearcorePublicKey(delegation.publicKey),
+      replayProtection: isNep611
+        ? fromNearcoreTransactionNonce(delegation.nonce)
+        : { scheme: 'NonceChannel', nonce: Number(delegation.nonce) },
+    },
+    receiverAccountId: delegation.receiverId,
+    expiration: { blockHeight: Number(delegation.maxBlockHeight) },
+    delegatedActions: delegation.actions.map(fromNearcoreDelegableAction),
+  };
+};

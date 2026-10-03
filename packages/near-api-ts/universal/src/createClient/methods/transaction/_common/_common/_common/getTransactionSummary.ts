@@ -1,5 +1,6 @@
 import type { ActionView } from '@near-js/jsonrpc-types';
 import type { Result } from '../../../../../../../types/_common/common';
+import type { SignedTransactionReplayProtection } from '../../../../../../../types/_common/transaction/transaction';
 import type {
   BaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionActionSummariesFn,
@@ -45,6 +46,19 @@ const getTransactionActionSummaries = <
   );
 };
 
+// Nearcore leaves `nonceMode` out for its default, `monotonic`, which a TransactionV0 has too.
+const getReplayProtection = ({
+  nonce,
+  nonceIndex,
+  nonceMode,
+}: RpcTransactionSummary): SignedTransactionReplayProtection => {
+  const nonceProgression = nonceMode === 'strict' ? 'Consecutive' : 'Increasing';
+
+  return typeof nonceIndex === 'number'
+    ? { scheme: 'NonceChannels', nonceChannelId: nonceIndex, nonce, nonceProgression }
+    : { scheme: 'NonceChannel', nonce, nonceProgression };
+};
+
 export const getTransactionSummary = (
   transaction: RpcTransactionSummary,
   deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn,
@@ -59,9 +73,11 @@ export const getTransactionSummary = (
   if (!actionSummaries.success) return actionSummaries;
 
   return result.ok({
-    signerAccountId: transaction.signerId,
-    signerPublicKey: transaction.publicKey.publicKey,
-    nonce: transaction.nonce,
+    signer: {
+      accountId: transaction.signerId,
+      publicKey: transaction.publicKey.publicKey,
+      replayProtection: getReplayProtection(transaction),
+    },
     receiverAccountId: transaction.receiverId,
     actionSummaries: actionSummaries.data,
     signature: transaction.signature.signature,

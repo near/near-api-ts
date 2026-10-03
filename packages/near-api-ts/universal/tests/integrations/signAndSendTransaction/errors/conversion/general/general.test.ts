@@ -5,6 +5,7 @@ import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 import { blockHashExpired } from './blockHashExpired';
+import { nonceGap } from './nonceGap';
 import { nonceInvalid } from './nonceInvalid';
 import { nonceTooLarge } from './nonceTooLarge';
 import { signatureInvalid } from './signatureInvalid';
@@ -43,8 +44,9 @@ export type TestContext = {
  *   which `blockHashNotAncestor.test.ts` arranges; also transient and deliberately unmapped, for
  *   the same reason.
  * - `InvalidNonceIndex`, `NotEnoughGasKeyBalance`, `NotEnoughBalanceForDeposit` — produced
- *   only by `verify_and_charge_gas_key_tx_ephemeral`, i.e. for transactions signed with a gas
- *   key, which the library doesn't build.
+ *   only by `verify_and_charge_gas_key_tx_ephemeral`, i.e. for transactions that use a nonce
+ *   channel of a key paid from its own balance. The library builds them, but doesn't map these
+ *   errors yet.
  */
 describe('signAndSendTransaction › General conversion errors', () => {
   const context = {
@@ -63,6 +65,8 @@ describe('signAndSendTransaction › General conversion errors', () => {
   );
 
   it('fails with Nonce.Invalid when the nonce is already used', nonceInvalid(context));
+
+  it('fails with Nonce.Invalid when a consecutive nonce skips ahead', nonceGap(context));
 
   it(
     'fails with BlockHash.Expired when the block hash is not on the chain anymore',

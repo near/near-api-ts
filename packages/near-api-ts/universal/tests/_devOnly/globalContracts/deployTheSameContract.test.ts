@@ -30,10 +30,12 @@ describe('DeployContract Tests', () => {
 
     const signedTransaction = await signTransaction({
       transaction: {
-        signerAccountId: 'nat',
-        signerPublicKey: defaultKeyPair.publicKey,
-        nonce: getLastNonce(natKey.accessKey) + 1,
-        blockHash: natKey.atMomentOf.blockHash,
+        signer: {
+          accountId: 'nat',
+          publicKey: defaultKeyPair.publicKey,
+          replayProtection: { scheme: 'NonceChannel', nonce: getLastNonce(natKey.accessKey) + 1 },
+        },
+        recentBlockHash: natKey.atMomentOf.blockHash,
         actions: [
           registerPinnableGlobalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
@@ -60,10 +62,12 @@ describe('DeployContract Tests', () => {
 
     const signedTransaction2 = await signTransaction({
       transaction: {
-        signerAccountId: 'alice',
-        signerPublicKey: defaultKeyPair.publicKey,
-        nonce: getLastNonce(aliceKey.accessKey) + 1,
-        blockHash: aliceKey.atMomentOf.blockHash,
+        signer: {
+          accountId: 'alice',
+          publicKey: defaultKeyPair.publicKey,
+          replayProtection: { scheme: 'NonceChannel', nonce: getLastNonce(aliceKey.accessKey) + 1 },
+        },
+        recentBlockHash: aliceKey.atMomentOf.blockHash,
         actions: [
           registerPinnableGlobalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),

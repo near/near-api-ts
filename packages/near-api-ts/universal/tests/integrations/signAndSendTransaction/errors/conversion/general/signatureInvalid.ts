@@ -19,10 +19,15 @@ export const signatureInvalid = (context: TestContext) => async () => {
   const signedTransaction = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'nat',
-      signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(natAccessKey.accessKey) + 1,
-      blockHash: natAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'nat',
+        publicKey: defaultKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(natAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: natAccessKey.atMomentOf.blockHash,
       action: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
     },

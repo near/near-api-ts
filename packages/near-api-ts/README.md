@@ -11,8 +11,9 @@ TypeScript library for interacting with NEAR Protocol from Node.js and the brows
   `context` shaped for that kind — narrow it with `isNatError(error, 'Some.Kind')`.
 - **Plain functions, no classes.** Nothing is registered globally, `sideEffects` is off,
   so bundlers can drop what you don't import.
-- **The whole protocol surface.** Meta transactions (NEP-366), global contracts, NEP-413
-  off-chain messages, ML-DSA-65 post-quantum keys, multi-RPC failover with retries.
+- **The whole protocol surface.** Meta transactions (NEP-366, NEP-611), gas keys, global
+  contracts, NEP-413 off-chain messages, ML-DSA-65 post-quantum keys, multi-RPC failover with
+  retries.
 
 [GitHub repository](https://github.com/near/near-api-ts) · [Changelog](./CHANGELOG.md)
 
@@ -279,8 +280,9 @@ while a key with a balance of its own (nearcore calls it a gas key) keeps up to 
 ones, so it can sign that many transactions in parallel.
 
 A nonce channel — the single one of an ordinary key or any of a gas key's — only moves forward.
-Each transaction leaves a mark at its nonce, and the next one has to land further along, though
-not necessarily on the very next number. `lastNonce` is the last mark so far:
+Each transaction leaves a mark at its nonce, and the next one has to land further along: by
+default on the very next number, or anywhere ahead when it asks for that (see
+[Signing manually](#signing-manually)). `lastNonce` is the last mark so far:
 
 ```text
   key added     tx      tx  tx        tx
@@ -520,10 +522,12 @@ if (replayProtection.scheme !== 'NonceChannel') throw new Error('Unexpected gas 
 const signed = await signTransaction({
   signDataProvider: signerKeyPair,
   transaction: {
-    signerAccountId: 'example.testnet',
-    signerPublicKey: signerKeyPair.publicKey,
-    nonce: replayProtection.lastNonce + 1,
-    blockHash: atMomentOf.blockHash,
+    signer: {
+      accountId: 'example.testnet',
+      publicKey: signerKeyPair.publicKey,
+      replayProtection: { scheme: 'NonceChannel', nonce: replayProtection.lastNonce + 1 },
+    },
+    recentBlockHash: atMomentOf.blockHash,
     receiverAccountId: 'receiver.testnet',
     action: transfer({ amount: near('1') }),
   },
@@ -534,6 +538,44 @@ signed.signedTransaction; // { transaction, signature }
 signed.signedTransactionBorsh64; // ready to hand to a relayer
 
 const tx = await client.sendSignedTransaction({ signedTransaction: signed });
+```
+
+`signer.replayProtection` names the nonce channel the transaction takes and the nonce in it.
+`nonceProgression` says how that nonce relates to the channel's `lastNonce`:
+
+| `nonceProgression` | The nonce must be |
+| --- | --- |
+| `'Consecutive'` (**default**) | exactly `lastNonce + 1`; any other is rejected as `Nonce.Invalid` right away |
+| `'Increasing'` | anything above `lastNonce` — gaps allowed, e.g. when transactions may arrive out of order |
+
+`signedTransaction` reports the progression the signature covers, the default filled in.
+
+A gas key keeps several channels, and a transaction picks one by `nonceChannelId`
+(`0..channelCount - 1`), so the key signs in parallel — one transaction per channel:
+
+```ts
+const { nonceChannels, atMomentOf } = await client.getAccessKeyNonceChannels({
+  accountId: 'example.testnet',
+  publicKey: gasKeyPair.publicKey,
+});
+
+const signedTransactions = await Promise.all(
+  nonceChannels.map(({ channelId, lastNonce }) =>
+    signTransaction({
+      signDataProvider: gasKeyPair,
+      transaction: {
+        signer: {
+          accountId: 'example.testnet',
+          publicKey: gasKeyPair.publicKey,
+          replayProtection: { scheme: 'NonceChannels', nonceChannelId: channelId, nonce: lastNonce + 1 },
+        },
+        recentBlockHash: atMomentOf.blockHash,
+        receiverAccountId: 'receiver.testnet',
+        action: transfer({ amount: near('1') }),
+      },
+    }),
+  ),
+);
 ```
 
 ### How far to wait
@@ -592,7 +634,7 @@ output: `deserializeResultData`, `deserializeActionSummaries`, `deserializeExecu
 
 ---
 
-## Meta transactions (NEP-366)
+## Meta transactions
 
 A *delegator* signs a set of actions without paying for them; a *relayer* wraps that signed
 delegation into its own transaction and covers the gas.
@@ -612,10 +654,12 @@ if (replayProtection.scheme !== 'NonceChannel') throw new Error('Unexpected gas 
 const signedDelegation = await signDelegation({
   signDataProvider: aliceKeyPair,
   delegation: {
-    delegatorAccountId: 'alice.testnet',
-    delegatorPublicKey: aliceKeyPair.publicKey,
+    delegator: {
+      accountId: 'alice.testnet',
+      publicKey: aliceKeyPair.publicKey,
+      replayProtection: { scheme: 'NonceChannel', nonce: replayProtection.lastNonce + 1 },
+    },
     receiverAccountId: 'contract.testnet',
-    nonce: replayProtection.lastNonce + 1,
     expiration: { blockHeight: atMomentOf.blockHeight + 100 },
     delegatedAction: functionCall({
       functionName: 'add_message',
@@ -642,6 +686,13 @@ output can be passed straight through. Delegations expire by block height, and e
 delegable action is supported except nesting another delegation. Failures come back as
 their own error kinds — `Action.ExecuteDelegation.Expired`, `.Signature.Invalid`,
 `.Nonce.Invalid`, `.Executor.NotAllowed`, and the `.Delegator.AccessKey.*` family.
+
+`delegator.replayProtection` works like the one of a transaction — a gas key signs on any of
+its channels with `{ scheme: 'NonceChannels', nonceChannelId, nonce }` — except that it has no
+`nonceProgression`: a delegation only needs a nonce above `lastNonce`. `signDelegation` signs
+in the NEP-611 format, the one that can name a channel; `executeDelegation` also relays a
+delegation signed elsewhere in the older NEP-366 format. `signedDelegation.delegation.tag`
+tells the two apart (`constants.Delegation.Nep611Tag` / `constants.Delegation.Nep366Tag`).
 
 ---
 
@@ -841,7 +892,7 @@ Requests that need historical state fall back to the archival endpoints on their
 | Export | Purpose |
 | --- | --- |
 | `convertObjectToU8` / `convertBase64ToObject` | JSON ⇄ bytes for contract arguments and results |
-| `constants` | `NearDecimals`, `TeraGasDecimals`, `Nep413Message`, `Nep366MetaTransaction`, `BinaryLengths` |
+| `constants` | `NearDecimals`, `TeraGasDecimals`, `Nep413Message`, `Delegation`, `BinaryLengths`, `NonceChannels` |
 | `toEd25519CurveString`, `toSecp256k1CurveString`, `toMlDsa65CurveString` | curve-prefixed key strings |
 | `AccountIdZodSchema`, `PublicKeyZodSchema`, `MessageZodSchema`, `Base64StringZodSchema` | reuse the library's validation in your own schemas |
 

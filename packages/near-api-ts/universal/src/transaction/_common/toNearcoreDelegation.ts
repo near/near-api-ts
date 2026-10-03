@@ -1,6 +1,7 @@
 import type {
   NearcoreDelegableAction,
-  NearcoreDelegation,
+  NearcoreDelegationV1,
+  NearcoreDelegationV2,
 } from '../../../types/_common/transaction/actions/executeDelegation/delegation';
 import { constants } from '../../_common/_common/_common/constants';
 import { toNearcorePublicKey } from './_common/_common/toNearcorePublicKey';
@@ -16,9 +17,14 @@ import { toNearcoreRegisterLinkableGlobalContractAction } from './_common/toNear
 import { toNearcoreRegisterPinnableGlobalContractAction } from './_common/toNearcore/toNearcoreRegisterPinnableGlobalContract';
 import { toNearcoreStakeAction } from './_common/toNearcore/toNearcoreStake';
 import { toNearcoreTopUpAccessKeyBalanceAction } from './_common/toNearcore/toNearcoreTopUpAccessKeyBalance';
+import { toNearcoreTransactionNonce } from './_common/toNearcore/toNearcoreTransactionNonce';
 import { toNearcoreTransferAction } from './_common/toNearcore/toNearcoreTransfer';
 import { toNearcoreWithdrawAccessKeyBalanceAction } from './_common/toNearcore/toNearcoreWithdrawAccessKeyBalance';
-import type { InnerDelegableAction, InnerDelegation } from './delegationZodSchema';
+import type {
+  InnerDelegableAction,
+  InnerDelegation,
+  InnerSignedDelegation,
+} from './delegationZodSchema';
 
 const toNearcoreDelegableAction = (action: InnerDelegableAction): NearcoreDelegableAction => {
   switch (action.actionType) {
@@ -64,12 +70,30 @@ const toNearcoreDelegableActions = (
   return [];
 };
 
-export const toNearcoreDelegation = (delegation: InnerDelegation): NearcoreDelegation => ({
-  tag: constants.Nep366MetaTransaction.Tag,
-  senderId: delegation.delegatorAccountId,
+// NEP-366 - a delegation signed elsewhere in the older format, which a relayer still sends as is.
+export const toNearcoreDelegationV1 = (
+  delegation: Extract<
+    InnerSignedDelegation['delegation'],
+    { tag: typeof constants.Delegation.Nep366Tag }
+  >,
+): NearcoreDelegationV1 => ({
+  tag: constants.Delegation.Nep366Tag,
+  senderId: delegation.delegator.accountId,
   receiverId: delegation.receiverAccountId,
   actions: toNearcoreDelegableActions(delegation),
-  nonce: BigInt(delegation.nonce),
+  nonce: BigInt(delegation.delegator.replayProtection.nonce),
   maxBlockHeight: BigInt(delegation.expiration.blockHeight),
-  publicKey: toNearcorePublicKey(delegation.delegatorPublicKey),
+  publicKey: toNearcorePublicKey(delegation.delegator.publicKey),
+});
+
+// NEP-611 - the format `signDelegation` signs.
+export const toNearcoreDelegationV2 = (delegation: InnerDelegation): NearcoreDelegationV2 => ({
+  tag: constants.Delegation.Nep611Tag,
+  version: 0,
+  senderId: delegation.delegator.accountId,
+  receiverId: delegation.receiverAccountId,
+  actions: toNearcoreDelegableActions(delegation),
+  nonce: toNearcoreTransactionNonce(delegation.delegator.replayProtection),
+  maxBlockHeight: BigInt(delegation.expiration.blockHeight),
+  publicKey: toNearcorePublicKey(delegation.delegator.publicKey),
 });

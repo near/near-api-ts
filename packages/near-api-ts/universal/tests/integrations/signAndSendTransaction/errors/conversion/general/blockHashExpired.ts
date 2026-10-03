@@ -19,14 +19,19 @@ export const blockHashExpired = (context: TestContext) => async () => {
   const signedTransaction = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'nat',
-      signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(natAccessKey.accessKey) + 1,
+      signer: {
+        accountId: 'nat',
+        publicKey: defaultKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(natAccessKey.accessKey) + 1,
+        },
+      },
       // `check_transaction_validity_period` (`chain/chain/src/store/utils.rs`) looks the block
       // up first and answers `Expired` when it isn't in the store — the same error a block
       // hash older than `transaction_validity_period` (100 blocks) gets from the next check,
       // only without waiting for the chain to grow past it.
-      blockHash: UNKNOWN_BLOCK_HASH,
+      recentBlockHash: UNKNOWN_BLOCK_HASH,
       action: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
     },

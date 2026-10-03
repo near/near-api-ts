@@ -37,10 +37,15 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
   const signedTransaction1 = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'nat',
-      signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: getLastNonce(natAccessKey.accessKey) + 1,
-      blockHash: natAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'nat',
+        publicKey: DEFAULT_PUBLIC_KEY,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(natAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: natAccessKey.atMomentOf.blockHash,
       actions: [
         createAccount(),
         transfer({ amount: { near: '10' } }),
@@ -64,10 +69,15 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
   const signedTransaction2 = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'nat',
-      signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: getLastNonce(natAccessKey.accessKey) + 2,
-      blockHash: natAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'nat',
+        publicKey: DEFAULT_PUBLIC_KEY,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(natAccessKey.accessKey) + 2,
+        },
+      },
+      recentBlockHash: natAccessKey.atMomentOf.blockHash,
       actions: [
         functionCall({
           functionName: 'delete_action_must_be_final',

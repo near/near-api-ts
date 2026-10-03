@@ -30,8 +30,14 @@ export const delegatedLinkGlobalContract = (context: TestContext) => async () =>
   const signedDelegation = await signDelegation({
     signDataProvider: defaultKeyPair,
     delegation: {
-      delegatorAccountId,
-      delegatorPublicKey: defaultKeyPair.publicKey,
+      delegator: {
+        accountId: delegatorAccountId,
+        publicKey: defaultKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(delegatorAccessKey.accessKey) + 1,
+        },
+      },
       delegatedActions: [
         linkGlobalContract({ globalContractAccountId }),
         functionCall({
@@ -41,7 +47,6 @@ export const delegatedLinkGlobalContract = (context: TestContext) => async () =>
         }),
       ],
       receiverAccountId: delegatorAccountId,
-      nonce: getLastNonce(delegatorAccessKey.accessKey) + 1,
       expiration: { blockHeight: delegatorAccessKey.atMomentOf.blockHeight + 100 },
     },
   });
@@ -56,10 +61,15 @@ export const delegatedLinkGlobalContract = (context: TestContext) => async () =>
   const signedTransaction = await signTransaction({
     signDataProvider: relayKeyPair,
     transaction: {
-      signerAccountId: 'relay',
-      signerPublicKey: relayKeyPair.publicKey,
-      nonce: getLastNonce(relayAccessKey.accessKey) + 1,
-      blockHash: relayAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'relay',
+        publicKey: relayKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(relayAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: relayAccessKey.atMomentOf.blockHash,
       action: executeDelegation(signedDelegation),
       receiverAccountId: delegatorAccountId,
     },
@@ -74,7 +84,7 @@ export const delegatedLinkGlobalContract = (context: TestContext) => async () =>
     {
       actionType: 'ExecuteDelegation',
       delegation: {
-        delegatorAccountId,
+        delegator: { accountId: delegatorAccountId },
         receiverAccountId: delegatorAccountId,
         delegatedActionSummaries: [
           { actionType: 'LinkGlobalContract', globalContractAccountId },

@@ -41,10 +41,15 @@ describe('safeSendSignedTransaction › success', () => {
     const signedTransaction = await signTransaction({
       signDataProvider: keyService,
       transaction: {
-        signerAccountId: 'nat',
-        signerPublicKey: DEFAULT_PUBLIC_KEY,
-        nonce: getLastNonce(natAccessKey.accessKey) + 1,
-        blockHash: natAccessKey.atMomentOf.blockHash,
+        signer: {
+          accountId: 'nat',
+          publicKey: DEFAULT_PUBLIC_KEY,
+          replayProtection: {
+            scheme: 'NonceChannel',
+            nonce: getLastNonce(natAccessKey.accessKey) + 1,
+          },
+        },
+        recentBlockHash: natAccessKey.atMomentOf.blockHash,
         actions: [
           createAccount(),
           transfer({ amount: { near: '100' } }),

@@ -44,10 +44,15 @@ describe('ml-dsa-65 Transaction success', () => {
     const createTx = await signTransaction({
       signDataProvider: keyService,
       transaction: {
-        signerAccountId: 'nat',
-        signerPublicKey: DEFAULT_PUBLIC_KEY,
-        nonce: getLastNonce(natAccessKey.accessKey) + 1,
-        blockHash: natAccessKey.atMomentOf.blockHash,
+        signer: {
+          accountId: 'nat',
+          publicKey: DEFAULT_PUBLIC_KEY,
+          replayProtection: {
+            scheme: 'NonceChannel',
+            nonce: getLastNonce(natAccessKey.accessKey) + 1,
+          },
+        },
+        recentBlockHash: natAccessKey.atMomentOf.blockHash,
         receiverAccountId: newAccountId,
         actions: [
           createAccount(),
@@ -76,10 +81,15 @@ describe('ml-dsa-65 Transaction success', () => {
     const transferTx = await signTransaction({
       signDataProvider: keyService,
       transaction: {
-        signerAccountId: newAccountId,
-        signerPublicKey: mlDsa65KeyPair.publicKey,
-        nonce: getLastNonce(mlDsa65AccessKey.accessKey) + 1,
-        blockHash: mlDsa65AccessKey.atMomentOf.blockHash,
+        signer: {
+          accountId: newAccountId,
+          publicKey: mlDsa65KeyPair.publicKey,
+          replayProtection: {
+            scheme: 'NonceChannel',
+            nonce: getLastNonce(mlDsa65AccessKey.accessKey) + 1,
+          },
+        },
+        recentBlockHash: mlDsa65AccessKey.atMomentOf.blockHash,
         receiverAccountId: 'bob',
         action: transfer({ amount: { near: '1' } }),
       },

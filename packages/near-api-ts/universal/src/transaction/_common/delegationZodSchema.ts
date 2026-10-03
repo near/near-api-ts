@@ -12,6 +12,7 @@ import { DeleteKeyActionZodSchema } from './_common/zodSchemas/deleteKey';
 import { DeployContractActionZodSchema } from './_common/zodSchemas/deployContract';
 import { FunctionCallActionZodSchema } from './_common/zodSchemas/functionCall';
 import { LinkGlobalContractActionZodSchema } from './_common/zodSchemas/linkGlobalContract';
+import { NonceChannelIdZodSchema } from './_common/zodSchemas/nonceChannelId';
 import { PinGlobalContractActionZodSchema } from './_common/zodSchemas/pinGlobalContract';
 import { RegisterLinkableGlobalContractActionZodSchema } from './_common/zodSchemas/registerLinkableGlobalContract';
 import { RegisterPinnableGlobalContractActionZodSchema } from './_common/zodSchemas/registerPinnableGlobalContract';
@@ -39,11 +40,28 @@ const DelegableActionZodSchema = z.union([
 
 export type InnerDelegableAction = z.infer<typeof DelegableActionZodSchema>;
 
-const DelegationBaseZodSchema = z.object({
-  delegatorAccountId: AccountIdZodSchema,
-  delegatorPublicKey: PublicKeyZodSchema,
-  receiverAccountId: AccountIdZodSchema,
+const NonceChannelReplayProtectionZodSchema = z.object({
+  scheme: z.literal('NonceChannel'),
   nonce: TransactionNonceZodSchema,
+  nonceChannelId: z.optional(z.never()),
+});
+
+const NonceChannelsReplayProtectionZodSchema = z.object({
+  scheme: z.literal('NonceChannels'),
+  nonceChannelId: NonceChannelIdZodSchema,
+  nonce: TransactionNonceZodSchema,
+});
+
+const DelegationBaseZodSchema = z.object({
+  delegator: z.object({
+    accountId: AccountIdZodSchema,
+    publicKey: PublicKeyZodSchema,
+    replayProtection: z.union([
+      NonceChannelReplayProtectionZodSchema,
+      NonceChannelsReplayProtectionZodSchema,
+    ]),
+  }),
+  receiverAccountId: AccountIdZodSchema,
   expiration: z.object({
     blockHeight: BlockHeightZodSchema,
   }),
@@ -73,12 +91,27 @@ export const DelegationZodSchema = z.union([
 export type InnerDelegation = z.infer<typeof DelegationZodSchema>;
 
 // A signed delegation always carries the action list, never the single-action
-// shorthand - `signDelegation` normalizes it before signing.
+// shorthand - `signDelegation` normalizes it before signing. The tag tells its format apart:
+// NEP-611 is the one `signDelegation` signs, NEP-366 comes from other signers and has no
+// nonce channel id.
 export const SignedDelegationZodSchema = z.object({
-  delegation: z.object({
-    tag: z.literal(constants.Nep366MetaTransaction.Tag),
-    ...DelegationBaseZodSchema.shape,
-    ...MultiDelegatedActionsZodSchema.shape,
-  }),
+  delegation: z.union([
+    z.object({
+      tag: z.literal(constants.Delegation.Nep611Tag),
+      ...DelegationBaseZodSchema.shape,
+      ...MultiDelegatedActionsZodSchema.shape,
+    }),
+    z.object({
+      tag: z.literal(constants.Delegation.Nep366Tag),
+      ...DelegationBaseZodSchema.shape,
+      delegator: z.object({
+        ...DelegationBaseZodSchema.shape.delegator.shape,
+        replayProtection: NonceChannelReplayProtectionZodSchema,
+      }),
+      ...MultiDelegatedActionsZodSchema.shape,
+    }),
+  ]),
   signature: SignatureZodSchema,
 });
+
+export type InnerSignedDelegation = z.infer<typeof SignedDelegationZodSchema>;

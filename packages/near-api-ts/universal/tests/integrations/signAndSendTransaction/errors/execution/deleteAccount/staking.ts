@@ -19,10 +19,15 @@ export const staking = (context: TestContext) => async () => {
   const signedStakeTx = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'nat',
-      signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: getLastNonce(natAccessKey.accessKey) + 1,
-      blockHash: natAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'nat',
+        publicKey: DEFAULT_PUBLIC_KEY,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(natAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: natAccessKey.atMomentOf.blockHash,
       action: stake({ amount: near('1000'), validatorPublicKey: DEFAULT_PUBLIC_KEY }),
       receiverAccountId: 'nat',
     },
@@ -37,10 +42,15 @@ export const staking = (context: TestContext) => async () => {
   const signedDeleteAccountTx = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'nat',
-      signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: getLastNonce(natAccessKey.accessKey) + 2,
-      blockHash: natAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'nat',
+        publicKey: DEFAULT_PUBLIC_KEY,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(natAccessKey.accessKey) + 2,
+        },
+      },
+      recentBlockHash: natAccessKey.atMomentOf.blockHash,
       action: deleteAccount({ beneficiaryAccountId: 'alice' }),
       receiverAccountId: 'nat',
     },

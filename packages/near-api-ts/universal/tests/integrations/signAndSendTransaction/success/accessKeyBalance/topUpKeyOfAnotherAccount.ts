@@ -17,10 +17,15 @@ export const topUpKeyOfAnotherAccount = (context: TestContext) => async () => {
   const addKeyTransaction = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'nat',
-      signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(natAccessKey.accessKey) + 1,
-      blockHash: natAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'nat',
+        publicKey: defaultKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(natAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: natAccessKey.atMomentOf.blockHash,
       action: addAccessKey({
         publicKey: gasKeyPair.publicKey,
         permission: { kind: 'FullAccess' },
@@ -44,10 +49,15 @@ export const topUpKeyOfAnotherAccount = (context: TestContext) => async () => {
   const topUpTransaction = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'alice',
-      signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
-      blockHash: aliceAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'alice',
+        publicKey: defaultKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: aliceAccessKey.atMomentOf.blockHash,
       action: topUpAccessKeyBalance({ publicKey: gasKeyPair.publicKey, amount: { near: '1' } }),
       receiverAccountId: 'nat',
     },

@@ -40,8 +40,14 @@ describe('Execute delegation', () => {
 
     const signedDelegation = await signDelegation({
       delegation: {
-        delegatorAccountId: 'alice',
-        delegatorPublicKey: aliceKp.publicKey,
+        delegator: {
+          accountId: 'alice',
+          publicKey: aliceKp.publicKey,
+          replayProtection: {
+            scheme: 'NonceChannel',
+            nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
+          },
+        },
         delegatedActions: [
           createAccount(),
           transfer({ amount: near('50') }),
@@ -58,7 +64,6 @@ describe('Execute delegation', () => {
           }),
         ],
         receiverAccountId: 'contract.alice',
-        nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
         expiration: { blockHeight: aliceAccessKey.atMomentOf.blockHeight + 100 },
       },
       signDataProvider: aliceKp,
@@ -74,12 +79,17 @@ describe('Execute delegation', () => {
 
     const signedTransaction = await signTransaction({
       transaction: {
-        signerAccountId: 'relay',
-        signerPublicKey: relayKp.publicKey,
-        nonce: getLastNonce(relayAccessKey.accessKey) + 1,
+        signer: {
+          accountId: 'relay',
+          publicKey: relayKp.publicKey,
+          replayProtection: {
+            scheme: 'NonceChannel',
+            nonce: getLastNonce(relayAccessKey.accessKey) + 1,
+          },
+        },
         actions: [executeDelegation(signedDelegation), transfer({ amount: { near: '1' } })],
         receiverAccountId: 'alice',
-        blockHash: relayAccessKey.atMomentOf.blockHash,
+        recentBlockHash: relayAccessKey.atMomentOf.blockHash,
       },
       signDataProvider: relayKp,
     });

@@ -20,11 +20,16 @@ export const notFound = (context: TestContext) => async () => {
 
   const signedDelegation = await signDelegation({
     delegation: {
-      delegatorAccountId: 'alice',
-      delegatorPublicKey: unknownKeyPair.publicKey,
+      delegator: {
+        accountId: 'alice',
+        publicKey: unknownKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
+        },
+      },
       delegatedAction: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',
-      nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
       expiration: { blockHeight: aliceAccessKey.atMomentOf.blockHeight + 100 },
     },
     signDataProvider: unknownKeyPair,

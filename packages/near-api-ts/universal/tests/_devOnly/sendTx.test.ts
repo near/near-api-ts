@@ -35,10 +35,7 @@ describe('SendTx', () => {
   });
 
   it('send tx', async () => {
-    const {
-      accessKey,
-      atMomentOf: { blockHash },
-    } = await client.getAccessKey({
+    const { accessKey, atMomentOf } = await client.getAccessKey({
       accountId: 'nat',
       publicKey: defaultKeyPair.publicKey,
     });
@@ -48,11 +45,22 @@ describe('SendTx', () => {
     const signedTransaction = await signTransaction({
       signDataProvider: defaultKeyPair,
       transaction: {
-        signerAccountId: 'nat',
-        signerPublicKey: defaultKeyPair.publicKey,
-        nonce: getLastNonce(accessKey) + 1,
-        blockHash,
-        action: stake({ amount: { near: '0' }, validatorPublicKey: randomKp.publicKey }),
+        signer: {
+          accountId: 'nat',
+          publicKey: defaultKeyPair.publicKey,
+          replayProtection: { scheme: 'NonceChannel', nonce: getLastNonce(accessKey) + 1 },
+        },
+        recentBlockHash: atMomentOf.blockHash,
+        action: addAccessKey({
+          publicKey: randomKp.publicKey,
+          permission: {
+            kind: 'FunctionCall',
+            allowedContract: 'abc',
+            allowedFunctions: 'AllNonPayable',
+          },
+          gasPayment: { source: 'KeyBalance' },
+          replayProtection: { channelCount: 12 },
+        }),
         receiverAccountId: 'nat',
       },
     });
@@ -60,10 +68,6 @@ describe('SendTx', () => {
     const tx = await client.safeSendSignedTransaction({
       signedTransaction,
     });
-
-    if (tx.success) {
-      const x = tx.data;
-    }
 
     log(tx);
   });

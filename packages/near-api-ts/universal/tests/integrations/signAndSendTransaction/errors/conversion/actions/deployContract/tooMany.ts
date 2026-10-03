@@ -22,10 +22,15 @@ export const deployContractTooMany = (context: TestContext) => async () => {
   const signedTransaction = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'nat',
-      signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(natAccessKey.accessKey) + 1,
-      blockHash: natAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'nat',
+        publicKey: defaultKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(natAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: natAccessKey.atMomentOf.blockHash,
       // `validate_number_of_deploy_actions` only counts the deploy actions, and the wasm
       // itself is never compiled at this stage — empty code keeps the transaction small.
       actions: Array.from({ length: deployContractActionsCount }, () =>

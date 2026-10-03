@@ -27,10 +27,15 @@ export const largeState = (context: TestContext) => async () => {
   const signedTx1 = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'alice',
-      signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
-      blockHash: aliceAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'alice',
+        publicKey: DEFAULT_PUBLIC_KEY,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: aliceAccessKey.atMomentOf.blockHash,
       actions,
       receiverAccountId: 'alice',
     },
@@ -45,10 +50,15 @@ export const largeState = (context: TestContext) => async () => {
   const signedDeleteAccountTx = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'alice',
-      signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: getLastNonce(aliceAccessKey.accessKey) + 2,
-      blockHash: aliceAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'alice',
+        publicKey: DEFAULT_PUBLIC_KEY,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(aliceAccessKey.accessKey) + 2,
+        },
+      },
+      recentBlockHash: aliceAccessKey.atMomentOf.blockHash,
       action: deleteAccount({ beneficiaryAccountId: 'nat' }),
       receiverAccountId: 'alice',
     },

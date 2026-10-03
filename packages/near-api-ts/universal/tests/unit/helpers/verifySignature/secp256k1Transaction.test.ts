@@ -9,15 +9,17 @@ test('secp256k1 transaction verification', async () => {
   const signedTransaction = await signTransaction({
     signDataProvider: keyPair,
     transaction: {
-      signerAccountId: 'nat',
-      signerPublicKey: keyPair.publicKey,
+      signer: {
+        accountId: 'nat',
+        publicKey: keyPair.publicKey,
+        replayProtection: { scheme: 'NonceChannel', nonce: 0 },
+      },
       action: {
         actionType: 'Transfer',
         amount: { near: '1' },
       },
       receiverAccountId: 'bob',
-      nonce: 0,
-      blockHash: '6nrziuxAjeYvmtusxDhSvfPkXNUXDmQznKXebzE5wC1G',
+      recentBlockHash: '6nrziuxAjeYvmtusxDhSvfPkXNUXDmQznKXebzE5wC1G',
     },
   });
 

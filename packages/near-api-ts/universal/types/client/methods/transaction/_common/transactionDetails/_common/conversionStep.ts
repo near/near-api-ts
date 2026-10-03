@@ -1,12 +1,8 @@
-import type {
-  AccountId,
-  BlockHash,
-  ReceiptId,
-  TransactionNonce,
-} from '../../../../../../_common/common';
+import type { AccountId, BlockHash, ReceiptId } from '../../../../../../_common/common';
 import type { PublicKey, Signature } from '../../../../../../_common/crypto';
 import type { NearGas } from '../../../../../../_common/nearGas';
 import type { NearToken } from '../../../../../../_common/nearToken';
+import type { SignedTransactionReplayProtection } from '../../../../../../_common/transaction/transaction';
 import type { ParsedTransactionActionSummary } from './_common/actionSummaries';
 import type { ConversionFailureError } from './_common/conversionFailureError';
 import type {
@@ -23,9 +19,11 @@ export type TransactionActionSummaries<
 export type TransactionSummary<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
 > = {
-  signerAccountId: AccountId;
-  signerPublicKey: PublicKey;
-  nonce: TransactionNonce;
+  signer: {
+    accountId: AccountId;
+    publicKey: PublicKey;
+    replayProtection: SignedTransactionReplayProtection;
+  };
   receiverAccountId: AccountId;
   actionSummaries: TransactionActionSummaries<ASF>;
   signature: Signature;

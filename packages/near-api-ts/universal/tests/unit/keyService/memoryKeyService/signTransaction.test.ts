@@ -12,15 +12,17 @@ const privateKey =
 const publicKey = 'ed25519:AkTn58AmaJcF7L15WqKUUfm8fv5gwzSymHXg3EDRpC44';
 
 const transaction: Transaction = {
-  signerAccountId: 'bob',
-  signerPublicKey: publicKey,
+  signer: {
+    accountId: 'bob',
+    publicKey,
+    replayProtection: { scheme: 'NonceChannel', nonce: 0 },
+  },
   action: {
     actionType: 'Transfer',
     amount: { near: '1' },
   },
   receiverAccountId: 'alice',
-  nonce: 0,
-  blockHash: 'EDhhHZrpcbJ4RrswFrcsPjww9oa6LTruF5Q4Hq2dXYwP',
+  recentBlockHash: 'EDhhHZrpcbJ4RrswFrcsPjww9oa6LTruF5Q4Hq2dXYwP',
 };
 
 describe('memoryKeyService.signTransaction', () => {
@@ -28,9 +30,9 @@ describe('memoryKeyService.signTransaction', () => {
     const keyService = createMemoryKeyService({ keySource: { privateKey } });
     const res = await signTransaction({ signDataProvider: keyService, transaction });
 
-    expect(res.transactionHash).toBe('HFdRehqc88853UQQZtFibmPAn77i9X64SwvxVSJjFpAa');
+    expect(res.transactionHash).toBe('HhxcQZDTWRsDV61vkH9zz94FSC8Fe8at3M4XCrgUQMrT');
     expect(res.signedTransaction.signature).toBe(
-      'ed25519:4j3z7rpKJLeyugziu8oKE9wZJBWXoakhdSUHRt8PHK5wuAdUkyuf3T36tMDF8RrWoiF5MG8Mc3PuAaqcpGAJtFAd',
+      'ed25519:2bFTZ2tkmM86weuzsUhWwJ8J2U4g3RKzjZG7eDQ36zEXmoJ8fe9z9Pv2Ug58VH5uhZ4kEZuFEqeCQXoJk1SPNfNd',
     );
   });
 
@@ -41,7 +43,7 @@ describe('memoryKeyService.signTransaction', () => {
       signDataProvider: keyService,
       transaction: {
         ...transaction,
-        signerPublicKey: randomEd25519KeyPair().publicKey,
+        signer: { ...transaction.signer, publicKey: randomEd25519KeyPair().publicKey },
       },
     });
 

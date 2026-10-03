@@ -2,6 +2,7 @@ import type { ActionView } from '@near-js/jsonrpc-types';
 import { base58 } from '@scure/base';
 import type { PublicKey, Signature } from '../../../../../../../../../types/_common/crypto';
 import type { RawTransactionActionSummary } from '../../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
+import { constants } from '../../../../../../../../_common/_common/_common/constants';
 import { gas } from '../../../../../../../../_common/nearGas';
 import { yoctoNear } from '../../../../../../../../_common/nearToken';
 import { getRawAddAccessKeyActionSummary } from './_common/getRawAddAccessKeyActionSummary';
@@ -125,8 +126,20 @@ export const getRawActionSummary = (rpcAction: ActionView): RawTransactionAction
 
   if ('Delegate' in rpcAction)
     return getRawExecuteDelegationActionSummary(
-      rpcAction.Delegate.delegateAction,
+      {
+        tag: constants.Delegation.Nep366Tag,
+        delegateAction: rpcAction.Delegate.delegateAction,
+      },
       rpcAction.Delegate.signature as Signature,
+    );
+
+  if ('DelegateV2' in rpcAction)
+    return getRawExecuteDelegationActionSummary(
+      {
+        tag: constants.Delegation.Nep611Tag,
+        delegateAction: rpcAction.DelegateV2.delegateAction.V2,
+      },
+      rpcAction.DelegateV2.signature as Signature,
     );
 
   throw new Error(`Unsupported action: ${JSON.stringify(rpcAction)}`);

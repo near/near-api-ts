@@ -1,5 +1,5 @@
 import type { Prettify } from '../../utils';
-import type { AccountId, BlockHash, TransactionNonce } from '../common';
+import type { AccountId, BlockHash, SequentialNonce } from '../common';
 import type { NearcorePublicKey, NearcoreSignature, PublicKey, Signature } from '../crypto';
 import type {
   AddAccessKeyAction,
@@ -76,12 +76,49 @@ export type TransactionAction =
 type SingleTransactionAction = { action: TransactionAction; actions?: never };
 type MultiTransactionActions = { action?: never; actions: TransactionAction[] };
 
+/**
+ * How the nonce of a transaction must relate to the last nonce of its channel:
+ * - `'Consecutive'` — exactly the next one, `lastNonce + 1`;
+ * - `'Increasing'` — any nonce greater than `lastNonce`, gaps allowed.
+ *
+ * Nearcore calls it the nonce mode: `Strict` and `Monotonic`.
+ */
+export type NonceProgression = 'Consecutive' | 'Increasing';
+
+/**
+ * The transaction uses the single nonce channel of a key paid from the account balance.
+ * `nonceProgression` defaults to `'Consecutive'`.
+ */
+type NonceChannelReplayProtection = {
+  scheme: 'NonceChannel';
+  nonce: SequentialNonce;
+  nonceProgression?: NonceProgression;
+  nonceChannelId?: never;
+};
+
+/**
+ * The transaction uses one of the nonce channels of a key paid from its own balance -
+ * `nonceChannelId` is 0..channelCount - 1. `nonceProgression` defaults to `'Consecutive'`.
+ */
+type NonceChannelsReplayProtection = {
+  scheme: 'NonceChannels';
+  nonceChannelId: number;
+  nonce: SequentialNonce;
+  nonceProgression?: NonceProgression;
+};
+
+export type TransactionReplayProtection =
+  | NonceChannelReplayProtection
+  | NonceChannelsReplayProtection;
+
 type TransactionBase = {
-  signerAccountId: AccountId;
-  signerPublicKey: PublicKey;
+  signer: {
+    accountId: AccountId;
+    publicKey: PublicKey;
+    replayProtection: TransactionReplayProtection;
+  };
   receiverAccountId: AccountId;
-  nonce: TransactionNonce;
-  blockHash: BlockHash;
+  recentBlockHash: BlockHash;
 };
 
 export type Transaction = TransactionBase & (SingleTransactionAction | MultiTransactionActions);
@@ -92,8 +129,25 @@ export type TransactionIntent = Prettify<
   } & (SingleTransactionAction | MultiTransactionActions)
 >;
 
+/**
+ * The replay protection of a signed transaction, with the default `nonceProgression`
+ * filled in - the one the signature covers.
+ */
+export type SignedTransactionReplayProtection =
+  | (NonceChannelReplayProtection & { nonceProgression: NonceProgression })
+  | (NonceChannelsReplayProtection & { nonceProgression: NonceProgression });
+
 export type SignedTransaction = {
-  transaction: TransactionBase & MultiTransactionActions;
+  transaction: {
+    signer: {
+      accountId: AccountId;
+      publicKey: PublicKey;
+      replayProtection: SignedTransactionReplayProtection;
+    };
+    actions: TransactionAction[];
+    receiverAccountId: AccountId;
+    recentBlockHash: BlockHash;
+  };
   signature: Signature;
 };
 
@@ -115,13 +169,24 @@ export type NearcoreTransactionAction =
   | NearcoreTopUpAccessKeyBalanceAction
   | NearcoreWithdrawAccessKeyBalanceAction;
 
+export type NearcoreTransactionNonce =
+  | { nonce: { nonce: bigint } }
+  | { gasKeyNonce: { nonce: bigint; nonceIndex: number } };
+
+export type NearcoreNonceMode = { monotonic: {} } | { strict: {} };
+
+// Nearcore `TransactionV1`, the only transaction version this library sends. Field order follows
+// the nearcore declaration, which is the order the borsh schema serializes them in. `version` is
+// the `1u8` nearcore writes in front of a V1 transaction, and it is a part of the signed bytes.
 export type NearcoreTransaction = {
+  version: 1;
   signerId: AccountId;
   publicKey: NearcorePublicKey;
-  actions: NearcoreTransactionAction[];
+  nonce: NearcoreTransactionNonce;
   receiverId: AccountId;
-  nonce: bigint;
   blockHash: Uint8Array;
+  actions: NearcoreTransactionAction[];
+  nonceMode: NearcoreNonceMode;
 };
 
 export type NearcoreSignedTransaction = {

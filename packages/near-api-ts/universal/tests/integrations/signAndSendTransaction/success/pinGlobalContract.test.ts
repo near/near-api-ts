@@ -34,10 +34,15 @@ describe('signAndSendTransaction › success', () => {
     const signedTransaction = await signTransaction({
       signDataProvider: defaultKeyPair,
       transaction: {
-        signerAccountId: 'alice',
-        signerPublicKey: defaultKeyPair.publicKey,
-        nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
-        blockHash: aliceAccessKey.atMomentOf.blockHash,
+        signer: {
+          accountId: 'alice',
+          publicKey: defaultKeyPair.publicKey,
+          replayProtection: {
+            scheme: 'NonceChannel',
+            nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
+          },
+        },
+        recentBlockHash: aliceAccessKey.atMomentOf.blockHash,
         actions: [
           pinGlobalContract({ globalContractWasmHash }),
           functionCall({

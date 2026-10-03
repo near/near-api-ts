@@ -43,7 +43,7 @@ export const safeSignTransaction: SafeSignTransaction = wrapInternalError(
     const transactionHashU8 = sha256(transactionBorshU8);
 
     const signedData = await args.signDataProvider.safeSignData({
-      publicKey: innerTransaction.signerPublicKey.publicKey,
+      publicKey: innerTransaction.signer.publicKey.publicKey,
       dataU8: transactionHashU8,
     });
 
@@ -62,13 +62,18 @@ export const safeSignTransaction: SafeSignTransaction = wrapInternalError(
     );
 
     // #3: Return signed transaction. The single-action shorthand is normalized into
-    // the action list, so the signed value always has the shape the bytes encode.
-    const { action, actions, ...transactionBase } = args.transaction;
+    // the action list and the default nonce progression is filled in, so the signed value
+    // always has the shape the bytes encode.
+    const { action, actions, signer, ...transactionBase } = args.transaction;
 
     return result.ok({
       transactionHash: base58.encode(transactionHashU8),
       signedTransaction: {
-        transaction: { ...transactionBase, actions: action ? [action] : actions },
+        transaction: {
+          ...transactionBase,
+          signer: { ...signer, replayProtection: innerTransaction.signer.replayProtection },
+          actions: action ? [action] : actions,
+        },
         signature: signedData.data.signature,
       },
       signedTransactionBorsh64: signedTransactionBorshU8.toBase64(),

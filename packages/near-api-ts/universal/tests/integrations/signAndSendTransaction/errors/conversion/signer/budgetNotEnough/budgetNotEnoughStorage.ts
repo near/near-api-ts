@@ -34,10 +34,15 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
   const createAccountTransaction = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'nat',
-      signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(natAccessKey.accessKey) + 1,
-      blockHash: natAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'nat',
+        publicKey: defaultKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(natAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: natAccessKey.atMomentOf.blockHash,
       actions: [
         createAccount(),
         transfer({ amount: { near: '1' } }),
@@ -64,10 +69,15 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
   const addKeysTransaction = await signTransaction({
     signDataProvider: accountKeyPair,
     transaction: {
-      signerAccountId: ACCOUNT_ID,
-      signerPublicKey: accountKeyPair.publicKey,
-      nonce: getLastNonce(accountAccessKey.accessKey) + 1,
-      blockHash: accountAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: ACCOUNT_ID,
+        publicKey: accountKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(accountAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: accountAccessKey.atMomentOf.blockHash,
       actions: Array.from({ length: EXTRA_KEYS_COUNT }, () =>
         addAccessKey({
           publicKey: randomEd25519KeyPair().publicKey,
@@ -97,10 +107,15 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
   const drainAccountTransaction = await signTransaction({
     signDataProvider: accountKeyPair,
     transaction: {
-      signerAccountId: ACCOUNT_ID,
-      signerPublicKey: accountKeyPair.publicKey,
-      nonce: getLastNonce(accountAccessKey.accessKey) + 2,
-      blockHash,
+      signer: {
+        accountId: ACCOUNT_ID,
+        publicKey: accountKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(accountAccessKey.accessKey) + 2,
+        },
+      },
+      recentBlockHash: blockHash,
       // `available` is everything but the storage deposit, so sending it away leaves the
       // account exactly at the required amount — and the transaction cost is charged on top
       // of it, which is what `check_storage_stake` reports as missing.

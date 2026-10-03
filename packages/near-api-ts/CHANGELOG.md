@@ -79,7 +79,132 @@
   Timeout, Aborted, Exhausted, Rpc.NotSynced, Rpc.Shard.NotTracked,
   Rpc.Block.GarbageCollected, Rpc.Block.NotFound, Internal}`.
 
+- **Gas keys can sign** – a transaction or a delegation takes one nonce channel
+  of a key with `replayProtection.scheme: 'NonceChannels'`, so the key signs up
+  to `channelCount` of them in parallel:
+
+  ```ts
+  signer: {
+    accountId,
+    publicKey: gasKeyPair.publicKey,
+    replayProtection: { scheme: 'NonceChannels', nonceChannelId: 0, nonce: lastNonce + 1 },
+  }
+  ```
+
+  `nonceChannelId` runs `0..channelCount - 1`, the `channelId` that
+  `getAccessKeyNonceChannels` reports. A transaction pays for gas from the key's
+  balance; a delegation is paid for by its relayer, as any other.
+
+- **`nonceProgression`** in a transaction's `signer.replayProtection`:
+  `'Consecutive'` (the default) takes exactly `lastNonce + 1`, `'Increasing'`
+  takes any nonce above `lastNonce`. A delegation has no such field – the
+  protocol only checks that its nonce is above `lastNonce`.
+
 ### Changed
+
+- **Breaking:** `Transaction` (the argument of `signTransaction`) groups who signs
+  under `signer` and renames `blockHash`:  \
+  Previously:
+  ```ts
+  {
+    signerAccountId,
+    signerPublicKey,
+    nonce,
+    blockHash,
+    receiverAccountId,
+    action,
+  }
+  ```
+
+  Now:
+  ```ts
+  {
+    signer: {
+      accountId, // was signerAccountId
+      publicKey, // was signerPublicKey
+      replayProtection: { scheme: 'NonceChannel', nonce }, // was nonce
+    },
+    recentBlockHash, // was blockHash
+    receiverAccountId,
+    action,
+  }
+  ```
+
+  `signedTransaction.transaction` in the output of `signTransaction` has the same
+  shape, with `nonceProgression` filled in.
+
+- **Breaking:** a transaction must use the very next nonce of its channel by
+  default. Every transaction is now signed in the protocol's newer format (it
+  needs a node with protocol version 85 or later), with
+  `nonceProgression: 'Consecutive'` unless it says otherwise, so a nonce that
+  skips ahead – `lastNonce + 2` – fails with
+  `Client.SendSignedTransaction.Rpc.Nonce.Invalid` instead of being accepted.
+  Pass `nonceProgression: 'Increasing'` to keep the old behaviour, e.g. for
+  transactions that may reach the node out of order. The same transaction gets
+  a different `transactionHash` than before. A memory signer signs this way too:
+  its `executeTransaction` is unaffected, as it sends one transaction per key at
+  a time, but transactions from its `signTransaction` now have to be sent in the
+  order they were signed.
+
+- **Breaking:** the delegation passed to `signDelegation` groups who signs under
+  `delegator`, the way a transaction does:  \
+  Previously:
+  ```ts
+  { delegatorAccountId, delegatorPublicKey, nonce, receiverAccountId, expiration, delegatedAction }
+  ```
+
+  Now:
+  ```ts
+  {
+    delegator: {
+      accountId, // was delegatorAccountId
+      publicKey, // was delegatorPublicKey
+      replayProtection: { scheme: 'NonceChannel', nonce }, // was nonce
+    },
+    receiverAccountId,
+    expiration,
+    delegatedAction,
+  }
+  ```
+
+  `SignedDelegation` and `DelegationBase` change the same way.
+
+- **Breaking:** `signDelegation` signs in the NEP-611 format, the one that can
+  name a nonce channel: `signedDelegation.delegation.tag` is
+  `constants.Delegation.Nep611Tag` instead of `constants.Delegation.Nep366Tag`,
+  and the node relaying it needs protocol version 85 or later. A relayer on an
+  older version of this library cannot read such a delegation.
+  `executeDelegation` still accepts a NEP-366 delegation signed elsewhere – the
+  tag of the signed delegation tells which one it got. Like the node, it now
+  rejects bytes left over after the delegation with
+  `CreateAction.ExecuteDelegation.SignedDelegation.Deserialize.Failed` instead of
+  ignoring them.
+
+- **Breaking:** the delegation tags live in one constant:
+  `constants.Nep366MetaTransaction.Tag` → `constants.Delegation.Nep366Tag`, next
+  to the new `constants.Delegation.Nep611Tag`.
+
+- **Breaking:** the transaction summary in `processingSteps.conversionStep`
+  reports the signer the way the transaction takes it:  \
+  Previously:
+  ```ts
+  transactionSummary.signerAccountId;
+  transactionSummary.signerPublicKey;
+  transactionSummary.nonce;
+  ```
+
+  Now:
+  ```ts
+  transactionSummary.signer.accountId;
+  transactionSummary.signer.publicKey;
+  transactionSummary.signer.replayProtection; // { scheme, nonceChannelId?, nonce, nonceProgression }
+  ```
+
+  The `ExecuteDelegation` action summary does the same: `delegation.delegator`
+  `{ accountId, publicKey, replayProtection }` replaces `delegatorAccountId`,
+  `delegatorPublicKey` and `nonce`. It now covers NEP-611 delegations too –
+  `getTransactionResult` for a transaction relaying one used to fail with
+  `Client.GetTransactionResult.Internal`.
 
 - **Breaking:** the access key API drops the `Account` prefix:
 

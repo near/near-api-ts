@@ -55,7 +55,7 @@ describe('executeTransaction › success', () => {
       },
     });
 
-    expect(tx.processingSteps.conversionStep.transactionSummary.signerPublicKey).toBe(
+    expect(tx.processingSteps.conversionStep.transactionSummary.signer.publicKey).toBe(
       mlDsa65KeyPair.publicKey,
     );
   });
@@ -100,7 +100,7 @@ describe('executeTransaction › success', () => {
       },
     });
 
-    expect(tx.processingSteps.conversionStep.transactionSummary.signerPublicKey).toBe(
+    expect(tx.processingSteps.conversionStep.transactionSummary.signer.publicKey).toBe(
       mlDsa65KeyPair.publicKey,
     );
   });

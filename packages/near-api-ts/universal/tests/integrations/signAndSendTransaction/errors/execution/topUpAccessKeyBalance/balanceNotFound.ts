@@ -20,10 +20,15 @@ export const balanceNotFound = (context: TestContext) => async () => {
   const signedTransaction = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'alice',
-      signerPublicKey: DEFAULT_PUBLIC_KEY,
-      nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
-      blockHash: aliceAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'alice',
+        publicKey: DEFAULT_PUBLIC_KEY,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: aliceAccessKey.atMomentOf.blockHash,
       action: topUpAccessKeyBalance({ publicKey: DEFAULT_PUBLIC_KEY, amount: near('1') }),
       receiverAccountId: 'nat',
     },

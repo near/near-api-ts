@@ -40,10 +40,18 @@ export const nonceTooLarge = (context: TestContext) => async () => {
   const signedTransaction = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'nat',
-      signerPublicKey: defaultKeyPair.publicKey,
-      nonce: txNonce,
-      blockHash: natAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'nat',
+        publicKey: defaultKeyPair.publicKey,
+        // A consecutive nonce this far ahead would be rejected right away as `Nonce.Invalid` -
+        // only an increasing one gets as far as the upper bound check.
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: txNonce,
+          nonceProgression: 'Increasing',
+        },
+      },
+      recentBlockHash: natAccessKey.atMomentOf.blockHash,
       action: transfer({ amount: { yoctoNear: '1' } }),
       receiverAccountId: 'bob',
     },

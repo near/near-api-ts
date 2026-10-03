@@ -74,12 +74,17 @@ describe.skip('signAndSendTransaction › Shard.Stuck conversion error', () => {
         const signedTransaction = await signTransaction({
           signDataProvider: defaultKeyPair,
           transaction: {
-            signerAccountId: 'alice',
-            signerPublicKey: defaultKeyPair.publicKey,
+            signer: {
+              accountId: 'alice',
+              publicKey: defaultKeyPair.publicKey,
+              replayProtection: {
+                scheme: 'NonceChannel',
+                nonce: getLastNonce(aliceAccessKey.accessKey) + 1 + attempt,
+              },
+            },
             // Every attempt needs its own nonce: the first ones are accepted and converted
             // on shard 0, they just never reach `nat`.
-            nonce: getLastNonce(aliceAccessKey.accessKey) + 1 + attempt,
-            blockHash: hash,
+            recentBlockHash: hash,
             action: transfer({ amount: { near: '1' } }),
             receiverAccountId: 'nat',
           },

@@ -10,6 +10,7 @@ import { DeleteKeyActionZodSchema } from '../_common/_common/zodSchemas/deleteKe
 import { DeployContractActionZodSchema } from '../_common/_common/zodSchemas/deployContract';
 import { FunctionCallActionZodSchema } from '../_common/_common/zodSchemas/functionCall';
 import { LinkGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/linkGlobalContract';
+import { NonceChannelIdZodSchema } from '../_common/_common/zodSchemas/nonceChannelId';
 import { PinGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/pinGlobalContract';
 import { RegisterLinkableGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/registerLinkableGlobalContract';
 import { RegisterPinnableGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/registerPinnableGlobalContract';
@@ -46,12 +47,36 @@ const TransactionActionZodSchema = z.union([
 
 export type InnerTransactionAction = z.infer<typeof TransactionActionZodSchema>;
 
+const NonceProgressionZodSchema = z._default(
+  z.union([z.literal('Consecutive'), z.literal('Increasing')]),
+  'Consecutive',
+);
+
+const TransactionReplayProtectionZodSchema = z.union([
+  z.object({
+    scheme: z.literal('NonceChannel'),
+    nonce: TransactionNonceZodSchema,
+    nonceProgression: NonceProgressionZodSchema,
+    nonceChannelId: z.optional(z.never()),
+  }),
+  z.object({
+    scheme: z.literal('NonceChannels'),
+    nonceChannelId: NonceChannelIdZodSchema,
+    nonce: TransactionNonceZodSchema,
+    nonceProgression: NonceProgressionZodSchema,
+  }),
+]);
+
+export type InnerTransactionReplayProtection = z.infer<typeof TransactionReplayProtectionZodSchema>;
+
 const TransactionBaseZodSchema = z.object({
-  signerAccountId: AccountIdZodSchema,
-  signerPublicKey: PublicKeyZodSchema,
+  signer: z.object({
+    accountId: AccountIdZodSchema,
+    publicKey: PublicKeyZodSchema,
+    replayProtection: TransactionReplayProtectionZodSchema,
+  }),
   receiverAccountId: AccountIdZodSchema,
-  nonce: TransactionNonceZodSchema,
-  blockHash: CryptoHashZodSchema,
+  recentBlockHash: CryptoHashZodSchema,
 });
 
 export const SingleTransactionActionZodSchema = z.object({

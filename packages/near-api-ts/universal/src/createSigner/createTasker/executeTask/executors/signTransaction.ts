@@ -24,10 +24,12 @@ export const signTransaction = async (
 
     const transaction: Transaction = {
       ...task.transactionIntent,
-      signerAccountId: signerContext.signerAccountId,
-      signerPublicKey: key.publicKey,
-      nonce: nextNonce,
-      blockHash,
+      signer: {
+        accountId: signerContext.signerAccountId,
+        publicKey: key.publicKey,
+        replayProtection: { scheme: 'NonceChannel', nonce: nextNonce },
+      },
+      recentBlockHash: blockHash,
     };
 
     // This call will never fail

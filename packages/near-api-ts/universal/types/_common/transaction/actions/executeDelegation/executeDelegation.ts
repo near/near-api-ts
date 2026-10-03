@@ -1,7 +1,11 @@
 import type { NatError } from '../../../../../src/_common/_common/_common/_common/natError';
 import type { Base64String, Result } from '../../../common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';
-import type { NearcoreSignedDelegation, SignedDelegation } from './delegation';
+import type {
+  NearcoreSignedDelegationV1,
+  NearcoreSignedDelegationV2,
+  SignedDelegation,
+} from './delegation';
 
 export interface CreateExecuteDelegationActionPublicErrorRegistry {
   'CreateAction.ExecuteDelegation.Args.InvalidSchema': InvalidSchemaErrorContext;
@@ -40,6 +44,8 @@ export type CreateExecuteDelegationAction = (
 
 // ****** NEARCORE ********
 
-export type NearcoreExecuteDelegationAction = {
-  executeDelegation: NearcoreSignedDelegation;
-};
+// Nearcore keeps the two delegation formats as two actions: `Delegate` (index 8) and
+// `DelegateV2` (index 14).
+export type NearcoreExecuteDelegationAction =
+  | { delegate: NearcoreSignedDelegationV1 }
+  | { delegateV2: NearcoreSignedDelegationV2 };

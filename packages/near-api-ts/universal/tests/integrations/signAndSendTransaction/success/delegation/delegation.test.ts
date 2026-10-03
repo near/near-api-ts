@@ -8,7 +8,9 @@ import { testKeys } from '../../../../utils/testKeys';
 import { delegatedAccessKeyBalance } from './delegatedAccessKeyBalance';
 import { delegatedAddGasKey } from './delegatedAddGasKey';
 import { delegatedLinkGlobalContract } from './delegatedLinkGlobalContract';
+import { delegatedOnNonceChannel } from './delegatedOnNonceChannel';
 import { delegatedPinGlobalContract } from './delegatedPinGlobalContract';
+import { relayedNep366Delegation } from './relayedNep366Delegation';
 
 export type TestContext = {
   client: Client;
@@ -34,4 +36,6 @@ describe('signAndSendTransaction › delegation › success', () => {
   it('pins code registered under its wasm hash', delegatedPinGlobalContract(context));
   it('adds a key paid from its own balance', delegatedAddGasKey(context));
   it('tops up and withdraws from a key balance', delegatedAccessKeyBalance(context));
+  it('signs on a nonce channel of a key', delegatedOnNonceChannel(context));
+  it('relays a delegation signed in the NEP-366 format', relayedNep366Delegation(context));
 });

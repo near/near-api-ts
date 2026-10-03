@@ -1,4 +1,4 @@
-import { deserialize } from 'borsh';
+import { deserialize, type Schema, serialize } from 'borsh';
 import * as z from 'zod/mini';
 import type {
   CreateExecuteDelegationAction,
@@ -7,12 +7,47 @@ import type {
 import { result, resultNatError } from '../../../_common/_common/_common/result';
 import { asThrowable } from '../../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../../_common/_common/wrapInternalError';
-import { SignedDelegationBorshSchema } from '../../_common/delegationBorshSchema';
+import {
+  SignedDelegationV1BorshSchema,
+  SignedDelegationV2BorshSchema,
+} from '../../_common/delegationBorshSchema';
 import { SignedDelegationZodSchema } from '../../_common/delegationZodSchema';
 import {
   fromNearcoreSignedDelegation,
   type WireSignedDelegation,
 } from './fromNearcoreSignedDelegation/fromNearcoreSignedDelegation';
+
+// The bytes carry no format tag, so the first two tell it, the way nearcore tells a
+// TransactionV0 from a V1: a NEP-366 delegation starts with the u32 length of the
+// delegator account id (2..64), so its second byte is always 0; a NEP-611 one starts
+// with the discriminant of its payload (0 for V2), followed by that length. Anything
+// else - a payload version nearcore may add later included - is no format we know.
+const getSignedDelegationBorshSchema = (signedDelegationBorshU8: Uint8Array) => {
+  const [firstByte, secondByte] = signedDelegationBorshU8;
+
+  if (secondByte === 0) return SignedDelegationV1BorshSchema;
+  if (firstByte === 0) return SignedDelegationV2BorshSchema;
+
+  throw new Error(`Unknown signed delegation format: it starts with ${firstByte}`);
+};
+
+// What nearcore's `try_from_slice` does. borsh-js reads only the bytes the schema asks for and
+// ignores the rest, while nearcore rejects bytes left over. Encoding the result back must give
+// exactly the bytes that came in - this also rejects a field borsh-js reads more leniently than
+// nearcore, such as a string that is not valid UTF-8.
+const deserializeStrictly = (schema: Schema, bytesU8: Uint8Array) => {
+  const value = deserialize(schema, bytesU8);
+  const reencodedU8 = serialize(schema, value);
+  const leftoverByteCount = bytesU8.length - reencodedU8.length;
+
+  if (leftoverByteCount > 0)
+    throw new Error(`Bytes left over after the borsh value: ${leftoverByteCount}`);
+
+  if (reencodedU8.some((byte, index) => byte !== bytesU8[index]))
+    throw new Error('The bytes are not encoded the way borsh encodes the value they decode to');
+
+  return value;
+};
 
 export const CreateExecuteDelegationActionArgsSchema = z.object({
   signedDelegationBorsh64: z.base64(),
@@ -30,10 +65,10 @@ export const safeExecuteDelegation: SafeCreateExecuteDelegationAction = wrapInte
 
     try {
       const signedDelegationBorshU8 = Uint8Array.fromBase64(validArgs.data.signedDelegationBorsh64);
+      const signedDelegationBorshSchema = getSignedDelegationBorshSchema(signedDelegationBorshU8);
 
-      // TODO Validate here by zod?
-      const wireSignedDelegation = deserialize(
-        SignedDelegationBorshSchema,
+      const wireSignedDelegation = deserializeStrictly(
+        signedDelegationBorshSchema,
         signedDelegationBorshU8,
       ) as WireSignedDelegation;
 

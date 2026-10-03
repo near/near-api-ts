@@ -2,13 +2,16 @@ import type {
   AccessKeyPermission,
   AccessKeyPermissionView,
   DelegateAction,
+  DelegateActionV2,
   GasKeyInfo,
   NonDelegateAction,
+  TransactionNonce,
 } from '@near-js/jsonrpc-types';
 import { sha256 } from '@noble/hashes/sha2.js';
 import { base58 } from '@scure/base';
 import type { Base64String } from '../../../../../../../../../types/_common/common';
 import type { PublicKey, Signature } from '../../../../../../../../../types/_common/crypto';
+import type { DelegationReplayProtection } from '../../../../../../../../../types/_common/transaction/actions/executeDelegation/delegation';
 import type { DelegableActionSummary } from '../../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
 import { constants } from '../../../../../../../../_common/_common/_common/constants';
 import { gas } from '../../../../../../../../_common/nearGas';
@@ -163,20 +166,40 @@ const convertNonDelegateActionToSummary = (
   throw new Error(`Unsupported delegable action: ${JSON.stringify(nonDelegateAction)}`);
 };
 
+const toDelegationReplayProtection = (nonce: TransactionNonce): DelegationReplayProtection =>
+  'GasKeyNonce' in nonce
+    ? {
+        scheme: 'NonceChannels',
+        nonceChannelId: nonce.GasKeyNonce.nonceIndex,
+        nonce: nonce.GasKeyNonce.nonce,
+      }
+    : { scheme: 'NonceChannel', nonce: nonce.Nonce.nonce };
+
+// Nearcore reports the two delegation formats as two actions - `Delegate` (NEP-366), whose nonce
+// is a plain number, and `DelegateV2` (NEP-611), whose nonce may name a nonce channel.
 export const getRawExecuteDelegationActionSummary = (
-  delegateAction: DelegateAction,
+  delegation:
+    | { tag: typeof constants.Delegation.Nep366Tag; delegateAction: DelegateAction }
+    | { tag: typeof constants.Delegation.Nep611Tag; delegateAction: DelegateActionV2 },
   signature: Signature,
 ) => {
+  const { delegateAction } = delegation;
+
   return {
     actionType: 'ExecuteDelegation' as const,
     delegation: {
-      tag: constants.Nep366MetaTransaction.Tag,
-      delegatorAccountId: delegateAction.senderId,
-      delegatorPublicKey: delegateAction.publicKey as PublicKey,
+      tag: delegation.tag,
+      delegator: {
+        accountId: delegateAction.senderId,
+        publicKey: delegateAction.publicKey as PublicKey,
+        replayProtection:
+          delegation.tag === constants.Delegation.Nep366Tag
+            ? { scheme: 'NonceChannel' as const, nonce: delegation.delegateAction.nonce }
+            : toDelegationReplayProtection(delegation.delegateAction.nonce),
+      },
       delegatedActionSummaries: delegateAction.actions.map(convertNonDelegateActionToSummary),
       receiverAccountId: delegateAction.receiverId,
       expiration: { blockHeight: delegateAction.maxBlockHeight },
-      nonce: delegateAction.nonce,
     },
     signature: signature as Signature,
   };

@@ -70,10 +70,12 @@ describe.skip('signAndSendTransaction › Shard.Congested conversion error', () 
       const deployTransaction = await signTransaction({
         signDataProvider: defaultKeyPair,
         transaction: {
-          signerAccountId: 'nat',
-          signerPublicKey: defaultKeyPair.publicKey,
-          nonce: getLastNonce(natKey.accessKey) + 1,
-          blockHash: natKey.atMomentOf.blockHash,
+          signer: {
+            accountId: 'nat',
+            publicKey: defaultKeyPair.publicKey,
+            replayProtection: { scheme: 'NonceChannel', nonce: getLastNonce(natKey.accessKey) + 1 },
+          },
+          recentBlockHash: natKey.atMomentOf.blockHash,
           actions: [
             createAccount(),
             transfer({ amount: { near: '50' } }),
@@ -115,10 +117,17 @@ describe.skip('signAndSendTransaction › Shard.Congested conversion error', () 
             signTransaction({
               signDataProvider: defaultKeyPair,
               transaction: {
-                signerAccountId: 'nat',
-                signerPublicKey: defaultKeyPair.publicKey,
-                nonce: nonce++,
-                blockHash,
+                signer: {
+                  accountId: 'nat',
+                  publicKey: defaultKeyPair.publicKey,
+                  // Sent in parallel, so they may reach the node out of order.
+                  replayProtection: {
+                    scheme: 'NonceChannel',
+                    nonce: nonce++,
+                    nonceProgression: 'Increasing',
+                  },
+                },
+                recentBlockHash: blockHash,
                 action: functionCall({
                   functionName: GAS_BURNER_FUNCTION_NAME,
                   gasLimit: { teraGas: PREPAID_TERA_GAS },
@@ -153,10 +162,17 @@ describe.skip('signAndSendTransaction › Shard.Congested conversion error', () 
         const probe = await signTransaction({
           signDataProvider: defaultKeyPair,
           transaction: {
-            signerAccountId: 'nat',
-            signerPublicKey: defaultKeyPair.publicKey,
-            nonce: nonce++,
-            blockHash,
+            signer: {
+              accountId: 'nat',
+              publicKey: defaultKeyPair.publicKey,
+              // Follows the flood, whose transactions may still reach the node out of order.
+              replayProtection: {
+                scheme: 'NonceChannel',
+                nonce: nonce++,
+                nonceProgression: 'Increasing',
+              },
+            },
+            recentBlockHash: blockHash,
             action: transfer({ amount: { yoctoNear: '1' } }),
             receiverAccountId: 'alice',
           },

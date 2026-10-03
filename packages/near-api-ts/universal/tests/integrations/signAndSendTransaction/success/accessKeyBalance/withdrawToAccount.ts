@@ -23,10 +23,15 @@ export const withdrawToAccount = (context: TestContext) => async () => {
   const fundingTransaction = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'nat',
-      signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(natAccessKeyBeforeFunding.accessKey) + 1,
-      blockHash: natAccessKeyBeforeFunding.atMomentOf.blockHash,
+      signer: {
+        accountId: 'nat',
+        publicKey: defaultKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(natAccessKeyBeforeFunding.accessKey) + 1,
+        },
+      },
+      recentBlockHash: natAccessKeyBeforeFunding.atMomentOf.blockHash,
       actions: [
         addAccessKey({
           publicKey: gasKeyPair.publicKey,
@@ -55,10 +60,15 @@ export const withdrawToAccount = (context: TestContext) => async () => {
   const withdrawalTransaction = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'nat',
-      signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(natAccessKeyBeforeWithdrawal.accessKey) + 1,
-      blockHash: natAccessKeyBeforeWithdrawal.atMomentOf.blockHash,
+      signer: {
+        accountId: 'nat',
+        publicKey: defaultKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(natAccessKeyBeforeWithdrawal.accessKey) + 1,
+        },
+      },
+      recentBlockHash: natAccessKeyBeforeWithdrawal.atMomentOf.blockHash,
       action: withdrawAccessKeyBalance({ publicKey: gasKeyPair.publicKey, amount: near('2.5') }),
       receiverAccountId: 'nat',
     },

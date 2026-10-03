@@ -27,8 +27,14 @@ export const delegatedAccessKeyBalance = (context: TestContext) => async () => {
   const signedDelegation = await signDelegation({
     signDataProvider: defaultKeyPair,
     delegation: {
-      delegatorAccountId,
-      delegatorPublicKey: defaultKeyPair.publicKey,
+      delegator: {
+        accountId: delegatorAccountId,
+        publicKey: defaultKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(delegatorAccessKey.accessKey) + 1,
+        },
+      },
       delegatedActions: [
         addAccessKey({
           publicKey: gasKeyPair.publicKey,
@@ -40,7 +46,6 @@ export const delegatedAccessKeyBalance = (context: TestContext) => async () => {
         withdrawAccessKeyBalance({ publicKey: gasKeyPair.publicKey, amount: near('0.25') }),
       ],
       receiverAccountId: delegatorAccountId,
-      nonce: getLastNonce(delegatorAccessKey.accessKey) + 1,
       expiration: { blockHeight: delegatorAccessKey.atMomentOf.blockHeight + 100 },
     },
   });
@@ -53,10 +58,15 @@ export const delegatedAccessKeyBalance = (context: TestContext) => async () => {
   const signedTransaction = await signTransaction({
     signDataProvider: relayKeyPair,
     transaction: {
-      signerAccountId: 'relay',
-      signerPublicKey: relayKeyPair.publicKey,
-      nonce: getLastNonce(relayAccessKey.accessKey) + 1,
-      blockHash: relayAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'relay',
+        publicKey: relayKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(relayAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: relayAccessKey.atMomentOf.blockHash,
       action: executeDelegation(signedDelegation),
       receiverAccountId: delegatorAccountId,
     },

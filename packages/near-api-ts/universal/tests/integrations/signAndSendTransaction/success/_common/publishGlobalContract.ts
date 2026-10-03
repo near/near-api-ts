@@ -39,10 +39,15 @@ const sendRegistration = async (args: PublishGlobalContractArgs, action: Delegab
   const signedTransaction = await signTransaction({
     signDataProvider: registrarKeyPair,
     transaction: {
-      signerAccountId: registrarAccountId,
-      signerPublicKey: registrarKeyPair.publicKey,
-      nonce: getLastNonce(registrarAccessKey.accessKey) + 1,
-      blockHash: registrarAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: registrarAccountId,
+        publicKey: registrarKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(registrarAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: registrarAccessKey.atMomentOf.blockHash,
       action,
       receiverAccountId: registrarAccountId,
     },

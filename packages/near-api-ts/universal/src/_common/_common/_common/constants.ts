@@ -27,14 +27,18 @@ export const NearDecimals = 24 as const;
 /** Fractional digits between the TeraGas and the gas units */
 export const TeraGasDecimals = 12 as const;
 
-export const Nep366MetaTransaction = {
-  /**
-   * `(1 << 30) + 366` - the delegation message tag. NEP-461 defines the tagging
-   * scheme (a u32 prefix over the borsh message, `1 << 30` being the start of
-   * the on-chain range), NEP-366 contributes the number that goes into it. The
-   * tag prefixes the bytes that get signed, never the bytes that go on the wire.
-   */
-  Tag: 1073742190,
+/**
+ * The tags a delegation is signed with - a u32 prefix over the borsh message, `(1 << 30) + <NEP>`.
+ * The range starting at `1 << 30` is nearcore's own choice for messages verified on chain
+ * (`MessageDiscriminant`, core/primitives/src/signable_message.rs), not a standard: NEP-461,
+ * which was meant to specify it, never was accepted. The tag prefixes the bytes that get signed,
+ * never the bytes that go on the wire, and it tells the two delegation formats apart.
+ */
+export const Delegation = {
+  /** `(1 << 30) + 366` - NEP-366, nearcore `DelegateAction`: a key with a single nonce channel. */
+  Nep366Tag: 1073742190,
+  /** `(1 << 30) + 611` - NEP-611, nearcore `DelegateActionV2`: any nonce channel of a key. */
+  Nep611Tag: 1073742435,
 } as const;
 
 export const Nep413Message = {
@@ -55,7 +59,7 @@ export const constants = {
   NearDecimals,
   TeraGasDecimals,
   Nep413Message,
-  Nep366MetaTransaction,
+  Delegation,
   BinaryLengths,
   NonceChannels,
 };

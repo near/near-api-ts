@@ -1,7 +1,7 @@
 import { sha256 } from '@noble/hashes/sha2.js';
 import { serialize } from 'borsh';
 import * as z from 'zod/mini';
-import type { NearcoreSignedDelegation } from '../../types/_common/transaction/actions/executeDelegation/delegation';
+import type { NearcoreSignedDelegationV2 } from '../../types/_common/transaction/actions/executeDelegation/delegation';
 import type {
   SafeSignDelegation,
   SignDelegation,
@@ -11,11 +11,11 @@ import { result, resultNatError } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import {
-  DelegationBorshSchema,
-  SignedDelegationBorshSchema,
+  DelegationV2BorshSchema,
+  SignedDelegationV2BorshSchema,
 } from './_common/delegationBorshSchema';
 import { DelegationZodSchema } from './_common/delegationZodSchema';
-import { toNearcoreDelegation } from './_common/toNearcoreDelegation';
+import { toNearcoreDelegationV2 } from './_common/toNearcoreDelegation';
 import { toNearcoreSignature } from './_common/toNearcoreSignature';
 
 const SignDelegationArgsSchema = z.object({
@@ -41,13 +41,15 @@ export const safeSignDelegation: SafeSignDelegation = wrapInternalError(
     // #1: Sign delegation
     const { delegation: innerDelegation } = validArgs.data;
 
-    const nearcoreDelegation = toNearcoreDelegation(innerDelegation);
+    // Always NEP-611 (nearcore `DelegateActionV2`): unlike the NEP-366 format, it can use any
+    // nonce channel of the delegator's key.
+    const nearcoreDelegation = toNearcoreDelegationV2(innerDelegation);
     // The signed bytes are the tagged message, not the delegation itself
-    const delegationBorshU8 = serialize(DelegationBorshSchema, nearcoreDelegation);
+    const delegationBorshU8 = serialize(DelegationV2BorshSchema, nearcoreDelegation);
     const delegationHashU8 = sha256(delegationBorshU8);
 
     const signedData = await args.signDataProvider.safeSignData({
-      publicKey: innerDelegation.delegatorPublicKey.publicKey,
+      publicKey: innerDelegation.delegator.publicKey.publicKey,
       dataU8: delegationHashU8,
     });
 
@@ -55,13 +57,13 @@ export const safeSignDelegation: SafeSignDelegation = wrapInternalError(
       return resultNatError('SignDelegation.SignData.Failed', { cause: signedData.error });
 
     // #2: Serialize signed delegation into borsh
-    const nearcoreSignedDelegation: NearcoreSignedDelegation = {
+    const nearcoreSignedDelegation: NearcoreSignedDelegationV2 = {
       delegation: nearcoreDelegation,
       signature: toNearcoreSignature(signedData.data),
     };
 
     const signedDelegationBorshU8 = serialize(
-      SignedDelegationBorshSchema,
+      SignedDelegationV2BorshSchema,
       nearcoreSignedDelegation,
     );
 
@@ -72,7 +74,7 @@ export const safeSignDelegation: SafeSignDelegation = wrapInternalError(
     return result.ok({
       signedDelegation: {
         delegation: {
-          tag: constants.Nep366MetaTransaction.Tag,
+          tag: constants.Delegation.Nep611Tag,
           ...delegationBase,
           delegatedActions: delegatedAction ? [delegatedAction] : delegatedActions,
         },

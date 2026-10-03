@@ -24,14 +24,19 @@ export const functionNotAllowed = (context: TestContext) => async () => {
 
   const signedDelegation = await signDelegation({
     delegation: {
-      delegatorAccountId: 'alice',
-      delegatorPublicKey: functionCallKeyPair.publicKey,
+      delegator: {
+        accountId: 'alice',
+        publicKey: functionCallKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
+        },
+      },
       delegatedAction: functionCall({
         functionName: 'forbidden_function',
         gasLimit: { teraGas: '10' },
       }),
       receiverAccountId: 'bob',
-      nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
       expiration: { blockHeight: aliceAccessKey.atMomentOf.blockHeight + 100 },
     },
     signDataProvider: functionCallKeyPair,

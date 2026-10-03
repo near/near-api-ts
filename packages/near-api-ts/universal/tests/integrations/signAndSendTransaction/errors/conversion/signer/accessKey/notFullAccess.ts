@@ -25,10 +25,15 @@ export const notFullAccess = (context: TestContext) => async () => {
   const signedTransaction = await signTransaction({
     signDataProvider: functionCallKeyPair,
     transaction: {
-      signerAccountId: 'nat',
-      signerPublicKey: functionCallKeyPair.publicKey,
-      nonce: getLastNonce(functionCallAccessKey.accessKey) + 1,
-      blockHash: functionCallAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'nat',
+        publicKey: functionCallKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(functionCallAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: functionCallAccessKey.atMomentOf.blockHash,
       action: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'alice',
     },

@@ -48,10 +48,15 @@ describe('invalid transaction included in a chunk', () => {
     const signedTransaction = await signTransaction({
       signDataProvider: kpd,
       transaction: {
-        signerAccountId: 'nat',
-        signerPublicKey: kpd.publicKey,
-        nonce: getLastNonce(natAccessKey.accessKey) + 1,
-        blockHash: natAccessKey.atMomentOf.blockHash,
+        signer: {
+          accountId: 'nat',
+          publicKey: kpd.publicKey,
+          replayProtection: {
+            scheme: 'NonceChannel',
+            nonce: getLastNonce(natAccessKey.accessKey) + 1,
+          },
+        },
+        recentBlockHash: natAccessKey.atMomentOf.blockHash,
         action: transfer({ amount: { near: '200000' } }),
         receiverAccountId: 'bob123',
       },

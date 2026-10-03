@@ -8,11 +8,11 @@ import type {
   BlockHeight,
   ContractFunctionName,
   ContractWasmHash,
-  DelegationNonce,
 } from '../../../../../../../_common/common';
 import type { PublicKey, Signature } from '../../../../../../../_common/crypto';
 import type { NearGas } from '../../../../../../../_common/nearGas';
 import type { NearToken } from '../../../../../../../_common/nearToken';
+import type { DelegationReplayProtection } from '../../../../../../../_common/transaction/actions/executeDelegation/delegation';
 
 type CreateAccountActionSummary = {
   actionType: 'CreateAccount';
@@ -133,15 +133,19 @@ export type DelegableActionSummary<FA> =
   | TopUpAccessKeyBalanceActionSummary
   | WithdrawAccessKeyBalanceActionSummary;
 
+// `tag` tells the delegation format apart, like in `SignedDelegation`: NEP-366 for nearcore
+// `Delegate`, NEP-611 for `DelegateV2`.
 type ExecuteDelegationActionSummary<FA> = {
   actionType: 'ExecuteDelegation';
   delegation: {
     tag: number;
-    delegatorAccountId: AccountId;
-    delegatorPublicKey: PublicKey;
+    delegator: {
+      accountId: AccountId;
+      publicKey: PublicKey;
+      replayProtection: DelegationReplayProtection;
+    };
     delegatedActionSummaries: DelegableActionSummary<FA>[];
     receiverAccountId: AccountId;
-    nonce: DelegationNonce;
     expiration: { blockHeight: BlockHeight };
   };
   signature: Signature;

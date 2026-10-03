@@ -37,10 +37,12 @@ export const executeTransaction = async (
 
       const transaction: Transaction = {
         ...task.transactionIntent,
-        signerAccountId: signerContext.signerAccountId,
-        signerPublicKey: key.publicKey,
-        nonce: newNonce,
-        blockHash,
+        signer: {
+          accountId: signerContext.signerAccountId,
+          publicKey: key.publicKey,
+          replayProtection: { scheme: 'NonceChannel', nonce: newNonce },
+        },
+        recentBlockHash: blockHash,
       };
 
       // This call will never fail

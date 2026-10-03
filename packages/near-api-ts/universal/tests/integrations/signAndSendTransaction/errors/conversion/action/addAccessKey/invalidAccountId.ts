@@ -39,10 +39,15 @@ export const invalidAccountId = (context: TestContext) => async () => {
   const signedTransaction = await signInvalidTransaction(
     defaultKeyPair,
     {
-      signerAccountId: 'nat',
-      signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(natAccessKey.accessKey) + 1,
-      blockHash: natAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'nat',
+        publicKey: defaultKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(natAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: natAccessKey.atMomentOf.blockHash,
       action: addAccessKey({
         publicKey: randomEd25519KeyPair().publicKey,
         permission: { kind: 'FunctionCall', allowedContract: 'alice', allowedFunctions: ['ping'] },

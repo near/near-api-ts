@@ -30,10 +30,15 @@ export const attachFunctionCallKey = async (
   const signedTransaction = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
-      signerAccountId: 'alice',
-      signerPublicKey: defaultKeyPair.publicKey,
-      nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
-      blockHash: aliceAccessKey.atMomentOf.blockHash,
+      signer: {
+        accountId: 'alice',
+        publicKey: defaultKeyPair.publicKey,
+        replayProtection: {
+          scheme: 'NonceChannel',
+          nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
+        },
+      },
+      recentBlockHash: aliceAccessKey.atMomentOf.blockHash,
       action: addAccessKey({
         publicKey: functionCallKeyPair.publicKey,
         permission: { kind: 'FunctionCall', ...permission },

@@ -1,8 +1,10 @@
-import type { NearcoreSignedDelegation } from '../../../types/_common/transaction/actions/executeDelegation/delegation';
+import type { NearcoreExecuteDelegationAction } from '../../../types/_common/transaction/actions/executeDelegation/executeDelegation';
 import type {
+  NearcoreNonceMode,
   NearcoreTransaction,
   NearcoreTransactionAction,
 } from '../../../types/_common/transaction/transaction';
+import { constants } from '../../_common/_common/_common/constants';
 import { toNearcorePublicKey } from '../_common/_common/_common/toNearcorePublicKey';
 import { toNearcoreAddAccessKeyAction } from '../_common/_common/toNearcore/toNearcoreAddAccessKey';
 import { toNearcoreCreateAccountAction } from '../_common/_common/toNearcore/toNearcoreCreateAccount';
@@ -16,26 +18,35 @@ import { toNearcoreRegisterLinkableGlobalContractAction } from '../_common/_comm
 import { toNearcoreRegisterPinnableGlobalContractAction } from '../_common/_common/toNearcore/toNearcoreRegisterPinnableGlobalContract';
 import { toNearcoreStakeAction } from '../_common/_common/toNearcore/toNearcoreStake';
 import { toNearcoreTopUpAccessKeyBalanceAction } from '../_common/_common/toNearcore/toNearcoreTopUpAccessKeyBalance';
+import { toNearcoreTransactionNonce } from '../_common/_common/toNearcore/toNearcoreTransactionNonce';
 import { toNearcoreTransferAction } from '../_common/_common/toNearcore/toNearcoreTransfer';
 import { toNearcoreWithdrawAccessKeyBalanceAction } from '../_common/_common/toNearcore/toNearcoreWithdrawAccessKeyBalance';
-import { toNearcoreDelegation } from '../_common/toNearcoreDelegation';
+import { toNearcoreDelegationV1, toNearcoreDelegationV2 } from '../_common/toNearcoreDelegation';
 import { toNearcoreSignature } from '../_common/toNearcoreSignature';
 import type {
   InnerExecuteDelegationAction,
   InnerTransaction,
   InnerTransactionAction,
+  InnerTransactionReplayProtection,
 } from './transactionZodSchema';
 
-const toNearcoreExecuteDelegation = (
-  action: InnerExecuteDelegationAction,
-): {
-  executeDelegation: NearcoreSignedDelegation;
-} => ({
-  executeDelegation: {
-    delegation: toNearcoreDelegation(action.signedDelegation.delegation),
-    signature: toNearcoreSignature(action.signedDelegation.signature),
-  },
-});
+// The tag the delegation was signed with decides which of the two nearcore actions carries it.
+const toNearcoreExecuteDelegation = ({
+  signedDelegation: { delegation, signature },
+}: InnerExecuteDelegationAction): NearcoreExecuteDelegationAction =>
+  delegation.tag === constants.Delegation.Nep366Tag
+    ? {
+        delegate: {
+          delegation: toNearcoreDelegationV1(delegation),
+          signature: toNearcoreSignature(signature),
+        },
+      }
+    : {
+        delegateV2: {
+          delegation: toNearcoreDelegationV2(delegation),
+          signature: toNearcoreSignature(signature),
+        },
+      };
 
 const toNearcoreTransactionAction = (action: InnerTransactionAction): NearcoreTransactionAction => {
   switch (action.actionType) {
@@ -80,11 +91,18 @@ const toNearcoreTransactionActions = (
   return [];
 };
 
+const toNearcoreNonceMode = ({
+  nonceProgression,
+}: InnerTransactionReplayProtection): NearcoreNonceMode =>
+  nonceProgression === 'Consecutive' ? { strict: {} } : { monotonic: {} };
+
 export const toNearcoreTransaction = (transaction: InnerTransaction): NearcoreTransaction => ({
-  signerId: transaction.signerAccountId,
-  publicKey: toNearcorePublicKey(transaction.signerPublicKey),
-  actions: toNearcoreTransactionActions(transaction),
+  version: 1,
+  signerId: transaction.signer.accountId,
+  publicKey: toNearcorePublicKey(transaction.signer.publicKey),
+  nonce: toNearcoreTransactionNonce(transaction.signer.replayProtection),
   receiverId: transaction.receiverAccountId,
-  nonce: BigInt(transaction.nonce),
-  blockHash: transaction.blockHash.cryptoHashU8,
+  blockHash: transaction.recentBlockHash.cryptoHashU8,
+  actions: toNearcoreTransactionActions(transaction),
+  nonceMode: toNearcoreNonceMode(transaction.signer.replayProtection),
 });
