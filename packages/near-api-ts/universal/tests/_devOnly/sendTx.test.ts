@@ -50,7 +50,6 @@ describe('SendTx', () => {
           publicKey: defaultKeyPair.publicKey,
           replayProtection: { scheme: 'NonceChannel', nonce: getLastNonce(accessKey) + 1 },
         },
-        recentBlockHash: atMomentOf.blockHash,
         action: addAccessKey({
           publicKey: randomKp.publicKey,
           permission: {
@@ -62,6 +61,7 @@ describe('SendTx', () => {
           replayProtection: { channelCount: 12 },
         }),
         receiverAccountId: 'nat',
+        recentBlockHash: atMomentOf.blockHash,
       },
     });
 
