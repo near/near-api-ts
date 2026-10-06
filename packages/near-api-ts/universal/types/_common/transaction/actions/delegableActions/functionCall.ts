@@ -26,7 +26,7 @@ export type FunctionCallAction = {
   functionName: ContractFunctionName;
   functionArgs: Uint8Array;
   gasLimit: NearGasArgs;
-  attachedDeposit?: NearTokenArgs;
+  attachedDeposit?: NearTokenArgs; // TODO fix it - Should be always present
 };
 
 // ******* Function Call Action Creator *********
