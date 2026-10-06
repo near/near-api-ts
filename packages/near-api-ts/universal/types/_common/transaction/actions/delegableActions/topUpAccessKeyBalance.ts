@@ -15,9 +15,11 @@ export type CreateTopUpAccessKeyBalanceActionArgs = {
 };
 
 /**
- * Moves `amount` from the receiver account's balance to the balance of its key `publicKey` - a key
- * with `gasPayment.source: 'KeyBalance'`, which pays for gas from that balance. Anyone can top up
- * a key of any account, the way anyone can transfer to it. Nearcore calls it `TransferToGasKey`.
+ * Adds `amount` to the balance of the receiver account's key `publicKey` - a key with
+ * `gasPayment.source: 'KeyBalance'`, which pays for gas from that balance. Like the amount of a
+ * `Transfer`, it is paid by the transaction signer - by the relayer, inside a delegation - and
+ * the receiver account's own balance does not change, so anyone can top up a key of any account.
+ * Nearcore calls it `TransferToGasKey`.
  */
 export type TopUpAccessKeyBalanceAction = {
   actionType: 'TopUpAccessKeyBalance';

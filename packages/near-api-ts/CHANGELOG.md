@@ -35,12 +35,13 @@
   accepts no other – and takes no `allowance`. The upper limit is
   `constants.NonceChannels.MaxChannelCount`.
 
-- **Gas keys can be funded and drained** – two new actions move NEAR between an
-  account and the balance of its key with `gasPayment.source: 'KeyBalance'`:
+- **Gas keys can be funded and drained** – two new actions fill the balance of a
+  key with `gasPayment.source: 'KeyBalance'` and move it back to the key's
+  account:
 
   ```ts
-  topUpAccessKeyBalance({ publicKey, amount: near('1') }); // account → key
-  withdrawAccessKeyBalance({ publicKey, amount: near('0.4') }); // key → account
+  topUpAccessKeyBalance({ publicKey, amount: near('1') }); // signer → key
+  withdrawAccessKeyBalance({ publicKey, amount: near('0.4') }); // key → its account
   ```
 
   - Both take a public key and an amount, have `safe*` twins
@@ -48,7 +49,9 @@
     transaction and in a delegation alike. New types
     `TopUpAccessKeyBalanceAction` and `WithdrawAccessKeyBalanceAction`; new
     error kinds `CreateAction.{TopUpAccessKeyBalance,WithdrawAccessKeyBalance}.{Args.InvalidSchema,Internal}`.
-  - Anyone can top up a key of any account; only the account itself can
+  - Anyone can top up a key of any account: like the amount of a transfer, the
+    top-up is paid by the transaction signer (by the relayer, inside a
+    delegation), not by the key's account. Only the account itself can
     withdraw.
   - Action summaries report them as `{ actionType, publicKey, amount }`.
   - New execution error kinds, also reachable as

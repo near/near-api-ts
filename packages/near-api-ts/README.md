@@ -416,8 +416,8 @@ The signer signs only with keys paid from the account balance. A key with a bala
 | `functionCall({ functionName, functionArgs?, gasLimit, attachedDeposit? })` | calls a contract method |
 | `deployContract({ wasmU8 \| wasmBase64 })` | deploys wasm to the receiver |
 | `addAccessKey({ publicKey, permission, gasPayment, replayProtection? })` | adds an access key — see below |
-| `topUpAccessKeyBalance({ publicKey, amount })` | moves NEAR from the account balance to a gas key's balance |
-| `withdrawAccessKeyBalance({ publicKey, amount })` | moves NEAR from a gas key's balance back to the account |
+| `topUpAccessKeyBalance({ publicKey, amount })` | adds NEAR, paid by the signer, to the balance of the receiver's gas key |
+| `withdrawAccessKeyBalance({ publicKey, amount })` | moves NEAR from a gas key's balance back to its account |
 | `deleteKey({ publicKey })` | removes an access key |
 | `deleteAccount({ beneficiaryAccountId })` | deletes the account, sends the remainder to the beneficiary |
 | `stake({ amount, validatorPublicKey })` | submits a staking proposal |
@@ -476,8 +476,9 @@ await signer.executeTransaction({
 withdrawAccessKeyBalance({ publicKey, amount: near('0.4') });
 ```
 
-Anyone can top up a key of any account, the way anyone can transfer to it; only the account
-itself can withdraw, so a withdrawal has to come from the receiver account. Both fail with
+Anyone can top up a key of any account, the way anyone can transfer to it: the amount is paid by
+the transaction signer (by the relayer, inside a delegation), not by the account the key belongs
+to. Only the account itself can withdraw, so a withdrawal has to come from the receiver account. Both fail with
 `Action.TopUpAccessKeyBalance.Balance.NotFound` / `Action.WithdrawAccessKeyBalance.Balance.NotFound`
 when the key has no balance of its own — it is paid from the account balance or does not exist at
 all — and withdrawing more than the key holds fails with
