@@ -314,12 +314,28 @@
   rather than ignored.
 
   - The action they return, and the one a hand-written `actions` entry must
-    have, is `{ actionType: 'AddAccessKey', ...args }` – `actionType: 'AddKey'`
-    is renamed and `accessType` is gone. The types `AddFullAccessKeyAction` and
-    `AddFunctionCallKeyAction` are replaced by `AddAccessKeyAction`.
+    have, describes the key the way `AccessKey` does, with what the arguments
+    leave implied spelled out – `actionType: 'AddKey'` is renamed and
+    `accessType` is gone:
+
+    ```ts
+    {
+      actionType: 'AddAccessKey',
+      publicKey,
+      permission: { kind: 'FullAccess' },
+      gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
+      replayProtection: { scheme: 'NonceChannel' },
+    }
+    ```
+
+    The `allowance` of a function call key is a `NearToken` – `near('0.25')`
+    where the action used to take `gasBudget: { near: '0.25' }` – and a key
+    paid from its own balance has
+    `replayProtection: { scheme: 'NonceChannels', channelCount }`. The types
+    `AddFullAccessKeyAction` and `AddFunctionCallKeyAction` are replaced by
+    `AddAccessKeyAction`.
   - The action summary in `processingSteps` (also inside an
-    `ExecuteDelegation`) has the same shape – `actionType: 'AddAccessKey'` – with
-    the allowance as a `NearToken`.
+    `ExecuteDelegation`) has the same shape as the action.
     It covers gas keys too: `getTransactionResult` for a transaction that adds
     one – built by another library – used to fail with
     `Client.GetTransactionResult.Internal`.

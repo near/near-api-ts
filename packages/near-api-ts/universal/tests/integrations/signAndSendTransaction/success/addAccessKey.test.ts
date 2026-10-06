@@ -98,20 +98,22 @@ describe('signAndSendTransaction › addAccessKey', () => {
         actionType: 'AddAccessKey',
         publicKey: fullAccessKey.publicKey,
         permission: { kind: 'FullAccess' },
-        gasPayment: { source: 'AccountBalance' },
+        gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
+        replayProtection: { scheme: 'NonceChannel' },
       },
       {
         actionType: 'AddAccessKey',
         publicKey: functionCallKey.publicKey,
         permission: functionCallPermission,
         gasPayment: { source: 'AccountBalance', allowance: { near: '0.25' } },
+        replayProtection: { scheme: 'NonceChannel' },
       },
       {
         actionType: 'AddAccessKey',
         publicKey: gasFullAccessKey.publicKey,
         permission: { kind: 'FullAccess' },
         gasPayment: { source: 'KeyBalance' },
-        replayProtection: { channelCount: 1024 },
+        replayProtection: { scheme: 'NonceChannels', channelCount: 1024 },
       },
       {
         actionType: 'AddAccessKey',
@@ -122,13 +124,13 @@ describe('signAndSendTransaction › addAccessKey', () => {
           allowedFunctions: 'AllNonPayable',
         },
         gasPayment: { source: 'KeyBalance' },
-        replayProtection: { channelCount: 3 },
+        replayProtection: { scheme: 'NonceChannels', channelCount: 3 },
       },
     ]);
 
-    // An ordinary key's summary carries exactly the fields of the action - nothing of a gas key
-    expect(Object.keys(actionSummaries[0] ?? {}).sort()).toStrictEqual(
-      ['actionType', 'gasPayment', 'permission', 'publicKey'].sort(),
+    // The summary is the action itself - no field more, no field less
+    expect(actionSummaries[0]).toStrictEqual(
+      signedTransaction.signedTransaction.transaction.actions[0],
     );
 
     const { accessKeys } = await client.getAccessKeys({ accountId: 'nat' });

@@ -16,30 +16,35 @@ const toNearcoreFunctionCallPermission = (
   methodNames: allowedFunctions === 'AllNonPayable' ? [] : allowedFunctions,
 });
 
-const getPermission = (action: InnerAddAccessKeyAction): NearcoreAccessKeyPermission => {
+const getPermission = ({
+  permission,
+  gasPayment,
+  replayProtection,
+}: InnerAddAccessKeyAction): NearcoreAccessKeyPermission => {
   // Only a key paid from its own balance - a gas key - keeps a set of nonce channels. Nearcore
   // requires it to be added with an empty balance and without an allowance.
-  if (action.replayProtection) {
-    const gasKeyInfo = { balance: 0n, numNonces: action.replayProtection.channelCount };
+  if (replayProtection.scheme === 'NonceChannels') {
+    const gasKeyInfo = { balance: 0n, numNonces: replayProtection.channelCount };
 
-    if (action.permission.kind === 'FullAccess') return { gasKeyFullAccess: gasKeyInfo };
+    if (permission.kind === 'FullAccess') return { gasKeyFullAccess: gasKeyInfo };
 
     return {
       gasKeyFunctionCall: {
         gasKeyInfo,
-        functionCallPermission: toNearcoreFunctionCallPermission(action.permission, null),
+        functionCallPermission: toNearcoreFunctionCallPermission(permission, null),
       },
     };
   }
 
-  if (action.permission.kind === 'FullAccess') return { fullAccess: {} };
+  // Nearcore has no allowance for a full access key - the schema allows only 'Unlimited' there
+  if (permission.kind === 'FullAccess') return { fullAccess: {} };
 
-  // Always set on a FunctionCall key paid from the account balance - the schema requires it
-  const { allowance } = action.gasPayment;
+  // Always set on a key paid from the account balance - the schema requires it
+  const { allowance } = gasPayment;
 
   return {
     functionCall: toNearcoreFunctionCallPermission(
-      action.permission,
+      permission,
       allowance === undefined || allowance === 'Unlimited' ? null : nearToken(allowance).yoctoNear,
     ),
   };

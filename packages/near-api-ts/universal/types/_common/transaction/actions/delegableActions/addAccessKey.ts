@@ -1,6 +1,11 @@
 import type { NatError } from '../../../../../src/_common/_common/_common/_common/natError';
-import type { Prettify } from '../../../../utils';
-import type { FullAccessPermission, FunctionCallPermission } from '../../../accessKey';
+import type {
+  AccountBalanceGasPayment,
+  FullAccessPermission,
+  FunctionCallPermission,
+  NonceChannels,
+  UnlimitedAccountBalanceGasPayment,
+} from '../../../accessKey';
 import type { AccountId, ContractFunctionName, Result } from '../../../common';
 import type { NearcorePublicKey, PublicKey } from '../../../crypto';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../natError';
@@ -68,9 +73,35 @@ export type CreateAddAccessKeyActionArgs =
   | KeyBalanceFullAccessKeyArgs
   | KeyBalanceFunctionCallKeyArgs;
 
-export type AddAccessKeyAction = Prettify<
-  { actionType: 'AddAccessKey' } & CreateAddAccessKeyActionArgs
->;
+export type AddAccessKeyAction =
+  | {
+      actionType: 'AddAccessKey';
+      publicKey: PublicKey;
+      permission: FullAccessPermission;
+      gasPayment: UnlimitedAccountBalanceGasPayment;
+      replayProtection: { scheme: 'NonceChannel' };
+    }
+  | {
+      actionType: 'AddAccessKey';
+      publicKey: PublicKey;
+      permission: FunctionCallPermission;
+      gasPayment: AccountBalanceGasPayment;
+      replayProtection: { scheme: 'NonceChannel' };
+    }
+  | {
+      actionType: 'AddAccessKey';
+      publicKey: PublicKey;
+      permission: FullAccessPermission;
+      gasPayment: { source: 'KeyBalance' };
+      replayProtection: NonceChannels;
+    }
+  | {
+      actionType: 'AddAccessKey';
+      publicKey: PublicKey;
+      permission: FunctionCallPermission;
+      gasPayment: { source: 'KeyBalance' };
+      replayProtection: NonceChannels;
+    };
 
 type CreateAddAccessKeyActionError =
   | NatError<'CreateAction.AddAccessKey.Args.InvalidSchema'>

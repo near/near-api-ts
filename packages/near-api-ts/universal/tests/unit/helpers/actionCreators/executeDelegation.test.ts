@@ -2,6 +2,7 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { serialize } from 'borsh';
 import { describe, expect, it } from 'vitest';
 import {
+  addAccessKey,
   constants,
   executeDelegation,
   randomEd25519KeyPair,
@@ -56,6 +57,57 @@ describe('executeDelegation', () => {
           publicKey: keyPair.publicKey,
           replayProtection: { scheme: 'NonceChannels', nonceChannelId: 1023, nonce: 7 },
         },
+      },
+    });
+
+    expect(executeDelegation({ signedDelegationBorsh64 })).toStrictEqual({
+      actionType: 'ExecuteDelegation',
+      signedDelegation,
+    });
+  });
+
+  // Borsh reads the allowance back as a bigint, so it is given as one to compare equal
+  it('reads back an AddAccessKey action of each key variant', async () => {
+    const permission = {
+      kind: 'FunctionCall' as const,
+      allowedContract: 'bob',
+      allowedFunctions: ['ping'],
+    };
+
+    const { signedDelegation, signedDelegationBorsh64 } = await signDelegation({
+      signDataProvider: keyPair,
+      delegation: {
+        delegator: {
+          accountId: 'alice',
+          publicKey: keyPair.publicKey,
+          replayProtection: { scheme: 'NonceChannel', nonce: 7 },
+        },
+        receiverAccountId: 'alice',
+        expiration: { blockHeight: 1000 },
+        delegatedActions: [
+          addAccessKey({
+            publicKey: keyPair.publicKey,
+            permission: { kind: 'FullAccess' },
+            gasPayment: { source: 'AccountBalance' },
+          }),
+          addAccessKey({
+            publicKey: keyPair.publicKey,
+            permission,
+            gasPayment: { source: 'AccountBalance', allowance: { yoctoNear: 1000n } },
+          }),
+          addAccessKey({
+            publicKey: keyPair.publicKey,
+            permission: { kind: 'FullAccess' },
+            gasPayment: { source: 'KeyBalance' },
+            replayProtection: { channelCount: 1024 },
+          }),
+          addAccessKey({
+            publicKey: keyPair.publicKey,
+            permission,
+            gasPayment: { source: 'KeyBalance' },
+            replayProtection: { channelCount: 3 },
+          }),
+        ],
       },
     });
 

@@ -26,7 +26,8 @@ export const getRawAddAccessKeyActionSummary = ({
     return {
       ...base,
       permission: { kind: 'FullAccess' },
-      gasPayment: { source: 'AccountBalance' },
+      gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
+      replayProtection: { scheme: 'NonceChannel' },
     };
 
   if ('FunctionCall' in permission) {
@@ -39,6 +40,7 @@ export const getRawAddAccessKeyActionSummary = ({
         source: 'AccountBalance',
         allowance: typeof allowance === 'string' ? yoctoNear(allowance) : 'Unlimited',
       },
+      replayProtection: { scheme: 'NonceChannel' },
     };
   }
 
@@ -47,7 +49,10 @@ export const getRawAddAccessKeyActionSummary = ({
       ...base,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'KeyBalance' },
-      replayProtection: { channelCount: permission.GasKeyFullAccess.numNonces },
+      replayProtection: {
+        scheme: 'NonceChannels',
+        channelCount: permission.GasKeyFullAccess.numNonces,
+      },
     };
 
   if ('GasKeyFunctionCall' in permission) {
@@ -57,7 +62,7 @@ export const getRawAddAccessKeyActionSummary = ({
       ...base,
       permission: toFunctionCallPermission(receiverId, methodNames),
       gasPayment: { source: 'KeyBalance' },
-      replayProtection: { channelCount: numNonces },
+      replayProtection: { scheme: 'NonceChannels', channelCount: numNonces },
     };
   }
 

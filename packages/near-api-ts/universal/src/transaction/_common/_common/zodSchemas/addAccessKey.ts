@@ -20,8 +20,9 @@ const FunctionCallPermissionZodSchema = z.object({
   allowedFunctions: AllowedFunctionsSchema,
 });
 
-const NonceChannelsZodSchema = z.object({
-  channelCount: z.number().check(z.int(), z.gte(1), z.lte(constants.NonceChannels.MaxChannelCount)),
+const FunctionCallAccountBalanceGasPaymentZodSchema = z.object({
+  source: z.literal('AccountBalance'),
+  allowance: z.union([z.literal('Unlimited'), NearTokenArgsZodSchema]),
 });
 
 const KeyBalanceGasPaymentZodSchema = z.object({
@@ -29,7 +30,13 @@ const KeyBalanceGasPaymentZodSchema = z.object({
   allowance: z.optional(z.never()),
 });
 
-const AccountBalanceFullAccessKeyShape = {
+const ChannelCountZodSchema = z
+  .number()
+  .check(z.int(), z.gte(1), z.lte(constants.NonceChannels.MaxChannelCount));
+
+// ── Arguments of addAccessKey ────────────────────────────────
+
+const AccountBalanceFullAccessKeyArgsZodSchema = z.object({
   publicKey: PublicKeyZodSchema,
   permission: FullAccessPermissionZodSchema,
   gasPayment: z.object({
@@ -37,46 +44,88 @@ const AccountBalanceFullAccessKeyShape = {
     allowance: z.optional(z.never()),
   }),
   replayProtection: z.optional(z.never()),
-};
+});
 
-const AccountBalanceFunctionCallKeyShape = {
+const AccountBalanceFunctionCallKeyArgsZodSchema = z.object({
   publicKey: PublicKeyZodSchema,
   permission: FunctionCallPermissionZodSchema,
-  gasPayment: z.object({
-    source: z.literal('AccountBalance'),
-    allowance: z.union([z.literal('Unlimited'), NearTokenArgsZodSchema]),
-  }),
+  gasPayment: FunctionCallAccountBalanceGasPaymentZodSchema,
   replayProtection: z.optional(z.never()),
-};
+});
 
-const KeyBalanceFullAccessKeyShape = {
+const NonceChannelsArgsZodSchema = z.object({
+  channelCount: ChannelCountZodSchema,
+});
+
+const KeyBalanceFullAccessKeyArgsZodSchema = z.object({
   publicKey: PublicKeyZodSchema,
   permission: FullAccessPermissionZodSchema,
   gasPayment: KeyBalanceGasPaymentZodSchema,
-  replayProtection: NonceChannelsZodSchema,
-};
+  replayProtection: NonceChannelsArgsZodSchema,
+});
 
-const KeyBalanceFunctionCallKeyShape = {
+const KeyBalanceFunctionCallKeyArgsZodSchema = z.object({
   publicKey: PublicKeyZodSchema,
   permission: FunctionCallPermissionZodSchema,
   gasPayment: KeyBalanceGasPaymentZodSchema,
-  replayProtection: NonceChannelsZodSchema,
-};
+  replayProtection: NonceChannelsArgsZodSchema,
+});
 
 export const AddAccessKeyArgsZodSchema = z.union([
-  z.object(AccountBalanceFullAccessKeyShape),
-  z.object(AccountBalanceFunctionCallKeyShape),
-  z.object(KeyBalanceFullAccessKeyShape),
-  z.object(KeyBalanceFunctionCallKeyShape),
+  AccountBalanceFullAccessKeyArgsZodSchema,
+  AccountBalanceFunctionCallKeyArgsZodSchema,
+  KeyBalanceFullAccessKeyArgsZodSchema,
+  KeyBalanceFunctionCallKeyArgsZodSchema,
 ]);
+
+// ── The action ───────────────────────────────────────────────
+// It spells out what the arguments leave implied: the allowance of a full access key and the
+// replay protection scheme of every key.
 
 const ActionTypeShape = { actionType: z.literal('AddAccessKey') };
 
+const NonceChannelZodSchema = z.object({
+  scheme: z.literal('NonceChannel'),
+  channelCount: z.optional(z.never()),
+});
+
+const NonceChannelsZodSchema = z.object({
+  scheme: z.literal('NonceChannels'),
+  channelCount: ChannelCountZodSchema,
+});
+
 export const AddAccessKeyActionZodSchema = z.union([
-  z.object({ ...ActionTypeShape, ...AccountBalanceFullAccessKeyShape }),
-  z.object({ ...ActionTypeShape, ...AccountBalanceFunctionCallKeyShape }),
-  z.object({ ...ActionTypeShape, ...KeyBalanceFullAccessKeyShape }),
-  z.object({ ...ActionTypeShape, ...KeyBalanceFunctionCallKeyShape }),
+  z.object({
+    ...ActionTypeShape,
+    publicKey: PublicKeyZodSchema,
+    permission: FullAccessPermissionZodSchema,
+    gasPayment: z.object({
+      source: z.literal('AccountBalance'),
+      allowance: z.literal('Unlimited'),
+    }),
+    replayProtection: NonceChannelZodSchema,
+  }),
+  z.object({
+    ...ActionTypeShape,
+    publicKey: PublicKeyZodSchema,
+    permission: FunctionCallPermissionZodSchema,
+    gasPayment: FunctionCallAccountBalanceGasPaymentZodSchema,
+    replayProtection: NonceChannelZodSchema,
+  }),
+  z.object({
+    ...ActionTypeShape,
+    publicKey: PublicKeyZodSchema,
+    permission: FullAccessPermissionZodSchema,
+    gasPayment: KeyBalanceGasPaymentZodSchema,
+    replayProtection: NonceChannelsZodSchema,
+  }),
+  z.object({
+    ...ActionTypeShape,
+    publicKey: PublicKeyZodSchema,
+    permission: FunctionCallPermissionZodSchema,
+    gasPayment: KeyBalanceGasPaymentZodSchema,
+    replayProtection: NonceChannelsZodSchema,
+  }),
 ]);
 
 export type InnerAddAccessKeyAction = z.infer<typeof AddAccessKeyActionZodSchema>;

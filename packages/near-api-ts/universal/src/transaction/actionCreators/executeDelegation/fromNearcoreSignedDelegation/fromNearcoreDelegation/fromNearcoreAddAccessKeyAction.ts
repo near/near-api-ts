@@ -3,6 +3,7 @@ import type {
   NearcoreAddAccessKeyAction,
   NearcoreFunctionCallPermission,
 } from '../../../../../../types/_common/transaction/actions/delegableActions/addAccessKey';
+import { yoctoNear } from '../../../../../_common/nearToken';
 import { fromNearcorePublicKey } from './_common/fromNearcorePublicKey';
 
 const fromNearcoreFunctionCallPermission = ({
@@ -27,7 +28,8 @@ export const fromNearcoreAddAccessKeyAction = ({
     return {
       ...base,
       permission: { kind: 'FullAccess' },
-      gasPayment: { source: 'AccountBalance' },
+      gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
+      replayProtection: { scheme: 'NonceChannel' },
     };
 
   if ('functionCall' in permission) {
@@ -38,8 +40,9 @@ export const fromNearcoreAddAccessKeyAction = ({
       permission: fromNearcoreFunctionCallPermission(permission.functionCall),
       gasPayment: {
         source: 'AccountBalance',
-        allowance: allowance === null ? 'Unlimited' : { yoctoNear: allowance },
+        allowance: allowance === null ? 'Unlimited' : yoctoNear(allowance),
       },
+      replayProtection: { scheme: 'NonceChannel' },
     };
   }
 
@@ -48,7 +51,10 @@ export const fromNearcoreAddAccessKeyAction = ({
       ...base,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'KeyBalance' },
-      replayProtection: { channelCount: permission.gasKeyFullAccess.numNonces },
+      replayProtection: {
+        scheme: 'NonceChannels',
+        channelCount: permission.gasKeyFullAccess.numNonces,
+      },
     };
 
   const { gasKeyInfo, functionCallPermission } = permission.gasKeyFunctionCall;
@@ -57,6 +63,6 @@ export const fromNearcoreAddAccessKeyAction = ({
     ...base,
     permission: fromNearcoreFunctionCallPermission(functionCallPermission),
     gasPayment: { source: 'KeyBalance' },
-    replayProtection: { channelCount: gasKeyInfo.numNonces },
+    replayProtection: { scheme: 'NonceChannels', channelCount: gasKeyInfo.numNonces },
   };
 };

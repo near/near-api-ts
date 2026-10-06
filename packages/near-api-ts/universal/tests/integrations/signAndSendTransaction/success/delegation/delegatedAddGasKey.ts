@@ -85,7 +85,7 @@ export const delegatedAddGasKey = (context: TestContext) => async () => {
               allowedFunctions: ['ping'],
             },
             gasPayment: { source: 'KeyBalance' },
-            replayProtection: { channelCount: 7 },
+            replayProtection: { scheme: 'NonceChannels', channelCount: 7 },
           },
         ],
       },

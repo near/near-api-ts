@@ -54,7 +54,7 @@ export type FunctionCallPermission = {
 /**
  * The key pays for gas from the account balance, as much as the account holds.
  */
-type UnlimitedAccountBalanceGasPayment = {
+export type UnlimitedAccountBalanceGasPayment = {
   source: 'AccountBalance';
   allowance: 'Unlimited';
 };
@@ -63,7 +63,7 @@ type UnlimitedAccountBalanceGasPayment = {
  * The key pays for gas from the account balance: as much as the account holds when
  * `allowance` is `'Unlimited'`, otherwise no more than `allowance` — the amount it has left.
  */
-type AccountBalanceGasPayment = {
+export type AccountBalanceGasPayment = {
   source: 'AccountBalance';
   allowance: 'Unlimited' | NearToken;
 };
@@ -95,7 +95,7 @@ type NonceChannel = {
  * that many transactions in parallel. Each transaction picks one channel and must use
  * a nonce greater than the last one in it.
  */
-type NonceChannels = {
+export type NonceChannels = {
   scheme: 'NonceChannels';
   channelCount: number;
 };

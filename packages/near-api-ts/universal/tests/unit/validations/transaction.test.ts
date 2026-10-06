@@ -134,3 +134,78 @@ describe('TransactionZodSchema › signer.replayProtection', () => {
     ).toBe(false);
   });
 });
+
+describe('TransactionZodSchema › AddAccessKey action', () => {
+  const withAction = (action: Record<string, unknown>) => ({ ...base, action });
+
+  const fullAccessKey = {
+    actionType: 'AddAccessKey',
+    publicKey: signerPublicKey,
+    permission: { kind: 'FullAccess' },
+    gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
+    replayProtection: { scheme: 'NonceChannel' },
+  };
+
+  const gasKey = {
+    ...fullAccessKey,
+    gasPayment: { source: 'KeyBalance' },
+    replayProtection: { scheme: 'NonceChannels', channelCount: 4 },
+  };
+
+  it('accepts a key paid from the account balance and one paid from its own balance', () => {
+    expect(TransactionZodSchema.safeParse(withAction(fullAccessKey)).success).toBe(true);
+    expect(TransactionZodSchema.safeParse(withAction(gasKey)).success).toBe(true);
+  });
+
+  // The shape of the creator arguments - the action spells out what they leave implied
+  it('rejects an action without its replay protection or allowance spelled out', () => {
+    const { replayProtection: _, ...withoutReplayProtection } = fullAccessKey;
+
+    expect(TransactionZodSchema.safeParse(withAction(withoutReplayProtection)).success).toBe(false);
+    expect(
+      TransactionZodSchema.safeParse(
+        withAction({ ...fullAccessKey, gasPayment: { source: 'AccountBalance' } }),
+      ).success,
+    ).toBe(false);
+  });
+
+  // Nearcore has no allowance for a full access key; dropping it would add an unlimited key
+  it('rejects a limited allowance on a FullAccess key', () => {
+    expect(
+      TransactionZodSchema.safeParse(
+        withAction({
+          ...fullAccessKey,
+          gasPayment: { source: 'AccountBalance', allowance: { near: '1' } },
+        }),
+      ).success,
+    ).toBe(false);
+  });
+
+  // A stripped count would add an ordinary key instead of the gas key the caller asked for
+  it('rejects a channel count with the NonceChannel scheme', () => {
+    expect(
+      TransactionZodSchema.safeParse(
+        withAction({
+          ...fullAccessKey,
+          replayProtection: { scheme: 'NonceChannel', channelCount: 4 },
+        }),
+      ).success,
+    ).toBe(false);
+  });
+
+  it('rejects a replay protection scheme that does not match the gas payment', () => {
+    expect(
+      TransactionZodSchema.safeParse(
+        withAction({ ...gasKey, replayProtection: { scheme: 'NonceChannel' } }),
+      ).success,
+    ).toBe(false);
+    expect(
+      TransactionZodSchema.safeParse(
+        withAction({
+          ...fullAccessKey,
+          replayProtection: { scheme: 'NonceChannels', channelCount: 4 },
+        }),
+      ).success,
+    ).toBe(false);
+  });
+});

@@ -29,27 +29,29 @@ export type AddAccessKeyActionSummary =
       actionType: 'AddAccessKey';
       publicKey: PublicKey;
       permission: FullAccessPermission;
-      gasPayment: { source: 'AccountBalance' };
+      gasPayment: { source: 'AccountBalance'; allowance: 'Unlimited' };
+      replayProtection: { scheme: 'NonceChannel' };
     }
   | {
       actionType: 'AddAccessKey';
       publicKey: PublicKey;
       permission: FunctionCallPermission;
       gasPayment: { source: 'AccountBalance'; allowance: 'Unlimited' | NearToken };
+      replayProtection: { scheme: 'NonceChannel' };
     }
   | {
       actionType: 'AddAccessKey';
       publicKey: PublicKey;
       permission: FullAccessPermission;
       gasPayment: { source: 'KeyBalance' };
-      replayProtection: { channelCount: number };
+      replayProtection: { scheme: 'NonceChannels'; channelCount: number };
     }
   | {
       actionType: 'AddAccessKey';
       publicKey: PublicKey;
       permission: FunctionCallPermission;
       gasPayment: { source: 'KeyBalance' };
-      replayProtection: { channelCount: number };
+      replayProtection: { scheme: 'NonceChannels'; channelCount: number };
     };
 
 type DeployContractActionSummary = {

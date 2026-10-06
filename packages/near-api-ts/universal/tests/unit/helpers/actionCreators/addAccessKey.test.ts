@@ -11,39 +11,113 @@ const functionCallPermission = {
 };
 
 describe('addAccessKey', () => {
-  it('creates an AddKey action for each key variant', () => {
-    const variants = [
-      {
+  // The action spells out what the arguments leave implied
+  it('creates an AddAccessKey action for each key variant', () => {
+    expect(
+      addAccessKey({
         publicKey,
-        permission: { kind: 'FullAccess' as const },
-        gasPayment: { source: 'AccountBalance' as const },
-      },
-      {
+        permission: { kind: 'FullAccess' },
+        gasPayment: { source: 'AccountBalance' },
+      }),
+    ).toStrictEqual({
+      actionType: 'AddAccessKey',
+      publicKey,
+      permission: { kind: 'FullAccess' },
+      gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
+      replayProtection: { scheme: 'NonceChannel' },
+    });
+
+    expect(
+      addAccessKey({
         publicKey,
         permission: functionCallPermission,
-        gasPayment: { source: 'AccountBalance' as const, allowance: 'Unlimited' as const },
-      },
-      {
+        gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
+      }),
+    ).toStrictEqual({
+      actionType: 'AddAccessKey',
+      publicKey,
+      permission: functionCallPermission,
+      gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
+      replayProtection: { scheme: 'NonceChannel' },
+    });
+
+    expect(
+      addAccessKey({
         publicKey,
         permission: { ...functionCallPermission, allowedFunctions: ['new'] },
-        gasPayment: { source: 'AccountBalance' as const, allowance: near('0.5') },
-      },
-      {
+        gasPayment: { source: 'AccountBalance', allowance: { near: '0.5' } },
+      }),
+    ).toStrictEqual({
+      actionType: 'AddAccessKey',
+      publicKey,
+      permission: { ...functionCallPermission, allowedFunctions: ['new'] },
+      gasPayment: { source: 'AccountBalance', allowance: near('0.5') },
+      replayProtection: { scheme: 'NonceChannel' },
+    });
+
+    expect(
+      addAccessKey({
         publicKey,
-        permission: { kind: 'FullAccess' as const },
-        gasPayment: { source: 'KeyBalance' as const },
+        permission: { kind: 'FullAccess' },
+        gasPayment: { source: 'KeyBalance' },
         replayProtection: { channelCount: 1 },
-      },
-      {
+      }),
+    ).toStrictEqual({
+      actionType: 'AddAccessKey',
+      publicKey,
+      permission: { kind: 'FullAccess' },
+      gasPayment: { source: 'KeyBalance' },
+      replayProtection: { scheme: 'NonceChannels', channelCount: 1 },
+    });
+
+    expect(
+      addAccessKey({
         publicKey,
         permission: functionCallPermission,
-        gasPayment: { source: 'KeyBalance' as const },
+        gasPayment: { source: 'KeyBalance' },
         replayProtection: { channelCount: 1024 },
-      },
-    ];
+      }),
+    ).toStrictEqual({
+      actionType: 'AddAccessKey',
+      publicKey,
+      permission: functionCallPermission,
+      gasPayment: { source: 'KeyBalance' },
+      replayProtection: { scheme: 'NonceChannels', channelCount: 1024 },
+    });
+  });
 
-    for (const args of variants)
-      expect(addAccessKey(args)).toStrictEqual({ actionType: 'AddAccessKey', ...args });
+  // The type promises a NearToken - its methods included, which plain token args lack
+  it('turns the allowance into a NearToken', () => {
+    const action = addAccessKey({
+      publicKey,
+      permission: functionCallPermission,
+      gasPayment: { source: 'AccountBalance', allowance: { yoctoNear: '1000' } },
+    });
+
+    if (action.gasPayment.source !== 'AccountBalance') throw new Error('Unexpected gas payment');
+    if (action.gasPayment.allowance === 'Unlimited') throw new Error('Unexpected allowance');
+
+    expect(action.gasPayment.allowance.yoctoNear).toBe(1000n);
+    expect(action.gasPayment.allowance.gt({ yoctoNear: '999' })).toBe(true);
+  });
+
+  // A wider object - parsed JSON, say - must not turn the action into another one
+  it('keeps its own actionType and drops the fields of other actions', () => {
+    const args = {
+      publicKey,
+      permission: { kind: 'FullAccess' as const },
+      gasPayment: { source: 'AccountBalance' as const },
+      actionType: 'DeleteAccount',
+      beneficiaryAccountId: 'bob',
+    };
+
+    expect(addAccessKey(args)).toStrictEqual({
+      actionType: 'AddAccessKey',
+      publicKey,
+      permission: { kind: 'FullAccess' },
+      gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
+      replayProtection: { scheme: 'NonceChannel' },
+    });
   });
 
   it('rejects missing args with Args.InvalidSchema', () => {
