@@ -25,8 +25,12 @@ it('getTransactionResult', async () => {
     // transactionHash: 'HoWytDmLdYF4MnmayBSArwxef6Tj6pDYjnuNCVdSEnXe', // execute_intents - SIR
     // transactionHash: 'GxFGnomJ8znxJkpSduxZk7c9F3nqh7waAvnWxdFfxshK', // v1.signer - respond - not SIR
     // transactionHash: 'DSnehcspPKHuX44brwy4gWDhJYBaKwcP21Hq4qqjncE1', // wrap.near - ft_transfer_call - not SIR
-    transactionHash: '9usBJmQ3J1e2XTULjjkuyXPrsyRmp3CxDDVtVMd4HWgF', // old HostError::GuestPanic
-    // transactionHash: '4NTSNVrJ2YSRKTvywbPd9iHd4EMLjES1CgsRay7LgErY',
+    // transactionHash: '9usBJmQ3J1e2XTULjjkuyXPrsyRmp3CxDDVtVMd4HWgF', // old HostError::GuestPanic
+    // transactionHash: 'HdbSynSQmGBDeq4GHZAaZQYSwHH5nX1ivWm1Xxpv2rnH', // DelegateActionInvalidNonceIndex
+    // transactionHash: 'CKyEiCLYiMo1EH7CnjLA8fcTY59FdoPk1tsLSKN3BJ4q', // DelegateActionAccessKeyError -> DelegateActionRequiresNonGasKey
+    // transactionHash: 'DQtKJxfAxyp67SCGWCaeHQxv5wbfyawCYWiFP2QZW7kY', // DelegateActionAccessKeyError -> DelegateActionRequiresGasKey
+    // transactionHash: '86Ait5akHb7LF1dEdT4WACCSZUtPUvoYDhVBABRmG9ap', // Success (ED+WithdrawAccessKeyBalance): 86Ait5akHb7LF1dEdT4WACCSZUtPUvoYDhVBABRmG9ap
+    transactionHash: 'CXwo4k3jrCefoL25McnS5wVQ8CNKMb8RwogTmgDgCAoA',
     options: { transportPolicy: { rpcTypePreferences: ['Archival', 'Regular'] } },
   });
 
