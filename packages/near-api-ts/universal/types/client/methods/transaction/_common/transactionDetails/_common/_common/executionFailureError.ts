@@ -51,8 +51,8 @@ interface StakeErrorRegistry {
   'Action.Stake.ValidatorStake.AlreadyZero': { accountId: AccountId };
 }
 
-interface DeleteKeyErrorRegistry {
-  'Action.DeleteKey.NotFound': { accountId: AccountId; publicKey: PublicKey };
+interface DeleteAccessKeyErrorRegistry {
+  'Action.DeleteAccessKey.NotFound': { accountId: AccountId; publicKey: PublicKey };
 }
 
 interface DeleteAccountErrorRegistry {
@@ -61,8 +61,8 @@ interface DeleteAccountErrorRegistry {
 }
 
 // Nearcore answers both of our actions with one `GlobalContractDoesNotExist`; the identifier it
-// blames is what tells them apart. Registering is asynchronous - the code only becomes usable a
-// block or so after the register transaction succeeds - so a pin or a link sent right after one
+// blames is what tells them apart. Publishing is asynchronous - the code only becomes usable a
+// block or so after the publish transaction succeeds - so a pin or a link sent right after one
 // can land before the code does and fail this way.
 interface GlobalContractErrorRegistry {
   'Action.PinGlobalContract.GlobalContract.NotFound': { globalContractWasmHash: ContractWasmHash };
@@ -129,7 +129,7 @@ export interface ExecutionFailureRegistry
     AddAccessKeyErrorRegistry,
     FunctionCallErrorRegistry,
     StakeErrorRegistry,
-    DeleteKeyErrorRegistry,
+    DeleteAccessKeyErrorRegistry,
     DeleteAccountErrorRegistry,
     GlobalContractErrorRegistry,
     TopUpAccessKeyBalanceErrorRegistry,

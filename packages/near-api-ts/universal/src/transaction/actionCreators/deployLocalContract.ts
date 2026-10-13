@@ -1,14 +1,14 @@
 import * as z from 'zod/mini';
 import type {
-  CreateDeployContractAction,
-  SafeCreateDeployContractAction,
-} from '../../../types/_common/transaction/actions/delegableActions/deployContract';
+  CreateDeployLocalContractAction,
+  SafeCreateDeployLocalContractAction,
+} from '../../../types/_common/transaction/actions/delegableActions/deployLocalContract';
 import { createNatError } from '../../_common/_common/_common/_common/natError';
 import { result } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 
-export const CreateDeployContractActionArgsSchema = z.union([
+export const CreateDeployLocalContractActionArgsSchema = z.union([
   z.object({
     wasmU8: z.instanceof(Uint8Array),
     wasmBase64: z.optional(z.never()),
@@ -19,15 +19,15 @@ export const CreateDeployContractActionArgsSchema = z.union([
   }),
 ]);
 
-export const safeDeployContract: SafeCreateDeployContractAction = wrapInternalError(
-  'CreateAction.DeployContract.Internal',
+export const safeDeployLocalContract: SafeCreateDeployLocalContractAction = wrapInternalError(
+  'CreateAction.DeployLocalContract.Internal',
   (args) => {
-    const validArgs = CreateDeployContractActionArgsSchema.safeParse(args);
+    const validArgs = CreateDeployLocalContractActionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
       return result.err(
         createNatError({
-          kind: 'CreateAction.DeployContract.Args.InvalidSchema',
+          kind: 'CreateAction.DeployLocalContract.Args.InvalidSchema',
           context: { zodError: validArgs.error },
         }),
       );
@@ -37,10 +37,11 @@ export const safeDeployContract: SafeCreateDeployContractAction = wrapInternalEr
       : Uint8Array.fromBase64(validArgs.data.wasmBase64);
 
     return result.ok({
-      actionType: 'DeployContract' as const,
+      actionType: 'DeployLocalContract' as const,
       wasmU8,
     });
   },
 );
 
-export const deployContract: CreateDeployContractAction = asThrowable(safeDeployContract);
+export const deployLocalContract: CreateDeployLocalContractAction =
+  asThrowable(safeDeployLocalContract);

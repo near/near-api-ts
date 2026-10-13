@@ -12,12 +12,12 @@ export type CreateLinkGlobalContractActionArgs = {
 };
 
 /**
- * Points the receiver account at a global contract registered with
- * `RegisterLinkableGlobalContract`, the way `DeployContract` attaches a wasm
+ * Points the receiver account at a global contract published with
+ * `PublishLinkableGlobalContract`, the way `DeployLocalContract` attaches a wasm
  * blob the transaction carries itself. Nearcore calls it `UseGlobalContract`.
  *
- * The link is by account id, so it follows that account: when the registrar
- * registers new code under the same account id, the receiver runs the new code
+ * The link is by account id, so it follows that account: when the publisher
+ * publishes new code under the same account id, the receiver runs the new code
  * without sending anything itself. Use `PinGlobalContractAction` to freeze the
  * account on one exact wasm instead.
  */

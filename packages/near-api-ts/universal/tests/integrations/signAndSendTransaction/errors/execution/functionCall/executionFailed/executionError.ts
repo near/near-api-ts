@@ -2,7 +2,7 @@ import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
 import {
   createAccount,
-  deployContract,
+  deployLocalContract,
   functionCall,
   near,
   transfer,
@@ -37,7 +37,7 @@ export const executionError = (context: TestContext) => async () => {
       actions: [
         createAccount(),
         transfer({ amount: near('10') }),
-        deployContract({ wasmU8: await getFileBytes('./wasm/write-get-record.wasm') }),
+        deployLocalContract({ wasmU8: await getFileBytes('./wasm/write-get-record.wasm') }),
         functionCall({
           functionName: 'add_record',
           functionArgs: { record: 'hello' },

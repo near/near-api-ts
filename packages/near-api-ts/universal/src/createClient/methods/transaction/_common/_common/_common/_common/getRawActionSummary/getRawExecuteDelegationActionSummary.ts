@@ -68,7 +68,7 @@ const convertNonDelegateActionToSummary = (
     const contractWasmHash = base58.encode(contractWasmHashU8);
 
     return {
-      actionType: 'DeployContract' as const,
+      actionType: 'DeployLocalContract' as const,
       contractWasmHash,
     };
   }
@@ -96,7 +96,7 @@ const convertNonDelegateActionToSummary = (
   if ('DeleteKey' in nonDelegateAction) {
     const { DeleteKey } = nonDelegateAction;
     return {
-      actionType: 'DeleteKey' as const,
+      actionType: 'DeleteAccessKey' as const,
       publicKey: DeleteKey.publicKey as PublicKey, // TODO validate key by zod
     };
   }
@@ -120,11 +120,11 @@ const convertNonDelegateActionToSummary = (
 
     return DeployGlobalContract.deployMode === 'CodeHash'
       ? {
-          actionType: 'RegisterPinnableGlobalContract' as const,
+          actionType: 'PublishPinnableGlobalContract' as const,
           contractWasmHash,
         }
       : {
-          actionType: 'RegisterLinkableGlobalContract' as const,
+          actionType: 'PublishLinkableGlobalContract' as const,
           contractWasmHash,
         };
   }

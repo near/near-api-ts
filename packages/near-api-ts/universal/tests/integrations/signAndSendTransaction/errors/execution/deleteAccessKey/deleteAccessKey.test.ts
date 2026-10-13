@@ -11,7 +11,7 @@ export type TestContext = {
   defaultKeyPair: KeyPair;
 };
 
-describe('signAndSendTransaction › DeleteKey.* errors', () => {
+describe('signAndSendTransaction › DeleteAccessKey.* errors', () => {
   const context = {
     defaultKeyPair: keyPair(DEFAULT_PRIVATE_KEY),
   } as TestContext;
@@ -23,7 +23,7 @@ describe('signAndSendTransaction › DeleteKey.* errors', () => {
   });
 
   it(
-    'fails with Action.DeleteKey.NotFound when deleting a key that is not attached to the account',
+    'fails with Action.DeleteAccessKey.NotFound when deleting a key that is not attached to the account',
     notFound(context),
   );
 });

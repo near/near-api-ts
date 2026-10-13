@@ -8,7 +8,7 @@ import {
   createMemoryKeyService,
   createMemorySigner,
   createTestnetClient,
-  deployContract,
+  deployLocalContract,
   functionCall,
   randomEd25519KeyPair,
   transfer,
@@ -55,7 +55,7 @@ describe('yield contract', () => {
     //       createAccount(),
     //       transfer({ amount: { near: '100' } }),
     //       addAccessKey({ publicKey: DEFAULT_PUBLIC_KEY, permission: { kind: 'FullAccess' }, gasPayment: { source: 'AccountBalance' } }),
-    //       deployContract({
+    //       deployLocalContract({
     //         wasmU8: await getFileBytes('./wasm/pause_continue.wasm'),
     //       }),
     //     ],

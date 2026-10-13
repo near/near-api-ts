@@ -5,7 +5,7 @@ import { signTransaction } from '../../../../src/transaction/signTransaction/sig
 import { createDefaultClient } from '../../../utils/common';
 import { getLastNonce } from '../../../utils/getLastNonce';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
-import { publishPinnableGlobalContract } from './_common/publishGlobalContract';
+import { setUpPinnableGlobalContract } from './_common/setUpGlobalContract';
 
 describe('signAndSendTransaction › success', () => {
   let client: Client;
@@ -17,11 +17,11 @@ describe('signAndSendTransaction › success', () => {
     return () => sandbox.stop();
   });
 
-  it('pins code registered under its wasm hash and runs it', async () => {
-    const { globalContractWasmHash } = await publishPinnableGlobalContract({
+  it('pins code published under its wasm hash and runs it', async () => {
+    const { globalContractWasmHash } = await setUpPinnableGlobalContract({
       client,
-      registrarAccountId: 'nat',
-      registrarKeyPair: defaultKeyPair,
+      publisherAccountId: 'nat',
+      publisherKeyPair: defaultKeyPair,
     });
 
     const aliceAccessKey = await client.getAccessKey({
@@ -66,7 +66,7 @@ describe('signAndSendTransaction › success', () => {
     ]);
 
     // A pinned account is tied to one exact wasm, so it carries the hash rather than the account
-    // id the code was registered from.
+    // id the code was published from.
     const { contract } = await client.getAccountInfo({ accountId: 'alice' });
 
     expect(contract).toStrictEqual({ status: 'Pinned', globalContractWasmHash });

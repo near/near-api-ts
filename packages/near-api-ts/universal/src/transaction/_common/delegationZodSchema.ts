@@ -7,15 +7,15 @@ import { SignatureZodSchema } from '../../_common/zodSchemas/signature';
 import { TransactionNonceZodSchema } from '../../_common/zodSchemas/transactionNonce';
 import { AddAccessKeyActionZodSchema } from './_common/zodSchemas/addAccessKey';
 import { CreateAccountActionZodSchema } from './_common/zodSchemas/createAccount';
+import { DeleteAccessKeyActionZodSchema } from './_common/zodSchemas/deleteAccessKey';
 import { DeleteAccountActionZodSchema } from './_common/zodSchemas/deleteAccount';
-import { DeleteKeyActionZodSchema } from './_common/zodSchemas/deleteKey';
-import { DeployContractActionZodSchema } from './_common/zodSchemas/deployContract';
+import { DeployLocalContractActionZodSchema } from './_common/zodSchemas/deployLocalContract';
 import { FunctionCallActionZodSchema } from './_common/zodSchemas/functionCall';
 import { LinkGlobalContractActionZodSchema } from './_common/zodSchemas/linkGlobalContract';
 import { NonceChannelIdZodSchema } from './_common/zodSchemas/nonceChannelId';
 import { PinGlobalContractActionZodSchema } from './_common/zodSchemas/pinGlobalContract';
-import { RegisterLinkableGlobalContractActionZodSchema } from './_common/zodSchemas/registerLinkableGlobalContract';
-import { RegisterPinnableGlobalContractActionZodSchema } from './_common/zodSchemas/registerPinnableGlobalContract';
+import { PublishLinkableGlobalContractActionZodSchema } from './_common/zodSchemas/publishLinkableGlobalContract';
+import { PublishPinnableGlobalContractActionZodSchema } from './_common/zodSchemas/publishPinnableGlobalContract';
 import { StakeActionZodSchema } from './_common/zodSchemas/stake';
 import { TopUpAccessKeyBalanceActionZodSchema } from './_common/zodSchemas/topUpAccessKeyBalance';
 import { TransferActionZodSchema } from './_common/zodSchemas/transfer';
@@ -25,13 +25,13 @@ const DelegableActionZodSchema = z.union([
   CreateAccountActionZodSchema,
   TransferActionZodSchema,
   AddAccessKeyActionZodSchema,
-  DeployContractActionZodSchema,
+  DeployLocalContractActionZodSchema,
   FunctionCallActionZodSchema,
   StakeActionZodSchema,
-  DeleteKeyActionZodSchema,
+  DeleteAccessKeyActionZodSchema,
   DeleteAccountActionZodSchema,
-  RegisterPinnableGlobalContractActionZodSchema,
-  RegisterLinkableGlobalContractActionZodSchema,
+  PublishPinnableGlobalContractActionZodSchema,
+  PublishLinkableGlobalContractActionZodSchema,
   LinkGlobalContractActionZodSchema,
   PinGlobalContractActionZodSchema,
   TopUpAccessKeyBalanceActionZodSchema,

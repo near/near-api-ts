@@ -21,7 +21,10 @@ const fromNearcoreDelegableAction = (action: NearcoreDelegableAction): Delegable
     return { actionType: 'Transfer', amount: { yoctoNear: action.transfer.deposit } };
 
   if ('deployContract' in action)
-    return { actionType: 'DeployContract', wasmU8: Uint8Array.from(action.deployContract.code) };
+    return {
+      actionType: 'DeployLocalContract',
+      wasmU8: Uint8Array.from(action.deployContract.code),
+    };
 
   if ('functionCall' in action) return fromNearcoreFunctionCallAction(action.functionCall);
 
@@ -36,7 +39,7 @@ const fromNearcoreDelegableAction = (action: NearcoreDelegableAction): Delegable
 
   if ('deleteKey' in action)
     return {
-      actionType: 'DeleteKey',
+      actionType: 'DeleteAccessKey',
       publicKey: fromNearcorePublicKey(action.deleteKey.publicKey),
     };
 
@@ -52,11 +55,11 @@ const fromNearcoreDelegableAction = (action: NearcoreDelegableAction): Delegable
 
     return 'codeHash' in deployMode
       ? {
-          actionType: 'RegisterPinnableGlobalContract',
+          actionType: 'PublishPinnableGlobalContract',
           wasmU8,
         }
       : {
-          actionType: 'RegisterLinkableGlobalContract',
+          actionType: 'PublishLinkableGlobalContract',
           wasmU8,
         };
   }

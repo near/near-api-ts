@@ -6,7 +6,7 @@ import {
   createMemoryKeyService,
   createMemorySignerFactory,
   createTestnetClient,
-  deployContract,
+  deployLocalContract,
   functionCall,
   keyPair,
   near,

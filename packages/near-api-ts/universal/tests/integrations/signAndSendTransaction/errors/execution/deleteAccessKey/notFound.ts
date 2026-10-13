@@ -1,11 +1,11 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
-import { deleteKey, randomEd25519KeyPair } from '../../../../../../index';
+import { deleteAccessKey, randomEd25519KeyPair } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import { getLastNonce } from '../../../../../utils/getLastNonce';
-import type { TestContext } from './deleteKey.test';
+import type { TestContext } from './deleteAccessKey.test';
 
 export const notFound = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
@@ -29,7 +29,7 @@ export const notFound = (context: TestContext) => async () => {
         },
       },
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
-      action: deleteKey({ publicKey: missingPublicKey }),
+      action: deleteAccessKey({ publicKey: missingPublicKey }),
       receiverAccountId: 'nat',
     },
   });
@@ -39,13 +39,13 @@ export const notFound = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.DeleteKey.NotFound');
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.DeleteAccessKey.NotFound');
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Action.DeleteKey.NotFound');
+  assertTxResultExecutionErrKind(txResult, 'Action.DeleteAccessKey.NotFound');
   expect(txResult.error.context).toStrictEqual({
     accountId: 'nat',
     publicKey: missingPublicKey,

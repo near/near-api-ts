@@ -2,7 +2,7 @@ import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import {
   addAccessKey,
   createAccount,
-  deployContract,
+  deployLocalContract,
   functionCall,
   transfer,
 } from '../../../../../../../index';
@@ -40,7 +40,7 @@ export const preparationFailed = (context: TestContext) => async () => {
           permission: { kind: 'FullAccess' },
           gasPayment: { source: 'AccountBalance' },
         }),
-        deployContract({ wasmU8: Uint8Array.from([1, 2, 3]) }),
+        deployLocalContract({ wasmU8: Uint8Array.from([1, 2, 3]) }),
         functionCall({
           functionName: 'add_record',
           functionArgs: { record: 'hello' },

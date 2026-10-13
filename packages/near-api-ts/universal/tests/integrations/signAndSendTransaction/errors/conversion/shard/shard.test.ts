@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   addAccessKey,
   createAccount,
-  deployContract,
+  deployLocalContract,
   functionCall,
   keyPair,
   transfer,
@@ -84,7 +84,7 @@ describe.skip('signAndSendTransaction › Shard.Congested conversion error', () 
               permission: { kind: 'FullAccess' },
               gasPayment: { source: 'AccountBalance' },
             }),
-            deployContract({ wasmU8: GAS_BURNER_WASM }),
+            deployLocalContract({ wasmU8: GAS_BURNER_WASM }),
           ],
           receiverAccountId: CONTRACT_ACCOUNT_ID,
         },

@@ -1,14 +1,14 @@
 import * as z from 'zod/mini';
 import type {
-  CreateRegisterPinnableGlobalContractAction,
-  SafeCreateRegisterPinnableGlobalContractAction,
-} from '../../../types/_common/transaction/actions/delegableActions/registerPinnableGlobalContract';
+  CreatePublishLinkableGlobalContractAction,
+  SafeCreatePublishLinkableGlobalContractAction,
+} from '../../../types/_common/transaction/actions/delegableActions/publishLinkableGlobalContract';
 import { createNatError } from '../../_common/_common/_common/_common/natError';
 import { result } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 
-export const CreateRegisterPinnableGlobalContractActionArgsSchema = z.union([
+export const CreatePublishLinkableGlobalContractActionArgsSchema = z.union([
   z.object({
     wasmU8: z.instanceof(Uint8Array),
     wasmBase64: z.optional(z.never()),
@@ -19,14 +19,14 @@ export const CreateRegisterPinnableGlobalContractActionArgsSchema = z.union([
   }),
 ]);
 
-export const safeRegisterPinnableGlobalContract: SafeCreateRegisterPinnableGlobalContractAction =
-  wrapInternalError('CreateAction.RegisterPinnableGlobalContract.Internal', (args) => {
-    const validArgs = CreateRegisterPinnableGlobalContractActionArgsSchema.safeParse(args);
+export const safePublishLinkableGlobalContract: SafeCreatePublishLinkableGlobalContractAction =
+  wrapInternalError('CreateAction.PublishLinkableGlobalContract.Internal', (args) => {
+    const validArgs = CreatePublishLinkableGlobalContractActionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
       return result.err(
         createNatError({
-          kind: 'CreateAction.RegisterPinnableGlobalContract.Args.InvalidSchema',
+          kind: 'CreateAction.PublishLinkableGlobalContract.Args.InvalidSchema',
           context: { zodError: validArgs.error },
         }),
       );
@@ -36,10 +36,11 @@ export const safeRegisterPinnableGlobalContract: SafeCreateRegisterPinnableGloba
       : Uint8Array.fromBase64(validArgs.data.wasmBase64);
 
     return result.ok({
-      actionType: 'RegisterPinnableGlobalContract' as const,
+      actionType: 'PublishLinkableGlobalContract' as const,
       wasmU8,
     });
   });
 
-export const registerPinnableGlobalContract: CreateRegisterPinnableGlobalContractAction =
-  asThrowable(safeRegisterPinnableGlobalContract);
+export const publishLinkableGlobalContract: CreatePublishLinkableGlobalContractAction = asThrowable(
+  safePublishLinkableGlobalContract,
+);

@@ -7,17 +7,17 @@ import {
 } from '../../../../../index';
 import { signTransaction } from '../../../../../src/transaction/signTransaction/signTransaction';
 import { getLastNonce } from '../../../../utils/getLastNonce';
-import { publishLinkableGlobalContract } from '../_common/publishGlobalContract';
+import { setUpLinkableGlobalContract } from '../_common/setUpGlobalContract';
 import type { TestContext } from './delegation.test';
 
 export const delegatedLinkGlobalContract = (context: TestContext) => async () => {
   const { client, defaultKeyPair, relayKeyPair } = context;
   const delegatorAccountId = 'alice';
 
-  const { globalContractAccountId } = await publishLinkableGlobalContract({
+  const { globalContractAccountId } = await setUpLinkableGlobalContract({
     client,
-    registrarAccountId: 'nat',
-    registrarKeyPair: defaultKeyPair,
+    publisherAccountId: 'nat',
+    publisherKeyPair: defaultKeyPair,
   });
 
   const delegatorAccessKey = await client.getAccessKey({

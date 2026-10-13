@@ -32,8 +32,8 @@ describe('signAndSendTransaction › delegation › success', () => {
     return () => sandbox.stop();
   });
 
-  it('links code registered under an account id', delegatedLinkGlobalContract(context));
-  it('pins code registered under its wasm hash', delegatedPinGlobalContract(context));
+  it('links code published under an account id', delegatedLinkGlobalContract(context));
+  it('pins code published under its wasm hash', delegatedPinGlobalContract(context));
   it('adds a key paid from its own balance', delegatedAddGasKey(context));
   it('tops up and withdraws from a key balance', delegatedAccessKeyBalance(context));
   it('signs on a nonce channel of a key', delegatedOnNonceChannel(context));

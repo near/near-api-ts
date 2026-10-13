@@ -131,10 +131,10 @@ export const getExecutionFailureError = (
         context: { accountId: kind.TriesToUnstake.accountId },
       };
 
-    // DeleteKey action
+    // DeleteAccessKey action
     if ('DeleteKeyDoesNotExist' in kind)
       return {
-        kind: 'Action.DeleteKey.NotFound',
+        kind: 'Action.DeleteAccessKey.NotFound',
         context: {
           accountId: kind.DeleteKeyDoesNotExist.accountId,
           publicKey: kind.DeleteKeyDoesNotExist.publicKey as PublicKey,

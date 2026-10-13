@@ -2,7 +2,7 @@ import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import {
   addAccessKey,
   createAccount,
-  deployContract,
+  deployLocalContract,
   functionCall,
   transfer,
 } from '../../../../../../index';
@@ -41,7 +41,7 @@ export const functionNotFound = (context: TestContext) => async () => {
           permission: { kind: 'FullAccess' },
           gasPayment: { source: 'AccountBalance' },
         }),
-        deployContract({ wasmU8: await getFileBytes('./wasm/write-get-record.wasm') }),
+        deployLocalContract({ wasmU8: await getFileBytes('./wasm/write-get-record.wasm') }),
         functionCall({
           functionName: 'not_exist',
           gasLimit: { teraGas: '10' },

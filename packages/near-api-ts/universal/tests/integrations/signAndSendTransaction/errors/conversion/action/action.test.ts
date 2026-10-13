@@ -8,7 +8,7 @@ import { allowedFunctionsFunctionNameTooLong } from './addAccessKey/allowedFunct
 import { allowedFunctionsTotalSizeExceeded } from './addAccessKey/allowedFunctionsTotalSizeExceeded';
 import { invalidAccountId } from './addAccessKey/invalidAccountId';
 import { notFinal } from './deleteAccount/notFinal';
-import { contractWasmTooLarge } from './deployContract/contractWasmTooLarge';
+import { contractWasmTooLarge } from './deployLocalContract/contractWasmTooLarge';
 import { functionArgsTooLarge } from './functionCall/functionArgsTooLarge';
 import { functionNameTooLong } from './functionCall/functionNameTooLong';
 import { zeroGasLimit } from './functionCall/zeroGasLimit';

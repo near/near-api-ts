@@ -1,4 +1,4 @@
-import { deployContract } from '../../../../../../../index';
+import { deployLocalContract } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertUnmappedInvalidTxError } from '../../../../../../utils/assertUnmappedInvalidTxError';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
@@ -55,7 +55,7 @@ export const contractWasmTooLarge = (context: TestContext) => async () => {
       },
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
       // The code is never compiled at this stage, only measured, so zeroed bytes are enough.
-      action: deployContract({ wasmU8: new Uint8Array(CONTRACT_WASM_SIZE_BYTES) }),
+      action: deployLocalContract({ wasmU8: new Uint8Array(CONTRACT_WASM_SIZE_BYTES) }),
       receiverAccountId: 'nat',
     },
   });

@@ -10,7 +10,7 @@ const AccountIdDeployModeBorshSchema = {
   },
 };
 
-// Both register-global-contract actions serialize as nearcore's single DeployGlobalContract
+// Both publish-global-contract actions serialize as nearcore's single DeployGlobalContract
 // variant. The deploy mode distinguishes whether the contract is pinnable or linkable.
 export const DeployGlobalContractActionBorshSchema = {
   struct: {

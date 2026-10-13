@@ -24,12 +24,12 @@ describe('signAndSendTransaction › GlobalContract.* errors', () => {
   });
 
   it(
-    'fails with Action.PinGlobalContract.GlobalContract.NotFound when the wasm hash is not registered',
+    'fails with Action.PinGlobalContract.GlobalContract.NotFound when the wasm hash is not published',
     pinNotFound(context),
   );
 
   it(
-    'fails with Action.LinkGlobalContract.GlobalContract.NotFound when the account has not registered a global contract',
+    'fails with Action.LinkGlobalContract.GlobalContract.NotFound when the account has not published a global contract',
     linkNotFound(context),
   );
 });

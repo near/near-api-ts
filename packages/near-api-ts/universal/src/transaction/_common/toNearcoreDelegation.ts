@@ -7,14 +7,14 @@ import { constants } from '../../_common/_common/_common/constants';
 import { toNearcorePublicKey } from './_common/_common/toNearcorePublicKey';
 import { toNearcoreAddAccessKeyAction } from './_common/toNearcore/toNearcoreAddAccessKey';
 import { toNearcoreCreateAccountAction } from './_common/toNearcore/toNearcoreCreateAccount';
+import { toNearcoreDeleteAccessKeyAction } from './_common/toNearcore/toNearcoreDeleteAccessKey';
 import { toNearcoreDeleteAccountAction } from './_common/toNearcore/toNearcoreDeleteAccount';
-import { toNearcoreDeleteKeyAction } from './_common/toNearcore/toNearcoreDeleteKey';
-import { toNearcoreDeployContractAction } from './_common/toNearcore/toNearcoreDeployContract';
+import { toNearcoreDeployLocalContractAction } from './_common/toNearcore/toNearcoreDeployLocalContract';
 import { toNearcoreFunctionCallAction } from './_common/toNearcore/toNearcoreFunctionCall';
 import { toNearcoreLinkGlobalContractAction } from './_common/toNearcore/toNearcoreLinkGlobalContract';
 import { toNearcorePinGlobalContractAction } from './_common/toNearcore/toNearcorePinGlobalContract';
-import { toNearcoreRegisterLinkableGlobalContractAction } from './_common/toNearcore/toNearcoreRegisterLinkableGlobalContract';
-import { toNearcoreRegisterPinnableGlobalContractAction } from './_common/toNearcore/toNearcoreRegisterPinnableGlobalContract';
+import { toNearcorePublishLinkableGlobalContractAction } from './_common/toNearcore/toNearcorePublishLinkableGlobalContract';
+import { toNearcorePublishPinnableGlobalContractAction } from './_common/toNearcore/toNearcorePublishPinnableGlobalContract';
 import { toNearcoreStakeAction } from './_common/toNearcore/toNearcoreStake';
 import { toNearcoreTopUpAccessKeyBalanceAction } from './_common/toNearcore/toNearcoreTopUpAccessKeyBalance';
 import { toNearcoreTransactionNonce } from './_common/toNearcore/toNearcoreTransactionNonce';
@@ -34,20 +34,20 @@ const toNearcoreDelegableAction = (action: InnerDelegableAction): NearcoreDelega
       return toNearcoreAddAccessKeyAction(action);
     case 'Transfer':
       return toNearcoreTransferAction(action);
-    case 'DeployContract':
-      return toNearcoreDeployContractAction(action);
+    case 'DeployLocalContract':
+      return toNearcoreDeployLocalContractAction(action);
     case 'FunctionCall':
       return toNearcoreFunctionCallAction(action);
     case 'Stake':
       return toNearcoreStakeAction(action);
-    case 'DeleteKey':
-      return toNearcoreDeleteKeyAction(action);
+    case 'DeleteAccessKey':
+      return toNearcoreDeleteAccessKeyAction(action);
     case 'DeleteAccount':
       return toNearcoreDeleteAccountAction(action);
-    case 'RegisterPinnableGlobalContract':
-      return toNearcoreRegisterPinnableGlobalContractAction(action);
-    case 'RegisterLinkableGlobalContract':
-      return toNearcoreRegisterLinkableGlobalContractAction(action);
+    case 'PublishPinnableGlobalContract':
+      return toNearcorePublishPinnableGlobalContractAction(action);
+    case 'PublishLinkableGlobalContract':
+      return toNearcorePublishLinkableGlobalContractAction(action);
     case 'LinkGlobalContract':
       return toNearcoreLinkGlobalContractAction(action);
     case 'PinGlobalContract':

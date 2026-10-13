@@ -3,7 +3,7 @@ import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
   createAccount,
-  deployContract,
+  deployLocalContract,
   executeDelegation,
   functionCall,
   keyPair,
@@ -51,7 +51,7 @@ describe('Execute delegation', () => {
         delegatedActions: [
           createAccount(),
           transfer({ amount: near('50') }),
-          deployContract({ wasmU8: await getFileBytes('./wasm/write-get-record.wasm') }),
+          deployLocalContract({ wasmU8: await getFileBytes('./wasm/write-get-record.wasm') }),
           functionCall({
             functionName: 'write_record',
             functionArgs: { record_id: 1, record: 'Hi Alice' },

@@ -5,7 +5,7 @@ import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
 import {
   addAccessKey,
-  deployContract,
+  deployLocalContract,
   functionCall,
   signTransaction,
   transfer,
@@ -54,7 +54,7 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
           permission: { kind: 'FullAccess' },
           gasPayment: { source: 'AccountBalance' },
         }),
-        deployContract({ wasmU8 }),
+        deployLocalContract({ wasmU8 }),
       ],
       receiverAccountId: 'contract.nat',
     },

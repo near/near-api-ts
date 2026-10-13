@@ -1,13 +1,13 @@
 import type { CreateExecuteDelegationActionPublicErrorRegistry } from '../executeDelegation/executeDelegation';
 import type { CreateAddAccessKeyActionPublicErrorRegistry } from './addAccessKey';
+import type { CreateDeleteAccessKeyActionPublicErrorRegistry } from './deleteAccessKey';
 import type { CreateDeleteActionPublicErrorRegistry } from './deleteAccount';
-import type { CreateDeleteKeyActionPublicErrorRegistry } from './deleteKey';
-import type { CreateDeployContractActionPublicErrorRegistry } from './deployContract';
+import type { CreateDeployLocalContractActionPublicErrorRegistry } from './deployLocalContract';
 import type { CreateFunctionCallActionPublicErrorRegistry } from './functionCall';
 import type { CreateLinkGlobalContractActionPublicErrorRegistry } from './linkGlobalContract';
 import type { CreatePinGlobalContractActionPublicErrorRegistry } from './pinGlobalContract';
-import type { CreateRegisterLinkableGlobalContractActionPublicErrorRegistry } from './registerLinkableGlobalContract';
-import type { CreateRegisterPinnableGlobalContractActionPublicErrorRegistry } from './registerPinnableGlobalContract';
+import type { CreatePublishLinkableGlobalContractActionPublicErrorRegistry } from './publishLinkableGlobalContract';
+import type { CreatePublishPinnableGlobalContractActionPublicErrorRegistry } from './publishPinnableGlobalContract';
 import type { CreateStakeActionPublicErrorRegistry } from './stake';
 import type { CreateTopUpAccessKeyBalanceActionPublicErrorRegistry } from './topUpAccessKeyBalance';
 import type { CreateTransferActionPublicErrorRegistry } from './transfer';
@@ -18,12 +18,12 @@ export interface ActionsPublicErrorRegistry
     CreateTransferActionPublicErrorRegistry,
     CreateFunctionCallActionPublicErrorRegistry,
     CreateStakeActionPublicErrorRegistry,
-    CreateDeployContractActionPublicErrorRegistry,
-    CreateDeleteKeyActionPublicErrorRegistry,
+    CreateDeployLocalContractActionPublicErrorRegistry,
+    CreateDeleteAccessKeyActionPublicErrorRegistry,
     CreateDeleteActionPublicErrorRegistry,
     CreateExecuteDelegationActionPublicErrorRegistry,
-    CreateRegisterPinnableGlobalContractActionPublicErrorRegistry,
-    CreateRegisterLinkableGlobalContractActionPublicErrorRegistry,
+    CreatePublishPinnableGlobalContractActionPublicErrorRegistry,
+    CreatePublishLinkableGlobalContractActionPublicErrorRegistry,
     CreateLinkGlobalContractActionPublicErrorRegistry,
     CreatePinGlobalContractActionPublicErrorRegistry,
     CreateTopUpAccessKeyBalanceActionPublicErrorRegistry,

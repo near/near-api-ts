@@ -11,14 +11,17 @@ import type {
   NearcoreCreateAccountAction,
 } from '../delegableActions/createAccount';
 import type {
+  DeleteAccessKeyAction,
+  NearcoreDeleteAccessKeyAction,
+} from '../delegableActions/deleteAccessKey';
+import type {
   DeleteAccountAction,
   NearcoreDeleteAccountAction,
 } from '../delegableActions/deleteAccount';
-import type { DeleteKeyAction, NearcoreDeleteKeyAction } from '../delegableActions/deleteKey';
 import type {
-  DeployContractAction,
-  NearcoreDeployContractAction,
-} from '../delegableActions/deployContract';
+  DeployLocalContractAction,
+  NearcoreDeployLocalContractAction,
+} from '../delegableActions/deployLocalContract';
 import type {
   FunctionCallAction,
   NearcoreFunctionCallAction,
@@ -32,13 +35,13 @@ import type {
   PinGlobalContractAction,
 } from '../delegableActions/pinGlobalContract';
 import type {
-  NearcoreRegisterLinkableGlobalContractAction,
-  RegisterLinkableGlobalContractAction,
-} from '../delegableActions/registerLinkableGlobalContract';
+  NearcorePublishLinkableGlobalContractAction,
+  PublishLinkableGlobalContractAction,
+} from '../delegableActions/publishLinkableGlobalContract';
 import type {
-  NearcoreRegisterPinnableGlobalContractAction,
-  RegisterPinnableGlobalContractAction,
-} from '../delegableActions/registerPinnableGlobalContract';
+  NearcorePublishPinnableGlobalContractAction,
+  PublishPinnableGlobalContractAction,
+} from '../delegableActions/publishPinnableGlobalContract';
 import type { NearcoreStakeAction, StakeAction } from '../delegableActions/stake';
 import type {
   NearcoreTopUpAccessKeyBalanceAction,
@@ -54,13 +57,13 @@ export type DelegableAction =
   | CreateAccountAction
   | TransferAction
   | AddAccessKeyAction
-  | DeployContractAction
+  | DeployLocalContractAction
   | FunctionCallAction
   | StakeAction
-  | DeleteKeyAction
+  | DeleteAccessKeyAction
   | DeleteAccountAction
-  | RegisterPinnableGlobalContractAction
-  | RegisterLinkableGlobalContractAction
+  | PublishPinnableGlobalContractAction
+  | PublishLinkableGlobalContractAction
   | LinkGlobalContractAction
   | PinGlobalContractAction
   | TopUpAccessKeyBalanceAction
@@ -141,13 +144,13 @@ export type NearcoreDelegableAction =
   | NearcoreCreateAccountAction
   | NearcoreTransferAction
   | NearcoreAddAccessKeyAction
-  | NearcoreDeployContractAction
+  | NearcoreDeployLocalContractAction
   | NearcoreFunctionCallAction
   | NearcoreStakeAction
-  | NearcoreDeleteKeyAction
+  | NearcoreDeleteAccessKeyAction
   | NearcoreDeleteAccountAction
-  | NearcoreRegisterPinnableGlobalContractAction
-  | NearcoreRegisterLinkableGlobalContractAction
+  | NearcorePublishPinnableGlobalContractAction
+  | NearcorePublishLinkableGlobalContractAction
   | NearcoreLinkGlobalContractAction
   | NearcorePinGlobalContractAction
   | NearcoreTopUpAccessKeyBalanceAction

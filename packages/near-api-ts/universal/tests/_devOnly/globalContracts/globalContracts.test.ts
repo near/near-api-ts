@@ -5,8 +5,8 @@ import {
   keyPair,
   linkGlobalContract,
   pinGlobalContract,
-  registerLinkableGlobalContract,
-  registerPinnableGlobalContract,
+  publishLinkableGlobalContract,
+  publishPinnableGlobalContract,
   signTransaction,
 } from '../../../index';
 import type { Client } from '../../../types/client/client';
@@ -39,10 +39,10 @@ describe('DeployContract Tests', () => {
         },
         recentBlockHash: natKey.atMomentOf.blockHash,
         actions: [
-          // registerPinnableGlobalContract({
+          // publishPinnableGlobalContract({
           //   wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
           // }),
-          registerLinkableGlobalContract({
+          publishLinkableGlobalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
           }),
         ],

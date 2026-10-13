@@ -148,10 +148,10 @@ export const getConversionFailureError = (
         // The node counts `DeployContract` and `DeployGlobalContract` actions together against
         // one `max_deploy_actions_per_receipt`.
         if ('TotalNumberOfDeployActionsExceeded' in actionsError)
-          return formErrorObject('Actions.DeployContract.TooMany', {
-            deployContractActionsCount:
+          return formErrorObject('Actions.UploadContract.TooMany', {
+            uploadContractActionsCount:
               actionsError.TotalNumberOfDeployActionsExceeded.numberOfDeployActions,
-            maximumDeployContractActionsCount:
+            maximumUploadContractActionsCount:
               actionsError.TotalNumberOfDeployActionsExceeded.limit,
           });
 

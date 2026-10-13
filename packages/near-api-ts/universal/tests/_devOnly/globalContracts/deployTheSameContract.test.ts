@@ -2,7 +2,7 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   functionCall,
-  registerPinnableGlobalContract,
+  publishPinnableGlobalContract,
   signTransaction,
   stake,
 } from '../../../index';
@@ -37,7 +37,7 @@ describe('DeployContract Tests', () => {
         },
         recentBlockHash: natKey.atMomentOf.blockHash,
         actions: [
-          registerPinnableGlobalContract({
+          publishPinnableGlobalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
           }),
         ],
@@ -69,7 +69,7 @@ describe('DeployContract Tests', () => {
         },
         recentBlockHash: aliceKey.atMomentOf.blockHash,
         actions: [
-          registerPinnableGlobalContract({
+          publishPinnableGlobalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
           }),
         ],

@@ -7,17 +7,17 @@ import {
 } from '../../../../../index';
 import { signTransaction } from '../../../../../src/transaction/signTransaction/signTransaction';
 import { getLastNonce } from '../../../../utils/getLastNonce';
-import { publishPinnableGlobalContract } from '../_common/publishGlobalContract';
+import { setUpPinnableGlobalContract } from '../_common/setUpGlobalContract';
 import type { TestContext } from './delegation.test';
 
 export const delegatedPinGlobalContract = (context: TestContext) => async () => {
   const { client, defaultKeyPair, relayKeyPair } = context;
   const delegatorAccountId = 'bob';
 
-  const { globalContractWasmHash } = await publishPinnableGlobalContract({
+  const { globalContractWasmHash } = await setUpPinnableGlobalContract({
     client,
-    registrarAccountId: 'nat',
-    registrarKeyPair: defaultKeyPair,
+    publisherAccountId: 'nat',
+    publisherKeyPair: defaultKeyPair,
   });
 
   const delegatorAccessKey = await client.getAccessKey({

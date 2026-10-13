@@ -229,13 +229,13 @@ info.atMomentOf; // { blockHash, blockHeight }
 switch (info.contract.status) {
   case 'NoContract':
     break;
-  case 'Deployed': // its own wasm, via DeployContract
+  case 'Deployed': // its own wasm, via DeployLocalContract
     info.contract.localContractWasmHash;
     break;
   case 'Pinned': // one exact global wasm, frozen
     info.contract.globalContractWasmHash;
     break;
-  case 'Linked': // follows whatever the registrar publishes
+  case 'Linked': // follows the publisher's current code
     info.contract.globalContractAccountId;
     break;
 }
@@ -414,18 +414,18 @@ The signer signs only with keys paid from the account balance. A key with a bala
 | `createAccount()` | creates the receiver account |
 | `transfer({ amount })` | sends NEAR |
 | `functionCall({ functionName, functionArgs?, gasLimit, attachedDeposit? })` | calls a contract method |
-| `deployContract({ wasmU8 \| wasmBase64 })` | deploys wasm to the receiver |
+| `deployLocalContract({ wasmU8 \| wasmBase64 })` | deploys wasm to the receiver |
 | `addAccessKey({ publicKey, permission, gasPayment, replayProtection? })` | adds an access key — see below |
 | `topUpAccessKeyBalance({ publicKey, amount })` | adds NEAR, paid by the signer, to the balance of the receiver's gas key |
 | `withdrawAccessKeyBalance({ publicKey, amount })` | moves NEAR from a gas key's balance back to its account |
-| `deleteKey({ publicKey })` | removes an access key |
+| `deleteAccessKey({ publicKey })` | removes an access key |
 | `deleteAccount({ beneficiaryAccountId })` | deletes the account, sends the remainder to the beneficiary |
 | `stake({ amount, validatorPublicKey })` | submits a staking proposal |
 | `executeDelegation(signedDelegation)` | relays somebody else's signed delegation |
-| `registerPinnableGlobalContract({ wasmU8 \| wasmBase64 })` | publishes immutable global code |
-| `registerLinkableGlobalContract({ wasmU8 \| wasmBase64 })` | publishes replaceable global code |
+| `publishPinnableGlobalContract({ wasmU8 \| wasmBase64 })` | publishes immutable global code |
+| `publishLinkableGlobalContract({ wasmU8 \| wasmBase64 })` | publishes replaceable global code |
 | `pinGlobalContract({ globalContractWasmHash })` | adopts one exact global wasm |
-| `linkGlobalContract({ globalContractAccountId })` | follows a registrar's current code |
+| `linkGlobalContract({ globalContractAccountId })` | follows a publisher's current code |
 
 `addAccessKey` describes a key the way `getAccessKey` reports it — what it may do, who pays for
 its gas and, for a key with a balance of its own, how many nonce channels it keeps:
@@ -702,24 +702,24 @@ tells the two apart (`constants.Delegation.Nep611Tag` / `constants.Delegation.Ne
 Publish wasm once, then let any number of accounts run it without each of them paying for
 its storage. Two modes:
 
-| Register | Adopt with | Semantics |
+| Publish | Adopt with | Semantics |
 | --- | --- | --- |
-| `registerPinnableGlobalContract` | `pinGlobalContract({ globalContractWasmHash })` | addressed by the hash of the wasm; immutable — nobody can swap the code under you |
-| `registerLinkableGlobalContract` | `linkGlobalContract({ globalContractAccountId })` | addressed by the registrar's account id; picks up every re-registration |
+| `publishPinnableGlobalContract` | `pinGlobalContract({ globalContractWasmHash })` | addressed by the hash of the wasm; immutable — nobody can swap the code under you |
+| `publishLinkableGlobalContract` | `linkGlobalContract({ globalContractAccountId })` | addressed by the publisher's account id; picks up every new publication |
 
 ```ts
-// The registrar publishes the code — a self-addressed transaction.
-const registration = await registrarSigner.executeTransaction({
+// The publisher sends the code — a self-addressed transaction.
+const publication = await publisherSigner.executeTransaction({
   intent: {
-    receiverAccountId: 'registrar.testnet',
-    action: registerPinnableGlobalContract({ wasmU8 }),
+    receiverAccountId: 'publisher.testnet',
+    action: publishPinnableGlobalContract({ wasmU8 }),
   },
 });
 
-// Nearcore reports the hash of the registered wasm in the action summary.
-const [summary] = registration.processingSteps.conversionStep.transactionSummary.actionSummaries;
+// Nearcore reports the hash of the published wasm in the action summary.
+const [summary] = publication.processingSteps.conversionStep.transactionSummary.actionSummaries;
 const globalContractWasmHash =
-  summary?.actionType === 'RegisterPinnableGlobalContract' ? summary.contractWasmHash : undefined;
+  summary?.actionType === 'PublishPinnableGlobalContract' ? summary.contractWasmHash : undefined;
 
 // Any account then adopts it — again, self-addressed.
 await userSigner.executeTransaction({
@@ -731,11 +731,11 @@ await userSigner.executeTransaction({
 ```
 
 All three actions act on the account that signs them, so the transaction receiver is always
-the signer itself. Registration is asynchronous: the code becomes usable a block or so
-after the register transaction succeeds, and a pin or link sent too early fails with
+the signer itself. Publishing is asynchronous: the code becomes usable a block or so
+after the publish transaction succeeds, and a pin or link sent too early fails with
 `Action.PinGlobalContract.GlobalContract.NotFound` /
-`Action.LinkGlobalContract.GlobalContract.NotFound`. Waiting for the registration to reach
-`CompletedFinal` is enough.
+`Action.LinkGlobalContract.GlobalContract.NotFound`. Waiting for the publish transaction to
+reach `CompletedFinal` is enough.
 
 ---
 

@@ -6,7 +6,7 @@ import {
   createAccount,
   createMemoryKeyService,
   createMemorySignerFactory,
-  deleteKey,
+  deleteAccessKey,
   type MemoryKeyService,
   type MemorySignerFactory,
   near,
@@ -227,7 +227,7 @@ describe('Get Account Balance', () => {
 
     await abc.executeTransaction({
       intent: {
-        actions: [deleteKey(keyPairs[0]), deleteKey(keyPairs[1])],
+        actions: [deleteAccessKey(keyPairs[0]), deleteAccessKey(keyPairs[1])],
         receiverAccountId: abc.signerAccountId,
       },
     });

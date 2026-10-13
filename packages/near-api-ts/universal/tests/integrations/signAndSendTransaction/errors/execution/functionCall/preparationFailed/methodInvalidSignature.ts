@@ -1,7 +1,7 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import {
   createAccount,
-  deployContract,
+  deployLocalContract,
   functionCall,
   near,
   transfer,
@@ -41,7 +41,7 @@ export const methodInvalidSignature = (context: TestContext) => async () => {
       actions: [
         createAccount(),
         transfer({ amount: near('0.1') }),
-        deployContract({
+        deployLocalContract({
           wasmBase64: 'AGFzbQEAAAABBQFgAX8AAwIBAAcOAQphZGRfcmVjb3JkAAAKBAECAAsACgRuYW1lAgMBAAA=',
         }),
         functionCall({

@@ -5,7 +5,7 @@ import {
   createMemoryKeyService,
   createMemorySigner,
   createMemorySignerFactory,
-  deployContract,
+  deployLocalContract,
   functionCall,
   keyPair,
   near,
@@ -43,7 +43,7 @@ describe('CallContractReadFunction', () => {
         actions: [
           createAccount(),
           transfer({ amount: near('50') }),
-          // deployContract({
+          // deployLocalContract({
           //   // wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
           //   wasmU8: Uint8Array.from([1, 2, 3, 4]),
           // }),

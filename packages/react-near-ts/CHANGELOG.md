@@ -34,6 +34,16 @@
   the wallet as before, but throws for a gas key (`gasPayment.source:
   'KeyBalance'`) – near-connect has no format for it.
 
+- **Breaking:** the action creators re-exported from near-api-ts
+  `deployContract`, `deleteKey`, `registerPinnableGlobalContract` and
+  `registerLinkableGlobalContract` are renamed to `deployLocalContract`,
+  `deleteAccessKey`, `publishPinnableGlobalContract` and
+  `publishLinkableGlobalContract`, and so are their `safe*` variants, the
+  `actionType` of the actions they create and their error kinds;
+  `Actions.DeployContract.TooMany` is now `Actions.UploadContract.TooMany`. See
+  the near-api-ts v0.13.0 changelog. The near-connect signer passes the actions
+  on to the wallet as before.
+
 - **Breaking:** `useAccountInfo` and `useContractReadFunction` take the transport
   policy as `options.transportPolicy` instead of `policies.transport`:  \
   Previously:

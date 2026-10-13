@@ -11,7 +11,7 @@ const FUNCTION_ARGS_SIZE_BYTES = MAX_FUNCTION_ARGS_SIZE_BYTES + 1;
 /**
  * Unreachable over JSON-RPC, so the case is registered as skipped (see `action.test.ts`) and
  * `FunctionCallArgumentsLengthExceeded` is left out of `ConversionFailureKind` — for the same
- * reason as its `deployContract/contractWasmTooLarge` sibling, which documents it in full: the
+ * reason as its `deployLocalContract/contractWasmTooLarge` sibling, which documents it in full: the
  * 4 MiB limit is past the 2 MiB request body the node accepts, so the transaction is never
  * delivered, and neither limit can be moved from the outside because both are baked into
  * `neard` at build time.

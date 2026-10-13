@@ -353,6 +353,48 @@
     `Client.SendSignedTransaction.Rpc.Action.AddKey.AlreadyExists` →
     `Client.SendSignedTransaction.Rpc.Action.AddAccessKey.AlreadyExists`.
 
+- **Breaking:** four actions are renamed – a global contract is now *published*,
+  and a contract the account carries itself is *local*. Each rename covers the
+  action creator and its `safe*` variant, the `actionType` – of the action, of a
+  hand-written `actions` entry and of the action summary in `processingSteps`
+  (also inside an `ExecuteDelegation`) – and the error kinds:
+
+  - `deployContract` / `safeDeployContract` → `deployLocalContract` /
+    `safeDeployLocalContract`, `actionType: 'DeployContract'` →
+    `'DeployLocalContract'`, `CreateAction.DeployContract.*` →
+    `CreateAction.DeployLocalContract.*`.
+  - `deleteKey` / `safeDeleteKey` → `deleteAccessKey` / `safeDeleteAccessKey`,
+    `actionType: 'DeleteKey'` → `'DeleteAccessKey'`, `CreateAction.DeleteKey.*`
+    → `CreateAction.DeleteAccessKey.*`. The node's error about the action follows
+    its new name too: `Action.DeleteKey.NotFound` → `Action.DeleteAccessKey.NotFound`,
+    and so does every kind built on top of it, e.g.
+    `Client.SendSignedTransaction.Rpc.Action.DeleteKey.NotFound` →
+    `Client.SendSignedTransaction.Rpc.Action.DeleteAccessKey.NotFound`.
+  - `registerPinnableGlobalContract` / `safeRegisterPinnableGlobalContract` →
+    `publishPinnableGlobalContract` / `safePublishPinnableGlobalContract`,
+    `actionType: 'RegisterPinnableGlobalContract'` →
+    `'PublishPinnableGlobalContract'`, the type
+    `RegisterPinnableGlobalContractAction` → `PublishPinnableGlobalContractAction`,
+    `CreateAction.RegisterPinnableGlobalContract.*` →
+    `CreateAction.PublishPinnableGlobalContract.*`.
+  - `registerLinkableGlobalContract` / `safeRegisterLinkableGlobalContract` →
+    `publishLinkableGlobalContract` / `safePublishLinkableGlobalContract`,
+    `actionType: 'RegisterLinkableGlobalContract'` →
+    `'PublishLinkableGlobalContract'`, the type
+    `RegisterLinkableGlobalContractAction` → `PublishLinkableGlobalContractAction`,
+    `CreateAction.RegisterLinkableGlobalContract.*` →
+    `CreateAction.PublishLinkableGlobalContract.*`.
+  - The node's limit on how many of these actions a transaction may carry
+    counts `deployLocalContract` and both `publish*GlobalContract` actions
+    together, so its error kind is named after what they share:
+    `Actions.DeployContract.TooMany` → `Actions.UploadContract.TooMany`, with
+    the context fields `deployContractActionsCount` /
+    `maximumDeployContractActionsCount` → `uploadContractActionsCount` /
+    `maximumUploadContractActionsCount`. The rename propagates to every kind
+    built on top of it, e.g.
+    `Client.SendSignedTransaction.Rpc.Actions.DeployContract.TooMany` →
+    `Client.SendSignedTransaction.Rpc.Actions.UploadContract.TooMany`.
+
 - **Breaking:** a custom `keyService` passed to `createMemorySigner` or
   `createMemorySignerFactory` must implement `findPublicKey` and
   `safeFindPublicKey` – the `MemoryKeyService` type requires both, and the

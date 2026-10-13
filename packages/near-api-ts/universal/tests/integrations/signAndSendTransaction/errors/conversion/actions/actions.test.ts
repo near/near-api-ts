@@ -4,11 +4,11 @@ import { type Client, keyPair } from '../../../../../../index';
 import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
-import { deployContractTooMany } from './deployContract/tooMany';
 import { executeDelegationTooMany } from './executeDelegation/tooMany';
 import { totalGasLimitExceeded } from './functionCall/totalGasLimitExceeded';
 import { totalGasLimitOverflow } from './functionCall/totalGasLimitOverflow';
 import { tooMany } from './tooMany';
+import { uploadContractTooMany } from './uploadContract/tooMany';
 
 export type TestContext = {
   client: Client;
@@ -44,8 +44,8 @@ describe('signAndSendTransaction › Actions.* conversion errors', () => {
   it('fails with Actions.TooMany when the transaction carries too many actions', tooMany(context));
 
   it(
-    'fails with Actions.DeployContract.TooMany when the transaction carries too many deploy actions',
-    deployContractTooMany(context),
+    'fails with Actions.UploadContract.TooMany when the transaction carries too many actions that upload a contract',
+    uploadContractTooMany(context),
   );
 
   it(

@@ -35,9 +35,11 @@ interface SignerErrorRegistry {
 
 interface ActionsValidationErrorRegistry {
   'Actions.TooMany': { actionsCount: number; maximumActionsCount: number };
-  'Actions.DeployContract.TooMany': {
-    deployContractActionsCount: number;
-    maximumDeployContractActionsCount: number;
+  // Counts every action that uploads a contract wasm: `DeployLocalContract` and both
+  // `Publish*GlobalContract` actions. `LinkGlobalContract` and `PinGlobalContract` upload nothing.
+  'Actions.UploadContract.TooMany': {
+    uploadContractActionsCount: number;
+    maximumUploadContractActionsCount: number;
   };
   'Actions.ExecuteDelegation.TooMany': null;
   'Actions.FunctionCall.TotalGasLimit.Exceeded': {

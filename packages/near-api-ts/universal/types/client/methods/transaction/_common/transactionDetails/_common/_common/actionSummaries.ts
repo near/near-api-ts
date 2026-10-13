@@ -54,8 +54,8 @@ export type AddAccessKeyActionSummary =
       replayProtection: { scheme: 'NonceChannels'; channelCount: number };
     };
 
-type DeployContractActionSummary = {
-  actionType: 'DeployContract';
+type DeployLocalContractActionSummary = {
+  actionType: 'DeployLocalContract';
   contractWasmHash: ContractWasmHash;
 };
 
@@ -73,8 +73,8 @@ type StakeActionSummary = {
   validatorPublicKey: PublicKey;
 };
 
-type DeleteKeyActionSummary = {
-  actionType: 'DeleteKey';
+type DeleteAccessKeyActionSummary = {
+  actionType: 'DeleteAccessKey';
   publicKey: PublicKey;
 };
 
@@ -84,16 +84,16 @@ type DeleteAccountActionSummary = {
 };
 
 /**
- * Nearcore hands back the hash of the registered wasm rather than the wasm itself,
- * the way it does for `DeployContract`.
+ * Nearcore hands back the hash of the published wasm rather than the wasm itself,
+ * the way it does for `DeployLocalContract`.
  */
-type RegisterPinnableGlobalContractActionSummary = {
-  actionType: 'RegisterPinnableGlobalContract';
+type PublishPinnableGlobalContractActionSummary = {
+  actionType: 'PublishPinnableGlobalContract';
   contractWasmHash: ContractWasmHash;
 };
 
-type RegisterLinkableGlobalContractActionSummary = {
-  actionType: 'RegisterLinkableGlobalContract';
+type PublishLinkableGlobalContractActionSummary = {
+  actionType: 'PublishLinkableGlobalContract';
   contractWasmHash: ContractWasmHash;
 };
 
@@ -123,13 +123,13 @@ export type DelegableActionSummary<FA> =
   | CreateAccountActionSummary
   | TransferActionSummary
   | AddAccessKeyActionSummary
-  | DeployContractActionSummary
+  | DeployLocalContractActionSummary
   | FunctionCallActionSummary<FA>
   | StakeActionSummary
-  | DeleteKeyActionSummary
+  | DeleteAccessKeyActionSummary
   | DeleteAccountActionSummary
-  | RegisterPinnableGlobalContractActionSummary
-  | RegisterLinkableGlobalContractActionSummary
+  | PublishPinnableGlobalContractActionSummary
+  | PublishLinkableGlobalContractActionSummary
   | LinkGlobalContractActionSummary
   | PinGlobalContractActionSummary
   | TopUpAccessKeyBalanceActionSummary

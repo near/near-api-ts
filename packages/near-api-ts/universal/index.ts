@@ -89,17 +89,17 @@ export {
 } from './src/transaction/actionCreators/addAccessKey';
 export { createAccount } from './src/transaction/actionCreators/createAccount';
 export {
+  deleteAccessKey,
+  safeDeleteAccessKey,
+} from './src/transaction/actionCreators/deleteAccessKey';
+export {
   deleteAccount,
   safeDeleteAccount,
 } from './src/transaction/actionCreators/deleteAccount';
 export {
-  deleteKey,
-  safeDeleteKey,
-} from './src/transaction/actionCreators/deleteKey';
-export {
-  deployContract,
-  safeDeployContract,
-} from './src/transaction/actionCreators/deployContract';
+  deployLocalContract,
+  safeDeployLocalContract,
+} from './src/transaction/actionCreators/deployLocalContract';
 export {
   executeDelegation,
   safeExecuteDelegation,
@@ -117,13 +117,13 @@ export {
   safePinGlobalContract,
 } from './src/transaction/actionCreators/pinGlobalContract';
 export {
-  registerLinkableGlobalContract,
-  safeRegisterLinkableGlobalContract,
-} from './src/transaction/actionCreators/registerLinkableGlobalContract';
+  publishLinkableGlobalContract,
+  safePublishLinkableGlobalContract,
+} from './src/transaction/actionCreators/publishLinkableGlobalContract';
 export {
-  registerPinnableGlobalContract,
-  safeRegisterPinnableGlobalContract,
-} from './src/transaction/actionCreators/registerPinnableGlobalContract';
+  publishPinnableGlobalContract,
+  safePublishPinnableGlobalContract,
+} from './src/transaction/actionCreators/publishPinnableGlobalContract';
 export {
   safeStake,
   stake,
@@ -185,8 +185,8 @@ export type {
 export type { FunctionCallAction } from './types/_common/transaction/actions/delegableActions/functionCall';
 export type { LinkGlobalContractAction } from './types/_common/transaction/actions/delegableActions/linkGlobalContract';
 export type { PinGlobalContractAction } from './types/_common/transaction/actions/delegableActions/pinGlobalContract';
-export type { RegisterLinkableGlobalContractAction } from './types/_common/transaction/actions/delegableActions/registerLinkableGlobalContract';
-export type { RegisterPinnableGlobalContractAction } from './types/_common/transaction/actions/delegableActions/registerPinnableGlobalContract';
+export type { PublishLinkableGlobalContractAction } from './types/_common/transaction/actions/delegableActions/publishLinkableGlobalContract';
+export type { PublishPinnableGlobalContractAction } from './types/_common/transaction/actions/delegableActions/publishPinnableGlobalContract';
 export type { TopUpAccessKeyBalanceAction } from './types/_common/transaction/actions/delegableActions/topUpAccessKeyBalance';
 export type { TransferAction } from './types/_common/transaction/actions/delegableActions/transfer';
 export type { WithdrawAccessKeyBalanceAction } from './types/_common/transaction/actions/delegableActions/withdrawAccessKeyBalance';

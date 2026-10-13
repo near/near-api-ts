@@ -5,7 +5,7 @@ import { signTransaction } from '../../../../src/transaction/signTransaction/sig
 import { createDefaultClient } from '../../../utils/common';
 import { getLastNonce } from '../../../utils/getLastNonce';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
-import { publishLinkableGlobalContract } from './_common/publishGlobalContract';
+import { setUpLinkableGlobalContract } from './_common/setUpGlobalContract';
 
 describe('signAndSendTransaction › success', () => {
   let client: Client;
@@ -17,11 +17,11 @@ describe('signAndSendTransaction › success', () => {
     return () => sandbox.stop();
   });
 
-  it('links code registered under an account id and runs it', async () => {
-    const { globalContractAccountId } = await publishLinkableGlobalContract({
+  it('links code published under an account id and runs it', async () => {
+    const { globalContractAccountId } = await setUpLinkableGlobalContract({
       client,
-      registrarAccountId: 'nat',
-      registrarKeyPair: defaultKeyPair,
+      publisherAccountId: 'nat',
+      publisherKeyPair: defaultKeyPair,
     });
 
     const aliceAccessKey = await client.getAccessKey({
@@ -65,7 +65,7 @@ describe('signAndSendTransaction › success', () => {
       { actionType: 'FunctionCall', functionName: 'write_record' },
     ]);
 
-    // A linked account follows whatever code the registrar holds, so it is the registrar account
+    // A linked account follows whatever code the publisher holds, so it is the publisher account
     // id - not a wasm hash - that the account carries.
     const { contract } = await client.getAccountInfo({ accountId: 'alice' });
 

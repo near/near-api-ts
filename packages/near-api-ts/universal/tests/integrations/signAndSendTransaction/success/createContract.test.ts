@@ -5,7 +5,7 @@ import {
   type Client,
   createAccount,
   createMemoryKeyService,
-  deployContract,
+  deployLocalContract,
   functionCall,
   type MemoryKeyService,
   transfer,
@@ -58,7 +58,7 @@ describe('safeSendSignedTransaction › success', () => {
             permission: { kind: 'FullAccess' },
             gasPayment: { source: 'AccountBalance' },
           }),
-          deployContract({
+          deployLocalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
           }),
           functionCall({

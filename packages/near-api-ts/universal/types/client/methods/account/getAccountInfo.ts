@@ -55,12 +55,12 @@ export type GetAccountInfoArgs = {
  *
  * - `NoContract` - the account has no contract at all.
  * - `Deployed` - the account carries its own wasm, put there by a
- *   `DeployContract` action.
+ *   `DeployLocalContract` action.
  * - `Pinned` - the account runs one exact global wasm (`PinGlobalContract`).
  *   Nobody can swap the code under it.
- * - `Linked` - the account runs whatever code the registrar account currently
- *   holds (`LinkGlobalContract`), so it changes when the registrar registers new
- *   code under the same account id with `RegisterLinkableGlobalContract`.
+ * - `Linked` - the account runs whatever code the publisher account currently
+ *   holds (`LinkGlobalContract`), so it changes when the publisher publishes new
+ *   code under the same account id with `PublishLinkableGlobalContract`.
  */
 export type AccountContract =
   | {

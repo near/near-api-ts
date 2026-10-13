@@ -86,7 +86,7 @@ const toNearConnectAction = (action: NatAction): ConnectorAction => {
       },
     };
 
-  if (action.actionType === 'DeployContract')
+  if (action.actionType === 'DeployLocalContract')
     return {
       type: 'DeployContract',
       params: { code: action.wasmU8 },
@@ -101,7 +101,7 @@ const toNearConnectAction = (action: NatAction): ConnectorAction => {
       },
     };
 
-  if (action.actionType === 'DeleteKey')
+  if (action.actionType === 'DeleteAccessKey')
     return {
       type: 'DeleteKey',
       params: { publicKey: action.publicKey },
@@ -113,13 +113,13 @@ const toNearConnectAction = (action: NatAction): ConnectorAction => {
       params: { beneficiaryId: action.beneficiaryAccountId },
     };
 
-  if (action.actionType === 'RegisterPinnableGlobalContract')
+  if (action.actionType === 'PublishPinnableGlobalContract')
     return {
       type: 'DeployGlobalContract',
       params: { code: action.wasmU8, deployMode: 'CodeHash' },
     };
 
-  if (action.actionType === 'RegisterLinkableGlobalContract')
+  if (action.actionType === 'PublishLinkableGlobalContract')
     return {
       type: 'DeployGlobalContract',
       params: { code: action.wasmU8, deployMode: 'AccountId' },

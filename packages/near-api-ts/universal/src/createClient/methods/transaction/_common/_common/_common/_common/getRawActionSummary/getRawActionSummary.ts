@@ -33,7 +33,7 @@ export const getRawActionSummary = (rpcAction: ActionView): RawTransactionAction
     const contractWasmHash = base58.encode(contractWasmHashU8);
 
     return {
-      actionType: 'DeployContract' as const,
+      actionType: 'DeployLocalContract' as const,
       contractWasmHash,
     };
   }
@@ -61,7 +61,7 @@ export const getRawActionSummary = (rpcAction: ActionView): RawTransactionAction
   if ('DeleteKey' in rpcAction) {
     const { DeleteKey } = rpcAction;
     return {
-      actionType: 'DeleteKey' as const,
+      actionType: 'DeleteAccessKey' as const,
       publicKey: DeleteKey.publicKey as PublicKey, // TODO validate key by zod
     };
   }
@@ -74,14 +74,14 @@ export const getRawActionSummary = (rpcAction: ActionView): RawTransactionAction
     };
   }
 
-  // Nearcore returns the two registration modes as separate views and hands back the hash of the
-  // registered wasm rather than the wasm itself - the same way it does for `DeployContract`.
+  // Nearcore returns the two publication modes as separate views and hands back the hash of the
+  // published wasm rather than the wasm itself - the same way it does for `DeployContract`.
   if ('DeployGlobalContract' in rpcAction) {
     const { DeployGlobalContract } = rpcAction;
     const contractWasmHashU8 = Uint8Array.fromBase64(DeployGlobalContract.code);
 
     return {
-      actionType: 'RegisterPinnableGlobalContract' as const,
+      actionType: 'PublishPinnableGlobalContract' as const,
       contractWasmHash: base58.encode(contractWasmHashU8),
     };
   }
@@ -91,7 +91,7 @@ export const getRawActionSummary = (rpcAction: ActionView): RawTransactionAction
     const contractWasmHashU8 = Uint8Array.fromBase64(DeployGlobalContractByAccountId.code);
 
     return {
-      actionType: 'RegisterLinkableGlobalContract' as const,
+      actionType: 'PublishLinkableGlobalContract' as const,
       contractWasmHash: base58.encode(contractWasmHashU8),
     };
   }
