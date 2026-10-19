@@ -395,11 +395,10 @@
     `Client.SendSignedTransaction.Rpc.Actions.DeployContract.TooMany` →
     `Client.SendSignedTransaction.Rpc.Actions.UploadContract.TooMany`.
 
-- **Breaking:** a custom `keyService` passed to `createMemorySigner` or
-  `createMemorySignerFactory` must implement `findPublicKey` and
-  `safeFindPublicKey` – the `MemoryKeyService` type requires both, and the
-  signer calls `safeFindPublicKey` to turn the refs an account lists back into
-  keys it can sign with.
+- **Breaking:** a custom `keyService` passed to `createMemorySigner` must
+  implement `findPublicKey` and `safeFindPublicKey` – the `MemoryKeyService`
+  type requires both, and the signer calls `safeFindPublicKey` to turn the refs
+  an account lists back into keys it can sign with.
 
 - **Breaking:** the per-call transport policy moved from `policies.transport` to
   `options.transportPolicy` – the shape `getTransactionResult` and
@@ -482,6 +481,26 @@
 
 - Bump `@near-js/jsonrpc-types` from `^1.8.0` to `^1.9.0`. The `rawRpcResult`
   type of `getBlock` comes from it.
+
+### Removed
+
+- `createMemorySignerFactory` / `createSafeMemorySignerFactory` and their types
+  `MemorySignerFactory` / `SafeMemorySignerFactory` – call `createMemorySigner`
+  (or `safeCreateMemorySigner`) once per account instead:  \
+  Previously:
+  ```ts
+  const createSigner = createMemorySignerFactory({ client, keyService });
+  const signer = createSigner('example.testnet');
+  ```
+
+  Now:
+  ```ts
+  const signer = createMemorySigner({
+    signerAccountId: 'example.testnet',
+    client,
+    keyService,
+  });
+  ```
 
 ---
 

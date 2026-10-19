@@ -32,18 +32,3 @@ export type SafeCreateMemorySigner = (
 ) => Result<MemorySigner, CreateMemorySignerError>;
 
 export type CreateMemorySigner = (args: CreateMemorySignerArgs) => MemorySigner;
-
-// Factory
-export type SafeMemorySignerFactory = (
-  signerAccountId: AccountId,
-) => Result<MemorySigner, CreateMemorySignerError>;
-
-export type CreateSafeMemorySignerFactory = (
-  args: Omit<CreateMemorySignerArgs, 'signerAccountId'>,
-) => SafeMemorySignerFactory;
-
-export type MemorySignerFactory = (signerAccountId: AccountId) => MemorySigner;
-
-export type CreateMemorySignerFactory = (
-  args: Omit<CreateMemorySignerArgs, 'signerAccountId'>,
-) => MemorySignerFactory;

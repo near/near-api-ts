@@ -404,9 +404,6 @@ const signer = createMemorySigner({
 The signer signs only with keys paid from the account balance. A key with a balance of its own
 (a gas key) is left out of its pool, even when `allowedAccessKeys` names it.
 
-`createMemorySignerFactory({ client, keyService })` returns
-`(signerAccountId) => MemorySigner` when one key service serves many accounts.
-
 ### Actions
 
 | Action creator | What it does |

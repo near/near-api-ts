@@ -3,8 +3,6 @@ import type { Client } from '../../types/client/client';
 import type { MemoryKeyService } from '../../types/memoryKeyService/memoryKeyService';
 import type {
   CreateMemorySigner,
-  CreateMemorySignerFactory,
-  CreateSafeMemorySignerFactory,
   SafeCreateMemorySigner,
 } from '../../types/signer/createMemorySigner';
 import type { MemorySignerContext } from '../../types/signer/memorySigner';
@@ -84,10 +82,3 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
 );
 
 export const createMemorySigner: CreateMemorySigner = asThrowable(safeCreateMemorySigner);
-
-export const createSafeMemorySignerFactory: CreateSafeMemorySignerFactory =
-  (args) => (signerAccountId) =>
-    safeCreateMemorySigner({ ...args, signerAccountId });
-
-export const createMemorySignerFactory: CreateMemorySignerFactory = (args) => (signerAccountId) =>
-  createMemorySigner({ ...args, signerAccountId });

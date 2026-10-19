@@ -6,9 +6,8 @@ import {
   type Client,
   createAccount,
   createMemoryKeyService,
-  createMemorySignerFactory,
+  createMemorySigner,
   type MemoryKeyService,
-  type MemorySignerFactory,
   randomEd25519KeyPair,
   transfer,
 } from '../../../../../../index';
@@ -20,7 +19,6 @@ z.config(z.locales.en());
 describe('executeTransaction › KeyPool.SigningKey.NotFound', async () => {
   let client: Client;
   let keyService: MemoryKeyService;
-  let createSigner: MemorySignerFactory;
 
   const keyPair1 = randomEd25519KeyPair();
 
@@ -30,13 +28,12 @@ describe('executeTransaction › KeyPool.SigningKey.NotFound', async () => {
     keyService = createMemoryKeyService({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, { privateKey: keyPair1.privateKey }],
     });
-    createSigner = createMemorySignerFactory({ client, keyService });
     return () => sandbox.stop();
   });
 
   it('fails with KeyPool.SigningKey.NotFound when no key in the pool can sign', async () => {
     // Create a new user with an FC key
-    const nat = createSigner('nat');
+    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyService });
 
     await nat.executeTransaction({
       intent: {
@@ -58,7 +55,7 @@ describe('executeTransaction › KeyPool.SigningKey.NotFound', async () => {
     });
 
     // Try to sign FA transaction with an FC key
-    const user = createSigner('user.nat');
+    const user = createMemorySigner({ signerAccountId: 'user.nat', client, keyService });
 
     // const keys = await client.getAccessKeys({ accountId: 'user.nat' });
     // console.log(keys);

@@ -3,10 +3,9 @@ import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
   createMemoryKeyService,
-  createMemorySignerFactory,
+  createMemorySigner,
   deleteAccount,
   type MemoryKeyService,
-  type MemorySignerFactory,
   transfer,
 } from '../../../../../../index';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
@@ -16,7 +15,6 @@ import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 describe('executeTransaction › Transaction.Receiver.NotFound', () => {
   let client: Client;
   let keyService: MemoryKeyService;
-  let createSigner: MemorySignerFactory;
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
@@ -24,12 +22,11 @@ describe('executeTransaction › Transaction.Receiver.NotFound', () => {
     keyService = createMemoryKeyService({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
     });
-    createSigner = createMemorySignerFactory({ client, keyService });
     return () => sandbox.stop();
   });
 
   // it('fails with Transaction.Receiver.NotFound when transferring to a missing account', async () => {
-  //   const nat = createSigner('nat');
+  //   const nat = createMemorySigner({ signerAccountId: 'nat', client, keyService });
   //
   //   const tx = await nat.safeExecuteTransaction({
   //     intent: {
@@ -41,7 +38,7 @@ describe('executeTransaction › Transaction.Receiver.NotFound', () => {
   // });
 
   // it('fails with Transaction.Receiver.NotFound when deleting a missing account', async () => {
-  //   const nat = createSigner('nat');
+  //   const nat = createMemorySigner({ signerAccountId: 'nat', client, keyService });
   //
   //   const tx = await nat.safeExecuteTransaction({
   //     intent: {

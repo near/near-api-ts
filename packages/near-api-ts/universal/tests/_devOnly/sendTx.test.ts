@@ -4,7 +4,6 @@ import {
   addAccessKey,
   createClient,
   createMemoryKeyService,
-  createMemorySignerFactory,
   createTestnetClient,
   deployLocalContract,
   functionCall,
@@ -19,7 +18,6 @@ import {
 import { safeSleep } from '../../src/createClient/createTransport/createSendRequest/_common/_common/sleep';
 import { createAccount } from '../../src/transaction/actionCreators/createAccount';
 import type { Client } from '../../types/client/client';
-import type { MemorySignerFactory } from '../../types/signer/createMemorySigner';
 import { createDefaultClient, log } from '../utils/common';
 import { getLastNonce } from '../utils/getLastNonce';
 import { startSandbox } from '../utils/sandbox/startSandbox';

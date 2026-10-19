@@ -3,9 +3,8 @@ import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
   createMemoryKeyService,
-  createMemorySignerFactory,
+  createMemorySigner,
   type MemoryKeyService,
-  type MemorySignerFactory,
   near,
   randomEd25519KeyPair,
   stake,
@@ -17,7 +16,6 @@ import { startSandbox } from '../../../../../../../utils/sandbox/startSandbox';
 describe('executeTransaction › Transaction.Action.Stake.ProposedStake.BelowThreshold', () => {
   let client: Client;
   let keyService: MemoryKeyService;
-  let createSigner: MemorySignerFactory;
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
@@ -25,12 +23,11 @@ describe('executeTransaction › Transaction.Action.Stake.ProposedStake.BelowThr
     keyService = await createMemoryKeyService({
       keySource: { privateKey: DEFAULT_PRIVATE_KEY },
     });
-    createSigner = createMemorySignerFactory({ client, keyService });
     return () => sandbox.stop();
   });
 
   it('fails with Transaction.Action.Stake.ProposedStake.BelowThreshold when the stake is below the seat price', async () => {
-    const nat = await createSigner('nat');
+    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyService });
 
     const res = await nat.safeExecuteTransaction({
       intent: {

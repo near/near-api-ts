@@ -64,12 +64,7 @@ export {
   safeRandomSecp256k1KeyPair,
 } from './src/createMemoryKeyService/toKeyPairs/keyPairs/randomSecp256k1KeyPair';
 // Signers
-export {
-  createMemorySigner,
-  createMemorySignerFactory,
-  createSafeMemorySignerFactory,
-  safeCreateMemorySigner,
-} from './src/createSigner/createSigner';
+export { createMemorySigner, safeCreateMemorySigner } from './src/createSigner/createSigner';
 // Nep413 Message
 export { createMessage, safeCreateMessage } from './src/offchainMessage/createMessage';
 export {
@@ -230,8 +225,4 @@ export type {
 } from './types/client/methods/contract/callContractReadFunction';
 export type { PartialTransportPolicy } from './types/client/transport/transport';
 export type { MemoryKeyService } from './types/memoryKeyService/memoryKeyService';
-export type {
-  MemorySignerFactory,
-  SafeMemorySignerFactory,
-} from './types/signer/createMemorySigner';
 export type { MemorySigner } from './types/signer/memorySigner';

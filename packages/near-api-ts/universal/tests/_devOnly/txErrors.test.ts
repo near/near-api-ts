@@ -4,7 +4,6 @@ import {
   addAccessKey,
   createMemoryKeyService,
   createMemorySigner,
-  createMemorySignerFactory,
   deployLocalContract,
   functionCall,
   keyPair,
@@ -14,7 +13,6 @@ import {
 } from '../../index';
 import { createAccount } from '../../src/transaction/actionCreators/createAccount';
 import type { Client } from '../../types/client/client';
-import type { MemorySignerFactory } from '../../types/signer/createMemorySigner';
 import type { MemorySigner } from '../../types/signer/memorySigner';
 import { createDefaultClient, getFileBytes, log } from '../utils/common';
 import { startSandbox } from '../utils/sandbox/startSandbox';
