@@ -3,7 +3,7 @@ import { beforeAll, describe, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createMemorySigner,
   randomEd25519KeyPair,
   transfer,
@@ -23,13 +23,13 @@ describe('executeTransaction › success', () => {
   it('sends 100 parallel native transfers using 10 function-call keys', async () => {
     const keyPairs = new Array(9).fill(0).map(() => randomEd25519KeyPair());
 
-    const keyService = createMemoryKeyService({
+    const keyVault = createMemoryKeyVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, ...keyPairs],
     });
 
     const baseSigner = createMemorySigner({
       signerAccountId: 'nat',
-      keyService,
+      keyVault,
       client,
     });
 
@@ -48,7 +48,7 @@ describe('executeTransaction › success', () => {
 
     const signer = createMemorySigner({
       signerAccountId: 'nat',
-      keyService,
+      keyVault,
       client,
     });
 

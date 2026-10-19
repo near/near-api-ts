@@ -5,8 +5,8 @@ import type { PublicKey, PublicKeyRef } from '../_common/crypto';
 type FindPublicKeyArgs = { publicKeyRef: PublicKeyRef };
 
 type FindPublicKeyError =
-  | NatError<'MemoryKeyService.FindPublicKey.Args.InvalidSchema'>
-  | NatError<'MemoryKeyService.FindPublicKey.Internal'>;
+  | NatError<'MemoryKeyVault.FindPublicKey.Args.InvalidSchema'>
+  | NatError<'MemoryKeyVault.FindPublicKey.Internal'>;
 
 export type SafeFindPublicKey = (
   args: FindPublicKeyArgs,

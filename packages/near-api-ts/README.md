@@ -39,7 +39,7 @@ the `zodError` inside `*.Args.InvalidSchema` errors.
 | `near-api-ts/browser` | the browser build |
 
 The bare `near-api-ts` import is what you normally want. Both platform builds currently
-re-export the universal surface; platform-specific key services live behind the explicit
+re-export the universal surface; platform-specific key vaults live behind the explicit
 entry points as they land.
 
 ---
@@ -49,7 +49,7 @@ entry points as they land.
 ```ts
 import {
   createTestnetClient,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createMemorySigner,
   transfer,
   near,
@@ -62,17 +62,17 @@ const { balance } = await client.getAccountInfo({ accountId: 'example.testnet' }
 console.log(balance.total.near); // '42.5'
 console.log(balance.total.yoctoNear); // 42500000000000000000000n
 
-// 2. A key service holds private keys and signs raw bytes with them.
-const keyService = createMemoryKeyService({
+// 2. A key vault holds private keys and signs raw bytes with them.
+const keyVault = createMemoryKeyVault({
   keySource: { privateKey: 'ed25519:your-private-key' },
 });
 
-// 3. A signer ties an account to a client and a key service, and takes care of
+// 3. A signer ties an account to a client and a key vault, and takes care of
 //    nonces, block hashes and key selection for you.
 const signer = createMemorySigner({
   signerAccountId: 'example.testnet',
   client,
-  keyService,
+  keyVault,
 });
 
 const tx = await signer.executeTransaction({
@@ -90,13 +90,13 @@ console.log(tx.transactionHash);
 
 ## Core concepts
 
-### Client, key service, signer
+### Client, key vault, signer
 
 | Piece | Responsibility |
 | --- | --- |
 | **Client** | Talks to RPC nodes: reads accounts, blocks, contracts, sends signed transactions. Knows nothing about keys. |
-| **Key service** | Owns private keys and exposes `signData` / `hasKey`. Never hands raw key pairs out. |
-| **Signer** | An account + a client + a key service. Builds transactions from an *intent*, picks a usable key, manages nonces and recent block hashes, signs and sends. |
+| **Key vault** | Owns private keys and exposes `signData` / `hasKey`. Never hands raw key pairs out. |
+| **Signer** | An account + a client + a key vault. Builds transactions from an *intent*, picks a usable key, manages nonces and recent block hashes, signs and sends. |
 
 They compose in one direction only, so you can stop at any layer: use the client alone for
 read-only apps, use `signTransaction` with a key pair for full manual control, or use the
@@ -395,7 +395,7 @@ per-account queue:
 const signer = createMemorySigner({
   signerAccountId: 'example.testnet',
   client,
-  keyService,
+  keyVault,
   keyPool: { allowedAccessKeys: ['ed25519:...'] },
   taskQueue: { timeoutMs: 30_000 },
 });
@@ -501,7 +501,7 @@ functionCall({
 
 `signTransaction` is decoupled from any particular key holder: it takes a
 `signDataProvider`, which is anything exposing `safeSignData` — a `KeyPair`, a
-`MemoryKeyService`, or your own hardware-wallet adapter.
+`MemoryKeyVault`, or your own hardware-wallet adapter.
 
 ```ts
 import { keyPair, signTransaction, transfer, near } from 'near-api-ts';
@@ -744,7 +744,7 @@ import {
   randomEd25519KeyPair,
   randomSecp256k1KeyPair,
   randomMlDsa65KeyPair,
-  createMemoryKeyService,
+  createMemoryKeyVault,
 } from 'near-api-ts';
 
 const fromPrivateKey = keyPair('ed25519:...');
@@ -763,20 +763,20 @@ const { signature, signatureU8 } = await fresh.signData({ dataU8 });
 
 Three curves are supported: **ed25519**, **secp256k1** and **ML-DSA-65** (post-quantum).
 
-A key service holds several keys and signs by public key, without ever exposing the key
+A key vault holds several keys and signs by public key, without ever exposing the key
 pair itself:
 
 ```ts
-const keyService = createMemoryKeyService({
+const keyVault = createMemoryKeyVault({
   keySources: [{ privateKey: 'ed25519:...' }, { privateKey: 'secp256k1:...' }],
 });
 
-await keyService.hasKey({ publicKey: 'ed25519:...' }); // true
-await keyService.findPublicKey({ publicKeyRef: 'ml-dsa-65-hash:...' }); // the key, or undefined
-await keyService.signData({ publicKey: 'ed25519:...', dataU8 });
+await keyVault.hasKey({ publicKey: 'ed25519:...' }); // true
+await keyVault.findPublicKey({ publicKeyRef: 'ml-dsa-65-hash:...' }); // the key, or undefined
+await keyVault.signData({ publicKey: 'ed25519:...', dataU8 });
 ```
 
-Both a `KeyPair` and a `MemoryKeyService` satisfy the `signDataProvider` contract, so either
+Both a `KeyPair` and a `MemoryKeyVault` satisfy the `signDataProvider` contract, so either
 can be handed to `signTransaction` / `signDelegation`.
 
 ---
@@ -894,7 +894,7 @@ Requests that need historical state fall back to the archival endpoints on their
 | `toEd25519CurveString`, `toSecp256k1CurveString`, `toMlDsa65CurveString` | curve-prefixed key strings |
 | `AccountIdZodSchema`, `PublicKeyZodSchema`, `MessageZodSchema`, `Base64StringZodSchema` | reuse the library's validation in your own schemas |
 
-Types for everything above are exported too — `Client`, `MemorySigner`, `MemoryKeyService`,
+Types for everything above are exported too — `Client`, `MemorySigner`, `MemoryKeyVault`,
 `NearToken`, `NearGas`, `TransactionAction`, `TransactionIntent`, `SignedTransaction`,
 `SignTransactionOutput`, `DelegationBase`, `SignDelegationOutput`, `AccessKey`,
 `AccountContract`, `GetAccountInfoOutput`, and the rest.

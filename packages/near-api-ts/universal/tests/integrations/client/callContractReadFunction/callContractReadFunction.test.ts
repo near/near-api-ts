@@ -3,7 +3,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import {
   type Client,
   createAccount,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createMemorySigner,
   deployLocalContract,
   functionCall,
@@ -22,13 +22,13 @@ describe('CallContractReadFunction', () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
 
-    const keyService = createMemoryKeyService({
+    const keyVault = createMemoryKeyVault({
       keySource: { privateKey: DEFAULT_PRIVATE_KEY },
     });
     const nat = createMemorySigner({
       signerAccountId: 'nat',
       client,
-      keyService,
+      keyVault,
     });
 
     await nat.executeTransaction({

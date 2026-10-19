@@ -2,9 +2,9 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createMemorySigner,
-  type MemoryKeyService,
+  type MemoryKeyVault,
   near,
   randomEd25519KeyPair,
   stake,
@@ -15,19 +15,19 @@ import { startSandbox } from '../../../../../../../utils/sandbox/startSandbox';
 
 describe('executeTransaction › Action.Stake.TotalBalance.NotEnough', () => {
   let client: Client;
-  let keyService: MemoryKeyService;
+  let keyVault: MemoryKeyVault;
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyService = createMemoryKeyService({
+    keyVault = createMemoryKeyVault({
       keySource: { privateKey: DEFAULT_PRIVATE_KEY },
     });
     return () => sandbox.stop();
   });
 
   it('fails with Action.Stake.TotalBalance.NotEnough when staking more than the balance', async () => {
-    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyService });
+    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
 
     const res = await nat.safeExecuteTransaction({
       intent: {

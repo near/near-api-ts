@@ -38,8 +38,8 @@ export const createFunctionCallPoolKeys = async (
     if (permission.kind !== 'FunctionCall' || replayProtection.scheme !== 'NonceChannel') continue;
 
     // The account refers to the key by its ref, and we need the full public key to sign;
-    // the keyService finds it only if it holds the key (we can sign data by it)
-    const publicKey = await signerContext.keyService.safeFindPublicKey({
+    // the keyVault finds it only if it holds the key (we can sign data by it)
+    const publicKey = await signerContext.keyVault.safeFindPublicKey({
       publicKeyRef: key.publicKeyRef,
     });
 

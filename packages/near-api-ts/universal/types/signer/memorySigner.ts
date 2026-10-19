@@ -1,6 +1,6 @@
 import type { AccountId } from '../_common/common';
 import type { Client } from '../client/client';
-import type { MemoryKeyService } from '../memoryKeyService/memoryKeyService';
+import type { MemoryKeyVault } from '../memoryKeyVault/memoryKeyVault';
 import type { CreateMemorySignerPublicErrorRegistry } from './createMemorySigner';
 import type { KeyPool, KeyPoolInnerErrorRegistry } from './inner/keyPool';
 import type { Tasker } from './inner/tasker';
@@ -28,7 +28,7 @@ export interface MemorySignerPublicErrorRegistry
 export type MemorySignerContext = {
   signerAccountId: AccountId;
   client: Client;
-  keyService: MemoryKeyService;
+  keyVault: MemoryKeyVault;
   taskQueue: TaskQueue;
   keyPool: KeyPool;
   tasker: Tasker;
@@ -38,7 +38,7 @@ export type MemorySignerContext = {
 export type MemorySigner = {
   signerAccountId: AccountId;
   client: Client;
-  keyService: MemoryKeyService;
+  keyVault: MemoryKeyVault;
   signTransaction: SignTransactionIntent; // TODO remove Intent from public type
   executeTransaction: ExecuteTransaction;
   safeSignTransaction: SafeSignTransactionIntent;

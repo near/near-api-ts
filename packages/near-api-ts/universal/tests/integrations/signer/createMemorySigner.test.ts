@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import * as z from 'zod/mini';
 import {
   type Client,
-  createMemoryKeyService,
-  type MemoryKeyService,
+  createMemoryKeyVault,
+  type MemoryKeyVault,
   safeCreateMemorySigner,
 } from '../../../index';
 import { assertNatErrKind } from '../../utils/assertNatErrKind';
@@ -14,12 +14,12 @@ import { startSandbox } from '../../utils/sandbox/startSandbox';
 z.config(z.locales.en());
 describe('createMemorySigner', async () => {
   let client: Client;
-  let keyService: MemoryKeyService;
+  let keyVault: MemoryKeyVault;
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyService = createMemoryKeyService({
+    keyVault = createMemoryKeyVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
     });
     return () => sandbox.stop();
@@ -29,7 +29,7 @@ describe('createMemorySigner', async () => {
     const signer = safeCreateMemorySigner({
       signerAccountId: 'nat',
       client,
-      keyService,
+      keyVault,
     });
     expect(signer.success).toBe(true);
   });
@@ -38,7 +38,7 @@ describe('createMemorySigner', async () => {
     const signer = safeCreateMemorySigner({
       signerAccountId: 'nat',
       client,
-      keyService,
+      keyVault,
       keyPool: {
         allowedAccessKeys: [DEFAULT_PUBLIC_KEY],
       },
@@ -56,7 +56,7 @@ describe('createMemorySigner', async () => {
         // @ts-ignore
         sendSignedTransaction: () => {},
       },
-      keyService: {
+      keyVault: {
         // @ts-ignore
         signTransaction: () => {},
       },
@@ -75,7 +75,7 @@ describe('createMemorySigner', async () => {
   //   const signer = safeCreateMemorySigner({
   //     signerAccountId: 'nat-123',
   //     client,
-  //     keyService,
+  //     keyVault,
   //   });
   //   assertNatErrKind(signer, 'CreateMemorySigner.Signer.AccessKeys.NotFound');
   // });
@@ -84,7 +84,7 @@ describe('createMemorySigner', async () => {
   //   const signer = await safeCreateMemorySigner({
   //     signerAccountId: 'nat',
   //     client,
-  //     keyService,
+  //     keyVault,
   //     keyPool: {
   //       allowedAccessKeys: [randomEd25519KeyPair().publicKey],
   //     },

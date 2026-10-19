@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createMemoryKeyService, randomEd25519KeyPair } from '../../../../index';
+import { createMemoryKeyVault, randomEd25519KeyPair } from '../../../../index';
 import {
   safeSignTransaction,
   signTransaction,
@@ -25,10 +25,10 @@ const transaction: Transaction = {
   recentBlockHash: 'EDhhHZrpcbJ4RrswFrcsPjww9oa6LTruF5Q4Hq2dXYwP',
 };
 
-describe('memoryKeyService.signTransaction', () => {
+describe('memoryKeyVault.signTransaction', () => {
   it('signs a transaction and returns hash and signature', async () => {
-    const keyService = createMemoryKeyService({ keySource: { privateKey } });
-    const res = await signTransaction({ signDataProvider: keyService, transaction });
+    const keyVault = createMemoryKeyVault({ keySource: { privateKey } });
+    const res = await signTransaction({ signDataProvider: keyVault, transaction });
 
     expect(res.transactionHash).toBe('HhxcQZDTWRsDV61vkH9zz94FSC8Fe8at3M4XCrgUQMrT');
     expect(res.signedTransaction.signature).toBe(
@@ -37,10 +37,10 @@ describe('memoryKeyService.signTransaction', () => {
   });
 
   it('fails with SigningKey.NotFound when no key matches the signer', async () => {
-    const keyService = createMemoryKeyService({ keySource: { privateKey } });
+    const keyVault = createMemoryKeyVault({ keySource: { privateKey } });
 
     const res = await safeSignTransaction({
-      signDataProvider: keyService,
+      signDataProvider: keyVault,
       transaction: {
         ...transaction,
         signer: { ...transaction.signer, publicKey: randomEd25519KeyPair().publicKey },

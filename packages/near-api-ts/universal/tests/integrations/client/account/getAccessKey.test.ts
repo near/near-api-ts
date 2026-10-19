@@ -3,7 +3,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createMemorySigner,
   randomMlDsa65KeyPair,
 } from '../../../../index';
@@ -45,7 +45,7 @@ describe('Get Account Access Key', () => {
 
     const signer = createMemorySigner({
       signerAccountId: 'nat',
-      keyService: createMemoryKeyService({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
+      keyVault: createMemoryKeyVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
       client,
     });
 

@@ -4,10 +4,10 @@ import {
   addAccessKey,
   type Client,
   createAccount,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   deployLocalContract,
   functionCall,
-  type MemoryKeyService,
+  type MemoryKeyVault,
   transfer,
 } from '../../../../index';
 import { signTransaction } from '../../../../src/transaction/signTransaction/signTransaction';
@@ -18,12 +18,12 @@ import { testKeys } from '../../../utils/testKeys';
 
 describe('safeSendSignedTransaction › success', () => {
   let client: Client;
-  let keyService: MemoryKeyService;
+  let keyVault: MemoryKeyVault;
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyService = createMemoryKeyService({
+    keyVault = createMemoryKeyVault({
       keySources: [
         { privateKey: DEFAULT_PRIVATE_KEY },
         { privateKey: testKeys.fc.forContract.privateKey },
@@ -39,7 +39,7 @@ describe('safeSendSignedTransaction › success', () => {
     });
 
     const signedTransaction = await signTransaction({
-      signDataProvider: keyService,
+      signDataProvider: keyVault,
       transaction: {
         signer: {
           accountId: 'nat',

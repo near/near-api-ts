@@ -22,14 +22,14 @@
 //     // expect(result.publicKey).toBe(kp1.publicKey);
 //   });
 //
-//   // it('MemoryKeyService.SignTransaction.SigningKeyPair.NotFound', async () => {
-//   //   const keyService = createMemoryKeyService({
+//   // it('MemoryKeyVault.SignTransaction.SigningKeyPair.NotFound', async () => {
+//   //   const keyService = createMemoryKeyVault({
 //   //     keySource: { privateKey: randomEd25519KeyPair().privateKey },
 //   //   });
 //   //
 //   //   const res = keyService.safeFindKeyPair({
 //   //     publicKey: randomEd25519KeyPair().publicKey,
 //   //   });
-//   //   assertNatErrKind(res, 'MemoryKeyService.FindKeyPair.NotFound');
+//   //   assertNatErrKind(res, 'MemoryKeyVault.FindKeyPair.NotFound');
 //   // });
 // });

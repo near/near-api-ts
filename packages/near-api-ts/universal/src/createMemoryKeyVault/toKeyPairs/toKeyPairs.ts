@@ -1,8 +1,8 @@
-import type { KeyPairs } from '../../../types/memoryKeyService/memoryKeyService';
-import type { InnerCreateMemoryKeyServiceArgs } from '../createMemoryKeyService';
+import type { KeyPairs } from '../../../types/memoryKeyVault/memoryKeyVault';
+import type { InnerCreateMemoryKeyVaultArgs } from '../createMemoryKeyVault';
 import { keyPair } from './keyPairs/keyPair/keyPair';
 
-export const toKeyPairs = (args: InnerCreateMemoryKeyServiceArgs): KeyPairs => {
+export const toKeyPairs = (args: InnerCreateMemoryKeyVaultArgs): KeyPairs => {
   if ('keySource' in args) {
     const kp = keyPair(args.keySource.privateKey.privateKey);
     return { [kp.publicKey]: kp };

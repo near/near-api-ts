@@ -3,9 +3,9 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import * as z from 'zod/mini';
 import {
   type Client,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createMemorySigner,
-  type MemoryKeyService,
+  type MemoryKeyVault,
   transfer,
 } from '../../../../index';
 import { createDefaultClient } from '../../../utils/common';
@@ -14,12 +14,12 @@ import { startSandbox } from '../../../utils/sandbox/startSandbox';
 z.config(z.locales.en());
 describe('MemorySigner.executeTransaction', async () => {
   let client: Client;
-  let keyService: MemoryKeyService;
+  let keyVault: MemoryKeyVault;
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyService = createMemoryKeyService({
+    keyVault = createMemoryKeyVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
     });
     return () => sandbox.stop();
@@ -30,13 +30,13 @@ describe('MemorySigner.executeTransaction', async () => {
     const nat1 = createMemorySigner({
       signerAccountId: 'nat',
       client,
-      keyService,
+      keyVault,
     });
 
     const nat2 = createMemorySigner({
       signerAccountId: 'nat',
       client,
-      keyService,
+      keyVault,
     });
 
     // Make sure send another TX - if you will send the same with invalid nonce,

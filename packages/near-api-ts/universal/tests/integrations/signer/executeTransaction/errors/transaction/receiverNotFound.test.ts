@@ -2,10 +2,10 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createMemorySigner,
   deleteAccount,
-  type MemoryKeyService,
+  type MemoryKeyVault,
   transfer,
 } from '../../../../../../index';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
@@ -14,19 +14,19 @@ import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 
 describe('executeTransaction › Transaction.Receiver.NotFound', () => {
   let client: Client;
-  let keyService: MemoryKeyService;
+  let keyVault: MemoryKeyVault;
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyService = createMemoryKeyService({
+    keyVault = createMemoryKeyVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
     });
     return () => sandbox.stop();
   });
 
   // it('fails with Transaction.Receiver.NotFound when transferring to a missing account', async () => {
-  //   const nat = createMemorySigner({ signerAccountId: 'nat', client, keyService });
+  //   const nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
   //
   //   const tx = await nat.safeExecuteTransaction({
   //     intent: {
@@ -38,7 +38,7 @@ describe('executeTransaction › Transaction.Receiver.NotFound', () => {
   // });
 
   // it('fails with Transaction.Receiver.NotFound when deleting a missing account', async () => {
-  //   const nat = createMemorySigner({ signerAccountId: 'nat', client, keyService });
+  //   const nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
   //
   //   const tx = await nat.safeExecuteTransaction({
   //     intent: {

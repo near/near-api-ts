@@ -6,7 +6,7 @@
 
 - Everything near-api-ts v0.13.0 adds is re-exported from this package as well –
   the `PublicKeyRef` type, `publicKeyRef` on every key pair and
-  `MemoryKeyService.findPublicKey` / `safeFindPublicKey`. See the near-api-ts
+  `MemoryKeyVault.findPublicKey` / `safeFindPublicKey`. See the near-api-ts
   changelog.
 
 - The gas key actions `topUpAccessKeyBalance` / `withdrawAccessKeyBalance` are
@@ -22,7 +22,7 @@
   v0.13.0 changelog for the full list, error kinds included.
 
 - **Breaking:** `AccessKey`, re-exported from near-api-ts, refers to the key by
-  `publicKeyRef` instead of `publicKey`, and a custom `keyService` passed
+  `publicKeyRef` instead of `publicKey`, and a custom `keyVault` passed
   to `createMemorySigner` must implement `findPublicKey` / `safeFindPublicKey`.
   See the near-api-ts v0.13.0 changelog.
 
@@ -43,6 +43,14 @@
   `Actions.DeployContract.TooMany` is now `Actions.UploadContract.TooMany`. See
   the near-api-ts v0.13.0 changelog. The near-connect signer passes the actions
   on to the wallet as before.
+
+- **Breaking:** the memory key service re-exported from near-api-ts is now a
+  memory key vault: `createMemoryKeyService` / `safeCreateMemoryKeyService` →
+  `createMemoryKeyVault` / `safeCreateMemoryKeyVault`, `MemoryKeyService` →
+  `MemoryKeyVault`, the `createMemorySigner` argument `keyService` → `keyVault`,
+  and the error kinds `CreateMemoryKeyService.*` / `MemoryKeyService.*` →
+  `CreateMemoryKeyVault.*` / `MemoryKeyVault.*`. See the near-api-ts v0.13.0
+  changelog.
 
 - **Breaking:** `useAccountInfo` and `useContractReadFunction` take the transport
   policy as `options.transportPolicy` instead of `policies.transport`:  \
@@ -73,6 +81,13 @@
 - The near-api-ts v0.13.0 fix for `getRecentBlockHash` and `getAccountInfo`
   failing right after a node starts, and its `@near-js/jsonrpc-types` bump to
   `^1.9.0`, reach this package through the re-export.
+
+### Removed
+
+- `createMemorySignerFactory` / `createSafeMemorySignerFactory` and their types
+  `MemorySignerFactory` / `SafeMemorySignerFactory`, re-exported from
+  near-api-ts – call `createMemorySigner` once per account instead. See the
+  near-api-ts v0.13.0 changelog.
 
 ---
 

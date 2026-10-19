@@ -5,9 +5,9 @@ import {
   addAccessKey,
   type Client,
   createAccount,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createMemorySigner,
-  type MemoryKeyService,
+  type MemoryKeyVault,
   randomEd25519KeyPair,
   transfer,
 } from '../../../../index';
@@ -19,14 +19,14 @@ z.config(z.locales.en());
 
 describe('MemorySigner.signTransaction', async () => {
   let client: Client;
-  let keyService: MemoryKeyService;
+  let keyVault: MemoryKeyVault;
 
   const keyPair1 = randomEd25519KeyPair();
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyService = createMemoryKeyService({
+    keyVault = createMemoryKeyVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, { privateKey: keyPair1.privateKey }],
     });
     return () => sandbox.stop();
@@ -36,7 +36,7 @@ describe('MemorySigner.signTransaction', async () => {
     const signer = createMemorySigner({
       signerAccountId: 'nat',
       client,
-      keyService,
+      keyVault,
     });
 
     const tx = await signer.safeSignTransaction({
@@ -56,7 +56,7 @@ describe('MemorySigner.signTransaction', async () => {
     const nat = createMemorySigner({
       signerAccountId: 'nat',
       client,
-      keyService,
+      keyVault,
     });
 
     const tx1 = await nat.signTransaction({
@@ -83,7 +83,7 @@ describe('MemorySigner.signTransaction', async () => {
     const user = createMemorySigner({
       signerAccountId: 'user.nat',
       client,
-      keyService,
+      keyVault,
     });
 
     const tx2 = await user.safeSignTransaction({

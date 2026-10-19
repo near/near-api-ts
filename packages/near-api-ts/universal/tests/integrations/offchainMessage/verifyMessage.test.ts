@@ -5,7 +5,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createMemorySigner,
   createMessage,
   keyPair,
@@ -68,7 +68,7 @@ describe('verifyMessage', () => {
 
     const signer = createMemorySigner({
       signerAccountId: 'nat',
-      keyService: createMemoryKeyService({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
+      keyVault: createMemoryKeyVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
       client,
     });
 

@@ -41,28 +41,28 @@ export {
 export { convertBase64ToObject } from './src/createClient/methods/_common/base64ToObject';
 export { createMainnetClient } from './src/createClient/presets/mainnet';
 export { createTestnetClient } from './src/createClient/presets/testnet';
-// Key Services
+// Key Vaults
 export {
-  createMemoryKeyService,
-  safeCreateMemoryKeyService,
-} from './src/createMemoryKeyService/createMemoryKeyService';
+  createMemoryKeyVault,
+  safeCreateMemoryKeyVault,
+} from './src/createMemoryKeyVault/createMemoryKeyVault';
 // KeyPair
 export {
   keyPair,
   safeKeyPair,
-} from './src/createMemoryKeyService/toKeyPairs/keyPairs/keyPair/keyPair';
+} from './src/createMemoryKeyVault/toKeyPairs/keyPairs/keyPair/keyPair';
 export {
   randomEd25519KeyPair,
   safeRandomEd25519KeyPair,
-} from './src/createMemoryKeyService/toKeyPairs/keyPairs/randomEd25519KeyPair';
+} from './src/createMemoryKeyVault/toKeyPairs/keyPairs/randomEd25519KeyPair';
 export {
   randomMlDsa65KeyPair,
   safeRandomMlDsa65KeyPair,
-} from './src/createMemoryKeyService/toKeyPairs/keyPairs/randomMlDsa65KeyPair';
+} from './src/createMemoryKeyVault/toKeyPairs/keyPairs/randomMlDsa65KeyPair';
 export {
   randomSecp256k1KeyPair,
   safeRandomSecp256k1KeyPair,
-} from './src/createMemoryKeyService/toKeyPairs/keyPairs/randomSecp256k1KeyPair';
+} from './src/createMemoryKeyVault/toKeyPairs/keyPairs/randomSecp256k1KeyPair';
 // Signers
 export { createMemorySigner, safeCreateMemorySigner } from './src/createSigner/createSigner';
 // Nep413 Message
@@ -224,5 +224,5 @@ export type {
   SafeCallContractReadFunction,
 } from './types/client/methods/contract/callContractReadFunction';
 export type { PartialTransportPolicy } from './types/client/transport/transport';
-export type { MemoryKeyService } from './types/memoryKeyService/memoryKeyService';
+export type { MemoryKeyVault } from './types/memoryKeyVault/memoryKeyVault';
 export type { MemorySigner } from './types/signer/memorySigner';

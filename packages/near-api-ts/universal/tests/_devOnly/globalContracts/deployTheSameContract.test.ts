@@ -6,7 +6,7 @@ import {
   signTransaction,
   stake,
 } from '../../../index';
-import { keyPair } from '../../../src/createMemoryKeyService/toKeyPairs/keyPairs/keyPair/keyPair';
+import { keyPair } from '../../../src/createMemoryKeyVault/toKeyPairs/keyPairs/keyPair/keyPair';
 import type { Client } from '../../../types/client/client';
 import { createDefaultClient, getFileBytes, log } from '../../utils/common';
 import { getLastNonce } from '../../utils/getLastNonce';

@@ -3,9 +3,9 @@ import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
   createAccount,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createMemorySigner,
-  type MemoryKeyService,
+  type MemoryKeyVault,
 } from '../../../../../../../../index';
 import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../../../../../utils/common';
@@ -13,13 +13,13 @@ import { startSandbox } from '../../../../../../../utils/sandbox/startSandbox';
 
 describe('executeTransaction › Transaction.Action.CreateAccount.AlreadyExist', () => {
   let client: Client;
-  let keyService: MemoryKeyService;
+  let keyVault: MemoryKeyVault;
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
 
     client = createDefaultClient(sandbox);
-    keyService = createMemoryKeyService({
+    keyVault = createMemoryKeyVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
     });
     return () => sandbox.stop();
@@ -27,7 +27,7 @@ describe('executeTransaction › Transaction.Action.CreateAccount.AlreadyExist',
 
   it('fails with Transaction.Action.Action.CreateAccount.AlreadyExist when creating an existing account', async () => {
     const errorKind = 'MemorySigner.ExecuteTransaction.Rpc.Action.CreateAccount.AlreadyExists';
-    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyService });
+    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
 
     const tx = await nat.safeExecuteTransaction({
       intent: {

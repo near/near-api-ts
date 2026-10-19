@@ -1,8 +1,8 @@
 // import { beforeAll, describe, expect, it } from 'vitest';
 // import {
-//   createMemoryKeyService,
+//   createMemoryKeyVault,
 //   type Client,
-//   type MemoryKeyService,
+//   type MemoryKeyVault,
 //   transfer,
 // } from '../../../../index';
 // import { createDefaultClient } from '../../../utils/common';
@@ -14,12 +14,12 @@
 //
 // describe('Transaction success', () => {
 //   let client: Client;
-//   let keyService: MemoryKeyService;
+//   let keyVault: MemoryKeyVault;
 //
 //   beforeAll(async () => {
 //     const sandbox = await startSandbox();
 //     client = createDefaultClient(sandbox);
-//     keyService = createMemoryKeyService({
+//     keyVault = createMemoryKeyVault({
 //       keySources: [
 //         { privateKey: DEFAULT_PRIVATE_KEY },
 //         { privateKey: testKeys.fc.forContract.privateKey },
@@ -34,7 +34,7 @@
 //       publicKey: DEFAULT_PUBLIC_KEY,
 //     });
 //
-//     const signedTransaction = await keyService.signTransaction({
+//     const signedTransaction = await keyVault.signTransaction({
 //       transaction: {
 //         signerAccountId: 'nat',
 //         signerPublicKey: DEFAULT_PUBLIC_KEY,

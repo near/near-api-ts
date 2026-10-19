@@ -3,7 +3,7 @@ import { beforeAll, describe, it } from 'vitest';
 import {
   addAccessKey,
   createClient,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createTestnetClient,
   deployLocalContract,
   functionCall,

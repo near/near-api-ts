@@ -3,7 +3,7 @@ import { beforeAll, describe, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createMemorySigner,
   randomSecp256k1KeyPair,
   transfer,
@@ -21,13 +21,13 @@ describe('executeTransaction › success', () => {
   });
 
   it('signs and sends a native transfer with a secp256k1 key', async () => {
-    const keyService1 = createMemoryKeyService({
+    const keyVault1 = createMemoryKeyVault({
       keySource: { privateKey: DEFAULT_PRIVATE_KEY },
     });
 
     const signer1 = createMemorySigner({
       signerAccountId: 'nat',
-      keyService: keyService1,
+      keyVault: keyVault1,
       client,
     });
 
@@ -44,11 +44,11 @@ describe('executeTransaction › success', () => {
       },
     });
 
-    const keyService2 = createMemoryKeyService({ keySource: secp256k1KeyPair });
+    const keyVault2 = createMemoryKeyVault({ keySource: secp256k1KeyPair });
 
     const signer2 = createMemorySigner({
       signerAccountId: 'nat',
-      keyService: keyService2,
+      keyVault: keyVault2,
       client,
     });
 

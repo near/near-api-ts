@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
 import type { Client } from '../../types/client/client';
-import type { MemoryKeyService } from '../../types/memoryKeyService/memoryKeyService';
+import type { MemoryKeyVault } from '../../types/memoryKeyVault/memoryKeyVault';
 import type {
   CreateMemorySigner,
   SafeCreateMemorySigner,
@@ -18,17 +18,17 @@ import { createSafeSignTransaction } from './createSignTransaction';
 import { createTasker } from './createTasker/createTasker';
 import { createTaskQueue } from './createTaskQueue/createTaskQueue';
 
-// keyService: z.object({
+// keyVault: z.object({
 //   safeSignData: z.custom<SafeSignData>(
 //     (val) => typeof val === 'function',
-//     'keyService.safeSignData must be a function', // TODO compete
+//     'keyVault.safeSignData must be a function', // TODO compete
 //   ),
 // }),
 
 const CreateMemorySignerArgsSchema = z.object({
   signerAccountId: AccountIdZodSchema,
   client: z.custom<Client>((value) => true), // TODO fix it
-  keyService: z.custom<MemoryKeyService>((value) => true), // TODO fix it
+  keyVault: z.custom<MemoryKeyVault>((value) => true), // TODO fix it
   keyPool: z.optional(
     z.object({
       allowedAccessKeys: z.optional(z.array(PublicKeyZodSchema).check(z.minLength(1))),
@@ -54,12 +54,12 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
         }),
       );
 
-    const { signerAccountId, client, keyService } = validArgs.data;
+    const { signerAccountId, client, keyVault } = validArgs.data;
 
     const context = {
       signerAccountId,
       client,
-      keyService,
+      keyVault,
     } as MemorySignerContext;
 
     context.keyPool = createKeyPool(context, args);
@@ -71,7 +71,7 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
 
     return result.ok({
       signerAccountId,
-      keyService,
+      keyVault,
       client,
       signTransaction: asThrowable(safeSignTransaction),
       executeTransaction: asThrowable(safeExecuteTransaction),

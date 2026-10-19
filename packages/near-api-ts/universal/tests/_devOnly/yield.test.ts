@@ -5,7 +5,7 @@ import {
   addAccessKey,
   type Client,
   createAccount,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createMemorySigner,
   createTestnetClient,
   deployLocalContract,
@@ -31,13 +31,13 @@ describe('yield contract', () => {
   it('test', async () => {
     const testnetClient = createTestnetClient();
 
-    const keyService = createMemoryKeyService({
+    const keyVault = createMemoryKeyVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
     });
 
     const nat = createMemorySigner({
       signerAccountId: 'nat',
-      keyService,
+      keyVault,
       client,
     });
 

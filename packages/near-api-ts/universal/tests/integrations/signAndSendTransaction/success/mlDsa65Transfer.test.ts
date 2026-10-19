@@ -4,8 +4,8 @@ import {
   addAccessKey,
   type Client,
   createAccount,
-  createMemoryKeyService,
-  type MemoryKeyService,
+  createMemoryKeyVault,
+  type MemoryKeyVault,
   randomMlDsa65KeyPair,
   transfer,
 } from '../../../../index';
@@ -18,7 +18,7 @@ vi.setConfig({ testTimeout: 120000, hookTimeout: 120000 });
 
 describe('ml-dsa-65 Transaction success', () => {
   let client: Client;
-  let keyService: MemoryKeyService;
+  let keyVault: MemoryKeyVault;
 
   // Post-quantum key generated at runtime — no 5.5 KB fixture literal.
   const mlDsa65KeyPair = randomMlDsa65KeyPair();
@@ -27,7 +27,7 @@ describe('ml-dsa-65 Transaction success', () => {
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyService = createMemoryKeyService({
+    keyVault = createMemoryKeyVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, { privateKey: mlDsa65KeyPair.privateKey }],
     });
     return () => sandbox.stop();
@@ -42,7 +42,7 @@ describe('ml-dsa-65 Transaction success', () => {
     });
 
     const createTx = await signTransaction({
-      signDataProvider: keyService,
+      signDataProvider: keyVault,
       transaction: {
         signer: {
           accountId: 'nat',
@@ -79,7 +79,7 @@ describe('ml-dsa-65 Transaction success', () => {
     });
 
     const transferTx = await signTransaction({
-      signDataProvider: keyService,
+      signDataProvider: keyVault,
       transaction: {
         signer: {
           accountId: newAccountId,

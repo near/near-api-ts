@@ -3,7 +3,7 @@ import type { AccountId, Milliseconds, Result } from '../_common/common';
 import type { PublicKey } from '../_common/crypto';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../_common/natError';
 import type { Client } from '../client/client';
-import type { MemoryKeyService } from '../memoryKeyService/memoryKeyService';
+import type { MemoryKeyVault } from '../memoryKeyVault/memoryKeyVault';
 import type { MemorySigner } from './memorySigner';
 
 export interface CreateMemorySignerPublicErrorRegistry {
@@ -14,7 +14,7 @@ export interface CreateMemorySignerPublicErrorRegistry {
 export type CreateMemorySignerArgs = {
   signerAccountId: AccountId;
   client: Client;
-  keyService: MemoryKeyService;
+  keyVault: MemoryKeyVault;
   keyPool?: {
     allowedAccessKeys?: PublicKey[];
   };

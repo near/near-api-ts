@@ -27,10 +27,10 @@
 //
 //     // TODO Think if it's possible to wrap into some helper function
 //     if (!keyPair.success) {
-//       // if (keyPair.error.kind === 'MemoryKeyService.FindKeyPair.NotFound')
+//       // if (keyPair.error.kind === 'MemoryKeyVault.FindKeyPair.NotFound')
 //       //   return result.err(
 //       //     createNatError({
-//       //       kind: 'MemoryKeyService.SignTransaction.SigningKeyPair.NotFound',
+//       //       kind: 'MemoryKeyVault.SignTransaction.SigningKeyPair.NotFound',
 //       //       context: {
 //       //         signerPublicKey: innerTransaction.signerPublicKey.publicKey,
 //       //       },

@@ -1,7 +1,7 @@
 import type { $ZodError } from 'zod/v4/core';
 import type { NatError } from '../../src/_common/_common/_common/_common/natError';
 import type { ClientInnerErrorRegistry, ClientPublicErrorRegistry } from '../client/client';
-import type { MemoryKeyServicePublicErrorRegistry } from '../memoryKeyService/memoryKeyService';
+import type { MemoryKeyVaultPublicErrorRegistry } from '../memoryKeyVault/memoryKeyVault';
 import type {
   MemorySignerInnerErrorRegistry,
   MemorySignerPublicErrorRegistry,
@@ -28,7 +28,7 @@ export interface NatInnerErrorRegistry
 // PublicError means that error can be shown to the end user, e.g., it returns from the public API
 export interface NatPublicErrorRegistry
   extends ClientPublicErrorRegistry,
-    MemoryKeyServicePublicErrorRegistry,
+    MemoryKeyVaultPublicErrorRegistry,
     MemorySignerPublicErrorRegistry,
     ActionsPublicErrorRegistry,
     KeyPairPublicErrorRegistry,

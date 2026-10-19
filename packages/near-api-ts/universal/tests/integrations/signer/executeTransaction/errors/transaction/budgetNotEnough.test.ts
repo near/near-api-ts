@@ -4,9 +4,9 @@ import {
   addAccessKey,
   type Client,
   createAccount,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createMemorySigner,
-  type MemoryKeyService,
+  type MemoryKeyVault,
   near,
   randomEd25519KeyPair,
   transfer,
@@ -17,20 +17,20 @@ import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 
 describe('executeTransaction › Signer.Budget.NotEnough', () => {
   let client: Client;
-  let keyService: MemoryKeyService;
+  let keyVault: MemoryKeyVault;
   const keyPair1 = randomEd25519KeyPair();
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyService = createMemoryKeyService({
+    keyVault = createMemoryKeyVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, keyPair1],
     });
     return () => sandbox.stop();
   });
 
   it('fails with Signer.Budget.NotEnough when transferring more than the balance', async () => {
-    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyService });
+    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
 
     // 1. Create an account with 10 FA keys
     await nat.executeTransaction({
@@ -65,7 +65,7 @@ describe('executeTransaction › Signer.Budget.NotEnough', () => {
     expect(balance1.locked.total.near).toBe('0.0092');
 
     // 2. try to send
-    const abc = createMemorySigner({ signerAccountId: 'abc.nat', client, keyService });
+    const abc = createMemorySigner({ signerAccountId: 'abc.nat', client, keyVault });
 
     const tx = await abc.safeExecuteTransaction({
       intent: {

@@ -20,11 +20,11 @@
     );
     ```
 
-  - `MemoryKeyService` gains `findPublicKey({ publicKeyRef })` /
-    `safeFindPublicKey`: the full public key when the service holds it,
+  - `MemoryKeyVault` gains `findPublicKey({ publicKeyRef })` /
+    `safeFindPublicKey`: the full public key when the vault holds it,
     `undefined` otherwise. New error kinds
-    `MemoryKeyService.FindPublicKey.Args.InvalidSchema` and
-    `MemoryKeyService.FindPublicKey.Internal`.
+    `MemoryKeyVault.FindPublicKey.Args.InvalidSchema` and
+    `MemoryKeyVault.FindPublicKey.Internal`.
   - `constants.BinaryLengths.<Curve>.PublicKeyRef` – the decoded length of a
     ref: 32 bytes for ed25519 and ml-dsa-65, 64 for secp256k1.
 
@@ -395,8 +395,22 @@
     `Client.SendSignedTransaction.Rpc.Actions.DeployContract.TooMany` →
     `Client.SendSignedTransaction.Rpc.Actions.UploadContract.TooMany`.
 
-- **Breaking:** a custom `keyService` passed to `createMemorySigner` must
-  implement `findPublicKey` and `safeFindPublicKey` – the `MemoryKeyService`
+- **Breaking:** the memory key service is now a memory key vault:
+
+  - `createMemoryKeyService` / `safeCreateMemoryKeyService` →
+    `createMemoryKeyVault` / `safeCreateMemoryKeyVault`.
+  - The type `MemoryKeyService` → `MemoryKeyVault`.
+  - The argument of `createMemorySigner` / `safeCreateMemorySigner` and the
+    field of the `MemorySigner` they return: `keyService` → `keyVault`.
+  - Error kinds `CreateMemoryKeyService.*` → `CreateMemoryKeyVault.*` and
+    `MemoryKeyService.*` → `MemoryKeyVault.*`, e.g.
+    `MemoryKeyService.SignData.SigningKey.NotFound` →
+    `MemoryKeyVault.SignData.SigningKey.NotFound`. When a memory key vault is the
+    `signDataProvider`, the `cause` of `SignTransaction.SignData.Failed` and
+    `SignDelegation.SignData.Failed` carries the new kinds.
+
+- **Breaking:** a custom `keyVault` passed to `createMemorySigner` must
+  implement `findPublicKey` and `safeFindPublicKey` – the `MemoryKeyVault`
   type requires both, and the signer calls `safeFindPublicKey` to turn the refs
   an account lists back into keys it can sign with.
 
@@ -498,7 +512,7 @@
   const signer = createMemorySigner({
     signerAccountId: 'example.testnet',
     client,
-    keyService,
+    keyVault,
   });
   ```
 

@@ -47,7 +47,7 @@ export const executeTransaction = async (
 
       // This call will never fail
       const signedTransaction = await signTransactionHelper({
-        signDataProvider: signerContext.keyService,
+        signDataProvider: signerContext.keyVault,
         transaction,
       });
 

@@ -4,7 +4,7 @@ import {
   addAccessKey,
   type Client,
   createClient,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createMemorySigner,
   isNatError,
   randomEd25519KeyPair,
@@ -49,7 +49,7 @@ describe('Get Account Access Keys', () => {
 
     const signer = createMemorySigner({
       signerAccountId: 'nat',
-      keyService: createMemoryKeyService({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
+      keyVault: createMemoryKeyVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
       client,
     });
 

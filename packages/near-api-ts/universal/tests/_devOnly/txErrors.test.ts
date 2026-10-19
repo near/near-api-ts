@@ -2,7 +2,7 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   addAccessKey,
-  createMemoryKeyService,
+  createMemoryKeyVault,
   createMemorySigner,
   deployLocalContract,
   functionCall,
@@ -24,12 +24,12 @@ describe('CallContractReadFunction', () => {
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    const keyService = createMemoryKeyService({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } });
+    const keyVault = createMemoryKeyVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } });
 
     nat = createMemorySigner({
       signerAccountId: 'nat',
       client,
-      keyService,
+      keyVault,
     });
 
     return () => sandbox.stop();

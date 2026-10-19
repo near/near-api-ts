@@ -1,9 +1,9 @@
 import * as z from 'zod/mini';
 import type {
-  CreateMemoryKeyService,
-  MemoryKeyServiceContext,
-  SafeCreateMemoryKeyService,
-} from '../../types/memoryKeyService/memoryKeyService';
+  CreateMemoryKeyVault,
+  MemoryKeyVaultContext,
+  SafeCreateMemoryKeyVault,
+} from '../../types/memoryKeyVault/memoryKeyVault';
 import { result, resultNatError } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
@@ -17,7 +17,7 @@ const KeySourceSchema = z.object({
   privateKey: PrivateKeyZodSchema,
 });
 
-const CreateMemoryKeyServiceArgsSchema = z.union([
+const CreateMemoryKeyVaultArgsSchema = z.union([
   z.object({
     keySource: KeySourceSchema,
   }),
@@ -26,21 +26,21 @@ const CreateMemoryKeyServiceArgsSchema = z.union([
   }),
 ]);
 
-export type InnerCreateMemoryKeyServiceArgs = z.infer<typeof CreateMemoryKeyServiceArgsSchema>;
+export type InnerCreateMemoryKeyVaultArgs = z.infer<typeof CreateMemoryKeyVaultArgsSchema>;
 
-export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService = wrapInternalError(
-  'CreateMemoryKeyService.Internal',
+export const safeCreateMemoryKeyVault: SafeCreateMemoryKeyVault = wrapInternalError(
+  'CreateMemoryKeyVault.Internal',
   (args) => {
-    const validArgs = CreateMemoryKeyServiceArgsSchema.safeParse(args);
+    const validArgs = CreateMemoryKeyVaultArgsSchema.safeParse(args);
 
     if (!validArgs.success)
-      return resultNatError('CreateMemoryKeyService.Args.InvalidSchema', {
+      return resultNatError('CreateMemoryKeyVault.Args.InvalidSchema', {
         zodError: validArgs.error,
       });
 
     const context = {
       keyPairs: toKeyPairs(validArgs.data),
-    } as MemoryKeyServiceContext;
+    } as MemoryKeyVaultContext;
 
     const safeHasKey = createSafeHasKey(context);
     const hasKey = asThrowable(safeHasKey);
@@ -64,6 +64,4 @@ export const safeCreateMemoryKeyService: SafeCreateMemoryKeyService = wrapIntern
   },
 );
 
-export const createMemoryKeyService: CreateMemoryKeyService = asThrowable(
-  safeCreateMemoryKeyService,
-);
+export const createMemoryKeyVault: CreateMemoryKeyVault = asThrowable(safeCreateMemoryKeyVault);
