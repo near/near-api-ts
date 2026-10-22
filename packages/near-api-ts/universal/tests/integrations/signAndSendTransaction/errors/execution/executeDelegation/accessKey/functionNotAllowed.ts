@@ -4,14 +4,14 @@ import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../../utils/assertTxResultExecutionErrKind';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../executeDelegation.test';
-import { attachFunctionCallKey } from './_common/attachFunctionCallKey';
+import { attachContractFunctionCallKey } from './_common/attachContractFunctionCallKey';
 import { sendDelegation } from './_common/sendDelegation';
 
 export const functionNotAllowed = (context: TestContext) => async () => {
   const { client } = context;
 
   // The key is restricted to `allowed_function`, but another function is delegated.
-  const functionCallKeyPair = await attachFunctionCallKey(context, {
+  const contractFunctionCallKeyPair = await attachContractFunctionCallKey(context, {
     allowedContract: 'bob',
     allowance: 'Unlimited',
     allowedFunctions: ['allowed_function'],
@@ -19,14 +19,14 @@ export const functionNotAllowed = (context: TestContext) => async () => {
 
   const aliceAccessKey = await client.getAccessKey({
     accountId: 'alice',
-    publicKey: functionCallKeyPair.publicKey,
+    publicKey: contractFunctionCallKeyPair.publicKey,
   });
 
   const signedDelegation = await signDelegation({
     delegation: {
       delegator: {
         accountId: 'alice',
-        publicKey: functionCallKeyPair.publicKey,
+        publicKey: contractFunctionCallKeyPair.publicKey,
         replayProtection: {
           scheme: 'NonceChannel',
           nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
@@ -39,7 +39,7 @@ export const functionNotAllowed = (context: TestContext) => async () => {
       receiverAccountId: 'bob',
       expiration: { blockHeight: aliceAccessKey.atMomentOf.blockHeight + 100 },
     },
-    signDataProvider: functionCallKeyPair,
+    signDataProvider: contractFunctionCallKeyPair,
   });
 
   const { tx, transactionHash } = await sendDelegation(context, signedDelegation);

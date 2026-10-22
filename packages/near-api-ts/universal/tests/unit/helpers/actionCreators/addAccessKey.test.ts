@@ -4,8 +4,8 @@ import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
 const publicKey = randomEd25519KeyPair().publicKey;
 
-const functionCallPermission = {
-  kind: 'FunctionCall' as const,
+const contractFunctionCallPermission = {
+  kind: 'ContractFunctionCall' as const,
   allowedContract: 'nat',
   allowedFunctions: 'AllNonPayable' as const,
 };
@@ -30,13 +30,13 @@ describe('addAccessKey', () => {
     expect(
       addAccessKey({
         publicKey,
-        permission: functionCallPermission,
+        permission: contractFunctionCallPermission,
         gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
       }),
     ).toStrictEqual({
       actionType: 'AddAccessKey',
       publicKey,
-      permission: functionCallPermission,
+      permission: contractFunctionCallPermission,
       gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
       replayProtection: { scheme: 'NonceChannel' },
     });
@@ -44,13 +44,13 @@ describe('addAccessKey', () => {
     expect(
       addAccessKey({
         publicKey,
-        permission: { ...functionCallPermission, allowedFunctions: ['new'] },
+        permission: { ...contractFunctionCallPermission, allowedFunctions: ['new'] },
         gasPayment: { source: 'AccountBalance', allowance: { near: '0.5' } },
       }),
     ).toStrictEqual({
       actionType: 'AddAccessKey',
       publicKey,
-      permission: { ...functionCallPermission, allowedFunctions: ['new'] },
+      permission: { ...contractFunctionCallPermission, allowedFunctions: ['new'] },
       gasPayment: { source: 'AccountBalance', allowance: near('0.5') },
       replayProtection: { scheme: 'NonceChannel' },
     });
@@ -73,14 +73,14 @@ describe('addAccessKey', () => {
     expect(
       addAccessKey({
         publicKey,
-        permission: functionCallPermission,
+        permission: contractFunctionCallPermission,
         gasPayment: { source: 'KeyBalance' },
         replayProtection: { channelCount: 1024 },
       }),
     ).toStrictEqual({
       actionType: 'AddAccessKey',
       publicKey,
-      permission: functionCallPermission,
+      permission: contractFunctionCallPermission,
       gasPayment: { source: 'KeyBalance' },
       replayProtection: { scheme: 'NonceChannels', channelCount: 1024 },
     });
@@ -90,7 +90,7 @@ describe('addAccessKey', () => {
   it('turns the allowance into a NearToken', () => {
     const action = addAccessKey({
       publicKey,
-      permission: functionCallPermission,
+      permission: contractFunctionCallPermission,
       gasPayment: { source: 'AccountBalance', allowance: { yoctoNear: '1000' } },
     });
 
@@ -139,17 +139,17 @@ describe('addAccessKey', () => {
   it('rejects an empty allowedFunctions list with Args.InvalidSchema', () => {
     const res = safeAddAccessKey({
       publicKey,
-      permission: { ...functionCallPermission, allowedFunctions: [] },
+      permission: { ...contractFunctionCallPermission, allowedFunctions: [] },
       gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
     });
     assertNatErrKind(res, 'CreateAction.AddAccessKey.Args.InvalidSchema');
   });
 
-  it('rejects a FunctionCall key paid from the account balance without an allowance', () => {
+  it('rejects a ContractFunctionCall key paid from the account balance without an allowance', () => {
     // @ts-expect-error
     const res = safeAddAccessKey({
       publicKey,
-      permission: functionCallPermission,
+      permission: contractFunctionCallPermission,
       gasPayment: { source: 'AccountBalance' },
     });
     assertNatErrKind(res, 'CreateAction.AddAccessKey.Args.InvalidSchema');
@@ -192,7 +192,7 @@ describe('addAccessKey', () => {
   it('rejects an allowance on a key paid from its own balance', () => {
     const res = safeAddAccessKey({
       publicKey,
-      permission: functionCallPermission,
+      permission: contractFunctionCallPermission,
       // @ts-expect-error
       gasPayment: { source: 'KeyBalance', allowance: 'Unlimited' },
       replayProtection: { channelCount: 4 },

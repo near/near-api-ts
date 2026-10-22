@@ -71,12 +71,13 @@ export const getConversionFailureError = (
     if ('InvalidAccessKeyError' in invalidTxError) {
       const accessKeyError = invalidTxError.InvalidAccessKeyError;
 
-      // The key the transaction is signed with is a function-call key, and the transaction
+      // The key the transaction is signed with is a `ContractFunctionCall` key, and the transaction
       // carries something other than a single CallContractFunction action.
       if (accessKeyError === 'RequiresFullAccess')
         return formErrorObject('Signer.AccessKey.NotFullAccess', null);
 
-      // A function-call key can never attach a deposit, not even to a function it may call.
+      // A `ContractFunctionCall` key can never attach a deposit, not even to a function it may
+      // call.
       if (accessKeyError === 'DepositWithFunctionCall')
         return formErrorObject('Signer.AccessKey.AttachedDeposit.NotAllowed', null);
 
@@ -101,10 +102,10 @@ export const getConversionFailureError = (
         // `transactionCost` is the same `total_cost` the node charges the signer balance with
         // (`Signer.Budget.NotEnough` reports it too, folded into `minimalMissingAmount`) — the
         // burnt fees plus the prepaid gas at the current gas price, plus the deposits. A
-        // function-call key may not attach a deposit, but `check_and_compute_new_allowance` runs
-        // before that check (`runtime/runtime/src/verifier.rs`), so a key with a deposit fails
-        // here — with the deposit counted into the cost — instead of with
-        // `AttachedDeposit.NotAllowed`.
+        // `ContractFunctionCall` key may not attach a deposit, but
+        // `check_and_compute_new_allowance` runs before that check
+        // (`runtime/runtime/src/verifier.rs`), so a key with a deposit fails here — with the
+        // deposit counted into the cost — instead of with `AttachedDeposit.NotAllowed`.
         if ('NotEnoughAllowance' in accessKeyError)
           return formErrorObject('Signer.AccessKey.GasBudget.NotEnough', {
             signerAccountId: accessKeyError.NotEnoughAllowance.accountId,

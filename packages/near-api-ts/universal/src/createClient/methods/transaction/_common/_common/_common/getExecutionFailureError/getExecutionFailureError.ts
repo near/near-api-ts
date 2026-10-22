@@ -227,15 +227,16 @@ export const getExecutionFailureError = (
     if ('DelegateActionAccessKeyError' in kind) {
       const accessKeyError = kind.DelegateActionAccessKeyError;
 
-      // The delegation is signed with a function-call key, and it carries something other than
-      // a single CallContractFunction action.
+      // The delegation is signed with a `ContractFunctionCall` key, and it carries something other
+      // than a single CallContractFunction action.
       if (accessKeyError === 'RequiresFullAccess')
         return {
           kind: 'Action.ExecuteDelegation.Delegator.AccessKey.NotFullAccess',
           context: null,
         };
 
-      // A function-call key can never attach a deposit, not even to a function it may call.
+      // A `ContractFunctionCall` key can never attach a deposit, not even to a function it may
+      // call.
       if (accessKeyError === 'DepositWithFunctionCall')
         return {
           kind: 'Action.ExecuteDelegation.Delegator.AccessKey.AttachedDeposit.NotAllowed',

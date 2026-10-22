@@ -106,7 +106,7 @@ describe('verifyMessage', () => {
   // the sandbox cannot add one yet, so a fake node lists them
   describe('keys paid from the key balance', () => {
     const fullAccessKeyPair = randomEd25519KeyPair();
-    const functionCallKeyPair = randomEd25519KeyPair();
+    const contractFunctionCallKeyPair = randomEd25519KeyPair();
 
     const startGasKeysRpc = () =>
       startFakeRpc({
@@ -119,7 +119,7 @@ describe('verifyMessage', () => {
             },
           },
           {
-            public_key: functionCallKeyPair.publicKey,
+            public_key: contractFunctionCallKeyPair.publicKey,
             access_key: {
               nonce: 0,
               permission: {
@@ -149,7 +149,7 @@ describe('verifyMessage', () => {
 
     it('rejects a message signed by a function call key', async () => {
       const { fakeClient, close } = await startGasKeysRpc();
-      const signedMessage = await signMessage(message, functionCallKeyPair);
+      const signedMessage = await signMessage(message, contractFunctionCallKeyPair);
       const isValid = await verifyMessage({ signedMessage, message, client: fakeClient });
       close();
 

@@ -30,7 +30,7 @@ export const alreadyExists = (context: TestContext) => async () => {
       action: addAccessKey({
         publicKey: DEFAULT_PUBLIC_KEY,
         permission: {
-          kind: 'FunctionCall',
+          kind: 'ContractFunctionCall',
           allowedContract: 'alice',
           allowedFunctions: 'AllNonPayable',
         },

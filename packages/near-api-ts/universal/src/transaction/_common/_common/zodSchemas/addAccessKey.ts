@@ -14,13 +14,13 @@ const FullAccessPermissionZodSchema = z.object({
   kind: z.literal('FullAccess'),
 });
 
-const FunctionCallPermissionZodSchema = z.object({
-  kind: z.literal('FunctionCall'),
+const ContractFunctionCallPermissionZodSchema = z.object({
+  kind: z.literal('ContractFunctionCall'),
   allowedContract: AccountIdZodSchema,
   allowedFunctions: AllowedFunctionsSchema,
 });
 
-const FunctionCallAccountBalanceGasPaymentZodSchema = z.object({
+const ContractFunctionCallAccountBalanceGasPaymentZodSchema = z.object({
   source: z.literal('AccountBalance'),
   allowance: z.union([z.literal('Unlimited'), NearTokenArgsZodSchema]),
 });
@@ -46,10 +46,10 @@ const AccountBalanceFullAccessKeyArgsZodSchema = z.object({
   replayProtection: z.optional(z.never()),
 });
 
-const AccountBalanceFunctionCallKeyArgsZodSchema = z.object({
+const AccountBalanceContractFunctionCallKeyArgsZodSchema = z.object({
   publicKey: PublicKeyZodSchema,
-  permission: FunctionCallPermissionZodSchema,
-  gasPayment: FunctionCallAccountBalanceGasPaymentZodSchema,
+  permission: ContractFunctionCallPermissionZodSchema,
+  gasPayment: ContractFunctionCallAccountBalanceGasPaymentZodSchema,
   replayProtection: z.optional(z.never()),
 });
 
@@ -64,18 +64,18 @@ const KeyBalanceFullAccessKeyArgsZodSchema = z.object({
   replayProtection: NonceChannelsArgsZodSchema,
 });
 
-const KeyBalanceFunctionCallKeyArgsZodSchema = z.object({
+const KeyBalanceContractFunctionCallKeyArgsZodSchema = z.object({
   publicKey: PublicKeyZodSchema,
-  permission: FunctionCallPermissionZodSchema,
+  permission: ContractFunctionCallPermissionZodSchema,
   gasPayment: KeyBalanceGasPaymentZodSchema,
   replayProtection: NonceChannelsArgsZodSchema,
 });
 
 export const AddAccessKeyArgsZodSchema = z.union([
   AccountBalanceFullAccessKeyArgsZodSchema,
-  AccountBalanceFunctionCallKeyArgsZodSchema,
+  AccountBalanceContractFunctionCallKeyArgsZodSchema,
   KeyBalanceFullAccessKeyArgsZodSchema,
-  KeyBalanceFunctionCallKeyArgsZodSchema,
+  KeyBalanceContractFunctionCallKeyArgsZodSchema,
 ]);
 
 // ── The action ───────────────────────────────────────────────
@@ -108,8 +108,8 @@ export const AddAccessKeyActionZodSchema = z.union([
   z.object({
     ...ActionTypeShape,
     publicKey: PublicKeyZodSchema,
-    permission: FunctionCallPermissionZodSchema,
-    gasPayment: FunctionCallAccountBalanceGasPaymentZodSchema,
+    permission: ContractFunctionCallPermissionZodSchema,
+    gasPayment: ContractFunctionCallAccountBalanceGasPaymentZodSchema,
     replayProtection: NonceChannelZodSchema,
   }),
   z.object({
@@ -122,7 +122,7 @@ export const AddAccessKeyActionZodSchema = z.union([
   z.object({
     ...ActionTypeShape,
     publicKey: PublicKeyZodSchema,
-    permission: FunctionCallPermissionZodSchema,
+    permission: ContractFunctionCallPermissionZodSchema,
     gasPayment: KeyBalanceGasPaymentZodSchema,
     replayProtection: NonceChannelsZodSchema,
   }),

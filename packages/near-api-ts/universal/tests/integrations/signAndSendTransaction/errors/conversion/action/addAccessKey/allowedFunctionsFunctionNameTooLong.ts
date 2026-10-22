@@ -34,7 +34,7 @@ export const allowedFunctionsFunctionNameTooLong = (context: TestContext) => asy
       action: addAccessKey({
         publicKey: randomEd25519KeyPair().publicKey,
         permission: {
-          kind: 'FunctionCall',
+          kind: 'ContractFunctionCall',
           allowedContract: 'alice',
           allowedFunctions: [FUNCTION_NAME],
         },

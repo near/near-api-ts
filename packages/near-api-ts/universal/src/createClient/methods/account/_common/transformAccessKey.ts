@@ -31,7 +31,7 @@ export const transformAccessKey = ({
     return {
       publicKeyId,
       permission: {
-        kind: 'FunctionCall',
+        kind: 'ContractFunctionCall',
         allowedContract: receiverId,
         allowedFunctions: toAllowedFunctions(methodNames),
       },
@@ -63,7 +63,7 @@ export const transformAccessKey = ({
     return {
       publicKeyId,
       permission: {
-        kind: 'FunctionCall',
+        kind: 'ContractFunctionCall',
         allowedContract: receiverId,
         allowedFunctions: toAllowedFunctions(methodNames),
       },

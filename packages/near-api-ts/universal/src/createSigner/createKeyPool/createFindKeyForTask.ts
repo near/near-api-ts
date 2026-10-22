@@ -1,19 +1,19 @@
 import type { FindKeyForTask, KeyPoolContext, PoolKeys } from '../../../types/signer/inner/keyPool';
 import type {
+  ContractFunctionCallKeyPriority,
   FullAccessKeyPriority,
-  FunctionCallKeyPriority,
 } from '../../../types/signer/inner/taskQueue';
 import { result } from '../../_common/_common/_common/result';
 
 const findSigningKey = (
-  keyPriority: FullAccessKeyPriority | FunctionCallKeyPriority,
+  keyPriority: FullAccessKeyPriority | ContractFunctionCallKeyPriority,
   poolKeys: PoolKeys,
 ) => {
   if (keyPriority.accessType === 'FullAccess')
     return poolKeys.fullAccess.find((key) => !key.isLocked);
 
-  // If keyType is FunctionCall - find the key which follows all criteria
-  return poolKeys.functionCall.find((key) => {
+  // If keyType is ContractFunctionCall - find the key which follows all criteria
+  return poolKeys.contractFunctionCall.find((key) => {
     const isContractIdMatch = key.contractAccountId === keyPriority.contractAccountId;
 
     // No allowedFunctions means that the key can call every contract function

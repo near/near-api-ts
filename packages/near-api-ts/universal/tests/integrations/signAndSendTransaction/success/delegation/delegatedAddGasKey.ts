@@ -35,7 +35,11 @@ export const delegatedAddGasKey = (context: TestContext) => async () => {
       },
       delegatedAction: addAccessKey({
         publicKey: gasKeyPair.publicKey,
-        permission: { kind: 'FunctionCall', allowedContract: 'bob', allowedFunctions: ['ping'] },
+        permission: {
+          kind: 'ContractFunctionCall',
+          allowedContract: 'bob',
+          allowedFunctions: ['ping'],
+        },
         gasPayment: { source: 'KeyBalance' },
         replayProtection: { channelCount: 7 },
       }),
@@ -80,7 +84,7 @@ export const delegatedAddGasKey = (context: TestContext) => async () => {
             actionType: 'AddAccessKey',
             publicKey: gasKeyPair.publicKey,
             permission: {
-              kind: 'FunctionCall',
+              kind: 'ContractFunctionCall',
               allowedContract: 'bob',
               allowedFunctions: ['ping'],
             },
@@ -98,7 +102,11 @@ export const delegatedAddGasKey = (context: TestContext) => async () => {
   });
 
   expect(gasAccessKey.accessKey).toMatchObject({
-    permission: { kind: 'FunctionCall', allowedContract: 'bob', allowedFunctions: ['ping'] },
+    permission: {
+      kind: 'ContractFunctionCall',
+      allowedContract: 'bob',
+      allowedFunctions: ['ping'],
+    },
     gasPayment: { source: 'KeyBalance', balance: { yoctoNear: 0n } },
     replayProtection: { scheme: 'NonceChannels', channelCount: 7 },
   });

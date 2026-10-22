@@ -66,7 +66,7 @@ describe('MemorySigner.signTransaction', async () => {
           addAccessKey({
             publicKey: keyPair1.publicKey,
             permission: {
-              kind: 'FunctionCall',
+              kind: 'ContractFunctionCall',
               allowedContract: 'abc',
               allowedFunctions: 'AllNonPayable',
             },

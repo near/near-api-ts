@@ -4,7 +4,7 @@ import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../../utils/assertTxResultExecutionErrKind';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../executeDelegation.test';
-import { attachFunctionCallKey } from './_common/attachFunctionCallKey';
+import { attachContractFunctionCallKey } from './_common/attachContractFunctionCallKey';
 import { sendDelegation } from './_common/sendDelegation';
 
 export const receiverNotAllowed = (context: TestContext) => async () => {
@@ -12,7 +12,7 @@ export const receiverNotAllowed = (context: TestContext) => async () => {
 
   // The key may only call `bob`, but the delegated call is addressed to `nat`. The receiver the
   // key restricts is the delegation receiver, not the relayer transaction's one.
-  const functionCallKeyPair = await attachFunctionCallKey(context, {
+  const contractFunctionCallKeyPair = await attachContractFunctionCallKey(context, {
     allowedContract: 'bob',
     allowance: 'Unlimited',
     allowedFunctions: 'AllNonPayable',
@@ -20,14 +20,14 @@ export const receiverNotAllowed = (context: TestContext) => async () => {
 
   const aliceAccessKey = await client.getAccessKey({
     accountId: 'alice',
-    publicKey: functionCallKeyPair.publicKey,
+    publicKey: contractFunctionCallKeyPair.publicKey,
   });
 
   const signedDelegation = await signDelegation({
     delegation: {
       delegator: {
         accountId: 'alice',
-        publicKey: functionCallKeyPair.publicKey,
+        publicKey: contractFunctionCallKeyPair.publicKey,
         replayProtection: {
           scheme: 'NonceChannel',
           nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
@@ -40,7 +40,7 @@ export const receiverNotAllowed = (context: TestContext) => async () => {
       receiverAccountId: 'nat',
       expiration: { blockHeight: aliceAccessKey.atMomentOf.blockHeight + 100 },
     },
-    signDataProvider: functionCallKeyPair,
+    signDataProvider: contractFunctionCallKeyPair,
   });
 
   const { tx, transactionHash } = await sendDelegation(context, signedDelegation);

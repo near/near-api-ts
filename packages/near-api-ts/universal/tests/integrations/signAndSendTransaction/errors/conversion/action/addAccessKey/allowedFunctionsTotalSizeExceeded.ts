@@ -41,7 +41,7 @@ export const allowedFunctionsTotalSizeExceeded = (context: TestContext) => async
       action: addAccessKey({
         publicKey: randomEd25519KeyPair().publicKey,
         permission: {
-          kind: 'FunctionCall',
+          kind: 'ContractFunctionCall',
           allowedContract: 'alice',
           allowedFunctions: allowedFunctions,
         },

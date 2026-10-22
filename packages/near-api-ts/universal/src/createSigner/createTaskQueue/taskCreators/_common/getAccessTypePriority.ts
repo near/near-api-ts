@@ -13,7 +13,7 @@ const getPriorityForCallContractFunctionTransaction = (
 ): AccessTypePriority => [
   { accessType: 'FullAccess' },
   {
-    accessType: 'FunctionCall',
+    accessType: 'ContractFunctionCall',
     contractAccountId: receiverAccountId,
     calledFnName: action.functionName,
   },

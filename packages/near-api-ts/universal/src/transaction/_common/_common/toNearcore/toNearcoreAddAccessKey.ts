@@ -1,4 +1,4 @@
-import type { FunctionCallPermission } from '../../../../../types/_common/accessKey';
+import type { ContractFunctionCallPermission } from '../../../../../types/_common/accessKey';
 import type {
   NearcoreAccessKeyPermission,
   NearcoreAddAccessKeyAction,
@@ -7,8 +7,8 @@ import { nearToken } from '../../../../_common/nearToken';
 import { toNearcorePublicKey } from '../_common/toNearcorePublicKey';
 import type { InnerAddAccessKeyAction } from '../zodSchemas/addAccessKey';
 
-const toNearcoreFunctionCallPermission = (
-  { allowedContract, allowedFunctions }: FunctionCallPermission,
+const toNearcoreContractFunctionCallPermission = (
+  { allowedContract, allowedFunctions }: ContractFunctionCallPermission,
   allowance: bigint | null,
 ) => ({
   receiverId: allowedContract,
@@ -31,7 +31,7 @@ const getPermission = ({
     return {
       gasKeyFunctionCall: {
         gasKeyInfo,
-        functionCallPermission: toNearcoreFunctionCallPermission(permission, null),
+        functionCallPermission: toNearcoreContractFunctionCallPermission(permission, null),
       },
     };
   }
@@ -43,7 +43,7 @@ const getPermission = ({
   const { allowance } = gasPayment;
 
   return {
-    functionCall: toNearcoreFunctionCallPermission(
+    functionCall: toNearcoreContractFunctionCallPermission(
       permission,
       allowance === undefined || allowance === 'Unlimited' ? null : nearToken(allowance).yoctoNear,
     ),

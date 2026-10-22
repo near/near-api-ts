@@ -4,21 +4,21 @@ import type {
   PoolKeys,
 } from '../../../types/signer/inner/keyPool';
 import type {
+  ContractFunctionCallKeyPriority,
   FullAccessKeyPriority,
-  FunctionCallKeyPriority,
 } from '../../../types/signer/inner/taskQueue';
 import { createNatError } from '../../_common/_common/_common/_common/natError';
 import { result } from '../../_common/_common/_common/result';
 
 const isKeyExist = async (
-  keyPriority: FullAccessKeyPriority | FunctionCallKeyPriority,
+  keyPriority: FullAccessKeyPriority | ContractFunctionCallKeyPriority,
   poolKeys: PoolKeys,
 ) => {
   // If there exists at least 1 FA key - return true
   if (keyPriority.accessType === 'FullAccess') return poolKeys.fullAccess.length > 0;
 
-  // If keyType is FunctionCall - find the key which follows all criteria
-  return poolKeys.functionCall.some((key) => {
+  // If keyType is ContractFunctionCall - find the key which follows all criteria
+  return poolKeys.contractFunctionCall.some((key) => {
     const isContractIdMatch = key.contractAccountId === keyPriority.contractAccountId;
 
     // No allowedFunctions means that the key can call every contract function

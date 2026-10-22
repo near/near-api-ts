@@ -1,8 +1,8 @@
 import type { NatError } from '../../../../../src/_common/_common/_common/_common/natError';
 import type {
   AccountBalanceGasPayment,
+  ContractFunctionCallPermission,
   FullAccessPermission,
-  FunctionCallPermission,
   NonceChannels,
   UnlimitedAccountBalanceGasPayment,
 } from '../../../accessKey';
@@ -36,9 +36,9 @@ type AccountBalanceFullAccessKeyArgs = {
   replayProtection?: never;
 };
 
-type AccountBalanceFunctionCallKeyArgs = {
+type AccountBalanceContractFunctionCallKeyArgs = {
   publicKey: PublicKey;
-  permission: FunctionCallPermission;
+  permission: ContractFunctionCallPermission;
   gasPayment: {
     source: 'AccountBalance';
     allowance: 'Unlimited' | NearTokenArgs;
@@ -58,9 +58,9 @@ type KeyBalanceFullAccessKeyArgs = {
   replayProtection: NonceChannelsArgs;
 };
 
-type KeyBalanceFunctionCallKeyArgs = {
+type KeyBalanceContractFunctionCallKeyArgs = {
   publicKey: PublicKey;
-  permission: FunctionCallPermission;
+  permission: ContractFunctionCallPermission;
   gasPayment: {
     source: 'KeyBalance';
   };
@@ -69,9 +69,9 @@ type KeyBalanceFunctionCallKeyArgs = {
 
 export type CreateAddAccessKeyActionArgs =
   | AccountBalanceFullAccessKeyArgs
-  | AccountBalanceFunctionCallKeyArgs
+  | AccountBalanceContractFunctionCallKeyArgs
   | KeyBalanceFullAccessKeyArgs
-  | KeyBalanceFunctionCallKeyArgs;
+  | KeyBalanceContractFunctionCallKeyArgs;
 
 export type AddAccessKeyAction =
   | {
@@ -84,7 +84,7 @@ export type AddAccessKeyAction =
   | {
       actionType: 'AddAccessKey';
       publicKey: PublicKey;
-      permission: FunctionCallPermission;
+      permission: ContractFunctionCallPermission;
       gasPayment: AccountBalanceGasPayment;
       replayProtection: { scheme: 'NonceChannel' };
     }
@@ -98,7 +98,7 @@ export type AddAccessKeyAction =
   | {
       actionType: 'AddAccessKey';
       publicKey: PublicKey;
-      permission: FunctionCallPermission;
+      permission: ContractFunctionCallPermission;
       gasPayment: { source: 'KeyBalance' };
       replayProtection: NonceChannels;
     };
@@ -115,7 +115,7 @@ export type CreateAddAccessKeyAction = (args: CreateAddAccessKeyActionArgs) => A
 
 // ****** NEARCORE ********
 
-export type NearcoreFunctionCallPermission = {
+export type NearcoreContractFunctionCallPermission = {
   receiverId: AccountId;
   allowance: bigint | null;
   methodNames: ContractFunctionName[];
@@ -127,12 +127,12 @@ type NearcoreGasKeyInfo = {
 };
 
 export type NearcoreAccessKeyPermission =
-  | { functionCall: NearcoreFunctionCallPermission }
+  | { functionCall: NearcoreContractFunctionCallPermission }
   | { fullAccess: {} }
   | {
       gasKeyFunctionCall: {
         gasKeyInfo: NearcoreGasKeyInfo;
-        functionCallPermission: NearcoreFunctionCallPermission;
+        functionCallPermission: NearcoreContractFunctionCallPermission;
       };
     }
   | { gasKeyFullAccess: NearcoreGasKeyInfo };

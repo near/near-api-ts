@@ -15,7 +15,7 @@ import type { TestContext } from '../signer.test';
 // the genesis accounts (182 bytes) can be drained to the last yoctoNEAR.
 const ZERO_BALANCE_ACCOUNT_STORAGE_LIMIT = 770;
 
-// Every function-call key with a 64 character contract account id adds ~170 bytes, so a
+// Every `ContractFunctionCall` key with a 64 character contract account id adds ~170 bytes, so a
 // handful of them is enough to leave the zero balance range.
 const EXTRA_KEYS_COUNT = 5;
 
@@ -82,7 +82,7 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
         addAccessKey({
           publicKey: randomEd25519KeyPair().publicKey,
           permission: {
-            kind: 'FunctionCall',
+            kind: 'ContractFunctionCall',
             allowedContract: 'a'.repeat(64),
             allowedFunctions: 'AllNonPayable',
           },

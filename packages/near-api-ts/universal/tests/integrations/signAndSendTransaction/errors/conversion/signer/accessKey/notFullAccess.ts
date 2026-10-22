@@ -4,36 +4,36 @@ import { signTransaction } from '../../../../../../../src/transaction/signTransa
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../signer.test';
-import { attachFunctionCallKey } from './_common/attachFunctionCallKey';
+import { attachContractFunctionCallKey } from './_common/attachContractFunctionCallKey';
 
 export const notFullAccess = (context: TestContext) => async () => {
   const { client } = context;
 
-  // A function-call key may only sign a single CallContractFunction action, so any other
+  // A `ContractFunctionCall` key may only sign a single CallContractFunction action, so any other
   // action — a transfer here — demands a full access key.
-  const functionCallKeyPair = await attachFunctionCallKey(context, {
+  const contractFunctionCallKeyPair = await attachContractFunctionCallKey(context, {
     allowedContract: 'alice',
     allowance: 'Unlimited',
     allowedFunctions: 'AllNonPayable',
   });
 
-  const functionCallAccessKey = await client.getAccessKey({
+  const contractFunctionCallAccessKey = await client.getAccessKey({
     accountId: 'nat',
-    publicKey: functionCallKeyPair.publicKey,
+    publicKey: contractFunctionCallKeyPair.publicKey,
   });
 
   const signedTransaction = await signTransaction({
-    signDataProvider: functionCallKeyPair,
+    signDataProvider: contractFunctionCallKeyPair,
     transaction: {
       signer: {
         accountId: 'nat',
-        publicKey: functionCallKeyPair.publicKey,
+        publicKey: contractFunctionCallKeyPair.publicKey,
         replayProtection: {
           scheme: 'NonceChannel',
-          nonce: getLastNonce(functionCallAccessKey.accessKey) + 1,
+          nonce: getLastNonce(contractFunctionCallAccessKey.accessKey) + 1,
         },
       },
-      recentBlockHash: functionCallAccessKey.atMomentOf.blockHash,
+      recentBlockHash: contractFunctionCallAccessKey.atMomentOf.blockHash,
       action: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'alice',
     },

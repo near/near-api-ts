@@ -26,17 +26,17 @@ export type PoolFullAccessKey = {
   accessType: 'FullAccess';
 } & KeyPoolKeyBase;
 
-export type PoolFunctionCallKey = {
-  accessType: 'FunctionCall';
+export type PoolContractFunctionCallKey = {
+  accessType: 'ContractFunctionCall';
   contractAccountId: AccountId;
   allowedFunctions: AllowedFunctions;
 } & KeyPoolKeyBase;
 
-export type PoolKey = PoolFullAccessKey | PoolFunctionCallKey;
+export type PoolKey = PoolFullAccessKey | PoolContractFunctionCallKey;
 
 export type PoolKeys = {
   fullAccess: PoolFullAccessKey[];
-  functionCall: PoolFunctionCallKey[];
+  contractFunctionCall: PoolContractFunctionCallKey[];
 };
 
 export type KeyPoolState = {

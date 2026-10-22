@@ -24,15 +24,15 @@ describe('signAndSendTransaction › addAccessKey', () => {
   });
 
   it('adds a key of each variant and reads them back', async () => {
-    const [fullAccessKey, functionCallKey, gasFullAccessKey, gasFunctionCallKey] = [
+    const [fullAccessKey, contractFunctionCallKey, gasFullAccessKey, gasContractFunctionCallKey] = [
       randomEd25519KeyPair(),
       randomSecp256k1KeyPair(),
       randomEd25519KeyPair(),
       randomSecp256k1KeyPair(),
     ];
 
-    const functionCallPermission = {
-      kind: 'FunctionCall' as const,
+    const contractFunctionCallPermission = {
+      kind: 'ContractFunctionCall' as const,
       allowedContract: 'alice',
       allowedFunctions: ['ping', 'pong'],
     };
@@ -61,8 +61,8 @@ describe('signAndSendTransaction › addAccessKey', () => {
             gasPayment: { source: 'AccountBalance' },
           }),
           addAccessKey({
-            publicKey: functionCallKey.publicKey,
-            permission: functionCallPermission,
+            publicKey: contractFunctionCallKey.publicKey,
+            permission: contractFunctionCallPermission,
             gasPayment: { source: 'AccountBalance', allowance: near('0.25') },
           }),
           addAccessKey({
@@ -72,9 +72,9 @@ describe('signAndSendTransaction › addAccessKey', () => {
             replayProtection: { channelCount: 1024 },
           }),
           addAccessKey({
-            publicKey: gasFunctionCallKey.publicKey,
+            publicKey: gasContractFunctionCallKey.publicKey,
             permission: {
-              kind: 'FunctionCall',
+              kind: 'ContractFunctionCall',
               allowedContract: 'bob',
               allowedFunctions: 'AllNonPayable',
             },
@@ -103,8 +103,8 @@ describe('signAndSendTransaction › addAccessKey', () => {
       },
       {
         actionType: 'AddAccessKey',
-        publicKey: functionCallKey.publicKey,
-        permission: functionCallPermission,
+        publicKey: contractFunctionCallKey.publicKey,
+        permission: contractFunctionCallPermission,
         gasPayment: { source: 'AccountBalance', allowance: { near: '0.25' } },
         replayProtection: { scheme: 'NonceChannel' },
       },
@@ -117,9 +117,9 @@ describe('signAndSendTransaction › addAccessKey', () => {
       },
       {
         actionType: 'AddAccessKey',
-        publicKey: gasFunctionCallKey.publicKey,
+        publicKey: gasContractFunctionCallKey.publicKey,
         permission: {
-          kind: 'FunctionCall',
+          kind: 'ContractFunctionCall',
           allowedContract: 'bob',
           allowedFunctions: 'AllNonPayable',
         },
@@ -144,8 +144,8 @@ describe('signAndSendTransaction › addAccessKey', () => {
       replayProtection: { scheme: 'NonceChannel' },
     });
 
-    expect(findKey(functionCallKey)).toMatchObject({
-      permission: functionCallPermission,
+    expect(findKey(contractFunctionCallKey)).toMatchObject({
+      permission: contractFunctionCallPermission,
       gasPayment: { source: 'AccountBalance', allowance: { near: '0.25' } },
       replayProtection: { scheme: 'NonceChannel' },
     });
@@ -157,9 +157,9 @@ describe('signAndSendTransaction › addAccessKey', () => {
       replayProtection: { scheme: 'NonceChannels', channelCount: 1024 },
     });
 
-    expect(findKey(gasFunctionCallKey)).toMatchObject({
+    expect(findKey(gasContractFunctionCallKey)).toMatchObject({
       permission: {
-        kind: 'FunctionCall',
+        kind: 'ContractFunctionCall',
         allowedContract: 'bob',
         allowedFunctions: 'AllNonPayable',
       },

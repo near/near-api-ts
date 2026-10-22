@@ -3,8 +3,8 @@ import type { GetPoolKeys, KeyPoolState } from '../../../../types/signer/inner/k
 import type { MemorySignerContext } from '../../../../types/signer/memorySigner';
 import { createNatError } from '../../../_common/_common/_common/_common/natError';
 import { result } from '../../../_common/_common/_common/result';
+import { createContractFunctionCallPoolKeys } from './createContractFunctionCallPoolKeys';
 import { createFullAccessPoolKeys } from './createFullAccessPoolKeys';
-import { createFunctionCallPoolKeys } from './createFunctionCallPoolKeys';
 import { getAllowedAccessKeys } from './getAllowedAccessKeys';
 
 // We use this function to create a pool only once and then reuse it for all tasks;
@@ -22,7 +22,7 @@ export const createGetPoolKeys =
     if (state.poolKeys)
       return result.ok({
         fullAccess: state.poolKeys.fullAccess,
-        functionCall: state.poolKeys.functionCall,
+        contractFunctionCall: state.poolKeys.contractFunctionCall,
       });
 
     // 2. If we are loading access keys right now - await for the result -
@@ -62,14 +62,14 @@ export const createGetPoolKeys =
         );
 
       // 5. Create pool keys and return them;
-      const [fullAccessPoolKeys, functionCallPollKeys] = await Promise.all([
+      const [fullAccessPoolKeys, contractFunctionCallPoolKeys] = await Promise.all([
         createFullAccessPoolKeys(allowedAccessKeys, signerContext),
-        createFunctionCallPoolKeys(allowedAccessKeys, signerContext),
+        createContractFunctionCallPoolKeys(allowedAccessKeys, signerContext),
       ]);
 
       state.poolKeys = {
         fullAccess: fullAccessPoolKeys,
-        functionCall: functionCallPollKeys,
+        contractFunctionCall: contractFunctionCallPoolKeys,
       };
       state.poolKeysLoadingPromise = undefined;
 

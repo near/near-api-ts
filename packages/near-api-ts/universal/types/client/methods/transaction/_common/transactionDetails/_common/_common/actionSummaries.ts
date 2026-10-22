@@ -1,6 +1,6 @@
 import type {
+  ContractFunctionCallPermission,
   FullAccessPermission,
-  FunctionCallPermission,
 } from '../../../../../../../_common/accessKey';
 import type {
   AccountId,
@@ -35,7 +35,7 @@ export type AddAccessKeyActionSummary =
   | {
       actionType: 'AddAccessKey';
       publicKey: PublicKey;
-      permission: FunctionCallPermission;
+      permission: ContractFunctionCallPermission;
       gasPayment: { source: 'AccountBalance'; allowance: 'Unlimited' | NearToken };
       replayProtection: { scheme: 'NonceChannel' };
     }
@@ -49,7 +49,7 @@ export type AddAccessKeyActionSummary =
   | {
       actionType: 'AddAccessKey';
       publicKey: PublicKey;
-      permission: FunctionCallPermission;
+      permission: ContractFunctionCallPermission;
       gasPayment: { source: 'KeyBalance' };
       replayProtection: { scheme: 'NonceChannels'; channelCount: number };
     };

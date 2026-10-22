@@ -4,15 +4,15 @@ import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../../utils/assertTxResultExecutionErrKind';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../executeDelegation.test';
-import { attachFunctionCallKey } from './_common/attachFunctionCallKey';
+import { attachContractFunctionCallKey } from './_common/attachContractFunctionCallKey';
 import { sendDelegation } from './_common/sendDelegation';
 
 export const attachedDepositNotAllowed = (context: TestContext) => async () => {
   const { client } = context;
 
-  // A function-call key can never attach a deposit, even to a function it is allowed to call on
-  // the account it is allowed to call.
-  const functionCallKeyPair = await attachFunctionCallKey(context, {
+  // A `ContractFunctionCall` key can never attach a deposit, even to a function it is allowed to
+  // call on the account it is allowed to call.
+  const contractFunctionCallKeyPair = await attachContractFunctionCallKey(context, {
     allowedContract: 'bob',
     allowance: 'Unlimited',
     allowedFunctions: 'AllNonPayable',
@@ -20,14 +20,14 @@ export const attachedDepositNotAllowed = (context: TestContext) => async () => {
 
   const aliceAccessKey = await client.getAccessKey({
     accountId: 'alice',
-    publicKey: functionCallKeyPair.publicKey,
+    publicKey: contractFunctionCallKeyPair.publicKey,
   });
 
   const signedDelegation = await signDelegation({
     delegation: {
       delegator: {
         accountId: 'alice',
-        publicKey: functionCallKeyPair.publicKey,
+        publicKey: contractFunctionCallKeyPair.publicKey,
         replayProtection: {
           scheme: 'NonceChannel',
           nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
@@ -41,7 +41,7 @@ export const attachedDepositNotAllowed = (context: TestContext) => async () => {
       receiverAccountId: 'bob',
       expiration: { blockHeight: aliceAccessKey.atMomentOf.blockHeight + 100 },
     },
-    signDataProvider: functionCallKeyPair,
+    signDataProvider: contractFunctionCallKeyPair,
   });
 
   const { tx, transactionHash } = await sendDelegation(context, signedDelegation);

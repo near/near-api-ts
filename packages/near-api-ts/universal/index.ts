@@ -149,13 +149,13 @@ export {
 
 export type {
   AccessKey,
+  AccountBalanceContractFunctionCallKey,
   AccountBalanceFullAccessKey,
-  AccountBalanceFunctionCallKey,
   AllowedFunctions,
   GasBudget,
   GasBudgetArgs,
+  KeyBalanceContractFunctionCallKey,
   KeyBalanceFullAccessKey,
-  KeyBalanceFunctionCallKey,
 } from './types/_common/accessKey';
 export type {
   AccountId,

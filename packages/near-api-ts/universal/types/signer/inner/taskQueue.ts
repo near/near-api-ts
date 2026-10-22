@@ -25,16 +25,16 @@ export interface TaskQueueInnerErrorRegistry {
 
 export type FullAccessKeyPriority = { accessType: 'FullAccess' };
 
-export type FunctionCallKeyPriority = {
-  accessType: 'FunctionCall';
+export type ContractFunctionCallKeyPriority = {
+  accessType: 'ContractFunctionCall';
   contractAccountId: AccountId;
   calledFnName: ContractFunctionName;
 };
 
 export type AccessTypePriority =
-  | [FullAccessKeyPriority | FunctionCallKeyPriority]
-  | [FullAccessKeyPriority, FunctionCallKeyPriority]
-  | [FunctionCallKeyPriority, FullAccessKeyPriority];
+  | [FullAccessKeyPriority | ContractFunctionCallKeyPriority]
+  | [FullAccessKeyPriority, ContractFunctionCallKeyPriority]
+  | [ContractFunctionCallKeyPriority, FullAccessKeyPriority];
 
 export type TaskId = UUID;
 

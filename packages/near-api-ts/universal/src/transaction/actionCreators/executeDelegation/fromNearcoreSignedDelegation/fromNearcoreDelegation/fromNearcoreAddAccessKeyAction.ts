@@ -1,16 +1,16 @@
 import type {
   AddAccessKeyAction,
   NearcoreAddAccessKeyAction,
-  NearcoreFunctionCallPermission,
+  NearcoreContractFunctionCallPermission,
 } from '../../../../../../types/_common/transaction/actions/delegableActions/addAccessKey';
 import { yoctoNear } from '../../../../../_common/nearToken';
 import { fromNearcorePublicKey } from './_common/fromNearcorePublicKey';
 
-const fromNearcoreFunctionCallPermission = ({
+const fromNearcoreContractFunctionCallPermission = ({
   receiverId,
   methodNames,
-}: NearcoreFunctionCallPermission) => ({
-  kind: 'FunctionCall' as const,
+}: NearcoreContractFunctionCallPermission) => ({
+  kind: 'ContractFunctionCall' as const,
   allowedContract: receiverId,
   allowedFunctions: methodNames.length > 0 ? methodNames : ('AllNonPayable' as const),
 });
@@ -37,7 +37,7 @@ export const fromNearcoreAddAccessKeyAction = ({
 
     return {
       ...base,
-      permission: fromNearcoreFunctionCallPermission(permission.functionCall),
+      permission: fromNearcoreContractFunctionCallPermission(permission.functionCall),
       gasPayment: {
         source: 'AccountBalance',
         allowance: allowance === null ? 'Unlimited' : yoctoNear(allowance),
@@ -61,7 +61,7 @@ export const fromNearcoreAddAccessKeyAction = ({
 
   return {
     ...base,
-    permission: fromNearcoreFunctionCallPermission(functionCallPermission),
+    permission: fromNearcoreContractFunctionCallPermission(functionCallPermission),
     gasPayment: { source: 'KeyBalance' },
     replayProtection: { scheme: 'NonceChannels', channelCount: gasKeyInfo.numNonces },
   };

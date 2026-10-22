@@ -3,7 +3,7 @@ import type { PublicKeyId } from './crypto';
 import type { NearToken, NearTokenArgs } from './nearToken';
 
 /**
- * The maximum number of NEAR tokens a function-call key
+ * The maximum number of NEAR tokens a `ContractFunctionCall` key
  * is permitted to spend on gas across all non-payable function call transactions it signs.
  *
  * - `'Unlimited'` — no spending cap is enforced.
@@ -25,7 +25,7 @@ import type { NearToken, NearTokenArgs } from './nearToken';
 export type GasBudgetArgs = 'Unlimited' | NearTokenArgs;
 export type GasBudget = 'Unlimited' | NearToken;
 /**
- * The set of contract functions this function-call key is permitted to invoke.
+ * The set of contract functions this `ContractFunctionCall` key is permitted to invoke.
  * - `'AllNonPayable'` — the key may call any non-payable function on the contract.
  * - {@link ContractFunctionName}[] — restricts the key to an explicit list of functions.
  *   Each name has a max length limit, and so does the list as a whole — see protocol config.
@@ -45,8 +45,8 @@ export type FullAccessPermission = {
   kind: 'FullAccess';
 };
 
-export type FunctionCallPermission = {
-  kind: 'FunctionCall';
+export type ContractFunctionCallPermission = {
+  kind: 'ContractFunctionCall';
   allowedContract: AccountId;
   allowedFunctions: AllowedFunctions;
 };
@@ -109,9 +109,9 @@ export type AccountBalanceFullAccessKey = {
   replayProtection: NonceChannel;
 };
 
-export type AccountBalanceFunctionCallKey = {
+export type AccountBalanceContractFunctionCallKey = {
   publicKeyId: PublicKeyId;
-  permission: FunctionCallPermission;
+  permission: ContractFunctionCallPermission;
   gasPayment: AccountBalanceGasPayment;
   replayProtection: NonceChannel;
 };
@@ -125,15 +125,15 @@ export type KeyBalanceFullAccessKey = {
   replayProtection: NonceChannels;
 };
 
-export type KeyBalanceFunctionCallKey = {
+export type KeyBalanceContractFunctionCallKey = {
   publicKeyId: PublicKeyId;
-  permission: FunctionCallPermission;
+  permission: ContractFunctionCallPermission;
   gasPayment: KeyBalanceGasPayment;
   replayProtection: NonceChannels;
 };
 
 export type AccessKey =
   | AccountBalanceFullAccessKey
-  | AccountBalanceFunctionCallKey
+  | AccountBalanceContractFunctionCallKey
   | KeyBalanceFullAccessKey
-  | KeyBalanceFunctionCallKey;
+  | KeyBalanceContractFunctionCallKey;

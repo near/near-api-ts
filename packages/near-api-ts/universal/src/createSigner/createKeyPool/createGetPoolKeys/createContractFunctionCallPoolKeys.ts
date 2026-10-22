@@ -1,23 +1,26 @@
-import type { AccessKey, AccountBalanceFunctionCallKey } from '../../../../types/_common/accessKey';
+import type {
+  AccessKey,
+  AccountBalanceContractFunctionCallKey,
+} from '../../../../types/_common/accessKey';
 import type { TransactionNonce } from '../../../../types/_common/common';
 import type { PublicKey } from '../../../../types/_common/crypto';
-import type { PoolFunctionCallKey } from '../../../../types/signer/inner/keyPool';
+import type { PoolContractFunctionCallKey } from '../../../../types/signer/inner/keyPool';
 import type { MemorySignerContext } from '../../../../types/signer/memorySigner';
 import { createLock, createSetNonce, createUnlock } from './_common/keyUtils';
 
 const transformKey = (
-  { allowedContract, allowedFunctions }: AccountBalanceFunctionCallKey['permission'],
+  { allowedContract, allowedFunctions }: AccountBalanceContractFunctionCallKey['permission'],
   nonce: TransactionNonce,
   publicKey: PublicKey,
-): PoolFunctionCallKey => {
+): PoolContractFunctionCallKey => {
   const key = {
-    accessType: 'FunctionCall',
+    accessType: 'ContractFunctionCall',
     publicKey,
     isLocked: false,
     nonce,
     contractAccountId: allowedContract,
     allowedFunctions,
-  } as PoolFunctionCallKey;
+  } as PoolContractFunctionCallKey;
 
   key.lock = createLock(key);
   key.unlock = createUnlock(key);
@@ -26,16 +29,17 @@ const transformKey = (
   return key;
 };
 
-export const createFunctionCallPoolKeys = async (
+export const createContractFunctionCallPoolKeys = async (
   accountKeys: AccessKey[],
   signerContext: MemorySignerContext,
-): Promise<PoolFunctionCallKey[]> => {
+): Promise<PoolContractFunctionCallKey[]> => {
   const filteredKeys = [];
 
   for (const key of accountKeys) {
     const { permission, replayProtection } = key;
     // The pool tracks one nonce per key, so it leaves out keys with a set of nonce channels
-    if (permission.kind !== 'FunctionCall' || replayProtection.scheme !== 'NonceChannel') continue;
+    if (permission.kind !== 'ContractFunctionCall' || replayProtection.scheme !== 'NonceChannel')
+      continue;
 
     // The account refers to the key by its id, and we need the full public key to sign;
     // the keyVault finds it only if it holds the key (we can sign data by it)

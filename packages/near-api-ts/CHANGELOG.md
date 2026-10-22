@@ -250,7 +250,7 @@
   }
   {
     publicKeyId,
-    permission: { kind: 'FunctionCall', allowedContract, allowedFunctions },
+    permission: { kind: 'ContractFunctionCall', allowedContract, allowedFunctions },
     gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' | NearToken }, // was gasBudget
     replayProtection: { scheme: 'NonceChannel', lastNonce },
   }
@@ -269,8 +269,8 @@
   ```
 
   The exported types `FullAccessKey` and `FunctionCallKey` are renamed to
-  `AccountBalanceFullAccessKey` and `AccountBalanceFunctionCallKey`;
-  `KeyBalanceFullAccessKey` and `KeyBalanceFunctionCallKey` are new.
+  `AccountBalanceFullAccessKey` and `AccountBalanceContractFunctionCallKey`;
+  `KeyBalanceFullAccessKey` and `KeyBalanceContractFunctionCallKey` are new.
 
   For ed25519 and secp256k1 keys `publicKeyId` holds the same value
   `publicKey` did. For an ml-dsa-65 key the value is now the hash:
@@ -304,7 +304,7 @@
   });
   addAccessKey({
     publicKey,
-    permission: { kind: 'FunctionCall', allowedContract, allowedFunctions }, // was contractAccountId
+    permission: { kind: 'ContractFunctionCall', allowedContract, allowedFunctions }, // was contractAccountId
     gasPayment: { source: 'AccountBalance', allowance }, // was gasBudget
   });
   ```
@@ -328,7 +328,7 @@
     }
     ```
 
-    The `allowance` of a function call key is a `NearToken` – `near('0.25')`
+    The `allowance` of a `ContractFunctionCall` key is a `NearToken` – `near('0.25')`
     where the action used to take `gasBudget: { near: '0.25' }` – and a key
     paid from its own balance has
     `replayProtection: { scheme: 'NonceChannels', channelCount }`. The types
@@ -447,9 +447,7 @@
     The renames propagate to every kind built on top of them, e.g.
     `Client.SendSignedTransaction.Rpc.Action.FunctionCall.Execution.Failed` →
     `Client.SendSignedTransaction.Rpc.Action.CallContractFunction.Execution.Failed`.
-  - The access key permission keeps its name – `permission: { kind:
-    'FunctionCall', … }` – and so does
-    `Client.CallContractReadFunction.Rpc.FunctionCall.Failed`.
+  - `Client.CallContractReadFunction.Rpc.FunctionCall.Failed` keeps its name.
 
 - **Breaking:** the memory key service is now a memory key vault:
 

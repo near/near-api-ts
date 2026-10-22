@@ -42,7 +42,7 @@ describe('executeTransaction › KeyPool.SigningKey.NotFound', async () => {
           addAccessKey({
             publicKey: keyPair1.publicKey,
             permission: {
-              kind: 'FunctionCall',
+              kind: 'ContractFunctionCall',
               allowedContract: 'abc',
               allowedFunctions: 'AllNonPayable',
             },

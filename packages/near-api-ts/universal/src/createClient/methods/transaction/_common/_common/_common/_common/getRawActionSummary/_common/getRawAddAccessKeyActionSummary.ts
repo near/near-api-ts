@@ -4,8 +4,8 @@ import type { PublicKey } from '../../../../../../../../../../types/_common/cryp
 import type { AddAccessKeyActionSummary } from '../../../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
 import { yoctoNear } from '../../../../../../../../../_common/nearToken';
 
-const toFunctionCallPermission = (receiverId: AccountId, methodNames: string[]) => ({
-  kind: 'FunctionCall' as const,
+const toContractFunctionCallPermission = (receiverId: AccountId, methodNames: string[]) => ({
+  kind: 'ContractFunctionCall' as const,
   allowedContract: receiverId,
   allowedFunctions: methodNames.length > 0 ? methodNames : ('AllNonPayable' as const),
 });
@@ -35,7 +35,7 @@ export const getRawAddAccessKeyActionSummary = ({
 
     return {
       ...base,
-      permission: toFunctionCallPermission(receiverId, methodNames),
+      permission: toContractFunctionCallPermission(receiverId, methodNames),
       gasPayment: {
         source: 'AccountBalance',
         allowance: typeof allowance === 'string' ? yoctoNear(allowance) : 'Unlimited',
@@ -60,7 +60,7 @@ export const getRawAddAccessKeyActionSummary = ({
 
     return {
       ...base,
-      permission: toFunctionCallPermission(receiverId, methodNames),
+      permission: toContractFunctionCallPermission(receiverId, methodNames),
       gasPayment: { source: 'KeyBalance' },
       replayProtection: { scheme: 'NonceChannels', channelCount: numNonces },
     };

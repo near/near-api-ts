@@ -255,7 +255,7 @@ atMomentOf; // { blockHash, blockHeight }
 const { permission, gasPayment, replayProtection } = accessKey;
 
 // What the key may do
-if (permission.kind === 'FunctionCall') {
+if (permission.kind === 'ContractFunctionCall') {
   permission.allowedContract;
   permission.allowedFunctions; // 'AllNonPayable' | string[]
 }
@@ -436,7 +436,7 @@ addAccessKey({
 });
 addAccessKey({
   publicKey,
-  permission: { kind: 'FunctionCall', allowedContract: 'app.near', allowedFunctions: ['vote'] },
+  permission: { kind: 'ContractFunctionCall', allowedContract: 'app.near', allowedFunctions: ['vote'] },
   gasPayment: { source: 'AccountBalance', allowance: near('0.25') }, // or 'Unlimited'
 });
 

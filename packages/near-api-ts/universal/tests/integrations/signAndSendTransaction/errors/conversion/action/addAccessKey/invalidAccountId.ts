@@ -15,9 +15,9 @@ const INVALID_CONTRACT_ACCOUNT_ID = 'Alice';
  * while the actions the library builds can still reach it.
  *
  * The only field that can carry a malformed account id into the runtime is the `receiver_id` of
- * a FunctionCall access key permission, and it is the sole account id in the whole action set
- * typed as a raw `String` (`core/primitives-core/src/account.rs`, where the comment blames
- * testnet genesis records that hold invalid values). Reaching it takes bypassing
+ * a `ContractFunctionCall` access key permission, and it is the sole account id in the whole
+ * action set typed as a raw `String` (`core/primitives-core/src/account.rs`, where the comment
+ * blames testnet genesis records that hold invalid values). Reaching it takes bypassing
  * `AccountIdZodSchema`, which is what this case does.
  *
  * The other two sites of the variant — `beneficiary_id` of a DeleteAccount action and a global
@@ -50,7 +50,11 @@ export const invalidAccountId = (context: TestContext) => async () => {
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
       action: addAccessKey({
         publicKey: randomEd25519KeyPair().publicKey,
-        permission: { kind: 'FunctionCall', allowedContract: 'alice', allowedFunctions: ['ping'] },
+        permission: {
+          kind: 'ContractFunctionCall',
+          allowedContract: 'alice',
+          allowedFunctions: ['ping'],
+        },
         gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
       }),
       receiverAccountId: 'nat',
@@ -61,7 +65,7 @@ export const invalidAccountId = (context: TestContext) => async () => {
         action: {
           ...transaction.action,
           permission: {
-            kind: 'FunctionCall',
+            kind: 'ContractFunctionCall',
             allowedContract: INVALID_CONTRACT_ACCOUNT_ID,
             allowedFunctions: ['ping'],
           },

@@ -69,7 +69,7 @@ describe('executeDelegation', () => {
   // Borsh reads the allowance back as a bigint, so it is given as one to compare equal
   it('reads back an AddAccessKey action of each key variant', async () => {
     const permission = {
-      kind: 'FunctionCall' as const,
+      kind: 'ContractFunctionCall' as const,
       allowedContract: 'bob',
       allowedFunctions: ['ping'],
     };

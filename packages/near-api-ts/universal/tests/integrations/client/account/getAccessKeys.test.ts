@@ -81,8 +81,13 @@ describe('Get Account Access Keys', () => {
 
   // The sandbox cannot add a gas key yet, so a fake node lists one key of every kind
   it('Ok - every kind of key', async () => {
-    const [fullAccess, functionCall, limitedFunctionCall, gasKeyFullAccess, gasKeyFunctionCall] =
-      Array.from({ length: 5 }, () => randomEd25519KeyPair().publicKey);
+    const [
+      fullAccess,
+      contractFunctionCall,
+      limitedContractFunctionCall,
+      gasKeyFullAccess,
+      gasKeyContractFunctionCall,
+    ] = Array.from({ length: 5 }, () => randomEd25519KeyPair().publicKey);
 
     const { fakeClient, close } = await startFakeRpc({
       keys: [
@@ -91,7 +96,7 @@ describe('Get Account Access Keys', () => {
           access_key: { nonce: 5, permission: 'FullAccess' },
         },
         {
-          public_key: functionCall,
+          public_key: contractFunctionCall,
           access_key: {
             nonce: 6,
             permission: {
@@ -104,7 +109,7 @@ describe('Get Account Access Keys', () => {
           },
         },
         {
-          public_key: limitedFunctionCall,
+          public_key: limitedContractFunctionCall,
           access_key: {
             nonce: 7,
             permission: {
@@ -124,7 +129,7 @@ describe('Get Account Access Keys', () => {
           },
         },
         {
-          public_key: gasKeyFunctionCall,
+          public_key: gasKeyContractFunctionCall,
           access_key: {
             nonce: 0,
             permission: {
@@ -153,9 +158,9 @@ describe('Get Account Access Keys', () => {
         replayProtection: { scheme: 'NonceChannel', lastNonce: 5 },
       },
       {
-        publicKeyId: functionCall,
+        publicKeyId: contractFunctionCall,
         permission: {
-          kind: 'FunctionCall',
+          kind: 'ContractFunctionCall',
           allowedContract: 'contract.near',
           allowedFunctions: 'AllNonPayable',
         },
@@ -163,9 +168,9 @@ describe('Get Account Access Keys', () => {
         replayProtection: { scheme: 'NonceChannel', lastNonce: 6 },
       },
       {
-        publicKeyId: limitedFunctionCall,
+        publicKeyId: limitedContractFunctionCall,
         permission: {
-          kind: 'FunctionCall',
+          kind: 'ContractFunctionCall',
           allowedContract: 'contract.near',
           allowedFunctions: ['add_record'],
         },
@@ -182,9 +187,9 @@ describe('Get Account Access Keys', () => {
         replayProtection: { scheme: 'NonceChannels', channelCount: 4 },
       },
       {
-        publicKeyId: gasKeyFunctionCall,
+        publicKeyId: gasKeyContractFunctionCall,
         permission: {
-          kind: 'FunctionCall',
+          kind: 'ContractFunctionCall',
           allowedContract: 'contract.near',
           allowedFunctions: 'AllNonPayable',
         },

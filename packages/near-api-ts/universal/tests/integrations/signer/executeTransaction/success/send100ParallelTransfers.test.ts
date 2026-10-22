@@ -20,7 +20,7 @@ describe('executeTransaction › success', () => {
     return () => sandbox.stop();
   });
 
-  it('sends 100 parallel native transfers using 10 function-call keys', async () => {
+  it('sends 100 parallel native transfers using 10 ContractFunctionCall keys', async () => {
     const keyPairs = new Array(9).fill(0).map(() => randomEd25519KeyPair());
 
     const keyVault = createMemoryKeyVault({

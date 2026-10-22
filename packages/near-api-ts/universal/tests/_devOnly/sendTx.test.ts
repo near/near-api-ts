@@ -51,7 +51,7 @@ describe('SendTx', () => {
         action: addAccessKey({
           publicKey: randomKp.publicKey,
           permission: {
-            kind: 'FunctionCall',
+            kind: 'ContractFunctionCall',
             allowedContract: 'abc',
             allowedFunctions: 'AllNonPayable',
           },
