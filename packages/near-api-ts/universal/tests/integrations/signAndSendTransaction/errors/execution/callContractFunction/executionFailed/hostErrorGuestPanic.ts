@@ -12,7 +12,7 @@ export const hostErrorGuestPanic = () => async () => {
   });
   log(txResult);
 
-  assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.Execution.Failed');
+  assertTxResultExecutionErrKind(txResult, 'Action.CallContractFunction.Execution.Failed');
   expect(txResult.error.context.cause).toBe(
     "Smart contract panicked: panicked at 'Request cannot " +
       "be deleted immediately after creation.', src/lib.rs:160:9",

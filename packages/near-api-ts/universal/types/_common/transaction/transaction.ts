@@ -6,6 +6,10 @@ import type {
   NearcoreAddAccessKeyAction,
 } from './actions/delegableActions/addAccessKey';
 import type {
+  CallContractFunctionAction,
+  NearcoreCallContractFunctionAction,
+} from './actions/delegableActions/callContractFunction';
+import type {
   CreateSubAccountAction,
   NearcoreCreateSubAccountAction,
 } from './actions/delegableActions/createSubAccount';
@@ -21,10 +25,6 @@ import type {
   DeployLocalContractAction,
   NearcoreDeployLocalContractAction,
 } from './actions/delegableActions/deployLocalContract';
-import type {
-  FunctionCallAction,
-  NearcoreFunctionCallAction,
-} from './actions/delegableActions/functionCall';
 import type {
   LinkGlobalContractAction,
   NearcoreLinkGlobalContractAction,
@@ -61,7 +61,7 @@ export type TransactionAction =
   | TransferAction
   | AddAccessKeyAction
   | DeployLocalContractAction
-  | FunctionCallAction
+  | CallContractFunctionAction
   | StakeAction
   | DeleteAccessKeyAction
   | DeleteAccountAction
@@ -157,7 +157,7 @@ export type NearcoreTransactionAction =
   | NearcoreTransferAction
   | NearcoreAddAccessKeyAction
   | NearcoreDeployLocalContractAction
-  | NearcoreFunctionCallAction
+  | NearcoreCallContractFunctionAction
   | NearcoreStakeAction
   | NearcoreDeleteAccessKeyAction
   | NearcoreDeleteAccountAction

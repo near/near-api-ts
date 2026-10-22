@@ -1,5 +1,5 @@
 import { expect } from 'vitest';
-import { functionCall } from '../../../../../../../index';
+import { callContractFunction } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
@@ -33,7 +33,7 @@ export const functionNotAllowed = (context: TestContext) => async () => {
         },
       },
       recentBlockHash: functionCallAccessKey.atMomentOf.blockHash,
-      action: functionCall({
+      action: callContractFunction({
         functionName: 'forbidden_function',
         gasLimit: { teraGas: '10' },
       }),

@@ -40,7 +40,7 @@ const getTransactionActionSummaries = <
     }
   }
   // If no custom deserializer is provided, use the default one and return default ActionSummaries
-  // with unknown functionCall.functionArgs type
+  // with unknown callContractFunction.functionArgs type
   return result.ok(
     rawActionSummaries.map(getParsedActionSummary) as TransactionActionSummaries<ASF>,
   );

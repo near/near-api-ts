@@ -29,6 +29,6 @@ export const getExecutionSteps = (
     }
   }
   // If no custom deserializer is provided, use the default one and return default ExecutionSteps
-  // with unknown result.data type and unknown functionCall.functionArgs type;
+  // with unknown result.data type and unknown callContractFunction.functionArgs type;
   return result.ok(rawExecutionSteps.map(getParsedExecutionStep) as ExecutionSteps);
 };

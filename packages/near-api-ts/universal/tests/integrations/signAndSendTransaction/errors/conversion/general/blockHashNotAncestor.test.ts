@@ -3,9 +3,9 @@ import { beforeAll, describe, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
+  callContractFunction,
   createSubAccount,
   deployLocalContract,
-  functionCall,
   keyPair,
   transfer,
 } from '../../../../../../index';
@@ -132,7 +132,7 @@ describe.skip('signAndSendTransaction › BlockHash.NotAncestor conversion error
                 },
               },
               recentBlockHash: natKey.atMomentOf.blockHash,
-              action: functionCall({
+              action: callContractFunction({
                 functionName: GAS_BURNER_FUNCTION_NAME,
                 gasLimit: { teraGas: '1000' },
               }),

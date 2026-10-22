@@ -3,7 +3,7 @@ import type { HostError } from '@near-js/jsonrpc-types';
 /**
  * Reproduces nearcore's `impl std::fmt::Display for HostError`, converting an
  * old `HostError` into the exact human-readable string nearcore emits nowadays. Used as the
- * `cause` of an `Action.FunctionCall.Execution.Failed` ExecutionError.
+ * `cause` of an `Action.CallContractFunction.Execution.Failed` ExecutionError.
  */
 export const transformHostError = (hostError: HostError): string => {
   if (typeof hostError === 'string') {

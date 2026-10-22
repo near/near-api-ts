@@ -6,11 +6,11 @@ import type {
 import { constants } from '../../_common/_common/_common/constants';
 import { toNearcorePublicKey } from './_common/_common/toNearcorePublicKey';
 import { toNearcoreAddAccessKeyAction } from './_common/toNearcore/toNearcoreAddAccessKey';
+import { toNearcoreCallContractFunctionAction } from './_common/toNearcore/toNearcoreCallContractFunction';
 import { toNearcoreCreateSubAccountAction } from './_common/toNearcore/toNearcoreCreateSubAccount';
 import { toNearcoreDeleteAccessKeyAction } from './_common/toNearcore/toNearcoreDeleteAccessKey';
 import { toNearcoreDeleteAccountAction } from './_common/toNearcore/toNearcoreDeleteAccount';
 import { toNearcoreDeployLocalContractAction } from './_common/toNearcore/toNearcoreDeployLocalContract';
-import { toNearcoreFunctionCallAction } from './_common/toNearcore/toNearcoreFunctionCall';
 import { toNearcoreLinkGlobalContractAction } from './_common/toNearcore/toNearcoreLinkGlobalContract';
 import { toNearcorePinGlobalContractAction } from './_common/toNearcore/toNearcorePinGlobalContract';
 import { toNearcorePublishLinkableGlobalContractAction } from './_common/toNearcore/toNearcorePublishLinkableGlobalContract';
@@ -36,8 +36,8 @@ const toNearcoreDelegableAction = (action: InnerDelegableAction): NearcoreDelega
       return toNearcoreTransferAction(action);
     case 'DeployLocalContract':
       return toNearcoreDeployLocalContractAction(action);
-    case 'FunctionCall':
-      return toNearcoreFunctionCallAction(action);
+    case 'CallContractFunction':
+      return toNearcoreCallContractFunctionAction(action);
     case 'Stake':
       return toNearcoreStakeAction(action);
     case 'DeleteAccessKey':

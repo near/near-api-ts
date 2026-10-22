@@ -1,6 +1,6 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { type Client, functionCall, keyPair, pinGlobalContract } from '../../../../index';
+import { type Client, callContractFunction, keyPair, pinGlobalContract } from '../../../../index';
 import { signTransaction } from '../../../../src/transaction/signTransaction/signTransaction';
 import { createDefaultClient } from '../../../utils/common';
 import { getLastNonce } from '../../../utils/getLastNonce';
@@ -45,7 +45,7 @@ describe('signAndSendTransaction › success', () => {
         recentBlockHash: aliceAccessKey.atMomentOf.blockHash,
         actions: [
           pinGlobalContract({ globalContractWasmHash }),
-          functionCall({
+          callContractFunction({
             functionName: 'write_record',
             functionArgs: { record_id: 0, record: 'Hello' },
             gasLimit: { teraGas: '100' },
@@ -62,7 +62,7 @@ describe('signAndSendTransaction › success', () => {
 
     expect(tx.processingSteps.conversionStep.transactionSummary.actionSummaries).toMatchObject([
       { actionType: 'PinGlobalContract', globalContractWasmHash },
-      { actionType: 'FunctionCall', functionName: 'write_record' },
+      { actionType: 'CallContractFunction', functionName: 'write_record' },
     ]);
 
     // A pinned account is tied to one exact wasm, so it carries the hash rather than the account

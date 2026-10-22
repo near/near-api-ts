@@ -9,7 +9,7 @@ import { attachFunctionCallKey } from './_common/attachFunctionCallKey';
 export const notFullAccess = (context: TestContext) => async () => {
   const { client } = context;
 
-  // A function-call key may only sign a single FunctionCall action, so any other
+  // A function-call key may only sign a single CallContractFunction action, so any other
   // action — a transfer here — demands a full access key.
   const functionCallKeyPair = await attachFunctionCallKey(context, {
     allowedContract: 'alice',

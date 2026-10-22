@@ -4,9 +4,9 @@ import { type Client, keyPair } from '../../../../../../index';
 import type { KeyPair } from '../../../../../../types/_common/keyPairs/keyPair';
 import { createDefaultClient } from '../../../../../utils/common';
 import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
+import { totalGasLimitExceeded } from './callContractFunction/totalGasLimitExceeded';
+import { totalGasLimitOverflow } from './callContractFunction/totalGasLimitOverflow';
 import { executeDelegationTooMany } from './executeDelegation/tooMany';
-import { totalGasLimitExceeded } from './functionCall/totalGasLimitExceeded';
-import { totalGasLimitOverflow } from './functionCall/totalGasLimitOverflow';
 import { tooMany } from './tooMany';
 import { uploadContractTooMany } from './uploadContract/tooMany';
 
@@ -54,12 +54,12 @@ describe('signAndSendTransaction › Actions.* conversion errors', () => {
   );
 
   it(
-    'fails with Actions.FunctionCall.TotalGasLimit.Overflow when the prepaid gas of the actions does not fit u64',
+    'fails with Actions.CallContractFunction.TotalGasLimit.Overflow when the prepaid gas of the actions does not fit u64',
     totalGasLimitOverflow(context),
   );
 
   it(
-    'fails with Actions.FunctionCall.TotalGasLimit.Exceeded when the prepaid gas is over the limit',
+    'fails with Actions.CallContractFunction.TotalGasLimit.Exceeded when the prepaid gas is over the limit',
     totalGasLimitExceeded(context),
   );
 });

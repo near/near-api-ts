@@ -1,7 +1,7 @@
 import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
-  functionCall,
+  callContractFunction,
   keyPair,
   linkGlobalContract,
   pinGlobalContract,
@@ -71,7 +71,7 @@ describe('DeployContract Tests', () => {
           //   globalContractWasmHash: 'D6noZ3aDk5ZwPSqp2p8P85dpEg9xhfqKSCo5cniDLkHK',
           // }),
           linkGlobalContract({ globalContractAccountId: 'nat' }),
-          functionCall({
+          callContractFunction({
             functionName: 'write_record',
             functionArgs: { record_id: 1, record: 'Hi Alice' },
             gasLimit: { teraGas: '20' },

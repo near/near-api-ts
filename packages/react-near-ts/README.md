@@ -179,7 +179,7 @@ Send a signed transaction from a connected wallet.
 ```tsx
 import {
   transfer,
-  functionCall,
+  callContractFunction,
   useExecuteTransaction
 } from 'react-near-ts';
 
@@ -196,7 +196,7 @@ executeTransaction({
 // Function call
 executeTransaction({
   intent: {
-    action: functionCall({
+    action: callContractFunction({
       functionName: 'add_record',
       functionArgs: { record: 'hello' },
       gasLimit: { teraGas: '10' }
@@ -232,13 +232,13 @@ delegation is returned as borsh base64, ready to be handed to a relayer that
 wraps it into `executeDelegation`.
 
 ```tsx
-import { functionCall, useSignDelegation } from 'react-near-ts';
+import { callContractFunction, useSignDelegation } from 'react-near-ts';
 
 const { signDelegation } = useSignDelegation();
 
 signDelegation({
   intent: {
-    delegatedAction: functionCall({
+    delegatedAction: callContractFunction({
       functionName: 'add_record',
       functionArgs: { record: 'hello' },
       gasLimit: { teraGas: '10' },

@@ -1,10 +1,10 @@
 import * as z from 'zod/mini';
 import type { Result } from '../../../types/_common/common';
 import type {
-  CreateFunctionCallAction,
-  InnerCreateFunctionCallActionArgs,
-  SafeCreateFunctionCallAction,
-} from '../../../types/_common/transaction/actions/delegableActions/functionCall';
+  CreateCallContractFunctionAction,
+  InnerCreateCallContractFunctionActionArgs,
+  SafeCreateCallContractFunctionAction,
+} from '../../../types/_common/transaction/actions/delegableActions/callContractFunction';
 import { createNatError, NatError } from '../../_common/_common/_common/_common/natError';
 import { result } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
@@ -16,12 +16,12 @@ import { ContractFunctionNameZodSchema } from '../../_common/zodSchemas/contract
 import { JsonValueZodSchema } from '../../_common/zodSchemas/jsonValue';
 
 const serializeFunctionArgs = (
-  args: InnerCreateFunctionCallActionArgs,
+  args: InnerCreateCallContractFunctionActionArgs,
 ): Result<
   Uint8Array,
-  | NatError<'CreateAction.FunctionCall.SerializeArgs.InvalidOutput'>
-  | NatError<'CreateAction.FunctionCall.SerializeArgs.Failed'>
-  | NatError<'CreateAction.FunctionCall.Args.InvalidSchema'>
+  | NatError<'CreateAction.CallContractFunction.SerializeArgs.InvalidOutput'>
+  | NatError<'CreateAction.CallContractFunction.SerializeArgs.Failed'>
+  | NatError<'CreateAction.CallContractFunction.Args.InvalidSchema'>
 > => {
   // If a user wants to use his own custom serializer;
   if (args.options?.serializeArgs) {
@@ -35,7 +35,7 @@ const serializeFunctionArgs = (
       if (!(output instanceof Uint8Array))
         return result.err(
           createNatError({
-            kind: 'CreateAction.FunctionCall.SerializeArgs.InvalidOutput',
+            kind: 'CreateAction.CallContractFunction.SerializeArgs.InvalidOutput',
             context: { output },
           }),
         );
@@ -45,7 +45,7 @@ const serializeFunctionArgs = (
     } catch (e) {
       return result.err(
         createNatError({
-          kind: 'CreateAction.FunctionCall.SerializeArgs.Failed',
+          kind: 'CreateAction.CallContractFunction.SerializeArgs.Failed',
           context: { cause: e, functionArgs: args.functionArgs },
         }),
       );
@@ -60,7 +60,7 @@ const serializeFunctionArgs = (
     if (!jsonArgs.success)
       return result.err(
         createNatError({
-          kind: 'CreateAction.FunctionCall.Args.InvalidSchema',
+          kind: 'CreateAction.CallContractFunction.Args.InvalidSchema',
           context: { zodError: jsonArgs.error },
         }),
       );
@@ -72,7 +72,7 @@ const serializeFunctionArgs = (
   return result.ok(new Uint8Array());
 };
 
-export const CreateFunctionCallActionArgsSchema = z.object({
+export const CreateCallContractFunctionActionArgsSchema = z.object({
   functionName: ContractFunctionNameZodSchema,
   functionArgs: z.optional(z.unknown()),
   gasLimit: NearGasArgsZodSchema,
@@ -84,15 +84,15 @@ export const CreateFunctionCallActionArgsSchema = z.object({
   ),
 });
 
-export const safeFunctionCall: SafeCreateFunctionCallAction = wrapInternalError(
-  'CreateAction.FunctionCall.Internal',
-  (args: InnerCreateFunctionCallActionArgs) => {
-    const validArgs = CreateFunctionCallActionArgsSchema.safeParse(args);
+export const safeCallContractFunction: SafeCreateCallContractFunctionAction = wrapInternalError(
+  'CreateAction.CallContractFunction.Internal',
+  (args: InnerCreateCallContractFunctionActionArgs) => {
+    const validArgs = CreateCallContractFunctionActionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
       return result.err(
         createNatError({
-          kind: 'CreateAction.FunctionCall.Args.InvalidSchema',
+          kind: 'CreateAction.CallContractFunction.Args.InvalidSchema',
           context: { zodError: validArgs.error },
         }),
       );
@@ -101,7 +101,7 @@ export const safeFunctionCall: SafeCreateFunctionCallAction = wrapInternalError(
     if (!functionArgs.success) return functionArgs;
 
     return result.ok({
-      actionType: 'FunctionCall' as const,
+      actionType: 'CallContractFunction' as const,
       functionName: args.functionName,
       gasLimit: args.gasLimit,
       functionArgs: functionArgs.data,
@@ -110,4 +110,6 @@ export const safeFunctionCall: SafeCreateFunctionCallAction = wrapInternalError(
   },
 );
 
-export const functionCall: CreateFunctionCallAction = asThrowable(safeFunctionCall as any) as any; // TODO fix any
+export const callContractFunction: CreateCallContractFunctionAction = asThrowable(
+  safeCallContractFunction as any,
+) as any; // TODO fix any

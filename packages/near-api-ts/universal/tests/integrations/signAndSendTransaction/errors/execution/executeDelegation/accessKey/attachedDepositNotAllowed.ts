@@ -1,5 +1,5 @@
 import { expect } from 'vitest';
-import { functionCall, signDelegation } from '../../../../../../../index';
+import { callContractFunction, signDelegation } from '../../../../../../../index';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../../utils/assertTxResultExecutionErrKind';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
@@ -33,7 +33,7 @@ export const attachedDepositNotAllowed = (context: TestContext) => async () => {
           nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
         },
       },
-      delegatedAction: functionCall({
+      delegatedAction: callContractFunction({
         functionName: 'any_function',
         gasLimit: { teraGas: '10' },
         attachedDeposit: { yoctoNear: '1' },

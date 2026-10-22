@@ -1,14 +1,16 @@
 import { expect } from 'vitest';
-import { functionCall } from '../../../../../../../index';
+import { callContractFunction, teraGas } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../actions.test';
 
-// Gas is a u64 on the wire, so the largest value a single action can carry.
-const MAX_GAS = 2n ** 64n - 1n;
+// `max_total_prepaid_gas` from the runtime config — raised from 300 to 1000 TGas in protocol
+// version 83 (`core/parameters/res/runtime_configs/83.yaml`).
+const MAX_TOTAL_GAS_LIMIT = teraGas('1000');
+const TOTAL_GAS_LIMIT = MAX_TOTAL_GAS_LIMIT.add({ teraGas: '1' });
 
-export const totalGasLimitOverflow = (context: TestContext) => async () => {
+export const totalGasLimitExceeded = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const natAccessKey = await client.getAccessKey({
@@ -28,13 +30,12 @@ export const totalGasLimitOverflow = (context: TestContext) => async () => {
         },
       },
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
-      // Each action on its own is valid — it is `total_prepaid_gas` summing them with
-      // `checked_add` that overflows, which is the only way to reach this variant. The sum
-      // never gets compared against the limit, so this hides `TotalGasLimit.Exceeded`.
-      actions: [
-        functionCall({ functionName: 'any_function', gasLimit: { gas: MAX_GAS } }),
-        functionCall({ functionName: 'any_function', gasLimit: { gas: MAX_GAS } }),
-      ],
+      // The gas of every action is summed up, so a single call over the limit is enough —
+      // the check is the last one `validate_actions_with_mode` performs.
+      action: callContractFunction({
+        functionName: 'any_function',
+        gasLimit: { teraGas: TOTAL_GAS_LIMIT.teraGas },
+      }),
       receiverAccountId: 'alice',
     },
   });
@@ -43,7 +44,10 @@ export const totalGasLimitOverflow = (context: TestContext) => async () => {
 
   assertNatErrKind(
     tx,
-    'Client.SendSignedTransaction.Rpc.Actions.FunctionCall.TotalGasLimit.Overflow',
+    'Client.SendSignedTransaction.Rpc.Actions.CallContractFunction.TotalGasLimit.Exceeded',
   );
-  expect(tx.error.context.info).toBe(null);
+
+  const { info } = tx.error.context;
+  expect(info.totalGasLimit.teraGas).toBe(TOTAL_GAS_LIMIT.teraGas);
+  expect(info.maximumTotalGasLimit.teraGas).toBe(MAX_TOTAL_GAS_LIMIT.teraGas);
 };

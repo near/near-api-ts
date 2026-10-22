@@ -10,7 +10,7 @@ import { sendDelegation } from './_common/sendDelegation';
 export const notFullAccess = (context: TestContext) => async () => {
   const { client } = context;
 
-  // A function-call key may only delegate a single FunctionCall action, so any other action —
+  // A function-call key may only delegate a single CallContractFunction action, so any other action —
   // a transfer here — demands a full access key.
   const functionCallKeyPair = await attachFunctionCallKey(context, {
     allowedContract: 'bob',

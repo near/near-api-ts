@@ -2,10 +2,10 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
+  callContractFunction,
   createSubAccount,
   deployLocalContract,
   executeDelegation,
-  functionCall,
   keyPair,
   near,
   signDelegation,
@@ -52,12 +52,12 @@ describe('Execute delegation', () => {
           createSubAccount(),
           transfer({ amount: near('50') }),
           deployLocalContract({ wasmU8: await getFileBytes('./wasm/write-get-record.wasm') }),
-          functionCall({
+          callContractFunction({
             functionName: 'write_record',
             functionArgs: { record_id: 1, record: 'Hi Alice' },
             gasLimit: { teraGas: '20' },
           }),
-          functionCall({
+          callContractFunction({
             functionName: 'write_record',
             functionArgs: { record_id: 2, record: 'Hello Again!' },
             gasLimit: { teraGas: '30' },

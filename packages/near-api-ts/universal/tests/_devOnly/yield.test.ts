@@ -4,12 +4,12 @@ import * as z from 'zod/mini';
 import {
   addAccessKey,
   type Client,
+  callContractFunction,
   createMemoryKeyVault,
   createMemorySigner,
   createSubAccount,
   createTestnetClient,
   deployLocalContract,
-  functionCall,
   randomEd25519KeyPair,
   transfer,
 } from '../../index';
@@ -69,7 +69,7 @@ describe('yield contract', () => {
     //
     // const res = await nat.executeTransaction({
     //   intent: {
-    //     action: functionCall({
+    //     action: callContractFunction({
     //       functionName: 'request',
     //       functionArgs: {
     //         prompt: 'Some request',

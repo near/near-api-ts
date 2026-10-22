@@ -3,7 +3,7 @@ import type { WasmTrap } from '@near-js/jsonrpc-types';
 /**
  * Reproduces nearcore's `impl std::fmt::Display for WasmTrap`, converting an
  * old `WasmTrap` into the exact human-readable string nearcore emits nowadays. Used as the
- * `cause` of an `Action.FunctionCall.Execution.Failed` ExecutionError.
+ * `cause` of an `Action.CallContractFunction.Execution.Failed` ExecutionError.
  */
 export const transformWasmTrap = (wasmTrap: WasmTrap): string => {
   if (wasmTrap === 'Unreachable') return 'An `unreachable` opcode was executed.';

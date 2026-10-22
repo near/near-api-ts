@@ -50,6 +50,14 @@
   `Action.CreateSubAccount.*` now. See the near-api-ts v0.13.0 changelog. The
   near-connect signer passes the action on to the wallet as before.
 
+- **Breaking:** the action creator `functionCall`, re-exported from near-api-ts,
+  is renamed to `callContractFunction`, and so are `safeFunctionCall`, the
+  `FunctionCallAction` type, the `actionType` of the action it creates and the
+  `Action.FunctionCall.*`, `Actions.FunctionCall.*` and
+  `CreateAction.FunctionCall.*` error kinds – the `FunctionCall` segment is
+  `CallContractFunction` now. See the near-api-ts v0.13.0 changelog. The
+  near-connect signer passes the action on to the wallet as before.
+
 - **Breaking:** the memory key service re-exported from near-api-ts is now a
   memory key vault: `createMemoryKeyService` / `safeCreateMemoryKeyService` →
   `createMemoryKeyVault` / `safeCreateMemoryKeyVault`, `MemoryKeyService` →

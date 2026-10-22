@@ -5,7 +5,7 @@ import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import type { TestContext } from '../action.test';
 
-// `max_length_method_name` from the runtime config — the same limit `functionCall`'s own name
+// `max_length_method_name` from the runtime config — the same limit `callContractFunction`'s own name
 // is held to. The config owns the number, so our schemas don't mirror it and the node is the
 // one that rejects the name.
 const MAX_FUNCTION_NAME_LENGTH = 256;

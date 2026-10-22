@@ -2,10 +2,10 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   addAccessKey,
+  callContractFunction,
   createMemoryKeyVault,
   createMemorySigner,
   deployLocalContract,
-  functionCall,
   keyPair,
   near,
   randomEd25519KeyPair,
@@ -45,7 +45,7 @@ describe('CallContractReadFunction', () => {
           //   // wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
           //   wasmU8: Uint8Array.from([1, 2, 3, 4]),
           // }),
-          functionCall({
+          callContractFunction({
             functionName: 'write_record1',
             functionArgs: {
               record_id: 0,

@@ -72,7 +72,7 @@ export const getConversionFailureError = (
       const accessKeyError = invalidTxError.InvalidAccessKeyError;
 
       // The key the transaction is signed with is a function-call key, and the transaction
-      // carries something other than a single FunctionCall action.
+      // carries something other than a single CallContractFunction action.
       if (accessKeyError === 'RequiresFullAccess')
         return formErrorObject('Signer.AccessKey.NotFullAccess', null);
 
@@ -121,15 +121,15 @@ export const getConversionFailureError = (
     if ('ActionsValidation' in invalidTxError) {
       const actionsError = invalidTxError.ActionsValidation;
 
-      // Only a FunctionCall action carries gas — `get_prepaid_gas` is zero for every other one
+      // Only a CallContractFunction action carries gas — `get_prepaid_gas` is zero for every other one
       // — so the sum that overflows a u64 here is theirs alone.
       if (actionsError === 'IntegerOverflow')
-        return formErrorObject('Actions.FunctionCall.TotalGasLimit.Overflow', null);
+        return formErrorObject('Actions.CallContractFunction.TotalGasLimit.Overflow', null);
 
       // A call with no gas could never do any work, so it is turned down before the node even
       // looks at the function name and the arguments.
       if (actionsError === 'FunctionCallZeroAttachedGas')
-        return formErrorObject('Action.FunctionCall.ZeroGasLimit', null);
+        return formErrorObject('Action.CallContractFunction.ZeroGasLimit', null);
 
       // The account is gone once the deletion executes, so nothing may follow it.
       if (actionsError === 'DeleteActionMustBeFinal')
@@ -156,13 +156,13 @@ export const getConversionFailureError = (
           });
 
         if ('TotalPrepaidGasExceeded' in actionsError)
-          return formErrorObject('Actions.FunctionCall.TotalGasLimit.Exceeded', {
+          return formErrorObject('Actions.CallContractFunction.TotalGasLimit.Exceeded', {
             totalGasLimit: gas(actionsError.TotalPrepaidGasExceeded.totalPrepaidGas),
             maximumTotalGasLimit: gas(actionsError.TotalPrepaidGasExceeded.limit),
           });
 
         if ('FunctionCallMethodNameLengthExceeded' in actionsError)
-          return formErrorObject('Action.FunctionCall.FunctionName.TooLong', {
+          return formErrorObject('Action.CallContractFunction.FunctionName.TooLong', {
             functionNameLength: actionsError.FunctionCallMethodNameLengthExceeded.length,
             maximumFunctionNameLength: actionsError.FunctionCallMethodNameLengthExceeded.limit,
           });

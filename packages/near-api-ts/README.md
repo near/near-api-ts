@@ -160,7 +160,7 @@ try {
 
 Error kinds are hierarchical strings — `Client.GetAccountInfo.Rpc.Account.NotFound`,
 `Client.SendSignedTransaction.Rpc.Action.Stake.TotalBalance.NotEnough`,
-`CreateAction.FunctionCall.Args.InvalidSchema` — so a prefix tells you which call failed
+`CreateAction.CallContractFunction.Args.InvalidSchema` — so a prefix tells you which call failed
 and the tail tells you why. Anything the library could not classify surfaces as
 `*.Internal` with the original cause in `context`.
 
@@ -363,13 +363,13 @@ The signer resolves the nonce, the recent block hash and the signing key itself,
 serializes concurrent sends per account so parallel calls don't collide on nonces.
 
 ```ts
-import { functionCall, transfer, near, teraGas } from 'near-api-ts';
+import { callContractFunction, transfer, near, teraGas } from 'near-api-ts';
 
 // one action
 await signer.executeTransaction({
   intent: {
     receiverAccountId: 'guest-book.testnet',
-    action: functionCall({
+    action: callContractFunction({
       functionName: 'add_message',
       functionArgs: { text: 'Hello' },
       gasLimit: teraGas('30'),
@@ -410,7 +410,7 @@ The signer signs only with keys paid from the account balance. A key with a bala
 | --- | --- |
 | `createSubAccount()` | creates the receiver account |
 | `transfer({ amount })` | sends NEAR |
-| `functionCall({ functionName, functionArgs?, gasLimit, attachedDeposit? })` | calls a contract method |
+| `callContractFunction({ functionName, functionArgs?, gasLimit, attachedDeposit? })` | calls a contract method |
 | `deployLocalContract({ wasmU8 \| wasmBase64 })` | deploys wasm to the receiver |
 | `addAccessKey({ publicKey, permission, gasPayment, replayProtection? })` | adds an access key — see below |
 | `topUpAccessKeyBalance({ publicKey, amount })` | adds NEAR, paid by the signer, to the balance of the receiver's gas key |
@@ -482,14 +482,14 @@ all — and withdrawing more than the key holds fails with
 `Action.WithdrawAccessKeyBalance.Balance.NotEnough`.
 
 Every creator validates its arguments and has a `safe*` twin (`safeTransfer`,
-`safeFunctionCall`, …) returning a `Result` — except `createSubAccount`, which takes no
+`safeCallContractFunction`, …) returning a `Result` — except `createSubAccount`, which takes no
 arguments and cannot fail.
 
-`functionCall` also takes `options.serializeArgs` when the contract expects something other
+`callContractFunction` also takes `options.serializeArgs` when the contract expects something other
 than JSON — Borsh, for instance:
 
 ```ts
-functionCall({
+callContractFunction({
   functionName: 'submit',
   functionArgs: payload,
   gasLimit: teraGas('30'),
@@ -638,7 +638,7 @@ A *delegator* signs a set of actions without paying for them; a *relayer* wraps 
 delegation into its own transaction and covers the gas.
 
 ```ts
-import { signDelegation, executeDelegation, functionCall, teraGas } from 'near-api-ts';
+import { signDelegation, executeDelegation, callContractFunction, teraGas } from 'near-api-ts';
 
 // --- delegator side ---
 const { accessKey, atMomentOf } = await client.getAccessKey({
@@ -659,7 +659,7 @@ const signedDelegation = await signDelegation({
     },
     receiverAccountId: 'contract.testnet',
     expiration: { blockHeight: atMomentOf.blockHeight + 100 },
-    delegatedAction: functionCall({
+    delegatedAction: callContractFunction({
       functionName: 'add_message',
       functionArgs: { text: 'Paid by somebody else' },
       gasLimit: teraGas('30'),
@@ -812,7 +812,7 @@ Errors are grouped by where they come from:
 | **Transport** | `*.Timeout`, `*.Aborted`, `*.Exhausted`, `*.PreferredRpc.NotFound` |
 | **RPC / node** | `Client.GetAccountInfo.Rpc.Account.NotFound`, `Client.GetBlock.Rpc.Block.GarbageCollected` |
 | **Conversion** (the node refused the transaction) | `Signer.Budget.NotEnough`, `BlockHash.Expired`, `Signer.AccessKey.NotFound`, `Actions.TooMany`, `TransactionCost.Overflow` |
-| **Execution** (it ran and failed) | `Action.FunctionCall.Execution.Failed`, `Action.CreateSubAccount.AlreadyExists`, `Action.Stake.TotalBalance.NotEnough`, `Executor.Budget.NotEnough` |
+| **Execution** (it ran and failed) | `Action.CallContractFunction.Execution.Failed`, `Action.CreateSubAccount.AlreadyExists`, `Action.Stake.TotalBalance.NotEnough`, `Executor.Budget.NotEnough` |
 | **Unclassified** | `*.Internal`, with the original cause in `context` |
 
 Conversion and execution failures keep their context: a conversion failure carries the

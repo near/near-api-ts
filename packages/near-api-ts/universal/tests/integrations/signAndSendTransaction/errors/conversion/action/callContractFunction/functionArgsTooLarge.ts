@@ -1,4 +1,4 @@
-import { functionCall } from '../../../../../../../index';
+import { callContractFunction } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertUnmappedInvalidTxError } from '../../../../../../utils/assertUnmappedInvalidTxError';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
@@ -39,7 +39,7 @@ export const functionArgsTooLarge = (context: TestContext) => async () => {
       // The gas has to be non-zero and the name short enough: both are checked before the
       // arguments in `validate_function_call_action`. The default serializer would turn the
       // arguments into JSON, so the raw bytes are handed over as they are.
-      action: functionCall({
+      action: callContractFunction({
         functionName: 'any_function',
         functionArgs: new Uint8Array(FUNCTION_ARGS_SIZE_BYTES),
         gasLimit: { teraGas: '10' },

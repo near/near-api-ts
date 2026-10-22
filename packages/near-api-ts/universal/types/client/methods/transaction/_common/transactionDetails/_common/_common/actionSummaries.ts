@@ -59,8 +59,8 @@ type DeployLocalContractActionSummary = {
   contractWasmHash: ContractWasmHash;
 };
 
-type FunctionCallActionSummary<FA> = {
-  actionType: 'FunctionCall';
+type CallContractFunctionActionSummary<FA> = {
+  actionType: 'CallContractFunction';
   functionName: ContractFunctionName;
   functionArgs: FA;
   gasLimit: NearGas;
@@ -124,7 +124,7 @@ export type DelegableActionSummary<FA> =
   | TransferActionSummary
   | AddAccessKeyActionSummary
   | DeployLocalContractActionSummary
-  | FunctionCallActionSummary<FA>
+  | CallContractFunctionActionSummary<FA>
   | StakeActionSummary
   | DeleteAccessKeyActionSummary
   | DeleteAccountActionSummary
@@ -159,12 +159,12 @@ export type TransactionActionSummary<FA> =
 
 /**
  * Return by default when there is no user-defined deserializeActionSummaries function;
- * FunctionCallActionSummary.functionArgs is unknown JSON or Base64String;
+ * CallContractFunctionActionSummary.functionArgs is unknown JSON or Base64String;
  */
 export type ParsedTransactionActionSummary = TransactionActionSummary<unknown>;
 
 /**
  * We pass this type of ActionSummaries as an argument into the deserializeActionSummaries function;
- * FunctionCallActionSummary.functionArgs is always Base64String;
+ * CallContractFunctionActionSummary.functionArgs is always Base64String;
  */
 export type RawTransactionActionSummary = TransactionActionSummary<Base64String>;

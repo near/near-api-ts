@@ -2,11 +2,11 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it } from 'vitest';
 import {
   type Client,
+  callContractFunction,
   createMemoryKeyVault,
   createMemorySigner,
   createSubAccount,
   deployLocalContract,
-  functionCall,
   near,
   transfer,
 } from '../../../../index';
@@ -39,7 +39,7 @@ describe('CallContractReadFunction', () => {
           deployLocalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
           }),
-          functionCall({
+          callContractFunction({
             functionName: 'write_record',
             functionArgs: {
               record_id: 0,

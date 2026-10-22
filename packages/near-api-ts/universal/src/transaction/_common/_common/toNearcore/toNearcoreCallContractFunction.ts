@@ -1,11 +1,11 @@
-import type { NearcoreFunctionCallAction } from '../../../../../types/_common/transaction/actions/delegableActions/functionCall';
+import type { NearcoreCallContractFunctionAction } from '../../../../../types/_common/transaction/actions/delegableActions/callContractFunction';
 import { nearGas } from '../../../../_common/nearGas';
 import { nearToken } from '../../../../_common/nearToken';
-import type { InnerFunctionCallAction } from '../zodSchemas/functionCall';
+import type { InnerCallContractFunctionAction } from '../zodSchemas/callContractFunction';
 
-export const toNearcoreFunctionCallAction = (
-  action: InnerFunctionCallAction,
-): NearcoreFunctionCallAction => {
+export const toNearcoreCallContractFunctionAction = (
+  action: InnerCallContractFunctionAction,
+): NearcoreCallContractFunctionAction => {
   const { functionName, attachedDeposit, gasLimit, functionArgs } = action;
   return {
     functionCall: {

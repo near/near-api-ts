@@ -11,7 +11,7 @@ import type { NearcoreTransactionNonce } from '../../../../../../types/_common/t
 import { constants } from '../../../../../_common/_common/_common/constants';
 import { fromNearcorePublicKey } from './_common/fromNearcorePublicKey';
 import { fromNearcoreAddAccessKeyAction } from './fromNearcoreAddAccessKeyAction';
-import { fromNearcoreFunctionCallAction } from './fromNearcoreFunctionCallAction';
+import { fromNearcoreCallContractFunctionAction } from './fromNearcoreCallContractFunctionAction';
 
 // Borsh deserializes `u8` arrays into plain number arrays, not Uint8Array.
 const fromNearcoreDelegableAction = (action: NearcoreDelegableAction): DelegableAction => {
@@ -26,7 +26,7 @@ const fromNearcoreDelegableAction = (action: NearcoreDelegableAction): Delegable
       wasmU8: Uint8Array.from(action.deployContract.code),
     };
 
-  if ('functionCall' in action) return fromNearcoreFunctionCallAction(action.functionCall);
+  if ('functionCall' in action) return fromNearcoreCallContractFunctionAction(action.functionCall);
 
   if ('stake' in action)
     return {

@@ -83,7 +83,7 @@ export const getExecutionFailureError = (
         },
       };
 
-    // FunctionCall action
+    // CallContractFunction action
     if ('FunctionCallError' in kind) return transformFunctionCallError(kind.FunctionCallError);
 
     // This error may only happen when a new receipt is created, in practice -
@@ -92,7 +92,7 @@ export const getExecutionFailureError = (
     // and some is very old (happened only in 2021), we stringify it.
     if ('NewReceiptValidationError' in kind)
       return {
-        kind: 'Action.FunctionCall.Execution.Failed',
+        kind: 'Action.CallContractFunction.Execution.Failed',
         context: { cause: JSON.stringify(kind) },
       };
 
@@ -228,7 +228,7 @@ export const getExecutionFailureError = (
       const accessKeyError = kind.DelegateActionAccessKeyError;
 
       // The delegation is signed with a function-call key, and it carries something other than
-      // a single FunctionCall action.
+      // a single CallContractFunction action.
       if (accessKeyError === 'RequiresFullAccess')
         return {
           kind: 'Action.ExecuteDelegation.Delegator.AccessKey.NotFullAccess',

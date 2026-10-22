@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { functionCall, useSignDelegation } from 'react-near-ts';
+import { callContractFunction, useSignDelegation } from 'react-near-ts';
 import { ContractAccountId } from '@/app/contract-records/config.ts';
 
 export const useSignAddRecordDelegation = (setRecordInput: Dispatch<SetStateAction<string>>) => {
@@ -11,7 +11,7 @@ export const useSignAddRecordDelegation = (setRecordInput: Dispatch<SetStateActi
     signAddRecordDelegation: (record: string) => {
       signDelegation({
         intent: {
-          delegatedAction: functionCall({
+          delegatedAction: callContractFunction({
             functionName: 'add_record',
             functionArgs: { record },
             gasLimit: { teraGas: '10' },

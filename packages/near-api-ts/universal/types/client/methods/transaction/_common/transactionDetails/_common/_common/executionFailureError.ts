@@ -32,11 +32,11 @@ interface AddAccessKeyErrorRegistry {
   'Action.AddAccessKey.AlreadyExists': { accountId: AccountId; publicKey: PublicKey };
 }
 
-interface FunctionCallErrorRegistry {
-  'Action.FunctionCall.ContractWasm.NotFound': { contractAccountId: AccountId };
-  'Action.FunctionCall.Function.NotFound': null;
-  'Action.FunctionCall.Preparation.Failed': { cause: string };
-  'Action.FunctionCall.Execution.Failed': { cause: string };
+interface CallContractFunctionErrorRegistry {
+  'Action.CallContractFunction.ContractWasm.NotFound': { contractAccountId: AccountId };
+  'Action.CallContractFunction.Function.NotFound': null;
+  'Action.CallContractFunction.Preparation.Failed': { cause: string };
+  'Action.CallContractFunction.Execution.Failed': { cause: string };
 }
 
 interface StakeErrorRegistry {
@@ -130,7 +130,7 @@ export interface ExecutionFailureRegistry
   extends GeneralExecutionErrorRegistry,
     CreateSubAccountErrorRegistry,
     AddAccessKeyErrorRegistry,
-    FunctionCallErrorRegistry,
+    CallContractFunctionErrorRegistry,
     StakeErrorRegistry,
     DeleteAccessKeyErrorRegistry,
     DeleteAccountErrorRegistry,

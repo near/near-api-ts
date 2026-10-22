@@ -1,7 +1,7 @@
 import { expect } from 'vitest';
 import {
+  callContractFunction,
   executeDelegation,
-  functionCall,
   pinGlobalContract,
   signDelegation,
 } from '../../../../../index';
@@ -40,7 +40,7 @@ export const delegatedPinGlobalContract = (context: TestContext) => async () => 
       },
       delegatedActions: [
         pinGlobalContract({ globalContractWasmHash }),
-        functionCall({
+        callContractFunction({
           functionName: 'write_record',
           functionArgs: { record_id: 0, record: 'Hello' },
           gasLimit: { teraGas: '100' },
@@ -88,7 +88,7 @@ export const delegatedPinGlobalContract = (context: TestContext) => async () => 
         receiverAccountId: delegatorAccountId,
         delegatedActionSummaries: [
           { actionType: 'PinGlobalContract', globalContractWasmHash },
-          { actionType: 'FunctionCall', functionName: 'write_record' },
+          { actionType: 'CallContractFunction', functionName: 'write_record' },
         ],
       },
     },

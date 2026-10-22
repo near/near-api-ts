@@ -1,9 +1,9 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import {
   addAccessKey,
+  callContractFunction,
   createSubAccount,
   deployLocalContract,
-  functionCall,
   transfer,
 } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
@@ -11,7 +11,7 @@ import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import { getFileBytes } from '../../../../../utils/common';
 import { getLastNonce } from '../../../../../utils/getLastNonce';
-import type { TestContext } from './functionCall.test';
+import type { TestContext } from './callContractFunction.test';
 
 export const functionNotFound = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
@@ -42,7 +42,7 @@ export const functionNotFound = (context: TestContext) => async () => {
           gasPayment: { source: 'AccountBalance' },
         }),
         deployLocalContract({ wasmU8: await getFileBytes('./wasm/write-get-record.wasm') }),
-        functionCall({
+        callContractFunction({
           functionName: 'not_exist',
           gasLimit: { teraGas: '10' },
         }),
@@ -56,11 +56,14 @@ export const functionNotFound = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.FunctionCall.Function.NotFound');
+  assertNatErrKind(
+    tx,
+    'Client.SendSignedTransaction.Rpc.Action.CallContractFunction.Function.NotFound',
+  );
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.Function.NotFound');
+  assertTxResultExecutionErrKind(txResult, 'Action.CallContractFunction.Function.NotFound');
 };

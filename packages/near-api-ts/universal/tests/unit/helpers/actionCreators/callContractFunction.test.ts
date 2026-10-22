@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { functionCall, safeFunctionCall, teraGas } from '../../../../index';
+import { callContractFunction, safeCallContractFunction, teraGas } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
-describe('functionCall › valid', () => {
+describe('callContractFunction › valid', () => {
   it('creates an action with only name and gasLimit', () => {
-    const res = functionCall({
+    const res = callContractFunction({
       functionName: 'create',
       gasLimit: teraGas('10'),
     });
@@ -12,7 +12,7 @@ describe('functionCall › valid', () => {
   });
 
   it('creates an action with an attachedDeposit', () => {
-    const res = functionCall({
+    const res = callContractFunction({
       functionName: 'create',
       gasLimit: teraGas('10'),
       attachedDeposit: { yoctoNear: 1n },
@@ -21,7 +21,7 @@ describe('functionCall › valid', () => {
   });
 
   it('creates an action with object functionArgs', () => {
-    const res = functionCall({
+    const res = callContractFunction({
       functionName: 'create',
       gasLimit: teraGas('10'),
       functionArgs: { a: 1 },
@@ -30,7 +30,7 @@ describe('functionCall › valid', () => {
   });
 
   it('creates an action with primitive functionArgs', () => {
-    const res = functionCall({
+    const res = callContractFunction({
       functionName: 'create',
       gasLimit: teraGas('10'),
       functionArgs: 1,
@@ -39,7 +39,7 @@ describe('functionCall › valid', () => {
   });
 
   it('creates an action with functionArgs and a custom serializeArgs', () => {
-    const res = functionCall({
+    const res = callContractFunction({
       functionName: 'create',
       gasLimit: teraGas('10'),
       functionArgs: { a: 1n },
@@ -51,7 +51,7 @@ describe('functionCall › valid', () => {
   });
 
   it('creates an action with serializeArgs and no functionArgs', () => {
-    const res = functionCall({
+    const res = callContractFunction({
       functionName: 'create',
       gasLimit: teraGas('10'),
       options: {
@@ -62,27 +62,27 @@ describe('functionCall › valid', () => {
   });
 });
 
-describe('functionCall › invalid', () => {
+describe('callContractFunction › invalid', () => {
   it('rejects a negative gasLimit with Args.InvalidSchema', () => {
-    const res = safeFunctionCall({
+    const res = safeCallContractFunction({
       functionName: 'create',
       gasLimit: { teraGas: '-10' },
     });
-    assertNatErrKind(res, 'CreateAction.FunctionCall.Args.InvalidSchema');
+    assertNatErrKind(res, 'CreateAction.CallContractFunction.Args.InvalidSchema');
   });
 
   it('rejects non-JSON-serializable functionArgs with Args.InvalidSchema', () => {
     // @ts-expect-error
-    const res = safeFunctionCall({
+    const res = safeCallContractFunction({
       functionName: 'x',
       gasLimit: teraGas('10'),
       functionArgs: { a: 1n },
     });
-    assertNatErrKind(res, 'CreateAction.FunctionCall.Args.InvalidSchema');
+    assertNatErrKind(res, 'CreateAction.CallContractFunction.Args.InvalidSchema');
   });
 
   it('fails with SerializeArgs.InvalidOutput when serializeArgs returns a non-Uint8Array', () => {
-    const res = safeFunctionCall({
+    const res = safeCallContractFunction({
       functionName: 'x',
       gasLimit: teraGas('10'),
       functionArgs: { a: 1n },
@@ -91,11 +91,11 @@ describe('functionCall › invalid', () => {
         serializeArgs: () => 1,
       },
     });
-    assertNatErrKind(res, 'CreateAction.FunctionCall.SerializeArgs.InvalidOutput');
+    assertNatErrKind(res, 'CreateAction.CallContractFunction.SerializeArgs.InvalidOutput');
   });
 
   it('fails with SerializeArgs.Failed when serializeArgs throws', () => {
-    const res = safeFunctionCall({
+    const res = safeCallContractFunction({
       functionName: 'x',
       gasLimit: teraGas('10'),
       functionArgs: { a: 1 },
@@ -105,6 +105,6 @@ describe('functionCall › invalid', () => {
         },
       },
     });
-    assertNatErrKind(res, 'CreateAction.FunctionCall.SerializeArgs.Failed');
+    assertNatErrKind(res, 'CreateAction.CallContractFunction.SerializeArgs.Failed');
   });
 });

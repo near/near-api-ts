@@ -3,10 +3,10 @@ import { beforeAll, describe, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
+  callContractFunction,
   createMemoryKeyVault,
   createSubAccount,
   deployLocalContract,
-  functionCall,
   type MemoryKeyVault,
   transfer,
 } from '../../../../index';
@@ -61,7 +61,7 @@ describe('safeSendSignedTransaction › success', () => {
           deployLocalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
           }),
-          functionCall({
+          callContractFunction({
             functionName: 'write_record',
             functionArgs: {
               record_id: 0,

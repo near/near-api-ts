@@ -9,7 +9,7 @@ import { getRawAddAccessKeyActionSummary } from './_common/getRawAddAccessKeyAct
 import { getRawExecuteDelegationActionSummary } from './getRawExecuteDelegationActionSummary';
 
 // Assembles the raw action summary from the RPC action - all fields are converted except
-// functionCall.functionArgs which stays a raw base64 string;
+// callContractFunction.functionArgs which stays a raw base64 string;
 export const getRawActionSummary = (rpcAction: ActionView): RawTransactionActionSummary => {
   if (rpcAction === 'CreateAccount') {
     return {
@@ -41,7 +41,7 @@ export const getRawActionSummary = (rpcAction: ActionView): RawTransactionAction
   if ('FunctionCall' in rpcAction) {
     const { FunctionCall } = rpcAction;
     return {
-      actionType: 'FunctionCall' as const,
+      actionType: 'CallContractFunction' as const,
       functionName: FunctionCall.methodName,
       functionArgs: FunctionCall.args,
       gasLimit: gas(FunctionCall.gas),

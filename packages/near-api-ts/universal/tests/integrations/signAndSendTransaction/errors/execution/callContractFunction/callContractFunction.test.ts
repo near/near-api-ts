@@ -17,7 +17,7 @@ export type TestContext = {
   defaultKeyPair: KeyPair;
 };
 
-describe('signAndSendTransaction › FunctionCall.* errors', () => {
+describe('signAndSendTransaction › CallContractFunction.* errors', () => {
   const context = {
     defaultKeyPair: keyPair(DEFAULT_PRIVATE_KEY),
   } as TestContext;
@@ -28,20 +28,20 @@ describe('signAndSendTransaction › FunctionCall.* errors', () => {
     return () => sandbox.stop();
   });
 
-  it('return Action.FunctionCall.ContractWasm.NotFound', contractWasmNotFound(context));
-  it('return Action.FunctionCall.Function.NotFound', functionNotFound(context));
-  it('return Action.FunctionCall.Preparation.Failed', preparationFailed(context));
+  it('return Action.CallContractFunction.ContractWasm.NotFound', contractWasmNotFound(context));
+  it('return Action.CallContractFunction.Function.NotFound', functionNotFound(context));
+  it('return Action.CallContractFunction.Preparation.Failed', preparationFailed(context));
   it(
-    'return Action.FunctionCall.Preparation.Failed: MethodInvalidSignature',
+    'return Action.CallContractFunction.Preparation.Failed: MethodInvalidSignature',
     methodInvalidSignature(context),
   );
-  it('return Action.FunctionCall.Execution.Failed', executionError(context));
+  it('return Action.CallContractFunction.Execution.Failed', executionError(context));
   it(
-    'return Action.FunctionCall.Execution.Failed: old HostError.GuestPanic',
+    'return Action.CallContractFunction.Execution.Failed: old HostError.GuestPanic',
     hostErrorGuestPanic(),
   );
   it(
-    'return Action.FunctionCall.Execution.Failed: ' +
+    'return Action.CallContractFunction.Execution.Failed: ' +
       'old NewReceiptValidationError.ActionsValidation.DeleteActionMustBeFinal',
     deleteActionMustBeFinal(context),
   );

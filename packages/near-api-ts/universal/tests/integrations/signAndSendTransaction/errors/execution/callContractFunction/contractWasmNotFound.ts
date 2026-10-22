@@ -1,10 +1,10 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
-import { functionCall } from '../../../../../../index';
+import { callContractFunction } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import { getLastNonce } from '../../../../../utils/getLastNonce';
-import type { TestContext } from './functionCall.test';
+import type { TestContext } from './callContractFunction.test';
 
 export const contractWasmNotFound = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
@@ -26,7 +26,7 @@ export const contractWasmNotFound = (context: TestContext) => async () => {
         },
       },
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
-      action: functionCall({
+      action: callContractFunction({
         functionName: 'add_record',
         functionArgs: { record: 'hello' },
         gasLimit: { teraGas: '10' },
@@ -43,12 +43,12 @@ export const contractWasmNotFound = (context: TestContext) => async () => {
 
   assertNatErrKind(
     tx,
-    'Client.SendSignedTransaction.Rpc.Action.FunctionCall.ContractWasm.NotFound',
+    'Client.SendSignedTransaction.Rpc.Action.CallContractFunction.ContractWasm.NotFound',
   );
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.ContractWasm.NotFound');
+  assertTxResultExecutionErrKind(txResult, 'Action.CallContractFunction.ContractWasm.NotFound');
 };

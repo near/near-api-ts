@@ -1,5 +1,5 @@
 import { expect } from 'vitest';
-import { functionCall, signDelegation } from '../../../../../../../index';
+import { callContractFunction, signDelegation } from '../../../../../../../index';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../../utils/assertTxResultExecutionErrKind';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
@@ -32,7 +32,7 @@ export const functionNotAllowed = (context: TestContext) => async () => {
           nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
         },
       },
-      delegatedAction: functionCall({
+      delegatedAction: callContractFunction({
         functionName: 'forbidden_function',
         gasLimit: { teraGas: '10' },
       }),

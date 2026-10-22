@@ -6,11 +6,11 @@ import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
 import { SignatureZodSchema } from '../../_common/zodSchemas/signature';
 import { TransactionNonceZodSchema } from '../../_common/zodSchemas/transactionNonce';
 import { AddAccessKeyActionZodSchema } from './_common/zodSchemas/addAccessKey';
+import { CallContractFunctionActionZodSchema } from './_common/zodSchemas/callContractFunction';
 import { CreateSubAccountActionZodSchema } from './_common/zodSchemas/createSubAccount';
 import { DeleteAccessKeyActionZodSchema } from './_common/zodSchemas/deleteAccessKey';
 import { DeleteAccountActionZodSchema } from './_common/zodSchemas/deleteAccount';
 import { DeployLocalContractActionZodSchema } from './_common/zodSchemas/deployLocalContract';
-import { FunctionCallActionZodSchema } from './_common/zodSchemas/functionCall';
 import { LinkGlobalContractActionZodSchema } from './_common/zodSchemas/linkGlobalContract';
 import { NonceChannelIdZodSchema } from './_common/zodSchemas/nonceChannelId';
 import { PinGlobalContractActionZodSchema } from './_common/zodSchemas/pinGlobalContract';
@@ -26,7 +26,7 @@ const DelegableActionZodSchema = z.union([
   TransferActionZodSchema,
   AddAccessKeyActionZodSchema,
   DeployLocalContractActionZodSchema,
-  FunctionCallActionZodSchema,
+  CallContractFunctionActionZodSchema,
   StakeActionZodSchema,
   DeleteAccessKeyActionZodSchema,
   DeleteAccountActionZodSchema,

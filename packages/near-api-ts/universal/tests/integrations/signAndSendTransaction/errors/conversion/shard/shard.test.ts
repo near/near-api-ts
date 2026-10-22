@@ -2,9 +2,9 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { describe, expect, it } from 'vitest';
 import {
   addAccessKey,
+  callContractFunction,
   createSubAccount,
   deployLocalContract,
-  functionCall,
   keyPair,
   transfer,
 } from '../../../../../../index';
@@ -128,7 +128,7 @@ describe.skip('signAndSendTransaction › Shard.Congested conversion error', () 
                   },
                 },
                 recentBlockHash: blockHash,
-                action: functionCall({
+                action: callContractFunction({
                   functionName: GAS_BURNER_FUNCTION_NAME,
                   gasLimit: { teraGas: PREPAID_TERA_GAS },
                 }),

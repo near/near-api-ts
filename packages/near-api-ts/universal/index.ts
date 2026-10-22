@@ -82,6 +82,10 @@ export {
   addAccessKey,
   safeAddAccessKey,
 } from './src/transaction/actionCreators/addAccessKey';
+export {
+  callContractFunction,
+  safeCallContractFunction,
+} from './src/transaction/actionCreators/callContractFunction';
 export { createSubAccount } from './src/transaction/actionCreators/createSubAccount';
 export {
   deleteAccessKey,
@@ -99,10 +103,6 @@ export {
   executeDelegation,
   safeExecuteDelegation,
 } from './src/transaction/actionCreators/executeDelegation/executeDelegation';
-export {
-  functionCall,
-  safeFunctionCall,
-} from './src/transaction/actionCreators/functionCall';
 export {
   linkGlobalContract,
   safeLinkGlobalContract,
@@ -177,7 +177,7 @@ export type {
   NearToken,
   NearTokenArgs,
 } from './types/_common/nearToken';
-export type { FunctionCallAction } from './types/_common/transaction/actions/delegableActions/functionCall';
+export type { CallContractFunctionAction } from './types/_common/transaction/actions/delegableActions/callContractFunction';
 export type { LinkGlobalContractAction } from './types/_common/transaction/actions/delegableActions/linkGlobalContract';
 export type { PinGlobalContractAction } from './types/_common/transaction/actions/delegableActions/pinGlobalContract';
 export type { PublishLinkableGlobalContractAction } from './types/_common/transaction/actions/delegableActions/publishLinkableGlobalContract';

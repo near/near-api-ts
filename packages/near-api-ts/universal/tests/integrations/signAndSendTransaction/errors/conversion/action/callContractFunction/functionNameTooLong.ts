@@ -1,5 +1,5 @@
 import { expect } from 'vitest';
-import { functionCall } from '../../../../../../../index';
+import { callContractFunction } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
@@ -33,14 +33,17 @@ export const functionNameTooLong = (context: TestContext) => async () => {
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
       // The gas has to be non-zero: `validate_function_call_action` looks at it first, and
       // `FunctionCallZeroAttachedGas` would hide the name check.
-      action: functionCall({ functionName: FUNCTION_NAME, gasLimit: { teraGas: '10' } }),
+      action: callContractFunction({ functionName: FUNCTION_NAME, gasLimit: { teraGas: '10' } }),
       receiverAccountId: 'alice',
     },
   });
 
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.FunctionCall.FunctionName.TooLong');
+  assertNatErrKind(
+    tx,
+    'Client.SendSignedTransaction.Rpc.Action.CallContractFunction.FunctionName.TooLong',
+  );
   expect(tx.error.context.info).toStrictEqual({
     functionNameLength: FUNCTION_NAME.length,
     maximumFunctionNameLength: MAX_FUNCTION_NAME_LENGTH,

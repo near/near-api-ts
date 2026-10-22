@@ -14,7 +14,7 @@ import { nearGas, nearToken } from 'near-api-ts';
  * Args a custom `serializeArgs` produced (borsh, say) are not JSON, so they
  * travel on as the raw bytes - which is what near-connect forwards for them
  * too. Bytes that happen to parse as JSON are read as JSON: by the time we hold
- * a `FunctionCallAction` the serializer that produced them is no longer known,
+ * a `CallContractFunctionAction` the serializer that produced them is no longer known,
  * so there is nothing better to go on.
  */
 const toConnectorArgs = (functionArgs: Uint8Array) => {
@@ -72,7 +72,7 @@ const toNearConnectAction = (action: NatAction): ConnectorAction => {
     };
   }
 
-  if (action.actionType === 'FunctionCall')
+  if (action.actionType === 'CallContractFunction')
     return {
       type: 'FunctionCall',
       params: {

@@ -7,11 +7,11 @@ import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 import { allowedFunctionsFunctionNameTooLong } from './addAccessKey/allowedFunctionsFunctionNameTooLong';
 import { allowedFunctionsTotalSizeExceeded } from './addAccessKey/allowedFunctionsTotalSizeExceeded';
 import { invalidAccountId } from './addAccessKey/invalidAccountId';
+import { functionArgsTooLarge } from './callContractFunction/functionArgsTooLarge';
+import { functionNameTooLong } from './callContractFunction/functionNameTooLong';
+import { zeroGasLimit } from './callContractFunction/zeroGasLimit';
 import { notFinal } from './deleteAccount/notFinal';
 import { contractWasmTooLarge } from './deployLocalContract/contractWasmTooLarge';
-import { functionArgsTooLarge } from './functionCall/functionArgsTooLarge';
-import { functionNameTooLong } from './functionCall/functionNameTooLong';
-import { zeroGasLimit } from './functionCall/zeroGasLimit';
 import { validatorKeyInvalid } from './stake/validatorKeyInvalid';
 
 export type TestContext = {
@@ -60,12 +60,12 @@ describe('signAndSendTransaction › Action.* conversion errors', () => {
   );
 
   it(
-    'fails with Action.FunctionCall.ZeroGasLimit when the function call attaches no gas',
+    'fails with Action.CallContractFunction.ZeroGasLimit when the function call attaches no gas',
     zeroGasLimit(context),
   );
 
   it(
-    'fails with Action.FunctionCall.FunctionName.TooLong when the function name is over the limit',
+    'fails with Action.CallContractFunction.FunctionName.TooLong when the function name is over the limit',
     functionNameTooLong(context),
   );
 

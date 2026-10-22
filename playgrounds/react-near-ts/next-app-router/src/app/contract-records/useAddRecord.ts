@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { functionCall, useExecuteTransaction } from 'react-near-ts';
+import { callContractFunction, useExecuteTransaction } from 'react-near-ts';
 import { ContractAccountId } from './config';
 
 export const useAddRecord = (setRecordInput: Dispatch<SetStateAction<string>>) => {
@@ -9,7 +9,7 @@ export const useAddRecord = (setRecordInput: Dispatch<SetStateAction<string>>) =
     addRecord: (record: string) => {
       mutation.executeTransaction({
         intent: {
-          action: functionCall({
+          action: callContractFunction({
             functionName: 'add_record',
             functionArgs: { record },
             gasLimit: { teraGas: '10' },

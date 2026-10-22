@@ -4,11 +4,11 @@ import { CryptoHashZodSchema } from '../../_common/zodSchemas/cryptoHash';
 import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
 import { TransactionNonceZodSchema } from '../../_common/zodSchemas/transactionNonce';
 import { AddAccessKeyActionZodSchema } from '../_common/_common/zodSchemas/addAccessKey';
+import { CallContractFunctionActionZodSchema } from '../_common/_common/zodSchemas/callContractFunction';
 import { CreateSubAccountActionZodSchema } from '../_common/_common/zodSchemas/createSubAccount';
 import { DeleteAccessKeyActionZodSchema } from '../_common/_common/zodSchemas/deleteAccessKey';
 import { DeleteAccountActionZodSchema } from '../_common/_common/zodSchemas/deleteAccount';
 import { DeployLocalContractActionZodSchema } from '../_common/_common/zodSchemas/deployLocalContract';
-import { FunctionCallActionZodSchema } from '../_common/_common/zodSchemas/functionCall';
 import { LinkGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/linkGlobalContract';
 import { NonceChannelIdZodSchema } from '../_common/_common/zodSchemas/nonceChannelId';
 import { PinGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/pinGlobalContract';
@@ -32,7 +32,7 @@ const TransactionActionZodSchema = z.union([
   TransferActionZodSchema,
   AddAccessKeyActionZodSchema,
   DeployLocalContractActionZodSchema,
-  FunctionCallActionZodSchema,
+  CallContractFunctionActionZodSchema,
   StakeActionZodSchema,
   DeleteAccessKeyActionZodSchema,
   DeleteAccountActionZodSchema,

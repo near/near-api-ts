@@ -42,19 +42,19 @@ interface ActionsValidationErrorRegistry {
     maximumUploadContractActionsCount: number;
   };
   'Actions.ExecuteDelegation.TooMany': null;
-  'Actions.FunctionCall.TotalGasLimit.Exceeded': {
+  'Actions.CallContractFunction.TotalGasLimit.Exceeded': {
     totalGasLimit: NearGas;
     maximumTotalGasLimit: NearGas;
   };
-  'Actions.FunctionCall.TotalGasLimit.Overflow': null;
+  'Actions.CallContractFunction.TotalGasLimit.Overflow': null;
 }
 
 interface ActionValidationErrorRegistry {
-  'Action.FunctionCall.FunctionName.TooLong': {
+  'Action.CallContractFunction.FunctionName.TooLong': {
     functionNameLength: number;
     maximumFunctionNameLength: number;
   };
-  'Action.FunctionCall.ZeroGasLimit': null;
+  'Action.CallContractFunction.ZeroGasLimit': null;
   'Action.AddAccessKey.AllowedFunctions.FunctionName.TooLong': {
     functionNameLength: number;
     maximumFunctionNameLength: number;

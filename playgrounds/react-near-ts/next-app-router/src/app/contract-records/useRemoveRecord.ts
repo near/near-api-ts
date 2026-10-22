@@ -1,4 +1,4 @@
-import { functionCall, useExecuteTransaction } from 'react-near-ts';
+import { callContractFunction, useExecuteTransaction } from 'react-near-ts';
 import { ContractAccountId } from './config';
 
 export const useRemoveRecord = () => {
@@ -8,7 +8,7 @@ export const useRemoveRecord = () => {
     removeRecord: (index: number) => {
       mutation.executeTransaction({
         intent: {
-          action: functionCall({
+          action: callContractFunction({
             functionName: 'remove_record',
             functionArgs: { index },
             gasLimit: { teraGas: '10' },

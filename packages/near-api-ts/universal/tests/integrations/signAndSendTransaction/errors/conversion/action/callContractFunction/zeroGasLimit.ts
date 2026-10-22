@@ -1,5 +1,5 @@
 import { expect } from 'vitest';
-import { functionCall } from '../../../../../../../index';
+import { callContractFunction } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
@@ -27,13 +27,13 @@ export const zeroGasLimit = (context: TestContext) => async () => {
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
       // A function call with no gas could never do any work, so `validate_function_call_action`
       // rejects it before the method name and the arguments are even looked at.
-      action: functionCall({ functionName: 'any_function', gasLimit: { gas: 0n } }),
+      action: callContractFunction({ functionName: 'any_function', gasLimit: { gas: 0n } }),
       receiverAccountId: 'alice',
     },
   });
 
   const tx = await client.safeSendSignedTransaction({ signedTransaction });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.FunctionCall.ZeroGasLimit');
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.CallContractFunction.ZeroGasLimit');
   expect(tx.error.context.info).toBe(null);
 };

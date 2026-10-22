@@ -1,18 +1,20 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
+import { expect } from 'vitest';
 import {
-  addAccessKey,
+  callContractFunction,
   createSubAccount,
   deployLocalContract,
-  functionCall,
+  near,
   transfer,
 } from '../../../../../../../index';
 import { signTransaction } from '../../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../../utils/assertTxResultExecutionErrKind';
+import { getFileBytes } from '../../../../../../utils/common';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
-import type { TestContext } from '../functionCall.test';
+import type { TestContext } from '../callContractFunction.test';
 
-export const preparationFailed = (context: TestContext) => async () => {
+export const executionError = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const natAccessKey = await client.getAccessKey({
@@ -34,20 +36,15 @@ export const preparationFailed = (context: TestContext) => async () => {
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
       actions: [
         createSubAccount(),
-        transfer({ amount: { near: '10' } }),
-        addAccessKey({
-          publicKey: defaultKeyPair.publicKey,
-          permission: { kind: 'FullAccess' },
-          gasPayment: { source: 'AccountBalance' },
-        }),
-        deployLocalContract({ wasmU8: Uint8Array.from([1, 2, 3]) }),
-        functionCall({
+        transfer({ amount: near('10') }),
+        deployLocalContract({ wasmU8: await getFileBytes('./wasm/write-get-record.wasm') }),
+        callContractFunction({
           functionName: 'add_record',
           functionArgs: { record: 'hello' },
-          gasLimit: { teraGas: '10' },
+          gasLimit: { teraGas: '0.01' },
         }),
       ],
-      receiverAccountId: 'contract.nat',
+      receiverAccountId: 'test.nat',
     },
   });
 
@@ -56,11 +53,15 @@ export const preparationFailed = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.FunctionCall.Preparation.Failed');
+  assertNatErrKind(
+    tx,
+    'Client.SendSignedTransaction.Rpc.Action.CallContractFunction.Execution.Failed',
+  );
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Action.FunctionCall.Preparation.Failed');
+  assertTxResultExecutionErrKind(txResult, 'Action.CallContractFunction.Execution.Failed');
+  expect(txResult.error.context.cause).toBe('Exceeded the prepaid gas.');
 };

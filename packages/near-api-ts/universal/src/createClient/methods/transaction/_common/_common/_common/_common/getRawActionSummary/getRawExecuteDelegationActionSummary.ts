@@ -76,7 +76,7 @@ const convertNonDelegateActionToSummary = (
   if ('FunctionCall' in nonDelegateAction) {
     const { FunctionCall } = nonDelegateAction;
     return {
-      actionType: 'FunctionCall' as const,
+      actionType: 'CallContractFunction' as const,
       functionName: FunctionCall.methodName,
       functionArgs: FunctionCall.args,
       gasLimit: gas(FunctionCall.gas),

@@ -417,6 +417,40 @@
     `MemorySigner.ExecuteTransaction.Rpc.Action.CreateAccount.AlreadyExists` →
     `MemorySigner.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists`.
 
+- **Breaking:** `functionCall` is renamed to `callContractFunction`. The rename
+  covers the `safe*` variant, the `actionType` – of the action, of a
+  hand-written `actions` entry and of the action summary in `processingSteps`
+  (also inside an `ExecuteDelegation`) – the type and the error kinds:
+
+  - `functionCall` / `safeFunctionCall` → `callContractFunction` /
+    `safeCallContractFunction`, `actionType: 'FunctionCall'` →
+    `'CallContractFunction'`, the type `FunctionCallAction` →
+    `CallContractFunctionAction`, `CreateAction.FunctionCall.*` →
+    `CreateAction.CallContractFunction.*`.
+  - The node's errors about the action follow its new name:
+    - `Action.FunctionCall.ContractWasm.NotFound` →
+      `Action.CallContractFunction.ContractWasm.NotFound`
+    - `Action.FunctionCall.Execution.Failed` →
+      `Action.CallContractFunction.Execution.Failed`
+    - `Action.FunctionCall.Function.NotFound` →
+      `Action.CallContractFunction.Function.NotFound`
+    - `Action.FunctionCall.FunctionName.TooLong` →
+      `Action.CallContractFunction.FunctionName.TooLong`
+    - `Action.FunctionCall.Preparation.Failed` →
+      `Action.CallContractFunction.Preparation.Failed`
+    - `Action.FunctionCall.ZeroGasLimit` → `Action.CallContractFunction.ZeroGasLimit`
+    - `Actions.FunctionCall.TotalGasLimit.Exceeded` →
+      `Actions.CallContractFunction.TotalGasLimit.Exceeded`
+    - `Actions.FunctionCall.TotalGasLimit.Overflow` →
+      `Actions.CallContractFunction.TotalGasLimit.Overflow`
+
+    The renames propagate to every kind built on top of them, e.g.
+    `Client.SendSignedTransaction.Rpc.Action.FunctionCall.Execution.Failed` →
+    `Client.SendSignedTransaction.Rpc.Action.CallContractFunction.Execution.Failed`.
+  - The access key permission keeps its name – `permission: { kind:
+    'FunctionCall', … }` – and so does
+    `Client.CallContractReadFunction.Rpc.FunctionCall.Failed`.
+
 - **Breaking:** the memory key service is now a memory key vault:
 
   - `createMemoryKeyService` / `safeCreateMemoryKeyService` →

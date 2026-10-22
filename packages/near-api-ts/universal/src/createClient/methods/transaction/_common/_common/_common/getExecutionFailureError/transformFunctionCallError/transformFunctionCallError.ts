@@ -6,15 +6,15 @@ import { transformWasmTrap } from './transformWasmTrap';
 export const transformFunctionCallError = (
   rpcFunctionCallError: FunctionCallError,
 ):
-  | ExecutionFailureError<'Action.FunctionCall.ContractWasm.NotFound'>
-  | ExecutionFailureError<'Action.FunctionCall.Preparation.Failed'>
-  | ExecutionFailureError<'Action.FunctionCall.Function.NotFound'>
-  | ExecutionFailureError<'Action.FunctionCall.Execution.Failed'> => {
+  | ExecutionFailureError<'Action.CallContractFunction.ContractWasm.NotFound'>
+  | ExecutionFailureError<'Action.CallContractFunction.Preparation.Failed'>
+  | ExecutionFailureError<'Action.CallContractFunction.Function.NotFound'>
+  | ExecutionFailureError<'Action.CallContractFunction.Execution.Failed'> => {
   if (typeof rpcFunctionCallError === 'string') {
     // Transform deprecated WasmUnknownError to be compatible with the modern nearcore ExecutionError
     if (rpcFunctionCallError === 'WasmUnknownError')
       return {
-        kind: 'Action.FunctionCall.Execution.Failed',
+        kind: 'Action.CallContractFunction.Execution.Failed',
         context: { cause: rpcFunctionCallError },
       };
     // Should never happen
@@ -28,19 +28,19 @@ export const transformFunctionCallError = (
 
     if ('CodeDoesNotExist' in CompilationError)
       return {
-        kind: 'Action.FunctionCall.ContractWasm.NotFound',
+        kind: 'Action.CallContractFunction.ContractWasm.NotFound',
         context: { contractAccountId: CompilationError.CodeDoesNotExist.accountId },
       };
 
     if ('PrepareError' in CompilationError)
       return {
-        kind: 'Action.FunctionCall.Preparation.Failed',
+        kind: 'Action.CallContractFunction.Preparation.Failed',
         context: { cause: CompilationError.PrepareError },
       };
 
     if ('WasmerCompileError' in CompilationError)
       return {
-        kind: 'Action.FunctionCall.Preparation.Failed',
+        kind: 'Action.CallContractFunction.Preparation.Failed',
         context: { cause: CompilationError.WasmerCompileError.msg },
       };
   }
@@ -51,13 +51,13 @@ export const transformFunctionCallError = (
 
     if (MethodResolveError === 'MethodEmptyName' || MethodResolveError === 'MethodNotFound')
       return {
-        kind: 'Action.FunctionCall.Function.NotFound',
+        kind: 'Action.CallContractFunction.Function.NotFound',
         context: null,
       };
 
     if (MethodResolveError === 'MethodInvalidSignature')
       return {
-        kind: 'Action.FunctionCall.Preparation.Failed',
+        kind: 'Action.CallContractFunction.Preparation.Failed',
         context: { cause: 'InvalidFunctionSignature' },
       };
   }
@@ -65,7 +65,7 @@ export const transformFunctionCallError = (
   // Transform deprecated LinkError to be compatible with the modern nearcore ExecutionError
   if ('LinkError' in rpcFunctionCallError) {
     return {
-      kind: 'Action.FunctionCall.Execution.Failed',
+      kind: 'Action.CallContractFunction.Execution.Failed',
       context: { cause: `Link Error: ${rpcFunctionCallError.LinkError.msg}` },
     };
   }
@@ -73,7 +73,7 @@ export const transformFunctionCallError = (
   // Transform a deprecated HostError to be compatible with the modern nearcore ExecutionError
   if ('WasmTrap' in rpcFunctionCallError) {
     return {
-      kind: 'Action.FunctionCall.Execution.Failed',
+      kind: 'Action.CallContractFunction.Execution.Failed',
       context: { cause: transformWasmTrap(rpcFunctionCallError.WasmTrap) },
     };
   }
@@ -81,7 +81,7 @@ export const transformFunctionCallError = (
   // Transform a deprecated HostError to be compatible with the modern nearcore ExecutionError
   if ('HostError' in rpcFunctionCallError) {
     return {
-      kind: 'Action.FunctionCall.Execution.Failed',
+      kind: 'Action.CallContractFunction.Execution.Failed',
       context: { cause: transformHostError(rpcFunctionCallError.HostError) },
     };
   }
@@ -89,7 +89,7 @@ export const transformFunctionCallError = (
   // Handle Execution errors
   if ('ExecutionError' in rpcFunctionCallError)
     return {
-      kind: 'Action.FunctionCall.Execution.Failed',
+      kind: 'Action.CallContractFunction.Execution.Failed',
       context: { cause: rpcFunctionCallError.ExecutionError },
     };
 

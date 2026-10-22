@@ -3,12 +3,12 @@ import { beforeAll, describe, it } from 'vitest';
 import * as z from 'zod/mini';
 import {
   type Client,
+  callContractFunction,
   convertBase64ToObject,
   createMemoryKeyVault,
   createMemorySigner,
   createSubAccount,
   deployLocalContract,
-  functionCall,
   near,
   transfer,
 } from '../../../../../index';
@@ -56,7 +56,7 @@ describe('CallContractReadFunction', () => {
           deployLocalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),
           }),
-          functionCall({
+          callContractFunction({
             functionName: 'write_record',
             functionArgs: {
               record_id: 0,
@@ -86,7 +86,7 @@ describe('CallContractReadFunction', () => {
     ): TransactionActionSummary<{ record_id: number; record: string } | Base64String>[] =>
       args.rawActionSummaries.map((rawActionSummary) => {
         if (
-          rawActionSummary.actionType === 'FunctionCall' &&
+          rawActionSummary.actionType === 'CallContractFunction' &&
           rawActionSummary.functionName === 'write_record'
         ) {
           return {

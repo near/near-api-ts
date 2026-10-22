@@ -2,11 +2,11 @@ import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   addAccessKey,
+  callContractFunction,
   createClient,
   createMemoryKeyVault,
   createTestnetClient,
   deployLocalContract,
-  functionCall,
   keyPair,
   near,
   randomEd25519KeyPair,
