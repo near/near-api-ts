@@ -135,8 +135,8 @@ describe('signAndSendTransaction › addAccessKey', () => {
 
     const { accessKeys } = await client.getAccessKeys({ accountId: 'nat' });
 
-    const findKey = ({ publicKeyRef }: { publicKeyRef: string }) =>
-      accessKeys.find((key) => key.publicKeyRef === publicKeyRef);
+    const findKey = ({ publicKeyId }: { publicKeyId: string }) =>
+      accessKeys.find((key) => key.publicKeyId === publicKeyId);
 
     expect(findKey(fullAccessKey)).toMatchObject({
       permission: { kind: 'FullAccess' },

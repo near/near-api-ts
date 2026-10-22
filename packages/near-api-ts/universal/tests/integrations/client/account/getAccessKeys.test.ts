@@ -31,7 +31,7 @@ describe('Get Account Access Keys', () => {
       accountId: 'nat',
     });
     expect(res.accessKeys[0]).toEqual({
-      publicKeyRef: DEFAULT_PUBLIC_KEY,
+      publicKeyId: DEFAULT_PUBLIC_KEY,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
       replayProtection: { scheme: 'NonceChannel', lastNonce: 0 },
@@ -43,7 +43,7 @@ describe('Get Account Access Keys', () => {
   });
 
   // The node lists an ml-dsa-65 key by the hash of the key, and any other key by the key itself
-  it('Ok - key refs', async () => {
+  it('Ok - key ids', async () => {
     const mlDsa65KeyPair = randomMlDsa65KeyPair();
     const secp256k1KeyPair = randomSecp256k1KeyPair();
 
@@ -73,10 +73,10 @@ describe('Get Account Access Keys', () => {
 
     const { accessKeys } = await client.getAccessKeys({ accountId: 'nat' });
 
-    expect(accessKeys.map(({ publicKeyRef }) => publicKeyRef).sort()).toEqual(
-      [DEFAULT_PUBLIC_KEY, secp256k1KeyPair.publicKey, mlDsa65KeyPair.publicKeyRef].sort(),
+    expect(accessKeys.map(({ publicKeyId }) => publicKeyId).sort()).toEqual(
+      [DEFAULT_PUBLIC_KEY, secp256k1KeyPair.publicKey, mlDsa65KeyPair.publicKeyId].sort(),
     );
-    expect(mlDsa65KeyPair.publicKeyRef).toMatch(/^ml-dsa-65-hash:/);
+    expect(mlDsa65KeyPair.publicKeyId).toMatch(/^ml-dsa-65-hash:/);
   });
 
   // The sandbox cannot add a gas key yet, so a fake node lists one key of every kind
@@ -147,13 +147,13 @@ describe('Get Account Access Keys', () => {
 
     expect(accessKeys).toEqual([
       {
-        publicKeyRef: fullAccess,
+        publicKeyId: fullAccess,
         permission: { kind: 'FullAccess' },
         gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
         replayProtection: { scheme: 'NonceChannel', lastNonce: 5 },
       },
       {
-        publicKeyRef: functionCall,
+        publicKeyId: functionCall,
         permission: {
           kind: 'FunctionCall',
           allowedContract: 'contract.near',
@@ -163,7 +163,7 @@ describe('Get Account Access Keys', () => {
         replayProtection: { scheme: 'NonceChannel', lastNonce: 6 },
       },
       {
-        publicKeyRef: limitedFunctionCall,
+        publicKeyId: limitedFunctionCall,
         permission: {
           kind: 'FunctionCall',
           allowedContract: 'contract.near',
@@ -176,13 +176,13 @@ describe('Get Account Access Keys', () => {
         replayProtection: { scheme: 'NonceChannel', lastNonce: 7 },
       },
       {
-        publicKeyRef: gasKeyFullAccess,
+        publicKeyId: gasKeyFullAccess,
         permission: { kind: 'FullAccess' },
         gasPayment: { source: 'KeyBalance', balance: yoctoNear('1000') },
         replayProtection: { scheme: 'NonceChannels', channelCount: 4 },
       },
       {
-        publicKeyRef: gasKeyFunctionCall,
+        publicKeyId: gasKeyFunctionCall,
         permission: {
           kind: 'FunctionCall',
           allowedContract: 'contract.near',
@@ -194,7 +194,7 @@ describe('Get Account Access Keys', () => {
     ]);
   });
 
-  it('Invalid public key ref in the rpc result', async () => {
+  it('Invalid public key id in the rpc result', async () => {
     // Answers like a node would, but with a 31-byte ml-dsa-65 hash
     const { fakeClient, close } = await startFakeRpc({
       keys: [

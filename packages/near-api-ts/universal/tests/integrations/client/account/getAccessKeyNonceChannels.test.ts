@@ -57,7 +57,7 @@ describe('Get Access Key Nonce Channels', () => {
 
     expect(res).toEqual({
       accountId: 'nat',
-      publicKeyRef: keyPair.publicKeyRef,
+      publicKeyId: keyPair.publicKeyId,
       nonceChannels: [
         { channelId: 0, lastNonce },
         { channelId: 1, lastNonce },
@@ -73,13 +73,13 @@ describe('Get Access Key Nonce Channels', () => {
     const keyPair = randomMlDsa65KeyPair();
     await addKeyWithChannels(keyPair.publicKey, 2);
 
-    const { publicKeyRef, nonceChannels } = await client.getAccessKeyNonceChannels({
+    const { publicKeyId, nonceChannels } = await client.getAccessKeyNonceChannels({
       accountId: 'nat',
       publicKey: keyPair.publicKey,
     });
 
-    expect(publicKeyRef).toBe(keyPair.publicKeyRef);
-    expect(publicKeyRef).toMatch(/^ml-dsa-65-hash:/);
+    expect(publicKeyId).toBe(keyPair.publicKeyId);
+    expect(publicKeyId).toMatch(/^ml-dsa-65-hash:/);
     expect(nonceChannels.map(({ channelId }) => channelId)).toEqual([0, 1]);
   });
 
@@ -100,7 +100,7 @@ describe('Get Access Key Nonce Channels', () => {
 
     expect(res).toEqual({
       accountId: 'nat',
-      publicKeyRef: keyPair.publicKeyRef,
+      publicKeyId: keyPair.publicKeyId,
       nonceChannels: [
         { channelId: 0, lastNonce: 5 },
         { channelId: 1, lastNonce: 0 },

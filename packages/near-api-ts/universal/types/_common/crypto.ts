@@ -16,10 +16,10 @@ export type MlDsa65PublicKeyHash = `ml-dsa-65-hash:${Base58String}`;
  * How the protocol refers to an access key of an account. An ed25519 or secp256k1 key is
  * referred to by the public key itself, an ml-dsa-65 key — by {@link MlDsa65PublicKeyHash}.
  *
- * A ref cannot verify a signature, and the protocol does not accept it where a public key
+ * An id cannot verify a signature, and the protocol does not accept it where a public key
  * is expected. Corresponds to nearcore `PublicKeyHandle`.
  */
-export type PublicKeyRef = Ed25519PublicKey | Secp256k1PublicKey | MlDsa65PublicKeyHash;
+export type PublicKeyId = Ed25519PublicKey | Secp256k1PublicKey | MlDsa65PublicKeyHash;
 
 export type Ed25519PrivateKey = Ed25519CurveString;
 export type Secp256k1PrivateKey = Secp256k1CurveString;

@@ -5,7 +5,7 @@
 ### Added
 
 - Everything near-api-ts v0.13.0 adds is re-exported from this package as well –
-  the `PublicKeyRef` type, `publicKeyRef` on every key pair and
+  the `PublicKeyId` type, `publicKeyId` on every key pair and
   `MemoryKeyVault.findPublicKey` / `safeFindPublicKey`. See the near-api-ts
   changelog.
 
@@ -22,7 +22,7 @@
   v0.13.0 changelog for the full list, error kinds included.
 
 - **Breaking:** `AccessKey`, re-exported from near-api-ts, refers to the key by
-  `publicKeyRef` instead of `publicKey`, and a custom `keyVault` passed
+  `publicKeyId` instead of `publicKey`, and a custom `keyVault` passed
   to `createMemorySigner` must implement `findPublicKey` / `safeFindPublicKey`.
   See the near-api-ts v0.13.0 changelog.
 

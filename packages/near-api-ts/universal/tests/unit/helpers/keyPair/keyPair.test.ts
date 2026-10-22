@@ -40,8 +40,8 @@ describe('keyPair', () => {
   it('refers to an ed25519 or secp256k1 key by the public key itself', () => {
     for (const randomKeyPair of [randomEd25519KeyPair(), randomSecp256k1KeyPair()]) {
       const kp = keyPair(randomKeyPair.privateKey);
-      expect(kp.publicKeyRef).toBe(kp.publicKey);
-      expect(randomKeyPair.publicKeyRef).toBe(randomKeyPair.publicKey);
+      expect(kp.publicKeyId).toBe(kp.publicKey);
+      expect(randomKeyPair.publicKeyId).toBe(randomKeyPair.publicKey);
     }
   });
 
@@ -49,8 +49,8 @@ describe('keyPair', () => {
     const randomKeyPair = randomMlDsa65KeyPair();
     const kp = keyPair(randomKeyPair.privateKey);
 
-    expect(randomKeyPair.publicKeyRef).toMatch(/^ml-dsa-65-hash:[1-9A-HJ-NP-Za-km-z]+$/);
-    expect(kp.publicKeyRef).toBe(randomKeyPair.publicKeyRef);
-    expect(randomMlDsa65KeyPair().publicKeyRef).not.toBe(randomKeyPair.publicKeyRef);
+    expect(randomKeyPair.publicKeyId).toMatch(/^ml-dsa-65-hash:[1-9A-HJ-NP-Za-km-z]+$/);
+    expect(kp.publicKeyId).toBe(randomKeyPair.publicKeyId);
+    expect(randomMlDsa65KeyPair().publicKeyId).not.toBe(randomKeyPair.publicKeyId);
   });
 });

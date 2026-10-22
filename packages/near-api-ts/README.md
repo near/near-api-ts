@@ -249,7 +249,7 @@ const { accessKey, atMomentOf } = await client.getAccessKey({
   publicKey: 'ed25519:...',
 });
 
-accessKey.publicKeyRef; // 'ed25519:...'
+accessKey.publicKeyId; // 'ed25519:...'
 atMomentOf; // { blockHash, blockHeight }
 
 const { permission, gasPayment, replayProtection } = accessKey;
@@ -313,11 +313,11 @@ Channels are numbered from 0 to `channelCount - 1`. A key with a single nonce ch
 channels to report — the method fails with
 `Client.GetAccessKeyNonceChannels.Rpc.NonceChannels.NotFound` for it, just as for a missing key.
 
-An account refers to its keys by `publicKeyRef` rather than by the public key: an ed25519 or
+An account refers to its keys by `publicKeyId` rather than by the public key: an ed25519 or
 secp256k1 key is referred to by the key itself, an ML-DSA-65 key by its hash
 (`'ml-dsa-65-hash:...'`), since the protocol does not store the full 1952-byte key.
-`getAccessKeys` lists keys by the same refs, and every key pair carries its own
-`publicKeyRef` to compare them with.
+`getAccessKeys` lists keys by the same ids, and every key pair carries its own
+`publicKeyId` to compare them with.
 
 ### Read-only contract calls
 
@@ -755,8 +755,8 @@ fresh.curve; // 'ed25519'
 fresh.publicKey; // 'ed25519:...'
 fresh.privateKey;
 fresh.publicKeyU8; // raw bytes when you need them
-fresh.publicKeyRef; // 'ed25519:...' — how an account refers to this key
-postQuantum.publicKeyRef; // 'ml-dsa-65-hash:...'
+fresh.publicKeyId; // 'ed25519:...' — how an account refers to this key
+postQuantum.publicKeyId; // 'ml-dsa-65-hash:...'
 
 const { signature, signatureU8 } = await fresh.signData({ dataU8 });
 ```
@@ -772,7 +772,7 @@ const keyVault = createMemoryKeyVault({
 });
 
 await keyVault.hasKey({ publicKey: 'ed25519:...' }); // true
-await keyVault.findPublicKey({ publicKeyRef: 'ml-dsa-65-hash:...' }); // the key, or undefined
+await keyVault.findPublicKey({ publicKeyId: 'ml-dsa-65-hash:...' }); // the key, or undefined
 await keyVault.signData({ publicKey: 'ed25519:...', dataU8 });
 ```
 

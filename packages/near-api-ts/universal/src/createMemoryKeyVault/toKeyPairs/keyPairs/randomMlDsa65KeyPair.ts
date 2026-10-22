@@ -47,7 +47,7 @@ export const safeRandomMlDsa65KeyPair: SafeCreateRandomMlDsa65KeyPair = wrapInte
       curve: 'ml-dsa-65' as const,
       publicKey,
       publicKeyU8,
-      publicKeyRef: toMlDsa65PublicKeyHash(publicKeyU8),
+      publicKeyId: toMlDsa65PublicKeyHash(publicKeyU8),
       privateKey,
       privateKeyU8,
       signData: asThrowable(safeSignData),

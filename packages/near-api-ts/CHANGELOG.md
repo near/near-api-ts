@@ -4,29 +4,29 @@
 
 ### Added
 
-- **`PublicKeyRef`** – how an account refers to its access keys: an ed25519 or
+- **`PublicKeyId`** – how an account refers to its access keys: an ed25519 or
   secp256k1 key by the public key itself, an ml-dsa-65 key by its hash,
   `'ml-dsa-65-hash:<base58>'`, since the protocol does not store the full
   1952-byte key.
 
-  - New type `PublicKeyRef`.
-  - Every key pair carries its own `publicKeyRef` – compare it with the refs an
+  - New type `PublicKeyId`.
+  - Every key pair carries its own `publicKeyId` – compare it with the ids an
     account lists:
 
     ```ts
     const { accessKeys } = await client.getAccessKeys({ accountId });
     const isAccountKey = accessKeys.some(
-      (key) => key.publicKeyRef === keyPair.publicKeyRef,
+      (key) => key.publicKeyId === keyPair.publicKeyId,
     );
     ```
 
-  - `MemoryKeyVault` gains `findPublicKey({ publicKeyRef })` /
+  - `MemoryKeyVault` gains `findPublicKey({ publicKeyId })` /
     `safeFindPublicKey`: the full public key when the vault holds it,
     `undefined` otherwise. New error kinds
     `MemoryKeyVault.FindPublicKey.Args.InvalidSchema` and
     `MemoryKeyVault.FindPublicKey.Internal`.
-  - `constants.BinaryLengths.<Curve>.PublicKeyRef` – the decoded length of a
-    ref: 32 bytes for ed25519 and ml-dsa-65, 64 for secp256k1.
+  - `constants.BinaryLengths.<Curve>.PublicKeyId` – the decoded length of an
+    id: 32 bytes for ed25519 and ml-dsa-65, 64 for secp256k1.
 
 - **Gas keys can be added** – `addAccessKey` with `gasPayment: { source: 'KeyBalance' }`
   and `replayProtection: { channelCount }` (1..1024) adds a key that pays for gas
@@ -233,7 +233,7 @@
 - **Breaking:** `AccessKey`, returned by `getAccessKey` and `getAccessKeys`, has
   a new shape. What the key may do, who pays for its gas and which nonces it
   signs with are three separate fields now, and the key is referred to by
-  `publicKeyRef` instead of `publicKey`:  \
+  `publicKeyId` instead of `publicKey`:  \
   Previously:
   ```ts
   { accessType: 'FullAccess', publicKey: PublicKey, nonce }
@@ -243,13 +243,13 @@
   Now:
   ```ts
   {
-    publicKeyRef: PublicKeyRef,
+    publicKeyId: PublicKeyId,
     permission: { kind: 'FullAccess' },
     gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
     replayProtection: { scheme: 'NonceChannel', lastNonce },
   }
   {
-    publicKeyRef,
+    publicKeyId,
     permission: { kind: 'FunctionCall', allowedContract, allowedFunctions },
     gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' | NearToken }, // was gasBudget
     replayProtection: { scheme: 'NonceChannel', lastNonce },
@@ -272,11 +272,11 @@
   `AccountBalanceFullAccessKey` and `AccountBalanceFunctionCallKey`;
   `KeyBalanceFullAccessKey` and `KeyBalanceFunctionCallKey` are new.
 
-  For ed25519 and secp256k1 keys `publicKeyRef` holds the same value
+  For ed25519 and secp256k1 keys `publicKeyId` holds the same value
   `publicKey` did. For an ml-dsa-65 key the value is now the hash:
   `getAccountAccessKey` used to return the full key it was asked about, and
   `getAccountAccessKeys` returned the hash typed as a `PublicKey`. To check
-  whether a key belongs to an account, compare against `keyPair.publicKeyRef`,
+  whether a key belongs to an account, compare against `keyPair.publicKeyId`,
   not `keyPair.publicKey`.
 
   This also fixes ml-dsa-65 keys wherever the library matched an account's keys
@@ -467,7 +467,7 @@
 
 - **Breaking:** a custom `keyVault` passed to `createMemorySigner` must
   implement `findPublicKey` and `safeFindPublicKey` – the `MemoryKeyVault`
-  type requires both, and the signer calls `safeFindPublicKey` to turn the refs
+  type requires both, and the signer calls `safeFindPublicKey` to turn the ids
   an account lists back into keys it can sign with.
 
 - **Breaking:** the per-call transport policy moved from `policies.transport` to

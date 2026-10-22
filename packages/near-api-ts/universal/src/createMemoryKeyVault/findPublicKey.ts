@@ -3,10 +3,10 @@ import type { SafeFindPublicKey } from '../../types/memoryKeyVault/findPublicKey
 import type { MemoryKeyVaultContext } from '../../types/memoryKeyVault/memoryKeyVault';
 import { result, resultNatError } from '../_common/_common/_common/result';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
-import { PublicKeyRefZodSchema } from '../_common/zodSchemas/publicKeyRef';
+import { PublicKeyIdZodSchema } from '../_common/zodSchemas/publicKeyId';
 
 const FindPublicKeyArgsZodSchema = z.object({
-  publicKeyRef: PublicKeyRefZodSchema,
+  publicKeyId: PublicKeyIdZodSchema,
 });
 
 export const createSafeFindPublicKey = (context: MemoryKeyVaultContext): SafeFindPublicKey =>
@@ -19,7 +19,7 @@ export const createSafeFindPublicKey = (context: MemoryKeyVaultContext): SafeFin
       });
 
     const keyPair = Object.values(context.keyPairs).find(
-      ({ publicKeyRef }) => publicKeyRef === validArgs.data.publicKeyRef,
+      ({ publicKeyId }) => publicKeyId === validArgs.data.publicKeyId,
     );
 
     return result.ok(keyPair?.publicKey);

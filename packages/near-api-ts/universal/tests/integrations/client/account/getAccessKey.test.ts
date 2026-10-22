@@ -29,7 +29,7 @@ describe('Get Account Access Key', () => {
     ).resolves.toMatchObject({
       accountId: 'nat',
       accessKey: {
-        publicKeyRef: DEFAULT_PUBLIC_KEY,
+        publicKeyId: DEFAULT_PUBLIC_KEY,
         permission: { kind: 'FullAccess' },
         gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
         replayProtection: { scheme: 'NonceChannel', lastNonce: 0 },
@@ -66,12 +66,12 @@ describe('Get Account Access Key', () => {
     });
 
     expect(mlDsa65AccessKey.accessKey).toEqual({
-      publicKeyRef: mlDsa65KeyPair.publicKeyRef,
+      publicKeyId: mlDsa65KeyPair.publicKeyId,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
       replayProtection: { scheme: 'NonceChannel', lastNonce: expect.any(Number) },
     });
-    expect(mlDsa65AccessKey.accessKey.publicKeyRef).toMatch(/^ml-dsa-65-hash:/);
+    expect(mlDsa65AccessKey.accessKey.publicKeyId).toMatch(/^ml-dsa-65-hash:/);
   });
 
   it('Invalid args', async () => {

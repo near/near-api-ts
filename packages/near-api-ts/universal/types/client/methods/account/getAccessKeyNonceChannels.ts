@@ -7,7 +7,7 @@ import type {
   Result,
   SequentialNonce,
 } from '../../../_common/common';
-import type { PublicKey, PublicKeyRef } from '../../../_common/crypto';
+import type { PublicKey, PublicKeyId } from '../../../_common/crypto';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../../_common/natError';
 import type { ClientContext } from '../../client';
 import type {
@@ -78,7 +78,7 @@ export type NonceChannel = {
 
 export type GetAccessKeyNonceChannelsOutput = {
   accountId: AccountId;
-  publicKeyRef: PublicKeyRef;
+  publicKeyId: PublicKeyId;
   /**
    * Every channel of the key, in `channelId` order
    */

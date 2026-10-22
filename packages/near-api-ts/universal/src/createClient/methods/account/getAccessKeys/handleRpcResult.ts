@@ -3,17 +3,17 @@ import * as z from 'zod/mini';
 import type { GetAccessKeysArgs } from '../../../../../types/client/methods/account/getAccessKeys';
 import { createNatError } from '../../../../_common/_common/_common/_common/natError';
 import { result, resultNatError } from '../../../../_common/_common/_common/result';
-import { PublicKeyRefZodSchema } from '../../../../_common/zodSchemas/publicKeyRef';
+import { PublicKeyIdZodSchema } from '../../../../_common/zodSchemas/publicKeyId';
 import type { BaseRpcResponse } from '../../../_common/zodSchemas/baseRpcResponse';
 import { transformAccessKey } from '../_common/transformAccessKey';
 
 const RpcQueryAccessKeyListResultSchema = z.object({
   ...AccessKeyListSchema().shape,
-  // The node refers to each key by its PublicKeyHandle, which is our PublicKeyRef
+  // The node refers to each key by its PublicKeyHandle, which is our PublicKeyId
   keys: z.array(
     z.object({
       ...AccessKeyInfoViewSchema().shape,
-      publicKey: PublicKeyRefZodSchema,
+      publicKey: PublicKeyIdZodSchema,
     }),
   ),
   blockHash: z.string(),
@@ -36,7 +36,7 @@ export const handleRpcResult = (rpcResponse: BaseRpcResponse, args: GetAccessKey
   return result.ok({
     accountId: args.accountId,
     accessKeys: keys.map(({ publicKey, accessKey }) =>
-      transformAccessKey({ publicKeyRef: publicKey, accessKey }),
+      transformAccessKey({ publicKeyId: publicKey, accessKey }),
     ),
     atMomentOf: { blockHash, blockHeight },
   });

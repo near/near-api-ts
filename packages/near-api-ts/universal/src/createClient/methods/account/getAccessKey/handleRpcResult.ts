@@ -3,7 +3,7 @@ import * as z from 'zod/mini';
 import type { GetAccessKeyArgs } from '../../../../../types/client/methods/account/getAccessKey';
 import { createNatError } from '../../../../_common/_common/_common/_common/natError';
 import { result, resultNatError } from '../../../../_common/_common/_common/result';
-import { toPublicKeyRef } from '../../../../_common/toPublicKeyRef';
+import { toPublicKeyId } from '../../../../_common/toPublicKeyId';
 import type { InnerPublicKey } from '../../../../_common/zodSchemas/publicKey';
 import type { BaseRpcResponse } from '../../../_common/zodSchemas/baseRpcResponse';
 import { transformAccessKey } from '../_common/transformAccessKey';
@@ -64,7 +64,7 @@ export const handleRpcResult = (
   return result.ok({
     accountId: args.accountId,
     accessKey: transformAccessKey({
-      publicKeyRef: toPublicKeyRef(publicKey),
+      publicKeyId: toPublicKeyId(publicKey),
       accessKey: rpcResult.data,
     }),
     atMomentOf: { blockHash, blockHeight },

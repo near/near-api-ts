@@ -1,5 +1,5 @@
 import type { AccountId, ContractFunctionName, SequentialNonce } from './common';
-import type { PublicKeyRef } from './crypto';
+import type { PublicKeyId } from './crypto';
 import type { NearToken, NearTokenArgs } from './nearToken';
 
 /**
@@ -103,14 +103,14 @@ export type NonceChannels = {
 // ── Paid from the account balance ────────────────────────────
 
 export type AccountBalanceFullAccessKey = {
-  publicKeyRef: PublicKeyRef;
+  publicKeyId: PublicKeyId;
   permission: FullAccessPermission;
   gasPayment: UnlimitedAccountBalanceGasPayment;
   replayProtection: NonceChannel;
 };
 
 export type AccountBalanceFunctionCallKey = {
-  publicKeyRef: PublicKeyRef;
+  publicKeyId: PublicKeyId;
   permission: FunctionCallPermission;
   gasPayment: AccountBalanceGasPayment;
   replayProtection: NonceChannel;
@@ -119,14 +119,14 @@ export type AccountBalanceFunctionCallKey = {
 // ── Paid from the key balance ────────────────────────────────
 
 export type KeyBalanceFullAccessKey = {
-  publicKeyRef: PublicKeyRef;
+  publicKeyId: PublicKeyId;
   permission: FullAccessPermission;
   gasPayment: KeyBalanceGasPayment;
   replayProtection: NonceChannels;
 };
 
 export type KeyBalanceFunctionCallKey = {
-  publicKeyRef: PublicKeyRef;
+  publicKeyId: PublicKeyId;
   permission: FunctionCallPermission;
   gasPayment: KeyBalanceGasPayment;
   replayProtection: NonceChannels;

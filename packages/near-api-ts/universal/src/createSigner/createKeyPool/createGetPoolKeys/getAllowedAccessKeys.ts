@@ -1,6 +1,6 @@
 import type { AccessKey } from '../../../../types/_common/accessKey';
 import type { CreateMemorySignerArgs } from '../../../../types/signer/createMemorySigner';
-import { toPublicKeyRef } from '../../../_common/toPublicKeyRef';
+import { toPublicKeyId } from '../../../_common/toPublicKeyId';
 import { PublicKeyZodSchema } from '../../../_common/zodSchemas/publicKey';
 
 export const getAllowedAccessKeys = (
@@ -12,10 +12,10 @@ export const getAllowedAccessKeys = (
   // We are sure that signingKeys contains at least 1 key if present;
   if (!whitelist) return accessKeys;
 
-  // The account refers to its keys by ref, so compare the whitelisted keys by ref too;
+  // The account refers to its keys by id, so compare the whitelisted keys by id too;
   // createMemorySigner has already validated them
   const set = new Set(
-    whitelist.map((publicKey) => toPublicKeyRef(PublicKeyZodSchema.parse(publicKey))),
+    whitelist.map((publicKey) => toPublicKeyId(PublicKeyZodSchema.parse(publicKey))),
   );
-  return accessKeys.filter((key) => set.has(key.publicKeyRef));
+  return accessKeys.filter((key) => set.has(key.publicKeyId));
 };

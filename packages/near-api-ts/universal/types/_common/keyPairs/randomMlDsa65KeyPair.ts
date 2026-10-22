@@ -35,7 +35,7 @@ export type MlDsa65KeyPair = {
   curve: 'ml-dsa-65';
   publicKey: MlDsa65PublicKey;
   publicKeyU8: Uint8Array;
-  publicKeyRef: MlDsa65PublicKeyHash;
+  publicKeyId: MlDsa65PublicKeyHash;
   privateKey: MlDsa65PrivateKey;
   privateKeyU8: Uint8Array;
   signData: SignData;

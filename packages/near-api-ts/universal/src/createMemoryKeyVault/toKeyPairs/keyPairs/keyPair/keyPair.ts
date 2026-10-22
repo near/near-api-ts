@@ -26,7 +26,7 @@ export const safeKeyPair: SafeCreateKeyPair = wrapInternalError(
       curve: innerPublicKey.curve,
       publicKey: innerPublicKey.publicKey,
       publicKeyU8: innerPublicKey.publicKeyU8,
-      publicKeyRef: innerPublicKey.publicKeyRef,
+      publicKeyId: innerPublicKey.publicKeyId,
       privateKey: validPrivateKey.data.privateKey,
       privateKeyU8: validPrivateKey.data.privateKeyU8,
       signData: asThrowable(safeSignData),

@@ -20,7 +20,7 @@ export const getInnerPublicKey = ({ curve, privateKeyU8 }: InnerPrivateKey) => {
         curve,
         publicKey,
         publicKeyU8,
-        publicKeyRef: publicKey,
+        publicKeyId: publicKey,
       };
     }
     case 'secp256k1': {
@@ -30,7 +30,7 @@ export const getInnerPublicKey = ({ curve, privateKeyU8 }: InnerPrivateKey) => {
         curve,
         publicKey,
         publicKeyU8,
-        publicKeyRef: publicKey,
+        publicKeyId: publicKey,
       };
     }
     // ml-dsa-65 stores secret-only, so derive the public key from the whole secret
@@ -40,7 +40,7 @@ export const getInnerPublicKey = ({ curve, privateKeyU8 }: InnerPrivateKey) => {
         curve,
         publicKey: toMlDsa65CurveString(publicKeyU8),
         publicKeyU8,
-        publicKeyRef: toMlDsa65PublicKeyHash(publicKeyU8),
+        publicKeyId: toMlDsa65PublicKeyHash(publicKeyU8),
       };
     }
   }

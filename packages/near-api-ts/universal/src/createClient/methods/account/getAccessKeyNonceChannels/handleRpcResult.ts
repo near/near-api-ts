@@ -3,7 +3,7 @@ import * as z from 'zod/mini';
 import type { GetAccessKeyNonceChannelsArgs } from '../../../../../types/client/methods/account/getAccessKeyNonceChannels';
 import { createNatError } from '../../../../_common/_common/_common/_common/natError';
 import { result, resultNatError } from '../../../../_common/_common/_common/result';
-import { toPublicKeyRef } from '../../../../_common/toPublicKeyRef';
+import { toPublicKeyId } from '../../../../_common/toPublicKeyId';
 import type { InnerPublicKey } from '../../../../_common/zodSchemas/publicKey';
 import type { BaseRpcResponse } from '../../../_common/zodSchemas/baseRpcResponse';
 
@@ -32,7 +32,7 @@ export const handleRpcResult = (
 
   return result.ok({
     accountId: args.accountId,
-    publicKeyRef: toPublicKeyRef(publicKey),
+    publicKeyId: toPublicKeyId(publicKey),
     nonceChannels: nonces.map((lastNonce, channelId) => ({ channelId, lastNonce })),
     atMomentOf: { blockHash, blockHeight },
   });

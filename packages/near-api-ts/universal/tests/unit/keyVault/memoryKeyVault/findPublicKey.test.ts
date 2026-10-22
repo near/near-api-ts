@@ -15,34 +15,34 @@ describe('memoryKeyVault.findPublicKey', () => {
     keySources: [ed25519KeyPair, mlDsa65KeyPair],
   });
 
-  it('finds an ed25519 key by its ref', async () => {
-    const publicKey = await keyVault.findPublicKey({ publicKeyRef: ed25519KeyPair.publicKeyRef });
+  it('finds an ed25519 key by its id', async () => {
+    const publicKey = await keyVault.findPublicKey({ publicKeyId: ed25519KeyPair.publicKeyId });
     expect(publicKey).toBe(ed25519KeyPair.publicKey);
   });
 
   it('finds an ml-dsa-65 key by its hash', async () => {
-    const publicKey = await keyVault.findPublicKey({ publicKeyRef: mlDsa65KeyPair.publicKeyRef });
+    const publicKey = await keyVault.findPublicKey({ publicKeyId: mlDsa65KeyPair.publicKeyId });
     expect(publicKey).toBe(mlDsa65KeyPair.publicKey);
   });
 
   it('returns undefined when the key is absent', async () => {
     const publicKey = await keyVault.findPublicKey({
-      publicKeyRef: randomMlDsa65KeyPair().publicKeyRef,
+      publicKeyId: randomMlDsa65KeyPair().publicKeyId,
     });
     expect(publicKey).toBeUndefined();
   });
 
   it('rejects a full ml-dsa-65 public key with Args.InvalidSchema', async () => {
     const result = await keyVault.safeFindPublicKey({
-      // @ts-expect-error a full ml-dsa-65 public key is not a ref
-      publicKeyRef: mlDsa65KeyPair.publicKey,
+      // @ts-expect-error a full ml-dsa-65 public key is not an id
+      publicKeyId: mlDsa65KeyPair.publicKey,
     });
     assertNatErrKind(result, 'MemoryKeyVault.FindPublicKey.Args.InvalidSchema');
   });
 
-  it('rejects a ref of the wrong length with Args.InvalidSchema', async () => {
+  it('rejects an id of the wrong length with Args.InvalidSchema', async () => {
     const result = await keyVault.safeFindPublicKey({
-      publicKeyRef: `ml-dsa-65-hash:${base58.encode(new Uint8Array(31).fill(7))}`,
+      publicKeyId: `ml-dsa-65-hash:${base58.encode(new Uint8Array(31).fill(7))}`,
     });
     assertNatErrKind(result, 'MemoryKeyVault.FindPublicKey.Args.InvalidSchema');
   });

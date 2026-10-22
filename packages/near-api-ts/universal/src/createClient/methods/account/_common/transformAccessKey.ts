@@ -1,10 +1,10 @@
 import type { AccessKeyView } from '@near-js/jsonrpc-types';
 import type { AccessKey, AllowedFunctions } from '../../../../../types/_common/accessKey';
-import type { PublicKeyRef } from '../../../../../types/_common/crypto';
+import type { PublicKeyId } from '../../../../../types/_common/crypto';
 import { yoctoNear } from '../../../../_common/nearToken';
 
 type TransformAccessKeyArgs = {
-  publicKeyRef: PublicKeyRef;
+  publicKeyId: PublicKeyId;
   accessKey: AccessKeyView;
 };
 
@@ -12,14 +12,14 @@ const toAllowedFunctions = (methodNames: string[]): AllowedFunctions =>
   methodNames.length > 0 ? methodNames : 'AllNonPayable';
 
 export const transformAccessKey = ({
-  publicKeyRef,
+  publicKeyId,
   accessKey,
 }: TransformAccessKeyArgs): AccessKey => {
   const { nonce, permission } = accessKey;
 
   if (permission === 'FullAccess')
     return {
-      publicKeyRef,
+      publicKeyId,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'AccountBalance', allowance: 'Unlimited' },
       replayProtection: { scheme: 'NonceChannel', lastNonce: nonce },
@@ -29,7 +29,7 @@ export const transformAccessKey = ({
     const { receiverId, methodNames, allowance } = permission.FunctionCall;
 
     return {
-      publicKeyRef,
+      publicKeyId,
       permission: {
         kind: 'FunctionCall',
         allowedContract: receiverId,
@@ -49,7 +49,7 @@ export const transformAccessKey = ({
     const { balance, numNonces } = permission.GasKeyFullAccess;
 
     return {
-      publicKeyRef,
+      publicKeyId,
       permission: { kind: 'FullAccess' },
       gasPayment: { source: 'KeyBalance', balance: yoctoNear(balance) },
       replayProtection: { scheme: 'NonceChannels', channelCount: numNonces },
@@ -61,7 +61,7 @@ export const transformAccessKey = ({
     const { receiverId, methodNames, balance, numNonces } = permission.GasKeyFunctionCall;
 
     return {
-      publicKeyRef,
+      publicKeyId,
       permission: {
         kind: 'FunctionCall',
         allowedContract: receiverId,
