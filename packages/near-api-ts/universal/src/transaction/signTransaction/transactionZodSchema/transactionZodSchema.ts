@@ -1,24 +1,24 @@
 import * as z from 'zod/mini';
-import { AccountIdZodSchema } from '../../_common/zodSchemas/accountId';
-import { CryptoHashZodSchema } from '../../_common/zodSchemas/cryptoHash';
-import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
-import { TransactionNonceZodSchema } from '../../_common/zodSchemas/transactionNonce';
-import { AddAccessKeyActionZodSchema } from '../_common/_common/zodSchemas/addAccessKey';
-import { CallContractFunctionActionZodSchema } from '../_common/_common/zodSchemas/callContractFunction';
-import { CreateSubAccountActionZodSchema } from '../_common/_common/zodSchemas/createSubAccount';
-import { DeleteAccessKeyActionZodSchema } from '../_common/_common/zodSchemas/deleteAccessKey';
-import { DeleteAccountActionZodSchema } from '../_common/_common/zodSchemas/deleteAccount';
-import { DeployLocalContractActionZodSchema } from '../_common/_common/zodSchemas/deployLocalContract';
-import { LinkGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/linkGlobalContract';
-import { NonceChannelIdZodSchema } from '../_common/_common/zodSchemas/nonceChannelId';
-import { PinGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/pinGlobalContract';
-import { PublishLinkableGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/publishLinkableGlobalContract';
-import { PublishPinnableGlobalContractActionZodSchema } from '../_common/_common/zodSchemas/publishPinnableGlobalContract';
-import { StakeActionZodSchema } from '../_common/_common/zodSchemas/stake';
-import { TopUpAccessKeyBalanceActionZodSchema } from '../_common/_common/zodSchemas/topUpAccessKeyBalance';
-import { TransferActionZodSchema } from '../_common/_common/zodSchemas/transfer';
-import { WithdrawAccessKeyBalanceActionZodSchema } from '../_common/_common/zodSchemas/withdrawAccessKeyBalance';
-import { SignedDelegationZodSchema } from '../_common/delegationZodSchema';
+import { AccountIdZodSchema } from '../../../_common/zodSchemas/accountId';
+import { CryptoHashZodSchema } from '../../../_common/zodSchemas/cryptoHash';
+import { NonceZodSchema } from '../../../_common/zodSchemas/nonce';
+import { PublicKeyZodSchema } from '../../../_common/zodSchemas/publicKey';
+import { AddAccessKeyActionZodSchema } from '../../_common/_common/zodSchemas/addAccessKey';
+import { CallContractFunctionActionZodSchema } from '../../_common/_common/zodSchemas/callContractFunction';
+import { CreateSubAccountActionZodSchema } from '../../_common/_common/zodSchemas/createSubAccount';
+import { DeleteAccessKeyActionZodSchema } from '../../_common/_common/zodSchemas/deleteAccessKey';
+import { DeleteAccountActionZodSchema } from '../../_common/_common/zodSchemas/deleteAccount';
+import { DeployLocalContractActionZodSchema } from '../../_common/_common/zodSchemas/deployLocalContract';
+import { LinkGlobalContractActionZodSchema } from '../../_common/_common/zodSchemas/linkGlobalContract';
+import { PinGlobalContractActionZodSchema } from '../../_common/_common/zodSchemas/pinGlobalContract';
+import { PublishLinkableGlobalContractActionZodSchema } from '../../_common/_common/zodSchemas/publishLinkableGlobalContract';
+import { PublishPinnableGlobalContractActionZodSchema } from '../../_common/_common/zodSchemas/publishPinnableGlobalContract';
+import { StakeActionZodSchema } from '../../_common/_common/zodSchemas/stake';
+import { TopUpAccessKeyBalanceActionZodSchema } from '../../_common/_common/zodSchemas/topUpAccessKeyBalance';
+import { TransferActionZodSchema } from '../../_common/_common/zodSchemas/transfer';
+import { SignedDelegationZodSchema } from '../../_common/delegationZodSchema';
+import { NonceChannelIdZodSchema } from './nonceChannelId';
+import { WithdrawAccessKeyBalanceActionZodSchema } from './withdrawAccessKeyBalance';
 
 const ExecuteDelegationActionZodSchema = z.object({
   actionType: z.literal('ExecuteDelegation'),
@@ -55,14 +55,14 @@ const NonceProgressionZodSchema = z._default(
 const TransactionReplayProtectionZodSchema = z.union([
   z.object({
     scheme: z.literal('NonceChannel'),
-    nonce: TransactionNonceZodSchema,
+    nonce: NonceZodSchema,
     nonceProgression: NonceProgressionZodSchema,
     nonceChannelId: z.optional(z.never()),
   }),
   z.object({
     scheme: z.literal('NonceChannels'),
     nonceChannelId: NonceChannelIdZodSchema,
-    nonce: TransactionNonceZodSchema,
+    nonce: NonceZodSchema,
     nonceProgression: NonceProgressionZodSchema,
   }),
 ]);

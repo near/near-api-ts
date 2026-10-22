@@ -1,4 +1,4 @@
-import { PublicKeyBorshSchema } from '../_common/publicKeyBorshSchema';
+import { PublicKeyBorshSchema } from '../../_common/_common/_common/publicKeyBorshSchema';
 
 export const WithdrawFromGasKeyActionBorshSchema = {
   struct: {

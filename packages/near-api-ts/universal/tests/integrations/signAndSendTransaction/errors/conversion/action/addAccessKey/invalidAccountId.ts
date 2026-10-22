@@ -1,5 +1,5 @@
 import { addAccessKey, randomEd25519KeyPair } from '../../../../../../../index';
-import type { InnerTransaction } from '../../../../../../../src/transaction/signTransaction/transactionZodSchema';
+import type { InnerTransaction } from '../../../../../../../src/transaction/signTransaction/transactionZodSchema/transactionZodSchema';
 import { assertUnmappedInvalidTxError } from '../../../../../../utils/assertUnmappedInvalidTxError';
 import { getLastNonce } from '../../../../../../utils/getLastNonce';
 import { signInvalidTransaction } from '../_common/signInvalidTransaction';

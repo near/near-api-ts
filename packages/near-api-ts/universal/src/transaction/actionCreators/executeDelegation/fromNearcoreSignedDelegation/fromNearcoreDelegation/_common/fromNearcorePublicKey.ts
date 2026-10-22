@@ -16,5 +16,5 @@ export const fromNearcorePublicKey = (publicKey: NearcorePublicKey): PublicKey =
   if ('mlDsa65Key' in publicKey)
     return toMlDsa65CurveString(Uint8Array.from(publicKey.mlDsa65Key.data));
 
-  throw new Error(`Unsupported public key type: ${publicKey}`);
+  throw new Error(`Unsupported public key format`, { cause: publicKey });
 };

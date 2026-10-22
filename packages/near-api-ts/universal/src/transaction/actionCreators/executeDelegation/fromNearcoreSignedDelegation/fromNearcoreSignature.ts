@@ -16,5 +16,5 @@ export const fromNearcoreSignature = (nearcoreSignature: NearcoreSignature): Sig
   if ('mlDsa65Signature' in nearcoreSignature)
     return toMlDsa65CurveString(Uint8Array.from(nearcoreSignature.mlDsa65Signature.data));
 
-  throw new Error(`Unsupported signature type: ${nearcoreSignature}`);
+  throw new Error(`Unsupported signature type`, { cause: nearcoreSignature });
 };

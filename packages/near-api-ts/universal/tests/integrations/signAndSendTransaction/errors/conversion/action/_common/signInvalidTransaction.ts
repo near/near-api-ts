@@ -2,15 +2,15 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { base58 } from '@scure/base';
 import { serialize } from 'borsh';
 import { toNearcoreSignature } from '../../../../../../../src/transaction/_common/toNearcoreSignature';
-import { toNearcoreTransaction } from '../../../../../../../src/transaction/signTransaction/toNearcoreTransaction';
+import { toNearcoreTransaction } from '../../../../../../../src/transaction/signTransaction/toNearcoreTransaction/toNearcoreTransaction';
 import {
   SignedTransactionBorshSchema,
   TransactionBorshSchema,
-} from '../../../../../../../src/transaction/signTransaction/transactionBorshSchema';
+} from '../../../../../../../src/transaction/signTransaction/transactionBorshSchema/transactionBorshSchema';
 import {
   type InnerTransaction,
   TransactionZodSchema,
-} from '../../../../../../../src/transaction/signTransaction/transactionZodSchema';
+} from '../../../../../../../src/transaction/signTransaction/transactionZodSchema/transactionZodSchema';
 import type { KeyPair } from '../../../../../../../types/_common/keyPairs/keyPair';
 import type { NearcoreSignedTransaction } from '../../../../../../../types/_common/transaction/transaction';
 

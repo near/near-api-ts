@@ -33,10 +33,7 @@ export const delegatedPinGlobalContract = (context: TestContext) => async () => 
       delegator: {
         accountId: delegatorAccountId,
         publicKey: defaultKeyPair.publicKey,
-        replayProtection: {
-          scheme: 'NonceChannel',
-          nonce: getLastNonce(delegatorAccessKey.accessKey) + 1,
-        },
+        replayProtection: { nonce: getLastNonce(delegatorAccessKey.accessKey) + 1 },
       },
       delegatedActions: [
         pinGlobalContract({ globalContractWasmHash }),

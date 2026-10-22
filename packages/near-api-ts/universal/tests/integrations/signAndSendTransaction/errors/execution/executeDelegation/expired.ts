@@ -18,10 +18,7 @@ export const expired = (context: TestContext) => async () => {
       delegator: {
         accountId: 'alice',
         publicKey: defaultKeyPair.publicKey,
-        replayProtection: {
-          scheme: 'NonceChannel',
-          nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
-        },
+        replayProtection: { nonce: getLastNonce(aliceAccessKey.accessKey) + 1 },
       },
       delegatedAction: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',

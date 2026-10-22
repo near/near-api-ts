@@ -43,10 +43,7 @@ describe('Execute delegation', () => {
         delegator: {
           accountId: 'alice',
           publicKey: aliceKp.publicKey,
-          replayProtection: {
-            scheme: 'NonceChannel',
-            nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
-          },
+          replayProtection: { nonce: getLastNonce(aliceAccessKey.accessKey) + 1 },
         },
         delegatedActions: [
           createSubAccount(),

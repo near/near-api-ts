@@ -1,4 +1,4 @@
-import type { NearcoreTransactionNonce } from '../../../../../types/_common/transaction/transaction';
+import type { NearcoreTransactionNonce } from '../../../../types/_common/transaction/transaction';
 
 type ReplayProtection =
   | { scheme: 'NonceChannel'; nonce: number }

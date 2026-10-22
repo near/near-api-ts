@@ -44,9 +44,10 @@
   withdrawAccessKeyBalance({ publicKey, amount: near('0.4') }); // key → its account
   ```
 
-  - Both take a public key and an amount, have `safe*` twins
-    (`safeTopUpAccessKeyBalance`, `safeWithdrawAccessKeyBalance`) and work in a
-    transaction and in a delegation alike. New types
+  - Both take a public key and an amount and have `safe*` twins
+    (`safeTopUpAccessKeyBalance`, `safeWithdrawAccessKeyBalance`). A top-up
+    also goes into a delegation, a withdrawal does not – the protocol refuses
+    it inside one. New types
     `TopUpAccessKeyBalanceAction` and `WithdrawAccessKeyBalanceAction`; new
     error kinds `CreateAction.{TopUpAccessKeyBalance,WithdrawAccessKeyBalance}.{Args.InvalidSchema,Internal}`.
   - Anyone can top up a key of any account: like the amount of a transfer, the
@@ -82,9 +83,9 @@
   Timeout, Aborted, Exhausted, Rpc.NotSynced, Rpc.Shard.NotTracked,
   Rpc.Block.GarbageCollected, Rpc.Block.NotFound, Internal}`.
 
-- **Gas keys can sign** – a transaction or a delegation takes one nonce channel
-  of a key with `replayProtection.scheme: 'NonceChannels'`, so the key signs up
-  to `channelCount` of them in parallel:
+- **Gas keys can sign** – a transaction takes one nonce channel of a key with
+  `replayProtection.scheme: 'NonceChannels'`, so the key signs up to
+  `channelCount` of them in parallel:
 
   ```ts
   signer: {
@@ -95,8 +96,9 @@
   ```
 
   `nonceChannelId` runs `0..channelCount - 1`, the `channelId` that
-  `getAccessKeyNonceChannels` reports. A transaction pays for gas from the key's
-  balance; a delegation is paid for by its relayer, as any other.
+  `getAccessKeyNonceChannels` reports. The transaction pays for gas from the
+  key's balance. A delegation cannot be signed by such a key – the protocol
+  refuses it.
 
 - **`nonceProgression`** in a transaction's `signer.replayProtection`:
   `'Consecutive'` (the default) takes exactly `lastNonce + 1`, `'Increasing'`
@@ -162,7 +164,7 @@
     delegator: {
       accountId, // was delegatorAccountId
       publicKey, // was delegatorPublicKey
-      replayProtection: { scheme: 'NonceChannel', nonce }, // was nonce
+      replayProtection: { nonce }, // was nonce
     },
     receiverAccountId,
     expiration,
@@ -172,20 +174,14 @@
 
   `SignedDelegation` and `DelegationBase` change the same way.
 
-- **Breaking:** `signDelegation` signs in the NEP-611 format, the one that can
-  name a nonce channel: `signedDelegation.delegation.tag` is
-  `constants.Delegation.Nep611Tag` instead of `constants.Delegation.Nep366Tag`,
-  and the node relaying it needs protocol version 85 or later. A relayer on an
-  older version of this library cannot read such a delegation.
-  `executeDelegation` still accepts a NEP-366 delegation signed elsewhere – the
-  tag of the signed delegation tells which one it got. Like the node, it now
-  rejects bytes left over after the delegation with
-  `CreateAction.ExecuteDelegation.SignedDelegation.Deserialize.Failed` instead of
-  ignoring them.
+- Like the node, `executeDelegation` now rejects bytes left over after the
+  delegation with `CreateAction.ExecuteDelegation.SignedDelegation.Deserialize.Failed`
+  instead of ignoring them.
 
 - **Breaking:** the delegation tags live in one constant:
   `constants.Nep366MetaTransaction.Tag` → `constants.Delegation.Nep366Tag`, next
-  to the new `constants.Delegation.Nep611Tag`.
+  to the new `constants.Delegation.Nep611Tag` – the tag of a NEP-611 delegation
+  in the action summary (see below).
 
 - **Breaking:** the transaction summary in `processingSteps.conversionStep`
   reports the signer the way the transaction takes it:  \
@@ -205,9 +201,13 @@
 
   The `ExecuteDelegation` action summary does the same: `delegation.delegator`
   `{ accountId, publicKey, replayProtection }` replaces `delegatorAccountId`,
-  `delegatorPublicKey` and `nonce`. It now covers NEP-611 delegations too –
-  `getTransactionResult` for a transaction relaying one used to fail with
-  `Client.GetTransactionResult.Internal`.
+  `delegatorPublicKey` and `nonce`. Unlike the signed delegation, its
+  `replayProtection` names the scheme: `{ scheme: 'NonceChannel', nonce }`, or
+  `{ scheme: 'NonceChannels', nonceChannelId, nonce }` for a NEP-611 delegation
+  signed by a gas key (`delegation.tag` is `constants.Delegation.Nep611Tag`),
+  which only transactions sent before protocol version 87 carry. It now covers
+  NEP-611 delegations too – `getTransactionResult` for a transaction relaying
+  one used to fail with `Client.GetTransactionResult.Internal`.
 
 - **Breaking:** the access key API drops the `Account` prefix:
 

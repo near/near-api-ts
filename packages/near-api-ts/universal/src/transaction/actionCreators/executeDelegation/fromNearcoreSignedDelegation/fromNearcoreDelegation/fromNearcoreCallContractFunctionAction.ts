@@ -1,12 +1,14 @@
-import type { NearcoreCallContractFunctionAction } from '../../../../../../types/_common/transaction/actions/delegableActions/callContractFunction';
-import type { DelegableAction } from '../../../../../../types/_common/transaction/actions/executeDelegation/delegation';
+import type {
+  CallContractFunctionAction,
+  NearcoreCallContractFunctionAction,
+} from '../../../../../../types/_common/transaction/actions/delegableActions/callContractFunction';
 
 export const fromNearcoreCallContractFunctionAction = ({
   methodName,
   args,
   gas,
   deposit,
-}: NearcoreCallContractFunctionAction['functionCall']): DelegableAction => ({
+}: NearcoreCallContractFunctionAction['functionCall']): CallContractFunctionAction => ({
   actionType: 'CallContractFunction',
   functionName: methodName,
   functionArgs: Uint8Array.from(args),

@@ -2,9 +2,9 @@ import * as z from 'zod/mini';
 import { constants } from '../../_common/_common/_common/constants';
 import { AccountIdZodSchema } from '../../_common/zodSchemas/accountId';
 import { BlockHeightZodSchema } from '../../_common/zodSchemas/blockHeight';
+import { NonceZodSchema } from '../../_common/zodSchemas/nonce';
 import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
 import { SignatureZodSchema } from '../../_common/zodSchemas/signature';
-import { TransactionNonceZodSchema } from '../../_common/zodSchemas/transactionNonce';
 import { AddAccessKeyActionZodSchema } from './_common/zodSchemas/addAccessKey';
 import { CallContractFunctionActionZodSchema } from './_common/zodSchemas/callContractFunction';
 import { CreateSubAccountActionZodSchema } from './_common/zodSchemas/createSubAccount';
@@ -12,14 +12,12 @@ import { DeleteAccessKeyActionZodSchema } from './_common/zodSchemas/deleteAcces
 import { DeleteAccountActionZodSchema } from './_common/zodSchemas/deleteAccount';
 import { DeployLocalContractActionZodSchema } from './_common/zodSchemas/deployLocalContract';
 import { LinkGlobalContractActionZodSchema } from './_common/zodSchemas/linkGlobalContract';
-import { NonceChannelIdZodSchema } from './_common/zodSchemas/nonceChannelId';
 import { PinGlobalContractActionZodSchema } from './_common/zodSchemas/pinGlobalContract';
 import { PublishLinkableGlobalContractActionZodSchema } from './_common/zodSchemas/publishLinkableGlobalContract';
 import { PublishPinnableGlobalContractActionZodSchema } from './_common/zodSchemas/publishPinnableGlobalContract';
 import { StakeActionZodSchema } from './_common/zodSchemas/stake';
 import { TopUpAccessKeyBalanceActionZodSchema } from './_common/zodSchemas/topUpAccessKeyBalance';
 import { TransferActionZodSchema } from './_common/zodSchemas/transfer';
-import { WithdrawAccessKeyBalanceActionZodSchema } from './_common/zodSchemas/withdrawAccessKeyBalance';
 
 const DelegableActionZodSchema = z.union([
   CreateSubAccountActionZodSchema,
@@ -35,31 +33,17 @@ const DelegableActionZodSchema = z.union([
   LinkGlobalContractActionZodSchema,
   PinGlobalContractActionZodSchema,
   TopUpAccessKeyBalanceActionZodSchema,
-  WithdrawAccessKeyBalanceActionZodSchema,
 ]);
 
 export type InnerDelegableAction = z.infer<typeof DelegableActionZodSchema>;
-
-const NonceChannelReplayProtectionZodSchema = z.object({
-  scheme: z.literal('NonceChannel'),
-  nonce: TransactionNonceZodSchema,
-  nonceChannelId: z.optional(z.never()),
-});
-
-const NonceChannelsReplayProtectionZodSchema = z.object({
-  scheme: z.literal('NonceChannels'),
-  nonceChannelId: NonceChannelIdZodSchema,
-  nonce: TransactionNonceZodSchema,
-});
 
 const DelegationBaseZodSchema = z.object({
   delegator: z.object({
     accountId: AccountIdZodSchema,
     publicKey: PublicKeyZodSchema,
-    replayProtection: z.union([
-      NonceChannelReplayProtectionZodSchema,
-      NonceChannelsReplayProtectionZodSchema,
-    ]),
+    replayProtection: z.object({
+      nonce: NonceZodSchema,
+    }),
   }),
   receiverAccountId: AccountIdZodSchema,
   expiration: z.object({
@@ -91,26 +75,13 @@ export const DelegationZodSchema = z.union([
 export type InnerDelegation = z.infer<typeof DelegationZodSchema>;
 
 // A signed delegation always carries the action list, never the single-action
-// shorthand - `signDelegation` normalizes it before signing. The tag tells its format apart:
-// NEP-611 is the one `signDelegation` signs, NEP-366 comes from other signers and has no
-// nonce channel id.
+// shorthand - `signDelegation` normalizes it before signing.
 export const SignedDelegationZodSchema = z.object({
-  delegation: z.union([
-    z.object({
-      tag: z.literal(constants.Delegation.Nep611Tag),
-      ...DelegationBaseZodSchema.shape,
-      ...MultiDelegatedActionsZodSchema.shape,
-    }),
-    z.object({
-      tag: z.literal(constants.Delegation.Nep366Tag),
-      ...DelegationBaseZodSchema.shape,
-      delegator: z.object({
-        ...DelegationBaseZodSchema.shape.delegator.shape,
-        replayProtection: NonceChannelReplayProtectionZodSchema,
-      }),
-      ...MultiDelegatedActionsZodSchema.shape,
-    }),
-  ]),
+  delegation: z.object({
+    tag: z.literal(constants.Delegation.Nep366Tag),
+    ...DelegationBaseZodSchema.shape,
+    ...MultiDelegatedActionsZodSchema.shape,
+  }),
   signature: SignatureZodSchema,
 });
 

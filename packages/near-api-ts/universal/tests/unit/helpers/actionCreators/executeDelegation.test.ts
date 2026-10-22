@@ -10,11 +10,15 @@ import {
   safeSignDelegation,
   signDelegation,
   transfer,
+  withdrawAccessKeyBalance,
 } from '../../../../index';
+import { PublicKeyBorshSchema } from '../../../../src/transaction/_common/_common/_common/publicKeyBorshSchema';
+import { SignatureBorshSchema } from '../../../../src/transaction/_common/_common/borshSchemas/signature';
 import {
-  DelegationV1BorshSchema,
-  SignedDelegationV1BorshSchema,
+  DelegationBorshSchema,
+  SignedDelegationBorshSchema,
 } from '../../../../src/transaction/_common/delegationBorshSchema';
+import { TransactionNonceBorshSchema } from '../../../../src/transaction/signTransaction/transactionBorshSchema/transactionNonce';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
 describe('executeDelegation', () => {
@@ -27,7 +31,7 @@ describe('executeDelegation', () => {
     expiration: { blockHeight: 1000 },
   };
 
-  it('reads back a delegation signed on the single nonce channel', async () => {
+  it('reads back a delegation signDelegation signed', async () => {
     const { signedDelegation, signedDelegationBorsh64 } = await signDelegation({
       signDataProvider: keyPair,
       delegation: {
@@ -35,31 +39,13 @@ describe('executeDelegation', () => {
         delegator: {
           accountId: 'alice',
           publicKey: keyPair.publicKey,
-          replayProtection: { scheme: 'NonceChannel', nonce: 7 },
+          replayProtection: { nonce: 7 },
         },
       },
     });
 
-    expect(signedDelegation.delegation.tag).toBe(constants.Delegation.Nep611Tag);
-    expect(executeDelegation({ signedDelegationBorsh64 })).toStrictEqual({
-      actionType: 'ExecuteDelegation',
-      signedDelegation,
-    });
-  });
-
-  it('reads back a delegation signed on one of many nonce channels', async () => {
-    const { signedDelegation, signedDelegationBorsh64 } = await signDelegation({
-      signDataProvider: keyPair,
-      delegation: {
-        ...delegation,
-        delegator: {
-          accountId: 'alice',
-          publicKey: keyPair.publicKey,
-          replayProtection: { scheme: 'NonceChannels', nonceChannelId: 1023, nonce: 7 },
-        },
-      },
-    });
-
+    expect(signedDelegation.delegation.tag).toBe(constants.Delegation.Nep366Tag);
+    expect(signedDelegation.delegation.delegator.replayProtection).toStrictEqual({ nonce: 7 });
     expect(executeDelegation({ signedDelegationBorsh64 })).toStrictEqual({
       actionType: 'ExecuteDelegation',
       signedDelegation,
@@ -80,7 +66,7 @@ describe('executeDelegation', () => {
         delegator: {
           accountId: 'alice',
           publicKey: keyPair.publicKey,
-          replayProtection: { scheme: 'NonceChannel', nonce: 7 },
+          replayProtection: { nonce: 7 },
         },
         receiverAccountId: 'alice',
         expiration: { blockHeight: 1000 },
@@ -117,7 +103,7 @@ describe('executeDelegation', () => {
     });
   });
 
-  it('reads a delegation signed in the NEP-366 format', async () => {
+  it('reads a delegation signed elsewhere', async () => {
     const nearcoreDelegation = {
       tag: constants.Delegation.Nep366Tag,
       senderId: 'alice',
@@ -129,10 +115,10 @@ describe('executeDelegation', () => {
     };
 
     const { signature, signatureU8 } = await keyPair.signData({
-      dataU8: sha256(serialize(DelegationV1BorshSchema, nearcoreDelegation)),
+      dataU8: sha256(serialize(DelegationBorshSchema, nearcoreDelegation)),
     });
 
-    const signedDelegationBorsh64 = serialize(SignedDelegationV1BorshSchema, {
+    const signedDelegationBorsh64 = serialize(SignedDelegationBorshSchema, {
       delegation: nearcoreDelegation,
       signature: { ed25519Signature: { data: signatureU8 } },
     }).toBase64();
@@ -145,7 +131,7 @@ describe('executeDelegation', () => {
           delegator: {
             accountId: 'alice',
             publicKey: keyPair.publicKey,
-            replayProtection: { scheme: 'NonceChannel', nonce: 7 },
+            replayProtection: { nonce: 7 },
           },
           receiverAccountId: 'bob',
           expiration: { blockHeight: 1000 },
@@ -166,7 +152,9 @@ describe('executeDelegation › malformed bytes', () => {
   const keyPair = randomEd25519KeyPair();
 
   // The signature is never checked here, only its encoding
-  const nep366DelegationU8 = serialize(SignedDelegationV1BorshSchema, {
+  const signature = { ed25519Signature: { data: new Uint8Array(64) } };
+
+  const nep366DelegationU8 = serialize(SignedDelegationBorshSchema, {
     delegation: {
       senderId: 'alice',
       receiverId: 'bob',
@@ -175,26 +163,8 @@ describe('executeDelegation › malformed bytes', () => {
       maxBlockHeight: 1000n,
       publicKey: { ed25519Key: { data: keyPair.publicKeyU8 } },
     },
-    signature: { ed25519Signature: { data: new Uint8Array(64) } },
+    signature,
   });
-
-  const getNep611DelegationU8 = async () => {
-    const { signedDelegationBorsh64 } = await signDelegation({
-      signDataProvider: keyPair,
-      delegation: {
-        delegator: {
-          accountId: 'alice',
-          publicKey: keyPair.publicKey,
-          replayProtection: { scheme: 'NonceChannels', nonceChannelId: 1, nonce: 7 },
-        },
-        receiverAccountId: 'bob',
-        delegatedAction: transfer({ amount: { yoctoNear: 1n } }),
-        expiration: { blockHeight: 1000 },
-      },
-    });
-
-    return Uint8Array.fromBase64(signedDelegationBorsh64);
-  };
 
   const executeDelegationOf = (signedDelegationU8: Uint8Array) =>
     safeExecuteDelegation({ signedDelegationBorsh64: signedDelegationU8.toBase64() });
@@ -207,28 +177,50 @@ describe('executeDelegation › malformed bytes', () => {
     expect(String(res.error.context.cause)).toContain(causeMessage);
   };
 
-  it('rejects bytes left over after a NEP-366 delegation', () => {
+  it('rejects bytes left over after the delegation', () => {
     expectDeserializeFailed(
       executeDelegationOf(new Uint8Array([...nep366DelegationU8, 0])),
       'Bytes left over after the borsh value: 1',
     );
   });
 
-  it('rejects bytes left over after a NEP-611 delegation', async () => {
-    const nep611DelegationU8 = await getNep611DelegationU8();
-
-    expectDeserializeFailed(
-      executeDelegationOf(new Uint8Array([...nep611DelegationU8, 1, 2])),
-      'Bytes left over after the borsh value: 2',
+  // Nearcore `VersionedSignedDelegateAction`: the payload discriminant (0 for V2) goes first, and
+  // the nonce may name a nonce channel. Nearcore refuses this format since protocol 87. The
+  // action list is left empty, so its element type does not matter.
+  it('rejects a delegation in the NEP-611 format', () => {
+    const nep611DelegationU8 = serialize(
+      {
+        struct: {
+          delegation: {
+            struct: {
+              version: 'u8',
+              senderId: 'string',
+              receiverId: 'string',
+              actions: { array: { type: 'u8' } },
+              nonce: TransactionNonceBorshSchema,
+              maxBlockHeight: 'u64',
+              publicKey: PublicKeyBorshSchema,
+            },
+          },
+          signature: SignatureBorshSchema,
+        },
+      },
+      {
+        delegation: {
+          version: 0,
+          senderId: 'alice',
+          receiverId: 'bob',
+          actions: [],
+          nonce: { gasKeyNonce: { nonce: 7n, nonceIndex: 1 } },
+          maxBlockHeight: 1000n,
+          publicKey: { ed25519Key: { data: keyPair.publicKeyU8 } },
+        },
+        signature,
+      },
     );
-  });
 
-  // A payload version nearcore may add later would start with its own discriminant
-  it('rejects a payload version other than V2', async () => {
-    const nextVersionU8 = await getNep611DelegationU8();
-    nextVersionU8[0] = 1;
-
-    expectDeserializeFailed(executeDelegationOf(nextVersionU8), 'Unknown signed delegation format');
+    const res = executeDelegationOf(nep611DelegationU8);
+    assertNatErrKind(res, 'CreateAction.ExecuteDelegation.SignedDelegation.Deserialize.Failed');
   });
 
   // borsh-js decodes any bytes as a string, nearcore accepts valid UTF-8 only: 0xC3 has to be
@@ -244,32 +236,29 @@ describe('executeDelegation › malformed bytes', () => {
   });
 });
 
-describe('signDelegation › delegator.replayProtection', () => {
+describe('signDelegation › delegated actions', () => {
   const keyPair = randomEd25519KeyPair();
 
-  const sign = (replayProtection: Record<string, unknown>) =>
-    safeSignDelegation({
+  // Nearcore refuses a withdrawal from a key balance inside any delegation since protocol 87
+  it('rejects a WithdrawAccessKeyBalance action', async () => {
+    const res = await safeSignDelegation({
       signDataProvider: keyPair,
       delegation: {
         delegator: {
           accountId: 'alice',
           publicKey: keyPair.publicKey,
-          // @ts-expect-error - the cases below are invalid on purpose
-          replayProtection,
+          replayProtection: { nonce: 1 },
         },
-        receiverAccountId: 'bob',
-        delegatedAction: transfer({ amount: { yoctoNear: '1' } }),
+        receiverAccountId: 'alice',
+        // @ts-expect-error - not a delegable action
+        delegatedAction: withdrawAccessKeyBalance({
+          publicKey: keyPair.publicKey,
+          amount: { near: '1' },
+        }),
         expiration: { blockHeight: 1000 },
       },
     });
 
-  it('rejects a nonce channel id with the NonceChannel scheme', async () => {
-    const res = await sign({ scheme: 'NonceChannel', nonceChannelId: 0, nonce: 1 });
-    assertNatErrKind(res, 'SignDelegation.Args.InvalidSchema');
-  });
-
-  it('rejects a nonce channel id out of range', async () => {
-    const res = await sign({ scheme: 'NonceChannels', nonceChannelId: 1024, nonce: 1 });
     assertNatErrKind(res, 'SignDelegation.Args.InvalidSchema');
   });
 });

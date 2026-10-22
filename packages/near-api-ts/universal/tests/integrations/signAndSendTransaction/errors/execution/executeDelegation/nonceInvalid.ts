@@ -20,7 +20,7 @@ export const nonceInvalid = (context: TestContext) => async () => {
       delegator: {
         accountId: 'alice',
         publicKey: defaultKeyPair.publicKey,
-        replayProtection: { scheme: 'NonceChannel', nonce: delegationNonce },
+        replayProtection: { nonce: delegationNonce },
       },
       delegatedAction: transfer({ amount: { near: '1' } }),
       receiverAccountId: 'bob',

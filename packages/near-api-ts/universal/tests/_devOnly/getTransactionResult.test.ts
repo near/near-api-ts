@@ -26,6 +26,9 @@ it('getTransactionResult', async () => {
     // transactionHash: 'GxFGnomJ8znxJkpSduxZk7c9F3nqh7waAvnWxdFfxshK', // v1.signer - respond - not SIR
     // transactionHash: 'DSnehcspPKHuX44brwy4gWDhJYBaKwcP21Hq4qqjncE1', // wrap.near - ft_transfer_call - not SIR
     // transactionHash: '9usBJmQ3J1e2XTULjjkuyXPrsyRmp3CxDDVtVMd4HWgF', // old HostError::GuestPanic
+    // DelegateV2 (NEP-611) signed by a gas key of lantstool.near, relayed by lants.near before protocol 87:
+    // transactionHash: 'aXPdG7bYXmZ8p4JwRMqdacF8sekqHMJJrfBVhUZYwAJ', // adds the gas key
+    // transactionHash: '9iukKMPYiwtWNxJxd6XfnaktwCPuiJRHmLGv4ESEYWzH', // Success (ED+Transfer)
     // transactionHash: 'HdbSynSQmGBDeq4GHZAaZQYSwHH5nX1ivWm1Xxpv2rnH', // DelegateActionInvalidNonceIndex
     // transactionHash: 'CKyEiCLYiMo1EH7CnjLA8fcTY59FdoPk1tsLSKN3BJ4q', // DelegateActionAccessKeyError -> DelegateActionRequiresNonGasKey
     // transactionHash: 'DQtKJxfAxyp67SCGWCaeHQxv5wbfyawCYWiFP2QZW7kY', // DelegateActionAccessKeyError -> DelegateActionRequiresGasKey

@@ -11,9 +11,12 @@ import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { toNearcoreSignature } from '../_common/toNearcoreSignature';
-import { toNearcoreTransaction } from './toNearcoreTransaction';
-import { SignedTransactionBorshSchema, TransactionBorshSchema } from './transactionBorshSchema';
-import { TransactionZodSchema } from './transactionZodSchema';
+import { toNearcoreTransaction } from './toNearcoreTransaction/toNearcoreTransaction';
+import {
+  SignedTransactionBorshSchema,
+  TransactionBorshSchema,
+} from './transactionBorshSchema/transactionBorshSchema';
+import { TransactionZodSchema } from './transactionZodSchema/transactionZodSchema';
 
 const SignTransactionArgsSchema = z.object({
   transaction: TransactionZodSchema,

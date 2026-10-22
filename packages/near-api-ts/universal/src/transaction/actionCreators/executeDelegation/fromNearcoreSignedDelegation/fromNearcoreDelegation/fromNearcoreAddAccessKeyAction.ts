@@ -22,7 +22,10 @@ export const fromNearcoreAddAccessKeyAction = ({
   publicKey,
   accessKey: { permission },
 }: NearcoreAddAccessKeyAction['addKey']): AddAccessKeyAction => {
-  const base = { actionType: 'AddAccessKey' as const, publicKey: fromNearcorePublicKey(publicKey) };
+  const base = {
+    actionType: 'AddAccessKey' as const,
+    publicKey: fromNearcorePublicKey(publicKey),
+  };
 
   if ('fullAccess' in permission)
     return {
@@ -57,12 +60,16 @@ export const fromNearcoreAddAccessKeyAction = ({
       },
     };
 
-  const { gasKeyInfo, functionCallPermission } = permission.gasKeyFunctionCall;
+  if ('gasKeyFunctionCall' in permission) {
+    const { gasKeyInfo, functionCallPermission } = permission.gasKeyFunctionCall;
 
-  return {
-    ...base,
-    permission: fromNearcoreContractFunctionCallPermission(functionCallPermission),
-    gasPayment: { source: 'KeyBalance' },
-    replayProtection: { scheme: 'NonceChannels', channelCount: gasKeyInfo.numNonces },
-  };
+    return {
+      ...base,
+      permission: fromNearcoreContractFunctionCallPermission(functionCallPermission),
+      gasPayment: { source: 'KeyBalance' },
+      replayProtection: { scheme: 'NonceChannels', channelCount: gasKeyInfo.numNonces },
+    };
+  }
+
+  throw new Error('Unsupported access key permission.', { cause: permission });
 };

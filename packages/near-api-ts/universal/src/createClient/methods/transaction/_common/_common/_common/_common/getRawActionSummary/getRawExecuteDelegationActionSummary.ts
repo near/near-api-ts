@@ -11,8 +11,10 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { base58 } from '@scure/base';
 import type { Base64String } from '../../../../../../../../../types/_common/common';
 import type { PublicKey, Signature } from '../../../../../../../../../types/_common/crypto';
-import type { DelegationReplayProtection } from '../../../../../../../../../types/_common/transaction/actions/executeDelegation/delegation';
-import type { DelegableActionSummary } from '../../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
+import type {
+  DelegableActionSummary,
+  ExecuteDelegationReplayProtectionSummary,
+} from '../../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
 import { constants } from '../../../../../../../../_common/_common/_common/constants';
 import { gas } from '../../../../../../../../_common/nearGas';
 import { yoctoNear } from '../../../../../../../../_common/nearToken';
@@ -166,7 +168,9 @@ const convertNonDelegateActionToSummary = (
   throw new Error(`Unsupported delegable action: ${JSON.stringify(nonDelegateAction)}`);
 };
 
-const toDelegationReplayProtection = (nonce: TransactionNonce): DelegationReplayProtection =>
+const toReplayProtectionSummary = (
+  nonce: TransactionNonce,
+): ExecuteDelegationReplayProtectionSummary =>
   'GasKeyNonce' in nonce
     ? {
         scheme: 'NonceChannels',
@@ -176,7 +180,9 @@ const toDelegationReplayProtection = (nonce: TransactionNonce): DelegationReplay
     : { scheme: 'NonceChannel', nonce: nonce.Nonce.nonce };
 
 // Nearcore reports the two delegation formats as two actions - `Delegate` (NEP-366), whose nonce
-// is a plain number, and `DelegateV2` (NEP-611), whose nonce may name a nonce channel.
+// is a plain number, and `DelegateV2` (NEP-611), whose nonce may name a nonce channel. This library
+// signs only the first one; the second is refused since protocol 87, but transactions sent before
+// it still carry one.
 export const getRawExecuteDelegationActionSummary = (
   delegation:
     | { tag: typeof constants.Delegation.Nep366Tag; delegateAction: DelegateAction }
@@ -195,7 +201,7 @@ export const getRawExecuteDelegationActionSummary = (
         replayProtection:
           delegation.tag === constants.Delegation.Nep366Tag
             ? { scheme: 'NonceChannel' as const, nonce: delegation.delegateAction.nonce }
-            : toDelegationReplayProtection(delegation.delegateAction.nonce),
+            : toReplayProtectionSummary(delegation.delegateAction.nonce),
       },
       delegatedActionSummaries: delegateAction.actions.map(convertNonDelegateActionToSummary),
       receiverAccountId: delegateAction.receiverId,

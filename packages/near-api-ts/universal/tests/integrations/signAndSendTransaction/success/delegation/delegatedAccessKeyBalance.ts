@@ -6,14 +6,14 @@ import {
   randomEd25519KeyPair,
   signDelegation,
   topUpAccessKeyBalance,
-  withdrawAccessKeyBalance,
 } from '../../../../../index';
 import { signTransaction } from '../../../../../src/transaction/signTransaction/signTransaction';
 import { getLastNonce } from '../../../../utils/getLastNonce';
 import type { TestContext } from './delegation.test';
 
-// Covers the delegation-only paths of both actions: their slots (12 and 13) in the delegation borsh
-// enum, decoding them back in `executeDelegation`, and the summaries of the delegated actions.
+// Covers the delegation-only paths of the top-up: its slot (12) in the delegation borsh enum,
+// decoding it back in `executeDelegation`, and the summary of the delegated action. A withdrawal
+// cannot be delegated - nearcore refuses it inside a delegation since protocol 87.
 export const delegatedAccessKeyBalance = (context: TestContext) => async () => {
   const { client, defaultKeyPair, relayKeyPair } = context;
   const delegatorAccountId = 'alice';
@@ -30,10 +30,7 @@ export const delegatedAccessKeyBalance = (context: TestContext) => async () => {
       delegator: {
         accountId: delegatorAccountId,
         publicKey: defaultKeyPair.publicKey,
-        replayProtection: {
-          scheme: 'NonceChannel',
-          nonce: getLastNonce(delegatorAccessKey.accessKey) + 1,
-        },
+        replayProtection: { nonce: getLastNonce(delegatorAccessKey.accessKey) + 1 },
       },
       delegatedActions: [
         addAccessKey({
@@ -43,7 +40,6 @@ export const delegatedAccessKeyBalance = (context: TestContext) => async () => {
           replayProtection: { channelCount: 1 },
         }),
         topUpAccessKeyBalance({ publicKey: gasKeyPair.publicKey, amount: near('1') }),
-        withdrawAccessKeyBalance({ publicKey: gasKeyPair.publicKey, amount: near('0.25') }),
       ],
       receiverAccountId: delegatorAccountId,
       expiration: { blockHeight: delegatorAccessKey.atMomentOf.blockHeight + 100 },
@@ -88,11 +84,6 @@ export const delegatedAccessKeyBalance = (context: TestContext) => async () => {
             publicKey: gasKeyPair.publicKey,
             amount: { near: '1' },
           },
-          {
-            actionType: 'WithdrawAccessKeyBalance',
-            publicKey: gasKeyPair.publicKey,
-            amount: { near: '0.25' },
-          },
         ],
       },
     },
@@ -104,7 +95,6 @@ export const delegatedAccessKeyBalance = (context: TestContext) => async () => {
     actionSummaries: [
       { actionType: 'AddAccessKey' },
       { actionType: 'TopUpAccessKeyBalance', amount: { near: '1' } },
-      { actionType: 'WithdrawAccessKeyBalance', amount: { near: '0.25' } },
     ],
   });
 
@@ -115,6 +105,6 @@ export const delegatedAccessKeyBalance = (context: TestContext) => async () => {
 
   expect(gasAccessKey.accessKey.gasPayment).toMatchObject({
     source: 'KeyBalance',
-    balance: { near: '0.75' },
+    balance: { near: '1' },
   });
 };

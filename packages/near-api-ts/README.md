@@ -11,7 +11,7 @@ TypeScript library for interacting with NEAR Protocol from Node.js and the brows
   `context` shaped for that kind — narrow it with `isNatError(error, 'Some.Kind')`.
 - **Plain functions, no classes.** Nothing is registered globally, `sideEffects` is off,
   so bundlers can drop what you don't import.
-- **The whole protocol surface.** Meta transactions (NEP-366, NEP-611), gas keys, global
+- **The whole protocol surface.** Meta transactions (NEP-366), gas keys, global
   contracts, NEP-413 off-chain messages, ML-DSA-65 post-quantum keys, multi-RPC failover with
   retries.
 
@@ -475,7 +475,8 @@ withdrawAccessKeyBalance({ publicKey, amount: near('0.4') });
 
 Anyone can top up a key of any account, the way anyone can transfer to it: the amount is paid by
 the transaction signer (by the relayer, inside a delegation), not by the account the key belongs
-to. Only the account itself can withdraw, so a withdrawal has to come from the receiver account. Both fail with
+to. Only the account itself can withdraw, so a withdrawal has to come from the receiver account,
+and it cannot be delegated. Both fail with
 `Action.TopUpAccessKeyBalance.Balance.NotFound` / `Action.WithdrawAccessKeyBalance.Balance.NotFound`
 when the key has no balance of its own — it is paid from the account balance or does not exist at
 all — and withdrawing more than the key holds fails with
@@ -655,7 +656,7 @@ const signedDelegation = await signDelegation({
     delegator: {
       accountId: 'alice.testnet',
       publicKey: aliceKeyPair.publicKey,
-      replayProtection: { scheme: 'NonceChannel', nonce: replayProtection.lastNonce + 1 },
+      replayProtection: { nonce: replayProtection.lastNonce + 1 },
     },
     receiverAccountId: 'contract.testnet',
     expiration: { blockHeight: atMomentOf.blockHeight + 100 },
@@ -681,16 +682,19 @@ await relaySigner.executeTransaction({
 
 `executeDelegation` accepts `{ signedDelegationBorsh64 }`, so the whole `signDelegation`
 output can be passed straight through. Delegations expire by block height, and every
-delegable action is supported except nesting another delegation. Failures come back as
+delegable action is supported except nesting another delegation and withdrawing from a key
+balance. Failures come back as
 their own error kinds — `Action.ExecuteDelegation.Expired`, `.Signature.Invalid`,
 `.Nonce.Invalid`, `.Executor.NotAllowed`, and the `.Delegator.AccessKey.*` family.
 
-`delegator.replayProtection` works like the one of a transaction — a gas key signs on any of
-its channels with `{ scheme: 'NonceChannels', nonceChannelId, nonce }` — except that it has no
-`nonceProgression`: a delegation only needs a nonce above `lastNonce`. `signDelegation` signs
-in the NEP-611 format, the one that can name a channel; `executeDelegation` also relays a
-delegation signed elsewhere in the older NEP-366 format. `signedDelegation.delegation.tag`
-tells the two apart (`constants.Delegation.Nep611Tag` / `constants.Delegation.Nep366Tag`).
+`delegator.replayProtection` holds just the nonce: a delegation always takes the single nonce
+channel of a key paid from the account balance — the protocol refuses one signed by a gas key —
+and it has no `nonceProgression`, since it only needs a nonce above `lastNonce`. `signDelegation`
+signs in the NEP-366 format (`signedDelegation.delegation.tag` is
+`constants.Delegation.Nep366Tag`), the only one `executeDelegation` relays. The action summary
+of an older transaction may still carry a NEP-611 delegation signed by a gas key: its `tag` is
+`constants.Delegation.Nep611Tag` and its `replayProtection` is
+`{ scheme: 'NonceChannels', nonceChannelId, nonce }`.
 
 ---
 

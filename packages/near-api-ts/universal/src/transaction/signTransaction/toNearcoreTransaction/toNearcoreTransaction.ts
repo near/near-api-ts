@@ -1,52 +1,42 @@
-import type { NearcoreExecuteDelegationAction } from '../../../types/_common/transaction/actions/executeDelegation/executeDelegation';
+import type { NearcoreExecuteDelegationAction } from '../../../../types/_common/transaction/actions/executeDelegation/executeDelegation';
 import type {
   NearcoreNonceMode,
   NearcoreTransaction,
   NearcoreTransactionAction,
-} from '../../../types/_common/transaction/transaction';
-import { constants } from '../../_common/_common/_common/constants';
-import { toNearcorePublicKey } from '../_common/_common/_common/toNearcorePublicKey';
-import { toNearcoreAddAccessKeyAction } from '../_common/_common/toNearcore/toNearcoreAddAccessKey';
-import { toNearcoreCallContractFunctionAction } from '../_common/_common/toNearcore/toNearcoreCallContractFunction';
-import { toNearcoreCreateSubAccountAction } from '../_common/_common/toNearcore/toNearcoreCreateSubAccount';
-import { toNearcoreDeleteAccessKeyAction } from '../_common/_common/toNearcore/toNearcoreDeleteAccessKey';
-import { toNearcoreDeleteAccountAction } from '../_common/_common/toNearcore/toNearcoreDeleteAccount';
-import { toNearcoreDeployLocalContractAction } from '../_common/_common/toNearcore/toNearcoreDeployLocalContract';
-import { toNearcoreLinkGlobalContractAction } from '../_common/_common/toNearcore/toNearcoreLinkGlobalContract';
-import { toNearcorePinGlobalContractAction } from '../_common/_common/toNearcore/toNearcorePinGlobalContract';
-import { toNearcorePublishLinkableGlobalContractAction } from '../_common/_common/toNearcore/toNearcorePublishLinkableGlobalContract';
-import { toNearcorePublishPinnableGlobalContractAction } from '../_common/_common/toNearcore/toNearcorePublishPinnableGlobalContract';
-import { toNearcoreStakeAction } from '../_common/_common/toNearcore/toNearcoreStake';
-import { toNearcoreTopUpAccessKeyBalanceAction } from '../_common/_common/toNearcore/toNearcoreTopUpAccessKeyBalance';
-import { toNearcoreTransactionNonce } from '../_common/_common/toNearcore/toNearcoreTransactionNonce';
-import { toNearcoreTransferAction } from '../_common/_common/toNearcore/toNearcoreTransfer';
-import { toNearcoreWithdrawAccessKeyBalanceAction } from '../_common/_common/toNearcore/toNearcoreWithdrawAccessKeyBalance';
-import { toNearcoreDelegationV1, toNearcoreDelegationV2 } from '../_common/toNearcoreDelegation';
-import { toNearcoreSignature } from '../_common/toNearcoreSignature';
+} from '../../../../types/_common/transaction/transaction';
+import { toNearcorePublicKey } from '../../_common/_common/_common/toNearcorePublicKey';
+import { toNearcoreAddAccessKeyAction } from '../../_common/_common/toNearcore/toNearcoreAddAccessKey';
+import { toNearcoreCallContractFunctionAction } from '../../_common/_common/toNearcore/toNearcoreCallContractFunction';
+import { toNearcoreCreateSubAccountAction } from '../../_common/_common/toNearcore/toNearcoreCreateSubAccount';
+import { toNearcoreDeleteAccessKeyAction } from '../../_common/_common/toNearcore/toNearcoreDeleteAccessKey';
+import { toNearcoreDeleteAccountAction } from '../../_common/_common/toNearcore/toNearcoreDeleteAccount';
+import { toNearcoreDeployLocalContractAction } from '../../_common/_common/toNearcore/toNearcoreDeployLocalContract';
+import { toNearcoreLinkGlobalContractAction } from '../../_common/_common/toNearcore/toNearcoreLinkGlobalContract';
+import { toNearcorePinGlobalContractAction } from '../../_common/_common/toNearcore/toNearcorePinGlobalContract';
+import { toNearcorePublishLinkableGlobalContractAction } from '../../_common/_common/toNearcore/toNearcorePublishLinkableGlobalContract';
+import { toNearcorePublishPinnableGlobalContractAction } from '../../_common/_common/toNearcore/toNearcorePublishPinnableGlobalContract';
+import { toNearcoreStakeAction } from '../../_common/_common/toNearcore/toNearcoreStake';
+import { toNearcoreTopUpAccessKeyBalanceAction } from '../../_common/_common/toNearcore/toNearcoreTopUpAccessKeyBalance';
+import { toNearcoreTransferAction } from '../../_common/_common/toNearcore/toNearcoreTransfer';
+import { toNearcoreDelegation } from '../../_common/toNearcoreDelegation';
+import { toNearcoreSignature } from '../../_common/toNearcoreSignature';
 import type {
   InnerExecuteDelegationAction,
   InnerTransaction,
   InnerTransactionAction,
   InnerTransactionReplayProtection,
-} from './transactionZodSchema';
+} from '../transactionZodSchema/transactionZodSchema';
+import { toNearcoreTransactionNonce } from './toNearcoreTransactionNonce';
+import { toNearcoreWithdrawAccessKeyBalanceAction } from './toNearcoreWithdrawAccessKeyBalance';
 
-// The tag the delegation was signed with decides which of the two nearcore actions carries it.
 const toNearcoreExecuteDelegation = ({
   signedDelegation: { delegation, signature },
-}: InnerExecuteDelegationAction): NearcoreExecuteDelegationAction =>
-  delegation.tag === constants.Delegation.Nep366Tag
-    ? {
-        delegate: {
-          delegation: toNearcoreDelegationV1(delegation),
-          signature: toNearcoreSignature(signature),
-        },
-      }
-    : {
-        delegateV2: {
-          delegation: toNearcoreDelegationV2(delegation),
-          signature: toNearcoreSignature(signature),
-        },
-      };
+}: InnerExecuteDelegationAction): NearcoreExecuteDelegationAction => ({
+  delegate: {
+    delegation: toNearcoreDelegation(delegation),
+    signature: toNearcoreSignature(signature),
+  },
+});
 
 const toNearcoreTransactionAction = (action: InnerTransactionAction): NearcoreTransactionAction => {
   switch (action.actionType) {

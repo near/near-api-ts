@@ -1,7 +1,6 @@
 import type { Prettify } from '../../../../utils';
 import type { AccountId, BlockHeight, SequentialNonce } from '../../../common';
 import type { NearcorePublicKey, NearcoreSignature, PublicKey, Signature } from '../../../crypto';
-import type { NearcoreTransactionNonce } from '../../transaction';
 import type {
   AddAccessKeyAction,
   NearcoreAddAccessKeyAction,
@@ -48,10 +47,6 @@ import type {
   TopUpAccessKeyBalanceAction,
 } from '../delegableActions/topUpAccessKeyBalance';
 import type { NearcoreTransferAction, TransferAction } from '../delegableActions/transfer';
-import type {
-  NearcoreWithdrawAccessKeyBalanceAction,
-  WithdrawAccessKeyBalanceAction,
-} from '../delegableActions/withdrawAccessKeyBalance';
 
 export type DelegableAction =
   | CreateSubAccountAction
@@ -66,8 +61,7 @@ export type DelegableAction =
   | PublishLinkableGlobalContractAction
   | LinkGlobalContractAction
   | PinGlobalContractAction
-  | TopUpAccessKeyBalanceAction
-  | WithdrawAccessKeyBalanceAction;
+  | TopUpAccessKeyBalanceAction;
 
 export type SingleDelegableAction = {
   delegatedAction: DelegableAction;
@@ -80,31 +74,14 @@ export type MultiDelegableActions = {
 };
 
 /**
- * The delegation uses the single nonce channel of a key paid from the account balance.
+ * A delegation uses the single nonce channel of a key paid from the account balance: nearcore
+ * refuses one signed by a key paid from its own balance. Unlike a transaction, it has no
+ * `nonceProgression` - nearcore only checks that its nonce is greater than the last one in the
+ * channel, `'Increasing'` in the terms of a transaction.
  */
-type NonceChannelDelegationReplayProtection = {
-  scheme: 'NonceChannel';
-  nonce: SequentialNonce;
-  nonceChannelId?: never;
-};
-
-/**
- * The delegation uses one of the nonce channels of a key paid from its own balance -
- * `nonceChannelId` is 0..channelCount - 1.
- */
-type NonceChannelsDelegationReplayProtection = {
-  scheme: 'NonceChannels';
-  nonceChannelId: number;
+export type DelegationReplayProtection = {
   nonce: SequentialNonce;
 };
-
-/**
- * Unlike a transaction, a delegation has no `nonceProgression`: nearcore only checks that its
- * nonce is greater than the last one in the channel - `'Increasing'` in the terms of a transaction.
- */
-export type DelegationReplayProtection =
-  | NonceChannelDelegationReplayProtection
-  | NonceChannelsDelegationReplayProtection;
 
 export type DelegationBase = {
   delegator: {
@@ -120,10 +97,7 @@ export type SignedDelegation = {
   /**
    * The signed delegation, normalized - whichever of `delegatedAction` /
    * `delegatedActions` was passed in, the signed value carries the action list.
-   * `tag` is the message tag the signature was made over, and it tells the two formats
-   * nearcore accepts apart: NEP-611 (`DelegateActionV2`), the one `signDelegation` signs,
-   * and NEP-366 (`DelegateAction`), still produced by other signers, which can only use
-   * the `'NonceChannel'` scheme.
+   * `tag` is the message tag the signature was made over - always NEP-366.
    */
   delegation: { tag: number; delegatedActions: DelegableAction[] } & DelegationBase;
   signature: Signature;
@@ -153,12 +127,11 @@ export type NearcoreDelegableAction =
   | NearcorePublishLinkableGlobalContractAction
   | NearcoreLinkGlobalContractAction
   | NearcorePinGlobalContractAction
-  | NearcoreTopUpAccessKeyBalanceAction
-  | NearcoreWithdrawAccessKeyBalanceAction;
+  | NearcoreTopUpAccessKeyBalanceAction;
 
 // Nearcore `DelegateAction` (NEP-366). Field order follows its declaration, which is the order
 // the borsh schemas serialize these in. `tag` is the signing-only prefix.
-export type NearcoreDelegationV1 = {
+export type NearcoreDelegation = {
   tag: number;
   senderId: AccountId;
   receiverId: AccountId;
@@ -168,26 +141,7 @@ export type NearcoreDelegationV1 = {
   publicKey: NearcorePublicKey;
 };
 
-// Nearcore `DelegateActionV2` (NEP-611) - its nonce picks a nonce channel the same way the one
-// of a transaction does. `tag` is the signing-only prefix; `version` is the discriminant of
-// `VersionedDelegateActionPayload::V2` (0), which goes both into the signed and the wire bytes.
-export type NearcoreDelegationV2 = {
-  tag: number;
-  version: 0;
-  senderId: AccountId;
-  receiverId: AccountId;
-  actions: NearcoreDelegableAction[];
-  nonce: NearcoreTransactionNonce;
-  maxBlockHeight: bigint;
-  publicKey: NearcorePublicKey;
-};
-
-export type NearcoreSignedDelegationV1 = {
-  delegation: NearcoreDelegationV1;
-  signature: NearcoreSignature;
-};
-
-export type NearcoreSignedDelegationV2 = {
-  delegation: NearcoreDelegationV2;
+export type NearcoreSignedDelegation = {
+  delegation: NearcoreDelegation;
   signature: NearcoreSignature;
 };

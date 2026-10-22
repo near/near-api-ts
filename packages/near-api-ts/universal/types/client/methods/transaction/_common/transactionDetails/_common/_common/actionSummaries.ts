@@ -8,11 +8,11 @@ import type {
   BlockHeight,
   ContractFunctionName,
   ContractWasmHash,
+  SequentialNonce,
 } from '../../../../../../../_common/common';
 import type { PublicKey, Signature } from '../../../../../../../_common/crypto';
 import type { NearGas } from '../../../../../../../_common/nearGas';
 import type { NearToken } from '../../../../../../../_common/nearToken';
-import type { DelegationReplayProtection } from '../../../../../../../_common/transaction/actions/executeDelegation/delegation';
 
 type CreateSubAccountActionSummary = {
   actionType: 'CreateSubAccount';
@@ -135,8 +135,26 @@ export type DelegableActionSummary<FA> =
   | TopUpAccessKeyBalanceActionSummary
   | WithdrawAccessKeyBalanceActionSummary;
 
-// `tag` tells the delegation format apart, like in `SignedDelegation`: NEP-366 for nearcore
-// `Delegate`, NEP-611 for `DelegateV2`.
+/**
+ * The replay protection of a relayed delegation, as the chain recorded it. A NEP-366 delegation
+ * always uses the single nonce channel of its key. A NEP-611 one could also use one of the nonce
+ * channels of a key paid from its own balance.
+ */
+export type ExecuteDelegationReplayProtectionSummary =
+  | {
+      scheme: 'NonceChannel';
+      nonce: SequentialNonce;
+      nonceChannelId?: never;
+    }
+  | {
+      scheme: 'NonceChannels';
+      nonceChannelId: number;
+      nonce: SequentialNonce;
+    };
+
+// `tag` tells the delegation format apart: NEP-366 for nearcore `Delegate`, NEP-611 for
+// `DelegateV2`. Nearcore refuses new NEP-611 delegations since protocol 87, so only the
+// transactions sent before it carry one.
 type ExecuteDelegationActionSummary<FA> = {
   actionType: 'ExecuteDelegation';
   delegation: {
@@ -144,7 +162,7 @@ type ExecuteDelegationActionSummary<FA> = {
     delegator: {
       accountId: AccountId;
       publicKey: PublicKey;
-      replayProtection: DelegationReplayProtection;
+      replayProtection: ExecuteDelegationReplayProtectionSummary;
     };
     delegatedActionSummaries: DelegableActionSummary<FA>[];
     receiverAccountId: AccountId;

@@ -35,9 +35,16 @@ export const TeraGasDecimals = 12 as const;
  * never the bytes that go on the wire, and it tells the two delegation formats apart.
  */
 export const Delegation = {
-  /** `(1 << 30) + 366` - NEP-366, nearcore `DelegateAction`: a key with a single nonce channel. */
+  /**
+   * `(1 << 30) + 366` - NEP-366, nearcore `DelegateAction`: a key with a single nonce channel.
+   * The format `signDelegation` signs.
+   */
   Nep366Tag: 1073742190,
-  /** `(1 << 30) + 611` - NEP-611, nearcore `DelegateActionV2`: any nonce channel of a key. */
+  /**
+   * `(1 << 30) + 611` - NEP-611, nearcore `DelegateActionV2`: any nonce channel of a key.
+   * Nearcore refuses new ones since protocol 87, so it only tags the `ExecuteDelegation` action
+   * summary of a transaction sent before that.
+   */
   Nep611Tag: 1073742435,
 } as const;
 

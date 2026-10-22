@@ -1,33 +1,24 @@
 import type { Schema } from 'borsh';
-import { PublicKeyBorshSchema } from '../_common/_common/_common/publicKeyBorshSchema';
-import { AddKeyActionBorshSchema } from '../_common/_common/borshSchemas/addKey';
-import { CreateAccountActionBorshSchema } from '../_common/_common/borshSchemas/createAccount';
-import { DeleteAccountActionBorshSchema } from '../_common/_common/borshSchemas/deleteAccount';
-import { DeleteKeyActionBorshSchema } from '../_common/_common/borshSchemas/deleteKey';
-import { DeployContractActionBorshSchema } from '../_common/_common/borshSchemas/deployContract';
-import { DeployGlobalContractActionBorshSchema } from '../_common/_common/borshSchemas/deployGlobalContract';
-import { FunctionCallActionBorshSchema } from '../_common/_common/borshSchemas/functionCall';
-import { SignatureBorshSchema } from '../_common/_common/borshSchemas/signature';
-import { StakeActionBorshSchema } from '../_common/_common/borshSchemas/stake';
-import { TransactionNonceBorshSchema } from '../_common/_common/borshSchemas/transactionNonce';
-import { TransferActionBorshSchema } from '../_common/_common/borshSchemas/transfer';
-import { TransferToGasKeyActionBorshSchema } from '../_common/_common/borshSchemas/transferToGasKey';
-import { UseGlobalContractActionBorshSchema } from '../_common/_common/borshSchemas/useGlobalContract';
-import { WithdrawFromGasKeyActionBorshSchema } from '../_common/_common/borshSchemas/withdrawFromGasKey';
-import {
-  SignedDelegationV1BorshSchema,
-  SignedDelegationV2BorshSchema,
-} from '../_common/delegationBorshSchema';
+import { PublicKeyBorshSchema } from '../../_common/_common/_common/publicKeyBorshSchema';
+import { AddKeyActionBorshSchema } from '../../_common/_common/borshSchemas/addKey';
+import { CreateAccountActionBorshSchema } from '../../_common/_common/borshSchemas/createAccount';
+import { DeleteAccountActionBorshSchema } from '../../_common/_common/borshSchemas/deleteAccount';
+import { DeleteKeyActionBorshSchema } from '../../_common/_common/borshSchemas/deleteKey';
+import { DeployContractActionBorshSchema } from '../../_common/_common/borshSchemas/deployContract';
+import { DeployGlobalContractActionBorshSchema } from '../../_common/_common/borshSchemas/deployGlobalContract';
+import { FunctionCallActionBorshSchema } from '../../_common/_common/borshSchemas/functionCall';
+import { SignatureBorshSchema } from '../../_common/_common/borshSchemas/signature';
+import { StakeActionBorshSchema } from '../../_common/_common/borshSchemas/stake';
+import { TransferActionBorshSchema } from '../../_common/_common/borshSchemas/transfer';
+import { TransferToGasKeyActionBorshSchema } from '../../_common/_common/borshSchemas/transferToGasKey';
+import { UseGlobalContractActionBorshSchema } from '../../_common/_common/borshSchemas/useGlobalContract';
+import { SignedDelegationBorshSchema } from '../../_common/delegationBorshSchema';
+import { TransactionNonceBorshSchema } from './transactionNonce';
+import { WithdrawFromGasKeyActionBorshSchema } from './withdrawFromGasKey';
 
 const DelegateActionBorshSchema = {
   struct: {
-    delegate: SignedDelegationV1BorshSchema,
-  },
-};
-
-const DelegateV2ActionBorshSchema = {
-  struct: {
-    delegateV2: SignedDelegationV2BorshSchema,
+    delegate: SignedDelegationBorshSchema,
   },
 };
 
@@ -53,7 +44,6 @@ export const TransactionActionBorshSchema: Schema = {
     { struct: { x: 'bool' } },
     TransferToGasKeyActionBorshSchema,
     WithdrawFromGasKeyActionBorshSchema,
-    DelegateV2ActionBorshSchema,
   ],
 };
 

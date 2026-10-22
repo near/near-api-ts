@@ -27,10 +27,7 @@ export const functionNotAllowed = (context: TestContext) => async () => {
       delegator: {
         accountId: 'alice',
         publicKey: contractFunctionCallKeyPair.publicKey,
-        replayProtection: {
-          scheme: 'NonceChannel',
-          nonce: getLastNonce(aliceAccessKey.accessKey) + 1,
-        },
+        replayProtection: { nonce: getLastNonce(aliceAccessKey.accessKey) + 1 },
       },
       delegatedAction: callContractFunction({
         functionName: 'forbidden_function',
