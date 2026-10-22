@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it, vi } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createAccount,
   createMemoryKeyVault,
+  createSubAccount,
   type MemoryKeyVault,
   randomMlDsa65KeyPair,
   transfer,
@@ -55,7 +55,7 @@ describe('ml-dsa-65 Transaction success', () => {
         recentBlockHash: natAccessKey.atMomentOf.blockHash,
         receiverAccountId: newAccountId,
         actions: [
-          createAccount(),
+          createSubAccount(),
           transfer({ amount: { near: '10' } }),
           addAccessKey({
             publicKey: mlDsa65KeyPair.publicKey,

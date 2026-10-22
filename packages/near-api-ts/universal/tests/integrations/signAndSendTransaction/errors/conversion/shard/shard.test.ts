@@ -2,7 +2,7 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { describe, expect, it } from 'vitest';
 import {
   addAccessKey,
-  createAccount,
+  createSubAccount,
   deployLocalContract,
   functionCall,
   keyPair,
@@ -77,7 +77,7 @@ describe.skip('signAndSendTransaction › Shard.Congested conversion error', () 
           },
           recentBlockHash: natKey.atMomentOf.blockHash,
           actions: [
-            createAccount(),
+            createSubAccount(),
             transfer({ amount: { near: '50' } }),
             addAccessKey({
               publicKey: defaultKeyPair.publicKey,

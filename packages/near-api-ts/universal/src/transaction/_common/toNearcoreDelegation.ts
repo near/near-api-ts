@@ -6,7 +6,7 @@ import type {
 import { constants } from '../../_common/_common/_common/constants';
 import { toNearcorePublicKey } from './_common/_common/toNearcorePublicKey';
 import { toNearcoreAddAccessKeyAction } from './_common/toNearcore/toNearcoreAddAccessKey';
-import { toNearcoreCreateAccountAction } from './_common/toNearcore/toNearcoreCreateAccount';
+import { toNearcoreCreateSubAccountAction } from './_common/toNearcore/toNearcoreCreateSubAccount';
 import { toNearcoreDeleteAccessKeyAction } from './_common/toNearcore/toNearcoreDeleteAccessKey';
 import { toNearcoreDeleteAccountAction } from './_common/toNearcore/toNearcoreDeleteAccount';
 import { toNearcoreDeployLocalContractAction } from './_common/toNearcore/toNearcoreDeployLocalContract';
@@ -28,8 +28,8 @@ import type {
 
 const toNearcoreDelegableAction = (action: InnerDelegableAction): NearcoreDelegableAction => {
   switch (action.actionType) {
-    case 'CreateAccount':
-      return toNearcoreCreateAccountAction();
+    case 'CreateSubAccount':
+      return toNearcoreCreateSubAccountAction();
     case 'AddAccessKey':
       return toNearcoreAddAccessKeyAction(action);
     case 'Transfer':

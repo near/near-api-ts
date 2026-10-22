@@ -1,7 +1,7 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
 import {
-  createAccount,
+  createSubAccount,
   deployLocalContract,
   functionCall,
   near,
@@ -35,7 +35,7 @@ export const executionError = (context: TestContext) => async () => {
       },
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
       actions: [
-        createAccount(),
+        createSubAccount(),
         transfer({ amount: near('10') }),
         deployLocalContract({ wasmU8: await getFileBytes('./wasm/write-get-record.wasm') }),
         functionCall({

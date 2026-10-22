@@ -3,7 +3,7 @@ import { beforeAll, describe, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createAccount,
+  createSubAccount,
   deployLocalContract,
   functionCall,
   keyPair,
@@ -91,7 +91,7 @@ describe.skip('signAndSendTransaction › BlockHash.NotAncestor conversion error
         },
         recentBlockHash: natKey.atMomentOf.blockHash,
         actions: [
-          createAccount(),
+          createSubAccount(),
           transfer({ amount: { near: '50' } }),
           addAccessKey({
             publicKey: defaultKeyPair.publicKey,

@@ -3,9 +3,9 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createAccount,
   createMemoryKeyVault,
   createMemorySigner,
+  createSubAccount,
   deleteAccessKey,
   type MemoryKeyVault,
   near,
@@ -45,7 +45,7 @@ describe('Get Account Balance', () => {
     await nat.executeTransaction({
       intent: {
         actions: [
-          createAccount(),
+          createSubAccount(),
           addAccessKey({
             publicKey: randomEd25519KeyPair().publicKey,
             permission: { kind: 'FullAccess' },
@@ -70,7 +70,7 @@ describe('Get Account Balance', () => {
     await nat.executeTransaction({
       intent: {
         actions: [
-          createAccount(),
+          createSubAccount(),
           addAccessKey({
             publicKey: keyPair1.publicKey,
             permission: { kind: 'FullAccess' },
@@ -116,7 +116,7 @@ describe('Get Account Balance', () => {
     await nat.executeTransaction({
       intent: {
         actions: [
-          createAccount(),
+          createSubAccount(),
           addAccessKey({
             publicKey: keyPair1.publicKey,
             permission: { kind: 'FullAccess' },
@@ -193,7 +193,7 @@ describe('Get Account Balance', () => {
     await nat.executeTransaction({
       intent: {
         actions: [
-          createAccount(),
+          createSubAccount(),
           addAccessKey({
             publicKey: keyPair1.publicKey,
             permission: { kind: 'FullAccess' },

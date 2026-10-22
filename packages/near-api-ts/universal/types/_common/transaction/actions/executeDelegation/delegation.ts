@@ -7,9 +7,9 @@ import type {
   NearcoreAddAccessKeyAction,
 } from '../delegableActions/addAccessKey';
 import type {
-  CreateAccountAction,
-  NearcoreCreateAccountAction,
-} from '../delegableActions/createAccount';
+  CreateSubAccountAction,
+  NearcoreCreateSubAccountAction,
+} from '../delegableActions/createSubAccount';
 import type {
   DeleteAccessKeyAction,
   NearcoreDeleteAccessKeyAction,
@@ -54,7 +54,7 @@ import type {
 } from '../delegableActions/withdrawAccessKeyBalance';
 
 export type DelegableAction =
-  | CreateAccountAction
+  | CreateSubAccountAction
   | TransferAction
   | AddAccessKeyAction
   | DeployLocalContractAction
@@ -141,7 +141,7 @@ export type DelegationIntent = Prettify<
 // Nearcore
 
 export type NearcoreDelegableAction =
-  | NearcoreCreateAccountAction
+  | NearcoreCreateSubAccountAction
   | NearcoreTransferAction
   | NearcoreAddAccessKeyAction
   | NearcoreDeployLocalContractAction

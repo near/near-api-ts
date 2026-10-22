@@ -1,13 +1,13 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
-import { createAccount } from '../../../../../../index';
+import { createSubAccount } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import { getLastNonce } from '../../../../../utils/getLastNonce';
-import type { TestContext } from './createAccount.test';
+import type { TestContext } from './createSubAccount.test';
 
-export const implicitAccount = (context: TestContext) => async () => {
+export const topLevelNamespace = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const natAccessKey = await client.getAccessKey({
@@ -27,8 +27,8 @@ export const implicitAccount = (context: TestContext) => async () => {
         },
       },
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
-      action: createAccount(),
-      receiverAccountId: '8a3a2af86f8b2a0d013761565dc6ee86af153f6fa4c7db4bd9a52f63ff072d4c',
+      action: createSubAccount(),
+      receiverAccountId: 'top-level-account',
     },
   });
 
@@ -37,15 +37,19 @@ export const implicitAccount = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.CreateAccount.ImplicitAccount');
+  assertNatErrKind(
+    tx,
+    'Client.SendSignedTransaction.Rpc.Action.CreateSubAccount.TopLevelNamespace',
+  );
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
-
-  assertTxResultExecutionErrKind(txResult, 'Action.CreateAccount.ImplicitAccount');
+  assertTxResultExecutionErrKind(txResult, 'Action.CreateSubAccount.TopLevelNamespace');
 
   expect(txResult.error.context).toStrictEqual({
-    newAccountId: '8a3a2af86f8b2a0d013761565dc6ee86af153f6fa4c7db4bd9a52f63ff072d4c',
+    newAccountId: 'top-level-account',
+    creatorAccountId: 'nat',
+    registrarAccountId: 'registrar',
   });
 };

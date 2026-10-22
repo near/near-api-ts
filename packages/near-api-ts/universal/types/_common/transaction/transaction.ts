@@ -6,9 +6,9 @@ import type {
   NearcoreAddAccessKeyAction,
 } from './actions/delegableActions/addAccessKey';
 import type {
-  CreateAccountAction,
-  NearcoreCreateAccountAction,
-} from './actions/delegableActions/createAccount';
+  CreateSubAccountAction,
+  NearcoreCreateSubAccountAction,
+} from './actions/delegableActions/createSubAccount';
 import type {
   DeleteAccessKeyAction,
   NearcoreDeleteAccessKeyAction,
@@ -57,7 +57,7 @@ import type {
 } from './actions/executeDelegation/executeDelegation';
 
 export type TransactionAction =
-  | CreateAccountAction
+  | CreateSubAccountAction
   | TransferAction
   | AddAccessKeyAction
   | DeployLocalContractAction
@@ -153,7 +153,7 @@ export type SignedTransaction = {
 
 // Nearcore Transaction
 export type NearcoreTransactionAction =
-  | NearcoreCreateAccountAction
+  | NearcoreCreateSubAccountAction
   | NearcoreTransferAction
   | NearcoreAddAccessKeyAction
   | NearcoreDeployLocalContractAction

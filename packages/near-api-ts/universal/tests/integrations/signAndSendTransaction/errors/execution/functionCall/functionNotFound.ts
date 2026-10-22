@@ -1,7 +1,7 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import {
   addAccessKey,
-  createAccount,
+  createSubAccount,
   deployLocalContract,
   functionCall,
   transfer,
@@ -34,7 +34,7 @@ export const functionNotFound = (context: TestContext) => async () => {
       },
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
       actions: [
-        createAccount(),
+        createSubAccount(),
         transfer({ amount: { near: '10' } }),
         addAccessKey({
           publicKey: defaultKeyPair.publicKey,

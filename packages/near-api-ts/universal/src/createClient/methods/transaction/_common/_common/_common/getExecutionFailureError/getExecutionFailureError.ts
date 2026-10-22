@@ -39,10 +39,10 @@ export const getExecutionFailureError = (
         },
       };
 
-    // CreateAccount action
+    // CreateSubAccount action
     if ('AccountAlreadyExists' in kind)
       return {
-        kind: 'Action.CreateAccount.AlreadyExists',
+        kind: 'Action.CreateSubAccount.AlreadyExists',
         context: {
           newAccountId: kind.AccountAlreadyExists.accountId,
         },
@@ -50,7 +50,7 @@ export const getExecutionFailureError = (
 
     if ('CreateAccountOnlyByRegistrar' in kind)
       return {
-        kind: 'Action.CreateAccount.TopLevelNamespace',
+        kind: 'Action.CreateSubAccount.TopLevelNamespace',
         context: {
           newAccountId: kind.CreateAccountOnlyByRegistrar.accountId,
           creatorAccountId: kind.CreateAccountOnlyByRegistrar.predecessorId,
@@ -60,7 +60,7 @@ export const getExecutionFailureError = (
 
     if ('CreateAccountNotAllowed' in kind)
       return {
-        kind: 'Action.CreateAccount.ForeignNamespace',
+        kind: 'Action.CreateSubAccount.ForeignNamespace',
         context: {
           newAccountId: kind.CreateAccountNotAllowed.accountId,
           creatorAccountId: kind.CreateAccountNotAllowed.predecessorId,
@@ -69,7 +69,7 @@ export const getExecutionFailureError = (
 
     if ('OnlyImplicitAccountCreationAllowed' in kind)
       return {
-        kind: 'Action.CreateAccount.ImplicitAccount',
+        kind: 'Action.CreateSubAccount.ImplicitAccount',
         context: { newAccountId: kind.OnlyImplicitAccountCreationAllowed.accountId },
       };
 

@@ -26,7 +26,7 @@ const toConnectorArgs = (functionArgs: Uint8Array) => {
 };
 
 const toNearConnectAction = (action: NatAction): ConnectorAction => {
-  if (action.actionType === 'CreateAccount')
+  if (action.actionType === 'CreateSubAccount')
     return {
       type: 'CreateAccount',
     };

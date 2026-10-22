@@ -1,6 +1,6 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
-import { createAccount, deployLocalContract, near, transfer } from '../../../../../../index';
+import { createSubAccount, deployLocalContract, near, transfer } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
@@ -38,7 +38,7 @@ export const executorBudgetNotEnough = (context: TestContext) => async () => {
       },
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
       actions: [
-        createAccount(),
+        createSubAccount(),
         transfer({ amount: near('0.1') }),
         deployLocalContract({
           wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),

@@ -10,7 +10,7 @@ import {
   signTransaction,
   transfer,
 } from '../../../../../../../../index';
-import { createAccount } from '../../../../../../../../src/transaction/actionCreators/createAccount';
+import { createSubAccount } from '../../../../../../../../src/transaction/actionCreators/createSubAccount';
 import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../../../utils/assertTxResultExecutionErrKind';
 import { getLastNonce } from '../../../../../../../utils/getLastNonce';
@@ -47,7 +47,7 @@ export const deleteActionMustBeFinal = (context: TestContext) => async () => {
       },
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
       actions: [
-        createAccount(),
+        createSubAccount(),
         transfer({ amount: { near: '10' } }),
         addAccessKey({
           publicKey: defaultKeyPair.publicKey,

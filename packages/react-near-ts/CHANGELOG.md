@@ -44,6 +44,12 @@
   the near-api-ts v0.13.0 changelog. The near-connect signer passes the actions
   on to the wallet as before.
 
+- **Breaking:** the action creator `createAccount`, re-exported from near-api-ts,
+  is renamed to `createSubAccount`, and so are the `actionType` of the action it
+  creates and the `Action.CreateAccount.*` error kinds – they are
+  `Action.CreateSubAccount.*` now. See the near-api-ts v0.13.0 changelog. The
+  near-connect signer passes the action on to the wallet as before.
+
 - **Breaking:** the memory key service re-exported from near-api-ts is now a
   memory key vault: `createMemoryKeyService` / `safeCreateMemoryKeyService` →
   `createMemoryKeyVault` / `safeCreateMemoryKeyVault`, `MemoryKeyService` →

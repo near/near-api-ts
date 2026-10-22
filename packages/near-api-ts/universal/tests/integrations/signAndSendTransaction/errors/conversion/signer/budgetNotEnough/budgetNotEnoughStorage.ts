@@ -1,7 +1,7 @@
 import { expect } from 'vitest';
 import {
   addAccessKey,
-  createAccount,
+  createSubAccount,
   randomEd25519KeyPair,
   transfer,
 } from '../../../../../../../index';
@@ -31,7 +31,7 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
     publicKey: defaultKeyPair.publicKey,
   });
 
-  const createAccountTransaction = await signTransaction({
+  const createSubAccountTransaction = await signTransaction({
     signDataProvider: defaultKeyPair,
     transaction: {
       signer: {
@@ -44,7 +44,7 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
       },
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
       actions: [
-        createAccount(),
+        createSubAccount(),
         transfer({ amount: { near: '1' } }),
         addAccessKey({
           publicKey: accountKeyPair.publicKey,
@@ -57,7 +57,7 @@ export const budgetNotEnoughStorage = (context: TestContext) => async () => {
   });
 
   await client.sendSignedTransaction({
-    signedTransaction: createAccountTransaction,
+    signedTransaction: createSubAccountTransaction,
     minimalProcessingStage: 'CompletedFinal',
   });
 

@@ -4,9 +4,9 @@ import * as z from 'zod/mini';
 import {
   addAccessKey,
   type Client,
-  createAccount,
   createMemoryKeyVault,
   createMemorySigner,
+  createSubAccount,
   type MemoryKeyVault,
   randomEd25519KeyPair,
   transfer,
@@ -38,7 +38,7 @@ describe('executeTransaction › KeyPool.SigningKey.NotFound', async () => {
     await nat.executeTransaction({
       intent: {
         actions: [
-          createAccount(),
+          createSubAccount(),
           addAccessKey({
             publicKey: keyPair1.publicKey,
             permission: {

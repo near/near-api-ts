@@ -3,9 +3,9 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createAccount,
   createMemoryKeyVault,
   createMemorySigner,
+  createSubAccount,
   type MemoryKeyVault,
   near,
   randomEd25519KeyPair,
@@ -36,7 +36,7 @@ describe('executeTransaction › Signer.Budget.NotEnough', () => {
     await nat.executeTransaction({
       intent: {
         actions: [
-          createAccount(),
+          createSubAccount(),
           addAccessKey({
             publicKey: keyPair1.publicKey,
             permission: { kind: 'FullAccess' },

@@ -11,7 +11,7 @@ import {
   randomEd25519KeyPair,
   transfer,
 } from '../../index';
-import { createAccount } from '../../src/transaction/actionCreators/createAccount';
+import { createSubAccount } from '../../src/transaction/actionCreators/createSubAccount';
 import type { Client } from '../../types/client/client';
 import type { MemorySigner } from '../../types/signer/memorySigner';
 import { createDefaultClient, getFileBytes, log } from '../utils/common';
@@ -39,7 +39,7 @@ describe('CallContractReadFunction', () => {
     const tx = await nat.safeExecuteTransaction({
       intent: {
         actions: [
-          createAccount(),
+          createSubAccount(),
           transfer({ amount: near('50') }),
           // deployLocalContract({
           //   // wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),

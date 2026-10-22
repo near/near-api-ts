@@ -3,8 +3,8 @@ import { beforeAll, describe, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createAccount,
   createMemoryKeyVault,
+  createSubAccount,
   deployLocalContract,
   functionCall,
   type MemoryKeyVault,
@@ -51,7 +51,7 @@ describe('safeSendSignedTransaction › success', () => {
         },
         recentBlockHash: natAccessKey.atMomentOf.blockHash,
         actions: [
-          createAccount(),
+          createSubAccount(),
           transfer({ amount: { near: '100' } }),
           addAccessKey({
             publicKey: DEFAULT_PUBLIC_KEY,

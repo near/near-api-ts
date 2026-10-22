@@ -41,7 +41,7 @@ const convertNonDelegateActionToSummary = (
   // Not the same as in getRawActionSummary
   if ('CreateAccount' in nonDelegateAction)
     return {
-      actionType: 'CreateAccount',
+      actionType: 'CreateSubAccount',
     };
 
   if ('Transfer' in nonDelegateAction)

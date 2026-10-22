@@ -14,8 +14,8 @@ import type { NearGas } from '../../../../../../../_common/nearGas';
 import type { NearToken } from '../../../../../../../_common/nearToken';
 import type { DelegationReplayProtection } from '../../../../../../../_common/transaction/actions/executeDelegation/delegation';
 
-type CreateAccountActionSummary = {
-  actionType: 'CreateAccount';
+type CreateSubAccountActionSummary = {
+  actionType: 'CreateSubAccount';
 };
 
 type TransferActionSummary = {
@@ -120,7 +120,7 @@ type WithdrawAccessKeyBalanceActionSummary = {
 };
 
 export type DelegableActionSummary<FA> =
-  | CreateAccountActionSummary
+  | CreateSubAccountActionSummary
   | TransferActionSummary
   | AddAccessKeyActionSummary
   | DeployLocalContractActionSummary

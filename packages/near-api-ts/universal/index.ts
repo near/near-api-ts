@@ -82,7 +82,7 @@ export {
   addAccessKey,
   safeAddAccessKey,
 } from './src/transaction/actionCreators/addAccessKey';
-export { createAccount } from './src/transaction/actionCreators/createAccount';
+export { createSubAccount } from './src/transaction/actionCreators/createSubAccount';
 export {
   deleteAccessKey,
   safeDeleteAccessKey,

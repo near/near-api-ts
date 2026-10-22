@@ -1,11 +1,11 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
-import { createAccount } from '../../../../../../index';
+import { createSubAccount } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import { getLastNonce } from '../../../../../utils/getLastNonce';
-import type { TestContext } from './createAccount.test';
+import type { TestContext } from './createSubAccount.test';
 
 export const foreignNamespace = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
@@ -27,7 +27,7 @@ export const foreignNamespace = (context: TestContext) => async () => {
         },
       },
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
-      action: createAccount(),
+      action: createSubAccount(),
       receiverAccountId: 'subaccount.alice',
     },
   });
@@ -37,13 +37,13 @@ export const foreignNamespace = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.CreateAccount.ForeignNamespace');
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.CreateSubAccount.ForeignNamespace');
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
 
-  assertTxResultExecutionErrKind(txResult, 'Action.CreateAccount.ForeignNamespace');
+  assertTxResultExecutionErrKind(txResult, 'Action.CreateSubAccount.ForeignNamespace');
 
   expect(txResult.error.context).toStrictEqual({
     newAccountId: 'subaccount.alice',

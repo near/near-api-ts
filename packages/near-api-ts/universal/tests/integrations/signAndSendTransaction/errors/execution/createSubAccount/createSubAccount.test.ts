@@ -14,7 +14,7 @@ export type TestContext = {
   defaultKeyPair: KeyPair;
 };
 
-describe('signAndSendTransaction › CreateAccount.* errors', () => {
+describe('signAndSendTransaction › CreateSubAccount.* errors', () => {
   const context = {
     defaultKeyPair: keyPair(DEFAULT_PRIVATE_KEY),
   } as TestContext;
@@ -26,24 +26,24 @@ describe('signAndSendTransaction › CreateAccount.* errors', () => {
   });
 
   it(
-    'fails with Action.CreateAccount.AlreadyExists when trying to recreate an existing account',
+    'fails with Action.CreateSubAccount.AlreadyExists when trying to recreate an existing account',
     alreadyExists(context),
   );
 
   it(
-    'fails with Action.CreateAccount.TopLevelNamespace when trying to create a top-level account ' +
+    'fails with Action.CreateSubAccount.TopLevelNamespace when trying to create a top-level account ' +
       'e.g near, alice etc.',
     topLevelNamespace(context),
   );
 
   it(
-    'fails with Action.CreateAccount.ForeignNamespace when trying to create an account ' +
+    'fails with Action.CreateSubAccount.ForeignNamespace when trying to create an account ' +
       'which is not a direct children of the parent account',
     foreignNamespace(context),
   );
 
   it(
-    'fails with Action.CreateAccount.ImplicitAccount when trying to create ' +
+    'fails with Action.CreateSubAccount.ImplicitAccount when trying to create ' +
       'an implicit native Near account (64 symbols)',
     implicitAccount(context),
   );

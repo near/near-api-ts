@@ -2,9 +2,9 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it } from 'vitest';
 import {
   type Client,
-  createAccount,
   createMemoryKeyVault,
   createMemorySigner,
+  createSubAccount,
   deployLocalContract,
   functionCall,
   near,
@@ -34,7 +34,7 @@ describe('CallContractReadFunction', () => {
     await nat.executeTransaction({
       intent: {
         actions: [
-          createAccount(),
+          createSubAccount(),
           transfer({ amount: near('50') }),
           deployLocalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),

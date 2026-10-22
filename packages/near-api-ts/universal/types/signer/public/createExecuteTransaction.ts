@@ -53,7 +53,7 @@ export interface ExecuteTransactionPublicErrorRegistry {
   'MemorySigner.ExecuteTransaction.Rpc.Timeout': null;
   'MemorySigner.ExecuteTransaction.Rpc.Signer.Budget.NotEnough': ConversionFailureContext<'Signer.Budget.NotEnough'>;
 
-  'MemorySigner.ExecuteTransaction.Rpc.Action.CreateAccount.AlreadyExists': ExecutionFailureContext;
+  'MemorySigner.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists': ExecutionFailureContext;
   'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ProposedStake.BelowThreshold': ExecutionFailureContext;
   'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.TotalBalance.NotEnough': ExecutionFailureContext;
   'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero': ExecutionFailureContext;
@@ -80,7 +80,7 @@ type ExecuteTransactionError =
   | NatError<'MemorySigner.ExecuteTransaction.Rpc.Signer.Budget.NotEnough'>
   | NatError<'MemorySigner.ExecuteTransaction.Rpc.Timeout'>
   // // Rpc transaction action errors
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.CreateAccount.AlreadyExists'>
+  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists'>
   | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ProposedStake.BelowThreshold'>
   | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.TotalBalance.NotEnough'>
   | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero'>

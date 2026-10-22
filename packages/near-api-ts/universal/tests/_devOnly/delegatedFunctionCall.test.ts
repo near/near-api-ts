@@ -2,7 +2,7 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
-  createAccount,
+  createSubAccount,
   deployLocalContract,
   executeDelegation,
   functionCall,
@@ -49,7 +49,7 @@ describe('Execute delegation', () => {
           },
         },
         delegatedActions: [
-          createAccount(),
+          createSubAccount(),
           transfer({ amount: near('50') }),
           deployLocalContract({ wasmU8: await getFileBytes('./wasm/write-get-record.wasm') }),
           functionCall({

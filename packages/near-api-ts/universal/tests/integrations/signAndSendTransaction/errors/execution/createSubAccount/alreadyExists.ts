@@ -1,13 +1,13 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { expect } from 'vitest';
-import { createAccount } from '../../../../../../index';
+import { createSubAccount } from '../../../../../../index';
 import { signTransaction } from '../../../../../../src/transaction/signTransaction/signTransaction';
 import { assertNatErrKind } from '../../../../../utils/assertNatErrKind';
 import { assertTxResultExecutionErrKind } from '../../../../../utils/assertTxResultExecutionErrKind';
 import { getLastNonce } from '../../../../../utils/getLastNonce';
-import type { TestContext } from './createAccount.test';
+import type { TestContext } from './createSubAccount.test';
 
-export const topLevelNamespace = (context: TestContext) => async () => {
+export const alreadyExists = (context: TestContext) => async () => {
   const { client, defaultKeyPair } = context;
 
   const natAccessKey = await client.getAccessKey({
@@ -27,8 +27,8 @@ export const topLevelNamespace = (context: TestContext) => async () => {
         },
       },
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
-      action: createAccount(),
-      receiverAccountId: 'top-level-account',
+      action: createSubAccount(),
+      receiverAccountId: 'nat',
     },
   });
 
@@ -37,16 +37,12 @@ export const topLevelNamespace = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.CreateAccount.TopLevelNamespace');
+  assertNatErrKind(tx, 'Client.SendSignedTransaction.Rpc.Action.CreateSubAccount.AlreadyExists');
 
   const txResult = await client.getTransactionResult({
     transactionHash: signedTransaction.transactionHash,
   });
-  assertTxResultExecutionErrKind(txResult, 'Action.CreateAccount.TopLevelNamespace');
 
-  expect(txResult.error.context).toStrictEqual({
-    newAccountId: 'top-level-account',
-    creatorAccountId: 'nat',
-    registrarAccountId: 'registrar',
-  });
+  assertTxResultExecutionErrKind(txResult, 'Action.CreateSubAccount.AlreadyExists');
+  expect(txResult.error.context).toStrictEqual({ newAccountId: 'nat' });
 };

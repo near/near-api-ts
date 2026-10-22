@@ -408,7 +408,7 @@ The signer signs only with keys paid from the account balance. A key with a bala
 
 | Action creator | What it does |
 | --- | --- |
-| `createAccount()` | creates the receiver account |
+| `createSubAccount()` | creates the receiver account |
 | `transfer({ amount })` | sends NEAR |
 | `functionCall({ functionName, functionArgs?, gasLimit, attachedDeposit? })` | calls a contract method |
 | `deployLocalContract({ wasmU8 \| wasmBase64 })` | deploys wasm to the receiver |
@@ -482,7 +482,7 @@ all — and withdrawing more than the key holds fails with
 `Action.WithdrawAccessKeyBalance.Balance.NotEnough`.
 
 Every creator validates its arguments and has a `safe*` twin (`safeTransfer`,
-`safeFunctionCall`, …) returning a `Result` — except `createAccount`, which takes no
+`safeFunctionCall`, …) returning a `Result` — except `createSubAccount`, which takes no
 arguments and cannot fail.
 
 `functionCall` also takes `options.serializeArgs` when the contract expects something other
@@ -812,7 +812,7 @@ Errors are grouped by where they come from:
 | **Transport** | `*.Timeout`, `*.Aborted`, `*.Exhausted`, `*.PreferredRpc.NotFound` |
 | **RPC / node** | `Client.GetAccountInfo.Rpc.Account.NotFound`, `Client.GetBlock.Rpc.Block.GarbageCollected` |
 | **Conversion** (the node refused the transaction) | `Signer.Budget.NotEnough`, `BlockHash.Expired`, `Signer.AccessKey.NotFound`, `Actions.TooMany`, `TransactionCost.Overflow` |
-| **Execution** (it ran and failed) | `Action.FunctionCall.Execution.Failed`, `Action.CreateAccount.AlreadyExists`, `Action.Stake.TotalBalance.NotEnough`, `Executor.Budget.NotEnough` |
+| **Execution** (it ran and failed) | `Action.FunctionCall.Execution.Failed`, `Action.CreateSubAccount.AlreadyExists`, `Action.Stake.TotalBalance.NotEnough`, `Executor.Budget.NotEnough` |
 | **Unclassified** | `*.Internal`, with the original cause in `context` |
 
 Conversion and execution failures keep their context: a conversion failure carries the

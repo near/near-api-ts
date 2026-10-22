@@ -4,9 +4,9 @@ import * as z from 'zod/mini';
 import {
   type Client,
   convertBase64ToObject,
-  createAccount,
   createMemoryKeyVault,
   createMemorySigner,
+  createSubAccount,
   deployLocalContract,
   functionCall,
   near,
@@ -51,7 +51,7 @@ describe('CallContractReadFunction', () => {
     const tx = await nat.executeTransaction({
       intent: {
         actions: [
-          createAccount(),
+          createSubAccount(),
           transfer({ amount: near('50') }),
           deployLocalContract({
             wasmU8: await getFileBytes('./wasm/write-get-record.wasm'),

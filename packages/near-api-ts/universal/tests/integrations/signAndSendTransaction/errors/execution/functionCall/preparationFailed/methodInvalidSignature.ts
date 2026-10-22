@@ -1,6 +1,6 @@
 import { DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import {
-  createAccount,
+  createSubAccount,
   deployLocalContract,
   functionCall,
   near,
@@ -39,7 +39,7 @@ export const methodInvalidSignature = (context: TestContext) => async () => {
       },
       recentBlockHash: natAccessKey.atMomentOf.blockHash,
       actions: [
-        createAccount(),
+        createSubAccount(),
         transfer({ amount: near('0.1') }),
         deployLocalContract({
           wasmBase64: 'AGFzbQEAAAABBQFgAX8AAwIBAAcOAQphZGRfcmVjb3JkAAAKBAECAAsACgRuYW1lAgMBAAA=',

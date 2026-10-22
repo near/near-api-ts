@@ -15,7 +15,7 @@ import { fromNearcoreFunctionCallAction } from './fromNearcoreFunctionCallAction
 
 // Borsh deserializes `u8` arrays into plain number arrays, not Uint8Array.
 const fromNearcoreDelegableAction = (action: NearcoreDelegableAction): DelegableAction => {
-  if ('createAccount' in action) return { actionType: 'CreateAccount' };
+  if ('createAccount' in action) return { actionType: 'CreateSubAccount' };
 
   if ('transfer' in action)
     return { actionType: 'Transfer', amount: { yoctoNear: action.transfer.deposit } };

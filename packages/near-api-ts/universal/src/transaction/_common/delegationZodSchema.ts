@@ -6,7 +6,7 @@ import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
 import { SignatureZodSchema } from '../../_common/zodSchemas/signature';
 import { TransactionNonceZodSchema } from '../../_common/zodSchemas/transactionNonce';
 import { AddAccessKeyActionZodSchema } from './_common/zodSchemas/addAccessKey';
-import { CreateAccountActionZodSchema } from './_common/zodSchemas/createAccount';
+import { CreateSubAccountActionZodSchema } from './_common/zodSchemas/createSubAccount';
 import { DeleteAccessKeyActionZodSchema } from './_common/zodSchemas/deleteAccessKey';
 import { DeleteAccountActionZodSchema } from './_common/zodSchemas/deleteAccount';
 import { DeployLocalContractActionZodSchema } from './_common/zodSchemas/deployLocalContract';
@@ -22,7 +22,7 @@ import { TransferActionZodSchema } from './_common/zodSchemas/transfer';
 import { WithdrawAccessKeyBalanceActionZodSchema } from './_common/zodSchemas/withdrawAccessKeyBalance';
 
 const DelegableActionZodSchema = z.union([
-  CreateAccountActionZodSchema,
+  CreateSubAccountActionZodSchema,
   TransferActionZodSchema,
   AddAccessKeyActionZodSchema,
   DeployLocalContractActionZodSchema,

@@ -14,15 +14,18 @@ interface GeneralExecutionErrorRegistry {
   'Action.Forbidden': { stepCreatorAccountId: AccountId; executorAccountId: AccountId };
 }
 
-interface CreateAccountErrorRegistry {
-  'Action.CreateAccount.AlreadyExists': { newAccountId: AccountId };
-  'Action.CreateAccount.TopLevelNamespace': {
+interface CreateSubAccountErrorRegistry {
+  'Action.CreateSubAccount.AlreadyExists': { newAccountId: AccountId };
+  'Action.CreateSubAccount.TopLevelNamespace': {
     newAccountId: AccountId;
     creatorAccountId: AccountId;
     registrarAccountId: AccountId;
   };
-  'Action.CreateAccount.ForeignNamespace': { newAccountId: AccountId; creatorAccountId: AccountId };
-  'Action.CreateAccount.ImplicitAccount': { newAccountId: AccountId };
+  'Action.CreateSubAccount.ForeignNamespace': {
+    newAccountId: AccountId;
+    creatorAccountId: AccountId;
+  };
+  'Action.CreateSubAccount.ImplicitAccount': { newAccountId: AccountId };
 }
 
 interface AddAccessKeyErrorRegistry {
@@ -125,7 +128,7 @@ interface ExecuteDelegationErrorRegistry {
 
 export interface ExecutionFailureRegistry
   extends GeneralExecutionErrorRegistry,
-    CreateAccountErrorRegistry,
+    CreateSubAccountErrorRegistry,
     AddAccessKeyErrorRegistry,
     FunctionCallErrorRegistry,
     StakeErrorRegistry,

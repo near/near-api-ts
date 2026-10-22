@@ -16,7 +16,7 @@ import {
   transfer,
 } from '../../index';
 import { safeSleep } from '../../src/createClient/createTransport/createSendRequest/_common/_common/sleep';
-import { createAccount } from '../../src/transaction/actionCreators/createAccount';
+import { createSubAccount } from '../../src/transaction/actionCreators/createSubAccount';
 import type { Client } from '../../types/client/client';
 import { createDefaultClient, log } from '../utils/common';
 import { getLastNonce } from '../utils/getLastNonce';

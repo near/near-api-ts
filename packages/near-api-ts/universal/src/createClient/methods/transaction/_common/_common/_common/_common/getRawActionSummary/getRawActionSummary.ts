@@ -13,7 +13,7 @@ import { getRawExecuteDelegationActionSummary } from './getRawExecuteDelegationA
 export const getRawActionSummary = (rpcAction: ActionView): RawTransactionActionSummary => {
   if (rpcAction === 'CreateAccount') {
     return {
-      actionType: 'CreateAccount',
+      actionType: 'CreateSubAccount',
     };
   }
 

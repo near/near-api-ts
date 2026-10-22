@@ -395,6 +395,28 @@
     `Client.SendSignedTransaction.Rpc.Actions.DeployContract.TooMany` →
     `Client.SendSignedTransaction.Rpc.Actions.UploadContract.TooMany`.
 
+- **Breaking:** `createAccount` is renamed to `createSubAccount`. The rename
+  covers the `actionType` – of the action, of a hand-written `actions` entry and
+  of the action summary in `processingSteps` (also inside an
+  `ExecuteDelegation`) – and the error kinds:
+
+  - `createAccount` → `createSubAccount`, `actionType: 'CreateAccount'` →
+    `'CreateSubAccount'`.
+  - The node's errors about the action follow its new name:
+    - `Action.CreateAccount.AlreadyExists` → `Action.CreateSubAccount.AlreadyExists`
+    - `Action.CreateAccount.TopLevelNamespace` →
+      `Action.CreateSubAccount.TopLevelNamespace`
+    - `Action.CreateAccount.ForeignNamespace` →
+      `Action.CreateSubAccount.ForeignNamespace`
+    - `Action.CreateAccount.ImplicitAccount` →
+      `Action.CreateSubAccount.ImplicitAccount`
+
+    The renames propagate to every kind built on top of them, e.g.
+    `Client.SendSignedTransaction.Rpc.Action.CreateAccount.AlreadyExists` →
+    `Client.SendSignedTransaction.Rpc.Action.CreateSubAccount.AlreadyExists` and
+    `MemorySigner.ExecuteTransaction.Rpc.Action.CreateAccount.AlreadyExists` →
+    `MemorySigner.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists`.
+
 - **Breaking:** the memory key service is now a memory key vault:
 
   - `createMemoryKeyService` / `safeCreateMemoryKeyService` →
