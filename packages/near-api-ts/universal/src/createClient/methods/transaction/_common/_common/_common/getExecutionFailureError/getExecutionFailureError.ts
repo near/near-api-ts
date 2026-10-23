@@ -277,6 +277,17 @@ export const getExecutionFailureError = (
       }
     }
 
+    // The delegation names a nonce channel past the last one of the delegator's gas key -
+    // `nonceIndex` is 0-based, like our `nonceChannelId`.
+    if ('DelegateActionInvalidNonceIndex' in kind)
+      return {
+        kind: 'Action.ExecuteDelegation.NonceChannel.NotFound',
+        context: {
+          delegationNonceChannelId: kind.DelegateActionInvalidNonceIndex.nonceIndex,
+          accessKeyChannelCount: kind.DelegateActionInvalidNonceIndex.numNonces,
+        },
+      };
+
     if ('DelegateActionInvalidNonce' in kind)
       return {
         kind: 'Action.ExecuteDelegation.Nonce.Invalid',

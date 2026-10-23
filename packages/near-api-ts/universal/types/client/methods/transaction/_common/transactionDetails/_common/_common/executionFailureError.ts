@@ -104,6 +104,12 @@ interface ExecuteDelegationErrorRegistry {
     delegationNonce: DelegationNonce;
     maxAllowedNonce: TransactionNonce;
   };
+  // Only a NEP-611 delegation signed by a gas key names a nonce channel. Nearcore refuses new
+  // NEP-611 delegations since protocol 87, so only transactions sent before it fail this way.
+  'Action.ExecuteDelegation.NonceChannel.NotFound': {
+    delegationNonceChannelId: number;
+    accessKeyChannelCount: number;
+  };
   'Action.ExecuteDelegation.Executor.NotAllowed': {
     executorAccountId: AccountId;
     delegatorAccountId: AccountId;

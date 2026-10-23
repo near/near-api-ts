@@ -207,7 +207,10 @@
   signed by a gas key (`delegation.tag` is `constants.Delegation.Nep611Tag`),
   which only transactions sent before protocol version 87 carry. It now covers
   NEP-611 delegations too – `getTransactionResult` for a transaction relaying
-  one used to fail with `Client.GetTransactionResult.Internal`.
+  one used to fail with `Client.GetTransactionResult.Internal`. So did one whose
+  delegation named a nonce channel the gas key does not have; it now reports
+  the new execution error kind `Action.ExecuteDelegation.NonceChannel.NotFound`
+  with `{ delegationNonceChannelId, accessKeyChannelCount }`.
 
 - **Breaking:** the access key API drops the `Account` prefix:
 
