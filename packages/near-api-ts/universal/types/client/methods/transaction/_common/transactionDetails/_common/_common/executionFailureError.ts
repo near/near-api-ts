@@ -125,6 +125,9 @@ interface ExecuteDelegationErrorRegistry {
   'Action.ExecuteDelegation.Delegator.AccessKey.Function.NotAllowed': {
     functionName: ContractFunctionName;
   };
+  // The delegation takes the single nonce channel of a key, but the delegator key has nonce
+  // channels - it is paid from its own balance, and such a key cannot sign a delegation
+  'Action.ExecuteDelegation.Delegator.AccessKey.NonceChannels.NotAllowed': null;
 }
 
 // A delegation in the NEP-611 format fails the way a NEP-366 one does, under the name of its action

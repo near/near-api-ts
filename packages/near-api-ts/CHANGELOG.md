@@ -126,7 +126,9 @@
   `nonceChannelId` runs `0..channelCount - 1`, the `channelId` that
   `getAccessKeyNonceChannels` reports. The transaction pays for gas from the
   key's balance. A delegation cannot be signed by such a key – the protocol
-  refuses it.
+  refuses it, and the relaying transaction fails with the new execution error
+  kind `Action.ExecuteDelegation.Delegator.AccessKey.NonceChannels.NotAllowed`.
+  Both methods used to fail with `Internal` there.
 
 - **`nonceProgression`** in a transaction's `signer.replayProtection`:
   `'Consecutive'` (the default) takes exactly `lastNonce + 1`, `'Increasing'`

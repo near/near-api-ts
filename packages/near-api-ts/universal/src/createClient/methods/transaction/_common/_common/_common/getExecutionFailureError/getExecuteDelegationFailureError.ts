@@ -66,6 +66,14 @@ export const getExecuteDelegationFailureError = (
         context: null,
       };
 
+    // The delegation takes the single nonce channel of a key, but the delegator key has nonce
+    // channels - the protocol refuses a delegation signed by a key paid from its own balance
+    if (accessKeyError === 'DelegateActionRequiresNonGasKey')
+      return {
+        kind: `${delegation}.Delegator.AccessKey.NonceChannels.NotAllowed`,
+        context: null,
+      };
+
     // The delegation names a nonce channel, which only a NEP-611 one can do, but the delegator
     // key is paid from the account balance and has none
     if (accessKeyError === 'DelegateActionRequiresGasKey')

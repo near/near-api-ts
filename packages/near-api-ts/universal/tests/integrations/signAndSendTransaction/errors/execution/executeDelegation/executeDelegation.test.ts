@@ -7,6 +7,7 @@ import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 import { testKeys } from '../../../../../utils/testKeys';
 import { attachedDepositNotAllowed } from './accessKey/attachedDepositNotAllowed';
 import { functionNotAllowed } from './accessKey/functionNotAllowed';
+import { nonceChannelsNotAllowed } from './accessKey/nonceChannelsNotAllowed';
 import { notFound } from './accessKey/notFound';
 import { notFullAccess } from './accessKey/notFullAccess';
 import { receiverNotAllowed } from './accessKey/receiverNotAllowed';
@@ -55,5 +56,9 @@ describe('signAndSendTransaction › ExecuteDelegation.* errors', () => {
   it(
     'fails with Action.ExecuteDelegation.Delegator.AccessKey.Function.NotAllowed',
     functionNotAllowed(context),
+  );
+  it(
+    'fails with Action.ExecuteDelegation.Delegator.AccessKey.NonceChannels.NotAllowed',
+    nonceChannelsNotAllowed(context),
   );
 });

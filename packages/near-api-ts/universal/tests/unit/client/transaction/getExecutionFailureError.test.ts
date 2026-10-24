@@ -55,6 +55,23 @@ describe('getExecutionFailureError › DelegateV2', () => {
     ).toMatchObject({ kind: 'Action.LegacyExecuteDelegation.Delegator.AccessKey.NotFound' });
   });
 
+  // The live counterpart of the case above: a delegation on the single nonce channel of a key,
+  // signed by a key that has nonce channels - mainnet CKyEiCLYiMo1EH7CnjLA8fcTY59FdoPk1tsLSKN3BJ4q
+  it('reports a delegation on the single nonce channel of a key that has nonce channels', () => {
+    const actionError = failureOf({
+      DelegateActionAccessKeyError: 'DelegateActionRequiresNonGasKey',
+    });
+
+    expect(getExecutionFailureError(actionError, [delegate], ['Live'])).toStrictEqual({
+      kind: 'Action.ExecuteDelegation.Delegator.AccessKey.NonceChannels.NotAllowed',
+      context: null,
+    });
+    expect(getExecutionFailureError(actionError, [delegateV2], ['Live', 'Legacy'])).toStrictEqual({
+      kind: 'Action.LegacyExecuteDelegation.Delegator.AccessKey.NonceChannels.NotAllowed',
+      context: null,
+    });
+  });
+
   it('refuses a failure of a NEP-611 delegation in a transaction sent now', () => {
     expect(() =>
       getExecutionFailureError(failureOf('DelegateActionExpired'), [delegateV2], ['Live']),
