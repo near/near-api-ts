@@ -75,7 +75,17 @@
     `{ scheme: 'NonceChannels', nonceChannelId, nonce }` for one signed by a key
     paid from its own balance;
   - `actionType: 'LegacyWithdrawAccessKeyBalance'` – a withdrawal from a key
-    balance inside a delegation (protocol 85–86), in `delegatedActionSummaries`.
+    balance inside a delegation (protocol 85–86), in `delegatedActionSummaries`;
+  - the execution failures of a `LegacyExecuteDelegation`: each failure a
+    NEP-366 delegation reports as `Action.ExecuteDelegation.*` (`Expired`,
+    `Signature.Invalid`, `Nonce.Invalid`, `Delegator.AccessKey.NotFound`, …)
+    under `Action.LegacyExecuteDelegation.*`, with the same context, and two of
+    its own: `Action.LegacyExecuteDelegation.NonceChannel.NotFound` with
+    `{ delegationNonceChannelId, accessKeyChannelCount }` – it named a nonce
+    channel its key does not have – and
+    `Action.LegacyExecuteDelegation.Delegator.AccessKey.NonceChannels.NotFound`
+    – it named a nonce channel, but its key has none. `getTransactionResult` for
+    the latter used to fail with `Client.GetTransactionResult.Internal`.
 
   The details of `sendSignedTransaction` and of a signer's `executeTransaction`
   hold only what the current protocol produces, and their types mention none of
@@ -248,8 +258,8 @@
   `Client.GetTransactionResult.Internal`; it now reads one as
   `LegacyExecuteDelegation` (see Legacy data). So did one whose
   delegation named a nonce channel the gas key does not have; it now reports
-  the new execution error kind `Action.ExecuteDelegation.NonceChannel.NotFound`
-  with `{ delegationNonceChannelId, accessKeyChannelCount }`.
+  the execution error kind `Action.LegacyExecuteDelegation.NonceChannel.NotFound`
+  (see Legacy data).
 
 - **Breaking:** the access key API drops the `Account` prefix:
 

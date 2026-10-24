@@ -3,7 +3,6 @@ import type {
   MaybeBaseDeserializeTransactionExecutionStepsFn,
   MaybeBaseDeserializeTransactionResultDataFn,
 } from '../_common/transactionDetails/_common/_common/deserializers';
-import type { ProtocolEra } from '../_common/transactionDetails/_common/_common/protocolEra';
 import type {
   MaybeTransactionProcessingStage,
   ReachableProcessingStageFromStage,
@@ -15,30 +14,27 @@ import type { ExecutionSuccess } from '../_common/transactionDetails/executionSu
 // Maps each processing stage to the concrete detail shape observed at exactly that stage.
 // Every `TransactionDetailsAtStage*` carries a `processingStage` tag, so these remain distinct
 // union members even where two shapes are otherwise structurally identical.
-// `PE` is `'Live'` everywhere but in the builders the methods share, which read any transaction.
+// A transaction sent now holds only what the current protocol produces - see `ProtocolEra`.
 export type TransactionDetailsAtStage<
-  PE extends ProtocolEra,
   RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<PE> = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn<PE> = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<'Live'> = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn<'Live'> = undefined,
 > = {
-  ConvertedOptimistic: ConversionSuccess<PE>['ConvertedOptimistic'];
-  ConvertedFinal: ConversionSuccess<PE, ASF>['ConvertedFinal'];
-  ExecutedOptimistic: ExecutionSuccess<PE, RDF, ASF, ESF>['ExecutedOptimistic'];
-  ExecutedNearlyFinal: ExecutionSuccess<PE, RDF, ASF, ESF>['ExecutedNearlyFinal'];
-  CompletedFinal: ExecutionSuccess<PE, RDF, ASF, ESF>['CompletedFinal'];
+  ConvertedOptimistic: ConversionSuccess<'Live'>['ConvertedOptimistic'];
+  ConvertedFinal: ConversionSuccess<'Live', ASF>['ConvertedFinal'];
+  ExecutedOptimistic: ExecutionSuccess<'Live', RDF, ASF, ESF>['ExecutedOptimistic'];
+  ExecutedNearlyFinal: ExecutionSuccess<'Live', RDF, ASF, ESF>['ExecutedNearlyFinal'];
+  CompletedFinal: ExecutionSuccess<'Live', RDF, ASF, ESF>['CompletedFinal'];
 };
 
 // Asking to wait for a minimal stage yields a union of that stage and every later reachable one,
 // because by the time the RPC responds, the transaction may have progressed further.
 export type TransactionDetailsFromStage<
-  PE extends ProtocolEra,
   RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<PE> = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn<PE> = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<'Live'> = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn<'Live'> = undefined,
 > = {
   [S in TransactionProcessingStage]: TransactionDetailsAtStage<
-    PE,
     RDF,
     ASF,
     ESF
@@ -51,5 +47,5 @@ export type SendSignedTransactionOutput<
   ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<'Live'> = undefined,
   ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn<'Live'> = undefined,
 > = [TPS] extends [undefined]
-  ? TransactionDetailsFromStage<'Live', RDF, ASF, ESF>['ExecutedOptimistic']
-  : TransactionDetailsFromStage<'Live', RDF, ASF, ESF>[Exclude<TPS, undefined>];
+  ? TransactionDetailsFromStage<RDF, ASF, ESF>['ExecutedOptimistic']
+  : TransactionDetailsFromStage<RDF, ASF, ESF>[Exclude<TPS, undefined>];

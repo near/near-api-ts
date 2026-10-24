@@ -59,15 +59,15 @@ export const handleRpcResult = (
   deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live'>,
   deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live'>,
 ): Result<
-  TransactionDetailsFromStage<'Live'>[TransactionProcessingStage],
+  TransactionDetailsFromStage[TransactionProcessingStage],
   | NatError<'Client.SendSignedTransaction.Exhausted'>
   | NatError<'Client.SendSignedTransaction.DeserializeResultData.Failed'>
   | NatError<'Client.SendSignedTransaction.DeserializeActionSummaries.Failed'>
   | NatError<'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed'>
   | ConversionFailureNatError
-  | ExecutionFailureErrorAtStage<'ExecutedOptimistic', 'Live'>
-  | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal', 'Live'>
-  | ExecutionFailureErrorAtStage<'CompletedFinal', 'Live'>
+  | ExecutionFailureErrorAtStage<'ExecutedOptimistic'>
+  | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal'>
+  | ExecutionFailureErrorAtStage<'CompletedFinal'>
 > => {
   const rpcResult = RpcResultZodSchema.safeParse(rpcResponse.result);
 

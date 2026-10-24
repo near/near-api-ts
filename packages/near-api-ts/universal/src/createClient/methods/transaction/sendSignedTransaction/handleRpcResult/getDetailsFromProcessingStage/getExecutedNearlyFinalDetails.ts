@@ -4,7 +4,6 @@ import type {
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
-import type { ProtocolEra } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type { ExecutionFailureErrorAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
 import type { TransactionDetailsAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import { type NatError } from '../../../../../../_common/_common/_common/_common/natError';
@@ -15,16 +14,16 @@ import { getExecutionSuccessExecutedNearlyFinal } from '../../../_common/getExec
 import type { RpcExecutedTransactionDetails } from '../../../_common/zodSchemas/rpcTransactionDetails/rpcTransactionDetails';
 import type { InnerClientTransactionDetailsError } from './getDetailsFromProcessingStage';
 
-export const getExecutedNearlyFinalDetails = <PE extends ProtocolEra>(args: {
+export const getExecutedNearlyFinalDetails = (args: {
   rpcDetails: RpcExecutedTransactionDetails;
   signedTransactionBorsh64: Base64String;
-  protocolEras: PE[];
+  protocolEras: 'Live'[];
   deserializeResultData?: BaseDeserializeTransactionResultDataFn;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<PE>;
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<PE>;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live'>;
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live'>;
 }): Result<
-  TransactionDetailsAtStage<PE>['ExecutedNearlyFinal'],
-  InnerClientTransactionDetailsError | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal', PE>
+  TransactionDetailsAtStage['ExecutedNearlyFinal'],
+  InnerClientTransactionDetailsError | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal'>
 > => {
   const {
     rpcDetails,

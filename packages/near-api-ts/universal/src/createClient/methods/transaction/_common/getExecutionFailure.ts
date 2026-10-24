@@ -4,7 +4,6 @@ import type {
   BaseDeserializeTransactionActionSummariesFn,
   BaseDeserializeTransactionExecutionStepsFn,
 } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
-import type { ExecutionFailureErrorOfEra } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/executionFailureError';
 import type { ProtocolEra } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type { ConversionStepSuccess } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/conversionStep';
 import type { ExecutionFailure } from '../../../../../types/client/methods/transaction/_common/transactionDetails/executionFailure';
@@ -86,11 +85,11 @@ const getBaseExecutionFailure = <PE extends ProtocolEra>(args: GetExecutionFailu
   return result.ok({
     transactionHash: transaction.hash.cryptoHash,
     status: 'ExecutionFailure' as const,
-    // `'Legacy'` adds no execution failure yet, so every one is of any era
     error: getExecutionFailureError(
       actionError,
       getFailedReceiptActions(conversionStepSuccess.data, receiptsWithOutcomes),
-    ) as ExecutionFailureErrorOfEra<PE>,
+      args.protocolEras,
+    ),
     processingSteps: {
       conversionStep: conversionStepSuccess.data,
       executionSteps: nonConversionSteps.data.executionSteps,

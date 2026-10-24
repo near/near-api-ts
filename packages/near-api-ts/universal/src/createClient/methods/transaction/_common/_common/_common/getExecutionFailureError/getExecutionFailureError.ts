@@ -1,14 +1,30 @@
 import type { ActionError, ActionView } from '@near-js/jsonrpc-types';
 import type { PublicKey } from '../../../../../../../../types/_common/crypto';
-import type { ExecutionFailureError } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/executionFailureError';
+import type {
+  ExecutionFailureError,
+  ExecutionFailureErrorOfEra,
+} from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/executionFailureError';
+import type { ProtocolEra } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import { yoctoNear } from '../../../../../../../_common/nearToken';
+import { getExecuteDelegationFailureError } from './getExecuteDelegationFailureError';
 import { transformFunctionCallError } from './transformFunctionCallError/transformFunctionCallError';
 
 // `failedReceiptActions` are the actions of the receipt that failed - `actionError.index` points into them
-export const getExecutionFailureError = (
+const toExecutionFailureError = (
   actionError: ActionError,
   failedReceiptActions: ActionView[],
+  protocolEras: readonly ProtocolEra[],
 ): ExecutionFailureError => {
+  const failedAction =
+    typeof actionError.index === 'number' ? failedReceiptActions[actionError.index] : undefined;
+
+  const executeDelegationFailureError = getExecuteDelegationFailureError(
+    actionError.kind,
+    failedAction,
+    protocolEras,
+  );
+  if (executeDelegationFailureError) return executeDelegationFailureError;
+
   if (typeof actionError.kind === 'object') {
     const { kind } = actionError;
 
@@ -183,9 +199,6 @@ export const getExecutionFailureError = (
         accountId: kind.GasKeyDoesNotExist.accountId,
         publicKey: kind.GasKeyDoesNotExist.publicKey as PublicKey, // TODO validate by zod
       };
-      const failedAction =
-        typeof actionError.index === 'number' ? failedReceiptActions[actionError.index] : undefined;
-
       if (typeof failedAction === 'object' && 'TransferToGasKey' in failedAction)
         return { kind: 'Action.TopUpAccessKeyBalance.Balance.NotFound', context };
 
@@ -208,116 +221,20 @@ export const getExecutionFailureError = (
         },
       };
     }
-
-    // ExecuteDelegation action
-    // The delegation is executed on the transaction receiver account, so that account must be
-    // the delegator - nearcore reports its own receiverId here, not the delegation receiver.
-    if ('DelegateActionSenderDoesNotMatchTxReceiver' in kind)
-      return {
-        kind: 'Action.ExecuteDelegation.Executor.NotAllowed',
-        context: {
-          executorAccountId: kind.DelegateActionSenderDoesNotMatchTxReceiver.receiverId,
-          delegatorAccountId: kind.DelegateActionSenderDoesNotMatchTxReceiver.senderId,
-        },
-      };
-
-    // The delegator's key is checked the same way a transaction signer's key is, so these
-    // mirror the `Signer.AccessKey.*` conversion errors - only the account they blame is the
-    // delegator, and the receiver they compare against is the delegation receiver.
-    if ('DelegateActionAccessKeyError' in kind) {
-      const accessKeyError = kind.DelegateActionAccessKeyError;
-
-      // The delegation is signed with a `ContractFunctionCall` key, and it carries something other
-      // than a single CallContractFunction action.
-      if (accessKeyError === 'RequiresFullAccess')
-        return {
-          kind: 'Action.ExecuteDelegation.Delegator.AccessKey.NotFullAccess',
-          context: null,
-        };
-
-      // A `ContractFunctionCall` key can never attach a deposit, not even to a function it may
-      // call.
-      if (accessKeyError === 'DepositWithFunctionCall')
-        return {
-          kind: 'Action.ExecuteDelegation.Delegator.AccessKey.AttachedDeposit.NotAllowed',
-          context: null,
-        };
-
-      if (typeof accessKeyError === 'object') {
-        if ('AccessKeyNotFound' in accessKeyError)
-          return {
-            kind: 'Action.ExecuteDelegation.Delegator.AccessKey.NotFound',
-            context: {
-              delegatorAccountId: accessKeyError.AccessKeyNotFound.accountId,
-              delegatorPublicKey: accessKeyError.AccessKeyNotFound.publicKey as PublicKey,
-            },
-          };
-
-        // `txReceiver` is the delegation receiver here - the delegated actions are the ones the
-        // key restricts, not the transaction the relayer wraps them into.
-        if ('ReceiverMismatch' in accessKeyError)
-          return {
-            kind: 'Action.ExecuteDelegation.Delegator.AccessKey.Receiver.NotAllowed',
-            context: {
-              delegationReceiverAccountId: accessKeyError.ReceiverMismatch.txReceiver,
-              allowedContractAccountId: accessKeyError.ReceiverMismatch.akReceiver,
-            },
-          };
-
-        if ('MethodNameMismatch' in accessKeyError)
-          return {
-            kind: 'Action.ExecuteDelegation.Delegator.AccessKey.Function.NotAllowed',
-            context: { functionName: accessKeyError.MethodNameMismatch.methodName },
-          };
-
-        // `NotEnoughAllowance` is left out on purpose: the relayer pays for a delegation, so
-        // `validate_delegate_action_key` (`runtime/runtime/src/actions.rs`) never touches the
-        // delegator key's allowance - only `verify_and_charge_tx_ephemeral`
-        // (`runtime/runtime/src/verifier.rs`) does, on the transaction path.
-      }
-    }
-
-    // The delegation names a nonce channel past the last one of the delegator's gas key -
-    // `nonceIndex` is 0-based, like our `nonceChannelId`.
-    if ('DelegateActionInvalidNonceIndex' in kind)
-      return {
-        kind: 'Action.ExecuteDelegation.NonceChannel.NotFound',
-        context: {
-          delegationNonceChannelId: kind.DelegateActionInvalidNonceIndex.nonceIndex,
-          accessKeyChannelCount: kind.DelegateActionInvalidNonceIndex.numNonces,
-        },
-      };
-
-    if ('DelegateActionInvalidNonce' in kind)
-      return {
-        kind: 'Action.ExecuteDelegation.Nonce.Invalid',
-        context: {
-          delegationNonce: kind.DelegateActionInvalidNonce.delegateNonce,
-          accessKeyNonce: kind.DelegateActionInvalidNonce.akNonce,
-        },
-      };
-
-    if ('DelegateActionNonceTooLarge' in kind)
-      return {
-        kind: 'Action.ExecuteDelegation.Nonce.TooLarge',
-        context: {
-          delegationNonce: kind.DelegateActionNonceTooLarge.delegateNonce,
-          maxAllowedNonce: kind.DelegateActionNonceTooLarge.upperBound,
-        },
-      };
   }
-
-  if (actionError.kind === 'DelegateActionInvalidSignature')
-    return {
-      kind: 'Action.ExecuteDelegation.Signature.Invalid',
-      context: null,
-    };
-
-  if (actionError.kind === 'DelegateActionExpired')
-    return {
-      kind: 'Action.ExecuteDelegation.Expired',
-      context: null,
-    };
 
   throw new Error('Unknown execution error', { cause: actionError });
 };
+
+// `protocolEras` are the eras the details may hold. Without `'Legacy'` the conversion throws on
+// the failure of what the current protocol refuses, so the error is of `PE` - hence this cast.
+export const getExecutionFailureError = <PE extends ProtocolEra>(
+  actionError: ActionError,
+  failedReceiptActions: ActionView[],
+  protocolEras: PE[],
+): ExecutionFailureErrorOfEra<PE> =>
+  toExecutionFailureError(
+    actionError,
+    failedReceiptActions,
+    protocolEras,
+  ) as ExecutionFailureErrorOfEra<PE>;

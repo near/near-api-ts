@@ -105,12 +105,6 @@ interface ExecuteDelegationErrorRegistry {
     delegationNonce: DelegationNonce;
     maxAllowedNonce: TransactionNonce;
   };
-  // Only a NEP-611 delegation signed by a gas key names a nonce channel. Nearcore refuses new
-  // NEP-611 delegations since protocol 87, so only transactions sent before it fail this way.
-  'Action.ExecuteDelegation.NonceChannel.NotFound': {
-    delegationNonceChannelId: number;
-    accessKeyChannelCount: number;
-  };
   'Action.ExecuteDelegation.Executor.NotAllowed': {
     executorAccountId: AccountId;
     delegatorAccountId: AccountId;
@@ -133,7 +127,36 @@ interface ExecuteDelegationErrorRegistry {
   };
 }
 
-export interface ExecutionFailureRegistry
+// A delegation in the NEP-611 format fails the way a NEP-366 one does, under the name of its action
+// summary, and in two more ways of its own: only it can name a nonce channel of its key
+type LegacyExecuteDelegationSharedErrorRegistry = {
+  [K in keyof ExecuteDelegationErrorRegistry as K extends `Action.ExecuteDelegation.${infer Rest}`
+    ? `Action.LegacyExecuteDelegation.${Rest}`
+    : never]: ExecuteDelegationErrorRegistry[K];
+};
+
+interface LegacyExecuteDelegationErrorRegistry extends LegacyExecuteDelegationSharedErrorRegistry {
+  /**
+   * The delegation names a nonce channel its key does not have - the key has channels
+   * `0..accessKeyChannelCount - 1`.
+   *
+   * @legacy Protocol 85–86 (nearcore 2.13).
+   */
+  'Action.LegacyExecuteDelegation.NonceChannel.NotFound': {
+    delegationNonceChannelId: number;
+    accessKeyChannelCount: number;
+  };
+  /**
+   * The delegation names a nonce channel, but the delegator key has none - it is paid from the
+   * account balance.
+   *
+   * @legacy Protocol 85–86 (nearcore 2.13).
+   */
+  'Action.LegacyExecuteDelegation.Delegator.AccessKey.NonceChannels.NotFound': null;
+}
+
+// What can go wrong when a transaction executes now
+export interface LiveExecutionFailureRegistry
   extends GeneralExecutionErrorRegistry,
     CreateSubAccountErrorRegistry,
     AddAccessKeyErrorRegistry,
@@ -146,6 +169,20 @@ export interface ExecutionFailureRegistry
     WithdrawAccessKeyBalanceErrorRegistry,
     ExecuteDelegationErrorRegistry {}
 
+/**
+ * Execution failures of what older protocol versions took and the current one refuses - see
+ * `ProtocolEra`. Each kind names the `@legacy` action summary that failed.
+ */
+export interface LegacyExecutionFailureRegistry extends LegacyExecuteDelegationErrorRegistry {}
+
+export interface ExecutionFailureRegistry
+  extends LiveExecutionFailureRegistry,
+    LegacyExecutionFailureRegistry {}
+
+export type LiveExecutionFailureKind = keyof LiveExecutionFailureRegistry;
+
+export type LegacyExecutionFailureKind = keyof LegacyExecutionFailureRegistry;
+
 export type ExecutionFailureKind = keyof ExecutionFailureRegistry;
 
 export type ExecutionFailureError<K extends ExecutionFailureKind = ExecutionFailureKind> =
@@ -153,8 +190,8 @@ export type ExecutionFailureError<K extends ExecutionFailureKind = ExecutionFail
 
 // Like `TransactionActionSummaryByEra`
 type ExecutionFailureErrorByEra = {
-  Live: ExecutionFailureError;
-  Legacy: never;
+  Live: ExecutionFailureError<LiveExecutionFailureKind>;
+  Legacy: ExecutionFailureError<LegacyExecutionFailureKind>;
 };
 
 export type ExecutionFailureErrorOfEra<PE extends ProtocolEra> = ExecutionFailureErrorByEra[PE];

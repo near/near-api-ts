@@ -1,18 +1,17 @@
 import type { Result, TransactionHash } from '../../../../../../../types/_common/common';
 import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
-import type { ProtocolEra } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type { ConversionSuccess } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/conversionSuccess';
 import type { NatError } from '../../../../../../_common/_common/_common/_common/natError';
 import { getConversionSuccessConvertedFinal } from '../../../_common/getConversionSuccess';
 import type { RpcIncludedFinalTransactionDetails } from '../../../_common/zodSchemas/rpcTransactionDetails/rpcTransactionDetails';
 
-export const getConvertedFinalDetails = <PE extends ProtocolEra>(args: {
+export const getConvertedFinalDetails = (args: {
   rpcDetails: RpcIncludedFinalTransactionDetails;
   transactionHash: TransactionHash;
-  protocolEras: PE[];
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<PE>;
+  protocolEras: 'Live'[];
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live'>;
 }): Result<
-  ConversionSuccess<PE>['ConvertedFinal'],
+  ConversionSuccess<'Live'>['ConvertedFinal'],
   NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
 > =>
   getConversionSuccessConvertedFinal({

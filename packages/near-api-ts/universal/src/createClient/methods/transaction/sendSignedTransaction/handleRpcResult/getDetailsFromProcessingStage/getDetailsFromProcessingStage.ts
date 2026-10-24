@@ -8,7 +8,6 @@ import type {
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
-import type { ProtocolEra } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type { TransactionProcessingStage } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/processingStage';
 import type {
   ConversionFailureNatError,
@@ -36,12 +35,12 @@ import { getExecutedOptimisticDetails } from './getExecutedOptimisticDetails';
  * split lives here, next to the union it splits.
  */
 type InnerTransactionDetailsError = Extract<
-  TransactionDetailsError<'Live'>,
+  TransactionDetailsError,
   { kind: `Inner.Client.TransactionDetails.${string}` }
 >;
 
 export const isInnerTransactionDetailsError = (
-  error: TransactionDetailsError<'Live'>,
+  error: TransactionDetailsError,
 ): error is InnerTransactionDetailsError =>
   error.kind.startsWith('Inner.Client.TransactionDetails');
 
@@ -50,16 +49,16 @@ export type InnerClientTransactionDetailsError =
   | NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
   | NatError<'Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'>;
 
-export type TransactionDetailsError<PE extends ProtocolEra> =
+export type TransactionDetailsError =
   | InnerClientTransactionDetailsError
   | ConversionFailureNatError
-  | ExecutionFailureErrorAtStage<'ExecutedOptimistic', PE>
-  | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal', PE>
-  | ExecutionFailureErrorAtStage<'CompletedFinal', PE>;
+  | ExecutionFailureErrorAtStage<'ExecutedOptimistic'>
+  | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal'>
+  | ExecutionFailureErrorAtStage<'CompletedFinal'>;
 
-// `PE` is the protocol eras the details may hold, and `protocolEras` names them at runtime: without
-// `'Legacy'` the builders throw on what the current protocol refuses
-type TransactionDetailsHandlerContext<PE extends ProtocolEra> = {
+// A transaction sent now holds only what the current protocol produces, and its errors exist only
+// for that, so `protocolEras` is `['Live']`: the builders throw on anything else
+type TransactionDetailsHandlerContext = {
   rpcResult:
     | RpcIncludedTransactionDetails
     | RpcIncludedFinalTransactionDetails
@@ -68,10 +67,10 @@ type TransactionDetailsHandlerContext<PE extends ProtocolEra> = {
     | RpcFinalTransactionDetails;
   transactionHash: TransactionHash;
   signedTransactionBorsh64: Base64String;
-  protocolEras: PE[];
+  protocolEras: 'Live'[];
   deserializeResultData?: BaseDeserializeTransactionResultDataFn;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<PE>;
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<PE>;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live'>;
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live'>;
 };
 
 /**
@@ -103,9 +102,9 @@ const reachableStagesByStage: Record<TransactionProcessingStage, TransactionProc
  *
  * The return type is the widest reachable union (everything reachable from `ConvertedOptimistic`).
  */
-const buildDetails = <PE extends ProtocolEra>(
-  context: TransactionDetailsHandlerContext<PE>,
-): Result<TransactionDetailsFromStage<PE>['ConvertedOptimistic'], TransactionDetailsError<PE>> => {
+const buildDetails = (
+  context: TransactionDetailsHandlerContext,
+): Result<TransactionDetailsFromStage['ConvertedOptimistic'], TransactionDetailsError> => {
   const { rpcResult, transactionHash } = context;
 
   switch (rpcResult.finalExecutionStatus) {
@@ -129,9 +128,9 @@ const buildDetails = <PE extends ProtocolEra>(
  * return type narrows to `TransactionDetailsFromStage[S]` automatically.
  */
 export const getDetailsFromProcessingStage = <S extends TransactionProcessingStage>(
-  context: TransactionDetailsHandlerContext<'Live'>,
+  context: TransactionDetailsHandlerContext,
   minimalProcessingStage: S,
-): Result<TransactionDetailsFromStage<'Live'>[S], TransactionDetailsError<'Live'>> => {
+): Result<TransactionDetailsFromStage[S], TransactionDetailsError> => {
   const actualProcessingStage = finalExecutionStatusToProcessingStage(
     context.rpcResult.finalExecutionStatus,
   );
@@ -145,8 +144,5 @@ export const getDetailsFromProcessingStage = <S extends TransactionProcessingSta
 
   // The guard above guarantees the produced detail is a member of `TransactionDetailsFromStage[S]`,
   // but TS can't derive that from an `Array.includes` check — hence this single, contained cast.
-  return buildDetails(context) as Result<
-    TransactionDetailsFromStage<'Live'>[S],
-    TransactionDetailsError<'Live'>
-  >;
+  return buildDetails(context) as Result<TransactionDetailsFromStage[S], TransactionDetailsError>;
 };

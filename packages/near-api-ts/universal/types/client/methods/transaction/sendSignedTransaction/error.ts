@@ -20,8 +20,7 @@ import type {
   MaybeBaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionExecutionStepsFn,
 } from '../_common/transactionDetails/_common/_common/deserializers';
-import type { ExecutionFailureKind } from '../_common/transactionDetails/_common/_common/executionFailureError';
-import type { ProtocolEra } from '../_common/transactionDetails/_common/_common/protocolEra';
+import type { LiveExecutionFailureKind } from '../_common/transactionDetails/_common/_common/executionFailureError';
 import type {
   MaybeTransactionProcessingStage,
   ReachableProcessingStageFromStage,
@@ -43,7 +42,7 @@ type ConversionFailurePublicErrorRegistry = {
 // cannot express. So the registry pins only the part that is always present, and
 // `ExecutionFailureErrorAtStage` passes the full (assignable) context explicitly.
 type ExecutionFailurePublicErrorRegistry = {
-  [EK in ExecutionFailureKind as `Client.SendSignedTransaction.Rpc.${EK}`]: {
+  [EK in LiveExecutionFailureKind as `Client.SendSignedTransaction.Rpc.${EK}`]: {
     signedTransactionBorsh64: Base64String;
   };
 };
@@ -81,18 +80,16 @@ type CommonErrorForAllStages =
   | NatError<'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed'>
   | NatError<'Client.SendSignedTransaction.Internal'>;
 
-// `PE` is `'Live'` everywhere but in the builders the methods share, which read any transaction
 export type ExecutionFailureErrorAtStage<
   S extends ReachableProcessingStageFromStage['ExecutedOptimistic'],
-  PE extends ProtocolEra,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<PE> = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn<PE> = undefined,
-  EK extends ExecutionFailureKind = ExecutionFailureKind,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<'Live'> = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn<'Live'> = undefined,
+  EK extends LiveExecutionFailureKind = LiveExecutionFailureKind,
 > = EK extends EK // turn on distributive conditional type
   ? NatError<
       `Client.SendSignedTransaction.Rpc.${EK}`,
       {
-        transactionDetails: ExecutionFailure<PE, ASF, ESF>[S];
+        transactionDetails: ExecutionFailure<'Live', ASF, ESF>[S];
         signedTransactionBorsh64: Base64String;
       }
     >
@@ -106,13 +103,13 @@ type SendSignedTransactionErrorAtStage<
   ConvertedFinal: CommonErrorForAllStages;
   ExecutedOptimistic:
     | CommonErrorForAllStages
-    | ExecutionFailureErrorAtStage<'ExecutedOptimistic', 'Live', ASF, ESF>;
+    | ExecutionFailureErrorAtStage<'ExecutedOptimistic', ASF, ESF>;
   ExecutedNearlyFinal:
     | CommonErrorForAllStages
-    | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal', 'Live', ASF, ESF>;
+    | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal', ASF, ESF>;
   CompletedFinal:
     | CommonErrorForAllStages
-    | ExecutionFailureErrorAtStage<'CompletedFinal', 'Live', ASF, ESF>;
+    | ExecutionFailureErrorAtStage<'CompletedFinal', ASF, ESF>;
 };
 
 type SendSignedTransactionErrorFromStage<

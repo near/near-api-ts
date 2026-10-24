@@ -4,7 +4,6 @@ import type {
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
-import type { ProtocolEra } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type {
   ConversionFailureNatError,
   ExecutionFailureErrorAtStage,
@@ -21,18 +20,18 @@ import { getExecutionSuccessCompletedFinal } from '../../../_common/getExecution
 import type { RpcFinalTransactionDetails } from '../../../_common/zodSchemas/rpcTransactionDetails/rpcTransactionDetails';
 import type { InnerClientTransactionDetailsError } from './getDetailsFromProcessingStage';
 
-export const getCompletedFinalDetails = <PE extends ProtocolEra>(args: {
+export const getCompletedFinalDetails = (args: {
   rpcDetails: RpcFinalTransactionDetails;
   signedTransactionBorsh64: Base64String;
-  protocolEras: PE[];
+  protocolEras: 'Live'[];
   deserializeResultData?: BaseDeserializeTransactionResultDataFn;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<PE>;
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<PE>;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live'>;
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live'>;
 }): Result<
-  TransactionDetailsAtStage<PE>['CompletedFinal'],
+  TransactionDetailsAtStage['CompletedFinal'],
   | InnerClientTransactionDetailsError
   | ConversionFailureNatError
-  | ExecutionFailureErrorAtStage<'CompletedFinal', PE>
+  | ExecutionFailureErrorAtStage<'CompletedFinal'>
 > => {
   const {
     rpcDetails,

@@ -1,5 +1,4 @@
 import type { Base64String } from '../../../../../../../../types/_common/common';
-import type { ExecutionFailureErrorOfEra } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/executionFailureError';
 import type { ProtocolEra } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type {
   ExecutionStepResult,
@@ -16,6 +15,7 @@ import type { ReceiptCreationMap } from '../createReceiptCreationMap';
 const getRawExecutionStepResult = <PE extends ProtocolEra>(
   status: RpcReceiptOutcome['outcome']['status'],
   receiptActions: RpcActionReceiptTrimmed['receipt']['Action']['actions'],
+  protocolEras: PE[],
 ): ExecutionStepResult<PE, Base64String> => {
   if (typeof status === 'object' && 'SuccessValue' in status) {
     return {
@@ -37,11 +37,7 @@ const getRawExecutionStepResult = <PE extends ProtocolEra>(
   if (typeof status === 'object' && 'Failure' in status) {
     return {
       status: 'Failure',
-      // `'Legacy'` adds no execution failure yet, so every one is of any era
-      error: getExecutionFailureError(
-        status.Failure.ActionError,
-        receiptActions,
-      ) as ExecutionFailureErrorOfEra<PE>,
+      error: getExecutionFailureError(status.Failure.ActionError, receiptActions, protocolEras),
     };
   }
 
@@ -74,7 +70,7 @@ export const getRawExecutionStep = <PE extends ProtocolEra>(
 
   return {
     executionStepId: receipt.receiptId,
-    result: getRawExecutionStepResult<PE>(receiptOutcome.outcome.status, Action.actions),
+    result: getRawExecutionStepResult(receiptOutcome.outcome.status, Action.actions, protocolEras),
     createdAt: receiptCreationMap[receipt.receiptId].createdAt,
     createdBy: { accountId: receipt.predecessorId },
     executedAt: { blockHash: receiptOutcome.blockHash.cryptoHash },

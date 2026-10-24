@@ -142,3 +142,55 @@ declare const readDeserializer: (args: GetTransactionResultDeserializeActionSumm
 // @ts-expect-error - a deserializer of `'Live'` data does not fit getTransactionResult
 const _sentDeserializerAsRead: typeof readDeserializer = sentDeserializer;
 const _readDeserializerAsSent: typeof sentDeserializer = readDeserializer;
+
+// Every failure of a NEP-611 delegation is named after its action summary, and only
+// getTransactionResult reports one
+type LegacyDelegationKind<T extends string> = Extract<
+  T,
+  `${string}LegacyExecuteDelegation.${string}`
+>;
+type NonceChannelKind<T extends string> = Extract<
+  T,
+  `${string}ExecuteDelegation.NonceChannel${string}`
+>;
+
+type ReadFailureKind = Extract<
+  GetTransactionResultOutput,
+  { status: 'ExecutionFailure' }
+>['error']['kind'];
+type ReadStepFailureKind = Extract<
+  GetTransactionResultDeserializeExecutionStepsArgs['rawExecutionSteps'][number]['result'],
+  { status: 'Failure' }
+>['error']['kind'];
+type SentErrorKind = SendSignedTransactionError['kind'];
+type SentStepFailureKind = Extract<
+  SendSignedTransactionDeserializeExecutionStepsArgs['rawExecutionSteps'][number]['result'],
+  { status: 'Failure' }
+>['error']['kind'];
+
+type _ReadLegacyFailures = Assert<
+  Equal<
+    Extract<
+      LegacyDelegationKind<ReadFailureKind>,
+      | 'Action.LegacyExecuteDelegation.Expired'
+      | 'Action.LegacyExecuteDelegation.NonceChannel.NotFound'
+      | 'Action.LegacyExecuteDelegation.Delegator.AccessKey.NonceChannels.NotFound'
+    >,
+    | 'Action.LegacyExecuteDelegation.Expired'
+    | 'Action.LegacyExecuteDelegation.NonceChannel.NotFound'
+    | 'Action.LegacyExecuteDelegation.Delegator.AccessKey.NonceChannels.NotFound'
+  >
+>;
+type _ReadStepLegacyFailure = Assert<
+  Equal<
+    Extract<ReadStepFailureKind, 'Action.LegacyExecuteDelegation.Expired'>,
+    'Action.LegacyExecuteDelegation.Expired'
+  >
+>;
+// A NEP-366 delegation cannot name a nonce channel
+type _ReadNonceChannelFailure = Assert<
+  Equal<NonceChannelKind<ReadFailureKind>, 'Action.LegacyExecuteDelegation.NonceChannel.NotFound'>
+>;
+type _SentLegacyFailures = Assert<Equal<LegacyDelegationKind<SentErrorKind>, never>>;
+type _SentStepLegacyFailures = Assert<Equal<LegacyDelegationKind<SentStepFailureKind>, never>>;
+type _SentNonceChannelFailure = Assert<Equal<NonceChannelKind<SentErrorKind>, never>>;
