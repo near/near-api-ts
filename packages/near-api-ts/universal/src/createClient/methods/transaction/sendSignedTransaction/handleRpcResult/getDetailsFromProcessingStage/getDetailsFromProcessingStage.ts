@@ -57,8 +57,8 @@ export type TransactionDetailsError<PE extends ProtocolEra> =
   | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal', PE>
   | ExecutionFailureErrorAtStage<'CompletedFinal', PE>;
 
-// `PE` is the protocol eras the deserializers take data of: `'Live'` from the caller,
-// `'Live' | 'Legacy'` in the builders - see `getDetailsFromProcessingStage`
+// `PE` is the protocol eras the details may hold, and `protocolEras` names them at runtime: without
+// `'Legacy'` the builders throw on what the current protocol refuses
 type TransactionDetailsHandlerContext<PE extends ProtocolEra> = {
   rpcResult:
     | RpcIncludedTransactionDetails
@@ -68,6 +68,7 @@ type TransactionDetailsHandlerContext<PE extends ProtocolEra> = {
     | RpcFinalTransactionDetails;
   transactionHash: TransactionHash;
   signedTransactionBorsh64: Base64String;
+  protocolEras: PE[];
   deserializeResultData?: BaseDeserializeTransactionResultDataFn;
   deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<PE>;
   deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<PE>;
@@ -102,12 +103,9 @@ const reachableStagesByStage: Record<TransactionProcessingStage, TransactionProc
  *
  * The return type is the widest reachable union (everything reachable from `ConvertedOptimistic`).
  */
-const buildDetails = (
-  context: TransactionDetailsHandlerContext<'Live' | 'Legacy'>,
-): Result<
-  TransactionDetailsFromStage<'Live' | 'Legacy'>['ConvertedOptimistic'],
-  TransactionDetailsError<'Live' | 'Legacy'>
-> => {
+const buildDetails = <PE extends ProtocolEra>(
+  context: TransactionDetailsHandlerContext<PE>,
+): Result<TransactionDetailsFromStage<PE>['ConvertedOptimistic'], TransactionDetailsError<PE>> => {
   const { rpcResult, transactionHash } = context;
 
   switch (rpcResult.finalExecutionStatus) {
@@ -145,12 +143,10 @@ export const getDetailsFromProcessingStage = <S extends TransactionProcessingSta
       `Unexpected stage "${actualProcessingStage}" for minimal stage "${minimalProcessingStage}"`,
     );
 
-  // The builders the methods share read any transaction, so they take and produce details of every
-  // era, while a transaction sent now holds only what the current protocol produces - `'Live'`.
-  // `'Legacy'` adds nothing yet, so the two hold the same data - hence this cast.
-  const details = buildDetails(context as TransactionDetailsHandlerContext<'Live' | 'Legacy'>);
-
   // The guard above guarantees the produced detail is a member of `TransactionDetailsFromStage[S]`,
   // but TS can't derive that from an `Array.includes` check — hence this single, contained cast.
-  return details as Result<TransactionDetailsFromStage<'Live'>[S], TransactionDetailsError<'Live'>>;
+  return buildDetails(context) as Result<
+    TransactionDetailsFromStage<'Live'>[S],
+    TransactionDetailsError<'Live'>
+  >;
 };

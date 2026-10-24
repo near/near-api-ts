@@ -32,6 +32,7 @@ describe('getRawActionSummary › DelegateV2', () => {
       delegateV2({ GasKeyNonce: { nonce: 7, nonceIndex: 1 } }, [
         { WithdrawFromGasKey: { publicKey, amount: '1000' } },
       ]),
+      ['Live', 'Legacy'],
     );
 
     expect(summary).toStrictEqual({
@@ -60,6 +61,7 @@ describe('getRawActionSummary › DelegateV2', () => {
   it('reports a delegation signed on the single nonce channel of a key', () => {
     const summary = getRawActionSummary(
       delegateV2({ Nonce: { nonce: 7 } }, [{ Transfer: { deposit: '1' } }]),
+      ['Live', 'Legacy'],
     );
 
     expect(summary).toMatchObject({

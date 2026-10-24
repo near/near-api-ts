@@ -15,6 +15,7 @@ import type {
   DelegableActionSummary,
   ExecuteDelegationReplayProtectionSummary,
 } from '../../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
+import type { ProtocolEra } from '../../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import { constants } from '../../../../../../../../_common/_common/_common/constants';
 import { gas } from '../../../../../../../../_common/nearGas';
 import { yoctoNear } from '../../../../../../../../_common/nearToken';
@@ -39,6 +40,7 @@ const toAccessKeyPermissionView = (permission: AccessKeyPermission): AccessKeyPe
 // TODO try to reuse some action convertors from getRawActionSummary
 const convertNonDelegateActionToSummary = (
   nonDelegateAction: NonDelegateAction,
+  protocolEras: readonly ProtocolEra[],
 ): DelegableActionSummary<Base64String> => {
   // Not the same as in getRawActionSummary
   if ('CreateAccount' in nonDelegateAction)
@@ -157,6 +159,9 @@ const convertNonDelegateActionToSummary = (
   }
 
   if ('WithdrawFromGasKey' in nonDelegateAction) {
+    if (!protocolEras.includes('Legacy'))
+      throw new Error('Protocol 87 refuses a withdrawal from a key balance inside a delegation');
+
     const { WithdrawFromGasKey } = nonDelegateAction;
     return {
       actionType: 'WithdrawAccessKeyBalance' as const,
@@ -188,6 +193,7 @@ export const getRawExecuteDelegationActionSummary = (
     | { tag: typeof constants.Delegation.Nep366Tag; delegateAction: DelegateAction }
     | { tag: typeof constants.Delegation.Nep611Tag; delegateAction: DelegateActionV2 },
   signature: Signature,
+  protocolEras: readonly ProtocolEra[],
 ) => {
   const { delegateAction } = delegation;
 
@@ -203,7 +209,9 @@ export const getRawExecuteDelegationActionSummary = (
             ? { scheme: 'NonceChannel' as const, nonce: delegation.delegateAction.nonce }
             : toReplayProtectionSummary(delegation.delegateAction.nonce),
       },
-      delegatedActionSummaries: delegateAction.actions.map(convertNonDelegateActionToSummary),
+      delegatedActionSummaries: delegateAction.actions.map((nonDelegateAction) =>
+        convertNonDelegateActionToSummary(nonDelegateAction, protocolEras),
+      ),
       receiverAccountId: delegateAction.receiverId,
       expiration: { blockHeight: delegateAction.maxBlockHeight },
     },

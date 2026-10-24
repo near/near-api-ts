@@ -1,6 +1,7 @@
 import type { InvalidTxError } from '@near-js/jsonrpc-types';
 import type { Result } from '../../../../../types/_common/common';
 import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { ProtocolEra } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type { ConversionFailure } from '../../../../../types/client/methods/transaction/_common/transactionDetails/conversionFailure';
 import { type NatError } from '../../../../_common/_common/_common/_common/natError';
 import { result } from '../../../../_common/_common/_common/result';
@@ -11,11 +12,12 @@ import { getConversionFailureError } from './_common/getConversionFailureError';
 import type { RpcTransactionOutcomeFailure } from './_common/zodSchemas/rpcTransactionOutcome';
 import type { RpcTransactionSummary } from './zodSchemas/rpcTransactionDetails/rpcTransactionSummary';
 
-type GetConversionFailureArgs = {
+type GetConversionFailureArgs<PE extends ProtocolEra> = {
   transaction: RpcTransactionSummary;
   transactionOutcomeFailure: RpcTransactionOutcomeFailure;
   invalidTxError: InvalidTxError;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
+  protocolEras: PE[];
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<PE>;
 };
 
 type GetConversionFailureError =
@@ -23,11 +25,20 @@ type GetConversionFailureError =
   | NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
   | NatError<'Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'>;
 
-const getBaseConversionFailure = (args: GetConversionFailureArgs) => {
-  const { transaction, transactionOutcomeFailure, invalidTxError, deserializeActionSummaries } =
-    args;
+const getBaseConversionFailure = <PE extends ProtocolEra>(args: GetConversionFailureArgs<PE>) => {
+  const {
+    transaction,
+    transactionOutcomeFailure,
+    invalidTxError,
+    protocolEras,
+    deserializeActionSummaries,
+  } = args;
 
-  const transactionSummary = getTransactionSummary(transaction, deserializeActionSummaries);
+  const transactionSummary = getTransactionSummary(
+    transaction,
+    protocolEras,
+    deserializeActionSummaries,
+  );
   if (!transactionSummary.success) return transactionSummary;
 
   const error = getConversionFailureError(invalidTxError);
@@ -53,12 +64,9 @@ const getBaseConversionFailure = (args: GetConversionFailureArgs) => {
   });
 };
 
-export const getConversionFailureExecutedOptimistic = (
-  args: GetConversionFailureArgs,
-): Result<
-  ConversionFailure<'Live' | 'Legacy'>['ExecutedOptimistic'],
-  GetConversionFailureError
-> => {
+export const getConversionFailureExecutedOptimistic = <PE extends ProtocolEra>(
+  args: GetConversionFailureArgs<PE>,
+): Result<ConversionFailure<PE>['ExecutedOptimistic'], GetConversionFailureError> => {
   const baseConversionFailure = getBaseConversionFailure(args);
   if (!baseConversionFailure.success) return baseConversionFailure;
 
@@ -68,9 +76,9 @@ export const getConversionFailureExecutedOptimistic = (
   });
 };
 
-export const getConversionFailureCompletedFinal = (
-  args: GetConversionFailureArgs,
-): Result<ConversionFailure<'Live' | 'Legacy'>['CompletedFinal'], GetConversionFailureError> => {
+export const getConversionFailureCompletedFinal = <PE extends ProtocolEra>(
+  args: GetConversionFailureArgs<PE>,
+): Result<ConversionFailure<PE>['CompletedFinal'], GetConversionFailureError> => {
   const baseConversionFailure = getBaseConversionFailure(args);
   if (!baseConversionFailure.success) return baseConversionFailure;
 

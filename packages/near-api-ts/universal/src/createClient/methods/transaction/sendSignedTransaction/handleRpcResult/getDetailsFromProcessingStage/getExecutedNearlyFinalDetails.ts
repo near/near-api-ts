@@ -4,6 +4,7 @@ import type {
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { ProtocolEra } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type { ExecutionFailureErrorAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/error';
 import type { TransactionDetailsAtStage } from '../../../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import { type NatError } from '../../../../../../_common/_common/_common/_common/natError';
@@ -14,19 +15,20 @@ import { getExecutionSuccessExecutedNearlyFinal } from '../../../_common/getExec
 import type { RpcExecutedTransactionDetails } from '../../../_common/zodSchemas/rpcTransactionDetails/rpcTransactionDetails';
 import type { InnerClientTransactionDetailsError } from './getDetailsFromProcessingStage';
 
-export const getExecutedNearlyFinalDetails = (args: {
+export const getExecutedNearlyFinalDetails = <PE extends ProtocolEra>(args: {
   rpcDetails: RpcExecutedTransactionDetails;
   signedTransactionBorsh64: Base64String;
+  protocolEras: PE[];
   deserializeResultData?: BaseDeserializeTransactionResultDataFn;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live' | 'Legacy'>;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<PE>;
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<PE>;
 }): Result<
-  TransactionDetailsAtStage<'Live' | 'Legacy'>['ExecutedNearlyFinal'],
-  | InnerClientTransactionDetailsError
-  | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal', 'Live' | 'Legacy'>
+  TransactionDetailsAtStage<PE>['ExecutedNearlyFinal'],
+  InnerClientTransactionDetailsError | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal', PE>
 > => {
   const {
     rpcDetails,
+    protocolEras,
     deserializeResultData,
     deserializeActionSummaries,
     deserializeExecutionSteps,
@@ -42,6 +44,7 @@ export const getExecutedNearlyFinalDetails = (args: {
       receipts,
       receiptsOutcome,
       statusSuccessValue: status.SuccessValue,
+      protocolEras,
       deserializeResultData,
       deserializeActionSummaries,
       deserializeExecutionSteps,
@@ -60,6 +63,7 @@ export const getExecutedNearlyFinalDetails = (args: {
       receipts,
       receiptsOutcome,
       actionError: status.Failure.ActionError,
+      protocolEras,
       deserializeActionSummaries,
       deserializeExecutionSteps,
     });

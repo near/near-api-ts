@@ -4,6 +4,7 @@ import type {
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { ProtocolEra } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type { ExecutionSuccess } from '../../../../../types/client/methods/transaction/_common/transactionDetails/executionSuccess';
 import { type NatError } from '../../../../_common/_common/_common/_common/natError';
 import { result, resultNatError } from '../../../../_common/_common/_common/result';
@@ -16,15 +17,16 @@ import type { RpcActionReceipt } from './zodSchemas/rpcTransactionDetails/rpcAct
 import type { RpcReceiptOutcome } from './zodSchemas/rpcTransactionDetails/rpcReceiptOutcome';
 import type { RpcTransactionSummary } from './zodSchemas/rpcTransactionDetails/rpcTransactionSummary';
 
-type GetExecutionSuccessArgs = {
+type GetExecutionSuccessArgs<PE extends ProtocolEra> = {
   transaction: RpcTransactionSummary;
   transactionOutcomeSuccess: RpcTransactionOutcomeSuccess;
   receipts: RpcActionReceipt[];
   receiptsOutcome: RpcReceiptOutcome[];
   statusSuccessValue: Base64String;
   deserializeResultData?: BaseDeserializeTransactionResultDataFn;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live' | 'Legacy'>;
+  protocolEras: PE[];
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<PE>;
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<PE>;
 };
 
 type GetExecutionSuccessError =
@@ -51,7 +53,7 @@ export const getResultData = (
   return result.ok(tryBase64ToObject(rawData));
 };
 
-const getBaseExecutionSuccess = (args: GetExecutionSuccessArgs) => {
+const getBaseExecutionSuccess = <PE extends ProtocolEra>(args: GetExecutionSuccessArgs<PE>) => {
   const { transaction, statusSuccessValue, deserializeResultData, deserializeExecutionSteps } =
     args;
 
@@ -68,6 +70,7 @@ const getBaseExecutionSuccess = (args: GetExecutionSuccessArgs) => {
   const nonConversionSteps = getNonConversionSteps({
     receiptsWithOutcomes,
     conversionStepSuccess: conversionStepSuccess.data,
+    protocolEras: args.protocolEras,
     deserializeExecutionSteps,
   });
   if (!nonConversionSteps.success) return nonConversionSteps;
@@ -87,9 +90,9 @@ const getBaseExecutionSuccess = (args: GetExecutionSuccessArgs) => {
   });
 };
 
-export const getExecutionSuccessExecutedOptimistic = (
-  args: GetExecutionSuccessArgs,
-): Result<ExecutionSuccess<'Live' | 'Legacy'>['ExecutedOptimistic'], GetExecutionSuccessError> => {
+export const getExecutionSuccessExecutedOptimistic = <PE extends ProtocolEra>(
+  args: GetExecutionSuccessArgs<PE>,
+): Result<ExecutionSuccess<PE>['ExecutedOptimistic'], GetExecutionSuccessError> => {
   const baseExecutionSuccess = getBaseExecutionSuccess(args);
   if (!baseExecutionSuccess.success) return baseExecutionSuccess;
 
@@ -107,9 +110,9 @@ export const getExecutionSuccessExecutedOptimistic = (
   });
 };
 
-export const getExecutionSuccessExecutedNearlyFinal = (
-  args: GetExecutionSuccessArgs,
-): Result<ExecutionSuccess<'Live' | 'Legacy'>['ExecutedNearlyFinal'], GetExecutionSuccessError> => {
+export const getExecutionSuccessExecutedNearlyFinal = <PE extends ProtocolEra>(
+  args: GetExecutionSuccessArgs<PE>,
+): Result<ExecutionSuccess<PE>['ExecutedNearlyFinal'], GetExecutionSuccessError> => {
   const baseExecutionSuccess = getBaseExecutionSuccess(args);
   if (!baseExecutionSuccess.success) return baseExecutionSuccess;
 
@@ -127,9 +130,9 @@ export const getExecutionSuccessExecutedNearlyFinal = (
   });
 };
 
-export const getExecutionSuccessCompletedFinal = (
-  args: GetExecutionSuccessArgs,
-): Result<ExecutionSuccess<'Live' | 'Legacy'>['CompletedFinal'], GetExecutionSuccessError> => {
+export const getExecutionSuccessCompletedFinal = <PE extends ProtocolEra>(
+  args: GetExecutionSuccessArgs<PE>,
+): Result<ExecutionSuccess<PE>['CompletedFinal'], GetExecutionSuccessError> => {
   const baseExecutionSuccess = getBaseExecutionSuccess(args);
   if (!baseExecutionSuccess.success) return baseExecutionSuccess;
 

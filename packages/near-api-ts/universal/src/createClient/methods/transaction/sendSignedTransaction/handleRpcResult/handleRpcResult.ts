@@ -84,6 +84,9 @@ export const handleRpcResult = (
       rpcResult: rpcResult.data,
       signedTransactionBorsh64,
       transactionHash,
+      // A transaction sent now holds only what the current protocol produces - the builders throw
+      // on anything else, which reaches the caller as `Client.SendSignedTransaction.Internal`
+      protocolEras: ['Live'],
       deserializeResultData,
       deserializeActionSummaries,
       deserializeExecutionSteps,

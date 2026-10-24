@@ -5,6 +5,7 @@ import type {
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { ProtocolEra } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type { GetTransactionResultOutput } from '../../../../../types/client/methods/transaction/getTransactionResult';
 import {
   createNatError,
@@ -65,6 +66,9 @@ export const handleRpcResult = (
 
   const { transaction, transactionOutcome, status, receiptsOutcome, receipts } = rpcResult.data;
 
+  // A transaction read back from the chain may hold what older protocol versions recorded
+  const protocolEras: ProtocolEra[] = ['Live', 'Legacy'];
+
   // #2: When the transaction execution is successful;
   if ('SuccessValue' in status && isRpcTransactionOutcomeSuccess(transactionOutcome))
     return getExecutionSuccessCompletedFinal({
@@ -73,6 +77,7 @@ export const handleRpcResult = (
       receipts,
       receiptsOutcome,
       statusSuccessValue: status.SuccessValue,
+      protocolEras,
       deserializeResultData,
       deserializeActionSummaries,
       deserializeExecutionSteps,
@@ -91,6 +96,7 @@ export const handleRpcResult = (
       receipts,
       receiptsOutcome,
       actionError: status.Failure.ActionError,
+      protocolEras,
       deserializeActionSummaries,
       deserializeExecutionSteps,
     });
@@ -107,6 +113,7 @@ export const handleRpcResult = (
       transaction,
       transactionOutcomeFailure: transactionOutcome,
       invalidTxError: status.Failure.InvalidTxError,
+      protocolEras,
       deserializeActionSummaries,
     });
 

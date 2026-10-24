@@ -4,6 +4,7 @@ import type {
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { ProtocolEra } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type {
   ConversionFailureNatError,
   ExecutionFailureErrorAtStage,
@@ -21,20 +22,22 @@ import { getExecutionSuccessExecutedOptimistic } from '../../../_common/getExecu
 import type { RpcExecutedOptimisticTransactionDetails } from '../../../_common/zodSchemas/rpcTransactionDetails/rpcTransactionDetails';
 import type { InnerClientTransactionDetailsError } from './getDetailsFromProcessingStage';
 
-export const getExecutedOptimisticDetails = (args: {
+export const getExecutedOptimisticDetails = <PE extends ProtocolEra>(args: {
   rpcDetails: RpcExecutedOptimisticTransactionDetails;
   signedTransactionBorsh64: Base64String;
+  protocolEras: PE[];
   deserializeResultData?: BaseDeserializeTransactionResultDataFn;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live' | 'Legacy'>;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<PE>;
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<PE>;
 }): Result<
-  TransactionDetailsAtStage<'Live' | 'Legacy'>['ExecutedOptimistic'],
+  TransactionDetailsAtStage<PE>['ExecutedOptimistic'],
   | InnerClientTransactionDetailsError
   | ConversionFailureNatError
-  | ExecutionFailureErrorAtStage<'ExecutedOptimistic', 'Live' | 'Legacy'>
+  | ExecutionFailureErrorAtStage<'ExecutedOptimistic', PE>
 > => {
   const {
     rpcDetails,
+    protocolEras,
     deserializeResultData,
     deserializeActionSummaries,
     deserializeExecutionSteps,
@@ -50,6 +53,7 @@ export const getExecutedOptimisticDetails = (args: {
       receipts,
       receiptsOutcome,
       statusSuccessValue: status.SuccessValue,
+      protocolEras,
       deserializeResultData,
       deserializeActionSummaries,
       deserializeExecutionSteps,
@@ -68,6 +72,7 @@ export const getExecutedOptimisticDetails = (args: {
       receipts,
       receiptsOutcome,
       actionError: status.Failure.ActionError,
+      protocolEras,
       deserializeActionSummaries,
       deserializeExecutionSteps,
     });

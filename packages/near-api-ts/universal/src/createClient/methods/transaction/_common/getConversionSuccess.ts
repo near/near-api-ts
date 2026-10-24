@@ -1,5 +1,6 @@
 import type { Result, ResultOk, TransactionHash } from '../../../../../types/_common/common';
 import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { ProtocolEra } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type { ConversionSuccess } from '../../../../../types/client/methods/transaction/_common/transactionDetails/conversionSuccess';
 import { type NatError } from '../../../../_common/_common/_common/_common/natError';
 import { result } from '../../../../_common/_common/_common/result';
@@ -16,12 +17,13 @@ export const getConversionSuccessConvertedOptimistic = (
     status: 'ConversionSuccess',
   });
 
-export const getConversionSuccessConvertedFinal = (args: {
+export const getConversionSuccessConvertedFinal = <PE extends ProtocolEra>(args: {
   transaction: RpcTransactionSummary;
   transactionOutcomeSuccess: RpcTransactionOutcomeSuccess;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
+  protocolEras: PE[];
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<PE>;
 }): Result<
-  ConversionSuccess<'Live' | 'Legacy'>['ConvertedFinal'],
+  ConversionSuccess<PE>['ConvertedFinal'],
   NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
 > => {
   const conversionStepSuccess = getConversionStepSuccess(args);

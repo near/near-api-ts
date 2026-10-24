@@ -1,4 +1,6 @@
 import type { Base64String } from '../../../../../../../../types/_common/common';
+import type { ExecutionFailureErrorOfEra } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/executionFailureError';
+import type { ProtocolEra } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type {
   ExecutionStepResult,
   RawExecutionStep,
@@ -11,10 +13,10 @@ import { getRawActionSummary } from '../../_common/_common/getRawActionSummary/g
 import { getExecutionFailureError } from '../../_common/getExecutionFailureError/getExecutionFailureError';
 import type { ReceiptCreationMap } from '../createReceiptCreationMap';
 
-const getRawExecutionStepResult = (
+const getRawExecutionStepResult = <PE extends ProtocolEra>(
   status: RpcReceiptOutcome['outcome']['status'],
   receiptActions: RpcActionReceiptTrimmed['receipt']['Action']['actions'],
-): ExecutionStepResult<'Live' | 'Legacy', Base64String> => {
+): ExecutionStepResult<PE, Base64String> => {
   if (typeof status === 'object' && 'SuccessValue' in status) {
     return {
       status: 'Success',
@@ -35,7 +37,11 @@ const getRawExecutionStepResult = (
   if (typeof status === 'object' && 'Failure' in status) {
     return {
       status: 'Failure',
-      error: getExecutionFailureError(status.Failure.ActionError, receiptActions),
+      // `'Legacy'` adds no execution failure yet, so every one is of any era
+      error: getExecutionFailureError(
+        status.Failure.ActionError,
+        receiptActions,
+      ) as ExecutionFailureErrorOfEra<PE>,
     };
   }
 
@@ -43,11 +49,12 @@ const getRawExecutionStepResult = (
   throw new Error(`Unexpected receipt execution outcome status: ${JSON.stringify(status)}`);
 };
 
-export const getRawExecutionStep = (
+export const getRawExecutionStep = <PE extends ProtocolEra>(
   receipt: RpcActionReceiptTrimmed,
   receiptOutcome: RpcReceiptOutcome,
   receiptCreationMap: ReceiptCreationMap,
-): RawExecutionStep<'Live' | 'Legacy'> => {
+  protocolEras: PE[],
+): RawExecutionStep<PE> => {
   const { Action } = receipt.receipt;
 
   // During execution, an execution step may create new execution steps
@@ -67,12 +74,14 @@ export const getRawExecutionStep = (
 
   return {
     executionStepId: receipt.receiptId,
-    result: getRawExecutionStepResult(receiptOutcome.outcome.status, Action.actions),
+    result: getRawExecutionStepResult<PE>(receiptOutcome.outcome.status, Action.actions),
     createdAt: receiptCreationMap[receipt.receiptId].createdAt,
     createdBy: { accountId: receipt.predecessorId },
     executedAt: { blockHash: receiptOutcome.blockHash.cryptoHash },
     executedBy: { accountId: receiptOutcome.outcome.executorId },
-    actionSummaries: Action.actions.map(getRawActionSummary),
+    actionSummaries: Action.actions.map((rpcAction) =>
+      getRawActionSummary(rpcAction, protocolEras),
+    ),
     producedSteps,
     requiredData,
     futureDataReceivers,

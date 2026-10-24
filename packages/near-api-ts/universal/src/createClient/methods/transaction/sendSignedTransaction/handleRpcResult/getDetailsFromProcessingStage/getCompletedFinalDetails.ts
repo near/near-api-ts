@@ -4,6 +4,7 @@ import type {
   BaseDeserializeTransactionExecutionStepsFn,
   BaseDeserializeTransactionResultDataFn,
 } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { ProtocolEra } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type {
   ConversionFailureNatError,
   ExecutionFailureErrorAtStage,
@@ -20,20 +21,22 @@ import { getExecutionSuccessCompletedFinal } from '../../../_common/getExecution
 import type { RpcFinalTransactionDetails } from '../../../_common/zodSchemas/rpcTransactionDetails/rpcTransactionDetails';
 import type { InnerClientTransactionDetailsError } from './getDetailsFromProcessingStage';
 
-export const getCompletedFinalDetails = (args: {
+export const getCompletedFinalDetails = <PE extends ProtocolEra>(args: {
   rpcDetails: RpcFinalTransactionDetails;
   signedTransactionBorsh64: Base64String;
+  protocolEras: PE[];
   deserializeResultData?: BaseDeserializeTransactionResultDataFn;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live' | 'Legacy'>;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<PE>;
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<PE>;
 }): Result<
-  TransactionDetailsAtStage<'Live' | 'Legacy'>['CompletedFinal'],
+  TransactionDetailsAtStage<PE>['CompletedFinal'],
   | InnerClientTransactionDetailsError
   | ConversionFailureNatError
-  | ExecutionFailureErrorAtStage<'CompletedFinal', 'Live' | 'Legacy'>
+  | ExecutionFailureErrorAtStage<'CompletedFinal', PE>
 > => {
   const {
     rpcDetails,
+    protocolEras,
     deserializeResultData,
     deserializeActionSummaries,
     deserializeExecutionSteps,
@@ -49,6 +52,7 @@ export const getCompletedFinalDetails = (args: {
       receipts,
       receiptsOutcome,
       statusSuccessValue: status.SuccessValue,
+      protocolEras,
       deserializeResultData,
       deserializeActionSummaries,
       deserializeExecutionSteps,
@@ -67,6 +71,7 @@ export const getCompletedFinalDetails = (args: {
       receipts,
       receiptsOutcome,
       actionError: status.Failure.ActionError,
+      protocolEras,
       deserializeActionSummaries,
       deserializeExecutionSteps,
     });

@@ -4,6 +4,8 @@ import type {
   BaseDeserializeTransactionActionSummariesFn,
   BaseDeserializeTransactionExecutionStepsFn,
 } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { ExecutionFailureErrorOfEra } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/executionFailureError';
+import type { ProtocolEra } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type { ConversionStepSuccess } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/conversionStep';
 import type { ExecutionFailure } from '../../../../../types/client/methods/transaction/_common/transactionDetails/executionFailure';
 import { type NatError } from '../../../../_common/_common/_common/_common/natError';
@@ -20,14 +22,15 @@ import type { RpcActionReceipt } from './zodSchemas/rpcTransactionDetails/rpcAct
 import type { RpcReceiptOutcome } from './zodSchemas/rpcTransactionDetails/rpcReceiptOutcome';
 import type { RpcTransactionSummary } from './zodSchemas/rpcTransactionDetails/rpcTransactionSummary';
 
-type GetExecutionFailureArgs = {
+type GetExecutionFailureArgs<PE extends ProtocolEra> = {
   transaction: RpcTransactionSummary;
   transactionOutcomeSuccess: RpcTransactionOutcomeSuccess;
   receipts: RpcActionReceipt[];
   receiptsOutcome: RpcReceiptOutcome[];
   actionError: ActionError;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live' | 'Legacy'>;
+  protocolEras: PE[];
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<PE>;
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<PE>;
 };
 
 type GetExecutionFailureError =
@@ -59,7 +62,7 @@ const getFailedReceiptActions = (
   return failedReceiptWithOutcome ? failedReceiptWithOutcome.receipt.receipt.Action.actions : [];
 };
 
-const getBaseExecutionFailure = (args: GetExecutionFailureArgs) => {
+const getBaseExecutionFailure = <PE extends ProtocolEra>(args: GetExecutionFailureArgs<PE>) => {
   const { transaction, actionError, deserializeExecutionSteps } = args;
 
   const conversionStepSuccess = getConversionStepSuccess(args);
@@ -75,6 +78,7 @@ const getBaseExecutionFailure = (args: GetExecutionFailureArgs) => {
   const nonConversionSteps = getNonConversionSteps({
     receiptsWithOutcomes,
     conversionStepSuccess: conversionStepSuccess.data,
+    protocolEras: args.protocolEras,
     deserializeExecutionSteps,
   });
   if (!nonConversionSteps.success) return nonConversionSteps;
@@ -82,10 +86,11 @@ const getBaseExecutionFailure = (args: GetExecutionFailureArgs) => {
   return result.ok({
     transactionHash: transaction.hash.cryptoHash,
     status: 'ExecutionFailure' as const,
+    // `'Legacy'` adds no execution failure yet, so every one is of any era
     error: getExecutionFailureError(
       actionError,
       getFailedReceiptActions(conversionStepSuccess.data, receiptsWithOutcomes),
-    ),
+    ) as ExecutionFailureErrorOfEra<PE>,
     processingSteps: {
       conversionStep: conversionStepSuccess.data,
       executionSteps: nonConversionSteps.data.executionSteps,
@@ -94,9 +99,9 @@ const getBaseExecutionFailure = (args: GetExecutionFailureArgs) => {
   });
 };
 
-export const getExecutionFailureExecutedOptimistic = (
-  args: GetExecutionFailureArgs,
-): Result<ExecutionFailure<'Live' | 'Legacy'>['ExecutedOptimistic'], GetExecutionFailureError> => {
+export const getExecutionFailureExecutedOptimistic = <PE extends ProtocolEra>(
+  args: GetExecutionFailureArgs<PE>,
+): Result<ExecutionFailure<PE>['ExecutedOptimistic'], GetExecutionFailureError> => {
   const baseExecutionFailure = getBaseExecutionFailure(args);
   if (!baseExecutionFailure.success) return baseExecutionFailure;
 
@@ -114,9 +119,9 @@ export const getExecutionFailureExecutedOptimistic = (
   });
 };
 
-export const getExecutionFailureExecutedNearlyFinal = (
-  args: GetExecutionFailureArgs,
-): Result<ExecutionFailure<'Live' | 'Legacy'>['ExecutedNearlyFinal'], GetExecutionFailureError> => {
+export const getExecutionFailureExecutedNearlyFinal = <PE extends ProtocolEra>(
+  args: GetExecutionFailureArgs<PE>,
+): Result<ExecutionFailure<PE>['ExecutedNearlyFinal'], GetExecutionFailureError> => {
   const baseExecutionFailure = getBaseExecutionFailure(args);
   if (!baseExecutionFailure.success) return baseExecutionFailure;
 
@@ -134,9 +139,9 @@ export const getExecutionFailureExecutedNearlyFinal = (
   });
 };
 
-export const getExecutionFailureCompletedFinal = (
-  args: GetExecutionFailureArgs,
-): Result<ExecutionFailure<'Live' | 'Legacy'>['CompletedFinal'], GetExecutionFailureError> => {
+export const getExecutionFailureCompletedFinal = <PE extends ProtocolEra>(
+  args: GetExecutionFailureArgs<PE>,
+): Result<ExecutionFailure<PE>['CompletedFinal'], GetExecutionFailureError> => {
   const baseExecutionFailure = getBaseExecutionFailure(args);
   if (!baseExecutionFailure.success) return baseExecutionFailure;
 

@@ -1,5 +1,6 @@
 import type { Result } from '../../../../../../types/_common/common';
 import type { BaseDeserializeTransactionActionSummariesFn } from '../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { ProtocolEra } from '../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type { ConversionStepSuccess } from '../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/conversionStep';
 import { type NatError } from '../../../../../_common/_common/_common/_common/natError';
 import { result } from '../../../../../_common/_common/_common/result';
@@ -9,21 +10,26 @@ import type { RpcTransactionSummary } from '../zodSchemas/rpcTransactionDetails/
 import { getTransactionSummary } from './_common/getTransactionSummary';
 import type { RpcTransactionOutcomeSuccess } from './zodSchemas/rpcTransactionOutcome';
 
-type GetConversionStepSuccessArgs = {
+type GetConversionStepSuccessArgs<PE extends ProtocolEra> = {
   transaction: RpcTransactionSummary;
   transactionOutcomeSuccess: RpcTransactionOutcomeSuccess;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
+  protocolEras: PE[];
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<PE>;
 };
 
-export const getConversionStepSuccess = (
-  args: GetConversionStepSuccessArgs,
+export const getConversionStepSuccess = <PE extends ProtocolEra>(
+  args: GetConversionStepSuccessArgs<PE>,
 ): Result<
-  ConversionStepSuccess<'Live' | 'Legacy'>,
+  ConversionStepSuccess<PE>,
   NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
 > => {
-  const { transaction, transactionOutcomeSuccess, deserializeActionSummaries } = args;
+  const { transaction, transactionOutcomeSuccess, protocolEras, deserializeActionSummaries } = args;
 
-  const transactionSummary = getTransactionSummary(transaction, deserializeActionSummaries);
+  const transactionSummary = getTransactionSummary(
+    transaction,
+    protocolEras,
+    deserializeActionSummaries,
+  );
   if (!transactionSummary.success) return transactionSummary;
 
   return result.ok({

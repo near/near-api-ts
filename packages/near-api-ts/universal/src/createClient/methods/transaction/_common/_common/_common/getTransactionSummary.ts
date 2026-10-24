@@ -5,6 +5,7 @@ import type {
   BaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionActionSummariesFn,
 } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { ProtocolEra } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type {
   TransactionActionSummaries,
   TransactionSummary,
@@ -16,24 +17,25 @@ import { getParsedActionSummary } from './_common/getParsedActionSummary';
 import { getRawActionSummary } from './_common/getRawActionSummary/getRawActionSummary';
 
 const getTransactionActionSummaries = <
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>,
+  PE extends ProtocolEra,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<PE>,
 >(
   rpcActions: ActionView[],
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>,
+  protocolEras: PE[],
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<PE>,
 ): Result<
-  TransactionActionSummaries<'Live' | 'Legacy', ASF>,
+  TransactionActionSummaries<PE, ASF>,
   NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
 > => {
-  const rawActionSummaries = rpcActions.map(getRawActionSummary);
+  const rawActionSummaries = rpcActions.map((rpcAction) =>
+    getRawActionSummary(rpcAction, protocolEras),
+  );
 
   // If a user wants to use his own custom deserializer:
   if (deserializeActionSummaries) {
     try {
       return result.ok(
-        deserializeActionSummaries({ rawActionSummaries }) as TransactionActionSummaries<
-          'Live' | 'Legacy',
-          ASF
-        >,
+        deserializeActionSummaries({ rawActionSummaries }) as TransactionActionSummaries<PE, ASF>,
       );
     } catch (cause) {
       return resultNatError('Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed', {
@@ -45,10 +47,7 @@ const getTransactionActionSummaries = <
   // If no custom deserializer is provided, use the default one and return default ActionSummaries
   // with unknown callContractFunction.functionArgs type
   return result.ok(
-    rawActionSummaries.map(getParsedActionSummary) as TransactionActionSummaries<
-      'Live' | 'Legacy',
-      ASF
-    >,
+    rawActionSummaries.map(getParsedActionSummary) as TransactionActionSummaries<PE, ASF>,
   );
 };
 
@@ -65,15 +64,17 @@ const getReplayProtection = ({
     : { scheme: 'NonceChannel', nonce, nonceProgression };
 };
 
-export const getTransactionSummary = (
+export const getTransactionSummary = <PE extends ProtocolEra>(
   transaction: RpcTransactionSummary,
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>,
+  protocolEras: PE[],
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<PE>,
 ): Result<
-  TransactionSummary<'Live' | 'Legacy'>,
+  TransactionSummary<PE>,
   NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
 > => {
   const actionSummaries = getTransactionActionSummaries(
     transaction.actions,
+    protocolEras,
     deserializeActionSummaries,
   );
   if (!actionSummaries.success) return actionSummaries;

@@ -2,6 +2,7 @@ import type { ActionView } from '@near-js/jsonrpc-types';
 import { base58 } from '@scure/base';
 import type { PublicKey, Signature } from '../../../../../../../../../types/_common/crypto';
 import type { RawTransactionActionSummary } from '../../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
+import type { ProtocolEra } from '../../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import { constants } from '../../../../../../../../_common/_common/_common/constants';
 import { gas } from '../../../../../../../../_common/nearGas';
 import { yoctoNear } from '../../../../../../../../_common/nearToken';
@@ -10,8 +11,9 @@ import { getRawExecuteDelegationActionSummary } from './getRawExecuteDelegationA
 
 // Assembles the raw action summary from the RPC action - all fields are converted except
 // callContractFunction.functionArgs which stays a raw base64 string;
-export const getRawActionSummary = (
+const toRawActionSummary = (
   rpcAction: ActionView,
+  protocolEras: readonly ProtocolEra[],
 ): RawTransactionActionSummary<'Live' | 'Legacy'> => {
   if (rpcAction === 'CreateAccount') {
     return {
@@ -133,16 +135,29 @@ export const getRawActionSummary = (
         delegateAction: rpcAction.Delegate.delegateAction,
       },
       rpcAction.Delegate.signature as Signature,
+      protocolEras,
     );
 
-  if ('DelegateV2' in rpcAction)
+  if ('DelegateV2' in rpcAction) {
+    if (!protocolEras.includes('Legacy')) throw new Error('Protocol 87 refuses a new DelegateV2');
+
     return getRawExecuteDelegationActionSummary(
       {
         tag: constants.Delegation.Nep611Tag,
         delegateAction: rpcAction.DelegateV2.delegateAction.V2,
       },
       rpcAction.DelegateV2.signature as Signature,
+      protocolEras,
     );
+  }
 
   throw new Error(`Unsupported action: ${JSON.stringify(rpcAction)}`);
 };
+
+// `protocolEras` are the eras the details may hold. Without `'Legacy'` the conversion throws on
+// what the current protocol refuses, so the summary is of `PE` - hence this cast.
+export const getRawActionSummary = <PE extends ProtocolEra>(
+  rpcAction: ActionView,
+  protocolEras: PE[],
+): RawTransactionActionSummary<PE> =>
+  toRawActionSummary(rpcAction, protocolEras) as RawTransactionActionSummary<PE>;
