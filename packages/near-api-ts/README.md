@@ -631,6 +631,24 @@ switch (result.status) {
 It also takes optional deserializers, which type the otherwise `unknown` parts of the
 output: `deserializeResultData`, `deserializeActionSummaries`, `deserializeExecutionSteps`.
 
+### Legacy data
+
+A past transaction can carry what an older protocol version recorded and the current one
+refuses. `getTransactionResult` reports such parts under names with `Legacy`, marked `@legacy`,
+so they stand out in a `switch`:
+
+| What the chain recorded | Protocol | `getTransactionResult` reports |
+| --- | --- | --- |
+| A delegation in the NEP-611 format (nearcore `DelegateV2`) | 85–86 | `actionType: 'LegacyExecuteDelegation'`, with `tag` set to `constants.Delegation.Nep611Tag` and a `replayProtection` that can also be `{ scheme: 'NonceChannels', nonceChannelId, nonce }` for one signed by a gas key |
+| A withdrawal from a key balance inside a delegation | 85–86 | `actionType: 'LegacyWithdrawAccessKeyBalance'` in `delegatedActionSummaries` |
+| A failure of a NEP-611 delegation | 85–86 | `Action.LegacyExecuteDelegation.*` — each `Action.ExecuteDelegation.*` kind, and `.NonceChannel.NotFound` and `.Delegator.AccessKey.NonceChannels.NotFound` of its own |
+
+The details and errors of `sendSignedTransaction` and of a signer hold only what the current
+protocol produces, and their types mention none of it: a transaction sent to a network still
+below protocol 87 that carries any of it fails with `Client.SendSignedTransaction.Internal`.
+The `deserializeActionSummaries` and `deserializeExecutionSteps` of `getTransactionResult` get the
+legacy parts too, so their argument types include them.
+
 ---
 
 ## Meta transactions
@@ -692,9 +710,8 @@ channel of a key paid from the account balance — the protocol refuses one sign
 and it has no `nonceProgression`, since it only needs a nonce above `lastNonce`. `signDelegation`
 signs in the NEP-366 format (`signedDelegation.delegation.tag` is
 `constants.Delegation.Nep366Tag`), the only one `executeDelegation` relays. An older transaction
-may still carry a NEP-611 delegation: `getTransactionResult` reads it as `LegacyExecuteDelegation`,
-with `tag` set to `constants.Delegation.Nep611Tag` and a `replayProtection` that can also be
-`{ scheme: 'NonceChannels', nonceChannelId, nonce }` for one signed by a gas key.
+may still carry a NEP-611 delegation, which `getTransactionResult` reads as
+[legacy data](#legacy-data).
 
 ---
 
