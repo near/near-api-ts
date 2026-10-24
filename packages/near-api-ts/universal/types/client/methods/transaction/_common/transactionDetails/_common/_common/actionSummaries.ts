@@ -120,6 +120,23 @@ type WithdrawAccessKeyBalanceActionSummary = {
   amount: NearToken;
 };
 
+/**
+ * A withdrawal from a key balance inside a delegation.
+ *
+ * @legacy Protocol 85–86 (nearcore 2.13). Protocol 87 refuses a withdrawal inside any delegation,
+ * so only transactions sent before it carry one.
+ */
+type LegacyWithdrawAccessKeyBalanceActionSummary = {
+  /**
+   * @legacy Protocol 85–86 (nearcore 2.13). Protocol 87 refuses a withdrawal inside any
+   * delegation, so only transactions sent before it carry one.
+   */
+  actionType: 'LegacyWithdrawAccessKeyBalance';
+  publicKey: PublicKey;
+  amount: NearToken;
+};
+
+// What a delegation can carry now - mirrors `DelegableAction`
 export type DelegableActionSummary<FA> =
   | CreateSubAccountActionSummary
   | TransferActionSummary
@@ -133,8 +150,18 @@ export type DelegableActionSummary<FA> =
   | PublishLinkableGlobalContractActionSummary
   | LinkGlobalContractActionSummary
   | PinGlobalContractActionSummary
-  | TopUpAccessKeyBalanceActionSummary
-  | WithdrawAccessKeyBalanceActionSummary;
+  | TopUpAccessKeyBalanceActionSummary;
+
+// What each protocol era adds to the actions of a delegation - see `ProtocolEra`
+type DelegatedActionSummaryByEra<FA> = {
+  Live: DelegableActionSummary<FA>;
+  Legacy: LegacyWithdrawAccessKeyBalanceActionSummary;
+};
+
+export type DelegatedActionSummary<
+  PE extends ProtocolEra,
+  FA,
+> = DelegatedActionSummaryByEra<FA>[PE];
 
 /**
  * The replay protection of a relayed delegation, as the chain recorded it. A NEP-366 delegation
@@ -156,7 +183,7 @@ export type ExecuteDelegationReplayProtectionSummary =
 // `tag` tells the delegation format apart: NEP-366 for nearcore `Delegate`, NEP-611 for
 // `DelegateV2`. Nearcore refuses new NEP-611 delegations since protocol 87, so only the
 // transactions sent before it carry one.
-type ExecuteDelegationActionSummary<FA> = {
+type ExecuteDelegationActionSummary<PE extends ProtocolEra, FA> = {
   actionType: 'ExecuteDelegation';
   delegation: {
     tag: number;
@@ -165,23 +192,27 @@ type ExecuteDelegationActionSummary<FA> = {
       publicKey: PublicKey;
       replayProtection: ExecuteDelegationReplayProtectionSummary;
     };
-    delegatedActionSummaries: DelegableActionSummary<FA>[];
+    delegatedActionSummaries: DelegatedActionSummary<PE, FA>[];
     receiverAccountId: AccountId;
     expiration: { blockHeight: BlockHeight };
   };
   signature: Signature;
 };
 
-// What each protocol era adds - see `ProtocolEra`
-type TransactionActionSummaryByEra<FA> = {
-  Live: DelegableActionSummary<FA> | ExecuteDelegationActionSummary<FA>;
+// What each protocol era adds - see `ProtocolEra`. A delegation is live, only what it carries
+// depends on the era.
+type TransactionActionSummaryByEra<PE extends ProtocolEra, FA> = {
+  Live:
+    | DelegableActionSummary<FA>
+    | WithdrawAccessKeyBalanceActionSummary
+    | ExecuteDelegationActionSummary<PE, FA>;
   Legacy: never;
 };
 
-export type TransactionActionSummary<
-  PE extends ProtocolEra,
-  FA,
-> = TransactionActionSummaryByEra<FA>[PE];
+export type TransactionActionSummary<PE extends ProtocolEra, FA> = TransactionActionSummaryByEra<
+  PE,
+  FA
+>[PE];
 
 /**
  * Return by default when there is no user-defined deserializeActionSummaries function;

@@ -12,7 +12,7 @@ import { base58 } from '@scure/base';
 import type { Base64String } from '../../../../../../../../../types/_common/common';
 import type { PublicKey, Signature } from '../../../../../../../../../types/_common/crypto';
 import type {
-  DelegableActionSummary,
+  DelegatedActionSummary,
   ExecuteDelegationReplayProtectionSummary,
 } from '../../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
 import type { ProtocolEra } from '../../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
@@ -41,7 +41,7 @@ const toAccessKeyPermissionView = (permission: AccessKeyPermission): AccessKeyPe
 const convertNonDelegateActionToSummary = (
   nonDelegateAction: NonDelegateAction,
   protocolEras: readonly ProtocolEra[],
-): DelegableActionSummary<Base64String> => {
+): DelegatedActionSummary<'Live' | 'Legacy', Base64String> => {
   // Not the same as in getRawActionSummary
   if ('CreateAccount' in nonDelegateAction)
     return {
@@ -164,7 +164,7 @@ const convertNonDelegateActionToSummary = (
 
     const { WithdrawFromGasKey } = nonDelegateAction;
     return {
-      actionType: 'WithdrawAccessKeyBalance' as const,
+      actionType: 'LegacyWithdrawAccessKeyBalance' as const,
       publicKey: WithdrawFromGasKey.publicKey as PublicKey, // TODO validate key by zod
       amount: yoctoNear(WithdrawFromGasKey.amount),
     };

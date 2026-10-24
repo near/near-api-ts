@@ -64,6 +64,18 @@
     `Action.WithdrawAccessKeyBalance.Balance.NotEnough` with
     `{ accountId, publicKey, keyBalance, withdrawalAmount, excessAmount }`.
 
+- **Legacy data** – `getTransactionResult` reads what older protocol versions
+  recorded on chain and the current one refuses, under `Legacy*` names marked
+  `@legacy`:
+
+  - `actionType: 'LegacyWithdrawAccessKeyBalance'` – a withdrawal from a key
+    balance inside a delegation (protocol 85–86), in `delegatedActionSummaries`.
+
+  The details of `sendSignedTransaction` and of a signer's `executeTransaction`
+  hold only what the current protocol produces, and their types mention none of
+  it. A transaction sent to a network still below protocol 87 that carries any
+  of it fails with `Client.SendSignedTransaction.Internal`.
+
 - **`getAccessKeyNonceChannels`** / `safeGetAccessKeyNonceChannels` – the last
   nonce of every channel of a key with `replayProtection.scheme: 'NonceChannels'`,
   which `getAccessKey` reports only as `channelCount`:

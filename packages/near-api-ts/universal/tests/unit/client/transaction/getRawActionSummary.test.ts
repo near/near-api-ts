@@ -46,7 +46,7 @@ describe('getRawActionSummary › DelegateV2', () => {
         },
         delegatedActionSummaries: [
           {
-            actionType: 'WithdrawAccessKeyBalance',
+            actionType: 'LegacyWithdrawAccessKeyBalance',
             publicKey,
             amount: expect.objectContaining({ yoctoNear: 1000n }),
           },
