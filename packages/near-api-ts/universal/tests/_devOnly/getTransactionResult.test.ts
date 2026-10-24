@@ -29,11 +29,11 @@ it('getTransactionResult', async () => {
     // DelegateV2 (NEP-611) signed by a gas key of lantstool.near, relayed by lants.near before protocol 87:
     // transactionHash: 'aXPdG7bYXmZ8p4JwRMqdacF8sekqHMJJrfBVhUZYwAJ', // adds the gas key
     // transactionHash: '9iukKMPYiwtWNxJxd6XfnaktwCPuiJRHmLGv4ESEYWzH', // Success (ED+Transfer)
-    // transactionHash: 'HdbSynSQmGBDeq4GHZAaZQYSwHH5nX1ivWm1Xxpv2rnH', // DelegateActionInvalidNonceIndex
+    transactionHash: 'HdbSynSQmGBDeq4GHZAaZQYSwHH5nX1ivWm1Xxpv2rnH', // DelegateActionInvalidNonceIndex
     // transactionHash: 'CKyEiCLYiMo1EH7CnjLA8fcTY59FdoPk1tsLSKN3BJ4q', // DelegateActionAccessKeyError -> DelegateActionRequiresNonGasKey
     // transactionHash: 'DQtKJxfAxyp67SCGWCaeHQxv5wbfyawCYWiFP2QZW7kY', // DelegateActionAccessKeyError -> DelegateActionRequiresGasKey
     // transactionHash: '86Ait5akHb7LF1dEdT4WACCSZUtPUvoYDhVBABRmG9ap', // Success (ED+WithdrawAccessKeyBalance): 86Ait5akHb7LF1dEdT4WACCSZUtPUvoYDhVBABRmG9ap
-    transactionHash: 'CXwo4k3jrCefoL25McnS5wVQ8CNKMb8RwogTmgDgCAoA',
+    // transactionHash: 'CXwo4k3jrCefoL25McnS5wVQ8CNKMb8RwogTmgDgCAoA',
     options: { transportPolicy: { rpcTypePreferences: ['Archival', 'Regular'] } },
   });
 

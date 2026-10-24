@@ -98,7 +98,6 @@ export const handleRpcResult = (
   // #4: When the invalid transaction was included in the chunk because
   // chunk provider's bug or intent;
   // It's a theoretical case - normally RPC / chunk provider won't include it in mempool
-  // and will return HandlerError;
   if (
     'Failure' in status &&
     'InvalidTxError' in status.Failure &&

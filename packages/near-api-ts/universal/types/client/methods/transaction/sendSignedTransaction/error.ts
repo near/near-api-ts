@@ -51,7 +51,7 @@ export interface SendSignedTransactionPublicErrorRegistry
   'Client.SendSignedTransaction.Timeout': TimeoutErrorContext;
   'Client.SendSignedTransaction.Aborted': AbortedErrorContext;
   'Client.SendSignedTransaction.Exhausted': ExhaustedErrorContext;
-  'Client.SendSignedTransaction.Rpc.Timeout': null;
+  'Client.SendSignedTransaction.Rpc.Timeout': null; // Remove - should use only lib's own .Timeout
   'Client.SendSignedTransaction.DeserializeResultData.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeResultData.Failed'];
   'Client.SendSignedTransaction.DeserializeActionSummaries.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'];
   'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'];

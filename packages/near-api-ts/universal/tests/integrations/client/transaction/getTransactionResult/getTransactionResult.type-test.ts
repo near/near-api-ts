@@ -1,4 +1,9 @@
 import * as z from 'zod/mini';
+import type {
+  GetTransactionResultDeserializeActionSummariesArgs,
+  GetTransactionResultDeserializeExecutionStepsArgs,
+  GetTransactionResultDeserializeResultDataArgs,
+} from '../../../../../index';
 import { createTestnetClient } from '../../../../../src/createClient/presets/testnet';
 import type {
   ParsedTransactionActionSummary,
@@ -293,6 +298,97 @@ const f5 = client.getTransactionResult({
 });
 type _F5ExecSteps = Assert<Equal<ExecSteps<typeof f5>, ParsedExecutionStep[]>>;
 
+// GROUP G - inline deserializers with unannotated parameters
+// -> each parameter gets its deserializer's input type; the output still follows ReturnType
+
+const g1 = client.getTransactionResult({
+  transactionHash,
+  options: {
+    deserializeResultData: (args) => {
+      type _G1Args = Assert<Equal<typeof args, GetTransactionResultDeserializeResultDataArgs>>;
+      return args.rawData.length;
+    },
+  },
+});
+type _G1Data = Assert<Equal<ExecutionSuccessData<typeof g1>, number>>;
+type _G1Summaries = Assert<Equal<Summaries<typeof g1>, ParsedTransactionActionSummary[]>>;
+type _G1ExecSteps = Assert<Equal<ExecSteps<typeof g1>, ParsedExecutionStep[]>>;
+
+const g2 = client.getTransactionResult({
+  transactionHash,
+  options: {
+    deserializeActionSummaries: (args) => {
+      type _G2Args = Assert<Equal<typeof args, GetTransactionResultDeserializeActionSummariesArgs>>;
+      return args.rawActionSummaries.map(({ actionType }) => actionType);
+    },
+  },
+});
+type _G2Data = Assert<Equal<ExecutionSuccessData<typeof g2>, unknown>>;
+type _G2Summaries = Assert<
+  Equal<Summaries<typeof g2>, RawTransactionActionSummary['actionType'][]>
+>;
+type _G2ExecSteps = Assert<Equal<ExecSteps<typeof g2>, ParsedExecutionStep[]>>;
+
+const g3 = client.getTransactionResult({
+  transactionHash,
+  options: {
+    deserializeExecutionSteps: (args) => {
+      type _G3Args = Assert<Equal<typeof args, GetTransactionResultDeserializeExecutionStepsArgs>>;
+      return { stepsCount: args.rawExecutionSteps.length };
+    },
+  },
+});
+type _G3Data = Assert<Equal<ExecutionSuccessData<typeof g3>, unknown>>;
+type _G3Summaries = Assert<Equal<Summaries<typeof g3>, ParsedTransactionActionSummary[]>>;
+type _G3ExecSteps = Assert<Equal<ExecSteps<typeof g3>, { stepsCount: number }>>;
+type _G3ExecutionFailureExecSteps = Assert<
+  Equal<ExecutionFailureExecSteps<typeof g3>, { stepsCount: number }>
+>;
+
+// All three inline, destructured pass-through deserializers -> the raw input types
+const g4 = client.getTransactionResult({
+  transactionHash,
+  options: {
+    deserializeResultData: ({ rawData }) => rawData,
+    deserializeActionSummaries: ({ rawActionSummaries }) => rawActionSummaries,
+    deserializeExecutionSteps: ({ rawExecutionSteps }) => rawExecutionSteps,
+  },
+});
+type _G4Data = Assert<Equal<ExecutionSuccessData<typeof g4>, string>>;
+type _G4Summaries = Assert<Equal<Summaries<typeof g4>, RawTransactionActionSummary[]>>;
+type _G4ExecSteps = Assert<Equal<ExecSteps<typeof g4>, RawExecutionStep[]>>;
+
+// Inline next to a named deserializer: the named one is inferred before the inline one is typed
+const g5 = client.getTransactionResult({
+  transactionHash,
+  options: {
+    deserializeResultData,
+    deserializeActionSummaries: ({ rawActionSummaries }) => rawActionSummaries.length,
+  },
+});
+type _G5Data = Assert<Equal<ExecutionSuccessData<typeof g5>, { decimals: number }>>;
+type _G5Summaries = Assert<Equal<Summaries<typeof g5>, number>>;
+type _G5ExecSteps = Assert<Equal<ExecSteps<typeof g5>, ParsedExecutionStep[]>>;
+
+// A standalone deserializer annotated with the exported input type
+const countActionSummaries = ({
+  rawActionSummaries,
+}: GetTransactionResultDeserializeActionSummariesArgs) => rawActionSummaries.length;
+const g7 = client.getTransactionResult({
+  transactionHash,
+  options: { deserializeActionSummaries: countActionSummaries },
+});
+type _G7Summaries = Assert<Equal<Summaries<typeof g7>, number>>;
+
+// Same through the safe variant
+const g6 = await client.safeGetTransactionResult({
+  transactionHash,
+  options: { deserializeResultData: ({ rawData }) => rawData.length },
+});
+if (g6.success && g6.data.status === 'ExecutionSuccess') {
+  type _G6Data = Assert<Equal<typeof g6.data.data, number>>;
+}
+
 // Narrowing sanity check - `data` is reachable only after narrowing on `status`, and the
 // error members expose `error` instead of `data`.
 const narrowed = await client.getTransactionResult({
@@ -335,7 +431,7 @@ client.getTransactionResult({
 client.getTransactionResult<undefined, undefined>({
   transactionHash,
   options: {
-    // @ts-expect-error RDF pinned to undefined -> deserializeResultData is poison-pilled (never)
+    // @ts-expect-error RDF pinned to undefined -> deserializeResultData is poison-pilled (undefined only)
     deserializeResultData,
   },
 });
@@ -344,7 +440,7 @@ client.getTransactionResult<CustomDeserializeResultData, undefined>({
   transactionHash,
   options: {
     deserializeResultData,
-    // @ts-expect-error ASF pinned to undefined -> deserializeActionSummaries is poison-pilled (never)
+    // @ts-expect-error ASF pinned to undefined -> deserializeActionSummaries is poison-pilled (undefined only)
     deserializeActionSummaries,
   },
 });
@@ -375,7 +471,7 @@ client.getTransactionResult({
 client.getTransactionResult<undefined, undefined, undefined>({
   transactionHash,
   options: {
-    // @ts-expect-error ESF pinned to undefined -> deserializeExecutionSteps is poison-pilled (never)
+    // @ts-expect-error ESF pinned to undefined -> deserializeExecutionSteps is poison-pilled (undefined only)
     deserializeExecutionSteps,
   },
 });
@@ -389,7 +485,7 @@ client.getTransactionResult<
   options: {
     deserializeResultData,
     deserializeActionSummaries,
-    // @ts-expect-error ESF pinned to undefined -> deserializeExecutionSteps is poison-pilled (never)
+    // @ts-expect-error ESF pinned to undefined -> deserializeExecutionSteps is poison-pilled (undefined only)
     deserializeExecutionSteps,
   },
 });
@@ -398,4 +494,42 @@ client.getTransactionResult({
   transactionHash,
   // @ts-expect-error deserializeExecutionSteps belongs inside `options`, not at the top level
   deserializeExecutionSteps,
+});
+
+client.getTransactionResult({
+  transactionHash,
+  options: {
+    // @ts-expect-error an inline deserializeResultData receives { rawData }, which has no `data`
+    deserializeResultData: ({ data }) => data,
+  },
+});
+
+client.getTransactionResult({
+  transactionHash,
+  options: {
+    // @ts-expect-error an inline deserializeExecutionSteps receives RawExecutionStep[], not strings
+    deserializeExecutionSteps: ({ rawExecutionSteps }) => rawExecutionSteps.map((s) => s.trim()),
+  },
+});
+
+client.getTransactionResult<undefined>({
+  transactionHash,
+  options: {
+    // @ts-expect-error RDF pinned to undefined -> an inline deserializeResultData is poison-pilled too
+    deserializeResultData: ({ rawData }) => rawData,
+  },
+});
+
+client.getTransactionResult<
+  CustomDeserializeResultData,
+  CustomDeserializeActionSummaries,
+  undefined
+>({
+  transactionHash,
+  options: {
+    deserializeResultData,
+    deserializeActionSummaries,
+    // @ts-expect-error ESF pinned to undefined -> an inline deserializeExecutionSteps is poison-pilled too
+    deserializeExecutionSteps: ({ rawExecutionSteps }) => rawExecutionSteps,
+  },
 });

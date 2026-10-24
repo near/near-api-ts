@@ -20,6 +20,24 @@ export type KeyIf<K extends PropertyKey, V> = [V] extends [undefined]
   : { [P in K]: V };
 
 /**
+ * Utility type that includes a key in an object, optional exactly when its value may be `undefined`:
+ *
+ * - If `V` admits `undefined`, the key `K` is optional with value type `V`. So `V = undefined`
+ *   leaves a key that never holds a value (the "poison pill" of `KeyIf`).
+ * - Otherwise, the key `K` is required with value type `V`.
+ *
+ * Examples:
+ * ```ts
+ *  type A = MaybeKeyIf<'foo', string>; // => { foo: string }
+ *  type B = MaybeKeyIf<'bar', undefined>; // => { bar?: undefined }
+ *  type C = MaybeKeyIf<'baz', string | undefined>; // => { baz?: string | undefined }
+ * ```
+ */
+export type MaybeKeyIf<K extends PropertyKey, V> = [undefined] extends [V]
+  ? { [P in K]?: V }
+  : { [P in K]: V };
+
+/**
  * Utility type that "prettifies" an object type for IDE hints.
  *
  * TypeScript often shows type aliases, intersections, and conditional types

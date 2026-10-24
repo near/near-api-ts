@@ -105,6 +105,28 @@
   takes any nonce above `lastNonce`. A delegation has no such field – the
   protocol only checks that its nonce is above `lastNonce`.
 
+- **Transaction deserializers can be typed** – an inline `deserializeResultData`,
+  `deserializeActionSummaries` or `deserializeExecutionSteps` passed to
+  `sendSignedTransaction`, `getTransactionResult` or their `safe*` twins gets
+  its parameter typed by the method, and the result still follows what it
+  returns. Such a call used to fail to compile with
+  `… is not assignable to type 'undefined'`.
+
+  ```ts
+  const result = await client.getTransactionResult({
+    transactionHash,
+    options: {
+      deserializeActionSummaries: ({ rawActionSummaries }) =>
+        rawActionSummaries.map(({ actionType }) => actionType),
+    },
+  });
+  ```
+
+  For a deserializer written apart from the call, each method exports what its
+  deserializers receive:
+  `SendSignedTransactionDeserialize{ResultData,ActionSummaries,ExecutionSteps}Args`
+  and `GetTransactionResultDeserialize{ResultData,ActionSummaries,ExecutionSteps}Args`.
+
 ### Changed
 
 - **Breaking:** `Transaction` (the argument of `signTransaction`) groups who signs

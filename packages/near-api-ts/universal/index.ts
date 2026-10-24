@@ -223,6 +223,16 @@ export type {
   MaybeBaseSerializeArgsFn,
   SafeCallContractReadFunction,
 } from './types/client/methods/contract/callContractReadFunction';
+export type {
+  GetTransactionResultDeserializeActionSummariesArgs,
+  GetTransactionResultDeserializeExecutionStepsArgs,
+  GetTransactionResultDeserializeResultDataArgs,
+} from './types/client/methods/transaction/getTransactionResult';
+export type {
+  SendSignedTransactionDeserializeActionSummariesArgs,
+  SendSignedTransactionDeserializeExecutionStepsArgs,
+  SendSignedTransactionDeserializeResultDataArgs,
+} from './types/client/methods/transaction/sendSignedTransaction/args';
 export type { PartialTransportPolicy } from './types/client/transport/transport';
 export type { MemoryKeyVault } from './types/memoryKeyVault/memoryKeyVault';
 export type { MemorySigner } from './types/signer/memorySigner';
