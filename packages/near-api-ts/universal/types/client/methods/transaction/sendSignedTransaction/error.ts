@@ -7,7 +7,11 @@ import type {
   PreferredRpcNotFoundErrorContext,
   TimeoutErrorContext,
 } from '../../../transport/sendRequest';
-import type { TransactionDetailsInnerErrorRegistry } from '../_common/innerErrorRegistry';
+import type {
+  DeserializeActionSummariesFailedContext,
+  DeserializeExecutionStepsFailedContext,
+  TransactionDetailsInnerErrorRegistry,
+} from '../_common/innerErrorRegistry';
 import type {
   ConversionFailureError,
   ConversionFailureKind,
@@ -17,6 +21,7 @@ import type {
   MaybeBaseDeserializeTransactionExecutionStepsFn,
 } from '../_common/transactionDetails/_common/_common/deserializers';
 import type { ExecutionFailureKind } from '../_common/transactionDetails/_common/_common/executionFailureError';
+import type { ProtocolEra } from '../_common/transactionDetails/_common/_common/protocolEra';
 import type {
   MaybeTransactionProcessingStage,
   ReachableProcessingStageFromStage,
@@ -53,8 +58,8 @@ export interface SendSignedTransactionPublicErrorRegistry
   'Client.SendSignedTransaction.Exhausted': ExhaustedErrorContext;
   'Client.SendSignedTransaction.Rpc.Timeout': null; // Remove - should use only lib's own .Timeout
   'Client.SendSignedTransaction.DeserializeResultData.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeResultData.Failed'];
-  'Client.SendSignedTransaction.DeserializeActionSummaries.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'];
-  'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'];
+  'Client.SendSignedTransaction.DeserializeActionSummaries.Failed': DeserializeActionSummariesFailedContext<'Live'>;
+  'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed': DeserializeExecutionStepsFailedContext<'Live'>;
   'Client.SendSignedTransaction.Internal': InternalErrorContext;
 }
 
@@ -76,41 +81,43 @@ type CommonErrorForAllStages =
   | NatError<'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed'>
   | NatError<'Client.SendSignedTransaction.Internal'>;
 
+// `PE` is `'Live'` everywhere but in the builders the methods share, which read any transaction
 export type ExecutionFailureErrorAtStage<
   S extends ReachableProcessingStageFromStage['ExecutedOptimistic'],
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
+  PE extends ProtocolEra,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<PE> = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn<PE> = undefined,
   EK extends ExecutionFailureKind = ExecutionFailureKind,
 > = EK extends EK // turn on distributive conditional type
   ? NatError<
       `Client.SendSignedTransaction.Rpc.${EK}`,
       {
-        transactionDetails: ExecutionFailure<ASF, ESF>[S];
+        transactionDetails: ExecutionFailure<PE, ASF, ESF>[S];
         signedTransactionBorsh64: Base64String;
       }
     >
   : never;
 
 type SendSignedTransactionErrorAtStage<
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<'Live'>,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn<'Live'>,
 > = {
   ConvertedOptimistic: CommonErrorForAllStages;
   ConvertedFinal: CommonErrorForAllStages;
   ExecutedOptimistic:
     | CommonErrorForAllStages
-    | ExecutionFailureErrorAtStage<'ExecutedOptimistic', ASF, ESF>;
+    | ExecutionFailureErrorAtStage<'ExecutedOptimistic', 'Live', ASF, ESF>;
   ExecutedNearlyFinal:
     | CommonErrorForAllStages
-    | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal', ASF, ESF>;
+    | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal', 'Live', ASF, ESF>;
   CompletedFinal:
     | CommonErrorForAllStages
-    | ExecutionFailureErrorAtStage<'CompletedFinal', ASF, ESF>;
+    | ExecutionFailureErrorAtStage<'CompletedFinal', 'Live', ASF, ESF>;
 };
 
 type SendSignedTransactionErrorFromStage<
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<'Live'> = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn<'Live'> = undefined,
 > = {
   [S in TransactionProcessingStage]: SendSignedTransactionErrorAtStage<
     ASF,
@@ -120,8 +127,8 @@ type SendSignedTransactionErrorFromStage<
 
 export type SendSignedTransactionError<
   TPS extends MaybeTransactionProcessingStage = undefined,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<'Live'> = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn<'Live'> = undefined,
 > = [TPS] extends [undefined]
   ? SendSignedTransactionErrorFromStage<ASF, ESF>['ExecutedOptimistic']
   : SendSignedTransactionErrorFromStage<ASF, ESF>[Exclude<TPS, undefined>];

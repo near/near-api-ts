@@ -5,15 +5,16 @@ import type { RawTransactionActionSummary } from '../_common/transactionDetails/
 import type { RawExecutionStep } from '../_common/transactionDetails/_common/executionStep';
 import type { MaybeTransactionProcessingStage } from '../_common/transactionDetails/_common/processingStage';
 
-// What each deserializer in `options` receives
+// What each deserializer in `options` receives. A transaction sent now holds only what the current
+// protocol produces, so these are `'Live'` - see `ProtocolEra`
 export type SendSignedTransactionDeserializeResultDataArgs = { rawData: Base64String };
 
 export type SendSignedTransactionDeserializeActionSummariesArgs = {
-  rawActionSummaries: RawTransactionActionSummary[];
+  rawActionSummaries: RawTransactionActionSummary<'Live'>[];
 };
 
 export type SendSignedTransactionDeserializeExecutionStepsArgs = {
-  rawExecutionSteps: RawExecutionStep[];
+  rawExecutionSteps: RawExecutionStep<'Live'>[];
 };
 
 export type MaybeDeserializeResultDataFn =

@@ -14,7 +14,7 @@ import type { ReceiptCreationMap } from '../createReceiptCreationMap';
 const getRawExecutionStepResult = (
   status: RpcReceiptOutcome['outcome']['status'],
   receiptActions: RpcActionReceiptTrimmed['receipt']['Action']['actions'],
-): ExecutionStepResult<Base64String> => {
+): ExecutionStepResult<'Live' | 'Legacy', Base64String> => {
   if (typeof status === 'object' && 'SuccessValue' in status) {
     return {
       status: 'Success',
@@ -47,7 +47,7 @@ export const getRawExecutionStep = (
   receipt: RpcActionReceiptTrimmed,
   receiptOutcome: RpcReceiptOutcome,
   receiptCreationMap: ReceiptCreationMap,
-): RawExecutionStep => {
+): RawExecutionStep<'Live' | 'Legacy'> => {
   const { Action } = receipt.receipt;
 
   // During execution, an execution step may create new execution steps

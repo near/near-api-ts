@@ -34,7 +34,7 @@ type ConversionFailureContext<CF extends ConversionFailureKind> = {
 // holds the failure itself. The signer always sends with the default processing stage and
 // without deserializers, so unlike the client registry this can name the details' shape.
 type ExecutionFailureContext = {
-  transactionDetails: ExecutionFailure['ExecutedOptimistic'];
+  transactionDetails: ExecutionFailure<'Live'>['ExecutedOptimistic'];
   signedTransactionBorsh64: Base64String;
 };
 

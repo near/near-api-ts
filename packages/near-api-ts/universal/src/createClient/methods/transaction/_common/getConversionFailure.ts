@@ -15,7 +15,7 @@ type GetConversionFailureArgs = {
   transaction: RpcTransactionSummary;
   transactionOutcomeFailure: RpcTransactionOutcomeFailure;
   invalidTxError: InvalidTxError;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
 };
 
 type GetConversionFailureError =
@@ -55,7 +55,10 @@ const getBaseConversionFailure = (args: GetConversionFailureArgs) => {
 
 export const getConversionFailureExecutedOptimistic = (
   args: GetConversionFailureArgs,
-): Result<ConversionFailure['ExecutedOptimistic'], GetConversionFailureError> => {
+): Result<
+  ConversionFailure<'Live' | 'Legacy'>['ExecutedOptimistic'],
+  GetConversionFailureError
+> => {
   const baseConversionFailure = getBaseConversionFailure(args);
   if (!baseConversionFailure.success) return baseConversionFailure;
 
@@ -67,7 +70,7 @@ export const getConversionFailureExecutedOptimistic = (
 
 export const getConversionFailureCompletedFinal = (
   args: GetConversionFailureArgs,
-): Result<ConversionFailure['CompletedFinal'], GetConversionFailureError> => {
+): Result<ConversionFailure<'Live' | 'Legacy'>['CompletedFinal'], GetConversionFailureError> => {
   const baseConversionFailure = getBaseConversionFailure(args);
   if (!baseConversionFailure.success) return baseConversionFailure;
 

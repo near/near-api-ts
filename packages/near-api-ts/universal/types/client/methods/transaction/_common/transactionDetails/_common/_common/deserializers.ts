@@ -1,6 +1,7 @@
 import type { Base64String } from '../../../../../../../_common/common';
 import type { RawExecutionStep } from '../executionStep';
 import type { RawTransactionActionSummary } from './actionSummaries';
+import type { ProtocolEra } from './protocolEra';
 
 // DeserializeTransactionResultData
 export type DeserializeTransactionResultDataArgs = { rawData: Base64String };
@@ -14,25 +15,27 @@ export type MaybeBaseDeserializeTransactionResultDataFn =
   | undefined;
 
 // DeserializeTransactionActionSummaries
-export type DeserializeTransactionActionSummariesArgs = {
-  rawActionSummaries: RawTransactionActionSummary[];
+export type DeserializeTransactionActionSummariesArgs<PE extends ProtocolEra> = {
+  rawActionSummaries: RawTransactionActionSummary<PE>[];
 };
 
-export type BaseDeserializeTransactionActionSummariesFn = (
-  args: DeserializeTransactionActionSummariesArgs,
+export type BaseDeserializeTransactionActionSummariesFn<PE extends ProtocolEra> = (
+  args: DeserializeTransactionActionSummariesArgs<PE>,
 ) => unknown;
 
-export type MaybeBaseDeserializeTransactionActionSummariesFn =
-  | BaseDeserializeTransactionActionSummariesFn
+export type MaybeBaseDeserializeTransactionActionSummariesFn<PE extends ProtocolEra> =
+  | BaseDeserializeTransactionActionSummariesFn<PE>
   | undefined;
 
 // DeserializeTransactionExecutionSteps
-export type DeserializeTransactionExecutionStepsArgs = { rawExecutionSteps: RawExecutionStep[] };
+export type DeserializeTransactionExecutionStepsArgs<PE extends ProtocolEra> = {
+  rawExecutionSteps: RawExecutionStep<PE>[];
+};
 
-export type BaseDeserializeTransactionExecutionStepsFn = (
-  args: DeserializeTransactionExecutionStepsArgs,
+export type BaseDeserializeTransactionExecutionStepsFn<PE extends ProtocolEra> = (
+  args: DeserializeTransactionExecutionStepsArgs<PE>,
 ) => unknown;
 
-export type MaybeBaseDeserializeTransactionExecutionStepsFn =
-  | BaseDeserializeTransactionExecutionStepsFn
+export type MaybeBaseDeserializeTransactionExecutionStepsFn<PE extends ProtocolEra> =
+  | BaseDeserializeTransactionExecutionStepsFn<PE>
   | undefined;

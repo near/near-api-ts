@@ -16,12 +16,12 @@ import { getParsedActionSummary } from './_common/getParsedActionSummary';
 import { getRawActionSummary } from './_common/getRawActionSummary/getRawActionSummary';
 
 const getTransactionActionSummaries = <
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>,
 >(
   rpcActions: ActionView[],
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn,
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>,
 ): Result<
-  TransactionActionSummaries<ASF>,
+  TransactionActionSummaries<'Live' | 'Legacy', ASF>,
   NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
 > => {
   const rawActionSummaries = rpcActions.map(getRawActionSummary);
@@ -30,7 +30,10 @@ const getTransactionActionSummaries = <
   if (deserializeActionSummaries) {
     try {
       return result.ok(
-        deserializeActionSummaries({ rawActionSummaries }) as TransactionActionSummaries<ASF>,
+        deserializeActionSummaries({ rawActionSummaries }) as TransactionActionSummaries<
+          'Live' | 'Legacy',
+          ASF
+        >,
       );
     } catch (cause) {
       return resultNatError('Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed', {
@@ -42,7 +45,10 @@ const getTransactionActionSummaries = <
   // If no custom deserializer is provided, use the default one and return default ActionSummaries
   // with unknown callContractFunction.functionArgs type
   return result.ok(
-    rawActionSummaries.map(getParsedActionSummary) as TransactionActionSummaries<ASF>,
+    rawActionSummaries.map(getParsedActionSummary) as TransactionActionSummaries<
+      'Live' | 'Legacy',
+      ASF
+    >,
   );
 };
 
@@ -61,9 +67,9 @@ const getReplayProtection = ({
 
 export const getTransactionSummary = (
   transaction: RpcTransactionSummary,
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn,
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>,
 ): Result<
-  TransactionSummary,
+  TransactionSummary<'Live' | 'Legacy'>,
   NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
 > => {
   const actionSummaries = getTransactionActionSummaries(

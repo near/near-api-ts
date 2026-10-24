@@ -7,7 +7,7 @@ type GetReceiptsWithOutcomesArgs = {
   transaction: RpcTransactionSummary;
   receipts: RpcActionReceipt[];
   receiptsOutcome: RpcReceiptOutcome[];
-  conversionStepSuccess: ConversionStepSuccess;
+  conversionStepSuccess: ConversionStepSuccess<'Live' | 'Legacy'>;
 };
 
 export const getReceiptsWithOutcomes = (args: GetReceiptsWithOutcomesArgs) => {

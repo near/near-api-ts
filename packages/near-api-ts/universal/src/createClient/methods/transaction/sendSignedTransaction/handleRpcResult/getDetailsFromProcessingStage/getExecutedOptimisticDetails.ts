@@ -25,13 +25,13 @@ export const getExecutedOptimisticDetails = (args: {
   rpcDetails: RpcExecutedOptimisticTransactionDetails;
   signedTransactionBorsh64: Base64String;
   deserializeResultData?: BaseDeserializeTransactionResultDataFn;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn;
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live' | 'Legacy'>;
 }): Result<
-  TransactionDetailsAtStage['ExecutedOptimistic'],
+  TransactionDetailsAtStage<'Live' | 'Legacy'>['ExecutedOptimistic'],
   | InnerClientTransactionDetailsError
   | ConversionFailureNatError
-  | ExecutionFailureErrorAtStage<'ExecutedOptimistic'>
+  | ExecutionFailureErrorAtStage<'ExecutedOptimistic', 'Live' | 'Legacy'>
 > => {
   const {
     rpcDetails,

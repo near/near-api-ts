@@ -9,7 +9,7 @@ import { getRawExecutionStep } from './getRawExecutionStep';
 export const getExecutionSteps = (
   receiptsWithOutcomes: ReceiptsWithOutcomes,
   receiptCreationMap: ReceiptCreationMap,
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn,
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live' | 'Legacy'>,
 ) => {
   const rawExecutionSteps = receiptsWithOutcomes
     .filter(({ receipt }) => receipt.predecessorId !== 'system')
@@ -20,7 +20,9 @@ export const getExecutionSteps = (
   // If a user wants to use his own custom deserializer:
   if (deserializeExecutionSteps) {
     try {
-      return result.ok(deserializeExecutionSteps({ rawExecutionSteps }) as ExecutionSteps);
+      return result.ok(
+        deserializeExecutionSteps({ rawExecutionSteps }) as ExecutionSteps<'Live' | 'Legacy'>,
+      );
     } catch (cause) {
       return resultNatError('Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed', {
         cause,
@@ -30,5 +32,7 @@ export const getExecutionSteps = (
   }
   // If no custom deserializer is provided, use the default one and return default ExecutionSteps
   // with unknown result.data type and unknown callContractFunction.functionArgs type;
-  return result.ok(rawExecutionSteps.map(getParsedExecutionStep) as ExecutionSteps);
+  return result.ok(
+    rawExecutionSteps.map(getParsedExecutionStep) as ExecutionSteps<'Live' | 'Legacy'>,
+  );
 };

@@ -8,9 +8,9 @@ import type { RpcIncludedFinalTransactionDetails } from '../../../_common/zodSch
 export const getConvertedFinalDetails = (args: {
   rpcDetails: RpcIncludedFinalTransactionDetails;
   transactionHash: TransactionHash;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
 }): Result<
-  ConversionSuccess['ConvertedFinal'],
+  ConversionSuccess<'Live' | 'Legacy'>['ConvertedFinal'],
   NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
 > =>
   getConversionSuccessConvertedFinal({

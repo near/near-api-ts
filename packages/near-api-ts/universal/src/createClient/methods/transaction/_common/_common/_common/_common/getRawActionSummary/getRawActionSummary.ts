@@ -10,7 +10,9 @@ import { getRawExecuteDelegationActionSummary } from './getRawExecuteDelegationA
 
 // Assembles the raw action summary from the RPC action - all fields are converted except
 // callContractFunction.functionArgs which stays a raw base64 string;
-export const getRawActionSummary = (rpcAction: ActionView): RawTransactionActionSummary => {
+export const getRawActionSummary = (
+  rpcAction: ActionView,
+): RawTransactionActionSummary<'Live' | 'Legacy'> => {
   if (rpcAction === 'CreateAccount') {
     return {
       actionType: 'CreateSubAccount',

@@ -157,9 +157,9 @@ type _Inline1Stage = Assert<
 >;
 type _Inline1Data = Assert<Equal<DataOf<typeof inline1>, number>>;
 type _Inline1Summaries = Assert<
-  Equal<SummariesOf<typeof inline1>, ParsedTransactionActionSummary[]>
+  Equal<SummariesOf<typeof inline1>, ParsedTransactionActionSummary<'Live'>[]>
 >;
-type _Inline1ExecSteps = Assert<Equal<ExecStepsOf<typeof inline1>, ParsedExecutionStep[]>>;
+type _Inline1ExecSteps = Assert<Equal<ExecStepsOf<typeof inline1>, ParsedExecutionStep<'Live'>[]>>;
 
 const inline2 = client.safeSendSignedTransaction({
   signedTransaction,
@@ -174,10 +174,10 @@ const inline2 = client.safeSendSignedTransaction({
 });
 type _Inline2Data = Assert<Equal<DataOf<typeof inline2>, unknown>>;
 type _Inline2Summaries = Assert<
-  Equal<SummariesOf<typeof inline2>, RawTransactionActionSummary['actionType'][]>
+  Equal<SummariesOf<typeof inline2>, RawTransactionActionSummary<'Live'>['actionType'][]>
 >;
 type _Inline2FailureSummaries = Assert<
-  Equal<FailureSummariesOf<typeof inline2>, RawTransactionActionSummary['actionType'][]>
+  Equal<FailureSummariesOf<typeof inline2>, RawTransactionActionSummary<'Live'>['actionType'][]>
 >;
 
 const inline3 = client.safeSendSignedTransaction({
@@ -206,8 +206,10 @@ const inline4 = client.safeSendSignedTransaction({
 });
 type _Inline4Stage = Assert<Equal<ProcessingStageOf<typeof inline4>, 'CompletedFinal'>>;
 type _Inline4Data = Assert<Equal<DataOf<typeof inline4>, string>>;
-type _Inline4Summaries = Assert<Equal<SummariesOf<typeof inline4>, RawTransactionActionSummary[]>>;
-type _Inline4ExecSteps = Assert<Equal<ExecStepsOf<typeof inline4>, RawExecutionStep[]>>;
+type _Inline4Summaries = Assert<
+  Equal<SummariesOf<typeof inline4>, RawTransactionActionSummary<'Live'>[]>
+>;
+type _Inline4ExecSteps = Assert<Equal<ExecStepsOf<typeof inline4>, RawExecutionStep<'Live'>[]>>;
 
 // Inline next to a named deserializer, through the throwing variant
 const deserializeResultSize = (args: SendSignedTransactionDeserializeResultDataArgs) => ({

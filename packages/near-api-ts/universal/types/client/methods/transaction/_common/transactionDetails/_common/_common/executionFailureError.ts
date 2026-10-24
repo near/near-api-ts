@@ -7,6 +7,7 @@ import type {
 } from '../../../../../../../_common/common';
 import type { PublicKey } from '../../../../../../../_common/crypto';
 import type { NearToken } from '../../../../../../../_common/nearToken';
+import type { ProtocolEra } from './protocolEra';
 
 interface GeneralExecutionErrorRegistry {
   'Executor.NotFound': { executorAccountId: AccountId };
@@ -149,3 +150,11 @@ export type ExecutionFailureKind = keyof ExecutionFailureRegistry;
 
 export type ExecutionFailureError<K extends ExecutionFailureKind = ExecutionFailureKind> =
   K extends K ? { kind: K; context: ExecutionFailureRegistry[K] } : never;
+
+// Like `TransactionActionSummaryByEra`
+type ExecutionFailureErrorByEra = {
+  Live: ExecutionFailureError;
+  Legacy: never;
+};
+
+export type ExecutionFailureErrorOfEra<PE extends ProtocolEra> = ExecutionFailureErrorByEra[PE];

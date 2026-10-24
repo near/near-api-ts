@@ -26,8 +26,8 @@ type GetExecutionFailureArgs = {
   receipts: RpcActionReceipt[];
   receiptsOutcome: RpcReceiptOutcome[];
   actionError: ActionError;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn;
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live' | 'Legacy'>;
 };
 
 type GetExecutionFailureError =
@@ -39,7 +39,7 @@ type GetExecutionFailureError =
 // from the transaction outcome (`get_execution_status`, chain/chain/src/chain.rs). The same walk
 // finds the actions of that receipt, which the error's action index points into.
 const getFailedReceiptActions = (
-  conversionStepSuccess: ConversionStepSuccess,
+  conversionStepSuccess: ConversionStepSuccess<'Live' | 'Legacy'>,
   receiptsWithOutcomes: ReceiptsWithOutcomes,
 ): ActionView[] => {
   // Outcomes come in the order nearcore collects them - a receipt before the ones it created - so
@@ -96,7 +96,7 @@ const getBaseExecutionFailure = (args: GetExecutionFailureArgs) => {
 
 export const getExecutionFailureExecutedOptimistic = (
   args: GetExecutionFailureArgs,
-): Result<ExecutionFailure['ExecutedOptimistic'], GetExecutionFailureError> => {
+): Result<ExecutionFailure<'Live' | 'Legacy'>['ExecutedOptimistic'], GetExecutionFailureError> => {
   const baseExecutionFailure = getBaseExecutionFailure(args);
   if (!baseExecutionFailure.success) return baseExecutionFailure;
 
@@ -116,7 +116,7 @@ export const getExecutionFailureExecutedOptimistic = (
 
 export const getExecutionFailureExecutedNearlyFinal = (
   args: GetExecutionFailureArgs,
-): Result<ExecutionFailure['ExecutedNearlyFinal'], GetExecutionFailureError> => {
+): Result<ExecutionFailure<'Live' | 'Legacy'>['ExecutedNearlyFinal'], GetExecutionFailureError> => {
   const baseExecutionFailure = getBaseExecutionFailure(args);
   if (!baseExecutionFailure.success) return baseExecutionFailure;
 
@@ -136,7 +136,7 @@ export const getExecutionFailureExecutedNearlyFinal = (
 
 export const getExecutionFailureCompletedFinal = (
   args: GetExecutionFailureArgs,
-): Result<ExecutionFailure['CompletedFinal'], GetExecutionFailureError> => {
+): Result<ExecutionFailure<'Live' | 'Legacy'>['CompletedFinal'], GetExecutionFailureError> => {
   const baseExecutionFailure = getBaseExecutionFailure(args);
   if (!baseExecutionFailure.success) return baseExecutionFailure;
 

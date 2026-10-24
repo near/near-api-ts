@@ -34,8 +34,8 @@ export const handleRpcResult = (
   rpcResponse: BaseRpcResponse,
   transactionHash: TransactionHash,
   deserializeResultData?: BaseDeserializeTransactionResultDataFn,
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn,
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn,
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>,
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live' | 'Legacy'>,
 ): Result<
   GetTransactionResultOutput,
   | NatError<'Client.GetTransactionResult.Exhausted'>

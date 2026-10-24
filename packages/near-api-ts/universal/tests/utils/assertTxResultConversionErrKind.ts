@@ -15,7 +15,7 @@ import type { GetTransactionResultOutput } from '../../types/client/methods/tran
 export function assertTxResultConversionErrKind<K extends ConversionFailureKind>(
   txResult: GetTransactionResultOutput,
   kind: K,
-): asserts txResult is ConversionFailure['CompletedFinal'] & {
+): asserts txResult is ConversionFailure<'Live' | 'Legacy'>['CompletedFinal'] & {
   error: ConversionFailureError<K>;
 } {
   expect(txResult.status).toBe('ConversionFailure');

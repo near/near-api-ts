@@ -8,15 +8,15 @@ import { tryBase64ToObject } from '../../../../../_common/base64ToObject';
 import { getParsedActionSummary } from '../../_common/_common/getParsedActionSummary';
 
 const getParsedResult = (
-  rawResult: ExecutionStepResult<Base64String>,
-): ExecutionStepResult<unknown> =>
+  rawResult: ExecutionStepResult<'Live' | 'Legacy', Base64String>,
+): ExecutionStepResult<'Live' | 'Legacy', unknown> =>
   rawResult.status === 'Success'
     ? { status: 'Success', data: tryBase64ToObject(rawResult.data) }
     : rawResult;
 
 export const getParsedExecutionStep = (
-  rawExecutionStep: RawExecutionStep,
-): ParsedExecutionStep => ({
+  rawExecutionStep: RawExecutionStep<'Live' | 'Legacy'>,
+): ParsedExecutionStep<'Live' | 'Legacy'> => ({
   executionStepId: rawExecutionStep.executionStepId,
   result: getParsedResult(rawExecutionStep.result),
   createdAt: rawExecutionStep.createdAt,

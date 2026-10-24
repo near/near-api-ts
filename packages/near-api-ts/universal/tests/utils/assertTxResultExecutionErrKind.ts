@@ -14,7 +14,7 @@ import type { GetTransactionResultOutput } from '../../types/client/methods/tran
 export function assertTxResultExecutionErrKind<K extends ExecutionFailureKind>(
   txResult: GetTransactionResultOutput,
   kind: K,
-): asserts txResult is ExecutionFailure['CompletedFinal'] & {
+): asserts txResult is ExecutionFailure<'Live' | 'Legacy'>['CompletedFinal'] & {
   error: ExecutionFailureError<K>;
 } {
   expect(txResult.status).toBe('ExecutionFailure');

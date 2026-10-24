@@ -13,6 +13,7 @@ import type {
 import type { PublicKey, Signature } from '../../../../../../../_common/crypto';
 import type { NearGas } from '../../../../../../../_common/nearGas';
 import type { NearToken } from '../../../../../../../_common/nearToken';
+import type { ProtocolEra } from './protocolEra';
 
 type CreateSubAccountActionSummary = {
   actionType: 'CreateSubAccount';
@@ -171,18 +172,31 @@ type ExecuteDelegationActionSummary<FA> = {
   signature: Signature;
 };
 
-export type TransactionActionSummary<FA> =
-  | DelegableActionSummary<FA>
-  | ExecuteDelegationActionSummary<FA>;
+// What each protocol era adds - see `ProtocolEra`
+type TransactionActionSummaryByEra<FA> = {
+  Live: DelegableActionSummary<FA> | ExecuteDelegationActionSummary<FA>;
+  Legacy: never;
+};
+
+export type TransactionActionSummary<
+  PE extends ProtocolEra,
+  FA,
+> = TransactionActionSummaryByEra<FA>[PE];
 
 /**
  * Return by default when there is no user-defined deserializeActionSummaries function;
  * CallContractFunctionActionSummary.functionArgs is unknown JSON or Base64String;
  */
-export type ParsedTransactionActionSummary = TransactionActionSummary<unknown>;
+export type ParsedTransactionActionSummary<PE extends ProtocolEra> = TransactionActionSummary<
+  PE,
+  unknown
+>;
 
 /**
  * We pass this type of ActionSummaries as an argument into the deserializeActionSummaries function;
  * CallContractFunctionActionSummary.functionArgs is always Base64String;
  */
-export type RawTransactionActionSummary = TransactionActionSummary<Base64String>;
+export type RawTransactionActionSummary<PE extends ProtocolEra> = TransactionActionSummary<
+  PE,
+  Base64String
+>;

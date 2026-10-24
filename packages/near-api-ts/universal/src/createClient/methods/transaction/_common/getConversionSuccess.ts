@@ -9,7 +9,7 @@ import type { RpcTransactionSummary } from './zodSchemas/rpcTransactionDetails/r
 
 export const getConversionSuccessConvertedOptimistic = (
   transactionHash: TransactionHash,
-): ResultOk<ConversionSuccess['ConvertedOptimistic']> =>
+): ResultOk<ConversionSuccess<'Live' | 'Legacy'>['ConvertedOptimistic']> =>
   result.ok({
     transactionHash,
     processingStage: 'ConvertedOptimistic' as const,
@@ -19,9 +19,9 @@ export const getConversionSuccessConvertedOptimistic = (
 export const getConversionSuccessConvertedFinal = (args: {
   transaction: RpcTransactionSummary;
   transactionOutcomeSuccess: RpcTransactionOutcomeSuccess;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
 }): Result<
-  ConversionSuccess['ConvertedFinal'],
+  ConversionSuccess<'Live' | 'Legacy'>['ConvertedFinal'],
   NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
 > => {
   const conversionStepSuccess = getConversionStepSuccess(args);

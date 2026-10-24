@@ -22,7 +22,7 @@ export type ReceiptCreationMap = Record<
  * we use this assumption to determine the step kind;
  */
 export const createReceiptCreationMap = (
-  conversionStepSuccess: ConversionStepSuccess,
+  conversionStepSuccess: ConversionStepSuccess<'Live' | 'Legacy'>,
   receiptsWithOutcomes: ReceiptsWithOutcomes,
 ): ReceiptCreationMap => {
   // May contains not all refund receipts

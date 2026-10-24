@@ -12,13 +12,13 @@ import type { RpcTransactionOutcomeSuccess } from './zodSchemas/rpcTransactionOu
 type GetConversionStepSuccessArgs = {
   transaction: RpcTransactionSummary;
   transactionOutcomeSuccess: RpcTransactionOutcomeSuccess;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
 };
 
 export const getConversionStepSuccess = (
   args: GetConversionStepSuccessArgs,
 ): Result<
-  ConversionStepSuccess,
+  ConversionStepSuccess<'Live' | 'Legacy'>,
   NatError<'Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'>
 > => {
   const { transaction, transactionOutcomeSuccess, deserializeActionSummaries } = args;

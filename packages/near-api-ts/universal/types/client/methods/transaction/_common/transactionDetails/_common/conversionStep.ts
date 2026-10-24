@@ -9,15 +9,20 @@ import type {
   BaseDeserializeTransactionActionSummariesFn,
   MaybeBaseDeserializeTransactionActionSummariesFn,
 } from './_common/deserializers';
+import type { ProtocolEra } from './_common/protocolEra';
 
+// Checks against a deserializer of `'Live'` data rather than of `PE`, which must stay out of
+// `extends` clauses - see `ProtocolEra`. A deserializer of any era takes `'Live'` data too.
 export type TransactionActionSummaries<
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-> = [ASF] extends [BaseDeserializeTransactionActionSummariesFn]
+  PE extends ProtocolEra,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<PE> = undefined,
+> = [ASF] extends [BaseDeserializeTransactionActionSummariesFn<'Live'>]
   ? ReturnType<ASF>
-  : ParsedTransactionActionSummary[];
+  : ParsedTransactionActionSummary<PE>[];
 
 export type TransactionSummary<
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  PE extends ProtocolEra,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<PE> = undefined,
 > = {
   signer: {
     accountId: AccountId;
@@ -25,32 +30,34 @@ export type TransactionSummary<
     replayProtection: SignedTransactionReplayProtection;
   };
   receiverAccountId: AccountId;
-  actionSummaries: TransactionActionSummaries<ASF>;
+  actionSummaries: TransactionActionSummaries<PE, ASF>;
   signature: Signature;
 };
 
 export type ConversionStepSuccess<
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  PE extends ProtocolEra,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<PE> = undefined,
 > = {
   result: {
     status: 'Success';
     firstExecutionStepId: ReceiptId;
   };
   executedAt: { blockHash: BlockHash };
-  transactionSummary: TransactionSummary<ASF>;
+  transactionSummary: TransactionSummary<PE, ASF>;
   gasFee: NearToken;
   gasUsed: NearGas;
 };
 
 export type ConversionStepFailure<
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
+  PE extends ProtocolEra,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<PE> = undefined,
 > = {
   result: {
     status: 'Failure';
     error: ConversionFailureError;
   };
   executedAt: { blockHash: BlockHash };
-  transactionSummary: TransactionSummary<ASF>;
+  transactionSummary: TransactionSummary<PE, ASF>;
   gasFee: NearToken;
   gasUsed: NearGas;
 };

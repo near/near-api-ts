@@ -18,11 +18,12 @@ export const getExecutedNearlyFinalDetails = (args: {
   rpcDetails: RpcExecutedTransactionDetails;
   signedTransactionBorsh64: Base64String;
   deserializeResultData?: BaseDeserializeTransactionResultDataFn;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn;
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live' | 'Legacy'>;
 }): Result<
-  TransactionDetailsAtStage['ExecutedNearlyFinal'],
-  InnerClientTransactionDetailsError | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal'>
+  TransactionDetailsAtStage<'Live' | 'Legacy'>['ExecutedNearlyFinal'],
+  | InnerClientTransactionDetailsError
+  | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal', 'Live' | 'Legacy'>
 > => {
   const {
     rpcDetails,

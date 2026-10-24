@@ -24,13 +24,13 @@ export const getCompletedFinalDetails = (args: {
   rpcDetails: RpcFinalTransactionDetails;
   signedTransactionBorsh64: Base64String;
   deserializeResultData?: BaseDeserializeTransactionResultDataFn;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn;
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live' | 'Legacy'>;
 }): Result<
-  TransactionDetailsAtStage['CompletedFinal'],
+  TransactionDetailsAtStage<'Live' | 'Legacy'>['CompletedFinal'],
   | InnerClientTransactionDetailsError
   | ConversionFailureNatError
-  | ExecutionFailureErrorAtStage<'CompletedFinal'>
+  | ExecutionFailureErrorAtStage<'CompletedFinal', 'Live' | 'Legacy'>
 > => {
   const {
     rpcDetails,

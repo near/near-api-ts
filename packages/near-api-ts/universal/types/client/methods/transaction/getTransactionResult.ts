@@ -10,7 +10,11 @@ import type {
   TimeoutErrorContext,
 } from '../../transport/sendRequest';
 import type { PartialTransportPolicy } from '../../transport/transport';
-import type { TransactionDetailsInnerErrorRegistry } from './_common/innerErrorRegistry';
+import type {
+  DeserializeActionSummariesFailedContext,
+  DeserializeExecutionStepsFailedContext,
+  TransactionDetailsInnerErrorRegistry,
+} from './_common/innerErrorRegistry';
 import type { RawTransactionActionSummary } from './_common/transactionDetails/_common/_common/actionSummaries';
 import type {
   MaybeBaseDeserializeTransactionActionSummariesFn,
@@ -41,20 +45,25 @@ export interface GetTransactionResultPublicErrorRegistry {
       | TransactionProcessingStageMap['ExecutedNearlyFinal'];
   };
   'Client.GetTransactionResult.DeserializeResultData.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeResultData.Failed'];
-  'Client.GetTransactionResult.DeserializeActionSummaries.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeActionSummaries.Failed'];
-  'Client.GetTransactionResult.DeserializeExecutionSteps.Failed': TransactionDetailsInnerErrorRegistry['Inner.Client.TransactionDetails.DeserializeExecutionSteps.Failed'];
+  'Client.GetTransactionResult.DeserializeActionSummaries.Failed': DeserializeActionSummariesFailedContext<
+    'Live' | 'Legacy'
+  >;
+  'Client.GetTransactionResult.DeserializeExecutionSteps.Failed': DeserializeExecutionStepsFailedContext<
+    'Live' | 'Legacy'
+  >;
   'Client.GetTransactionResult.Internal': InternalErrorContext;
 }
 
-// What each deserializer in `options` receives
+// What each deserializer in `options` receives. A transaction read back from the chain may hold
+// what older protocol versions recorded, so these hold data of every era - see `ProtocolEra`
 export type GetTransactionResultDeserializeResultDataArgs = { rawData: Base64String };
 
 export type GetTransactionResultDeserializeActionSummariesArgs = {
-  rawActionSummaries: RawTransactionActionSummary[];
+  rawActionSummaries: RawTransactionActionSummary<'Live' | 'Legacy'>[];
 };
 
 export type GetTransactionResultDeserializeExecutionStepsArgs = {
-  rawExecutionSteps: RawExecutionStep[];
+  rawExecutionSteps: RawExecutionStep<'Live' | 'Legacy'>[];
 };
 
 type MaybeDeserializeResultDataFn =
@@ -102,12 +111,12 @@ export type GetTransactionResultArgs<
 
 export type GetTransactionResultOutput<
   RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'> = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn<'Live' | 'Legacy'> = undefined,
 > =
-  | ConversionFailure<ASF>['CompletedFinal']
-  | ExecutionFailure<ASF, ESF>['CompletedFinal']
-  | ExecutionSuccess<RDF, ASF, ESF>['CompletedFinal'];
+  | ConversionFailure<'Live' | 'Legacy', ASF>['CompletedFinal']
+  | ExecutionFailure<'Live' | 'Legacy', ASF, ESF>['CompletedFinal']
+  | ExecutionSuccess<'Live' | 'Legacy', RDF, ASF, ESF>['CompletedFinal'];
 
 export type GetTransactionResultError =
   | NatError<'Client.GetTransactionResult.Args.InvalidSchema'>

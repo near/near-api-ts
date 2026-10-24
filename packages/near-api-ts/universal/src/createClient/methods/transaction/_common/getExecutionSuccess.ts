@@ -23,8 +23,8 @@ type GetExecutionSuccessArgs = {
   receiptsOutcome: RpcReceiptOutcome[];
   statusSuccessValue: Base64String;
   deserializeResultData?: BaseDeserializeTransactionResultDataFn;
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn;
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live' | 'Legacy'>;
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live' | 'Legacy'>;
 };
 
 type GetExecutionSuccessError =
@@ -89,7 +89,7 @@ const getBaseExecutionSuccess = (args: GetExecutionSuccessArgs) => {
 
 export const getExecutionSuccessExecutedOptimistic = (
   args: GetExecutionSuccessArgs,
-): Result<ExecutionSuccess['ExecutedOptimistic'], GetExecutionSuccessError> => {
+): Result<ExecutionSuccess<'Live' | 'Legacy'>['ExecutedOptimistic'], GetExecutionSuccessError> => {
   const baseExecutionSuccess = getBaseExecutionSuccess(args);
   if (!baseExecutionSuccess.success) return baseExecutionSuccess;
 
@@ -109,7 +109,7 @@ export const getExecutionSuccessExecutedOptimistic = (
 
 export const getExecutionSuccessExecutedNearlyFinal = (
   args: GetExecutionSuccessArgs,
-): Result<ExecutionSuccess['ExecutedNearlyFinal'], GetExecutionSuccessError> => {
+): Result<ExecutionSuccess<'Live' | 'Legacy'>['ExecutedNearlyFinal'], GetExecutionSuccessError> => {
   const baseExecutionSuccess = getBaseExecutionSuccess(args);
   if (!baseExecutionSuccess.success) return baseExecutionSuccess;
 
@@ -129,7 +129,7 @@ export const getExecutionSuccessExecutedNearlyFinal = (
 
 export const getExecutionSuccessCompletedFinal = (
   args: GetExecutionSuccessArgs,
-): Result<ExecutionSuccess['CompletedFinal'], GetExecutionSuccessError> => {
+): Result<ExecutionSuccess<'Live' | 'Legacy'>['CompletedFinal'], GetExecutionSuccessError> => {
   const baseExecutionSuccess = getBaseExecutionSuccess(args);
   if (!baseExecutionSuccess.success) return baseExecutionSuccess;
 

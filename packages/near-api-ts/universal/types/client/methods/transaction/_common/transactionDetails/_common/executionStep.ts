@@ -16,7 +16,8 @@ import type {
   BaseDeserializeTransactionExecutionStepsFn,
   MaybeBaseDeserializeTransactionExecutionStepsFn,
 } from './_common/deserializers';
-import type { ExecutionFailureError } from './_common/executionFailureError';
+import type { ExecutionFailureErrorOfEra } from './_common/executionFailureError';
+import type { ProtocolEra } from './_common/protocolEra';
 
 type RequiredDataItem = { dataId: CryptoHash };
 
@@ -25,7 +26,7 @@ type FutureDataReceiver = {
   receiverAccountId: AccountId;
 };
 
-export type ExecutionStepResult<RD> =
+export type ExecutionStepResult<PE extends ProtocolEra, RD> =
   | {
       status: 'Success';
       data: RD;
@@ -36,16 +37,16 @@ export type ExecutionStepResult<RD> =
     }
   | {
       status: 'Failure';
-      error: ExecutionFailureError;
+      error: ExecutionFailureErrorOfEra<PE>;
     };
 
 type ProducedStep =
   | { stepType: 'Execution'; executionStepId: ReceiptId }
   | { stepType: 'Refund'; refundStepId: ReceiptId };
 
-export type ExecutionStep<RD, AS> = {
+export type ExecutionStep<PE extends ProtocolEra, RD, AS> = {
   executionStepId: ReceiptId;
-  result: ExecutionStepResult<RD>;
+  result: ExecutionStepResult<PE, RD>;
   createdAt: { blockHash: BlockHash };
   createdBy: { accountId: AccountId };
   executedAt: { blockHash: BlockHash };
@@ -60,11 +61,22 @@ export type ExecutionStep<RD, AS> = {
   logs: Log[];
 };
 
-export type ParsedExecutionStep = ExecutionStep<unknown, ParsedTransactionActionSummary[]>;
-export type RawExecutionStep = ExecutionStep<Base64String, RawTransactionActionSummary[]>;
+export type ParsedExecutionStep<PE extends ProtocolEra> = ExecutionStep<
+  PE,
+  unknown,
+  ParsedTransactionActionSummary<PE>[]
+>;
 
+export type RawExecutionStep<PE extends ProtocolEra> = ExecutionStep<
+  PE,
+  Base64String,
+  RawTransactionActionSummary<PE>[]
+>;
+
+// Like `TransactionActionSummaries`
 export type ExecutionSteps<
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
-> = [ESF] extends [BaseDeserializeTransactionExecutionStepsFn]
+  PE extends ProtocolEra,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn<PE> = undefined,
+> = [ESF] extends [BaseDeserializeTransactionExecutionStepsFn<'Live'>]
   ? ReturnType<ESF>
-  : ParsedExecutionStep[];
+  : ParsedExecutionStep<PE>[];

@@ -13,12 +13,15 @@ import { createReceiptCreationMap } from './createReceiptCreationMap';
 import { getExecutionSteps } from './getExecutionSteps/getExecutionSteps';
 import { getRefundSteps } from './getRefundSteps';
 
-type NonConversionSteps = { executionSteps: ExecutionSteps; refundSteps: RefundStep[] };
+type NonConversionSteps = {
+  executionSteps: ExecutionSteps<'Live' | 'Legacy'>;
+  refundSteps: RefundStep[];
+};
 
 type GetNonConversionStepsArgs = {
   receiptsWithOutcomes: ReceiptsWithOutcomes;
-  conversionStepSuccess: ConversionStepSuccess;
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn;
+  conversionStepSuccess: ConversionStepSuccess<'Live' | 'Legacy'>;
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live' | 'Legacy'>;
 };
 
 export const getNonConversionSteps = (

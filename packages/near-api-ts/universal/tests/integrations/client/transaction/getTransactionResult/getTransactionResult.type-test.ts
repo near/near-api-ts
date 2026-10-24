@@ -10,11 +10,6 @@ import type {
   RawTransactionActionSummary,
 } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
 import type { ConversionFailureKind } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/conversionFailureError';
-import type {
-  DeserializeTransactionActionSummariesArgs,
-  DeserializeTransactionExecutionStepsArgs,
-  DeserializeTransactionResultDataArgs,
-} from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
 import type { ExecutionFailureKind } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/executionFailureError';
 import type {
   ParsedExecutionStep,
@@ -72,34 +67,37 @@ type ConversionFailureProcessingStepKeys<TPromise> =
 
 const responseZodSchema = z.object({ decimals: z.number() });
 
-const deserializeResultData = (args: DeserializeTransactionResultDataArgs): { decimals: number } =>
-  responseZodSchema.parse(args.rawData);
-type CustomDeserializeResultData = (args: DeserializeTransactionResultDataArgs) => {
+const deserializeResultData = (
+  args: GetTransactionResultDeserializeResultDataArgs,
+): { decimals: number } => responseZodSchema.parse(args.rawData);
+type CustomDeserializeResultData = (args: GetTransactionResultDeserializeResultDataArgs) => {
   decimals: number;
 };
 
 const deserializeActionSummaries = (
-  _args: DeserializeTransactionActionSummariesArgs,
+  _args: GetTransactionResultDeserializeActionSummariesArgs,
 ): [number, number, string] => [1, 2, '123'];
 type CustomDeserializeActionSummaries = (
-  args: DeserializeTransactionActionSummariesArgs,
+  args: GetTransactionResultDeserializeActionSummariesArgs,
 ) => [number, number, string];
 
 // Pass-through summaries deserializer -> ReturnType is RawTransactionActionSummary[]
-const passthroughActionSummaries = (args: DeserializeTransactionActionSummariesArgs) =>
+const passthroughActionSummaries = (args: GetTransactionResultDeserializeActionSummariesArgs) =>
   args.rawActionSummaries;
 
 const deserializeExecutionSteps = (
-  args: DeserializeTransactionExecutionStepsArgs,
+  args: GetTransactionResultDeserializeExecutionStepsArgs,
 ): {
   stepsCount: number;
 } => ({ stepsCount: args.rawExecutionSteps.length });
-type CustomDeserializeExecutionSteps = (args: DeserializeTransactionExecutionStepsArgs) => {
+type CustomDeserializeExecutionSteps = (
+  args: GetTransactionResultDeserializeExecutionStepsArgs,
+) => {
   stepsCount: number;
 };
 
 // Pass-through execution steps deserializer -> ReturnType is RawExecutionStep[]
-const passthroughExecutionSteps = (args: DeserializeTransactionExecutionStepsArgs) =>
+const passthroughExecutionSteps = (args: GetTransactionResultDeserializeExecutionStepsArgs) =>
   args.rawExecutionSteps;
 
 const client = createTestnetClient();
@@ -110,10 +108,12 @@ const transactionHash = 'HoWytDmLdYF4MnmayBSArwxef6Tj6pDYjnuNCVdSEnXe';
 
 const a1 = client.getTransactionResult({ transactionHash });
 type _A1Data = Assert<Equal<ExecutionSuccessData<typeof a1>, unknown>>;
-type _A1Summaries = Assert<Equal<Summaries<typeof a1>, ParsedTransactionActionSummary[]>>;
-type _A1ExecSteps = Assert<Equal<ExecSteps<typeof a1>, ParsedExecutionStep[]>>;
+type _A1Summaries = Assert<
+  Equal<Summaries<typeof a1>, ParsedTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
+type _A1ExecSteps = Assert<Equal<ExecSteps<typeof a1>, ParsedExecutionStep<'Live' | 'Legacy'>[]>>;
 type _A1ExecutionFailureExecSteps = Assert<
-  Equal<ExecutionFailureExecSteps<typeof a1>, ParsedExecutionStep[]>
+  Equal<ExecutionFailureExecSteps<typeof a1>, ParsedExecutionStep<'Live' | 'Legacy'>[]>
 >;
 type _A1ConversionFailureProcessingStepKeys = Assert<
   Equal<ConversionFailureProcessingStepKeys<typeof a1>, 'conversionStep'>
@@ -121,22 +121,30 @@ type _A1ConversionFailureProcessingStepKeys = Assert<
 
 const a2 = client.getTransactionResult({ transactionHash, options: {} });
 type _A2Data = Assert<Equal<ExecutionSuccessData<typeof a2>, unknown>>;
-type _A2Summaries = Assert<Equal<Summaries<typeof a2>, ParsedTransactionActionSummary[]>>;
+type _A2Summaries = Assert<
+  Equal<Summaries<typeof a2>, ParsedTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
 
 const a3 = client.getTransactionResult({
   transactionHash,
   options: { signal: new AbortController().signal },
 });
 type _A3Data = Assert<Equal<ExecutionSuccessData<typeof a3>, unknown>>;
-type _A3Summaries = Assert<Equal<Summaries<typeof a3>, ParsedTransactionActionSummary[]>>;
+type _A3Summaries = Assert<
+  Equal<Summaries<typeof a3>, ParsedTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
 
 const a4 = client.getTransactionResult({ transactionHash, options: {} });
 type _A4Data = Assert<Equal<ExecutionSuccessData<typeof a4>, unknown>>;
-type _A4Summaries = Assert<Equal<Summaries<typeof a4>, ParsedTransactionActionSummary[]>>;
+type _A4Summaries = Assert<
+  Equal<Summaries<typeof a4>, ParsedTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
 
 const a5 = client.getTransactionResult<undefined, undefined>({ transactionHash });
 type _A5Data = Assert<Equal<ExecutionSuccessData<typeof a5>, unknown>>;
-type _A5Summaries = Assert<Equal<Summaries<typeof a5>, ParsedTransactionActionSummary[]>>;
+type _A5Summaries = Assert<
+  Equal<Summaries<typeof a5>, ParsedTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
 
 // GROUP B - only deserializeResultData (RDF set, ASF = undefined)
 // -> data: ReturnType<RDF>, actionSummaries: ParsedTransactionActionSummary[]
@@ -146,34 +154,41 @@ const b1 = client.getTransactionResult({
   options: { deserializeResultData },
 });
 type _B1Data = Assert<Equal<ExecutionSuccessData<typeof b1>, { decimals: number }>>;
-type _B1Summaries = Assert<Equal<Summaries<typeof b1>, ParsedTransactionActionSummary[]>>;
+type _B1Summaries = Assert<
+  Equal<Summaries<typeof b1>, ParsedTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
 
 const b2 = client.getTransactionResult<CustomDeserializeResultData>({
   transactionHash,
   options: { deserializeResultData },
 });
 type _B2Data = Assert<Equal<ExecutionSuccessData<typeof b2>, { decimals: number }>>;
-type _B2Summaries = Assert<Equal<Summaries<typeof b2>, ParsedTransactionActionSummary[]>>;
+type _B2Summaries = Assert<
+  Equal<Summaries<typeof b2>, ParsedTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
 
 const b3 = client.getTransactionResult<CustomDeserializeResultData, undefined>({
   transactionHash,
   options: { deserializeResultData },
 });
 type _B3Data = Assert<Equal<ExecutionSuccessData<typeof b3>, { decimals: number }>>;
-type _B3Summaries = Assert<Equal<Summaries<typeof b3>, ParsedTransactionActionSummary[]>>;
+type _B3Summaries = Assert<
+  Equal<Summaries<typeof b3>, ParsedTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
 
 // Inline fn with a different return shape - proves ReturnType inference (not a hard-coded type)
 const b4 = client.getTransactionResult({
   transactionHash,
   options: {
-    deserializeResultData: (_args: DeserializeTransactionResultDataArgs): [bigint, string] => [
-      1n,
-      'abc',
-    ],
+    deserializeResultData: (
+      _args: GetTransactionResultDeserializeResultDataArgs,
+    ): [bigint, string] => [1n, 'abc'],
   },
 });
 type _B4Data = Assert<Equal<ExecutionSuccessData<typeof b4>, [bigint, string]>>;
-type _B4Summaries = Assert<Equal<Summaries<typeof b4>, ParsedTransactionActionSummary[]>>;
+type _B4Summaries = Assert<
+  Equal<Summaries<typeof b4>, ParsedTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
 
 // GROUP C - only deserializeActionSummaries (RDF = undefined, ASF set)
 // -> data: unknown, actionSummaries: ReturnType<ASF>
@@ -198,7 +213,9 @@ const c3 = client.getTransactionResult({
   options: { deserializeActionSummaries: passthroughActionSummaries },
 });
 type _C3Data = Assert<Equal<ExecutionSuccessData<typeof c3>, unknown>>;
-type _C3Summaries = Assert<Equal<Summaries<typeof c3>, RawTransactionActionSummary[]>>;
+type _C3Summaries = Assert<
+  Equal<Summaries<typeof c3>, RawTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
 
 // GROUP D - both deserializers (RDF set, ASF set)
 // -> data: ReturnType<RDF>, actionSummaries: ReturnType<ASF>
@@ -228,7 +245,9 @@ const e1 = client.getTransactionResult({
   options: { deserializeExecutionSteps },
 });
 type _E1Data = Assert<Equal<ExecutionSuccessData<typeof e1>, unknown>>;
-type _E1Summaries = Assert<Equal<Summaries<typeof e1>, ParsedTransactionActionSummary[]>>;
+type _E1Summaries = Assert<
+  Equal<Summaries<typeof e1>, ParsedTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
 type _E1ExecSteps = Assert<Equal<ExecSteps<typeof e1>, { stepsCount: number }>>;
 type _E1ExecutionFailureExecSteps = Assert<
   Equal<ExecutionFailureExecSteps<typeof e1>, { stepsCount: number }>
@@ -242,7 +261,9 @@ const e2 = client.getTransactionResult<undefined, undefined, CustomDeserializeEx
   options: { deserializeExecutionSteps },
 });
 type _E2Data = Assert<Equal<ExecutionSuccessData<typeof e2>, unknown>>;
-type _E2Summaries = Assert<Equal<Summaries<typeof e2>, ParsedTransactionActionSummary[]>>;
+type _E2Summaries = Assert<
+  Equal<Summaries<typeof e2>, ParsedTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
 type _E2ExecSteps = Assert<Equal<ExecSteps<typeof e2>, { stepsCount: number }>>;
 
 // Pass-through deserializer -> executionSteps: RawExecutionStep[]
@@ -251,7 +272,7 @@ const e3 = client.getTransactionResult({
   options: { deserializeExecutionSteps: passthroughExecutionSteps },
 });
 type _E3Data = Assert<Equal<ExecutionSuccessData<typeof e3>, unknown>>;
-type _E3ExecSteps = Assert<Equal<ExecSteps<typeof e3>, RawExecutionStep[]>>;
+type _E3ExecSteps = Assert<Equal<ExecSteps<typeof e3>, RawExecutionStep<'Live' | 'Legacy'>[]>>;
 
 // GROUP F - combos with deserializeExecutionSteps
 
@@ -260,7 +281,9 @@ const f1 = client.getTransactionResult({
   options: { deserializeResultData, deserializeExecutionSteps },
 });
 type _F1Data = Assert<Equal<ExecutionSuccessData<typeof f1>, { decimals: number }>>;
-type _F1Summaries = Assert<Equal<Summaries<typeof f1>, ParsedTransactionActionSummary[]>>;
+type _F1Summaries = Assert<
+  Equal<Summaries<typeof f1>, ParsedTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
 type _F1ExecSteps = Assert<Equal<ExecSteps<typeof f1>, { stepsCount: number }>>;
 
 const f2 = client.getTransactionResult({
@@ -296,7 +319,7 @@ const f5 = client.getTransactionResult({
   transactionHash,
   options: { deserializeResultData, deserializeActionSummaries },
 });
-type _F5ExecSteps = Assert<Equal<ExecSteps<typeof f5>, ParsedExecutionStep[]>>;
+type _F5ExecSteps = Assert<Equal<ExecSteps<typeof f5>, ParsedExecutionStep<'Live' | 'Legacy'>[]>>;
 
 // GROUP G - inline deserializers with unannotated parameters
 // -> each parameter gets its deserializer's input type; the output still follows ReturnType
@@ -311,8 +334,10 @@ const g1 = client.getTransactionResult({
   },
 });
 type _G1Data = Assert<Equal<ExecutionSuccessData<typeof g1>, number>>;
-type _G1Summaries = Assert<Equal<Summaries<typeof g1>, ParsedTransactionActionSummary[]>>;
-type _G1ExecSteps = Assert<Equal<ExecSteps<typeof g1>, ParsedExecutionStep[]>>;
+type _G1Summaries = Assert<
+  Equal<Summaries<typeof g1>, ParsedTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
+type _G1ExecSteps = Assert<Equal<ExecSteps<typeof g1>, ParsedExecutionStep<'Live' | 'Legacy'>[]>>;
 
 const g2 = client.getTransactionResult({
   transactionHash,
@@ -325,9 +350,9 @@ const g2 = client.getTransactionResult({
 });
 type _G2Data = Assert<Equal<ExecutionSuccessData<typeof g2>, unknown>>;
 type _G2Summaries = Assert<
-  Equal<Summaries<typeof g2>, RawTransactionActionSummary['actionType'][]>
+  Equal<Summaries<typeof g2>, RawTransactionActionSummary<'Live' | 'Legacy'>['actionType'][]>
 >;
-type _G2ExecSteps = Assert<Equal<ExecSteps<typeof g2>, ParsedExecutionStep[]>>;
+type _G2ExecSteps = Assert<Equal<ExecSteps<typeof g2>, ParsedExecutionStep<'Live' | 'Legacy'>[]>>;
 
 const g3 = client.getTransactionResult({
   transactionHash,
@@ -339,7 +364,9 @@ const g3 = client.getTransactionResult({
   },
 });
 type _G3Data = Assert<Equal<ExecutionSuccessData<typeof g3>, unknown>>;
-type _G3Summaries = Assert<Equal<Summaries<typeof g3>, ParsedTransactionActionSummary[]>>;
+type _G3Summaries = Assert<
+  Equal<Summaries<typeof g3>, ParsedTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
 type _G3ExecSteps = Assert<Equal<ExecSteps<typeof g3>, { stepsCount: number }>>;
 type _G3ExecutionFailureExecSteps = Assert<
   Equal<ExecutionFailureExecSteps<typeof g3>, { stepsCount: number }>
@@ -355,8 +382,10 @@ const g4 = client.getTransactionResult({
   },
 });
 type _G4Data = Assert<Equal<ExecutionSuccessData<typeof g4>, string>>;
-type _G4Summaries = Assert<Equal<Summaries<typeof g4>, RawTransactionActionSummary[]>>;
-type _G4ExecSteps = Assert<Equal<ExecSteps<typeof g4>, RawExecutionStep[]>>;
+type _G4Summaries = Assert<
+  Equal<Summaries<typeof g4>, RawTransactionActionSummary<'Live' | 'Legacy'>[]>
+>;
+type _G4ExecSteps = Assert<Equal<ExecSteps<typeof g4>, RawExecutionStep<'Live' | 'Legacy'>[]>>;
 
 // Inline next to a named deserializer: the named one is inferred before the inline one is typed
 const g5 = client.getTransactionResult({
@@ -368,7 +397,7 @@ const g5 = client.getTransactionResult({
 });
 type _G5Data = Assert<Equal<ExecutionSuccessData<typeof g5>, { decimals: number }>>;
 type _G5Summaries = Assert<Equal<Summaries<typeof g5>, number>>;
-type _G5ExecSteps = Assert<Equal<ExecSteps<typeof g5>, ParsedExecutionStep[]>>;
+type _G5ExecSteps = Assert<Equal<ExecSteps<typeof g5>, ParsedExecutionStep<'Live' | 'Legacy'>[]>>;
 
 // A standalone deserializer annotated with the exported input type
 const countActionSummaries = ({

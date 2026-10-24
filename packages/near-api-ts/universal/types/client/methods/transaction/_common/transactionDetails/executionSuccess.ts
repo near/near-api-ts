@@ -5,6 +5,7 @@ import type {
   MaybeBaseDeserializeTransactionExecutionStepsFn,
   MaybeBaseDeserializeTransactionResultDataFn,
 } from './_common/_common/deserializers';
+import type { ProtocolEra } from './_common/_common/protocolEra';
 import type { ConversionStepSuccess } from './_common/conversionStep';
 import type { ExecutionSteps } from './_common/executionStep';
 import type { TransactionProcessingStageMap } from './_common/processingStage';
@@ -16,9 +17,10 @@ export type TransactionResultData<
 > = [RDF] extends [BaseDeserializeTransactionResultDataFn] ? ReturnType<RDF> : unknown;
 
 export type ExecutionSuccess<
+  PE extends ProtocolEra,
   RDF extends MaybeBaseDeserializeTransactionResultDataFn = undefined,
-  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn = undefined,
-  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<PE> = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn<PE> = undefined,
 > = {
   ExecutedOptimistic: {
     transactionHash: CryptoHash;
@@ -26,8 +28,8 @@ export type ExecutionSuccess<
     status: 'ExecutionSuccess';
     data: TransactionResultData<RDF>;
     processingSteps: {
-      conversionStep: ConversionStepSuccess<ASF>;
-      executionSteps: ExecutionSteps<ESF>;
+      conversionStep: ConversionStepSuccess<PE, ASF>;
+      executionSteps: ExecutionSteps<PE, ESF>;
     };
   };
   ExecutedNearlyFinal: {
@@ -36,8 +38,8 @@ export type ExecutionSuccess<
     status: 'ExecutionSuccess';
     data: TransactionResultData<RDF>;
     processingSteps: {
-      conversionStep: ConversionStepSuccess<ASF>;
-      executionSteps: ExecutionSteps<ESF>;
+      conversionStep: ConversionStepSuccess<PE, ASF>;
+      executionSteps: ExecutionSteps<PE, ESF>;
     };
   };
   CompletedFinal: {
@@ -46,8 +48,8 @@ export type ExecutionSuccess<
     status: 'ExecutionSuccess';
     data: TransactionResultData<RDF>;
     processingSteps: {
-      conversionStep: ConversionStepSuccess<ASF>;
-      executionSteps: ExecutionSteps<ESF>;
+      conversionStep: ConversionStepSuccess<PE, ASF>;
+      executionSteps: ExecutionSteps<PE, ESF>;
       refundSteps: RefundStep[];
     };
   };

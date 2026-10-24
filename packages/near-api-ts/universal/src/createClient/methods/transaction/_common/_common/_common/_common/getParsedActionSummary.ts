@@ -7,8 +7,8 @@ import { tryBase64ToObject } from '../../../../../_common/base64ToObject';
 // Default deserialization of the raw action summary - tries to parse callContractFunction.functionArgs
 // as JSON, otherwise keeps the raw base64 string (functionArgs type stays unknown);
 export const getParsedActionSummary = (
-  rawActionSummary: RawTransactionActionSummary,
-): ParsedTransactionActionSummary => {
+  rawActionSummary: RawTransactionActionSummary<'Live' | 'Legacy'>,
+): ParsedTransactionActionSummary<'Live' | 'Legacy'> => {
   if (rawActionSummary.actionType === 'CallContractFunction')
     return {
       ...rawActionSummary,

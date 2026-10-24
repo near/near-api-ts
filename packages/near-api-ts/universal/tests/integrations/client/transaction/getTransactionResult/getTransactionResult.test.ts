@@ -9,17 +9,15 @@ import {
   createMemorySigner,
   createSubAccount,
   deployLocalContract,
+  type GetTransactionResultDeserializeActionSummariesArgs,
+  type GetTransactionResultDeserializeExecutionStepsArgs,
+  type GetTransactionResultDeserializeResultDataArgs,
   near,
   transfer,
 } from '../../../../../index';
 import { safeSleep } from '../../../../../src/createClient/createTransport/createSendRequest/_common/_common/sleep';
 import type { Base64String, TransactionHash } from '../../../../../types/_common/common';
 import type { TransactionActionSummary } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
-import type {
-  DeserializeTransactionActionSummariesArgs,
-  DeserializeTransactionExecutionStepsArgs,
-  DeserializeTransactionResultDataArgs,
-} from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
 import type { ExecutionStep } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/executionStep';
 import type { MemorySigner } from '../../../../../types/signer/memorySigner';
 import { createDefaultClient, getFileBytes, log } from '../../../../utils/common';
@@ -77,13 +75,16 @@ describe('CallContractReadFunction', () => {
 
   it('Ok', async () => {
     // Just return some parsed result
-    const deserializeResultData = (args: DeserializeTransactionResultDataArgs) =>
+    const deserializeResultData = (args: GetTransactionResultDeserializeResultDataArgs) =>
       convertBase64ToObject(args.rawData);
 
     // We can validate that we called a write_record method with a valid WriteRecordArgs type functionArgs;
     const deserializeActionSummaries = (
-      args: DeserializeTransactionActionSummariesArgs,
-    ): TransactionActionSummary<{ record_id: number; record: string } | Base64String>[] =>
+      args: GetTransactionResultDeserializeActionSummariesArgs,
+    ): TransactionActionSummary<
+      'Live' | 'Legacy',
+      { record_id: number; record: string } | Base64String
+    >[] =>
       args.rawActionSummaries.map((rawActionSummary) => {
         if (
           rawActionSummary.actionType === 'CallContractFunction' &&
@@ -101,10 +102,14 @@ describe('CallContractReadFunction', () => {
 
     // Just show parsed result
     const deserializeExecutionSteps = (
-      args: DeserializeTransactionExecutionStepsArgs,
+      args: GetTransactionResultDeserializeExecutionStepsArgs,
     ): ExecutionStep<
+      'Live' | 'Legacy',
       unknown,
-      TransactionActionSummary<{ record_id: number; record: string } | Base64String>[]
+      TransactionActionSummary<
+        'Live' | 'Legacy',
+        { record_id: number; record: string } | Base64String
+      >[]
     >[] =>
       args.rawExecutionSteps.map((rawExecutionStep) => ({
         ...rawExecutionStep,

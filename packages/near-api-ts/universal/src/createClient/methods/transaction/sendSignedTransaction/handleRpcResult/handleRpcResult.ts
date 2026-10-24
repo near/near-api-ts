@@ -56,18 +56,18 @@ export const handleRpcResult = (
   transactionHash: TransactionHash,
   signedTransactionBorsh64: Base64String,
   deserializeResultData?: BaseDeserializeTransactionResultDataFn,
-  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn,
-  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn,
+  deserializeActionSummaries?: BaseDeserializeTransactionActionSummariesFn<'Live'>,
+  deserializeExecutionSteps?: BaseDeserializeTransactionExecutionStepsFn<'Live'>,
 ): Result<
-  TransactionDetailsFromStage[TransactionProcessingStage],
+  TransactionDetailsFromStage<'Live'>[TransactionProcessingStage],
   | NatError<'Client.SendSignedTransaction.Exhausted'>
   | NatError<'Client.SendSignedTransaction.DeserializeResultData.Failed'>
   | NatError<'Client.SendSignedTransaction.DeserializeActionSummaries.Failed'>
   | NatError<'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed'>
   | ConversionFailureNatError
-  | ExecutionFailureErrorAtStage<'ExecutedOptimistic'>
-  | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal'>
-  | ExecutionFailureErrorAtStage<'CompletedFinal'>
+  | ExecutionFailureErrorAtStage<'ExecutedOptimistic', 'Live'>
+  | ExecutionFailureErrorAtStage<'ExecutedNearlyFinal', 'Live'>
+  | ExecutionFailureErrorAtStage<'CompletedFinal', 'Live'>
 > => {
   const rpcResult = RpcResultZodSchema.safeParse(rpcResponse.result);
 
