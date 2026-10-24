@@ -36,7 +36,7 @@ describe('getRawActionSummary › DelegateV2', () => {
     );
 
     expect(summary).toStrictEqual({
-      actionType: 'ExecuteDelegation',
+      actionType: 'LegacyExecuteDelegation',
       delegation: {
         tag: constants.Delegation.Nep611Tag,
         delegator: {
@@ -64,7 +64,9 @@ describe('getRawActionSummary › DelegateV2', () => {
       ['Live', 'Legacy'],
     );
 
+    // Legacy too: protocol 87 refuses every NEP-611 delegation, whatever key signed it
     expect(summary).toMatchObject({
+      actionType: 'LegacyExecuteDelegation',
       delegation: {
         tag: constants.Delegation.Nep611Tag,
         delegator: { replayProtection: { scheme: 'NonceChannel', nonce: 7 } },

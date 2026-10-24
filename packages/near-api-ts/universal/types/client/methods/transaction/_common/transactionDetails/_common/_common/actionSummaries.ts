@@ -1,3 +1,4 @@
+import type { constants } from '../../../../../../../../src/_common/_common/_common/constants';
 import type {
   ContractFunctionCallPermission,
   FullAccessPermission,
@@ -163,12 +164,33 @@ export type DelegatedActionSummary<
   FA,
 > = DelegatedActionSummaryByEra<FA>[PE];
 
+// A delegation in the format nearcore calls `Delegate` (NEP-366), the only one the current protocol
+// takes. On older protocol versions it could already carry a withdrawal, hence `PE`.
+type ExecuteDelegationActionSummary<PE extends ProtocolEra, FA> = {
+  actionType: 'ExecuteDelegation';
+  delegation: {
+    /** The message tag the signature was made over. */
+    tag: typeof constants.Delegation.Nep366Tag;
+    delegator: {
+      accountId: AccountId;
+      publicKey: PublicKey;
+      replayProtection: { scheme: 'NonceChannel'; nonce: SequentialNonce };
+    };
+    delegatedActionSummaries: DelegatedActionSummary<PE, FA>[];
+    receiverAccountId: AccountId;
+    expiration: { blockHeight: BlockHeight };
+  };
+  signature: Signature;
+};
+
 /**
- * The replay protection of a relayed delegation, as the chain recorded it. A NEP-366 delegation
- * always uses the single nonce channel of its key. A NEP-611 one could also use one of the nonce
- * channels of a key paid from its own balance.
+ * The replay protection of a delegation in the format nearcore calls `DelegateV2` (NEP-611): the
+ * single nonce channel of a key paid from the account balance, or one of the nonce channels of a
+ * key paid from its own balance.
+ *
+ * @legacy Protocol 85–86 (nearcore 2.13).
  */
-export type ExecuteDelegationReplayProtectionSummary =
+export type LegacyExecuteDelegationReplayProtectionSummary =
   | {
       scheme: 'NonceChannel';
       nonce: SequentialNonce;
@@ -180,19 +202,27 @@ export type ExecuteDelegationReplayProtectionSummary =
       nonce: SequentialNonce;
     };
 
-// `tag` tells the delegation format apart: NEP-366 for nearcore `Delegate`, NEP-611 for
-// `DelegateV2`. Nearcore refuses new NEP-611 delegations since protocol 87, so only the
-// transactions sent before it carry one.
-type ExecuteDelegationActionSummary<PE extends ProtocolEra, FA> = {
-  actionType: 'ExecuteDelegation';
+/**
+ * A delegation in the format nearcore calls `DelegateV2` (NEP-611).
+ *
+ * @legacy Protocol 85–86 (nearcore 2.13). Protocol 87 refuses new NEP-611 delegations, so only
+ * transactions sent before it carry one.
+ */
+type LegacyExecuteDelegationActionSummary<FA> = {
+  /**
+   * @legacy Protocol 85–86 (nearcore 2.13). Protocol 87 refuses new NEP-611 delegations, so only
+   * transactions sent before it carry one.
+   */
+  actionType: 'LegacyExecuteDelegation';
   delegation: {
-    tag: number;
+    /** The message tag the signature was made over. */
+    tag: typeof constants.Delegation.Nep611Tag;
     delegator: {
       accountId: AccountId;
       publicKey: PublicKey;
-      replayProtection: ExecuteDelegationReplayProtectionSummary;
+      replayProtection: LegacyExecuteDelegationReplayProtectionSummary;
     };
-    delegatedActionSummaries: DelegatedActionSummary<PE, FA>[];
+    delegatedActionSummaries: DelegatedActionSummary<'Live' | 'Legacy', FA>[];
     receiverAccountId: AccountId;
     expiration: { blockHeight: BlockHeight };
   };
@@ -206,7 +236,7 @@ type TransactionActionSummaryByEra<PE extends ProtocolEra, FA> = {
     | DelegableActionSummary<FA>
     | WithdrawAccessKeyBalanceActionSummary
     | ExecuteDelegationActionSummary<PE, FA>;
-  Legacy: never;
+  Legacy: LegacyExecuteDelegationActionSummary<FA>;
 };
 
 export type TransactionActionSummary<PE extends ProtocolEra, FA> = TransactionActionSummaryByEra<

@@ -13,7 +13,8 @@ import type { Base64String } from '../../../../../../../../../types/_common/comm
 import type { PublicKey, Signature } from '../../../../../../../../../types/_common/crypto';
 import type {
   DelegatedActionSummary,
-  ExecuteDelegationReplayProtectionSummary,
+  LegacyExecuteDelegationReplayProtectionSummary,
+  RawTransactionActionSummary,
 } from '../../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
 import type { ProtocolEra } from '../../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import { constants } from '../../../../../../../../_common/_common/_common/constants';
@@ -175,7 +176,7 @@ const convertNonDelegateActionToSummary = (
 
 const toReplayProtectionSummary = (
   nonce: TransactionNonce,
-): ExecuteDelegationReplayProtectionSummary =>
+): LegacyExecuteDelegationReplayProtectionSummary =>
   'GasKeyNonce' in nonce
     ? {
         scheme: 'NonceChannels',
@@ -185,36 +186,56 @@ const toReplayProtectionSummary = (
     : { scheme: 'NonceChannel', nonce: nonce.Nonce.nonce };
 
 // Nearcore reports the two delegation formats as two actions - `Delegate` (NEP-366), whose nonce
-// is a plain number, and `DelegateV2` (NEP-611), whose nonce may name a nonce channel. This library
-// signs only the first one; the second is refused since protocol 87, but transactions sent before
-// it still carry one.
+// is a plain number, and `DelegateV2` (NEP-611), whose nonce may name a nonce channel. The current
+// protocol takes only the first one; the second is refused since protocol 87, so it reads as
+// `@legacy`, but transactions sent before it still carry one.
 export const getRawExecuteDelegationActionSummary = (
   delegation:
     | { tag: typeof constants.Delegation.Nep366Tag; delegateAction: DelegateAction }
     | { tag: typeof constants.Delegation.Nep611Tag; delegateAction: DelegateActionV2 },
   signature: Signature,
   protocolEras: readonly ProtocolEra[],
-) => {
+): RawTransactionActionSummary<'Live' | 'Legacy'> => {
   const { delegateAction } = delegation;
 
+  const delegator = {
+    accountId: delegateAction.senderId,
+    publicKey: delegateAction.publicKey as PublicKey,
+  };
+  const delegatedActionSummaries = delegateAction.actions.map((nonDelegateAction) =>
+    convertNonDelegateActionToSummary(nonDelegateAction, protocolEras),
+  );
+  const receiverAccountId = delegateAction.receiverId;
+  const expiration = { blockHeight: delegateAction.maxBlockHeight };
+
+  if (delegation.tag === constants.Delegation.Nep366Tag)
+    return {
+      actionType: 'ExecuteDelegation',
+      delegation: {
+        tag: delegation.tag,
+        delegator: {
+          ...delegator,
+          replayProtection: { scheme: 'NonceChannel', nonce: delegation.delegateAction.nonce },
+        },
+        delegatedActionSummaries,
+        receiverAccountId,
+        expiration,
+      },
+      signature,
+    };
+
   return {
-    actionType: 'ExecuteDelegation' as const,
+    actionType: 'LegacyExecuteDelegation',
     delegation: {
       tag: delegation.tag,
       delegator: {
-        accountId: delegateAction.senderId,
-        publicKey: delegateAction.publicKey as PublicKey,
-        replayProtection:
-          delegation.tag === constants.Delegation.Nep366Tag
-            ? { scheme: 'NonceChannel' as const, nonce: delegation.delegateAction.nonce }
-            : toReplayProtectionSummary(delegation.delegateAction.nonce),
+        ...delegator,
+        replayProtection: toReplayProtectionSummary(delegation.delegateAction.nonce),
       },
-      delegatedActionSummaries: delegateAction.actions.map((nonDelegateAction) =>
-        convertNonDelegateActionToSummary(nonDelegateAction, protocolEras),
-      ),
-      receiverAccountId: delegateAction.receiverId,
-      expiration: { blockHeight: delegateAction.maxBlockHeight },
+      delegatedActionSummaries,
+      receiverAccountId,
+      expiration,
     },
-    signature: signature as Signature,
+    signature,
   };
 };

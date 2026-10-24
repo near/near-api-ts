@@ -4,6 +4,7 @@ import type {
   SendSignedTransactionDeserializeActionSummariesArgs,
   SendSignedTransactionDeserializeExecutionStepsArgs,
 } from '../../../../index';
+import type { constants } from '../../../../src/_common/_common/_common/constants';
 import type { DeserializeActionSummariesFailedContext } from '../../../../types/client/methods/transaction/_common/innerErrorRegistry';
 import type { ExecutionFailure } from '../../../../types/client/methods/transaction/_common/transactionDetails/executionFailure';
 import type { ExecutionSuccess } from '../../../../types/client/methods/transaction/_common/transactionDetails/executionSuccess';
@@ -107,6 +108,30 @@ type _ReadTopLevelWithdrawal = Assert<
 >;
 type _SentTopLevelWithdrawal = Assert<
   Equal<Withdrawal<ActionType<SentSummary>>, 'WithdrawAccessKeyBalance'>
+>;
+
+// Every NEP-611 delegation is legacy - a sending method reports NEP-366 ones only
+type Delegation<T extends string> = Extract<T, `${string}ExecuteDelegation`>;
+type SentDelegation = Extract<SentSummary, { actionType: 'ExecuteDelegation' }>['delegation'];
+
+type _ReadDelegations = Assert<
+  Equal<Delegation<ActionType<ReadSummary>>, 'ExecuteDelegation' | 'LegacyExecuteDelegation'>
+>;
+type _ReadStepDelegations = Assert<
+  Equal<Delegation<ActionType<ReadStepSummary>>, 'ExecuteDelegation' | 'LegacyExecuteDelegation'>
+>;
+type _SentDelegations = Assert<Equal<Delegation<ActionType<SentSummary>>, 'ExecuteDelegation'>>;
+type _SentStepDelegations = Assert<
+  Equal<Delegation<ActionType<SentStepSummary>>, 'ExecuteDelegation'>
+>;
+type _SentParsedDelegations = Assert<
+  Equal<Delegation<ActionType<SentParsedSummary>>, 'ExecuteDelegation'>
+>;
+type _SentDelegationTag = Assert<
+  Equal<SentDelegation['tag'], typeof constants.Delegation.Nep366Tag>
+>;
+type _SentDelegationScheme = Assert<
+  Equal<SentDelegation['delegator']['replayProtection']['scheme'], 'NonceChannel'>
 >;
 
 // A deserializer for getTransactionResult must take what `'Legacy'` adds. One of a sending method

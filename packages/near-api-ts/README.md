@@ -691,10 +691,10 @@ their own error kinds — `Action.ExecuteDelegation.Expired`, `.Signature.Invali
 channel of a key paid from the account balance — the protocol refuses one signed by a gas key —
 and it has no `nonceProgression`, since it only needs a nonce above `lastNonce`. `signDelegation`
 signs in the NEP-366 format (`signedDelegation.delegation.tag` is
-`constants.Delegation.Nep366Tag`), the only one `executeDelegation` relays. The action summary
-of an older transaction may still carry a NEP-611 delegation signed by a gas key: its `tag` is
-`constants.Delegation.Nep611Tag` and its `replayProtection` is
-`{ scheme: 'NonceChannels', nonceChannelId, nonce }`.
+`constants.Delegation.Nep366Tag`), the only one `executeDelegation` relays. An older transaction
+may still carry a NEP-611 delegation: `getTransactionResult` reads it as `LegacyExecuteDelegation`,
+with `tag` set to `constants.Delegation.Nep611Tag` and a `replayProtection` that can also be
+`{ scheme: 'NonceChannels', nonceChannelId, nonce }` for one signed by a gas key.
 
 ---
 

@@ -68,6 +68,12 @@
   recorded on chain and the current one refuses, under `Legacy*` names marked
   `@legacy`:
 
+  - `actionType: 'LegacyExecuteDelegation'` – a delegation in the NEP-611
+    format (nearcore `DelegateV2`, protocol 85–86), with `delegation.tag`
+    `constants.Delegation.Nep611Tag` and `delegation.delegator.replayProtection`
+    `{ scheme: 'NonceChannel', nonce }`, or
+    `{ scheme: 'NonceChannels', nonceChannelId, nonce }` for one signed by a key
+    paid from its own balance;
   - `actionType: 'LegacyWithdrawAccessKeyBalance'` – a withdrawal from a key
     balance inside a delegation (protocol 85–86), in `delegatedActionSummaries`.
 
@@ -214,8 +220,8 @@
 
 - **Breaking:** the delegation tags live in one constant:
   `constants.Nep366MetaTransaction.Tag` → `constants.Delegation.Nep366Tag`, next
-  to the new `constants.Delegation.Nep611Tag` – the tag of a NEP-611 delegation
-  in the action summary (see below).
+  to the new `constants.Delegation.Nep611Tag` – the tag of a
+  `LegacyExecuteDelegation` action summary (see Legacy data).
 
 - **Breaking:** the transaction summary in `processingSteps.conversionStep`
   reports the signer the way the transaction takes it:  \
@@ -236,12 +242,11 @@
   The `ExecuteDelegation` action summary does the same: `delegation.delegator`
   `{ accountId, publicKey, replayProtection }` replaces `delegatorAccountId`,
   `delegatorPublicKey` and `nonce`. Unlike the signed delegation, its
-  `replayProtection` names the scheme: `{ scheme: 'NonceChannel', nonce }`, or
-  `{ scheme: 'NonceChannels', nonceChannelId, nonce }` for a NEP-611 delegation
-  signed by a gas key (`delegation.tag` is `constants.Delegation.Nep611Tag`),
-  which only transactions sent before protocol version 87 carry. It now covers
-  NEP-611 delegations too – `getTransactionResult` for a transaction relaying
-  one used to fail with `Client.GetTransactionResult.Internal`. So did one whose
+  `replayProtection` names the scheme: `{ scheme: 'NonceChannel', nonce }`.
+  `getTransactionResult` for a transaction relaying a NEP-611 delegation, which
+  only transactions sent before protocol version 87 carry, used to fail with
+  `Client.GetTransactionResult.Internal`; it now reads one as
+  `LegacyExecuteDelegation` (see Legacy data). So did one whose
   delegation named a nonce channel the gas key does not have; it now reports
   the new execution error kind `Action.ExecuteDelegation.NonceChannel.NotFound`
   with `{ delegationNonceChannelId, accessKeyChannelCount }`.

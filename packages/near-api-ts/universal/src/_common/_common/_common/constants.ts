@@ -41,9 +41,10 @@ export const Delegation = {
    */
   Nep366Tag: 1073742190,
   /**
-   * `(1 << 30) + 611` - NEP-611, nearcore `DelegateActionV2`: any nonce channel of a key.
-   * Nearcore refuses new ones since protocol 87, so it only tags the `ExecuteDelegation` action
-   * summary of a transaction sent before that.
+   * `(1 << 30) + 611` - NEP-611, nearcore `DelegateActionV2`: any nonce channel of a key. It only
+   * tags the `LegacyExecuteDelegation` action summary of a transaction sent before protocol 87.
+   *
+   * @legacy Protocol 85–86 (nearcore 2.13). Protocol 87 refuses new NEP-611 delegations.
    */
   Nep611Tag: 1073742435,
 } as const;
