@@ -7,7 +7,13 @@ import { constants } from '../../../../../../../../_common/_common/_common/const
 import { gas } from '../../../../../../../../_common/nearGas';
 import { yoctoNear } from '../../../../../../../../_common/nearToken';
 import { getRawAddAccessKeyActionSummary } from './_common/getRawAddAccessKeyActionSummary';
-import { getRawExecuteDelegationActionSummary } from './getRawExecuteDelegationActionSummary';
+import { getRawCallContractFunctionActionSummary } from './_common/getRawCallContractFunctionActionSummary';
+import { getRawDeleteAccessKeyActionSummary } from './_common/getRawDeleteAccessKeyActionSummary';
+import { getRawDeleteAccountActionSummary } from './_common/getRawDeleteAccountActionSummary';
+import { getRawStakeActionSummary } from './_common/getRawStakeActionSummary';
+import { getRawTopUpAccessKeyBalanceActionSummary } from './_common/getRawTopUpAccessKeyBalanceActionSummary';
+import { getRawTransferActionSummary } from './_common/getRawTransferActionSummary';
+import { getRawExecuteDelegationActionSummary } from './getRawExecuteDelegationActionSummary/getRawExecuteDelegationActionSummary';
 
 // Assembles the raw action summary from the RPC action - all fields are converted except
 // callContractFunction.functionArgs which stays a raw base64 string;
@@ -21,13 +27,7 @@ const toRawActionSummary = (
     };
   }
 
-  if ('Transfer' in rpcAction) {
-    const { Transfer } = rpcAction;
-    return {
-      actionType: 'Transfer' as const,
-      amount: yoctoNear(Transfer.deposit),
-    };
-  }
+  if ('Transfer' in rpcAction) return getRawTransferActionSummary(rpcAction.Transfer);
 
   if ('AddKey' in rpcAction) return getRawAddAccessKeyActionSummary(rpcAction.AddKey);
 
@@ -42,41 +42,15 @@ const toRawActionSummary = (
     };
   }
 
-  if ('FunctionCall' in rpcAction) {
-    const { FunctionCall } = rpcAction;
-    return {
-      actionType: 'CallContractFunction' as const,
-      functionName: FunctionCall.methodName,
-      functionArgs: FunctionCall.args,
-      gasLimit: gas(FunctionCall.gas),
-      attachedDeposit: yoctoNear(FunctionCall.deposit),
-    };
-  }
+  if ('FunctionCall' in rpcAction)
+    return getRawCallContractFunctionActionSummary(rpcAction.FunctionCall);
 
-  if ('Stake' in rpcAction) {
-    const { Stake } = rpcAction;
-    return {
-      actionType: 'Stake' as const,
-      amount: yoctoNear(Stake.stake),
-      validatorPublicKey: Stake.publicKey as PublicKey, // TODO validate key by zod
-    };
-  }
+  if ('Stake' in rpcAction) return getRawStakeActionSummary(rpcAction.Stake);
 
-  if ('DeleteKey' in rpcAction) {
-    const { DeleteKey } = rpcAction;
-    return {
-      actionType: 'DeleteAccessKey' as const,
-      publicKey: DeleteKey.publicKey as PublicKey, // TODO validate key by zod
-    };
-  }
+  if ('DeleteKey' in rpcAction) return getRawDeleteAccessKeyActionSummary(rpcAction.DeleteKey);
 
-  if ('DeleteAccount' in rpcAction) {
-    const { DeleteAccount } = rpcAction;
-    return {
-      actionType: 'DeleteAccount' as const,
-      beneficiaryAccountId: DeleteAccount.beneficiaryId,
-    };
-  }
+  if ('DeleteAccount' in rpcAction)
+    return getRawDeleteAccountActionSummary(rpcAction.DeleteAccount);
 
   // Nearcore returns the two publication modes as separate views and hands back the hash of the
   // published wasm rather than the wasm itself - the same way it does for `DeployContract`.
@@ -115,11 +89,7 @@ const toRawActionSummary = (
     };
 
   if ('TransferToGasKey' in rpcAction)
-    return {
-      actionType: 'TopUpAccessKeyBalance' as const,
-      publicKey: rpcAction.TransferToGasKey.publicKey as PublicKey, // TODO validate key by zod
-      amount: yoctoNear(rpcAction.TransferToGasKey.deposit),
-    };
+    return getRawTopUpAccessKeyBalanceActionSummary(rpcAction.TransferToGasKey);
 
   if ('WithdrawFromGasKey' in rpcAction)
     return {
