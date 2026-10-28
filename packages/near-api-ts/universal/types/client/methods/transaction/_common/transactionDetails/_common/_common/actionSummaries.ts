@@ -174,7 +174,7 @@ type ExecuteDelegationActionSummary<PE extends ProtocolEra, FA> = {
     delegator: {
       accountId: AccountId;
       publicKey: PublicKey;
-      replayProtection: { scheme: 'NonceChannel'; nonce: SequentialNonce };
+      replayProtection: { nonce: SequentialNonce };
     };
     delegatedActionSummaries: DelegatedActionSummary<PE, FA>[];
     receiverAccountId: AccountId;

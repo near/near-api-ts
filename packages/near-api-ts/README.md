@@ -639,7 +639,7 @@ so they stand out in a `switch`:
 
 | What the chain recorded | Protocol | `getTransactionResult` reports |
 | --- | --- | --- |
-| A delegation in the NEP-611 format (nearcore `DelegateV2`) | 85–86 | `actionType: 'LegacyExecuteDelegation'`, with `tag` set to `constants.Delegation.Nep611Tag` and a `replayProtection` that can also be `{ scheme: 'NonceChannels', nonceChannelId, nonce }` for one signed by a gas key |
+| A delegation in the NEP-611 format (nearcore `DelegateV2`) | 85–86 | `actionType: 'LegacyExecuteDelegation'`, with `tag` set to `constants.Delegation.Nep611Tag` and a `replayProtection` that names its scheme: `{ scheme: 'NonceChannel', nonce }`, or `{ scheme: 'NonceChannels', nonceChannelId, nonce }` for one signed by a gas key |
 | A withdrawal from a key balance inside a delegation | 85–86 | `actionType: 'LegacyWithdrawAccessKeyBalance'` in `delegatedActionSummaries` |
 | A failure of a NEP-611 delegation | 85–86 | `Action.LegacyExecuteDelegation.*` — each `Action.ExecuteDelegation.*` kind, and `.NonceChannel.NotFound` and `.Delegator.AccessKey.NonceChannels.NotFound` of its own |
 

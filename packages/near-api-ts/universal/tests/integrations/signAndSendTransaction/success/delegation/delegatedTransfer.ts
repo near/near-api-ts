@@ -5,9 +5,9 @@ import { getLastNonce } from '../../../../utils/getLastNonce';
 import type { TestContext } from './delegation.test';
 
 // A delegation is signed in the NEP-366 format, on the single nonce channel of the delegator's key.
-// The action summary reports it with the scheme spelled out, the way it reports a NEP-611
-// delegation from before protocol 87, which could use a nonce channel of a key paid from its
-// own balance.
+// The action summary reports just its nonce, the way the delegation takes it - no scheme, unlike a
+// NEP-611 delegation from before protocol 87, which could use a nonce channel of a key paid from
+// its own balance.
 export const delegatedTransfer = (context: TestContext) => async () => {
   const { client, defaultKeyPair, relayKeyPair } = context;
   const delegatorAccountId = 'alice';
@@ -65,7 +65,7 @@ export const delegatedTransfer = (context: TestContext) => async () => {
     minimalProcessingStage: 'CompletedFinal',
   });
 
-  expect(tx.processingSteps.conversionStep.transactionSummary.actionSummaries).toMatchObject([
+  expect(tx.processingSteps.conversionStep.transactionSummary.actionSummaries).toStrictEqual([
     {
       actionType: 'ExecuteDelegation',
       delegation: {
@@ -73,10 +73,15 @@ export const delegatedTransfer = (context: TestContext) => async () => {
         delegator: {
           accountId: delegatorAccountId,
           publicKey: defaultKeyPair.publicKey,
-          replayProtection: { scheme: 'NonceChannel', nonce },
+          replayProtection: { nonce },
         },
+        delegatedActionSummaries: [
+          { actionType: 'Transfer', amount: expect.objectContaining({ yoctoNear: 1n }) },
+        ],
         receiverAccountId: 'bob',
+        expiration: { blockHeight: aliceAccessKey.atMomentOf.blockHeight + 100 },
       },
+      signature: signedDelegation.signedDelegation.signature,
     },
   ]);
 

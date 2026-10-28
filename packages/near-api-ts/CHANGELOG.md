@@ -253,8 +253,8 @@
 
   The `ExecuteDelegation` action summary does the same: `delegation.delegator`
   `{ accountId, publicKey, replayProtection }` replaces `delegatorAccountId`,
-  `delegatorPublicKey` and `nonce`. Unlike the signed delegation, its
-  `replayProtection` names the scheme: `{ scheme: 'NonceChannel', nonce }`.
+  `delegatorPublicKey` and `nonce`. Its `replayProtection` is `{ nonce }`, as in
+  the signed delegation.
   `getTransactionResult` for a transaction relaying a NEP-611 delegation, which
   only transactions sent before protocol version 87 carry, used to fail with
   `Client.GetTransactionResult.Internal`; it now reads one as

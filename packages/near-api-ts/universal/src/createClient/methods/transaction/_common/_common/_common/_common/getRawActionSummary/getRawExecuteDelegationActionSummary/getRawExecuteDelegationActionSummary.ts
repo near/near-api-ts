@@ -49,7 +49,7 @@ export const getRawExecuteDelegationActionSummary = (
         tag: delegation.tag,
         delegator: {
           ...delegator,
-          replayProtection: { scheme: 'NonceChannel', nonce: delegation.delegateAction.nonce },
+          replayProtection: { nonce: delegation.delegateAction.nonce },
         },
         delegatedActionSummaries,
         receiverAccountId,

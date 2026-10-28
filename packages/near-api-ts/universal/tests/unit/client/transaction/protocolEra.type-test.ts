@@ -130,8 +130,8 @@ type _SentParsedDelegations = Assert<
 type _SentDelegationTag = Assert<
   Equal<SentDelegation['tag'], typeof constants.Delegation.Nep366Tag>
 >;
-type _SentDelegationScheme = Assert<
-  Equal<SentDelegation['delegator']['replayProtection']['scheme'], 'NonceChannel'>
+type _SentDelegationReplayProtection = Assert<
+  Equal<keyof SentDelegation['delegator']['replayProtection'], 'nonce'>
 >;
 
 // A deserializer for getTransactionResult must take what `'Legacy'` adds. One of a sending method
