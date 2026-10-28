@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
 import type { Client } from '../../types/client/client';
-import type { MemoryKeyVault } from '../../types/memoryKeyVault/memoryKeyVault';
+import type { MemoryVault } from '../../types/memoryVault/memoryVault';
 import type {
   CreateMemorySigner,
   SafeCreateMemorySigner,
@@ -28,7 +28,7 @@ import { createTaskQueue } from './createTaskQueue/createTaskQueue';
 const CreateMemorySignerArgsSchema = z.object({
   signerAccountId: AccountIdZodSchema,
   client: z.custom<Client>((value) => true), // TODO fix it
-  keyVault: z.custom<MemoryKeyVault>((value) => true), // TODO fix it
+  keyVault: z.custom<MemoryVault>((value) => true), // TODO fix it
   keyPool: z.optional(
     z.object({
       allowedAccessKeys: z.optional(z.array(PublicKeyZodSchema).check(z.minLength(1))),

@@ -3,11 +3,11 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemoryKeyVault,
   createMemorySigner,
+  createMemoryVault,
   createSubAccount,
   deleteAccessKey,
-  type MemoryKeyVault,
+  type MemoryVault,
   near,
   randomEd25519KeyPair,
   stake,
@@ -23,7 +23,7 @@ const TRANSFER_FEE = { near: '0.000446365125' };
 
 describe('Get Account Balance', () => {
   let client: Client;
-  let keyVault: MemoryKeyVault;
+  let keyVault: MemoryVault;
 
   const keyPair1 = randomEd25519KeyPair();
 
@@ -32,7 +32,7 @@ describe('Get Account Balance', () => {
     // gas price that produces no price-difference refund receipts.
     const sandbox = await startSandbox({ gasPrice: MIN_GAS_PURCHASE_PRICE });
     client = createDefaultClient(sandbox);
-    keyVault = createMemoryKeyVault({
+    keyVault = createMemoryVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, { privateKey: keyPair1.privateKey }],
     });
     return () => sandbox.stop();

@@ -2,9 +2,9 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
-  createMemoryKeyVault,
   createMemorySigner,
-  type MemoryKeyVault,
+  createMemoryVault,
+  type MemoryVault,
   near,
   randomEd25519KeyPair,
   stake,
@@ -15,12 +15,12 @@ import { startSandbox } from '../../../../../../../utils/sandbox/startSandbox';
 
 describe('executeTransaction › Transaction.Action.Stake.ValidatorStake.AlreadyZero', () => {
   let client: Client;
-  let keyVault: MemoryKeyVault;
+  let keyVault: MemoryVault;
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyVault = createMemoryKeyVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } });
+    keyVault = createMemoryVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } });
     return () => sandbox.stop();
   });
 

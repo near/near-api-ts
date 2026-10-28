@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import * as z from 'zod/mini';
 import {
   type Client,
-  createMemoryKeyVault,
-  type MemoryKeyVault,
+  createMemoryVault,
+  type MemoryVault,
   safeCreateMemorySigner,
 } from '../../../index';
 import { assertNatErrKind } from '../../utils/assertNatErrKind';
@@ -14,12 +14,12 @@ import { startSandbox } from '../../utils/sandbox/startSandbox';
 z.config(z.locales.en());
 describe('createMemorySigner', async () => {
   let client: Client;
-  let keyVault: MemoryKeyVault;
+  let keyVault: MemoryVault;
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyVault = createMemoryKeyVault({
+    keyVault = createMemoryVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
     });
     return () => sandbox.stop();

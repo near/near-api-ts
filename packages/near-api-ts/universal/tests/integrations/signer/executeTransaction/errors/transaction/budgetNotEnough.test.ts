@@ -3,10 +3,10 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemoryKeyVault,
   createMemorySigner,
+  createMemoryVault,
   createSubAccount,
-  type MemoryKeyVault,
+  type MemoryVault,
   near,
   randomEd25519KeyPair,
   transfer,
@@ -17,13 +17,13 @@ import { startSandbox } from '../../../../../utils/sandbox/startSandbox';
 
 describe('executeTransaction › Signer.Budget.NotEnough', () => {
   let client: Client;
-  let keyVault: MemoryKeyVault;
+  let keyVault: MemoryVault;
   const keyPair1 = randomEd25519KeyPair();
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyVault = createMemoryKeyVault({
+    keyVault = createMemoryVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, keyPair1],
     });
     return () => sandbox.stop();

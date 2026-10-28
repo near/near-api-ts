@@ -4,7 +4,7 @@ import {
   addAccessKey,
   callContractFunction,
   createClient,
-  createMemoryKeyVault,
+  createMemoryVault,
   createTestnetClient,
   deployLocalContract,
   keyPair,

@@ -1,9 +1,9 @@
 import * as z from 'zod/mini';
 import type {
-  CreateMemoryKeyVault,
-  MemoryKeyVaultContext,
-  SafeCreateMemoryKeyVault,
-} from '../../types/memoryKeyVault/memoryKeyVault';
+  CreateMemoryVault,
+  MemoryVaultContext,
+  SafeCreateMemoryVault,
+} from '../../types/memoryVault/memoryVault';
 import { result, resultNatError } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
@@ -17,7 +17,7 @@ const KeySourceSchema = z.object({
   privateKey: PrivateKeyZodSchema,
 });
 
-const CreateMemoryKeyVaultArgsSchema = z.union([
+const CreateMemoryVaultArgsSchema = z.union([
   z.object({
     keySource: KeySourceSchema,
   }),
@@ -26,21 +26,21 @@ const CreateMemoryKeyVaultArgsSchema = z.union([
   }),
 ]);
 
-export type InnerCreateMemoryKeyVaultArgs = z.infer<typeof CreateMemoryKeyVaultArgsSchema>;
+export type InnerCreateMemoryVaultArgs = z.infer<typeof CreateMemoryVaultArgsSchema>;
 
-export const safeCreateMemoryKeyVault: SafeCreateMemoryKeyVault = wrapInternalError(
-  'CreateMemoryKeyVault.Internal',
+export const safeCreateMemoryVault: SafeCreateMemoryVault = wrapInternalError(
+  'CreateMemoryVault.Internal',
   (args) => {
-    const validArgs = CreateMemoryKeyVaultArgsSchema.safeParse(args);
+    const validArgs = CreateMemoryVaultArgsSchema.safeParse(args);
 
     if (!validArgs.success)
-      return resultNatError('CreateMemoryKeyVault.Args.InvalidSchema', {
+      return resultNatError('CreateMemoryVault.Args.InvalidSchema', {
         zodError: validArgs.error,
       });
 
     const context = {
       keyPairs: toKeyPairs(validArgs.data),
-    } as MemoryKeyVaultContext;
+    } as MemoryVaultContext;
 
     const safeHasKey = createSafeHasKey(context);
     const hasKey = asThrowable(safeHasKey);
@@ -64,4 +64,4 @@ export const safeCreateMemoryKeyVault: SafeCreateMemoryKeyVault = wrapInternalEr
   },
 );
 
-export const createMemoryKeyVault: CreateMemoryKeyVault = asThrowable(safeCreateMemoryKeyVault);
+export const createMemoryVault: CreateMemoryVault = asThrowable(safeCreateMemoryVault);

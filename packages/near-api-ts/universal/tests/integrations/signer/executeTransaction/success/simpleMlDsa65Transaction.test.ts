@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemoryKeyVault,
   createMemorySigner,
+  createMemoryVault,
   randomMlDsa65KeyPair,
   transfer,
 } from '../../../../../index';
@@ -21,11 +21,11 @@ describe('executeTransaction › success', () => {
   });
 
   // The node lists an ml-dsa-65 key by its hash, so the signer has to get the
-  // full public key back from the key vault before it can sign with it
+  // full public key back from the vault before it can sign with it
   it('signs and sends a native transfer with an ml-dsa-65 key', async () => {
     const defaultSigner = createMemorySigner({
       signerAccountId: 'nat',
-      keyVault: createMemoryKeyVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
+      keyVault: createMemoryVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
       client,
     });
 
@@ -44,7 +44,7 @@ describe('executeTransaction › success', () => {
 
     const mlDsa65Signer = createMemorySigner({
       signerAccountId: 'nat',
-      keyVault: createMemoryKeyVault({ keySource: mlDsa65KeyPair }),
+      keyVault: createMemoryVault({ keySource: mlDsa65KeyPair }),
       client,
     });
 
@@ -61,7 +61,7 @@ describe('executeTransaction › success', () => {
   });
 
   it('keeps only the whitelisted ml-dsa-65 key in the pool', async () => {
-    const defaultKeyVault = createMemoryKeyVault({
+    const defaultKeyVault = createMemoryVault({
       keySource: { privateKey: DEFAULT_PRIVATE_KEY },
     });
     const defaultSigner = createMemorySigner({
@@ -83,10 +83,10 @@ describe('executeTransaction › success', () => {
       },
     });
 
-    // The key vault holds both keys; the whitelist narrows the pool to the ml-dsa-65 one
+    // The vault holds both keys; the whitelist narrows the pool to the ml-dsa-65 one
     const signer = createMemorySigner({
       signerAccountId: 'nat',
-      keyVault: createMemoryKeyVault({
+      keyVault: createMemoryVault({
         keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, mlDsa65KeyPair],
       }),
       keyPool: { allowedAccessKeys: [mlDsa65KeyPair.publicKey] },

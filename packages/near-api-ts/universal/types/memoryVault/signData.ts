@@ -6,9 +6,9 @@ import type {
 } from '../_common/signData';
 
 type SignDataError =
-  | NatError<'MemoryKeyVault.SignData.Args.InvalidSchema'>
-  | NatError<'MemoryKeyVault.SignData.SigningKey.NotFound'>
-  | NatError<'MemoryKeyVault.SignData.Internal'>;
+  | NatError<'MemoryVault.SignData.Args.InvalidSchema'>
+  | NatError<'MemoryVault.SignData.SigningKey.NotFound'>
+  | NatError<'MemoryVault.SignData.Internal'>;
 
 export type SafeSignData = CommonSafeSignData<SignDataError>;
 export type SignData = (args: SignDataArgs) => Promise<SignedData>;

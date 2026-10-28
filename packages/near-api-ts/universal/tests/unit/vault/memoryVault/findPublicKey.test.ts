@@ -1,17 +1,13 @@
 import { base58 } from '@scure/base';
 import { describe, expect, it } from 'vitest';
-import {
-  createMemoryKeyVault,
-  randomEd25519KeyPair,
-  randomMlDsa65KeyPair,
-} from '../../../../index';
+import { createMemoryVault, randomEd25519KeyPair, randomMlDsa65KeyPair } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
-describe('memoryKeyVault.findPublicKey', () => {
+describe('memoryVault.findPublicKey', () => {
   const ed25519KeyPair = randomEd25519KeyPair();
   const mlDsa65KeyPair = randomMlDsa65KeyPair();
 
-  const keyVault = createMemoryKeyVault({
+  const keyVault = createMemoryVault({
     keySources: [ed25519KeyPair, mlDsa65KeyPair],
   });
 
@@ -37,13 +33,13 @@ describe('memoryKeyVault.findPublicKey', () => {
       // @ts-expect-error a full ml-dsa-65 public key is not an id
       publicKeyId: mlDsa65KeyPair.publicKey,
     });
-    assertNatErrKind(result, 'MemoryKeyVault.FindPublicKey.Args.InvalidSchema');
+    assertNatErrKind(result, 'MemoryVault.FindPublicKey.Args.InvalidSchema');
   });
 
   it('rejects an id of the wrong length with Args.InvalidSchema', async () => {
     const result = await keyVault.safeFindPublicKey({
       publicKeyId: `ml-dsa-65-hash:${base58.encode(new Uint8Array(31).fill(7))}`,
     });
-    assertNatErrKind(result, 'MemoryKeyVault.FindPublicKey.Args.InvalidSchema');
+    assertNatErrKind(result, 'MemoryVault.FindPublicKey.Args.InvalidSchema');
   });
 });

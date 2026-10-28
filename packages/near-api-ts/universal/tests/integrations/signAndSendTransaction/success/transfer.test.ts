@@ -1,11 +1,6 @@
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it } from 'vitest';
-import {
-  type Client,
-  createMemoryKeyVault,
-  type MemoryKeyVault,
-  transfer,
-} from '../../../../index';
+import { type Client, createMemoryVault, type MemoryVault, transfer } from '../../../../index';
 import { signTransaction } from '../../../../src/transaction/signTransaction/signTransaction';
 import { createDefaultClient } from '../../../utils/common';
 import { getLastNonce } from '../../../utils/getLastNonce';
@@ -14,12 +9,12 @@ import { testKeys } from '../../../utils/testKeys';
 
 describe('safeSendSignedTransaction › success', () => {
   let client: Client;
-  let keyVault: MemoryKeyVault;
+  let keyVault: MemoryVault;
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyVault = createMemoryKeyVault({
+    keyVault = createMemoryVault({
       keySources: [
         { privateKey: DEFAULT_PRIVATE_KEY },
         { privateKey: testKeys.fc.forContract.privateKey },

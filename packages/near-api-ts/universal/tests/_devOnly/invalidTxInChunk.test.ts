@@ -2,8 +2,8 @@ import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addAccessKey,
-  createMemoryKeyVault,
   createMemorySigner,
+  createMemoryVault,
   keyPair,
   near,
   randomEd25519KeyPair,
@@ -31,7 +31,7 @@ describe('invalid transaction included in a chunk', () => {
     const sandbox = await startMaliciousSandbox();
     rpcUrl = sandbox.rpcUrl;
     client = createDefaultClient(sandbox);
-    const keyVault = createMemoryKeyVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } });
+    const keyVault = createMemoryVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } });
     nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
     return () => sandbox.stop();
   });

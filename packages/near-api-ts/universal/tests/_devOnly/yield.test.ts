@@ -5,8 +5,8 @@ import {
   addAccessKey,
   type Client,
   callContractFunction,
-  createMemoryKeyVault,
   createMemorySigner,
+  createMemoryVault,
   createSubAccount,
   createTestnetClient,
   deployLocalContract,
@@ -31,7 +31,7 @@ describe('yield contract', () => {
   it('test', async () => {
     const testnetClient = createTestnetClient();
 
-    const keyVault = createMemoryKeyVault({
+    const keyVault = createMemoryVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
     });
 

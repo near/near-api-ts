@@ -4,10 +4,10 @@ import * as z from 'zod/mini';
 import {
   addAccessKey,
   type Client,
-  createMemoryKeyVault,
   createMemorySigner,
+  createMemoryVault,
   createSubAccount,
-  type MemoryKeyVault,
+  type MemoryVault,
   randomEd25519KeyPair,
   transfer,
 } from '../../../../index';
@@ -19,14 +19,14 @@ z.config(z.locales.en());
 
 describe('MemorySigner.signTransaction', async () => {
   let client: Client;
-  let keyVault: MemoryKeyVault;
+  let keyVault: MemoryVault;
 
   const keyPair1 = randomEd25519KeyPair();
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyVault = createMemoryKeyVault({
+    keyVault = createMemoryVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, { privateKey: keyPair1.privateKey }],
     });
     return () => sandbox.stop();

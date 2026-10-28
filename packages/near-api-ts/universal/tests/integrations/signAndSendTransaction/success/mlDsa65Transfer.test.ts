@@ -3,9 +3,9 @@ import { beforeAll, describe, expect, it, vi } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemoryKeyVault,
+  createMemoryVault,
   createSubAccount,
-  type MemoryKeyVault,
+  type MemoryVault,
   randomMlDsa65KeyPair,
   transfer,
 } from '../../../../index';
@@ -18,7 +18,7 @@ vi.setConfig({ testTimeout: 120000, hookTimeout: 120000 });
 
 describe('ml-dsa-65 Transaction success', () => {
   let client: Client;
-  let keyVault: MemoryKeyVault;
+  let keyVault: MemoryVault;
 
   // Post-quantum key generated at runtime — no 5.5 KB fixture literal.
   const mlDsa65KeyPair = randomMlDsa65KeyPair();
@@ -27,7 +27,7 @@ describe('ml-dsa-65 Transaction success', () => {
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyVault = createMemoryKeyVault({
+    keyVault = createMemoryVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, { privateKey: mlDsa65KeyPair.privateKey }],
     });
     return () => sandbox.stop();

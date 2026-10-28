@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { createMemoryKeyVault, randomEd25519KeyPair } from '../../../../index';
+import { createMemoryVault, randomEd25519KeyPair } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
 
-describe('memoryKeyVault.hasKey', () => {
+describe('memoryVault.hasKey', () => {
   it('returns true when the key is present', async () => {
     const kp1 = randomEd25519KeyPair();
 
-    const keyVault = createMemoryKeyVault({
+    const keyVault = createMemoryVault({
       keySource: { privateKey: kp1.privateKey },
     });
     const result = await keyVault.hasKey({ publicKey: kp1.publicKey });
@@ -14,7 +14,7 @@ describe('memoryKeyVault.hasKey', () => {
   });
 
   it('returns false when the key is absent', async () => {
-    const keyVault = createMemoryKeyVault({
+    const keyVault = createMemoryVault({
       keySource: { privateKey: randomEd25519KeyPair().privateKey },
     });
     const result = await keyVault.hasKey({
@@ -24,7 +24,7 @@ describe('memoryKeyVault.hasKey', () => {
   });
 
   it('rejects an invalid public key with Args.InvalidSchema', async () => {
-    const keyVault = createMemoryKeyVault({
+    const keyVault = createMemoryVault({
       keySource: { privateKey: randomEd25519KeyPair().privateKey },
     });
 
@@ -32,6 +32,6 @@ describe('memoryKeyVault.hasKey', () => {
       // @ts-expect-error
       publicKey: 1,
     });
-    assertNatErrKind(result, 'MemoryKeyVault.HasKey.Args.InvalidSchema');
+    assertNatErrKind(result, 'MemoryVault.HasKey.Args.InvalidSchema');
   });
 });

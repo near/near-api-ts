@@ -5,8 +5,8 @@ import {
   type Client,
   callContractFunction,
   convertBase64ToObject,
-  createMemoryKeyVault,
   createMemorySigner,
+  createMemoryVault,
   createSubAccount,
   deployLocalContract,
   type GetTransactionResultDeserializeActionSummariesArgs,
@@ -37,7 +37,7 @@ describe('CallContractReadFunction', () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
 
-    const keyVault = createMemoryKeyVault({
+    const keyVault = createMemoryVault({
       keySource: { privateKey: DEFAULT_PRIVATE_KEY },
     });
     nat = createMemorySigner({

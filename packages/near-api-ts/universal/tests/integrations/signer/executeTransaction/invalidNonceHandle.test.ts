@@ -3,9 +3,9 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import * as z from 'zod/mini';
 import {
   type Client,
-  createMemoryKeyVault,
   createMemorySigner,
-  type MemoryKeyVault,
+  createMemoryVault,
+  type MemoryVault,
   transfer,
 } from '../../../../index';
 import { createDefaultClient } from '../../../utils/common';
@@ -14,12 +14,12 @@ import { startSandbox } from '../../../utils/sandbox/startSandbox';
 z.config(z.locales.en());
 describe('MemorySigner.executeTransaction', async () => {
   let client: Client;
-  let keyVault: MemoryKeyVault;
+  let keyVault: MemoryVault;
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
-    keyVault = createMemoryKeyVault({
+    keyVault = createMemoryVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
     });
     return () => sandbox.stop();

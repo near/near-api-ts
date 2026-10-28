@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
-import type { SafeFindPublicKey } from '../../types/memoryKeyVault/findPublicKey';
-import type { MemoryKeyVaultContext } from '../../types/memoryKeyVault/memoryKeyVault';
+import type { SafeFindPublicKey } from '../../types/memoryVault/findPublicKey';
+import type { MemoryVaultContext } from '../../types/memoryVault/memoryVault';
 import { result, resultNatError } from '../_common/_common/_common/result';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { PublicKeyIdZodSchema } from '../_common/zodSchemas/publicKeyId';
@@ -9,12 +9,12 @@ const FindPublicKeyArgsZodSchema = z.object({
   publicKeyId: PublicKeyIdZodSchema,
 });
 
-export const createSafeFindPublicKey = (context: MemoryKeyVaultContext): SafeFindPublicKey =>
-  wrapInternalError('MemoryKeyVault.FindPublicKey.Internal', async (args) => {
+export const createSafeFindPublicKey = (context: MemoryVaultContext): SafeFindPublicKey =>
+  wrapInternalError('MemoryVault.FindPublicKey.Internal', async (args) => {
     const validArgs = FindPublicKeyArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
-      return resultNatError('MemoryKeyVault.FindPublicKey.Args.InvalidSchema', {
+      return resultNatError('MemoryVault.FindPublicKey.Args.InvalidSchema', {
         zodError: validArgs.error,
       });
 

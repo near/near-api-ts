@@ -3,8 +3,8 @@ import { beforeAll, describe, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemoryKeyVault,
   createMemorySigner,
+  createMemoryVault,
   randomEd25519KeyPair,
   transfer,
 } from '../../../../../index';
@@ -23,7 +23,7 @@ describe('executeTransaction › success', () => {
   it('sends 100 parallel native transfers using 10 ContractFunctionCall keys', async () => {
     const keyPairs = new Array(9).fill(0).map(() => randomEd25519KeyPair());
 
-    const keyVault = createMemoryKeyVault({
+    const keyVault = createMemoryVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, ...keyPairs],
     });
 

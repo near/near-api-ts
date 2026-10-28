@@ -5,8 +5,8 @@ import type { PublicKey } from '../_common/crypto';
 type HasKeyArgs = { publicKey: PublicKey };
 
 type HasKeyError =
-  | NatError<'MemoryKeyVault.HasKey.Args.InvalidSchema'>
-  | NatError<'MemoryKeyVault.HasKey.Internal'>;
+  | NatError<'MemoryVault.HasKey.Args.InvalidSchema'>
+  | NatError<'MemoryVault.HasKey.Internal'>;
 
 export type SafeHasKey = (args: HasKeyArgs) => Promise<Result<boolean, HasKeyError>>;
 export type HasKey = (args: HasKeyArgs) => Promise<boolean>;

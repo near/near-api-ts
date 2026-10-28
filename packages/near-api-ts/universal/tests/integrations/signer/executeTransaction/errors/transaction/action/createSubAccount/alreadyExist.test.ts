@@ -2,10 +2,10 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
-  createMemoryKeyVault,
   createMemorySigner,
+  createMemoryVault,
   createSubAccount,
-  type MemoryKeyVault,
+  type MemoryVault,
 } from '../../../../../../../../index';
 import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../../../../../../utils/common';
@@ -13,13 +13,13 @@ import { startSandbox } from '../../../../../../../utils/sandbox/startSandbox';
 
 describe('executeTransaction › Transaction.Action.CreateSubAccount.AlreadyExist', () => {
   let client: Client;
-  let keyVault: MemoryKeyVault;
+  let keyVault: MemoryVault;
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
 
     client = createDefaultClient(sandbox);
-    keyVault = createMemoryKeyVault({
+    keyVault = createMemoryVault({
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
     });
     return () => sandbox.stop();

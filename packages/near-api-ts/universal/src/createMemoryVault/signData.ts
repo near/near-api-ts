@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
-import type { MemoryKeyVaultContext } from '../../types/memoryKeyVault/memoryKeyVault';
-import type { SafeSignData } from '../../types/memoryKeyVault/signData';
+import type { MemoryVaultContext } from '../../types/memoryVault/memoryVault';
+import type { SafeSignData } from '../../types/memoryVault/signData';
 import { result, resultNatError } from '../_common/_common/_common/result';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { PublicKeyZodSchema } from '../_common/zodSchemas/publicKey';
@@ -10,12 +10,12 @@ const SignDataArgsZodSchema = z.object({
   dataU8: z.instanceof(Uint8Array),
 });
 
-export const createSafeSignData = (context: MemoryKeyVaultContext): SafeSignData =>
-  wrapInternalError('MemoryKeyVault.SignData.Internal', async (args) => {
+export const createSafeSignData = (context: MemoryVaultContext): SafeSignData =>
+  wrapInternalError('MemoryVault.SignData.Internal', async (args) => {
     const validArgs = SignDataArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
-      return resultNatError('MemoryKeyVault.SignData.Args.InvalidSchema', {
+      return resultNatError('MemoryVault.SignData.Args.InvalidSchema', {
         zodError: validArgs.error,
       });
 
@@ -25,7 +25,7 @@ export const createSafeSignData = (context: MemoryKeyVaultContext): SafeSignData
     const isKeyPair = await context.hasKey({ publicKey: publicKey.publicKey });
 
     if (!isKeyPair)
-      return resultNatError('MemoryKeyVault.SignData.SigningKey.NotFound', {
+      return resultNatError('MemoryVault.SignData.SigningKey.NotFound', {
         publicKey: publicKey.publicKey,
       });
 

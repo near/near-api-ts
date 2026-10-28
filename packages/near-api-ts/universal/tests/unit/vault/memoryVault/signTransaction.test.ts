@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createMemoryKeyVault, randomEd25519KeyPair } from '../../../../index';
+import { createMemoryVault, randomEd25519KeyPair } from '../../../../index';
 import {
   safeSignTransaction,
   signTransaction,
@@ -25,9 +25,9 @@ const transaction: Transaction = {
   recentBlockHash: 'EDhhHZrpcbJ4RrswFrcsPjww9oa6LTruF5Q4Hq2dXYwP',
 };
 
-describe('memoryKeyVault.signTransaction', () => {
+describe('memoryVault.signTransaction', () => {
   it('signs a transaction and returns hash and signature', async () => {
-    const keyVault = createMemoryKeyVault({ keySource: { privateKey } });
+    const keyVault = createMemoryVault({ keySource: { privateKey } });
     const res = await signTransaction({ signDataProvider: keyVault, transaction });
 
     expect(res.transactionHash).toBe('HhxcQZDTWRsDV61vkH9zz94FSC8Fe8at3M4XCrgUQMrT');
@@ -37,7 +37,7 @@ describe('memoryKeyVault.signTransaction', () => {
   });
 
   it('fails with SigningKey.NotFound when no key matches the signer', async () => {
-    const keyVault = createMemoryKeyVault({ keySource: { privateKey } });
+    const keyVault = createMemoryVault({ keySource: { privateKey } });
 
     const res = await safeSignTransaction({
       signDataProvider: keyVault,
