@@ -1,7 +1,7 @@
 import type { AccountId } from '../_common/common';
 import type { Client } from '../client/client';
 import type { MemoryVault } from '../memoryVault/memoryVault';
-import type { CreateMemorySignerPublicErrorRegistry } from './createMemorySigner';
+import type { CreateSignerPublicErrorRegistry } from './createSigner';
 import type { KeyPool, KeyPoolInnerErrorRegistry } from './inner/keyPool';
 import type { Tasker } from './inner/tasker';
 import type { TaskQueue, TaskQueueInnerErrorRegistry } from './inner/taskQueue';
@@ -16,16 +16,16 @@ import type {
   SignTransactionPublicErrorRegistry,
 } from './public/createSignTransaction';
 
-export interface MemorySignerInnerErrorRegistry
+export interface SignerInnerErrorRegistry
   extends KeyPoolInnerErrorRegistry,
     TaskQueueInnerErrorRegistry {}
 
-export interface MemorySignerPublicErrorRegistry
-  extends CreateMemorySignerPublicErrorRegistry,
+export interface SignerPublicErrorRegistry
+  extends CreateSignerPublicErrorRegistry,
     ExecuteTransactionPublicErrorRegistry,
     SignTransactionPublicErrorRegistry {}
 
-export type MemorySignerContext = {
+export type SignerContext = {
   signerAccountId: AccountId;
   client: Client;
   keyVault: MemoryVault;
@@ -35,7 +35,7 @@ export type MemorySignerContext = {
 };
 
 // NextFeature: add policies
-export type MemorySigner = {
+export type Signer = {
   signerAccountId: AccountId;
   client: Client;
   keyVault: MemoryVault;

@@ -3,14 +3,14 @@ import { createFindKeyForTask } from './createFindKeyForTask';
 import { createGetPoolKeys } from './createGetPoolKeys/createGetPoolKeys';
 import { createIsKeyForTaskExist } from './createIsKeyForTaskExist';
 
-export const createKeyPool: CreateKeyPool = (signerContext, createMemorySignerArgs) => {
+export const createKeyPool: CreateKeyPool = (signerContext, createSignerArgs) => {
   const state: KeyPoolState = {
     poolKeys: undefined,
     poolKeysLoadingPromise: undefined,
   };
 
   const keyPoolContext = {
-    getPoolKeys: createGetPoolKeys(state, signerContext, createMemorySignerArgs),
+    getPoolKeys: createGetPoolKeys(state, signerContext, createSignerArgs),
   };
 
   return {

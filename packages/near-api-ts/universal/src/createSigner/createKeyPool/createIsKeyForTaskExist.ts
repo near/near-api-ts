@@ -43,7 +43,7 @@ export const createIsKeyForTaskExist =
 
     return result.err(
       createNatError({
-        kind: 'MemorySigner.KeyPool.SigningKey.NotFound',
+        kind: 'Signer.KeyPool.SigningKey.NotFound',
         context: {
           poolKeys: poolKeys.data,
           accessTypePriority: task.accessTypePriority,

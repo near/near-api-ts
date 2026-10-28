@@ -1,6 +1,6 @@
-import type { CreateMemorySignerArgs } from '../../../../types/signer/createMemorySigner';
+import type { CreateSignerArgs } from '../../../../types/signer/createSigner';
 import type { GetPoolKeys, KeyPoolState } from '../../../../types/signer/inner/keyPool';
-import type { MemorySignerContext } from '../../../../types/signer/memorySigner';
+import type { SignerContext } from '../../../../types/signer/signer';
 import { createNatError } from '../../../_common/_common/_common/_common/natError';
 import { result } from '../../../_common/_common/_common/result';
 import { createContractFunctionCallPoolKeys } from './createContractFunctionCallPoolKeys';
@@ -12,8 +12,8 @@ import { getAllowedAccessKeys } from './getAllowedAccessKeys';
 export const createGetPoolKeys =
   (
     state: KeyPoolState,
-    signerContext: MemorySignerContext,
-    createMemorySignerArgs: CreateMemorySignerArgs,
+    signerContext: SignerContext,
+    createSignerArgs: CreateSignerArgs,
   ): GetPoolKeys =>
   async () => {
     // 1. If pool keys already exist - return them;
@@ -39,24 +39,21 @@ export const createGetPoolKeys =
       if (!accessKeys.success)
         return result.err(
           createNatError({
-            kind: 'MemorySigner.KeyPool.AccessKeys.NotLoaded',
+            kind: 'Signer.KeyPool.AccessKeys.NotLoaded',
             context: { cause: accessKeys.error },
           }),
         );
 
       // 4. If a user wants to handle all tasks only by a specific key/s - remove others;
-      const allowedAccessKeys = getAllowedAccessKeys(
-        accessKeys.data.accessKeys,
-        createMemorySignerArgs,
-      );
+      const allowedAccessKeys = getAllowedAccessKeys(accessKeys.data.accessKeys, createSignerArgs);
 
       if (allowedAccessKeys.length === 0)
         return result.err(
           createNatError({
-            kind: 'MemorySigner.KeyPool.Empty',
+            kind: 'Signer.KeyPool.Empty',
             context: {
               accessKeys: accessKeys.data.accessKeys,
-              allowedAccessKeys: createMemorySignerArgs.keyPool?.allowedAccessKeys ?? [],
+              allowedAccessKeys: createSignerArgs.keyPool?.allowedAccessKeys ?? [],
             },
           }),
         );

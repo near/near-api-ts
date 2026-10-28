@@ -2,8 +2,8 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   type MemoryVault,
   near,
   randomEd25519KeyPair,
@@ -25,7 +25,7 @@ describe('executeTransaction › Transaction.Action.Stake.ValidatorStake.Already
   });
 
   it('fails with Transaction.Action.Stake.ValidatorStake.AlreadyZero when staking zero with an unknown validator key', async () => {
-    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
+    const nat = createSigner({ signerAccountId: 'nat', client, keyVault });
 
     const res = await nat.safeExecuteTransaction({
       intent: {
@@ -37,9 +37,6 @@ describe('executeTransaction › Transaction.Action.Stake.ValidatorStake.Already
       },
     });
 
-    assertNatErrKind(
-      res,
-      'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero',
-    );
+    assertNatErrKind(res, 'Signer.ExecuteTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero');
   });
 });

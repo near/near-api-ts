@@ -3,8 +3,8 @@ import { beforeAll, describe, it } from 'vitest';
 import {
   addAccessKey,
   callContractFunction,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   deployLocalContract,
   keyPair,
   near,
@@ -13,20 +13,20 @@ import {
 } from '../../index';
 import { createSubAccount } from '../../src/transaction/actionCreators/createSubAccount';
 import type { Client } from '../../types/client/client';
-import type { MemorySigner } from '../../types/signer/memorySigner';
+import type { Signer } from '../../types/signer/signer';
 import { createDefaultClient, getFileBytes, log } from '../utils/common';
 import { startSandbox } from '../utils/sandbox/startSandbox';
 
 describe('CallContractReadFunction', () => {
   let client: Client;
-  let nat: MemorySigner;
+  let nat: Signer;
 
   beforeAll(async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
     const keyVault = createMemoryVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } });
 
-    nat = createMemorySigner({
+    nat = createSigner({
       signerAccountId: 'nat',
       client,
       keyVault,

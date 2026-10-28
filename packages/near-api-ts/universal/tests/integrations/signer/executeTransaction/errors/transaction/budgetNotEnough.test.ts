@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   createSubAccount,
   type MemoryVault,
   near,
@@ -30,7 +30,7 @@ describe('executeTransaction › Signer.Budget.NotEnough', () => {
   });
 
   it('fails with Signer.Budget.NotEnough when transferring more than the balance', async () => {
-    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
+    const nat = createSigner({ signerAccountId: 'nat', client, keyVault });
 
     // 1. Create an account with 10 FA keys
     await nat.executeTransaction({
@@ -65,7 +65,7 @@ describe('executeTransaction › Signer.Budget.NotEnough', () => {
     expect(balance1.locked.total.near).toBe('0.0092');
 
     // 2. try to send
-    const abc = createMemorySigner({ signerAccountId: 'abc.nat', client, keyVault });
+    const abc = createSigner({ signerAccountId: 'abc.nat', client, keyVault });
 
     const tx = await abc.safeExecuteTransaction({
       intent: {
@@ -76,6 +76,6 @@ describe('executeTransaction › Signer.Budget.NotEnough', () => {
       },
     });
 
-    assertNatErrKind(tx, 'MemorySigner.ExecuteTransaction.Rpc.Signer.Budget.NotEnough');
+    assertNatErrKind(tx, 'Signer.ExecuteTransaction.Rpc.Signer.Budget.NotEnough');
   });
 });

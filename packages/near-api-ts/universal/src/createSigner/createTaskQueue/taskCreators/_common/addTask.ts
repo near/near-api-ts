@@ -16,7 +16,7 @@ export const addTask = (task: Task, taskQueueContext: TaskQueueContext) => {
       task.taskId,
       result.err(
         createNatError({
-          kind: 'MemorySigner.TaskQueue.Timeout',
+          kind: 'Signer.TaskQueue.Timeout',
           context: { timeoutMs },
         }),
       ),

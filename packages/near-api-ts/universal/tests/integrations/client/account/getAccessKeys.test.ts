@@ -4,8 +4,8 @@ import {
   addAccessKey,
   type Client,
   createClient,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   isNatError,
   randomEd25519KeyPair,
   randomMlDsa65KeyPair,
@@ -47,7 +47,7 @@ describe('Get Account Access Keys', () => {
     const mlDsa65KeyPair = randomMlDsa65KeyPair();
     const secp256k1KeyPair = randomSecp256k1KeyPair();
 
-    const signer = createMemorySigner({
+    const signer = createSigner({
       signerAccountId: 'nat',
       keyVault: createMemoryVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
       client,

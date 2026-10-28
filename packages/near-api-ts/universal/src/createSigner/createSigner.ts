@@ -1,11 +1,8 @@
 import * as z from 'zod/mini';
 import type { Client } from '../../types/client/client';
 import type { MemoryVault } from '../../types/memoryVault/memoryVault';
-import type {
-  CreateMemorySigner,
-  SafeCreateMemorySigner,
-} from '../../types/signer/createMemorySigner';
-import type { MemorySignerContext } from '../../types/signer/memorySigner';
+import type { CreateSigner, SafeCreateSigner } from '../../types/signer/createSigner';
+import type { SignerContext } from '../../types/signer/signer';
 import { createNatError } from '../_common/_common/_common/_common/natError';
 import { result } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
@@ -25,7 +22,7 @@ import { createTaskQueue } from './createTaskQueue/createTaskQueue';
 //   ),
 // }),
 
-const CreateMemorySignerArgsSchema = z.object({
+const CreateSignerArgsSchema = z.object({
   signerAccountId: AccountIdZodSchema,
   client: z.custom<Client>((value) => true), // TODO fix it
   keyVault: z.custom<MemoryVault>((value) => true), // TODO fix it
@@ -41,15 +38,15 @@ const CreateMemorySignerArgsSchema = z.object({
   ),
 });
 
-export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
-  'CreateMemorySigner.Internal',
+export const safeCreateSigner: SafeCreateSigner = wrapInternalError(
+  'CreateSigner.Internal',
   (args) => {
-    const validArgs = CreateMemorySignerArgsSchema.safeParse(args);
+    const validArgs = CreateSignerArgsSchema.safeParse(args);
 
     if (!validArgs.success)
       return result.err(
         createNatError({
-          kind: 'CreateMemorySigner.Args.InvalidSchema',
+          kind: 'CreateSigner.Args.InvalidSchema',
           context: { zodError: validArgs.error },
         }),
       );
@@ -60,7 +57,7 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
       signerAccountId,
       client,
       keyVault,
-    } as MemorySignerContext;
+    } as SignerContext;
 
     context.keyPool = createKeyPool(context, args);
     context.taskQueue = createTaskQueue(context, args);
@@ -81,4 +78,4 @@ export const safeCreateMemorySigner: SafeCreateMemorySigner = wrapInternalError(
   },
 );
 
-export const createMemorySigner: CreateMemorySigner = asThrowable(safeCreateMemorySigner);
+export const createSigner: CreateSigner = asThrowable(safeCreateSigner);

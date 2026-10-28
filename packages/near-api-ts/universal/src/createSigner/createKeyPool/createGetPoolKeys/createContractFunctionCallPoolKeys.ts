@@ -5,7 +5,7 @@ import type {
 import type { TransactionNonce } from '../../../../types/_common/common';
 import type { PublicKey } from '../../../../types/_common/crypto';
 import type { PoolContractFunctionCallKey } from '../../../../types/signer/inner/keyPool';
-import type { MemorySignerContext } from '../../../../types/signer/memorySigner';
+import type { SignerContext } from '../../../../types/signer/signer';
 import { createLock, createSetNonce, createUnlock } from './_common/keyUtils';
 
 const transformKey = (
@@ -31,7 +31,7 @@ const transformKey = (
 
 export const createContractFunctionCallPoolKeys = async (
   accountKeys: AccessKey[],
-  signerContext: MemorySignerContext,
+  signerContext: SignerContext,
 ): Promise<PoolContractFunctionCallKey[]> => {
   const filteredKeys = [];
 

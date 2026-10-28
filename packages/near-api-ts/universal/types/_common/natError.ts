@@ -2,10 +2,7 @@ import type { $ZodError } from 'zod/v4/core';
 import type { NatError } from '../../src/_common/_common/_common/_common/natError';
 import type { ClientInnerErrorRegistry, ClientPublicErrorRegistry } from '../client/client';
 import type { MemoryVaultPublicErrorRegistry } from '../memoryVault/memoryVault';
-import type {
-  MemorySignerInnerErrorRegistry,
-  MemorySignerPublicErrorRegistry,
-} from '../signer/memorySigner';
+import type { SignerInnerErrorRegistry, SignerPublicErrorRegistry } from '../signer/signer';
 import type { ResultErr } from './common';
 import type { KeyPairPublicErrorRegistry } from './keyPairs/keyPair';
 import type { MessagePublicErrorRegistry } from './message';
@@ -21,15 +18,13 @@ export type InvalidSchemaErrorContext = { zodError: $ZodError };
 
 // InnerError means that the error is only a part of inner library code and
 // the end user will never see it
-export interface NatInnerErrorRegistry
-  extends ClientInnerErrorRegistry,
-    MemorySignerInnerErrorRegistry {}
+export interface NatInnerErrorRegistry extends ClientInnerErrorRegistry, SignerInnerErrorRegistry {}
 
 // PublicError means that error can be shown to the end user, e.g., it returns from the public API
 export interface NatPublicErrorRegistry
   extends ClientPublicErrorRegistry,
     MemoryVaultPublicErrorRegistry,
-    MemorySignerPublicErrorRegistry,
+    SignerPublicErrorRegistry,
     ActionsPublicErrorRegistry,
     KeyPairPublicErrorRegistry,
     SignTransactionPublicErrorRegistry,

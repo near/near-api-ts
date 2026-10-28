@@ -14,8 +14,8 @@ import type {
   PreferredRpcNotFoundErrorContext,
   TimeoutErrorContext,
 } from '../../client/transport/sendRequest';
-import type { MemorySignerErrorContext } from '../_common/errorContext';
-import type { MemorySignerContext } from '../memorySigner';
+import type { SignerErrorContext } from '../_common/errorContext';
+import type { SignerContext } from '../signer';
 
 // TODO Temporary
 // `executeTransaction` forwards these straight from `client.sendSignedTransaction`:
@@ -39,26 +39,26 @@ type ExecutionFailureContext = {
 };
 
 export interface ExecuteTransactionPublicErrorRegistry {
-  'MemorySigner.ExecuteTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'MemorySigner.ExecuteTransaction.KeyPool.AccessKeys.NotLoaded': MemorySignerErrorContext['KeyPool']['AccessKeys']['NotLoaded'];
-  'MemorySigner.ExecuteTransaction.KeyPool.Empty': MemorySignerErrorContext['KeyPool']['Empty'];
-  'MemorySigner.ExecuteTransaction.KeyPool.SigningKey.NotFound': MemorySignerErrorContext['KeyPool']['SigningKey']['NotFound'];
-  'MemorySigner.ExecuteTransaction.TaskQueue.Timeout': MemorySignerErrorContext['TaskQueue']['Timeout'];
+  'Signer.ExecuteTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'Signer.ExecuteTransaction.KeyPool.AccessKeys.NotLoaded': SignerErrorContext['KeyPool']['AccessKeys']['NotLoaded'];
+  'Signer.ExecuteTransaction.KeyPool.Empty': SignerErrorContext['KeyPool']['Empty'];
+  'Signer.ExecuteTransaction.KeyPool.SigningKey.NotFound': SignerErrorContext['KeyPool']['SigningKey']['NotFound'];
+  'Signer.ExecuteTransaction.TaskQueue.Timeout': SignerErrorContext['TaskQueue']['Timeout'];
   //
-  'MemorySigner.ExecuteTransaction.PreferredRpc.NotFound': PreferredRpcNotFoundErrorContext;
-  'MemorySigner.ExecuteTransaction.Timeout': TimeoutErrorContext;
-  'MemorySigner.ExecuteTransaction.Aborted': AbortedErrorContext;
-  'MemorySigner.ExecuteTransaction.Exhausted': ExhaustedErrorContext;
+  'Signer.ExecuteTransaction.PreferredRpc.NotFound': PreferredRpcNotFoundErrorContext;
+  'Signer.ExecuteTransaction.Timeout': TimeoutErrorContext;
+  'Signer.ExecuteTransaction.Aborted': AbortedErrorContext;
+  'Signer.ExecuteTransaction.Exhausted': ExhaustedErrorContext;
 
-  'MemorySigner.ExecuteTransaction.Rpc.Timeout': null;
-  'MemorySigner.ExecuteTransaction.Rpc.Signer.Budget.NotEnough': ConversionFailureContext<'Signer.Budget.NotEnough'>;
+  'Signer.ExecuteTransaction.Rpc.Timeout': null;
+  'Signer.ExecuteTransaction.Rpc.Signer.Budget.NotEnough': ConversionFailureContext<'Signer.Budget.NotEnough'>;
 
-  'MemorySigner.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists': ExecutionFailureContext;
-  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ProposedStake.BelowThreshold': ExecutionFailureContext;
-  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.TotalBalance.NotEnough': ExecutionFailureContext;
-  'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero': ExecutionFailureContext;
+  'Signer.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists': ExecutionFailureContext;
+  'Signer.ExecuteTransaction.Rpc.Action.Stake.ProposedStake.BelowThreshold': ExecutionFailureContext;
+  'Signer.ExecuteTransaction.Rpc.Action.Stake.TotalBalance.NotEnough': ExecutionFailureContext;
+  'Signer.ExecuteTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero': ExecutionFailureContext;
 
-  'MemorySigner.ExecuteTransaction.Internal': InternalErrorContext;
+  'Signer.ExecuteTransaction.Internal': InternalErrorContext;
 }
 
 type ExecuteTransactionArgs = {
@@ -66,26 +66,26 @@ type ExecuteTransactionArgs = {
 };
 
 type ExecuteTransactionError =
-  | NatError<'MemorySigner.ExecuteTransaction.Args.InvalidSchema'>
-  | NatError<'MemorySigner.ExecuteTransaction.KeyPool.AccessKeys.NotLoaded'>
-  | NatError<'MemorySigner.ExecuteTransaction.KeyPool.Empty'>
-  | NatError<'MemorySigner.ExecuteTransaction.KeyPool.SigningKey.NotFound'>
-  | NatError<'MemorySigner.ExecuteTransaction.TaskQueue.Timeout'>
+  | NatError<'Signer.ExecuteTransaction.Args.InvalidSchema'>
+  | NatError<'Signer.ExecuteTransaction.KeyPool.AccessKeys.NotLoaded'>
+  | NatError<'Signer.ExecuteTransaction.KeyPool.Empty'>
+  | NatError<'Signer.ExecuteTransaction.KeyPool.SigningKey.NotFound'>
+  | NatError<'Signer.ExecuteTransaction.TaskQueue.Timeout'>
   // SendRequest
-  | NatError<'MemorySigner.ExecuteTransaction.PreferredRpc.NotFound'>
-  | NatError<'MemorySigner.ExecuteTransaction.Timeout'>
-  | NatError<'MemorySigner.ExecuteTransaction.Aborted'>
-  | NatError<'MemorySigner.ExecuteTransaction.Exhausted'>
+  | NatError<'Signer.ExecuteTransaction.PreferredRpc.NotFound'>
+  | NatError<'Signer.ExecuteTransaction.Timeout'>
+  | NatError<'Signer.ExecuteTransaction.Aborted'>
+  | NatError<'Signer.ExecuteTransaction.Exhausted'>
   // RPC errors
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Signer.Budget.NotEnough'>
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Timeout'>
+  | NatError<'Signer.ExecuteTransaction.Rpc.Signer.Budget.NotEnough'>
+  | NatError<'Signer.ExecuteTransaction.Rpc.Timeout'>
   // // Rpc transaction action errors
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists'>
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ProposedStake.BelowThreshold'>
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.TotalBalance.NotEnough'>
-  | NatError<'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero'>
+  | NatError<'Signer.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists'>
+  | NatError<'Signer.ExecuteTransaction.Rpc.Action.Stake.ProposedStake.BelowThreshold'>
+  | NatError<'Signer.ExecuteTransaction.Rpc.Action.Stake.TotalBalance.NotEnough'>
+  | NatError<'Signer.ExecuteTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero'>
   // Stub
-  | NatError<'MemorySigner.ExecuteTransaction.Internal'>;
+  | NatError<'Signer.ExecuteTransaction.Internal'>;
 
 export type SafeExecuteTransaction = (
   args: ExecuteTransactionArgs,
@@ -95,4 +95,4 @@ export type ExecuteTransaction = (
   args: ExecuteTransactionArgs,
 ) => Promise<SendSignedTransactionOutput>;
 
-export type CreateSafeExecuteTransaction = (context: MemorySignerContext) => SafeExecuteTransaction;
+export type CreateSafeExecuteTransaction = (context: SignerContext) => SafeExecuteTransaction;

@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   randomMlDsa65KeyPair,
   transfer,
 } from '../../../../../index';
@@ -23,7 +23,7 @@ describe('executeTransaction › success', () => {
   // The node lists an ml-dsa-65 key by its hash, so the signer has to get the
   // full public key back from the vault before it can sign with it
   it('signs and sends a native transfer with an ml-dsa-65 key', async () => {
-    const defaultSigner = createMemorySigner({
+    const defaultSigner = createSigner({
       signerAccountId: 'nat',
       keyVault: createMemoryVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
       client,
@@ -42,7 +42,7 @@ describe('executeTransaction › success', () => {
       },
     });
 
-    const mlDsa65Signer = createMemorySigner({
+    const mlDsa65Signer = createSigner({
       signerAccountId: 'nat',
       keyVault: createMemoryVault({ keySource: mlDsa65KeyPair }),
       client,
@@ -64,7 +64,7 @@ describe('executeTransaction › success', () => {
     const defaultKeyVault = createMemoryVault({
       keySource: { privateKey: DEFAULT_PRIVATE_KEY },
     });
-    const defaultSigner = createMemorySigner({
+    const defaultSigner = createSigner({
       signerAccountId: 'nat',
       keyVault: defaultKeyVault,
       client,
@@ -84,7 +84,7 @@ describe('executeTransaction › success', () => {
     });
 
     // The vault holds both keys; the whitelist narrows the pool to the ml-dsa-65 one
-    const signer = createMemorySigner({
+    const signer = createSigner({
       signerAccountId: 'nat',
       keyVault: createMemoryVault({
         keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, mlDsa65KeyPair],

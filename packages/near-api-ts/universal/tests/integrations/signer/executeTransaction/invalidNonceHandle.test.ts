@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import * as z from 'zod/mini';
 import {
   type Client,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   type MemoryVault,
   transfer,
 } from '../../../../index';
@@ -12,7 +12,7 @@ import { createDefaultClient } from '../../../utils/common';
 import { startSandbox } from '../../../utils/sandbox/startSandbox';
 
 z.config(z.locales.en());
-describe('MemorySigner.executeTransaction', async () => {
+describe('Signer.executeTransaction', async () => {
   let client: Client;
   let keyVault: MemoryVault;
 
@@ -27,13 +27,13 @@ describe('MemorySigner.executeTransaction', async () => {
 
   // Create 2 signers of the same account (don't do it in the prod - for test only)
   it('Invalid nonce handled', async () => {
-    const nat1 = createMemorySigner({
+    const nat1 = createSigner({
       signerAccountId: 'nat',
       client,
       keyVault,
     });
 
-    const nat2 = createMemorySigner({
+    const nat2 = createSigner({
       signerAccountId: 'nat',
       client,
       keyVault,

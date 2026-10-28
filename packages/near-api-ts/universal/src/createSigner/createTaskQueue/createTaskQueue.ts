@@ -8,15 +8,12 @@ import { createFindTaskForKey } from './createFindTaskForKey';
 import { createAddExecuteTransactionTask } from './taskCreators/createAddExecuteTransactionTask';
 import { createAddSignTransactionTask } from './taskCreators/createAddSignTransactionTask';
 
-export const createTaskQueue: CreateTaskQueue = (
-  signerContext,
-  createMemorySignerArgs,
-): TaskQueue => {
+export const createTaskQueue: CreateTaskQueue = (signerContext, createSignerArgs): TaskQueue => {
   const taskQueueContext: TaskQueueContext = {
     queue: [],
     cleaners: {},
     signerContext,
-    timeoutMs: createMemorySignerArgs.taskQueue?.timeoutMs ?? 60_000,
+    timeoutMs: createSignerArgs.taskQueue?.timeoutMs ?? 60_000,
   };
 
   // We remove the task from the queue when the task execution starts

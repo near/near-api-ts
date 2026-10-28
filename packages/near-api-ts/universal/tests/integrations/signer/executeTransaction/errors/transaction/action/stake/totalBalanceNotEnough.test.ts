@@ -2,8 +2,8 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   type MemoryVault,
   near,
   randomEd25519KeyPair,
@@ -27,7 +27,7 @@ describe('executeTransaction › Action.Stake.TotalBalance.NotEnough', () => {
   });
 
   it('fails with Action.Stake.TotalBalance.NotEnough when staking more than the balance', async () => {
-    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
+    const nat = createSigner({ signerAccountId: 'nat', client, keyVault });
 
     const res = await nat.safeExecuteTransaction({
       intent: {
@@ -39,9 +39,6 @@ describe('executeTransaction › Action.Stake.TotalBalance.NotEnough', () => {
       },
     });
 
-    assertNatErrKind(
-      res,
-      'MemorySigner.ExecuteTransaction.Rpc.Action.Stake.TotalBalance.NotEnough',
-    );
+    assertNatErrKind(res, 'Signer.ExecuteTransaction.Rpc.Action.Stake.TotalBalance.NotEnough');
   });
 });

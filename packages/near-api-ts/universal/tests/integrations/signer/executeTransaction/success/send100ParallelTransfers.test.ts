@@ -3,8 +3,8 @@ import { beforeAll, describe, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   randomEd25519KeyPair,
   transfer,
 } from '../../../../../index';
@@ -27,7 +27,7 @@ describe('executeTransaction › success', () => {
       keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, ...keyPairs],
     });
 
-    const baseSigner = createMemorySigner({
+    const baseSigner = createSigner({
       signerAccountId: 'nat',
       keyVault,
       client,
@@ -46,7 +46,7 @@ describe('executeTransaction › success', () => {
       },
     });
 
-    const signer = createMemorySigner({
+    const signer = createSigner({
       signerAccountId: 'nat',
       keyVault,
       client,

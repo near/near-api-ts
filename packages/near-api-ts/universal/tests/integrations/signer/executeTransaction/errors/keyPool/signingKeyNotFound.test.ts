@@ -4,8 +4,8 @@ import * as z from 'zod/mini';
 import {
   addAccessKey,
   type Client,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   createSubAccount,
   type MemoryVault,
   randomEd25519KeyPair,
@@ -33,7 +33,7 @@ describe('executeTransaction › KeyPool.SigningKey.NotFound', async () => {
 
   it('fails with KeyPool.SigningKey.NotFound when no key in the pool can sign', async () => {
     // Create a new user with an FC key
-    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
+    const nat = createSigner({ signerAccountId: 'nat', client, keyVault });
 
     await nat.executeTransaction({
       intent: {
@@ -55,7 +55,7 @@ describe('executeTransaction › KeyPool.SigningKey.NotFound', async () => {
     });
 
     // Try to sign FA transaction with an FC key
-    const user = createMemorySigner({ signerAccountId: 'user.nat', client, keyVault });
+    const user = createSigner({ signerAccountId: 'user.nat', client, keyVault });
 
     // const keys = await client.getAccessKeys({ accountId: 'user.nat' });
     // console.log(keys);
@@ -66,6 +66,6 @@ describe('executeTransaction › KeyPool.SigningKey.NotFound', async () => {
         receiverAccountId: 'nat',
       },
     });
-    assertNatErrKind(tx2, 'MemorySigner.ExecuteTransaction.KeyPool.SigningKey.NotFound');
+    assertNatErrKind(tx2, 'Signer.ExecuteTransaction.KeyPool.SigningKey.NotFound');
   });
 });

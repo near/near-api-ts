@@ -11,13 +11,13 @@ const SignTransactionArgsSchema = z.object({
 });
 
 export const createSafeSignTransaction: CreateSafeSignTransaction = (context) =>
-  wrapInternalError('MemorySigner.SignTransaction.Internal', async (args) => {
+  wrapInternalError('Signer.SignTransaction.Internal', async (args) => {
     const validArgs = SignTransactionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
       return result.err(
         createNatError({
-          kind: 'MemorySigner.SignTransaction.Args.InvalidSchema',
+          kind: 'Signer.SignTransaction.Args.InvalidSchema',
           context: { zodError: validArgs.error },
         }),
       );
@@ -29,16 +29,16 @@ export const createSafeSignTransaction: CreateSafeSignTransaction = (context) =>
     // Repack some errors to make them method-specific
     if (
       isNatErrorOf(signedTransaction.error, [
-        'MemorySigner.KeyPool.AccessKeys.NotLoaded',
-        'MemorySigner.KeyPool.Empty',
-        'MemorySigner.KeyPool.SigningKey.NotFound',
-        'MemorySigner.TaskQueue.Timeout',
+        'Signer.KeyPool.AccessKeys.NotLoaded',
+        'Signer.KeyPool.Empty',
+        'Signer.KeyPool.SigningKey.NotFound',
+        'Signer.TaskQueue.Timeout',
       ])
     )
       return repackError({
         error: signedTransaction.error,
-        originPrefix: 'MemorySigner',
-        targetPrefix: 'MemorySigner.SignTransaction',
+        originPrefix: 'Signer',
+        targetPrefix: 'Signer.SignTransaction',
       });
 
     return result.err(signedTransaction.error);

@@ -51,9 +51,9 @@ type SentSummariesFailure =
 // @ts-expect-error - nor the raw data a failed deserializer of it got
 const _readSummariesFailureAsSent: SentSummariesFailure = readSummariesFailure;
 
-// MemorySigner.executeTransaction
+// Signer.executeTransaction
 type SignedFailureDetails =
-  ExecuteTransactionPublicErrorRegistry['MemorySigner.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists']['transactionDetails'];
+  ExecuteTransactionPublicErrorRegistry['Signer.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists']['transactionDetails'];
 
 const _signedFailure: SignedFailureDetails = sentFailure;
 // @ts-expect-error - the same for a transaction a signer sends

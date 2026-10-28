@@ -4,8 +4,8 @@ import * as z from 'zod/mini';
 import {
   addAccessKey,
   type Client,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   createSubAccount,
   type MemoryVault,
   randomEd25519KeyPair,
@@ -17,7 +17,7 @@ import { startSandbox } from '../../../utils/sandbox/startSandbox';
 
 z.config(z.locales.en());
 
-describe('MemorySigner.signTransaction', async () => {
+describe('Signer.signTransaction', async () => {
   let client: Client;
   let keyVault: MemoryVault;
 
@@ -33,7 +33,7 @@ describe('MemorySigner.signTransaction', async () => {
   });
 
   it('Default Ok', async () => {
-    const signer = createMemorySigner({
+    const signer = createSigner({
       signerAccountId: 'nat',
       client,
       keyVault,
@@ -53,7 +53,7 @@ describe('MemorySigner.signTransaction', async () => {
 
   it('KeyPool.SigningKey.NotFound', async () => {
     // Create a new user with an FC key
-    const nat = createMemorySigner({
+    const nat = createSigner({
       signerAccountId: 'nat',
       client,
       keyVault,
@@ -80,7 +80,7 @@ describe('MemorySigner.signTransaction', async () => {
     await client.sendSignedTransaction({ signedTransaction: tx1 });
 
     // Try to sign FA transaction with an FC key
-    const user = createMemorySigner({
+    const user = createSigner({
       signerAccountId: 'user.nat',
       client,
       keyVault,
@@ -92,6 +92,6 @@ describe('MemorySigner.signTransaction', async () => {
         receiverAccountId: 'nat',
       },
     });
-    assertNatErrKind(tx2, 'MemorySigner.SignTransaction.KeyPool.SigningKey.NotFound');
+    assertNatErrKind(tx2, 'Signer.SignTransaction.KeyPool.SigningKey.NotFound');
   });
 });

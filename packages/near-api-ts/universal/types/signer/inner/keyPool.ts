@@ -2,15 +2,15 @@ import type { NatError } from '../../../src/_common/_common/_common/_common/natE
 import type { AllowedFunctions } from '../../_common/accessKey';
 import type { AccountId, Result, TransactionNonce } from '../../_common/common';
 import type { PublicKey } from '../../_common/crypto';
-import type { MemorySignerErrorContext } from '../_common/errorContext';
-import type { CreateMemorySignerArgs } from '../createMemorySigner';
-import type { MemorySignerContext } from '../memorySigner';
+import type { SignerErrorContext } from '../_common/errorContext';
+import type { CreateSignerArgs } from '../createSigner';
+import type { SignerContext } from '../signer';
 import type { Task } from './taskQueue';
 
 export interface KeyPoolInnerErrorRegistry {
-  'MemorySigner.KeyPool.AccessKeys.NotLoaded': MemorySignerErrorContext['KeyPool']['AccessKeys']['NotLoaded'];
-  'MemorySigner.KeyPool.Empty': MemorySignerErrorContext['KeyPool']['Empty'];
-  'MemorySigner.KeyPool.SigningKey.NotFound': MemorySignerErrorContext['KeyPool']['SigningKey']['NotFound'];
+  'Signer.KeyPool.AccessKeys.NotLoaded': SignerErrorContext['KeyPool']['AccessKeys']['NotLoaded'];
+  'Signer.KeyPool.Empty': SignerErrorContext['KeyPool']['Empty'];
+  'Signer.KeyPool.SigningKey.NotFound': SignerErrorContext['KeyPool']['SigningKey']['NotFound'];
 }
 
 type KeyPoolKeyBase = {
@@ -45,8 +45,8 @@ export type KeyPoolState = {
 };
 
 type GetPoolKeysError =
-  | NatError<'MemorySigner.KeyPool.AccessKeys.NotLoaded'>
-  | NatError<'MemorySigner.KeyPool.Empty'>;
+  | NatError<'Signer.KeyPool.AccessKeys.NotLoaded'>
+  | NatError<'Signer.KeyPool.Empty'>;
 
 export type GetPoolKeys = () => Promise<Result<PoolKeys, GetPoolKeysError>>;
 
@@ -55,17 +55,17 @@ export type KeyPoolContext = {
 };
 
 type FindKeyForTaskError =
-  | NatError<'MemorySigner.KeyPool.AccessKeys.NotLoaded'>
-  | NatError<'MemorySigner.KeyPool.Empty'>;
+  | NatError<'Signer.KeyPool.AccessKeys.NotLoaded'>
+  | NatError<'Signer.KeyPool.Empty'>;
 
 export type FindKeyForTask = (
   task: Task,
 ) => Promise<Result<PoolKey | undefined, FindKeyForTaskError>>;
 
 type IsKeyForTaskExistError =
-  | NatError<'MemorySigner.KeyPool.AccessKeys.NotLoaded'>
-  | NatError<'MemorySigner.KeyPool.Empty'>
-  | NatError<'MemorySigner.KeyPool.SigningKey.NotFound'>;
+  | NatError<'Signer.KeyPool.AccessKeys.NotLoaded'>
+  | NatError<'Signer.KeyPool.Empty'>
+  | NatError<'Signer.KeyPool.SigningKey.NotFound'>;
 
 export type IsKeyForTaskExist = (task: Task) => Promise<Result<true, IsKeyForTaskExistError>>;
 
@@ -75,6 +75,6 @@ export type KeyPool = {
 };
 
 export type CreateKeyPool = (
-  signerContext: MemorySignerContext,
-  createMemorySignerArgs: CreateMemorySignerArgs,
+  signerContext: SignerContext,
+  createSignerArgs: CreateSignerArgs,
 ) => KeyPool;

@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   createSubAccount,
   deleteAccessKey,
   type MemoryVault,
@@ -40,7 +40,7 @@ describe('Get Account Balance', () => {
 
   // Test#1 ---------------------
   it('Ok: total: 0, available: 0, locked: 0 (storage: 182b, staked: 0)', async () => {
-    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
+    const nat = createSigner({ signerAccountId: 'nat', client, keyVault });
 
     await nat.executeTransaction({
       intent: {
@@ -65,7 +65,7 @@ describe('Get Account Balance', () => {
 
   // Test#2 ---------------------
   it('Ok: total: 1, available: 1, locked: 0 (storage: 182b, staked: 0)', async () => {
-    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
+    const nat = createSigner({ signerAccountId: 'nat', client, keyVault });
     // 1. Create a new account
     await nat.executeTransaction({
       intent: {
@@ -90,7 +90,7 @@ describe('Get Account Balance', () => {
     expect(balance1.locked.total.near).toBe('0');
 
     // 2. Transfer all NEAR tokens
-    const abc = createMemorySigner({ signerAccountId: 'abc2.nat', client, keyVault });
+    const abc = createSigner({ signerAccountId: 'abc2.nat', client, keyVault });
 
     await abc.executeTransaction({
       intent: {
@@ -111,7 +111,7 @@ describe('Get Account Balance', () => {
 
   // Test#3 ---------------------
   it('Ok: total: 2000, available: 500, locked: 1500 (storage: 920b, staked: 1500)', async () => {
-    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
+    const nat = createSigner({ signerAccountId: 'nat', client, keyVault });
     // 1. Create an account with 10 FA keys
     await nat.executeTransaction({
       intent: {
@@ -145,7 +145,7 @@ describe('Get Account Balance', () => {
     expect(balance1.locked.total.near).toBe('0.0092');
 
     // 2. Stake 1500
-    const abc = createMemorySigner({ signerAccountId: 'abc3.nat', client, keyVault });
+    const abc = createSigner({ signerAccountId: 'abc3.nat', client, keyVault });
 
     await abc.executeTransaction({
       intent: {
@@ -184,7 +184,7 @@ describe('Get Account Balance', () => {
 
   // Test#4 ---------------------
   it('Account become a zero cost again after deleting state', async () => {
-    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
+    const nat = createSigner({ signerAccountId: 'nat', client, keyVault });
     // 1. Create a new account with 10 FA keys
     const keyPairs = Array(9)
       .fill(0)
@@ -220,7 +220,7 @@ describe('Get Account Balance', () => {
     expect(balance1.locked.total.near).toBe('0.0092');
 
     // 2. Delete 2 FA keys
-    const abc = createMemorySigner({ signerAccountId: 'abc4.nat', client, keyVault });
+    const abc = createSigner({ signerAccountId: 'abc4.nat', client, keyVault });
 
     await abc.executeTransaction({
       intent: {

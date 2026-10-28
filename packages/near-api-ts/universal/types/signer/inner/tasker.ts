@@ -1,5 +1,5 @@
 import type { Result } from '../../_common/common';
-import type { MemorySignerContext } from '../memorySigner';
+import type { SignerContext } from '../signer';
 import type { Task, TaskId } from './taskQueue';
 
 export type ActiveTasks = Record<
@@ -14,7 +14,7 @@ export type CompleteTask = <T, E>(taskId: TaskId, taskResult: Result<T, E>) => v
 
 export type ExecuteTask = (task: Task) => Promise<void>;
 
-export type CreateExecuteTask = (signerContext: MemorySignerContext) => ExecuteTask;
+export type CreateExecuteTask = (signerContext: SignerContext) => ExecuteTask;
 
 export type Tasker = {
   executeTask: ExecuteTask;
@@ -22,4 +22,4 @@ export type Tasker = {
   completeTask: CompleteTask;
 };
 
-export type CreateTasker = (context: MemorySignerContext) => Tasker;
+export type CreateTasker = (context: SignerContext) => Tasker;

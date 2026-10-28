@@ -5,8 +5,8 @@ import {
   type Client,
   callContractFunction,
   convertBase64ToObject,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   createSubAccount,
   deployLocalContract,
   type GetTransactionResultDeserializeActionSummariesArgs,
@@ -19,7 +19,7 @@ import { safeSleep } from '../../../../../src/createClient/createTransport/creat
 import type { Base64String, TransactionHash } from '../../../../../types/_common/common';
 import type { TransactionActionSummary } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/actionSummaries';
 import type { ExecutionStep } from '../../../../../types/client/methods/transaction/_common/transactionDetails/_common/executionStep';
-import type { MemorySigner } from '../../../../../types/signer/memorySigner';
+import type { Signer } from '../../../../../types/signer/signer';
 import { createDefaultClient, getFileBytes, log } from '../../../../utils/common';
 import { startSandbox } from '../../../../utils/sandbox/startSandbox';
 
@@ -30,7 +30,7 @@ const WriteRecordArgsZodSchema = z.object({
 
 describe('CallContractReadFunction', () => {
   let client: Client;
-  let nat: MemorySigner;
+  let nat: Signer;
   let transactionHash: TransactionHash;
 
   beforeAll(async () => {
@@ -40,7 +40,7 @@ describe('CallContractReadFunction', () => {
     const keyVault = createMemoryVault({
       keySource: { privateKey: DEFAULT_PRIVATE_KEY },
     });
-    nat = createMemorySigner({
+    nat = createSigner({
       signerAccountId: 'nat',
       client,
       keyVault,

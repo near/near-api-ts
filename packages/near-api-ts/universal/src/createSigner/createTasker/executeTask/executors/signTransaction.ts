@@ -3,22 +3,22 @@ import type { SignTransactionOutput } from '../../../../../types/_common/transac
 import type { Transaction } from '../../../../../types/_common/transaction/transaction';
 import type { PoolKey } from '../../../../../types/signer/inner/keyPool';
 import type { Task } from '../../../../../types/signer/inner/taskQueue';
-import type { MemorySignerContext } from '../../../../../types/signer/memorySigner';
+import type { SignerContext } from '../../../../../types/signer/signer';
 import type { NatError } from '../../../../_common/_common/_common/_common/natError';
 import { result } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
 import { signTransaction as signTransactionHelper } from '../../../../transaction/signTransaction/signTransaction';
 
 type Execute = () => Promise<
-  Result<SignTransactionOutput, NatError<'MemorySigner.SignTransaction.Internal'>>
+  Result<SignTransactionOutput, NatError<'Signer.SignTransaction.Internal'>>
 >;
 
 export const signTransaction = async (
-  signerContext: MemorySignerContext,
+  signerContext: SignerContext,
   task: Task,
   key: PoolKey,
 ): Promise<void> => {
-  const execute: Execute = wrapInternalError('MemorySigner.SignTransaction.Internal', async () => {
+  const execute: Execute = wrapInternalError('Signer.SignTransaction.Internal', async () => {
     const nextNonce = key.nonce + 1;
     const blockHash = await signerContext.client.getRecentBlockHash();
 

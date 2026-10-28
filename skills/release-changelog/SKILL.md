@@ -98,7 +98,7 @@ comm -13 <(kinds <release-commit> $D) <(kinds WORKTREE $D)   # added
 Three things this output does not tell you on its own:
 
 - **Derived kinds are invisible.** `Client.SendSignedTransaction.Rpc.${K}` and
-  `MemorySigner.ExecuteTransaction.Rpc.${K}` are built with template literals over
+  `Signer.ExecuteTransaction.Rpc.${K}` are built with template literals over
   `ConversionFailureRegistry` / `ExecutionFailureRegistry`. Renaming one base kind renames
   every kind derived from it. State the propagation once with an example instead of
   listing the cross-product.

@@ -2,8 +2,8 @@ import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addAccessKey,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   keyPair,
   near,
   randomEd25519KeyPair,
@@ -11,7 +11,7 @@ import {
   transfer,
 } from '../../index';
 import type { Client } from '../../types/client/client';
-import type { MemorySigner } from '../../types/signer/memorySigner';
+import type { Signer } from '../../types/signer/signer';
 import { createDefaultClient, log } from '../utils/common';
 import { getLastNonce } from '../utils/getLastNonce';
 import { startMaliciousSandbox } from '../utils/sandbox/maliciousChunkProducer/startMaliciousSandbox';
@@ -24,7 +24,7 @@ import { startMaliciousSandbox } from '../utils/sandbox/maliciousChunkProducer/s
 // by `send_tx`.
 describe('invalid transaction included in a chunk', () => {
   let client: Client;
-  let nat: MemorySigner;
+  let nat: Signer;
   let rpcUrl: string;
 
   beforeAll(async () => {
@@ -32,7 +32,7 @@ describe('invalid transaction included in a chunk', () => {
     rpcUrl = sandbox.rpcUrl;
     client = createDefaultClient(sandbox);
     const keyVault = createMemoryVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } });
-    nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
+    nat = createSigner({ signerAccountId: 'nat', client, keyVault });
     return () => sandbox.stop();
   });
 

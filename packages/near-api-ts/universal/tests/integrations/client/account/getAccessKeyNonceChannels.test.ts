@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   isNatError,
   type PublicKey,
   randomEd25519KeyPair,
@@ -25,7 +25,7 @@ describe('Get Access Key Nonce Channels', () => {
   });
 
   const addKeyWithChannels = async (publicKey: PublicKey, channelCount: number) => {
-    const signer = createMemorySigner({
+    const signer = createSigner({
       signerAccountId: 'nat',
       keyVault: createMemoryVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
       client,

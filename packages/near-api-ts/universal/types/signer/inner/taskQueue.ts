@@ -11,14 +11,14 @@ import type { SignTransactionOutput } from '../../_common/transaction/signTransa
 import type { TransactionIntent } from '../../_common/transaction/transaction';
 import type { SendSignedTransactionError } from '../../client/methods/transaction/sendSignedTransaction/error';
 import type { SendSignedTransactionOutput } from '../../client/methods/transaction/sendSignedTransaction/output';
-import type { MemorySignerErrorContext } from '../_common/errorContext';
-import type { CreateMemorySignerArgs } from '../createMemorySigner';
-import type { MemorySignerContext } from '../memorySigner';
+import type { SignerErrorContext } from '../_common/errorContext';
+import type { CreateSignerArgs } from '../createSigner';
+import type { SignerContext } from '../signer';
 import type { PoolKey } from './keyPool';
 
 export interface TaskQueueInnerErrorRegistry {
-  'MemorySigner.TaskQueue.Timeout': MemorySignerErrorContext['TaskQueue']['Timeout'];
-  'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction': {
+  'Signer.TaskQueue.Timeout': SignerErrorContext['TaskQueue']['Timeout'];
+  'Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction': {
     cause: SendSignedTransactionError;
   };
 }
@@ -59,19 +59,19 @@ export type RemoveTask = (taskId: TaskId) => void;
 export type TaskQueueContext = {
   queue: Task[];
   cleaners: Record<TaskId, TimeoutId>;
-  signerContext: MemorySignerContext;
+  signerContext: SignerContext;
   timeoutMs: Milliseconds;
 };
 
 // ExecuteTransaction
 // TODO Add `Inner` prefix
 type ExecuteTransactionTaskError =
-  | NatError<'MemorySigner.KeyPool.AccessKeys.NotLoaded'>
-  | NatError<'MemorySigner.KeyPool.Empty'>
-  | NatError<'MemorySigner.KeyPool.SigningKey.NotFound'>
-  | NatError<'MemorySigner.TaskQueue.Timeout'>
-  | NatError<'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction'>
-  | NatError<'MemorySigner.ExecuteTransaction.Internal'>;
+  | NatError<'Signer.KeyPool.AccessKeys.NotLoaded'>
+  | NatError<'Signer.KeyPool.Empty'>
+  | NatError<'Signer.KeyPool.SigningKey.NotFound'>
+  | NatError<'Signer.TaskQueue.Timeout'>
+  | NatError<'Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction'>
+  | NatError<'Signer.ExecuteTransaction.Internal'>;
 
 export type AddExecuteTransactionTask = (
   intent: TransactionIntent,
@@ -83,11 +83,11 @@ export type CreateAddExecuteTransactionTask = (
 
 // SignTransaction
 export type SignTransactionTaskError =
-  | NatError<'MemorySigner.KeyPool.AccessKeys.NotLoaded'>
-  | NatError<'MemorySigner.KeyPool.Empty'>
-  | NatError<'MemorySigner.KeyPool.SigningKey.NotFound'>
-  | NatError<'MemorySigner.TaskQueue.Timeout'>
-  | NatError<'MemorySigner.SignTransaction.Internal'>;
+  | NatError<'Signer.KeyPool.AccessKeys.NotLoaded'>
+  | NatError<'Signer.KeyPool.Empty'>
+  | NatError<'Signer.KeyPool.SigningKey.NotFound'>
+  | NatError<'Signer.TaskQueue.Timeout'>
+  | NatError<'Signer.SignTransaction.Internal'>;
 
 export type AddSignTransactionTask = (
   intent: TransactionIntent,
@@ -105,6 +105,6 @@ export type TaskQueue = {
 };
 
 export type CreateTaskQueue = (
-  signerContext: MemorySignerContext,
-  createMemorySignerArgs: CreateMemorySignerArgs,
+  signerContext: SignerContext,
+  createSignerArgs: CreateSignerArgs,
 ) => TaskQueue;

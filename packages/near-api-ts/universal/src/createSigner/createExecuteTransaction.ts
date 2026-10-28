@@ -11,13 +11,13 @@ const SignTransactionArgsSchema = z.object({
 });
 
 export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (context) =>
-  wrapInternalError('MemorySigner.ExecuteTransaction.Internal', async (args) => {
+  wrapInternalError('Signer.ExecuteTransaction.Internal', async (args) => {
     const validArgs = SignTransactionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
       return result.err(
         createNatError({
-          kind: 'MemorySigner.ExecuteTransaction.Args.InvalidSchema',
+          kind: 'Signer.ExecuteTransaction.Args.InvalidSchema',
           context: { zodError: validArgs.error },
         }),
       );
@@ -27,16 +27,16 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (conte
 
     if (
       isNatErrorOf(taskResult.error, [
-        'MemorySigner.KeyPool.AccessKeys.NotLoaded',
-        'MemorySigner.KeyPool.Empty',
-        'MemorySigner.KeyPool.SigningKey.NotFound',
-        'MemorySigner.TaskQueue.Timeout',
+        'Signer.KeyPool.AccessKeys.NotLoaded',
+        'Signer.KeyPool.Empty',
+        'Signer.KeyPool.SigningKey.NotFound',
+        'Signer.TaskQueue.Timeout',
       ])
     )
       return repackError({
         error: taskResult.error,
-        originPrefix: 'MemorySigner',
-        targetPrefix: 'MemorySigner.ExecuteTransaction',
+        originPrefix: 'Signer',
+        targetPrefix: 'Signer.ExecuteTransaction',
       });
 
     // When we get some errors from the RPC, we want to repack particular errors
@@ -45,8 +45,7 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (conte
     // .executeTransaction call;
     // And return everything else under .Internal
     if (
-      taskResult.error.kind ===
-      'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction'
+      taskResult.error.kind === 'Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction'
     ) {
       if (
         isNatErrorOf(taskResult.error.context.cause, [
@@ -65,7 +64,7 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (conte
         return repackError({
           error: taskResult.error.context.cause,
           originPrefix: 'Client.SendSignedTransaction',
-          targetPrefix: 'MemorySigner.ExecuteTransaction',
+          targetPrefix: 'Signer.ExecuteTransaction',
         });
       }
       throw taskResult.error.context.cause;

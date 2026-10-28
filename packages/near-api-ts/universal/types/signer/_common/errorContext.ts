@@ -5,7 +5,7 @@ import type { GetAccessKeysError } from '../../client/methods/account/getAccessK
 import type { PoolKeys } from '../inner/keyPool';
 import type { AccessTypePriority } from '../inner/taskQueue';
 
-export type MemorySignerErrorContext = {
+export type SignerErrorContext = {
   KeyPool: {
     AccessKeys: {
       NotLoaded: { cause: GetAccessKeysError };

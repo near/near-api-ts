@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   randomMlDsa65KeyPair,
 } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
@@ -43,7 +43,7 @@ describe('Get Account Access Key', () => {
   it('Ok - ml-dsa-65 key', async () => {
     const mlDsa65KeyPair = randomMlDsa65KeyPair();
 
-    const signer = createMemorySigner({
+    const signer = createSigner({
       signerAccountId: 'nat',
       keyVault: createMemoryVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
       client,

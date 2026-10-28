@@ -5,9 +5,9 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import {
   addAccessKey,
   type Client,
-  createMemorySigner,
   createMemoryVault,
   createMessage,
+  createSigner,
   keyPair,
   type Message,
   type PublicKey,
@@ -66,7 +66,7 @@ describe('verifyMessage', () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
 
-    const signer = createMemorySigner({
+    const signer = createSigner({
       signerAccountId: 'nat',
       keyVault: createMemoryVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
       client,

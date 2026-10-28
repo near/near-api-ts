@@ -3,7 +3,7 @@ import type { Transaction } from '../../../../../types/_common/transaction/trans
 import type { SendSignedTransactionOutput } from '../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import type { PoolKey } from '../../../../../types/signer/inner/keyPool';
 import type { Task } from '../../../../../types/signer/inner/taskQueue';
-import type { MemorySignerContext } from '../../../../../types/signer/memorySigner';
+import type { SignerContext } from '../../../../../types/signer/signer';
 import {
   createNatError,
   type NatError,
@@ -18,20 +18,20 @@ type Attempt = (
 ) => Promise<
   Result<
     SendSignedTransactionOutput,
-    | NatError<'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction'>
-    | NatError<'MemorySigner.ExecuteTransaction.Internal'>
+    | NatError<'Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction'>
+    | NatError<'Signer.ExecuteTransaction.Internal'>
   >
 >;
 
 export const executeTransaction = async (
-  signerContext: MemorySignerContext,
+  signerContext: SignerContext,
   task: Task,
   key: PoolKey,
 ): Promise<void> => {
   const maxAttempts = 3; // Maybe we will allow user to configure it in the future
 
   const attempt: Attempt = wrapInternalError(
-    'MemorySigner.ExecuteTransaction.Internal',
+    'Signer.ExecuteTransaction.Internal',
     async (attemptIndex, newNonce) => {
       const blockHash = await signerContext.client.getRecentBlockHash();
 
@@ -71,7 +71,7 @@ export const executeTransaction = async (
       // Pack sendSignedTransaction error and return;
       return result.err(
         createNatError({
-          kind: 'MemorySigner.Executors.ExecuteTransaction.Client.SendSignedTransaction',
+          kind: 'Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction',
           context: { cause: txResult.error },
         }),
       );

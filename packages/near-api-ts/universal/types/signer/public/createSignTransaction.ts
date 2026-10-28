@@ -3,16 +3,16 @@ import type { Result } from '../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../_common/natError';
 import type { SignTransactionOutput } from '../../_common/transaction/signTransaction';
 import type { TransactionIntent } from '../../_common/transaction/transaction';
-import type { MemorySignerErrorContext } from '../_common/errorContext';
-import type { MemorySignerContext } from '../memorySigner';
+import type { SignerErrorContext } from '../_common/errorContext';
+import type { SignerContext } from '../signer';
 
 export interface SignTransactionPublicErrorRegistry {
-  'MemorySigner.SignTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'MemorySigner.SignTransaction.KeyPool.AccessKeys.NotLoaded': MemorySignerErrorContext['KeyPool']['AccessKeys']['NotLoaded'];
-  'MemorySigner.SignTransaction.KeyPool.Empty': MemorySignerErrorContext['KeyPool']['Empty'];
-  'MemorySigner.SignTransaction.KeyPool.SigningKey.NotFound': MemorySignerErrorContext['KeyPool']['SigningKey']['NotFound'];
-  'MemorySigner.SignTransaction.TaskQueue.Timeout': MemorySignerErrorContext['TaskQueue']['Timeout'];
-  'MemorySigner.SignTransaction.Internal': InternalErrorContext;
+  'Signer.SignTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'Signer.SignTransaction.KeyPool.AccessKeys.NotLoaded': SignerErrorContext['KeyPool']['AccessKeys']['NotLoaded'];
+  'Signer.SignTransaction.KeyPool.Empty': SignerErrorContext['KeyPool']['Empty'];
+  'Signer.SignTransaction.KeyPool.SigningKey.NotFound': SignerErrorContext['KeyPool']['SigningKey']['NotFound'];
+  'Signer.SignTransaction.TaskQueue.Timeout': SignerErrorContext['TaskQueue']['Timeout'];
+  'Signer.SignTransaction.Internal': InternalErrorContext;
 }
 
 type SignTransactionIntentArgs = {
@@ -20,12 +20,12 @@ type SignTransactionIntentArgs = {
 };
 
 type SignTransactionIntentError =
-  | NatError<'MemorySigner.SignTransaction.Args.InvalidSchema'>
-  | NatError<'MemorySigner.SignTransaction.KeyPool.AccessKeys.NotLoaded'>
-  | NatError<'MemorySigner.SignTransaction.KeyPool.Empty'>
-  | NatError<'MemorySigner.SignTransaction.KeyPool.SigningKey.NotFound'>
-  | NatError<'MemorySigner.SignTransaction.TaskQueue.Timeout'>
-  | NatError<'MemorySigner.SignTransaction.Internal'>;
+  | NatError<'Signer.SignTransaction.Args.InvalidSchema'>
+  | NatError<'Signer.SignTransaction.KeyPool.AccessKeys.NotLoaded'>
+  | NatError<'Signer.SignTransaction.KeyPool.Empty'>
+  | NatError<'Signer.SignTransaction.KeyPool.SigningKey.NotFound'>
+  | NatError<'Signer.SignTransaction.TaskQueue.Timeout'>
+  | NatError<'Signer.SignTransaction.Internal'>;
 
 export type SafeSignTransactionIntent = (
   args: SignTransactionIntentArgs,
@@ -35,4 +35,4 @@ export type SignTransactionIntent = (
   args: SignTransactionIntentArgs,
 ) => Promise<SignTransactionOutput>;
 
-export type CreateSafeSignTransaction = (context: MemorySignerContext) => SafeSignTransactionIntent;
+export type CreateSafeSignTransaction = (context: SignerContext) => SafeSignTransactionIntent;

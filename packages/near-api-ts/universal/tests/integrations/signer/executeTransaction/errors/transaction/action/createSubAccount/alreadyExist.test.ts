@@ -2,8 +2,8 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   type Client,
-  createMemorySigner,
   createMemoryVault,
+  createSigner,
   createSubAccount,
   type MemoryVault,
 } from '../../../../../../../../index';
@@ -26,8 +26,8 @@ describe('executeTransaction › Transaction.Action.CreateSubAccount.AlreadyExis
   });
 
   it('fails with Transaction.Action.Action.CreateSubAccount.AlreadyExist when creating an existing account', async () => {
-    const errorKind = 'MemorySigner.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists';
-    const nat = createMemorySigner({ signerAccountId: 'nat', client, keyVault });
+    const errorKind = 'Signer.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists';
+    const nat = createSigner({ signerAccountId: 'nat', client, keyVault });
 
     const tx = await nat.safeExecuteTransaction({
       intent: {
