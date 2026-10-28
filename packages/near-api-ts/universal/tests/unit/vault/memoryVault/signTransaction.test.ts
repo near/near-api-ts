@@ -27,7 +27,7 @@ const transaction: Transaction = {
 
 describe('memoryVault.signTransaction', () => {
   it('signs a transaction and returns hash and signature', async () => {
-    const keyVault = createMemoryVault({ keySource: { privateKey } });
+    const keyVault = createMemoryVault({ privateKey });
     const res = await signTransaction({ signDataProvider: keyVault, transaction });
 
     expect(res.transactionHash).toBe('HhxcQZDTWRsDV61vkH9zz94FSC8Fe8at3M4XCrgUQMrT');
@@ -37,7 +37,7 @@ describe('memoryVault.signTransaction', () => {
   });
 
   it('fails with SigningKey.NotFound when no key matches the signer', async () => {
-    const keyVault = createMemoryVault({ keySource: { privateKey } });
+    const keyVault = createMemoryVault({ privateKey });
 
     const res = await safeSignTransaction({
       signDataProvider: keyVault,

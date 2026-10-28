@@ -7,26 +7,31 @@ import type {
 import { result, resultNatError } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
-import { PrivateKeyZodSchema } from './_common/zodSchemas/privateKey';
-import { createSafeFindPublicKey } from './findPublicKey';
-import { createSafeHasKey } from './hasKey';
+import { type InnerPrivateKey, PrivateKeyZodSchema } from './_common/_common/zodSchemas/privateKey';
+import { keyPair } from './_common/keyPairs/keyPair/keyPair';
+import { createSafeAddKeyPair } from './addKeyPair';
+import { createSafeDeleteKeyPair } from './deleteKeyPair';
+import { createSafeGetPublicKey } from './getPublicKey';
+import { createSafeHasKeyPair } from './hasKeyPair';
 import { createSafeSignData } from './signData';
-import { toKeyPairs } from './toKeyPairs/toKeyPairs';
 
-const KeySourceSchema = z.object({
-  privateKey: PrivateKeyZodSchema,
-});
+// Without private keys, or with an empty list of them, the vault starts empty
+const CreateMemoryVaultArgsSchema = z.optional(
+  z.union([
+    z.object({
+      privateKey: PrivateKeyZodSchema,
+    }),
+    z.object({
+      privateKeys: z.array(PrivateKeyZodSchema),
+    }),
+  ]),
+);
 
-const CreateMemoryVaultArgsSchema = z.union([
-  z.object({
-    keySource: KeySourceSchema,
-  }),
-  z.object({
-    keySources: z.array(KeySourceSchema).check(z.minLength(1)),
-  }),
-]);
-
-export type InnerCreateMemoryVaultArgs = z.infer<typeof CreateMemoryVaultArgsSchema>;
+const getPrivateKeys = (args: z.infer<typeof CreateMemoryVaultArgsSchema>): InnerPrivateKey[] => {
+  if (args === undefined) return [];
+  if ('privateKey' in args) return [args.privateKey];
+  return args.privateKeys;
+};
 
 export const safeCreateMemoryVault: SafeCreateMemoryVault = wrapInternalError(
   'CreateMemoryVault.Internal',
@@ -38,28 +43,41 @@ export const safeCreateMemoryVault: SafeCreateMemoryVault = wrapInternalError(
         zodError: validArgs.error,
       });
 
-    const context = {
-      keyPairs: toKeyPairs(validArgs.data),
-    } as MemoryVaultContext;
+    const context: MemoryVaultContext = {
+      keyPairs: Object.fromEntries(
+        getPrivateKeys(validArgs.data).map((privateKey) => {
+          const kp = keyPair(privateKey.privateKey);
+          return [kp.publicKey, kp];
+        }),
+      ),
+    };
 
-    const safeHasKey = createSafeHasKey(context);
-    const hasKey = asThrowable(safeHasKey);
+    const safeHasKeyPair = createSafeHasKeyPair(context);
+    const hasKeyPair = asThrowable(safeHasKeyPair);
 
-    context.hasKey = hasKey;
-
-    const safeFindPublicKey = createSafeFindPublicKey(context);
-    const findPublicKey = asThrowable(safeFindPublicKey);
+    const safeGetPublicKey = createSafeGetPublicKey(context);
+    const getPublicKey = asThrowable(safeGetPublicKey);
 
     const safeSignData = createSafeSignData(context);
     const signData = asThrowable(safeSignData);
 
+    const safeAddKeyPair = createSafeAddKeyPair(context);
+    const addKeyPair = asThrowable(safeAddKeyPair);
+
+    const safeDeleteKeyPair = createSafeDeleteKeyPair(context);
+    const deleteKeyPair = asThrowable(safeDeleteKeyPair);
+
     return result.ok({
-      hasKey,
-      safeHasKey,
-      findPublicKey,
-      safeFindPublicKey,
+      hasKeyPair,
+      safeHasKeyPair,
+      getPublicKey,
+      safeGetPublicKey,
       signData,
       safeSignData,
+      addKeyPair,
+      safeAddKeyPair,
+      deleteKeyPair,
+      safeDeleteKeyPair,
     });
   },
 );

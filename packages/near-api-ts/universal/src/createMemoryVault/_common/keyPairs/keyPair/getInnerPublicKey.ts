@@ -6,7 +6,7 @@ import {
   toMlDsa65CurveString,
   toSecp256k1CurveString,
 } from '../../../../_common/toCurveString';
-import { type InnerPrivateKey } from '../../../_common/zodSchemas/privateKey';
+import { type InnerPrivateKey } from '../../_common/zodSchemas/privateKey';
 
 const { Ed25519, Secp256k1 } = BinaryLengths;
 

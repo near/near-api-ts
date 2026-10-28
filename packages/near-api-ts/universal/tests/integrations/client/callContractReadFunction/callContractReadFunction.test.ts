@@ -23,7 +23,7 @@ describe('CallContractReadFunction', () => {
     client = createDefaultClient(sandbox);
 
     const keyVault = createMemoryVault({
-      keySource: { privateKey: DEFAULT_PRIVATE_KEY },
+      privateKey: DEFAULT_PRIVATE_KEY,
     });
     const nat = createSigner({
       signerAccountId: 'nat',

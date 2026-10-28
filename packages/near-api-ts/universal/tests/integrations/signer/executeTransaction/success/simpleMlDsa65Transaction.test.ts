@@ -25,7 +25,7 @@ describe('executeTransaction › success', () => {
   it('signs and sends a native transfer with an ml-dsa-65 key', async () => {
     const defaultSigner = createSigner({
       signerAccountId: 'nat',
-      keyVault: createMemoryVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
+      keyVault: createMemoryVault({ privateKey: DEFAULT_PRIVATE_KEY }),
       client,
     });
 
@@ -44,7 +44,7 @@ describe('executeTransaction › success', () => {
 
     const mlDsa65Signer = createSigner({
       signerAccountId: 'nat',
-      keyVault: createMemoryVault({ keySource: mlDsa65KeyPair }),
+      keyVault: createMemoryVault({ privateKey: mlDsa65KeyPair.privateKey }),
       client,
     });
 
@@ -62,7 +62,7 @@ describe('executeTransaction › success', () => {
 
   it('keeps only the whitelisted ml-dsa-65 key in the pool', async () => {
     const defaultKeyVault = createMemoryVault({
-      keySource: { privateKey: DEFAULT_PRIVATE_KEY },
+      privateKey: DEFAULT_PRIVATE_KEY,
     });
     const defaultSigner = createSigner({
       signerAccountId: 'nat',
@@ -87,7 +87,7 @@ describe('executeTransaction › success', () => {
     const signer = createSigner({
       signerAccountId: 'nat',
       keyVault: createMemoryVault({
-        keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, mlDsa65KeyPair],
+        privateKeys: [DEFAULT_PRIVATE_KEY, mlDsa65KeyPair.privateKey],
       }),
       keyPool: { allowedAccessKeys: [mlDsa65KeyPair.publicKey] },
       client,

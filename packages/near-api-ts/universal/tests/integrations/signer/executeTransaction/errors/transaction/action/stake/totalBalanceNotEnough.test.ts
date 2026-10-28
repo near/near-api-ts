@@ -21,7 +21,7 @@ describe('executeTransaction › Action.Stake.TotalBalance.NotEnough', () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
     keyVault = createMemoryVault({
-      keySource: { privateKey: DEFAULT_PRIVATE_KEY },
+      privateKey: DEFAULT_PRIVATE_KEY,
     });
     return () => sandbox.stop();
   });

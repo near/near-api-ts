@@ -27,7 +27,7 @@ describe('Signer.signTransaction', async () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
     keyVault = createMemoryVault({
-      keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, { privateKey: keyPair1.privateKey }],
+      privateKeys: [DEFAULT_PRIVATE_KEY, keyPair1.privateKey],
     });
     return () => sandbox.stop();
   });

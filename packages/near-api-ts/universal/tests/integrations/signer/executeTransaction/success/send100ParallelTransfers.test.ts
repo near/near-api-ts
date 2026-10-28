@@ -24,7 +24,7 @@ describe('executeTransaction › success', () => {
     const keyPairs = new Array(9).fill(0).map(() => randomEd25519KeyPair());
 
     const keyVault = createMemoryVault({
-      keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, ...keyPairs],
+      privateKeys: [DEFAULT_PRIVATE_KEY, ...keyPairs.map((kp) => kp.privateKey)],
     });
 
     const baseSigner = createSigner({

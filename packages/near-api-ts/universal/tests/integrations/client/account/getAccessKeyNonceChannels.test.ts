@@ -27,7 +27,7 @@ describe('Get Access Key Nonce Channels', () => {
   const addKeyWithChannels = async (publicKey: PublicKey, channelCount: number) => {
     const signer = createSigner({
       signerAccountId: 'nat',
-      keyVault: createMemoryVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
+      keyVault: createMemoryVault({ privateKey: DEFAULT_PRIVATE_KEY }),
       client,
     });
 

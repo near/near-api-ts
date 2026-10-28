@@ -20,7 +20,7 @@ describe('executeTransaction › Transaction.Action.CreateSubAccount.AlreadyExis
 
     client = createDefaultClient(sandbox);
     keyVault = createMemoryVault({
-      keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
+      privateKeys: [DEFAULT_PRIVATE_KEY],
     });
     return () => sandbox.stop();
   });

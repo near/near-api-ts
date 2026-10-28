@@ -22,15 +22,14 @@ export const createSafeSignData = (context: MemoryVaultContext): SafeSignData =>
     const { publicKey, dataU8 } = validArgs.data;
 
     // Check if key exists in the storage;
-    const isKeyPair = await context.hasKey({ publicKey: publicKey.publicKey });
+    const keyPair = context.keyPairs[publicKey.publicKey];
 
-    if (!isKeyPair)
+    if (!keyPair)
       return resultNatError('MemoryVault.SignData.SigningKey.NotFound', {
         publicKey: publicKey.publicKey,
       });
 
     // Sign data;
-    const keyPair = context.keyPairs[publicKey.publicKey];
     const signedData = await keyPair.signData({ dataU8 });
 
     return result.ok(signedData);

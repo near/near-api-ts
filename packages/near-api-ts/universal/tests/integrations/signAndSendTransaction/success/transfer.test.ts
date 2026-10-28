@@ -15,10 +15,7 @@ describe('safeSendSignedTransaction › success', () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
     keyVault = createMemoryVault({
-      keySources: [
-        { privateKey: DEFAULT_PRIVATE_KEY },
-        { privateKey: testKeys.fc.forContract.privateKey },
-      ],
+      privateKeys: [DEFAULT_PRIVATE_KEY, testKeys.fc.forContract.privateKey],
     });
     return () => sandbox.stop();
   });

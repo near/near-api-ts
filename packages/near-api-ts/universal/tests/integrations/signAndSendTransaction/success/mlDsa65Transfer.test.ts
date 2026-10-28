@@ -28,7 +28,7 @@ describe('ml-dsa-65 Transaction success', () => {
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
     keyVault = createMemoryVault({
-      keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }, { privateKey: mlDsa65KeyPair.privateKey }],
+      privateKeys: [DEFAULT_PRIVATE_KEY, mlDsa65KeyPair.privateKey],
     });
     return () => sandbox.stop();
   });

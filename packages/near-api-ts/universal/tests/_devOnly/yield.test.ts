@@ -32,7 +32,7 @@ describe('yield contract', () => {
     const testnetClient = createTestnetClient();
 
     const keyVault = createMemoryVault({
-      keySources: [{ privateKey: DEFAULT_PRIVATE_KEY }],
+      privateKeys: [DEFAULT_PRIVATE_KEY],
     });
 
     const nat = createSigner({

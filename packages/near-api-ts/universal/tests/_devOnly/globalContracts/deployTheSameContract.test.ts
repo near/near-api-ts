@@ -2,11 +2,11 @@ import { DEFAULT_PRIVATE_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
 import {
   callContractFunction,
+  keyPair,
   publishPinnableGlobalContract,
   signTransaction,
   stake,
 } from '../../../index';
-import { keyPair } from '../../../src/createMemoryVault/toKeyPairs/keyPairs/keyPair/keyPair';
 import type { Client } from '../../../types/client/client';
 import { createDefaultClient, getFileBytes, log } from '../../utils/common';
 import { getLastNonce } from '../../utils/getLastNonce';

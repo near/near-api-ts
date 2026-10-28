@@ -22,7 +22,7 @@ describe('executeTransaction › success', () => {
 
   it('signs and sends a native transfer with a secp256k1 key', async () => {
     const keyVault1 = createMemoryVault({
-      keySource: { privateKey: DEFAULT_PRIVATE_KEY },
+      privateKey: DEFAULT_PRIVATE_KEY,
     });
 
     const signer1 = createSigner({
@@ -44,7 +44,7 @@ describe('executeTransaction › success', () => {
       },
     });
 
-    const keyVault2 = createMemoryVault({ keySource: secp256k1KeyPair });
+    const keyVault2 = createMemoryVault({ privateKey: secp256k1KeyPair.privateKey });
 
     const signer2 = createSigner({
       signerAccountId: 'nat',

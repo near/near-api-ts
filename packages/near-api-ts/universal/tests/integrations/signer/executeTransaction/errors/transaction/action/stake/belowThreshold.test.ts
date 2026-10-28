@@ -21,7 +21,7 @@ describe('executeTransaction › Transaction.Action.Stake.ProposedStake.BelowThr
     const sandbox = await startSandbox();
     client = createDefaultClient(sandbox);
     keyVault = await createMemoryVault({
-      keySource: { privateKey: DEFAULT_PRIVATE_KEY },
+      privateKey: DEFAULT_PRIVATE_KEY,
     });
     return () => sandbox.stop();
   });

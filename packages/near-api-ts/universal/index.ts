@@ -41,28 +41,28 @@ export {
 export { convertBase64ToObject } from './src/createClient/methods/_common/base64ToObject';
 export { createMainnetClient } from './src/createClient/presets/mainnet';
 export { createTestnetClient } from './src/createClient/presets/testnet';
+// KeyPair
+export {
+  keyPair,
+  safeKeyPair,
+} from './src/createMemoryVault/_common/keyPairs/keyPair/keyPair';
+export {
+  randomEd25519KeyPair,
+  safeRandomEd25519KeyPair,
+} from './src/createMemoryVault/_common/keyPairs/randomEd25519KeyPair';
+export {
+  randomMlDsa65KeyPair,
+  safeRandomMlDsa65KeyPair,
+} from './src/createMemoryVault/_common/keyPairs/randomMlDsa65KeyPair';
+export {
+  randomSecp256k1KeyPair,
+  safeRandomSecp256k1KeyPair,
+} from './src/createMemoryVault/_common/keyPairs/randomSecp256k1KeyPair';
 // Vaults
 export {
   createMemoryVault,
   safeCreateMemoryVault,
 } from './src/createMemoryVault/createMemoryVault';
-// KeyPair
-export {
-  keyPair,
-  safeKeyPair,
-} from './src/createMemoryVault/toKeyPairs/keyPairs/keyPair/keyPair';
-export {
-  randomEd25519KeyPair,
-  safeRandomEd25519KeyPair,
-} from './src/createMemoryVault/toKeyPairs/keyPairs/randomEd25519KeyPair';
-export {
-  randomMlDsa65KeyPair,
-  safeRandomMlDsa65KeyPair,
-} from './src/createMemoryVault/toKeyPairs/keyPairs/randomMlDsa65KeyPair';
-export {
-  randomSecp256k1KeyPair,
-  safeRandomSecp256k1KeyPair,
-} from './src/createMemoryVault/toKeyPairs/keyPairs/randomSecp256k1KeyPair';
 // Signers
 export { createSigner, safeCreateSigner } from './src/createSigner/createSigner';
 // Nep413 Message
@@ -202,6 +202,7 @@ export type {
   TransactionAction,
   TransactionIntent,
 } from './types/_common/transaction/transaction';
+export type { Vault } from './types/_common/vault';
 
 // Client
 export type { Client } from './types/client/client';

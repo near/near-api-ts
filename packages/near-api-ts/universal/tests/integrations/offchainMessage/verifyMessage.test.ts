@@ -68,7 +68,7 @@ describe('verifyMessage', () => {
 
     const signer = createSigner({
       signerAccountId: 'nat',
-      keyVault: createMemoryVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } }),
+      keyVault: createMemoryVault({ privateKey: DEFAULT_PRIVATE_KEY }),
       client,
     });
 

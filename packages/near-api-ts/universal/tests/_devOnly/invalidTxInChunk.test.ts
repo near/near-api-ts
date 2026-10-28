@@ -31,7 +31,7 @@ describe('invalid transaction included in a chunk', () => {
     const sandbox = await startMaliciousSandbox();
     rpcUrl = sandbox.rpcUrl;
     client = createDefaultClient(sandbox);
-    const keyVault = createMemoryVault({ keySource: { privateKey: DEFAULT_PRIVATE_KEY } });
+    const keyVault = createMemoryVault({ privateKey: DEFAULT_PRIVATE_KEY });
     nat = createSigner({ signerAccountId: 'nat', client, keyVault });
     return () => sandbox.stop();
   });

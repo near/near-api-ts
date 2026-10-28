@@ -31,13 +31,19 @@ export const createFullAccessPoolKeys = async (
     // The pool tracks one nonce per key, so it leaves out keys with a set of nonce channels
     if (permission.kind !== 'FullAccess' || replayProtection.scheme !== 'NonceChannel') continue;
 
-    // The account refers to the key by its id, and we need the full public key to sign;
-    // the keyVault finds it only if it holds the key (we can sign data by it)
-    const publicKey = await signerContext.keyVault.safeFindPublicKey({
+    // We can sign only by a key the keyVault holds
+    const hasKeyPair = await signerContext.keyVault.safeHasKeyPair({
       publicKeyId: key.publicKeyId,
     });
 
-    if (publicKey.success && publicKey.data)
+    if (!hasKeyPair.success || !hasKeyPair.data) continue;
+
+    // The account refers to the key by its id, and we need the full public key to sign
+    const publicKey = await signerContext.keyVault.safeGetPublicKey({
+      publicKeyId: key.publicKeyId,
+    });
+
+    if (publicKey.success)
       filteredKeys.push(transformKey(replayProtection.lastNonce, publicKey.data));
   }
 
