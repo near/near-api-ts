@@ -17,6 +17,8 @@ export type CacheState = {
   recentBlockHash: {
     validUntil: number;
     value?: BlockHash;
+    // The request that fetches the block right now, shared by the calls that come meanwhile
+    loadingPromise?: ReturnType<SafeGetRecentBlockHash>;
   };
 };
 
