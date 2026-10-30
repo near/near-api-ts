@@ -3,6 +3,7 @@ import type { NatError } from '../../src/_common/_common/_common/_common/natErro
 import type { ClientInnerErrorRegistry, ClientPublicErrorRegistry } from '../client/client';
 import type { MemoryVaultPublicErrorRegistry } from '../memoryVault/memoryVault';
 import type { SignerInnerErrorRegistry, SignerPublicErrorRegistry } from '../signer/signer';
+import type { VaultSignServicePublicErrorRegistry } from '../vaultSignService/vaultSignService';
 import type { ResultErr } from './common';
 import type { KeyPairPublicErrorRegistry } from './keyPairs/keyPair';
 import type { MessagePublicErrorRegistry } from './message';
@@ -24,6 +25,7 @@ export interface NatInnerErrorRegistry extends ClientInnerErrorRegistry, SignerI
 export interface NatPublicErrorRegistry
   extends ClientPublicErrorRegistry,
     MemoryVaultPublicErrorRegistry,
+    VaultSignServicePublicErrorRegistry,
     SignerPublicErrorRegistry,
     ActionsPublicErrorRegistry,
     KeyPairPublicErrorRegistry,

@@ -23,3 +23,11 @@ export type Vault = {
   safeGetPublicKey: (args: GetPublicKeyArgs) => Promise<Result<PublicKey, unknown>>;
   safeSignData: (args: SignDataArgs) => Promise<Result<SignedData, unknown>>;
 };
+
+// A result that can't fail has no error branch, so it adds `never`, not `unknown`
+type ErrorBranchOf<R> = R extends { success: false; error: infer E } ? E : never;
+type ErrorOf<F> = F extends (...args: never[]) => Promise<infer R> ? ErrorBranchOf<R> : never;
+
+// What a call of vault V fails with - `unknown` in the contract, the vault's own errors in V
+export type HasKeyPairErrorOf<V extends Vault> = ErrorOf<V['safeHasKeyPair']>;
+export type SignDataErrorOf<V extends Vault> = ErrorOf<V['safeSignData']>;

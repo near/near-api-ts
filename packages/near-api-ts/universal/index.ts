@@ -65,6 +65,11 @@ export {
 } from './src/createMemoryVault/createMemoryVault';
 // Signers
 export { createSigner, safeCreateSigner } from './src/createSigner/createSigner';
+// Sign services
+export {
+  createVaultSignService,
+  safeCreateVaultSignService,
+} from './src/createVaultSignService/createVaultSignService';
 // Nep413 Message
 export { createMessage, safeCreateMessage } from './src/offchainMessage/createMessage';
 export {
@@ -237,3 +242,4 @@ export type {
 export type { PartialTransportPolicy } from './types/client/transport/transport';
 export type { MemoryVault } from './types/memoryVault/memoryVault';
 export type { Signer } from './types/signer/signer';
+export type { VaultSignService } from './types/vaultSignService/vaultSignService';

@@ -263,31 +263,39 @@ Depth means foundational, not obscure.
 ## Known deviations
 
 Two, from unrelated causes. Both are recorded in `scripts/checkModulePlacement/allow.json`
-— three entries for the first, one for the second — and everything else conforms.
+— seven entries for the first, one for the second — and everything else conforms.
 
-### `createSigner` reaches into `src/transaction/`
+### `createSigner` and `createVaultSignService` reach into `src/transaction/`
 
-`src/transaction/` groups the action creators, `signTransaction/`, `signDelegation/` and
+`src/transaction/` groups the action creators, `signTransaction/`, `signDelegation.ts` and
 the schema trees all three share. It is a feature root without an entry file, so it stays
-a group folder, and `createSigner` reaches past that into its interior. Two consequences,
-both temporary:
+a group folder, and `createSigner` and `createVaultSignService` reach past that into its
+interior. Four consequences, all temporary:
 
 - `createSigner/_common/zodSchemas.ts` builds `TransactionIntentZodSchema` out of
   `SingleTransactionActionZodSchema` and `MultiTransactionActionsZodSchema`, which
-  `signTransaction/zodSchemas/transaction/transaction.ts` exports. That reaches into
-  `signTransaction/`'s interior — the only illegal edge in the package. The module sits
-  there because of its one legitimate consumer, `signTransaction.ts` (Rule 1, `|C| == 1`);
+  `signTransaction/transactionZodSchema/transactionZodSchema.ts` exports. That reaches into
+  `signTransaction/`'s interior. The module sits there because of its one legitimate
+  consumer, `signTransaction.ts` (Rule 1, `|C| == 1`);
   `toNearcoreTransaction/toNearcoreTransaction.ts` imports from it `type`-only and so is
   not a consumer at all. Counting the `createSigner` edge instead would put the LCA at
   `src/` and drag the whole zod ladder into `src/_common/`'s — see "Why the grouping
   matters" below.
+- `createVaultSignService/signTransaction.ts` and `signDelegation.ts` validate their args,
+  as every public method does, with `TransactionZodSchema` and `DelegationZodSchema`. The
+  first is private to `signTransaction/`, the second sits in `transaction/_common/`, so
+  both edges reach in — and `delegationZodSchema.ts`, like `transactionZodSchema.ts`, gets a
+  consumer that drags its LCA out to `src/`.
 - `signTransaction/signTransaction.ts` is consumed by two modules in
-  `createSigner/createTasker/executeTask/executors/`, so the algorithm would move the whole
-  `signTransaction/` folder under `executors/_common/`.
+  `createSigner/createTasker/executeTask/executors/` and by
+  `createVaultSignService/signTransaction.ts`, so the algorithm would hoist the whole
+  `signTransaction/` folder to `src/_common/`.
+- `signDelegation.ts` has one consumer, `createVaultSignService/signDelegation.ts`, so the
+  algorithm would move it under that module.
 
-Both close the same way: give `transaction/` an entry factory and have `createSigner`
-consume that instead of reaching in. Until then, do not restructure around these two, and
-do not add new cross-feature imports like them.
+All four close the same way: give `transaction/` an entry factory and have `createSigner`
+and `createVaultSignService` consume that instead of reaching in. Until then, do not
+restructure around these, and do not add new cross-feature imports like them.
 
 ### `getConversionSuccess.ts` is placed for a method that does not exist yet
 
