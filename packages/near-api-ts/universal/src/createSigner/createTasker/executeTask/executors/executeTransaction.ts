@@ -11,9 +11,14 @@ import {
 import { result, resultNatError } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
 
+type AttemptArgs = {
+  attemptIndex: number;
+  newNonce: TransactionNonce;
+  refreshBlockHash?: boolean;
+};
+
 type Attempt = (
-  attemptIndex: number,
-  newNonce: TransactionNonce,
+  args: AttemptArgs,
 ) => Promise<
   Result<
     SendSignedTransactionOutput,
@@ -31,8 +36,10 @@ export const executeTransaction = async (
 
   const attempt: Attempt = wrapInternalError(
     'Signer.ExecuteTransaction.Internal',
-    async (attemptIndex, newNonce) => {
-      const blockHash = await signerContext.client.safeGetRecentBlockHash();
+    async ({ attemptIndex, newNonce, refreshBlockHash }) => {
+      const blockHash = await signerContext.client.safeGetRecentBlockHash({
+        options: { refreshCache: refreshBlockHash },
+      });
 
       // TODO The signer has no error of its own for a failed request yet, so it is Internal for now
       if (!blockHash.success)
@@ -75,8 +82,20 @@ export const executeTransaction = async (
         attemptIndex <= maxAttempts &&
         txResult.error.kind === 'Client.SendSignedTransaction.Rpc.Nonce.Invalid'
       ) {
-        return await attempt(attemptIndex + 1, txResult.error.context.info.accessKeyNonce + 1);
+        return await attempt({
+          attemptIndex: attemptIndex + 1,
+          newNonce: txResult.error.context.info.accessKeyNonce + 1,
+        });
       }
+
+      // By default the client keeps a block hash for an hour, longer than a network with a short
+      // validity period keeps a transaction valid - 100 blocks on a localnet, about 12 seconds on
+      // the sandbox. Send it again with a fresh block hash; the nonce wasn't used, so it stays
+      if (
+        attemptIndex <= maxAttempts &&
+        txResult.error.kind === 'Client.SendSignedTransaction.Rpc.BlockHash.Expired'
+      )
+        return await attempt({ attemptIndex: attemptIndex + 1, newNonce, refreshBlockHash: true });
 
       // Pack sendSignedTransaction error and return;
       return result.err(
@@ -88,7 +107,7 @@ export const executeTransaction = async (
     },
   );
 
-  const executeTransactionResult = await attempt(1, key.nonce + 1);
+  const executeTransactionResult = await attempt({ attemptIndex: 1, newNonce: key.nonce + 1 });
 
   signerContext.tasker.completeTask(task.taskId, executeTransactionResult);
 };
