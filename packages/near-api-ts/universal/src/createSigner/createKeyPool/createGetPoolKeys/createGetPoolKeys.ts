@@ -47,7 +47,15 @@ export const createGetPoolKeys =
       // 4. If a user wants to handle all tasks only by a specific key/s - remove others;
       const allowedAccessKeys = getAllowedAccessKeys(accessKeys.data.accessKeys, createSignerArgs);
 
-      if (allowedAccessKeys.length === 0)
+      // 5. Create pool keys of the allowed keys the signer can sign by;
+      const [fullAccessPoolKeys, contractFunctionCallPoolKeys] = await Promise.all([
+        createFullAccessPoolKeys(allowedAccessKeys, signerContext),
+        createContractFunctionCallPoolKeys(allowedAccessKeys, signerContext),
+      ]);
+
+      // 6. The pool is empty when no key is left after every filter - not allowed,
+      // a gas key, or one the sign service doesn't hold;
+      if (fullAccessPoolKeys.length === 0 && contractFunctionCallPoolKeys.length === 0)
         return result.err(
           createNatError({
             kind: 'Signer.KeyPool.Empty',
@@ -58,21 +66,18 @@ export const createGetPoolKeys =
           }),
         );
 
-      // 5. Create pool keys and return them;
-      const [fullAccessPoolKeys, contractFunctionCallPoolKeys] = await Promise.all([
-        createFullAccessPoolKeys(allowedAccessKeys, signerContext),
-        createContractFunctionCallPoolKeys(allowedAccessKeys, signerContext),
-      ]);
-
       state.poolKeys = {
         fullAccess: fullAccessPoolKeys,
         contractFunctionCall: contractFunctionCallPoolKeys,
       };
-      state.poolKeysLoadingPromise = undefined;
 
       return result.ok(state.poolKeys);
     };
 
-    state.poolKeysLoadingPromise = loadAccessKeys();
+    // A failed load is not kept, so the next task loads the keys again
+    state.poolKeysLoadingPromise = loadAccessKeys().finally(() => {
+      state.poolKeysLoadingPromise = undefined;
+    });
+
     return await state.poolKeysLoadingPromise;
   };

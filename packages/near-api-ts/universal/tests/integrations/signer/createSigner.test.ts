@@ -116,26 +116,4 @@ describe('createSigner', async () => {
     });
     assertNatErrKind(signer, 'CreateSigner.Args.InvalidSchema');
   });
-
-  // TODO move to executeTransaction
-  // it('CreateSigner.Signer.AccessKeys.NotFound', async () => {
-  //   const signer = safeCreateSigner({
-  //     signerAccountId: 'nat-123',
-  //     client,
-  //     keyVault,
-  //   });
-  //   assertNatErrKind(signer, 'CreateSigner.Signer.AccessKeys.NotFound');
-  // });
-  //
-  // it('CreateSigner.KeyPool.Empty', async () => {
-  //   const signer = await safeCreateSigner({
-  //     signerAccountId: 'nat',
-  //     client,
-  //     keyVault,
-  //     keyPool: {
-  //       allowedAccessKeys: [randomEd25519KeyPair().publicKey],
-  //     },
-  //   });
-  //   assertNatErrKind(signer, 'CreateSigner.KeyPool.Empty');
-  // });
 });

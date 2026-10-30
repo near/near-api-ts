@@ -10,6 +10,10 @@ export type SignerErrorContext = {
     AccessKeys: {
       NotLoaded: { cause: GetAccessKeysError };
     };
+    /**
+     * No account key is left to sign by: `allowedAccessKeys` leaves them out, they are gas
+     * keys, or the sign service doesn't hold them.
+     */
     Empty: {
       accessKeys: AccessKey[];
       allowedAccessKeys: PublicKey[];
