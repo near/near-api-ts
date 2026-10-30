@@ -7,6 +7,7 @@ import {
   createMemoryVault,
   createSigner,
   createSubAccount,
+  createVaultSignService,
   type MemoryVault,
   randomEd25519KeyPair,
   transfer,
@@ -33,7 +34,11 @@ describe('executeTransaction › KeyPool.SigningKey.NotFound', async () => {
 
   it('fails with KeyPool.SigningKey.NotFound when no key in the pool can sign', async () => {
     // Create a new user with an FC key
-    const nat = createSigner({ signerAccountId: 'nat', client, keyVault });
+    const nat = createSigner({
+      signerAccountId: 'nat',
+      client,
+      signService: createVaultSignService({ vault: keyVault }),
+    });
 
     await nat.executeTransaction({
       intent: {
@@ -55,7 +60,11 @@ describe('executeTransaction › KeyPool.SigningKey.NotFound', async () => {
     });
 
     // Try to sign FA transaction with an FC key
-    const user = createSigner({ signerAccountId: 'user.nat', client, keyVault });
+    const user = createSigner({
+      signerAccountId: 'user.nat',
+      client,
+      signService: createVaultSignService({ vault: keyVault }),
+    });
 
     // const keys = await client.getAccessKeys({ accountId: 'user.nat' });
     // console.log(keys);

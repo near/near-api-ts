@@ -4,6 +4,7 @@ import {
   type Client,
   createMemoryVault,
   createSigner,
+  createVaultSignService,
   type MemoryVault,
   near,
   randomEd25519KeyPair,
@@ -27,7 +28,11 @@ describe('executeTransaction › Action.Stake.TotalBalance.NotEnough', () => {
   });
 
   it('fails with Action.Stake.TotalBalance.NotEnough when staking more than the balance', async () => {
-    const nat = createSigner({ signerAccountId: 'nat', client, keyVault });
+    const nat = createSigner({
+      signerAccountId: 'nat',
+      client,
+      signService: createVaultSignService({ vault: keyVault }),
+    });
 
     const res = await nat.safeExecuteTransaction({
       intent: {

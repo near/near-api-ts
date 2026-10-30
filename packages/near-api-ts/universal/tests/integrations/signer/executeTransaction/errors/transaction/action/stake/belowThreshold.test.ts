@@ -4,6 +4,7 @@ import {
   type Client,
   createMemoryVault,
   createSigner,
+  createVaultSignService,
   type MemoryVault,
   near,
   randomEd25519KeyPair,
@@ -27,7 +28,11 @@ describe('executeTransaction › Transaction.Action.Stake.ProposedStake.BelowThr
   });
 
   it('fails with Transaction.Action.Stake.ProposedStake.BelowThreshold when the stake is below the seat price', async () => {
-    const nat = createSigner({ signerAccountId: 'nat', client, keyVault });
+    const nat = createSigner({
+      signerAccountId: 'nat',
+      client,
+      signService: createVaultSignService({ vault: keyVault }),
+    });
 
     const res = await nat.safeExecuteTransaction({
       intent: {

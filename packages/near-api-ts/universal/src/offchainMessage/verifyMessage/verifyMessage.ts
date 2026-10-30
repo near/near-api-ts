@@ -3,7 +3,6 @@ import { type Schema, serialize } from 'borsh';
 import * as z from 'zod/mini';
 import type { BorshBytes } from '../../../types/_common/common';
 import type { Message, SafeVerifyMessage, VerifyMessage } from '../../../types/_common/message';
-import type { SafeGetAccessKeys } from '../../../types/client/methods/account/getAccessKeys';
 import { Nep413Message } from '../../_common/_common/_common/constants';
 import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
@@ -34,10 +33,7 @@ export const VerifyMessageArgsSchema = z.object({
   signedMessage: SignedMessageZodSchema,
   message: MessageZodSchema,
   client: z.object({
-    safeGetAccessKeys: z.custom<SafeGetAccessKeys>(
-      (val) => typeof val === 'function',
-      'client.safeGetAccessKeys must be a function',
-    ),
+    safeGetAccessKeys: z.function(),
   }),
 });
 
@@ -51,7 +47,9 @@ export const safeVerifyMessage: SafeVerifyMessage = wrapInternalError(
         zodError: validArgs.error,
       });
 
-    const { signedMessage, client } = validArgs.data;
+    const { signedMessage } = validArgs.data;
+    // The client itself - the parsed copy keeps only the method the schema names, wrapped
+    const { client } = args;
 
     // 1. Check if a provided public key belongs to the account and is a FullAccess key
     const accessKeys = await client.safeGetAccessKeys({

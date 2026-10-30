@@ -5,6 +5,7 @@ import {
   type Client,
   createMemoryVault,
   createSigner,
+  createVaultSignService,
   randomEd25519KeyPair,
   transfer,
 } from '../../../../../index';
@@ -29,7 +30,7 @@ describe('executeTransaction › success', () => {
 
     const baseSigner = createSigner({
       signerAccountId: 'nat',
-      keyVault,
+      signService: createVaultSignService({ vault: keyVault }),
       client,
     });
 
@@ -48,7 +49,7 @@ describe('executeTransaction › success', () => {
 
     const signer = createSigner({
       signerAccountId: 'nat',
-      keyVault,
+      signService: createVaultSignService({ vault: keyVault }),
       client,
     });
 

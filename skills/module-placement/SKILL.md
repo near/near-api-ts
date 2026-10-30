@@ -270,7 +270,7 @@ Two, from unrelated causes. Both are recorded in `scripts/checkModulePlacement/a
 `src/transaction/` groups the action creators, `signTransaction/`, `signDelegation.ts` and
 the schema trees all three share. It is a feature root without an entry file, so it stays
 a group folder, and `createSigner` and `createVaultSignService` reach past that into its
-interior. Four consequences, all temporary:
+interior. Three consequences, all temporary:
 
 - `createSigner/_common/zodSchemas.ts` builds `TransactionIntentZodSchema` out of
   `SingleTransactionActionZodSchema` and `MultiTransactionActionsZodSchema`, which
@@ -286,14 +286,12 @@ interior. Four consequences, all temporary:
   first is private to `signTransaction/`, the second sits in `transaction/_common/`, so
   both edges reach in — and `delegationZodSchema.ts`, like `transactionZodSchema.ts`, gets a
   consumer that drags its LCA out to `src/`.
-- `signTransaction/signTransaction.ts` is consumed by two modules in
-  `createSigner/createTasker/executeTask/executors/` and by
-  `createVaultSignService/signTransaction.ts`, so the algorithm would hoist the whole
-  `signTransaction/` folder to `src/_common/`.
-- `signDelegation.ts` has one consumer, `createVaultSignService/signDelegation.ts`, so the
-  algorithm would move it under that module.
+- `signTransaction/signTransaction.ts` and `signDelegation.ts` each have one consumer,
+  `createVaultSignService/signTransaction.ts` and `createVaultSignService/signDelegation.ts`,
+  so the algorithm would move each under that module. The signer signs through a sign
+  service and no longer imports them.
 
-All four close the same way: give `transaction/` an entry factory and have `createSigner`
+All three close the same way: give `transaction/` an entry factory and have `createSigner`
 and `createVaultSignService` consume that instead of reaching in. Until then, do not
 restructure around these, and do not add new cross-feature imports like them.
 

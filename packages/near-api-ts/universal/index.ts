@@ -182,6 +182,7 @@ export type {
   NearToken,
   NearTokenArgs,
 } from './types/_common/nearToken';
+export type { SignService } from './types/_common/signService';
 export type { CallContractFunctionAction } from './types/_common/transaction/actions/delegableActions/callContractFunction';
 export type { LinkGlobalContractAction } from './types/_common/transaction/actions/delegableActions/linkGlobalContract';
 export type { PinGlobalContractAction } from './types/_common/transaction/actions/delegableActions/pinGlobalContract';

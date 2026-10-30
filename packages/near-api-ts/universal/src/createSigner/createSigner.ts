@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
+import type { SignService } from '../../types/_common/signService';
 import type { Client } from '../../types/client/client';
-import type { MemoryVault } from '../../types/memoryVault/memoryVault';
 import type { CreateSigner, SafeCreateSigner } from '../../types/signer/createSigner';
 import type { SignerContext } from '../../types/signer/signer';
 import { createNatError } from '../_common/_common/_common/_common/natError';
@@ -15,17 +15,14 @@ import { createSafeSignTransaction } from './createSignTransaction';
 import { createTasker } from './createTasker/createTasker';
 import { createTaskQueue } from './createTaskQueue/createTaskQueue';
 
-// keyVault: z.object({
-//   safeSignData: z.custom<SafeSignData>(
-//     (val) => typeof val === 'function',
-//     'keyVault.safeSignData must be a function', // TODO compete
-//   ),
-// }),
-
 const CreateSignerArgsSchema = z.object({
   signerAccountId: AccountIdZodSchema,
   client: z.custom<Client>((value) => true), // TODO fix it
-  keyVault: z.custom<MemoryVault>((value) => true), // TODO fix it
+  signService: z.object({
+    safeHasKeyPair: z.function(),
+    safeGetPublicKey: z.function(),
+    safeSignTransaction: z.function(),
+  }),
   keyPool: z.optional(
     z.object({
       allowedAccessKeys: z.optional(z.array(PublicKeyZodSchema).check(z.minLength(1))),
@@ -51,12 +48,15 @@ export const safeCreateSigner: SafeCreateSigner = wrapInternalError(
         }),
       );
 
-    const { signerAccountId, client, keyVault } = validArgs.data;
+    const { signerAccountId, client } = validArgs.data;
+    // The sign service itself - the parsed copy keeps only the methods the schema names, wrapped
+    const { signService } = args;
 
     const context = {
       signerAccountId,
       client,
-      keyVault,
+      // Inside, the signer needs only what every sign service has
+      signService: signService as SignService,
     } as SignerContext;
 
     context.keyPool = createKeyPool(context, args);
@@ -68,7 +68,7 @@ export const safeCreateSigner: SafeCreateSigner = wrapInternalError(
 
     return result.ok({
       signerAccountId,
-      keyVault,
+      signService,
       client,
       signTransaction: asThrowable(safeSignTransaction),
       executeTransaction: asThrowable(safeExecuteTransaction),

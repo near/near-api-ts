@@ -5,6 +5,7 @@ import {
   type Client,
   createMemoryVault,
   createSigner,
+  createVaultSignService,
   type MemoryVault,
   transfer,
 } from '../../../../index';
@@ -30,13 +31,13 @@ describe('Signer.executeTransaction', async () => {
     const nat1 = createSigner({
       signerAccountId: 'nat',
       client,
-      keyVault,
+      signService: createVaultSignService({ vault: keyVault }),
     });
 
     const nat2 = createSigner({
       signerAccountId: 'nat',
       client,
-      keyVault,
+      signService: createVaultSignService({ vault: keyVault }),
     });
 
     // Make sure send another TX - if you will send the same with invalid nonce,

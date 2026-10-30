@@ -8,6 +8,7 @@ import {
   createMemoryVault,
   createMessage,
   createSigner,
+  createVaultSignService,
   keyPair,
   type Message,
   type PublicKey,
@@ -68,7 +69,9 @@ describe('verifyMessage', () => {
 
     const signer = createSigner({
       signerAccountId: 'nat',
-      keyVault: createMemoryVault({ privateKey: DEFAULT_PRIVATE_KEY }),
+      signService: createVaultSignService({
+        vault: createMemoryVault({ privateKey: DEFAULT_PRIVATE_KEY }),
+      }),
       client,
     });
 

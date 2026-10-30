@@ -5,6 +5,7 @@ import {
   type Client,
   createMemoryVault,
   createSigner,
+  createVaultSignService,
   isNatError,
   type PublicKey,
   randomEd25519KeyPair,
@@ -27,7 +28,9 @@ describe('Get Access Key Nonce Channels', () => {
   const addKeyWithChannels = async (publicKey: PublicKey, channelCount: number) => {
     const signer = createSigner({
       signerAccountId: 'nat',
-      keyVault: createMemoryVault({ privateKey: DEFAULT_PRIVATE_KEY }),
+      signService: createVaultSignService({
+        vault: createMemoryVault({ privateKey: DEFAULT_PRIVATE_KEY }),
+      }),
       client,
     });
 

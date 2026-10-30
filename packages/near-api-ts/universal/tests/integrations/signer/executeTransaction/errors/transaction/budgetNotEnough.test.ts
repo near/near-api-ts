@@ -6,6 +6,7 @@ import {
   createMemoryVault,
   createSigner,
   createSubAccount,
+  createVaultSignService,
   type MemoryVault,
   near,
   randomEd25519KeyPair,
@@ -30,7 +31,11 @@ describe('executeTransaction › Signer.Budget.NotEnough', () => {
   });
 
   it('fails with Signer.Budget.NotEnough when transferring more than the balance', async () => {
-    const nat = createSigner({ signerAccountId: 'nat', client, keyVault });
+    const nat = createSigner({
+      signerAccountId: 'nat',
+      client,
+      signService: createVaultSignService({ vault: keyVault }),
+    });
 
     // 1. Create an account with 10 FA keys
     await nat.executeTransaction({
@@ -65,7 +70,11 @@ describe('executeTransaction › Signer.Budget.NotEnough', () => {
     expect(balance1.locked.total.near).toBe('0.0092');
 
     // 2. try to send
-    const abc = createSigner({ signerAccountId: 'abc.nat', client, keyVault });
+    const abc = createSigner({
+      signerAccountId: 'abc.nat',
+      client,
+      signService: createVaultSignService({ vault: keyVault }),
+    });
 
     const tx = await abc.safeExecuteTransaction({
       intent: {

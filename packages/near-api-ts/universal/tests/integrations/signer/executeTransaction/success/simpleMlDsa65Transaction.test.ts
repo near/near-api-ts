@@ -5,6 +5,7 @@ import {
   type Client,
   createMemoryVault,
   createSigner,
+  createVaultSignService,
   randomMlDsa65KeyPair,
   transfer,
 } from '../../../../../index';
@@ -25,7 +26,9 @@ describe('executeTransaction › success', () => {
   it('signs and sends a native transfer with an ml-dsa-65 key', async () => {
     const defaultSigner = createSigner({
       signerAccountId: 'nat',
-      keyVault: createMemoryVault({ privateKey: DEFAULT_PRIVATE_KEY }),
+      signService: createVaultSignService({
+        vault: createMemoryVault({ privateKey: DEFAULT_PRIVATE_KEY }),
+      }),
       client,
     });
 
@@ -44,7 +47,9 @@ describe('executeTransaction › success', () => {
 
     const mlDsa65Signer = createSigner({
       signerAccountId: 'nat',
-      keyVault: createMemoryVault({ privateKey: mlDsa65KeyPair.privateKey }),
+      signService: createVaultSignService({
+        vault: createMemoryVault({ privateKey: mlDsa65KeyPair.privateKey }),
+      }),
       client,
     });
 
@@ -66,7 +71,7 @@ describe('executeTransaction › success', () => {
     });
     const defaultSigner = createSigner({
       signerAccountId: 'nat',
-      keyVault: defaultKeyVault,
+      signService: createVaultSignService({ vault: defaultKeyVault }),
       client,
     });
 
@@ -86,8 +91,10 @@ describe('executeTransaction › success', () => {
     // The vault holds both keys; the whitelist narrows the pool to the ml-dsa-65 one
     const signer = createSigner({
       signerAccountId: 'nat',
-      keyVault: createMemoryVault({
-        privateKeys: [DEFAULT_PRIVATE_KEY, mlDsa65KeyPair.privateKey],
+      signService: createVaultSignService({
+        vault: createMemoryVault({
+          privateKeys: [DEFAULT_PRIVATE_KEY, mlDsa65KeyPair.privateKey],
+        }),
       }),
       keyPool: { allowedAccessKeys: [mlDsa65KeyPair.publicKey] },
       client,

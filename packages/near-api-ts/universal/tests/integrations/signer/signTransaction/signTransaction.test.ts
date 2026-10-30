@@ -7,6 +7,7 @@ import {
   createMemoryVault,
   createSigner,
   createSubAccount,
+  createVaultSignService,
   type MemoryVault,
   randomEd25519KeyPair,
   transfer,
@@ -36,7 +37,7 @@ describe('Signer.signTransaction', async () => {
     const signer = createSigner({
       signerAccountId: 'nat',
       client,
-      keyVault,
+      signService: createVaultSignService({ vault: keyVault }),
     });
 
     const tx = await signer.safeSignTransaction({
@@ -56,7 +57,7 @@ describe('Signer.signTransaction', async () => {
     const nat = createSigner({
       signerAccountId: 'nat',
       client,
-      keyVault,
+      signService: createVaultSignService({ vault: keyVault }),
     });
 
     const tx1 = await nat.signTransaction({
@@ -83,7 +84,7 @@ describe('Signer.signTransaction', async () => {
     const user = createSigner({
       signerAccountId: 'user.nat',
       client,
-      keyVault,
+      signService: createVaultSignService({ vault: keyVault }),
     });
 
     const tx2 = await user.safeSignTransaction({

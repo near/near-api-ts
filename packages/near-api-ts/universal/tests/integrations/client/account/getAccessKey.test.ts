@@ -5,6 +5,7 @@ import {
   type Client,
   createMemoryVault,
   createSigner,
+  createVaultSignService,
   randomMlDsa65KeyPair,
 } from '../../../../index';
 import { assertNatErrKind } from '../../../utils/assertNatErrKind';
@@ -45,9 +46,14 @@ describe('Get Account Access Key', () => {
 
     const signer = createSigner({
       signerAccountId: 'nat',
-      keyVault: createMemoryVault({ privateKey: DEFAULT_PRIVATE_KEY }),
+      signService: createVaultSignService({
+        vault: createMemoryVault({ privateKey: DEFAULT_PRIVATE_KEY }),
+      }),
       client,
     });
+
+    const x = signer.signService;
+    const y = x.signTransaction;
 
     await signer.executeTransaction({
       intent: {

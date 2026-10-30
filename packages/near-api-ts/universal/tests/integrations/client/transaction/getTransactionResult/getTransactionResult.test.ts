@@ -8,6 +8,7 @@ import {
   createMemoryVault,
   createSigner,
   createSubAccount,
+  createVaultSignService,
   deployLocalContract,
   type GetTransactionResultDeserializeActionSummariesArgs,
   type GetTransactionResultDeserializeExecutionStepsArgs,
@@ -43,7 +44,7 @@ describe('CallContractReadFunction', () => {
     nat = createSigner({
       signerAccountId: 'nat',
       client,
-      keyVault,
+      signService: createVaultSignService({ vault: keyVault }),
     });
 
     const tx = await nat.executeTransaction({

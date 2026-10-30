@@ -11,13 +11,11 @@ import { createSafeHasKeyPair } from './hasKeyPair';
 import { createSafeSignDelegation } from './signDelegation';
 import { createSafeSignTransaction } from './signTransaction';
 
-const isFunction = (val: unknown) => typeof val === 'function';
-
 const CreateVaultSignServiceArgsSchema = z.object({
   vault: z.object({
-    safeHasKeyPair: z.custom(isFunction, 'vault.safeHasKeyPair must be a function'),
-    safeGetPublicKey: z.custom(isFunction, 'vault.safeGetPublicKey must be a function'),
-    safeSignData: z.custom(isFunction, 'vault.safeSignData must be a function'),
+    safeHasKeyPair: z.function(),
+    safeGetPublicKey: z.function(),
+    safeSignData: z.function(),
   }),
 });
 
@@ -31,7 +29,7 @@ export const safeCreateVaultSignService: SafeCreateVaultSignService = wrapIntern
         zodError: validArgs.error,
       });
 
-    // The vault itself - the parsed copy keeps only the methods the schema names
+    // The vault itself - the parsed copy keeps only the methods the schema names, wrapped
     const context = { vault: args.vault };
 
     const safeHasKeyPair = createSafeHasKeyPair(context);

@@ -5,6 +5,7 @@ import {
   callContractFunction,
   createMemoryVault,
   createSigner,
+  createVaultSignService,
   deployLocalContract,
   keyPair,
   near,
@@ -29,7 +30,7 @@ describe('CallContractReadFunction', () => {
     nat = createSigner({
       signerAccountId: 'nat',
       client,
-      keyVault,
+      signService: createVaultSignService({ vault: keyVault }),
     });
 
     return () => sandbox.stop();

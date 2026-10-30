@@ -5,6 +5,7 @@ import {
   createMemoryVault,
   createSigner,
   createSubAccount,
+  createVaultSignService,
   type MemoryVault,
 } from '../../../../../../../../index';
 import { assertNatErrKind } from '../../../../../../../utils/assertNatErrKind';
@@ -27,7 +28,11 @@ describe('executeTransaction › Transaction.Action.CreateSubAccount.AlreadyExis
 
   it('fails with Transaction.Action.Action.CreateSubAccount.AlreadyExist when creating an existing account', async () => {
     const errorKind = 'Signer.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists';
-    const nat = createSigner({ signerAccountId: 'nat', client, keyVault });
+    const nat = createSigner({
+      signerAccountId: 'nat',
+      client,
+      signService: createVaultSignService({ vault: keyVault }),
+    });
 
     const tx = await nat.safeExecuteTransaction({
       intent: {

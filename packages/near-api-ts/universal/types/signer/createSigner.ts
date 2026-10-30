@@ -2,8 +2,8 @@ import type { NatError } from '../../src/_common/_common/_common/_common/natErro
 import type { AccountId, Milliseconds, Result } from '../_common/common';
 import type { PublicKey } from '../_common/crypto';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../_common/natError';
+import type { SignService } from '../_common/signService';
 import type { Client } from '../client/client';
-import type { MemoryVault } from '../memoryVault/memoryVault';
 import type { Signer } from './signer';
 
 export interface CreateSignerPublicErrorRegistry {
@@ -11,10 +11,10 @@ export interface CreateSignerPublicErrorRegistry {
   'CreateSigner.Internal': InternalErrorContext;
 }
 
-export type CreateSignerArgs = {
+export type CreateSignerArgs<S extends SignService = SignService> = {
   signerAccountId: AccountId;
   client: Client;
-  keyVault: MemoryVault;
+  signService: S;
   keyPool?: {
     allowedAccessKeys?: PublicKey[];
   };
@@ -27,6 +27,8 @@ type CreateSignerError =
   | NatError<'CreateSigner.Args.InvalidSchema'>
   | NatError<'CreateSigner.Internal'>;
 
-export type SafeCreateSigner = (args: CreateSignerArgs) => Result<Signer, CreateSignerError>;
+export type SafeCreateSigner = <S extends SignService>(
+  args: CreateSignerArgs<S>,
+) => Result<Signer<S>, CreateSignerError>;
 
-export type CreateSigner = (args: CreateSignerArgs) => Signer;
+export type CreateSigner = <S extends SignService>(args: CreateSignerArgs<S>) => Signer<S>;

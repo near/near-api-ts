@@ -9,6 +9,7 @@ import {
   createSigner,
   createSubAccount,
   createTestnetClient,
+  createVaultSignService,
   deployLocalContract,
   randomEd25519KeyPair,
   transfer,
@@ -37,7 +38,7 @@ describe('yield contract', () => {
 
     const nat = createSigner({
       signerAccountId: 'nat',
-      keyVault,
+      signService: createVaultSignService({ vault: keyVault }),
       client,
     });
 

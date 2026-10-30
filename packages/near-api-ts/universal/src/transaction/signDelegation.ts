@@ -21,10 +21,7 @@ import { toNearcoreSignature } from './_common/toNearcoreSignature';
 const SignDelegationArgsSchema = z.object({
   delegation: DelegationZodSchema,
   signDataProvider: z.object({
-    safeSignData: z.custom(
-      (val) => typeof val === 'function',
-      'signDataProvider.safeSignData must be a function',
-    ),
+    safeSignData: z.function(),
   }),
 });
 

@@ -21,10 +21,7 @@ import { TransactionZodSchema } from './transactionZodSchema/transactionZodSchem
 const SignTransactionArgsSchema = z.object({
   transaction: TransactionZodSchema,
   signDataProvider: z.object({
-    safeSignData: z.custom(
-      (val) => typeof val === 'function',
-      'signDataProvider.safeSignData must be a function',
-    ),
+    safeSignData: z.function(),
   }),
 });
 

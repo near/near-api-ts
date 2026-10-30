@@ -8,9 +8,8 @@ import {
   createNatError,
   type NatError,
 } from '../../../../_common/_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/_common/result';
+import { result, resultNatError } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
-import { signTransaction as signTransactionHelper } from '../../../../transaction/signTransaction/signTransaction';
 
 type Attempt = (
   attemptIndex: number,
@@ -45,13 +44,20 @@ export const executeTransaction = async (
         recentBlockHash: blockHash,
       };
 
-      // This call will never fail
-      const signedTransaction = await signTransactionHelper({
-        signDataProvider: signerContext.keyVault,
+      const signedTransaction = await signerContext.signService.safeSignTransaction({
         transaction,
       });
 
-      const txResult = await signerContext.client.safeSendSignedTransaction({ signedTransaction });
+      // TODO A key deleted from the vault fails here - to be solved by syncing the vault
+      //  and the signer; until then the failure is reported as Internal
+      if (!signedTransaction.success)
+        return resultNatError('Signer.ExecuteTransaction.Internal', {
+          cause: signedTransaction.error,
+        });
+
+      const txResult = await signerContext.client.safeSendSignedTransaction({
+        signedTransaction: signedTransaction.data,
+      });
 
       // If tx executed successfully, update key nonce and return tx execution result;
       if (txResult.success) {

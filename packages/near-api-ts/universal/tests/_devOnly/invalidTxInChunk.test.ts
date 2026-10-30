@@ -4,6 +4,7 @@ import {
   addAccessKey,
   createMemoryVault,
   createSigner,
+  createVaultSignService,
   keyPair,
   near,
   randomEd25519KeyPair,
@@ -32,7 +33,11 @@ describe('invalid transaction included in a chunk', () => {
     rpcUrl = sandbox.rpcUrl;
     client = createDefaultClient(sandbox);
     const keyVault = createMemoryVault({ privateKey: DEFAULT_PRIVATE_KEY });
-    nat = createSigner({ signerAccountId: 'nat', client, keyVault });
+    nat = createSigner({
+      signerAccountId: 'nat',
+      client,
+      signService: createVaultSignService({ vault: keyVault }),
+    });
     return () => sandbox.stop();
   });
 

@@ -1,7 +1,13 @@
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, expect, it } from 'vitest';
 import * as z from 'zod/mini';
-import { type Client, createMemoryVault, type MemoryVault, safeCreateSigner } from '../../../index';
+import {
+  type Client,
+  createMemoryVault,
+  createVaultSignService,
+  type MemoryVault,
+  safeCreateSigner,
+} from '../../../index';
 import { assertNatErrKind } from '../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../utils/common';
 import { startSandbox } from '../../utils/sandbox/startSandbox';
@@ -24,7 +30,7 @@ describe('createSigner', async () => {
     const signer = safeCreateSigner({
       signerAccountId: 'nat',
       client,
-      keyVault,
+      signService: createVaultSignService({ vault: keyVault }),
     });
     expect(signer.success).toBe(true);
   });
@@ -33,7 +39,7 @@ describe('createSigner', async () => {
     const signer = safeCreateSigner({
       signerAccountId: 'nat',
       client,
-      keyVault,
+      signService: createVaultSignService({ vault: keyVault }),
       keyPool: {
         allowedAccessKeys: [DEFAULT_PUBLIC_KEY],
       },
@@ -51,7 +57,7 @@ describe('createSigner', async () => {
         // @ts-ignore
         sendSignedTransaction: () => {},
       },
-      keyVault: {
+      signService: {
         // @ts-ignore
         signTransaction: () => {},
       },
@@ -61,6 +67,17 @@ describe('createSigner', async () => {
       taskQueue: {
         timeoutMs: -1000,
       },
+    });
+    assertNatErrKind(signer, 'CreateSigner.Args.InvalidSchema');
+  });
+
+  it('rejects a vault as a sign service with Args.InvalidSchema', async () => {
+    // A vault signs data, but not transactions
+    const signer = safeCreateSigner({
+      signerAccountId: 'nat',
+      client,
+      // @ts-expect-error a vault is not a sign service
+      signService: keyVault,
     });
     assertNatErrKind(signer, 'CreateSigner.Args.InvalidSchema');
   });

@@ -4,6 +4,7 @@ import {
   type Client,
   createMemoryVault,
   createSigner,
+  createVaultSignService,
   type MemoryVault,
   near,
   randomEd25519KeyPair,
@@ -25,7 +26,11 @@ describe('executeTransaction › Transaction.Action.Stake.ValidatorStake.Already
   });
 
   it('fails with Transaction.Action.Stake.ValidatorStake.AlreadyZero when staking zero with an unknown validator key', async () => {
-    const nat = createSigner({ signerAccountId: 'nat', client, keyVault });
+    const nat = createSigner({
+      signerAccountId: 'nat',
+      client,
+      signService: createVaultSignService({ vault: keyVault }),
+    });
 
     const res = await nat.safeExecuteTransaction({
       intent: {
