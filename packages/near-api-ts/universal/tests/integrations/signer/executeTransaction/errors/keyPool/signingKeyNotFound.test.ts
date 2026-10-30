@@ -4,6 +4,7 @@ import * as z from 'zod/mini';
 import {
   addAccessKey,
   type Client,
+  callContractFunction,
   createMemoryVault,
   createSigner,
   createSubAccount,
@@ -29,11 +30,8 @@ describe('executeTransaction › KeyPool.SigningKey.NotFound', async () => {
     keyVault = createMemoryVault({
       privateKeys: [DEFAULT_PRIVATE_KEY, keyPair1.privateKey],
     });
-    return () => sandbox.stop();
-  });
 
-  it('fails with KeyPool.SigningKey.NotFound when no key in the pool can sign', async () => {
-    // Create a new user with an FC key
+    // Create a new user with an FC key only
     const nat = createSigner({
       signerAccountId: 'nat',
       client,
@@ -59,6 +57,10 @@ describe('executeTransaction › KeyPool.SigningKey.NotFound', async () => {
       },
     });
 
+    return () => sandbox.stop();
+  });
+
+  it('fails with KeyPool.SigningKey.NotFound when no key in the pool can sign', async () => {
     // Try to sign FA transaction with an FC key
     const user = createSigner({
       signerAccountId: 'user.nat',
@@ -66,15 +68,33 @@ describe('executeTransaction › KeyPool.SigningKey.NotFound', async () => {
       signService: createVaultSignService({ vault: keyVault }),
     });
 
-    // const keys = await client.getAccessKeys({ accountId: 'user.nat' });
-    // console.log(keys);
-
-    const tx2 = await user.safeExecuteTransaction({
+    const tx = await user.safeExecuteTransaction({
       intent: {
         action: transfer({ amount: { near: '1' } }),
         receiverAccountId: 'nat',
       },
     });
-    assertNatErrKind(tx2, 'Signer.ExecuteTransaction.KeyPool.SigningKey.NotFound');
+    assertNatErrKind(tx, 'Signer.ExecuteTransaction.KeyPool.SigningKey.NotFound');
+  });
+
+  it('fails with KeyPool.SigningKey.NotFound for a call with a deposit, which an FC key cannot attach', async () => {
+    const user = createSigner({
+      signerAccountId: 'user.nat',
+      client,
+      signService: createVaultSignService({ vault: keyVault }),
+    });
+
+    // The FC key allows the contract and the function, but not the deposit
+    const tx = await user.safeExecuteTransaction({
+      intent: {
+        action: callContractFunction({
+          functionName: 'any_function',
+          gasLimit: { teraGas: '10' },
+          attachedDeposit: { yoctoNear: '1' },
+        }),
+        receiverAccountId: 'abc',
+      },
+    });
+    assertNatErrKind(tx, 'Signer.ExecuteTransaction.KeyPool.SigningKey.NotFound');
   });
 });

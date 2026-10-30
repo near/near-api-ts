@@ -3,6 +3,7 @@ import type { TransactionNonce } from '../../../../types/_common/common';
 import type { PublicKey } from '../../../../types/_common/crypto';
 import type { PoolFullAccessKey } from '../../../../types/signer/inner/keyPool';
 import type { SignerContext } from '../../../../types/signer/signer';
+import { isAccountBalanceKey } from './_common/isAccountBalanceKey';
 import { createLock, createSetNonce, createUnlock } from './_common/keyUtils';
 
 const transformKey = (nonce: TransactionNonce, publicKey: PublicKey): PoolFullAccessKey => {
@@ -27,9 +28,10 @@ export const createFullAccessPoolKeys = async (
   const filteredKeys = [];
 
   for (const key of accountKeys) {
+    if (!isAccountBalanceKey(key)) continue;
+
     const { permission, replayProtection } = key;
-    // The pool tracks one nonce per key, so it leaves out keys with a set of nonce channels
-    if (permission.kind !== 'FullAccess' || replayProtection.scheme !== 'NonceChannel') continue;
+    if (permission.kind !== 'FullAccess') continue;
 
     // We can sign only by a key the signService holds
     const hasKeyPair = await signerContext.signService.safeHasKeyPair({
