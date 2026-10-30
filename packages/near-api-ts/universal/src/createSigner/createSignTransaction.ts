@@ -31,6 +31,7 @@ export const createSafeSignTransaction: CreateSafeSignTransaction = (context) =>
       isNatErrorOf(signedTransaction.error, [
         'Signer.KeyPool.AccessKeys.NotLoaded',
         'Signer.KeyPool.Empty',
+        'Signer.KeyPool.SignService.Failed',
         'Signer.KeyPool.SigningKey.NotFound',
         'Signer.TaskQueue.Timeout',
       ])

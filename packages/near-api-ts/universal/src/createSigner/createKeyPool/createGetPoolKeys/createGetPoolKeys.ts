@@ -53,9 +53,12 @@ export const createGetPoolKeys =
         createContractFunctionCallPoolKeys(allowedAccessKeys, signerContext),
       ]);
 
+      if (!fullAccessPoolKeys.success) return fullAccessPoolKeys;
+      if (!contractFunctionCallPoolKeys.success) return contractFunctionCallPoolKeys;
+
       // 6. The pool is empty when no key is left after every filter - not allowed,
       // a gas key, or one the sign service doesn't hold;
-      if (fullAccessPoolKeys.length === 0 && contractFunctionCallPoolKeys.length === 0)
+      if (fullAccessPoolKeys.data.length === 0 && contractFunctionCallPoolKeys.data.length === 0)
         return result.err(
           createNatError({
             kind: 'Signer.KeyPool.Empty',
@@ -67,8 +70,8 @@ export const createGetPoolKeys =
         );
 
       state.poolKeys = {
-        fullAccess: fullAccessPoolKeys,
-        contractFunctionCall: contractFunctionCallPoolKeys,
+        fullAccess: fullAccessPoolKeys.data,
+        contractFunctionCall: contractFunctionCallPoolKeys.data,
       };
 
       return result.ok(state.poolKeys);

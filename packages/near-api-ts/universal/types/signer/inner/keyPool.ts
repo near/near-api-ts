@@ -10,6 +10,7 @@ import type { Task } from './taskQueue';
 export interface KeyPoolInnerErrorRegistry {
   'Signer.KeyPool.AccessKeys.NotLoaded': SignerErrorContext['KeyPool']['AccessKeys']['NotLoaded'];
   'Signer.KeyPool.Empty': SignerErrorContext['KeyPool']['Empty'];
+  'Signer.KeyPool.SignService.Failed': SignerErrorContext['KeyPool']['SignService']['Failed'];
   'Signer.KeyPool.SigningKey.NotFound': SignerErrorContext['KeyPool']['SigningKey']['NotFound'];
 }
 
@@ -46,7 +47,8 @@ export type KeyPoolState = {
 
 type GetPoolKeysError =
   | NatError<'Signer.KeyPool.AccessKeys.NotLoaded'>
-  | NatError<'Signer.KeyPool.Empty'>;
+  | NatError<'Signer.KeyPool.Empty'>
+  | NatError<'Signer.KeyPool.SignService.Failed'>;
 
 export type GetPoolKeys = () => Promise<Result<PoolKeys, GetPoolKeysError>>;
 
@@ -56,7 +58,8 @@ export type KeyPoolContext = {
 
 type FindKeyForTaskError =
   | NatError<'Signer.KeyPool.AccessKeys.NotLoaded'>
-  | NatError<'Signer.KeyPool.Empty'>;
+  | NatError<'Signer.KeyPool.Empty'>
+  | NatError<'Signer.KeyPool.SignService.Failed'>;
 
 export type FindKeyForTask = (
   task: Task,
@@ -65,6 +68,7 @@ export type FindKeyForTask = (
 type IsKeyForTaskExistError =
   | NatError<'Signer.KeyPool.AccessKeys.NotLoaded'>
   | NatError<'Signer.KeyPool.Empty'>
+  | NatError<'Signer.KeyPool.SignService.Failed'>
   | NatError<'Signer.KeyPool.SigningKey.NotFound'>;
 
 export type IsKeyForTaskExist = (task: Task) => Promise<Result<true, IsKeyForTaskExistError>>;

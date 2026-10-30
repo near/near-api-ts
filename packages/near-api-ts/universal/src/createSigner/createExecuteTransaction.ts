@@ -29,6 +29,7 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (conte
       isNatErrorOf(taskResult.error, [
         'Signer.KeyPool.AccessKeys.NotLoaded',
         'Signer.KeyPool.Empty',
+        'Signer.KeyPool.SignService.Failed',
         'Signer.KeyPool.SigningKey.NotFound',
         'Signer.TaskQueue.Timeout',
       ])

@@ -18,6 +18,13 @@ export type SignerErrorContext = {
       accessKeys: AccessKey[];
       allowedAccessKeys: PublicKey[];
     };
+    /**
+     * The sign service failed to say whether it holds a key of the account, or to give its
+     * full public key - its own error is the `cause`.
+     */
+    SignService: {
+      Failed: { cause: unknown };
+    };
     SigningKey: {
       NotFound: {
         poolKeys: PoolKeys;

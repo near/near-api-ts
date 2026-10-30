@@ -2,10 +2,12 @@ import type {
   AccessKey,
   AccountBalanceContractFunctionCallKey,
 } from '../../../../types/_common/accessKey';
-import type { TransactionNonce } from '../../../../types/_common/common';
+import type { Result, TransactionNonce } from '../../../../types/_common/common';
 import type { PublicKey } from '../../../../types/_common/crypto';
 import type { PoolContractFunctionCallKey } from '../../../../types/signer/inner/keyPool';
 import type { SignerContext } from '../../../../types/signer/signer';
+import type { NatError } from '../../../_common/_common/_common/_common/natError';
+import { result, resultNatError } from '../../../_common/_common/_common/result';
 import { isAccountBalanceKey } from './_common/isAccountBalanceKey';
 import { createLock, createSetNonce, createUnlock } from './_common/keyUtils';
 
@@ -33,7 +35,9 @@ const transformKey = (
 export const createContractFunctionCallPoolKeys = async (
   accountKeys: AccessKey[],
   signerContext: SignerContext,
-): Promise<PoolContractFunctionCallKey[]> => {
+): Promise<
+  Result<PoolContractFunctionCallKey[], NatError<'Signer.KeyPool.SignService.Failed'>>
+> => {
   const filteredKeys = [];
 
   for (const key of accountKeys) {
@@ -47,16 +51,21 @@ export const createContractFunctionCallPoolKeys = async (
       publicKeyId: key.publicKeyId,
     });
 
-    if (!hasKeyPair.success || !hasKeyPair.data) continue;
+    if (!hasKeyPair.success)
+      return resultNatError('Signer.KeyPool.SignService.Failed', { cause: hasKeyPair.error });
+
+    if (!hasKeyPair.data) continue;
 
     // The account refers to the key by its id, and we need the full public key to sign
     const publicKey = await signerContext.signService.safeGetPublicKey({
       publicKeyId: key.publicKeyId,
     });
 
-    if (publicKey.success)
-      filteredKeys.push(transformKey(permission, replayProtection.lastNonce, publicKey.data));
+    if (!publicKey.success)
+      return resultNatError('Signer.KeyPool.SignService.Failed', { cause: publicKey.error });
+
+    filteredKeys.push(transformKey(permission, replayProtection.lastNonce, publicKey.data));
   }
 
-  return filteredKeys;
+  return result.ok(filteredKeys);
 };

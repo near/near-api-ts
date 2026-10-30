@@ -10,6 +10,7 @@ export interface SignTransactionPublicErrorRegistry {
   'Signer.SignTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
   'Signer.SignTransaction.KeyPool.AccessKeys.NotLoaded': SignerErrorContext['KeyPool']['AccessKeys']['NotLoaded'];
   'Signer.SignTransaction.KeyPool.Empty': SignerErrorContext['KeyPool']['Empty'];
+  'Signer.SignTransaction.KeyPool.SignService.Failed': SignerErrorContext['KeyPool']['SignService']['Failed'];
   'Signer.SignTransaction.KeyPool.SigningKey.NotFound': SignerErrorContext['KeyPool']['SigningKey']['NotFound'];
   'Signer.SignTransaction.TaskQueue.Timeout': SignerErrorContext['TaskQueue']['Timeout'];
   'Signer.SignTransaction.Internal': InternalErrorContext;
@@ -23,6 +24,7 @@ type SignTransactionIntentError =
   | NatError<'Signer.SignTransaction.Args.InvalidSchema'>
   | NatError<'Signer.SignTransaction.KeyPool.AccessKeys.NotLoaded'>
   | NatError<'Signer.SignTransaction.KeyPool.Empty'>
+  | NatError<'Signer.SignTransaction.KeyPool.SignService.Failed'>
   | NatError<'Signer.SignTransaction.KeyPool.SigningKey.NotFound'>
   | NatError<'Signer.SignTransaction.TaskQueue.Timeout'>
   | NatError<'Signer.SignTransaction.Internal'>;

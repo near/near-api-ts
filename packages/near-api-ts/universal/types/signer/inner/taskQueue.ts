@@ -68,6 +68,7 @@ export type TaskQueueContext = {
 type ExecuteTransactionTaskError =
   | NatError<'Signer.KeyPool.AccessKeys.NotLoaded'>
   | NatError<'Signer.KeyPool.Empty'>
+  | NatError<'Signer.KeyPool.SignService.Failed'>
   | NatError<'Signer.KeyPool.SigningKey.NotFound'>
   | NatError<'Signer.TaskQueue.Timeout'>
   | NatError<'Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction'>
@@ -85,6 +86,7 @@ export type CreateAddExecuteTransactionTask = (
 export type SignTransactionTaskError =
   | NatError<'Signer.KeyPool.AccessKeys.NotLoaded'>
   | NatError<'Signer.KeyPool.Empty'>
+  | NatError<'Signer.KeyPool.SignService.Failed'>
   | NatError<'Signer.KeyPool.SigningKey.NotFound'>
   | NatError<'Signer.TaskQueue.Timeout'>
   | NatError<'Signer.SignTransaction.Internal'>;
