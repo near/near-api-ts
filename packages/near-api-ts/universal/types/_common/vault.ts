@@ -30,4 +30,5 @@ type ErrorOf<F> = F extends (...args: never[]) => Promise<infer R> ? ErrorBranch
 
 // What a call of vault V fails with - `unknown` in the contract, the vault's own errors in V
 export type HasKeyPairErrorOf<V extends Vault> = ErrorOf<V['safeHasKeyPair']>;
+export type GetPublicKeyErrorOf<V extends Vault> = ErrorOf<V['safeGetPublicKey']>;
 export type SignDataErrorOf<V extends Vault> = ErrorOf<V['safeSignData']>;

@@ -6,6 +6,8 @@ import type {
 import { result, resultNatError } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
+import { createSafeGetPublicKey } from './getPublicKey';
+import { createSafeHasKeyPair } from './hasKeyPair';
 import { createSafeSignDelegation } from './signDelegation';
 import { createSafeSignTransaction } from './signTransaction';
 
@@ -32,6 +34,12 @@ export const safeCreateVaultSignService: SafeCreateVaultSignService = wrapIntern
     // The vault itself - the parsed copy keeps only the methods the schema names
     const context = { vault: args.vault };
 
+    const safeHasKeyPair = createSafeHasKeyPair(context);
+    const hasKeyPair = asThrowable(safeHasKeyPair);
+
+    const safeGetPublicKey = createSafeGetPublicKey(context);
+    const getPublicKey = asThrowable(safeGetPublicKey);
+
     const safeSignTransaction = createSafeSignTransaction(context);
     const signTransaction = asThrowable(safeSignTransaction);
 
@@ -40,6 +48,10 @@ export const safeCreateVaultSignService: SafeCreateVaultSignService = wrapIntern
 
     return result.ok({
       vault: context.vault,
+      hasKeyPair,
+      safeHasKeyPair,
+      getPublicKey,
+      safeGetPublicKey,
       signTransaction,
       safeSignTransaction,
       signDelegation,

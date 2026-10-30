@@ -1,14 +1,23 @@
 import type { NatError } from '../../src/_common/_common/_common/_common/natError';
 import type { Result } from '../_common/common';
-import type { PublicKey } from '../_common/crypto';
+import type { PublicKey, PublicKeyId } from '../_common/crypto';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../_common/natError';
 import type { Vault } from '../_common/vault';
+import type { GetPublicKey, SafeGetPublicKey } from './getPublicKey';
+import type { HasKeyPair, SafeHasKeyPair } from './hasKeyPair';
 import type { SafeSignDelegation, SignDelegation } from './signDelegation';
 import type { SafeSignTransaction, SignTransaction } from './signTransaction';
 
 export interface VaultSignServicePublicErrorRegistry {
   'CreateVaultSignService.Args.InvalidSchema': InvalidSchemaErrorContext;
   'CreateVaultSignService.Internal': InternalErrorContext;
+  'VaultSignService.HasKeyPair.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'VaultSignService.HasKeyPair.Vault.Failed': { cause: unknown };
+  'VaultSignService.HasKeyPair.Internal': InternalErrorContext;
+  'VaultSignService.GetPublicKey.Args.InvalidSchema': InvalidSchemaErrorContext;
+  'VaultSignService.GetPublicKey.PublicKey.NotFound': { publicKeyId: PublicKeyId };
+  'VaultSignService.GetPublicKey.Vault.Failed': { cause: unknown };
+  'VaultSignService.GetPublicKey.Internal': InternalErrorContext;
   'VaultSignService.SignTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
   'VaultSignService.SignTransaction.SigningKey.NotFound': { publicKey: PublicKey };
   'VaultSignService.SignTransaction.Vault.Failed': { cause: unknown };
@@ -33,8 +42,12 @@ export type VaultSignServiceContext<V extends Vault> = {
  */
 export type VaultSignService<V extends Vault> = {
   vault: V;
+  hasKeyPair: HasKeyPair;
+  getPublicKey: GetPublicKey;
   signTransaction: SignTransaction;
   signDelegation: SignDelegation;
+  safeHasKeyPair: SafeHasKeyPair<V>;
+  safeGetPublicKey: SafeGetPublicKey<V>;
   safeSignTransaction: SafeSignTransaction<V>;
   safeSignDelegation: SafeSignDelegation<V>;
 };

@@ -12,6 +12,8 @@ type ErrorOf<F extends (...args: never[]) => Promise<unknown>> = Extract<
 
 type CauseOf<E, K> = Extract<E, { kind: K }> extends { context: { cause: infer C } } ? C : never;
 
+type HasKeyPairError = ErrorOf<VaultSignService<MemoryVault>['safeHasKeyPair']>;
+type GetPublicKeyError = ErrorOf<VaultSignService<MemoryVault>['safeGetPublicKey']>;
 type SignTransactionError = ErrorOf<VaultSignService<MemoryVault>['safeSignTransaction']>;
 type SignDelegationError = ErrorOf<VaultSignService<MemoryVault>['safeSignDelegation']>;
 
@@ -19,12 +21,29 @@ type HasKeyPairErrorKind =
   | 'MemoryVault.HasKeyPair.Args.InvalidSchema'
   | 'MemoryVault.HasKeyPair.Internal';
 
+type GetPublicKeyErrorKind =
+  | 'MemoryVault.GetPublicKey.Args.InvalidSchema'
+  | 'MemoryVault.GetPublicKey.PublicKey.NotFound'
+  | 'MemoryVault.GetPublicKey.Internal';
+
 type SignDataErrorKind =
   | 'MemoryVault.SignData.Args.InvalidSchema'
   | 'MemoryVault.SignData.SigningKey.NotFound'
   | 'MemoryVault.SignData.Internal';
 
 // A failed vault call comes back with the error the vault reports, whichever call it was
+type _HasKeyPairVault = Expect<
+  Equal<
+    CauseOf<HasKeyPairError, 'VaultSignService.HasKeyPair.Vault.Failed'>['kind'],
+    HasKeyPairErrorKind
+  >
+>;
+type _GetPublicKeyVault = Expect<
+  Equal<
+    CauseOf<GetPublicKeyError, 'VaultSignService.GetPublicKey.Vault.Failed'>['kind'],
+    HasKeyPairErrorKind | GetPublicKeyErrorKind
+  >
+>;
 type _SignTransactionVault = Expect<
   Equal<
     CauseOf<SignTransactionError, 'VaultSignService.SignTransaction.Vault.Failed'>['kind'],
