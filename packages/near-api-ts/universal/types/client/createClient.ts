@@ -1,6 +1,7 @@
 import type { NatError } from '../../src/_common/_common/_common/_common/natError';
 import type { Result } from '../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../_common/natError';
+import type { CacheOptions } from './cache/cache';
 import type { Client } from './client';
 import type { CreateTransportArgs } from './transport/transport';
 
@@ -11,6 +12,7 @@ export interface CreateClientPublicErrorRegistry {
 
 type CreateClientArgs = {
   transport: CreateTransportArgs;
+  cache?: CacheOptions;
 };
 
 type CreateClientError =

@@ -1,4 +1,5 @@
 import * as z from 'zod/mini';
+import type { Milliseconds } from '../../../types/_common/common';
 import type { CacheState } from '../../../types/client/cache/cache';
 import type {
   CreateSafeGetRecentBlockHash,
@@ -28,17 +29,25 @@ const GetRecentBlockHashArgsSchema = z.optional(
   }),
 );
 
+type FetchRecentBlockHashArgs = {
+  transport: Transport;
+  state: CacheState;
+  ttlMs: Milliseconds;
+  signal?: AbortSignal;
+};
+
 // We don't use the getBlock method to avoid
 // a situation when a user will use a CustomClient without this method, but it's
 // required;
 // We use 'final', not 'near-final': while the head is still genesis, the near-final
 // block is the zero hash the node doesn't know, and the final head starts at genesis.
 // A final block is also never reverted, so the transaction stays on the canonical chain;
-const fetchRecentBlockHash = async (
-  transport: Transport,
-  state: CacheState,
-  signal?: AbortSignal,
-): ReturnType<SafeGetRecentBlockHash> => {
+const fetchRecentBlockHash = async ({
+  transport,
+  state,
+  ttlMs,
+  signal,
+}: FetchRecentBlockHashArgs): ReturnType<SafeGetRecentBlockHash> => {
   const rpcResponse = await transport.sendRequest({
     method: 'block',
     params: { finality: 'final' },
@@ -80,13 +89,12 @@ const fetchRecentBlockHash = async (
     );
 
   state.recentBlockHash.value = rpcResult.data.header.hash.cryptoHash;
-  // Refetch every 1000ms * 60sec * 60min = 1 hour
-  state.recentBlockHash.validUntil = Date.now() + 3_600_000;
+  state.recentBlockHash.validUntil = Date.now() + ttlMs;
 
   return result.ok(state.recentBlockHash.value);
 };
 
-export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (transport, state) =>
+export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (transport, state, ttlMs) =>
   wrapInternalError('Client.GetRecentBlockHash.Internal', async (args) => {
     // 1. Validate arguments
     const validArgs = GetRecentBlockHashArgsSchema.safeParse(args);
@@ -110,12 +118,16 @@ export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (transport
     // 3. If the cache is empty (first call), expired or refreshed - fetch and set;
     // A call with its own signal fetches alone, so aborting it can't abort the others
     const signal = args?.options?.signal;
-    if (signal) return fetchRecentBlockHash(transport, state, signal);
+    if (signal) return fetchRecentBlockHash({ transport, state, ttlMs, signal });
 
     // The calls that come while the block is being fetched wait for the same request,
     // so a burst of transactions makes one request, not one each
     if (!state.recentBlockHash.loadingPromise)
-      state.recentBlockHash.loadingPromise = fetchRecentBlockHash(transport, state).finally(() => {
+      state.recentBlockHash.loadingPromise = fetchRecentBlockHash({
+        transport,
+        state,
+        ttlMs,
+      }).finally(() => {
         state.recentBlockHash.loadingPromise = undefined;
       });
 

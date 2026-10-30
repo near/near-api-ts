@@ -18,6 +18,15 @@ import { createSafeSendSignedTransaction } from './methods/transaction/sendSigne
 
 const CreateClientArgsSchema = z.object({
   transport: CreateTransportArgsZodSchema,
+  cache: z.optional(
+    z.object({
+      recentBlockHash: z.optional(
+        z.object({
+          ttlMs: z.optional(z.number().check(z.nonnegative())),
+        }),
+      ),
+    }),
+  ),
 });
 
 export const safeCreateClient: SafeCreateClient = wrapInternalError(
@@ -34,7 +43,7 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
       );
 
     const transport = createTransport(args.transport);
-    const cache = createCache({ transport });
+    const cache = createCache({ transport, options: args.cache });
 
     const context = {
       sendRequest: transport.sendRequest,

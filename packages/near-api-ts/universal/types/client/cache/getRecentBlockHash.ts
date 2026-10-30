@@ -1,5 +1,5 @@
 import type { NatError } from '../../../src/_common/_common/_common/_common/natError';
-import type { BlockHash, Result } from '../../_common/common';
+import type { BlockHash, Milliseconds, Result } from '../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../_common/natError';
 import type {
   AbortedErrorContext,
@@ -43,4 +43,5 @@ export type GetRecentBlockHash = (args?: GetRecentBlockHashArgs) => Promise<Bloc
 export type CreateSafeGetRecentBlockHash = (
   transport: Transport,
   state: CacheState,
+  ttlMs: Milliseconds,
 ) => SafeGetRecentBlockHash;
