@@ -1,17 +1,31 @@
 import type { NatError } from '../../../src/_common/_common/_common/_common/natError';
-import type { AllowedFunctions } from '../../_common/accessKey';
+import type { AccessKey, AllowedFunctions } from '../../_common/accessKey';
 import type { AccountId, Result, TransactionNonce } from '../../_common/common';
 import type { PublicKey } from '../../_common/crypto';
-import type { SignerErrorContext } from '../_common/errorContext';
+import type { GetAccessKeysError } from '../../client/methods/account/getAccessKeys';
 import type { CreateSignerArgs } from '../createSigner';
 import type { SignerContext } from '../signer';
-import type { Task } from './taskQueue';
+import type { AccessTypePriority, Task } from './taskQueue';
 
 export interface KeyPoolInnerErrorRegistry {
-  'Signer.KeyPool.AccessKeys.NotLoaded': SignerErrorContext['KeyPool']['AccessKeys']['NotLoaded'];
-  'Signer.KeyPool.Empty': SignerErrorContext['KeyPool']['Empty'];
-  'Signer.KeyPool.SignService.Failed': SignerErrorContext['KeyPool']['SignService']['Failed'];
-  'Signer.KeyPool.SigningKey.NotFound': SignerErrorContext['KeyPool']['SigningKey']['NotFound'];
+  'Signer.KeyPool.AccessKeys.NotLoaded': { cause: GetAccessKeysError };
+  /**
+   * No account key is left to sign by: `allowedAccessKeys` leaves them out, they are gas
+   * keys, or the sign service doesn't hold them.
+   */
+  'Signer.KeyPool.Empty': {
+    accessKeys: AccessKey[];
+    allowedAccessKeys: PublicKey[];
+  };
+  /**
+   * The sign service failed to say whether it holds a key of the account, or to give its
+   * full public key - its own error is the `cause`.
+   */
+  'Signer.KeyPool.SignService.Failed': { cause: unknown };
+  'Signer.KeyPool.SigningKey.NotFound': {
+    poolKeys: PoolKeys;
+    accessTypePriority: AccessTypePriority;
+  };
 }
 
 type KeyPoolKeyBase = {

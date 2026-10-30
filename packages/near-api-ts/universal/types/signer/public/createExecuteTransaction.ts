@@ -14,7 +14,8 @@ import type {
   PreferredRpcNotFoundErrorContext,
   TimeoutErrorContext,
 } from '../../client/transport/sendRequest';
-import type { SignerErrorContext } from '../_common/errorContext';
+import type { KeyPoolInnerErrorRegistry } from '../inner/keyPool';
+import type { TaskQueueInnerErrorRegistry } from '../inner/taskQueue';
 import type { SignerContext } from '../signer';
 
 // TODO Temporary
@@ -40,11 +41,11 @@ type ExecutionFailureContext = {
 
 export interface ExecuteTransactionPublicErrorRegistry {
   'Signer.ExecuteTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'Signer.ExecuteTransaction.KeyPool.AccessKeys.NotLoaded': SignerErrorContext['KeyPool']['AccessKeys']['NotLoaded'];
-  'Signer.ExecuteTransaction.KeyPool.Empty': SignerErrorContext['KeyPool']['Empty'];
-  'Signer.ExecuteTransaction.KeyPool.SignService.Failed': SignerErrorContext['KeyPool']['SignService']['Failed'];
-  'Signer.ExecuteTransaction.KeyPool.SigningKey.NotFound': SignerErrorContext['KeyPool']['SigningKey']['NotFound'];
-  'Signer.ExecuteTransaction.TaskQueue.Timeout': SignerErrorContext['TaskQueue']['Timeout'];
+  'Signer.ExecuteTransaction.KeyPool.AccessKeys.NotLoaded': KeyPoolInnerErrorRegistry['Signer.KeyPool.AccessKeys.NotLoaded'];
+  'Signer.ExecuteTransaction.KeyPool.Empty': KeyPoolInnerErrorRegistry['Signer.KeyPool.Empty'];
+  'Signer.ExecuteTransaction.KeyPool.SignService.Failed': KeyPoolInnerErrorRegistry['Signer.KeyPool.SignService.Failed'];
+  'Signer.ExecuteTransaction.KeyPool.SigningKey.NotFound': KeyPoolInnerErrorRegistry['Signer.KeyPool.SigningKey.NotFound'];
+  'Signer.ExecuteTransaction.TaskQueue.Timeout': TaskQueueInnerErrorRegistry['Signer.TaskQueue.Timeout'];
   //
   'Signer.ExecuteTransaction.PreferredRpc.NotFound': PreferredRpcNotFoundErrorContext;
   'Signer.ExecuteTransaction.Timeout': TimeoutErrorContext;

@@ -11,13 +11,12 @@ import type { SignTransactionOutput } from '../../_common/transaction/signTransa
 import type { TransactionIntent } from '../../_common/transaction/transaction';
 import type { SendSignedTransactionError } from '../../client/methods/transaction/sendSignedTransaction/error';
 import type { SendSignedTransactionOutput } from '../../client/methods/transaction/sendSignedTransaction/output';
-import type { SignerErrorContext } from '../_common/errorContext';
 import type { CreateSignerArgs } from '../createSigner';
 import type { SignerContext } from '../signer';
 import type { PoolKey } from './keyPool';
 
 export interface TaskQueueInnerErrorRegistry {
-  'Signer.TaskQueue.Timeout': SignerErrorContext['TaskQueue']['Timeout'];
+  'Signer.TaskQueue.Timeout': { timeoutMs: Milliseconds };
   'Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction': {
     cause: SendSignedTransactionError;
   };

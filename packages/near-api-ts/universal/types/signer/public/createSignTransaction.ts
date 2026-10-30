@@ -3,16 +3,17 @@ import type { Result } from '../../_common/common';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../../_common/natError';
 import type { SignTransactionOutput } from '../../_common/transaction/signTransaction';
 import type { TransactionIntent } from '../../_common/transaction/transaction';
-import type { SignerErrorContext } from '../_common/errorContext';
+import type { KeyPoolInnerErrorRegistry } from '../inner/keyPool';
+import type { TaskQueueInnerErrorRegistry } from '../inner/taskQueue';
 import type { SignerContext } from '../signer';
 
 export interface SignTransactionPublicErrorRegistry {
   'Signer.SignTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'Signer.SignTransaction.KeyPool.AccessKeys.NotLoaded': SignerErrorContext['KeyPool']['AccessKeys']['NotLoaded'];
-  'Signer.SignTransaction.KeyPool.Empty': SignerErrorContext['KeyPool']['Empty'];
-  'Signer.SignTransaction.KeyPool.SignService.Failed': SignerErrorContext['KeyPool']['SignService']['Failed'];
-  'Signer.SignTransaction.KeyPool.SigningKey.NotFound': SignerErrorContext['KeyPool']['SigningKey']['NotFound'];
-  'Signer.SignTransaction.TaskQueue.Timeout': SignerErrorContext['TaskQueue']['Timeout'];
+  'Signer.SignTransaction.KeyPool.AccessKeys.NotLoaded': KeyPoolInnerErrorRegistry['Signer.KeyPool.AccessKeys.NotLoaded'];
+  'Signer.SignTransaction.KeyPool.Empty': KeyPoolInnerErrorRegistry['Signer.KeyPool.Empty'];
+  'Signer.SignTransaction.KeyPool.SignService.Failed': KeyPoolInnerErrorRegistry['Signer.KeyPool.SignService.Failed'];
+  'Signer.SignTransaction.KeyPool.SigningKey.NotFound': KeyPoolInnerErrorRegistry['Signer.KeyPool.SigningKey.NotFound'];
+  'Signer.SignTransaction.TaskQueue.Timeout': TaskQueueInnerErrorRegistry['Signer.TaskQueue.Timeout'];
   'Signer.SignTransaction.Internal': InternalErrorContext;
 }
 
