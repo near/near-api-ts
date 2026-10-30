@@ -243,4 +243,5 @@ export type {
 export type { PartialTransportPolicy } from './types/client/transport/transport';
 export type { MemoryVault } from './types/memoryVault/memoryVault';
 export type { Signer } from './types/signer/signer';
+export type { SignerClient } from './types/signer/signerClient';
 export type { VaultSignService } from './types/vaultSignService/vaultSignService';

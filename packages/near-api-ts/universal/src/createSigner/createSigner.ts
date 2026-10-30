@@ -1,8 +1,8 @@
 import * as z from 'zod/mini';
 import type { SignService } from '../../types/_common/signService';
-import type { Client } from '../../types/client/client';
 import type { CreateSigner, SafeCreateSigner } from '../../types/signer/createSigner';
 import type { SignerContext } from '../../types/signer/signer';
+import type { SignerClient } from '../../types/signer/signerClient';
 import { createNatError } from '../_common/_common/_common/_common/natError';
 import { result } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
@@ -17,7 +17,11 @@ import { createTaskQueue } from './createTaskQueue/createTaskQueue';
 
 const CreateSignerArgsSchema = z.object({
   signerAccountId: AccountIdZodSchema,
-  client: z.custom<Client>((value) => true), // TODO fix it
+  client: z.object({
+    safeGetAccessKeys: z.function(),
+    safeGetRecentBlockHash: z.function(),
+    safeSendSignedTransaction: z.function(),
+  }),
   signService: z.object({
     safeHasKeyPair: z.function(),
     safeGetPublicKey: z.function(),
@@ -48,14 +52,14 @@ export const safeCreateSigner: SafeCreateSigner = wrapInternalError(
         }),
       );
 
-    const { signerAccountId, client } = validArgs.data;
-    // The sign service itself - the parsed copy keeps only the methods the schema names, wrapped
-    const { signService } = args;
+    const { signerAccountId } = validArgs.data;
+    // The objects themselves - the parsed copy keeps only the methods the schema names, wrapped
+    const { client, signService } = args;
 
     const context = {
       signerAccountId,
-      client,
-      // Inside, the signer needs only what every sign service has
+      // Inside, the signer needs only what every client and sign service has
+      client: client as SignerClient,
       signService: signService as SignService,
     } as SignerContext;
 

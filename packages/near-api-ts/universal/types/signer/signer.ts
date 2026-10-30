@@ -1,6 +1,5 @@
 import type { AccountId } from '../_common/common';
 import type { SignService } from '../_common/signService';
-import type { Client } from '../client/client';
 import type { CreateSignerPublicErrorRegistry } from './createSigner';
 import type { KeyPool, KeyPoolInnerErrorRegistry } from './inner/keyPool';
 import type { Tasker } from './inner/tasker';
@@ -15,6 +14,7 @@ import type {
   SignTransactionIntent,
   SignTransactionPublicErrorRegistry,
 } from './public/createSignTransaction';
+import type { SignerClient } from './signerClient';
 
 export interface SignerInnerErrorRegistry
   extends KeyPoolInnerErrorRegistry,
@@ -27,7 +27,7 @@ export interface SignerPublicErrorRegistry
 
 export type SignerContext = {
   signerAccountId: AccountId;
-  client: Client;
+  client: SignerClient;
   signService: SignService;
   taskQueue: TaskQueue;
   keyPool: KeyPool;
@@ -35,13 +35,13 @@ export type SignerContext = {
 };
 
 /**
- * `S` is the sign service the signer was created with, so `signService` keeps its own
- * methods - the vault of a VaultSignService, for one.
+ * `S` and `C` are the sign service and the client the signer was created with, so
+ * `signService` and `client` keep their own methods - the vault of a VaultSignService,
+ * or every method of a Client, for one.
  */
-// NextFeature: add policies
-export type Signer<S extends SignService = SignService> = {
+export type Signer<S extends SignService = SignService, C extends SignerClient = SignerClient> = {
   signerAccountId: AccountId;
-  client: Client;
+  client: C;
   signService: S;
   signTransaction: SignTransactionIntent; // TODO remove Intent from public type
   executeTransaction: ExecuteTransaction;

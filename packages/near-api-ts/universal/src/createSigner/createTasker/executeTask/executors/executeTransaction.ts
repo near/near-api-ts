@@ -32,7 +32,11 @@ export const executeTransaction = async (
   const attempt: Attempt = wrapInternalError(
     'Signer.ExecuteTransaction.Internal',
     async (attemptIndex, newNonce) => {
-      const blockHash = await signerContext.client.getRecentBlockHash();
+      const blockHash = await signerContext.client.safeGetRecentBlockHash();
+
+      // TODO The signer has no error of its own for a failed request yet, so it is Internal for now
+      if (!blockHash.success)
+        return resultNatError('Signer.ExecuteTransaction.Internal', { cause: blockHash.error });
 
       const transaction: Transaction = {
         ...task.transactionIntent,
@@ -41,7 +45,7 @@ export const executeTransaction = async (
           publicKey: key.publicKey,
           replayProtection: { scheme: 'NonceChannel', nonce: newNonce },
         },
-        recentBlockHash: blockHash,
+        recentBlockHash: blockHash.data,
       };
 
       const signedTransaction = await signerContext.signService.safeSignTransaction({

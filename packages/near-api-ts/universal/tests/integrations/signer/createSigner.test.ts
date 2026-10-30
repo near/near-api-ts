@@ -4,9 +4,11 @@ import * as z from 'zod/mini';
 import {
   type Client,
   createMemoryVault,
+  createSigner,
   createVaultSignService,
   type MemoryVault,
   safeCreateSigner,
+  transfer,
 } from '../../../index';
 import { assertNatErrKind } from '../../utils/assertNatErrKind';
 import { createDefaultClient } from '../../utils/common';
@@ -67,6 +69,39 @@ describe('createSigner', async () => {
       taskQueue: {
         timeoutMs: -1000,
       },
+    });
+    assertNatErrKind(signer, 'CreateSigner.Args.InvalidSchema');
+  });
+
+  it('executes a transaction through an object of just the client methods it needs', async () => {
+    const signer = createSigner({
+      signerAccountId: 'nat',
+      client: {
+        safeGetAccessKeys: client.safeGetAccessKeys,
+        safeGetRecentBlockHash: client.safeGetRecentBlockHash,
+        safeSendSignedTransaction: client.safeSendSignedTransaction,
+      },
+      signService: createVaultSignService({ vault: keyVault }),
+    });
+
+    const tx = await signer.safeExecuteTransaction({
+      intent: {
+        action: transfer({ amount: { yoctoNear: '1' } }),
+        receiverAccountId: 'nat',
+      },
+    });
+    expect(tx.success).toBe(true);
+  });
+
+  it('rejects a client that cannot send a transaction with Args.InvalidSchema', async () => {
+    const signer = safeCreateSigner({
+      signerAccountId: 'nat',
+      // @ts-expect-error a signer can't send a transaction through such a client
+      client: {
+        safeGetAccessKeys: client.safeGetAccessKeys,
+        safeGetRecentBlockHash: client.safeGetRecentBlockHash,
+      },
+      signService: createVaultSignService({ vault: keyVault }),
     });
     assertNatErrKind(signer, 'CreateSigner.Args.InvalidSchema');
   });
