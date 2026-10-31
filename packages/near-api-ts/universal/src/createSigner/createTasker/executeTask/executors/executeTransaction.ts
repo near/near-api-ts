@@ -76,10 +76,15 @@ export const executeTransaction = async (
         return txResult;
       }
 
+      // After execution failure the prev nonce is used
+      if (txResult.error.context !== null && 'transactionDetails' in txResult.error.context) {
+        key.setNonce(newNonce);
+      }
+
       // If it's not a last attempt + it's a nonce error -
       // re-sign with the new nonce and try to send it again;
       if (
-        attemptIndex <= maxAttempts &&
+        attemptIndex < maxAttempts &&
         txResult.error.kind === 'Client.SendSignedTransaction.Rpc.Nonce.Invalid'
       ) {
         return await attempt({
@@ -92,7 +97,7 @@ export const executeTransaction = async (
       // validity period keeps a transaction valid - 100 blocks on a localnet, about 12 seconds on
       // the sandbox. Send it again with a fresh block hash; the nonce wasn't used, so it stays
       if (
-        attemptIndex <= maxAttempts &&
+        attemptIndex < maxAttempts &&
         txResult.error.kind === 'Client.SendSignedTransaction.Rpc.BlockHash.Expired'
       )
         return await attempt({ attemptIndex: attemptIndex + 1, newNonce, refreshBlockHash: true });
