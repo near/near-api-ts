@@ -5,9 +5,12 @@
 ### Added
 
 - Everything near-api-ts v0.13.0 adds is re-exported from this package as well –
-  the `PublicKeyId` type, `publicKeyId` on every key pair and
-  `MemoryKeyVault.findPublicKey` / `safeFindPublicKey`. See the near-api-ts
-  changelog.
+  the `PublicKeyId` type and `publicKeyId` on every key pair,
+  `createVaultSignService` and the `Vault`, `SignService` and `SignerClient`
+  contracts, the memory vault's `addKeyPair`, `deleteKeyPair` and
+  `getPublicKey`, the `minimalProcessingStage` and `options` of a signer's
+  `executeTransaction`, and `cache.recentBlockHash.ttlMs` in `createClient`. See
+  the near-api-ts changelog.
 
 - The gas key actions `topUpAccessKeyBalance` / `withdrawAccessKeyBalance` are
   re-exported from near-api-ts too. The near-connect signer throws for both –
@@ -22,9 +25,7 @@
   v0.13.0 changelog for the full list, error kinds included.
 
 - **Breaking:** `AccessKey`, re-exported from near-api-ts, refers to the key by
-  `publicKeyId` instead of `publicKey`, and a custom `keyVault` passed
-  to `createMemorySigner` must implement `findPublicKey` / `safeFindPublicKey`.
-  See the near-api-ts v0.13.0 changelog.
+  `publicKeyId` instead of `publicKey`. See the near-api-ts v0.13.0 changelog.
 
 - **Breaking:** the action creators `addFullAccessKey` and `addFunctionCallKey`,
   re-exported from near-api-ts, are replaced by `addAccessKey`, and the action
@@ -58,12 +59,16 @@
   `CallContractFunction` now. See the near-api-ts v0.13.0 changelog. The
   near-connect signer passes the action on to the wallet as before.
 
-- **Breaking:** the memory key service re-exported from near-api-ts is now a
-  memory key vault: `createMemoryKeyService` / `safeCreateMemoryKeyService` →
-  `createMemoryKeyVault` / `safeCreateMemoryKeyVault`, `MemoryKeyService` →
-  `MemoryKeyVault`, the `createMemorySigner` argument `keyService` → `keyVault`,
-  and the error kinds `CreateMemoryKeyService.*` / `MemoryKeyService.*` →
-  `CreateMemoryKeyVault.*` / `MemoryKeyVault.*`. See the near-api-ts v0.13.0
+- **Breaking:** the memory key service and the memory signer re-exported from
+  near-api-ts are replaced by a memory vault, a vault sign service and a signer:
+  `createMemoryKeyService` / `safeCreateMemoryKeyService` → `createMemoryVault` /
+  `safeCreateMemoryVault`, `MemoryKeyService` → `MemoryVault`,
+  `createMemorySigner` / `safeCreateMemorySigner` → `createSigner` /
+  `safeCreateSigner`, `MemorySigner` → `Signer`, whose argument `keyService` →
+  `signService` – a sign service from `createVaultSignService({ vault })` – and
+  the error kinds `CreateMemoryKeyService.*` / `MemoryKeyService.*` /
+  `CreateMemorySigner.*` / `MemorySigner.*` → `CreateMemoryVault.*` /
+  `MemoryVault.*` / `CreateSigner.*` / `Signer.*`. See the near-api-ts v0.13.0
   changelog.
 
 - **Breaking:** `useAccountInfo` and `useContractReadFunction` take the transport
@@ -92,15 +97,16 @@
   usage as `storage.usedBytes` instead of `usedStorageBytes` – the same change
   as in near-api-ts `getAccountInfo`. See the near-api-ts v0.13.0 changelog.
 
-- The near-api-ts v0.13.0 fix for `getRecentBlockHash` and `getAccountInfo`
-  failing right after a node starts, and its `@near-js/jsonrpc-types` bump to
-  `^1.9.0`, reach this package through the re-export.
+- The near-api-ts v0.13.0 fixes – for `getRecentBlockHash` and `getAccountInfo`
+  failing right after a node starts, for a signal aborted before a call, and the
+  signer's – and its `@near-js/jsonrpc-types` bump to `^1.9.0` reach this package
+  through the re-export.
 
 ### Removed
 
 - `createMemorySignerFactory` / `createSafeMemorySignerFactory` and their types
   `MemorySignerFactory` / `SafeMemorySignerFactory`, re-exported from
-  near-api-ts – call `createMemorySigner` once per account instead. See the
+  near-api-ts – call `createSigner` once per account instead. See the
   near-api-ts v0.13.0 changelog.
 
 ---

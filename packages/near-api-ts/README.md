@@ -39,7 +39,7 @@ the `zodError` inside `*.Args.InvalidSchema` errors.
 | `near-api-ts/browser` | the browser build |
 
 The bare `near-api-ts` import is what you normally want. Both platform builds currently
-re-export the universal surface; platform-specific key vaults live behind the explicit
+re-export the universal surface; platform-specific vaults live behind the explicit
 entry points as they land.
 
 ---
@@ -49,8 +49,9 @@ entry points as they land.
 ```ts
 import {
   createTestnetClient,
-  createMemoryKeyVault,
-  createMemorySigner,
+  createMemoryVault,
+  createVaultSignService,
+  createSigner,
   transfer,
   near,
 } from 'near-api-ts';
@@ -62,17 +63,17 @@ const { balance } = await client.getAccountInfo({ accountId: 'example.testnet' }
 console.log(balance.total.near); // '42.5'
 console.log(balance.total.yoctoNear); // 42500000000000000000000n
 
-// 2. A key vault holds private keys and signs raw bytes with them.
-const keyVault = createMemoryKeyVault({
-  keySource: { privateKey: 'ed25519:your-private-key' },
-});
+// 2. A vault holds private keys and signs raw bytes with them,
+//    and a sign service signs transactions by the keys of a vault.
+const vault = createMemoryVault({ privateKey: 'ed25519:your-private-key' });
+const signService = createVaultSignService({ vault });
 
-// 3. A signer ties an account to a client and a key vault, and takes care of
+// 3. A signer ties an account to a client and a sign service, and takes care of
 //    nonces, block hashes and key selection for you.
-const signer = createMemorySigner({
+const signer = createSigner({
   signerAccountId: 'example.testnet',
   client,
-  keyVault,
+  signService,
 });
 
 const tx = await signer.executeTransaction({
@@ -90,17 +91,20 @@ console.log(tx.transactionHash);
 
 ## Core concepts
 
-### Client, key vault, signer
+### Client, vault, sign service, signer
 
 | Piece | Responsibility |
 | --- | --- |
 | **Client** | Talks to RPC nodes: reads accounts, blocks, contracts, sends signed transactions. Knows nothing about keys. |
-| **Key vault** | Owns private keys and exposes `signData` / `hasKey`. Never hands raw key pairs out. |
-| **Signer** | An account + a client + a key vault. Builds transactions from an *intent*, picks a usable key, manages nonces and recent block hashes, signs and sends. |
+| **Vault** | Owns private keys and signs raw bytes by them: `hasKeyPair`, `getPublicKey`, `signData`. Never hands raw key pairs out. |
+| **Sign service** | Signs NEAR objects — transactions, delegations — by the keys of a vault. |
+| **Signer** | An account + a client + a sign service. Builds transactions from an *intent*, picks a usable key, manages nonces and recent block hashes, signs and sends. |
 
 They compose in one direction only, so you can stop at any layer: use the client alone for
 read-only apps, use `signTransaction` with a key pair for full manual control, or use the
-signer when you just want the transaction to land.
+signer when you just want the transaction to land. Each layer asks only for the methods it
+calls, so a vault, sign service or client of your own fits in — see
+[Keys and signing](#keys-and-signing).
 
 ### Throwing and safe variants
 
@@ -151,7 +155,7 @@ try {
     },
   });
 } catch (error) {
-  if (isNatError(error, 'MemorySigner.ExecuteTransaction.Rpc.Signer.Budget.NotEnough')) {
+  if (isNatError(error, 'Signer.ExecuteTransaction.Rpc.Signer.Budget.NotEnough')) {
     // `context` is typed for this exact kind
     console.log(error.context.info.minimalMissingAmount.near);
   }
@@ -387,22 +391,40 @@ await signer.executeTransaction({
 });
 ```
 
+`executeTransaction` sends the way `sendSignedTransaction` does and takes the same
+`minimalProcessingStage` and `options` — `transportPolicy`, `signal` and the deserializers
+(see [How far to wait](#how-far-to-wait)). Its errors are the send's under its own prefix,
+e.g. `Signer.ExecuteTransaction.Rpc.Signer.Budget.NotEnough`. A `signal` aborts the whole
+call: a call still waiting for a key leaves the queue at once, and nothing is signed after
+the abort.
+
+```ts
+const controller = new AbortController();
+
+await signer.executeTransaction({
+  intent: { receiverAccountId: 'receiver.testnet', action: transfer({ amount: near('1') }) },
+  minimalProcessingStage: 'CompletedFinal',
+  options: { signal: controller.signal },
+});
+```
+
 Use `signer.signTransaction({ intent })` when you want the signed payload without sending
 it. To restrict which keys a signer may use, or to bound how long a send may wait in the
 per-account queue:
 
 ```ts
-const signer = createMemorySigner({
+const signer = createSigner({
   signerAccountId: 'example.testnet',
   client,
-  keyVault,
+  signService,
   keyPool: { allowedAccessKeys: ['ed25519:...'] },
   taskQueue: { timeoutMs: 30_000 },
 });
 ```
 
 The signer signs only with keys paid from the account balance. A key with a balance of its own
-(a gas key) is left out of its pool, even when `allowedAccessKeys` names it.
+(a gas key) is left out of its pool, even when `allowedAccessKeys` names it. The signer reads
+the account's keys once, so a key added later takes a new signer.
 
 ### Actions
 
@@ -502,7 +524,7 @@ callContractFunction({
 
 `signTransaction` is decoupled from any particular key holder: it takes a
 `signDataProvider`, which is anything exposing `safeSignData` — a `KeyPair`, a
-`MemoryKeyVault`, or your own hardware-wallet adapter.
+`MemoryVault`, or your own hardware-wallet adapter.
 
 ```ts
 import { keyPair, signTransaction, transfer, near } from 'near-api-ts';
@@ -579,8 +601,8 @@ const signedTransactions = await Promise.all(
 
 ### How far to wait
 
-`sendSignedTransaction` accepts `minimalProcessingStage`, and the shape of what you get
-back follows from it:
+`sendSignedTransaction` — and `signer.executeTransaction` — accept `minimalProcessingStage`,
+and the shape of what you get back follows from it:
 
 | Stage | Meaning |
 | --- | --- |
@@ -765,7 +787,8 @@ import {
   randomEd25519KeyPair,
   randomSecp256k1KeyPair,
   randomMlDsa65KeyPair,
-  createMemoryKeyVault,
+  createMemoryVault,
+  createVaultSignService,
 } from 'near-api-ts';
 
 const fromPrivateKey = keyPair('ed25519:...');
@@ -784,21 +807,38 @@ const { signature, signatureU8 } = await fresh.signData({ dataU8 });
 
 Three curves are supported: **ed25519**, **secp256k1** and **ML-DSA-65** (post-quantum).
 
-A key vault holds several keys and signs by public key, without ever exposing the key
-pair itself:
+A vault holds several keys and signs by public key, without ever exposing the key pair
+itself:
 
 ```ts
-const keyVault = createMemoryKeyVault({
-  keySources: [{ privateKey: 'ed25519:...' }, { privateKey: 'secp256k1:...' }],
-});
+const vault = createMemoryVault({ privateKeys: ['ed25519:...', 'secp256k1:...'] });
 
-await keyVault.hasKey({ publicKey: 'ed25519:...' }); // true
-await keyVault.findPublicKey({ publicKeyId: 'ml-dsa-65-hash:...' }); // the key, or undefined
-await keyVault.signData({ publicKey: 'ed25519:...', dataU8 });
+await vault.hasKeyPair({ publicKey: 'ed25519:...' }); // true
+await vault.getPublicKey({ publicKeyId: 'ml-dsa-65-hash:...' }); // the full key
+await vault.signData({ publicKey: 'ed25519:...', dataU8 });
+
+const { publicKey, publicKeyId } = await vault.addKeyPair({ privateKey: 'ed25519:...' });
+await vault.deleteKeyPair({ publicKey });
 ```
 
-Both a `KeyPair` and a `MemoryKeyVault` satisfy the `signDataProvider` contract, so either
+Both a `KeyPair` and a `MemoryVault` satisfy the `signDataProvider` contract, so either
 can be handed to `signTransaction` / `signDelegation`.
+
+A sign service signs NEAR objects by the keys of a vault, and is what a signer takes:
+
+```ts
+const signService = createVaultSignService({ vault });
+
+const signed = await signService.signTransaction({ transaction });
+const signedDelegation = await signService.signDelegation({ delegation });
+signService.vault; // the vault it was given, with its own type
+```
+
+Each layer asks only for the methods it calls, so you can bring your own: a `Vault` is any
+object with `safeHasKeyPair`, `safeGetPublicKey` and `safeSignData`, a `SignService` any
+object with `safeHasKeyPair`, `safeGetPublicKey` and `safeSignTransaction`, and the client a
+signer takes — a `SignerClient` — any object with `safeGetAccessKeys`,
+`safeGetRecentBlockHash` and `safeSendSignedTransaction`.
 
 ---
 
@@ -904,6 +944,17 @@ const info = await client.getAccountInfo({
 
 Requests that need historical state fall back to the archival endpoints on their own.
 
+`getRecentBlockHash` — which a signer signs with — reuses a block hash for an hour. On a
+network whose transactions stay valid only briefly — the sandbox keeps one valid for about
+12 seconds — make it shorter:
+
+```ts
+const client = createClient({
+  transport,
+  cache: { recentBlockHash: { ttlMs: 5_000 } },
+});
+```
+
 ---
 
 ## Utilities
@@ -915,10 +966,11 @@ Requests that need historical state fall back to the archival endpoints on their
 | `toEd25519CurveString`, `toSecp256k1CurveString`, `toMlDsa65CurveString` | curve-prefixed key strings |
 | `AccountIdZodSchema`, `PublicKeyZodSchema`, `MessageZodSchema`, `Base64StringZodSchema` | reuse the library's validation in your own schemas |
 
-Types for everything above are exported too — `Client`, `MemorySigner`, `MemoryKeyVault`,
-`NearToken`, `NearGas`, `TransactionAction`, `TransactionIntent`, `SignedTransaction`,
-`SignTransactionOutput`, `DelegationBase`, `SignDelegationOutput`, `AccessKey`,
-`AccountContract`, `GetAccountInfoOutput`, and the rest.
+Types for everything above are exported too — `Client`, `Signer`, `SignerClient`,
+`MemoryVault`, `Vault`, `VaultSignService`, `SignService`, `NearToken`, `NearGas`,
+`TransactionAction`, `TransactionIntent`, `SignedTransaction`, `SignTransactionOutput`,
+`DelegationBase`, `SignDelegationOutput`, `AccessKey`, `AccountContract`,
+`GetAccountInfoOutput`, and the rest.
 
 ---
 

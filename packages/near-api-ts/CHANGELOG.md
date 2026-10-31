@@ -20,11 +20,9 @@
     );
     ```
 
-  - `MemoryKeyVault` gains `findPublicKey({ publicKeyId })` /
-    `safeFindPublicKey`: the full public key when the vault holds it,
-    `undefined` otherwise. New error kinds
-    `MemoryKeyVault.FindPublicKey.Args.InvalidSchema` and
-    `MemoryKeyVault.FindPublicKey.Internal`.
+  - A memory vault finds a key by its id too: `hasKeyPair({ publicKeyId })`, and
+    `getPublicKey({ publicKeyId })`, which gives the full public key – see the
+    memory vault below.
   - `constants.BinaryLengths.<Curve>.PublicKeyId` – the decoded length of an
     id: 32 bytes for ed25519 and ml-dsa-65, 64 for secp256k1.
 
@@ -157,6 +155,113 @@
   `SendSignedTransactionDeserialize{ResultData,ActionSummaries,ExecutionSteps}Args`
   and `GetTransactionResultDeserialize{ResultData,ActionSummaries,ExecutionSteps}Args`.
 
+- **Sign services** – `createVaultSignService({ vault })` /
+  `safeCreateVaultSignService` sign NEAR objects by the keys of a vault – a memory
+  vault or one of your own: `signTransaction({ transaction })` and
+  `signDelegation({ delegation })`, plus `hasKeyPair` and `getPublicKey` as the
+  vault has them, each with a `safe*` twin. `signService.vault` is the vault it
+  was given, with its own type.
+
+  - A failed vault call fails the method with
+    `VaultSignService.<Method>.Vault.Failed`, the vault's error as `cause`, typed
+    as that vault reports it. A key the vault doesn't hold fails
+    `signTransaction` and `signDelegation` with
+    `VaultSignService.{SignTransaction,SignDelegation}.SigningKey.NotFound`
+    `{ publicKey }`, and `getPublicKey` with
+    `VaultSignService.GetPublicKey.PublicKey.NotFound` `{ publicKeyId }`. Each
+    method also has `Args.InvalidSchema` and `Internal`, and the factory
+    `CreateVaultSignService.{Args.InvalidSchema,Internal}`.
+  - A signer takes any sign service – an object with `safeHasKeyPair`,
+    `safeGetPublicKey` and `safeSignTransaction` (type `SignService`) – and any
+    client with `safeGetAccessKeys`, `safeGetRecentBlockHash` and
+    `safeSendSignedTransaction` (type `SignerClient`); a client from
+    `createClient` is one. `Signer` keeps the types of both, so
+    `signer.signService.vault` is the vault behind a vault sign service.
+
+- **A memory vault can change its keys** – `addKeyPair({ privateKey })` adds
+  a key pair and returns its `{ publicKey, publicKeyId }`, and re-adding one is
+  not an error; `deleteKeyPair({ publicKey })` or `({ publicKeyId })` removes
+  one, and deleting a key it doesn't hold is not an error either;
+  `getPublicKey({ publicKeyId })` gives the full public key of one it holds, or
+  fails with `MemoryVault.GetPublicKey.PublicKey.NotFound` `{ publicKeyId }`.
+  Each has a `safe*` twin and its own
+  `MemoryVault.<Method>.{Args.InvalidSchema,Internal}`. `createMemoryVault()`
+  without keys starts an empty vault.
+
+  A signer reads the keys it signs by once, the first time it needs them: it
+  doesn't pick up a key added to the vault later, and a call that takes a key
+  deleted from the vault meanwhile fails with `Signer.SignTransaction.Internal` /
+  `Signer.ExecuteTransaction.Internal`.
+
+- **`executeTransaction` takes what `sendSignedTransaction` takes** besides the
+  signed transaction – `minimalProcessingStage`, and `options` with
+  `transportPolicy`, `signal` and the three deserializers – typed the same way,
+  so its output and its errors follow the stage and the deserializers:
+
+  ```ts
+  const tx = await signer.executeTransaction({
+    intent,
+    minimalProcessingStage: 'CompletedFinal',
+    options: {
+      signal,
+      deserializeActionSummaries: ({ rawActionSummaries }) =>
+        rawActionSummaries.map(({ actionType }) => actionType),
+    },
+  });
+  ```
+
+  The signal aborts the whole call: a call waiting in the signer's queue leaves
+  it at once, one aborted before it is signed is not signed, and the send is
+  aborted as `sendSignedTransaction` aborts it. Each fails with
+  `Signer.ExecuteTransaction.Aborted` `{ reason }`. The requests a signer shares
+  between calls – the account's keys and the recent block hash – are not
+  aborted; the call notices the abort once they answer. `transportPolicy`
+  applies to the send only. A failed deserializer fails the call with
+  `Signer.ExecuteTransaction.Deserialize{ResultData,ActionSummaries,ExecutionSteps}.Failed`.
+
+- **`executeTransaction` passes on every error of the send** – each
+  `Client.SendSignedTransaction.<kind>` comes as `Signer.ExecuteTransaction.<kind>`
+  with the same context: every conversion failure, e.g.
+  `Signer.ExecuteTransaction.Rpc.Nonce.Invalid` or
+  `Signer.ExecuteTransaction.Rpc.Signer.AccessKey.NotFullAccess`, and every
+  execution failure, e.g.
+  `Signer.ExecuteTransaction.Rpc.Action.DeleteAccessKey.NotFound`. Only ten of
+  them came through before; the rest failed with
+  `MemorySigner.ExecuteTransaction.Internal`. Three still do, as a signer can't
+  run into them – `Args.InvalidSchema`, `Internal` and `Rpc.Signature.Invalid`:
+  then `Signer.ExecuteTransaction.Internal` carries the client's error as
+  `cause`. The `transactionDetails` of an execution failure is typed at every
+  stage the node may answer with, no longer only at `ExecutedOptimistic`.
+
+- New signer error kinds, for both `signTransaction` and `executeTransaction`:
+
+  - `Signer.<Method>.RecentBlockHash.NotLoaded` – the client didn't give a
+    recent block hash, so nothing was signed or sent; the `cause` is the
+    client's `Client.GetRecentBlockHash.{PreferredRpc.NotFound,Timeout,Exhausted}`.
+    It used to fail with `MemorySigner.<Method>.Internal`.
+  - `Signer.<Method>.KeyPool.SignService.Failed` – the sign service failed to
+    say whether it holds a key of the account, or to give its full public key;
+    its error is the `cause`. The memory signer used to leave such a key out of
+    its pool without a word.
+
+- **`cache.recentBlockHash.ttlMs`** in `createClient` / `safeCreateClient` – how
+  long the client reuses a recent block hash, an hour by default:
+
+  ```ts
+  const client = createClient({
+    transport,
+    cache: { recentBlockHash: { ttlMs: 5_000 } },
+  });
+  ```
+
+  A network whose transactions stay valid only briefly needs a few seconds
+  here – the sandbox keeps one valid for 100 blocks, about 12 seconds – or a
+  transaction from `signer.signTransaction`, or from `signTransaction` with a
+  block hash from `getRecentBlockHash`, is refused with
+  `Client.SendSignedTransaction.Rpc.BlockHash.Expired`. `executeTransaction`
+  signs again with a fresh block hash on its own. A negative value fails with
+  `CreateClient.Args.InvalidSchema`.
+
 ### Changed
 
 - **Breaking:** `Transaction` (the argument of `signTransaction`) groups who signs
@@ -198,7 +303,7 @@
   `Client.SendSignedTransaction.Rpc.Nonce.Invalid` instead of being accepted.
   Pass `nonceProgression: 'Increasing'` to keep the old behaviour, e.g. for
   transactions that may reach the node out of order. The same transaction gets
-  a different `transactionHash` than before. A memory signer signs this way too:
+  a different `transactionHash` than before. A signer signs this way too:
   its `executeTransaction` is unaffected, as it sends one transaction per key at
   a time, but transactions from its `signTransaction` now have to be sent in the
   order they were signed.
@@ -275,10 +380,10 @@
     `Client.GetAccountAccessKey.Rpc.AccountAccessKey.NotFound` →
     `Client.GetAccessKey.Rpc.AccessKey.NotFound`. The `cause` of
     `VerifyMessage.AccessKeys.NotLoaded` and
-    `MemorySigner.{SignTransaction,ExecuteTransaction}.KeyPool.AccessKeys.NotLoaded`
+    `Signer.{SignTransaction,ExecuteTransaction}.KeyPool.AccessKeys.NotLoaded`
     carries the new kinds.
-  - The context of `MemorySigner.SignTransaction.KeyPool.Empty` and
-    `MemorySigner.ExecuteTransaction.KeyPool.Empty`: `accountAccessKeys` →
+  - The context of `Signer.SignTransaction.KeyPool.Empty` and
+    `Signer.ExecuteTransaction.KeyPool.Empty`: `accountAccessKeys` →
     `accessKeys`.
   - `verifyMessage` calls `client.safeGetAccessKeys` instead of
     `client.safeGetAccountAccessKeys`. A client from `createClient` has it; a
@@ -469,7 +574,7 @@
     `Client.SendSignedTransaction.Rpc.Action.CreateAccount.AlreadyExists` →
     `Client.SendSignedTransaction.Rpc.Action.CreateSubAccount.AlreadyExists` and
     `MemorySigner.ExecuteTransaction.Rpc.Action.CreateAccount.AlreadyExists` →
-    `MemorySigner.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists`.
+    `Signer.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists`.
 
 - **Breaking:** `functionCall` is renamed to `callContractFunction`. The rename
   covers the `safe*` variant, the `actionType` – of the action, of a
@@ -503,24 +608,52 @@
     `Client.SendSignedTransaction.Rpc.Action.CallContractFunction.Execution.Failed`.
   - `Client.CallContractReadFunction.Rpc.FunctionCall.Failed` keeps its name.
 
-- **Breaking:** the memory key service is now a memory key vault:
+- **Breaking:** keys and signing are split in three. A *vault* holds key pairs
+  and signs raw bytes by them, a *sign service* signs NEAR objects by the keys of
+  a vault, and a *signer* takes a sign service. The memory key service becomes a
+  memory vault, and the memory signer a signer:  \
+  Previously:
+  ```ts
+  const keyService = createMemoryKeyService({ keySource: { privateKey } });
+  const signer = createMemorySigner({ signerAccountId, client, keyService });
+  ```
 
-  - `createMemoryKeyService` / `safeCreateMemoryKeyService` →
-    `createMemoryKeyVault` / `safeCreateMemoryKeyVault`.
-  - The type `MemoryKeyService` → `MemoryKeyVault`.
-  - The argument of `createMemorySigner` / `safeCreateMemorySigner` and the
-    field of the `MemorySigner` they return: `keyService` → `keyVault`.
-  - Error kinds `CreateMemoryKeyService.*` → `CreateMemoryKeyVault.*` and
-    `MemoryKeyService.*` → `MemoryKeyVault.*`, e.g.
-    `MemoryKeyService.SignData.SigningKey.NotFound` →
-    `MemoryKeyVault.SignData.SigningKey.NotFound`. When a memory key vault is the
+  Now:
+  ```ts
+  const vault = createMemoryVault({ privateKey });
+  const signService = createVaultSignService({ vault });
+  const signer = createSigner({ signerAccountId, client, signService });
+  ```
+
+  - `createMemoryKeyService` / `safeCreateMemoryKeyService` → `createMemoryVault`
+    / `safeCreateMemoryVault`, the type `MemoryKeyService` → `MemoryVault`. The
+    argument loses a level: `{ keySource: { privateKey } }` → `{ privateKey }`,
+    `{ keySources: [{ privateKey }, …] }` → `{ privateKeys: [privateKey, …] }`.
+  - The vault's `hasKey` / `safeHasKey` → `hasKeyPair` / `safeHasKeyPair`.
+    `signData` / `safeSignData` keep their names and arguments, so a memory vault
+    is a `signDataProvider` for `signTransaction` and `signDelegation`, as the key
+    service was.
+  - `createMemorySigner` / `safeCreateMemorySigner` → `createSigner` /
+    `safeCreateSigner`, the type `MemorySigner` → `Signer`. The argument and the
+    field `keyService` → `signService`.
+  - A hand-made `keyService` becomes a vault – an object with `safeHasKeyPair`,
+    `safeGetPublicKey` and `safeSignData` (type `Vault`) – handed to
+    `createVaultSignService`, or a sign service of its own (see Sign services).
+  - Error kinds `CreateMemoryKeyService.*` → `CreateMemoryVault.*`,
+    `MemoryKeyService.SignData.*` → `MemoryVault.SignData.*`,
+    `MemoryKeyService.HasKey.*` → `MemoryVault.HasKeyPair.*`,
+    `CreateMemorySigner.*` → `CreateSigner.*` and `MemorySigner.*` → `Signer.*`,
+    e.g. `MemorySigner.ExecuteTransaction.TaskQueue.Timeout` →
+    `Signer.ExecuteTransaction.TaskQueue.Timeout`. When a memory vault is the
     `signDataProvider`, the `cause` of `SignTransaction.SignData.Failed` and
     `SignDelegation.SignData.Failed` carries the new kinds.
-
-- **Breaking:** a custom `keyVault` passed to `createMemorySigner` must
-  implement `findPublicKey` and `safeFindPublicKey` – the `MemoryKeyVault`
-  type requires both, and the signer calls `safeFindPublicKey` to turn the ids
-  an account lists back into keys it can sign with.
+  - The context of `Signer.{SignTransaction,ExecuteTransaction}.KeyPool.SigningKey.NotFound`
+    follows the access key renames: `poolKeys.functionCall` →
+    `poolKeys.contractFunctionCall`, and `accessType: 'FunctionCall'` →
+    `'ContractFunctionCall'` in its pool keys and in `accessTypePriority`.
+  - `createSigner` checks that `client` and `signService` have the methods it
+    calls, and fails with `CreateSigner.Args.InvalidSchema` otherwise;
+    `createMemorySigner` took any value there.
 
 - **Breaking:** the per-call transport policy moved from `policies.transport` to
   `options.transportPolicy` – the shape `getTransactionResult` and
@@ -585,12 +718,13 @@
 
 - An account holding a gas key no longer breaks the library:
   `getAccountAccessKey` failed on such a key and `getAccountAccessKeys` on such an
-  account, and with them `createMemorySigner`
-  (`MemorySigner.KeyPool.AccessKeys.NotLoaded`) and `verifyMessage`
-  (`VerifyMessage.AccessKeys.NotLoaded`). The memory signer still signs only with
-  keys paid from the account balance and leaves gas keys out of its pool, also
-  when `keyPool.allowedAccessKeys` names them. `verifyMessage` accepts a message
-  signed by a gas key with full access, like any other full access key.
+  account, and with them the memory signer
+  (`MemorySigner.{SignTransaction,ExecuteTransaction}.KeyPool.AccessKeys.NotLoaded`)
+  and `verifyMessage` (`VerifyMessage.AccessKeys.NotLoaded`). The signer still
+  signs only with keys paid from the account balance and leaves gas keys out of
+  its pool, also when `keyPool.allowedAccessKeys` names them. `verifyMessage`
+  accepts a message signed by a gas key with full access, like any other full
+  access key.
 
 - `getRecentBlockHash` returns the hash of the final block rather than the
   near-final one – one block older, which the transaction validity period
@@ -601,26 +735,57 @@
   `MemorySigner.ExecuteTransaction.Internal`, and `getAccountInfo` with
   `Client.GetAccountInfo.StoragePricePerByte.NotLoaded`.
 
+- The signer's key pool:
+
+  - fails with `KeyPool.Empty` whenever no key of the account is left to sign
+    by – `keyPool.allowedAccessKeys` leaves them out, they are gas keys, or the
+    sign service doesn't hold them. It used to come only from
+    `allowedAccessKeys`; otherwise every call failed with
+    `KeyPool.SigningKey.NotFound`.
+  - loads the account's keys again for the next call after a failed load. A
+    failed load used to fail every later call of that signer.
+  - signs a function call with an attached deposit only by a full access key –
+    the protocol refuses a deposit from a function call key. The memory signer
+    could pick one, and `executeTransaction` then failed with
+    `MemorySigner.ExecuteTransaction.Internal`.
+
+- `executeTransaction` sends a transaction at most three times – it could send
+  four. It sends again when the node refuses the nonce (`Rpc.Nonce.Invalid`),
+  with the node's next one, as before, and now also when the block hash expired
+  (`Rpc.BlockHash.Expired`), with a fresh one – that used to fail with
+  `MemorySigner.ExecuteTransaction.Internal`. A transaction that ran and failed,
+  or whose deserializer failed, keeps its nonce, so the next one on that key is
+  no longer refused once with `Rpc.Nonce.Invalid`.
+
+- A client method honours a signal aborted before the call: it fails with
+  `Client.<Method>.Aborted` at once, carrying the signal's reason, without
+  sending a request. The request used to go out anyway – `sendSignedTransaction`
+  even sent the transaction.
+
+- `getRecentBlockHash` calls that come while the block hash is being fetched
+  wait for that request instead of sending one each; a call with its own
+  `signal` still fetches alone.
+
 - Bump `@near-js/jsonrpc-types` from `^1.8.0` to `^1.9.0`. The `rawRpcResult`
   type of `getBlock` comes from it.
 
 ### Removed
 
 - `createMemorySignerFactory` / `createSafeMemorySignerFactory` and their types
-  `MemorySignerFactory` / `SafeMemorySignerFactory` – call `createMemorySigner`
-  (or `safeCreateMemorySigner`) once per account instead:  \
+  `MemorySignerFactory` / `SafeMemorySignerFactory` – call `createSigner`
+  (or `safeCreateSigner`) once per account instead:  \
   Previously:
   ```ts
-  const createSigner = createMemorySignerFactory({ client, keyService });
-  const signer = createSigner('example.testnet');
+  const signerFor = createMemorySignerFactory({ client, keyService });
+  const signer = signerFor('example.testnet');
   ```
 
   Now:
   ```ts
-  const signer = createMemorySigner({
+  const signer = createSigner({
     signerAccountId: 'example.testnet',
     client,
-    keyVault,
+    signService,
   });
   ```
 
