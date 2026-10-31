@@ -10,6 +10,7 @@ import {
 } from '../../../../_common/_common/_common/_common/natError';
 import { result, resultNatError } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
+import { loadRecentBlockHash } from './_common/loadRecentBlockHash';
 
 type AttemptArgs = {
   attemptIndex: number;
@@ -22,6 +23,7 @@ type Attempt = (
 ) => Promise<
   Result<
     SendSignedTransactionOutput,
+    | NatError<'Signer.RecentBlockHash.NotLoaded'>
     | NatError<'Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction'>
     | NatError<'Signer.ExecuteTransaction.Internal'>
   >
@@ -37,13 +39,11 @@ export const executeTransaction = async (
   const attempt: Attempt = wrapInternalError(
     'Signer.ExecuteTransaction.Internal',
     async ({ attemptIndex, newNonce, refreshBlockHash }) => {
-      const blockHash = await signerContext.client.safeGetRecentBlockHash({
-        options: { refreshCache: refreshBlockHash },
+      const blockHash = await loadRecentBlockHash({
+        client: signerContext.client,
+        refreshCache: refreshBlockHash,
       });
-
-      // TODO The signer has no error of its own for a failed request yet, so it is Internal for now
-      if (!blockHash.success)
-        return resultNatError('Signer.ExecuteTransaction.Internal', { cause: blockHash.error });
+      if (!blockHash.success) return blockHash;
 
       const transaction: Transaction = {
         ...task.transactionIntent,

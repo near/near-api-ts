@@ -63,6 +63,7 @@ export interface ExecuteTransactionPublicErrorRegistry
   'Signer.ExecuteTransaction.KeyPool.SignService.Failed': KeyPoolInnerErrorRegistry['Signer.KeyPool.SignService.Failed'];
   'Signer.ExecuteTransaction.KeyPool.SigningKey.NotFound': KeyPoolInnerErrorRegistry['Signer.KeyPool.SigningKey.NotFound'];
   'Signer.ExecuteTransaction.TaskQueue.Timeout': TaskQueueInnerErrorRegistry['Signer.TaskQueue.Timeout'];
+  'Signer.ExecuteTransaction.RecentBlockHash.NotLoaded': TaskQueueInnerErrorRegistry['Signer.RecentBlockHash.NotLoaded'];
   'Signer.ExecuteTransaction.Internal': InternalErrorContext;
 }
 
@@ -77,6 +78,7 @@ export type ExecuteTransactionError =
   | NatError<'Signer.ExecuteTransaction.KeyPool.SignService.Failed'>
   | NatError<'Signer.ExecuteTransaction.KeyPool.SigningKey.NotFound'>
   | NatError<'Signer.ExecuteTransaction.TaskQueue.Timeout'>
+  | NatError<'Signer.ExecuteTransaction.RecentBlockHash.NotLoaded'>
   // The signer sends at the default processing stage and without deserializers
   | RepackedSendSignedTransactionError<SendSignedTransactionError>
   | NatError<'Signer.ExecuteTransaction.Internal'>;

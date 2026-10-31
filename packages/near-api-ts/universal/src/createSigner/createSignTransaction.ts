@@ -34,6 +34,7 @@ export const createSafeSignTransaction: CreateSafeSignTransaction = (context) =>
         'Signer.KeyPool.SignService.Failed',
         'Signer.KeyPool.SigningKey.NotFound',
         'Signer.TaskQueue.Timeout',
+        'Signer.RecentBlockHash.NotLoaded',
       ])
     )
       return repackError({

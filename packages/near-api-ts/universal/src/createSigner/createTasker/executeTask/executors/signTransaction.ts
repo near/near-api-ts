@@ -7,9 +7,13 @@ import type { SignerContext } from '../../../../../types/signer/signer';
 import type { NatError } from '../../../../_common/_common/_common/_common/natError';
 import { result, resultNatError } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
+import { loadRecentBlockHash } from './_common/loadRecentBlockHash';
 
 type Execute = () => Promise<
-  Result<SignTransactionOutput, NatError<'Signer.SignTransaction.Internal'>>
+  Result<
+    SignTransactionOutput,
+    NatError<'Signer.RecentBlockHash.NotLoaded'> | NatError<'Signer.SignTransaction.Internal'>
+  >
 >;
 
 export const signTransaction = async (
@@ -19,11 +23,8 @@ export const signTransaction = async (
 ): Promise<void> => {
   const execute: Execute = wrapInternalError('Signer.SignTransaction.Internal', async () => {
     const nextNonce = key.nonce + 1;
-    const blockHash = await signerContext.client.safeGetRecentBlockHash();
-
-    // TODO The signer has no error of its own for a failed request yet, so it is Internal for now
-    if (!blockHash.success)
-      return resultNatError('Signer.SignTransaction.Internal', { cause: blockHash.error });
+    const blockHash = await loadRecentBlockHash({ client: signerContext.client });
+    if (!blockHash.success) return blockHash;
 
     const transaction: Transaction = {
       ...task.transactionIntent,

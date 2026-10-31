@@ -14,6 +14,7 @@ export interface SignTransactionPublicErrorRegistry {
   'Signer.SignTransaction.KeyPool.SignService.Failed': KeyPoolInnerErrorRegistry['Signer.KeyPool.SignService.Failed'];
   'Signer.SignTransaction.KeyPool.SigningKey.NotFound': KeyPoolInnerErrorRegistry['Signer.KeyPool.SigningKey.NotFound'];
   'Signer.SignTransaction.TaskQueue.Timeout': TaskQueueInnerErrorRegistry['Signer.TaskQueue.Timeout'];
+  'Signer.SignTransaction.RecentBlockHash.NotLoaded': TaskQueueInnerErrorRegistry['Signer.RecentBlockHash.NotLoaded'];
   'Signer.SignTransaction.Internal': InternalErrorContext;
 }
 
@@ -28,6 +29,7 @@ type SignTransactionIntentError =
   | NatError<'Signer.SignTransaction.KeyPool.SignService.Failed'>
   | NatError<'Signer.SignTransaction.KeyPool.SigningKey.NotFound'>
   | NatError<'Signer.SignTransaction.TaskQueue.Timeout'>
+  | NatError<'Signer.SignTransaction.RecentBlockHash.NotLoaded'>
   | NatError<'Signer.SignTransaction.Internal'>;
 
 export type SafeSignTransactionIntent = (

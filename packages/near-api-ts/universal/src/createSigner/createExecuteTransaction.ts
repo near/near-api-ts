@@ -46,6 +46,7 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (conte
         'Signer.KeyPool.SignService.Failed',
         'Signer.KeyPool.SigningKey.NotFound',
         'Signer.TaskQueue.Timeout',
+        'Signer.RecentBlockHash.NotLoaded',
       ])
     )
       return repackError({
@@ -60,6 +61,7 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (conte
       taskResult.error.kind === 'Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction'
     ) {
       const { cause } = taskResult.error.context;
+
       if (isNatErrorOf(cause, unreachableSendSignedTransactionKinds)) throw cause;
 
       return repackError({

@@ -17,6 +17,13 @@ import type { PoolKey } from './keyPool';
 
 export interface TaskQueueInnerErrorRegistry {
   'Signer.TaskQueue.Timeout': { timeoutMs: Milliseconds };
+  // The client didn't give a recent block hash, so the transaction was neither signed nor sent
+  'Signer.RecentBlockHash.NotLoaded': {
+    cause:
+      | NatError<'Client.GetRecentBlockHash.PreferredRpc.NotFound'>
+      | NatError<'Client.GetRecentBlockHash.Timeout'>
+      | NatError<'Client.GetRecentBlockHash.Exhausted'>;
+  };
   'Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction': {
     cause: SendSignedTransactionError;
   };
@@ -70,6 +77,7 @@ type ExecuteTransactionTaskError =
   | NatError<'Signer.KeyPool.SignService.Failed'>
   | NatError<'Signer.KeyPool.SigningKey.NotFound'>
   | NatError<'Signer.TaskQueue.Timeout'>
+  | NatError<'Signer.RecentBlockHash.NotLoaded'>
   | NatError<'Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction'>
   | NatError<'Signer.ExecuteTransaction.Internal'>;
 
@@ -88,6 +96,7 @@ export type SignTransactionTaskError =
   | NatError<'Signer.KeyPool.SignService.Failed'>
   | NatError<'Signer.KeyPool.SigningKey.NotFound'>
   | NatError<'Signer.TaskQueue.Timeout'>
+  | NatError<'Signer.RecentBlockHash.NotLoaded'>
   | NatError<'Signer.SignTransaction.Internal'>;
 
 export type AddSignTransactionTask = (
