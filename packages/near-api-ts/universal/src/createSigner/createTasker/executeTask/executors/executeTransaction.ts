@@ -1,11 +1,14 @@
 import type { Result, TransactionNonce } from '../../../../../types/_common/common';
 import type { Transaction } from '../../../../../types/_common/transaction/transaction';
-import type { SendSignedTransactionOutput } from '../../../../../types/client/methods/transaction/sendSignedTransaction/output';
 import type { PoolKey } from '../../../../../types/signer/inner/keyPool';
-import type { Task } from '../../../../../types/signer/inner/taskQueue';
+import type {
+  ExecuteTransactionTask,
+  ExecuteTransactionTaskOutput,
+} from '../../../../../types/signer/inner/taskQueue';
 import type { SignerContext } from '../../../../../types/signer/signer';
 import {
   createNatError,
+  isNatErrorOf,
   type NatError,
 } from '../../../../_common/_common/_common/_common/natError';
 import { result, resultNatError } from '../../../../_common/_common/_common/result';
@@ -22,7 +25,8 @@ type Attempt = (
   args: AttemptArgs,
 ) => Promise<
   Result<
-    SendSignedTransactionOutput,
+    ExecuteTransactionTaskOutput,
+    | NatError<'Signer.Aborted'>
     | NatError<'Signer.RecentBlockHash.NotLoaded'>
     | NatError<'Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction'>
     | NatError<'Signer.ExecuteTransaction.Internal'>
@@ -31,10 +35,11 @@ type Attempt = (
 
 export const executeTransaction = async (
   signerContext: SignerContext,
-  task: Task,
+  task: ExecuteTransactionTask,
   key: PoolKey,
 ): Promise<void> => {
   const maxAttempts = 3; // Maybe we will allow user to configure it in the future
+  const signal = task.sendingArgs.options?.signal;
 
   const attempt: Attempt = wrapInternalError(
     'Signer.ExecuteTransaction.Internal',
@@ -44,6 +49,9 @@ export const executeTransaction = async (
         refreshCache: refreshBlockHash,
       });
       if (!blockHash.success) return blockHash;
+
+      // A call aborted by now isn't signed - its send would be aborted at once anyway
+      if (signal?.aborted) return resultNatError('Signer.Aborted', { reason: signal.reason });
 
       const transaction: Transaction = {
         ...task.transactionIntent,
@@ -68,6 +76,7 @@ export const executeTransaction = async (
 
       const txResult = await signerContext.client.safeSendSignedTransaction({
         signedTransaction: signedTransaction.data,
+        ...task.sendingArgs,
       });
 
       // If tx executed successfully, update key nonce and return tx execution result;
@@ -76,8 +85,15 @@ export const executeTransaction = async (
         return txResult;
       }
 
-      // After execution failure the prev nonce is used
-      if (txResult.error.context !== null && 'transactionDetails' in txResult.error.context) {
+      // After execution failure or failed deserialization the prev nonce is used
+      if (
+        isNatErrorOf(txResult.error, [
+          'Client.SendSignedTransaction.DeserializeResultData.Failed',
+          'Client.SendSignedTransaction.DeserializeActionSummaries.Failed',
+          'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed',
+        ]) ||
+        (txResult.error.context !== null && 'transactionDetails' in txResult.error.context)
+      ) {
         key.setNonce(newNonce);
       }
 

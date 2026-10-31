@@ -16,7 +16,7 @@ export const createAddSignTransactionTask: CreateAddSignTransactionTask =
     const canHandle = await keyPool.isKeyForTaskExist(task);
     if (!canHandle.success) return canHandle;
 
-    addTask(task, taskQueueContext);
+    addTask({ task, taskQueueContext });
 
     // TODO Fix types
     return await tasker.waitForTask(task.taskId);

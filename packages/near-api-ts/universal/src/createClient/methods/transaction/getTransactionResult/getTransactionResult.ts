@@ -7,7 +7,7 @@ import { resultNatError } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
 import { repackError } from '../../../../_common/repackError';
 import { CryptoHashZodSchema } from '../../../../_common/zodSchemas/cryptoHash';
-import { PartialTransportPolicyZodSchema } from '../../../_common/zodSchemas/transportPolicy';
+import { PartialTransportPolicyZodSchema } from '../../../../_common/zodSchemas/transportPolicy';
 import { handleRpcError } from './handleRpcError';
 import { handleRpcResult } from './handleRpcResult';
 

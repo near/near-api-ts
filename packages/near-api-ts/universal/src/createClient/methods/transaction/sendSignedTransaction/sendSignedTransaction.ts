@@ -7,7 +7,8 @@ import { resultNatError } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
 import { repackError } from '../../../../_common/repackError';
 import { CryptoHashZodSchema } from '../../../../_common/zodSchemas/cryptoHash';
-import { PartialTransportPolicyZodSchema } from '../../../_common/zodSchemas/transportPolicy';
+import { TransactionProcessingStageZodSchema } from '../../../../_common/zodSchemas/transactionProcessingStage';
+import { PartialTransportPolicyZodSchema } from '../../../../_common/zodSchemas/transportPolicy';
 import { processingStageToFinalExecutionStatus } from '../_common/processingStageConverters';
 import { handleRpcError } from './handleRpcError';
 import { handleRpcResult } from './handleRpcResult/handleRpcResult';
@@ -17,15 +18,7 @@ const SendSignedTransactionArgsZodSchema = z.object({
     signedTransactionBorsh64: z.base64(),
     transactionHash: CryptoHashZodSchema,
   }),
-  minimalProcessingStage: z.optional(
-    z.union([
-      z.literal('ConvertedOptimistic'),
-      z.literal('ConvertedFinal'),
-      z.literal('ExecutedOptimistic'),
-      z.literal('ExecutedNearlyFinal'),
-      z.literal('CompletedFinal'),
-    ]),
-  ),
+  minimalProcessingStage: z.optional(TransactionProcessingStageZodSchema),
   options: z.optional(
     z.object({
       transportPolicy: z.optional(PartialTransportPolicyZodSchema),

@@ -2,7 +2,12 @@ import type { ConversionFailureKind } from '../../../types/client/methods/transa
 import type { LiveExecutionFailureKind } from '../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/executionFailureError';
 import type { ReachableProcessingStageFromStage } from '../../../types/client/methods/transaction/_common/transactionDetails/_common/processingStage';
 import type { ExecutionFailure } from '../../../types/client/methods/transaction/_common/transactionDetails/executionFailure';
-import type { TimeoutErrorContext } from '../../../types/client/transport/sendRequest';
+import type { SendSignedTransactionDeserializeActionSummariesArgs } from '../../../types/client/methods/transaction/sendSignedTransaction/args';
+import type { SendSignedTransactionPublicErrorRegistry } from '../../../types/client/methods/transaction/sendSignedTransaction/error';
+import type {
+  AbortedErrorContext,
+  TimeoutErrorContext,
+} from '../../../types/client/transport/sendRequest';
 import type { ExecuteTransactionError } from '../../../types/signer/public/createExecuteTransaction';
 import type { ExcludeStrict } from '../../../types/utils';
 
@@ -43,9 +48,56 @@ type _Details = Expect<
   >
 >;
 
+// The details follow the stage and the deserializers of the call, as for sendSignedTransaction
+type DetailsOf<E> = E extends {
+  kind: 'Signer.ExecuteTransaction.Rpc.Executor.NotFound';
+  context: { transactionDetails: infer D };
+}
+  ? D
+  : never;
+
+declare const deserializeActionSummaries: (
+  args: SendSignedTransactionDeserializeActionSummariesArgs,
+) => number;
+
+type _DetailsAtStage = Expect<
+  Equal<
+    DetailsOf<ExecuteTransactionError<'CompletedFinal'>>,
+    ExecutionFailure<'Live'>['CompletedFinal']
+  >
+>;
+type _DeserializedDetails = Expect<
+  Equal<
+    DetailsOf<ExecuteTransactionError<'CompletedFinal', typeof deserializeActionSummaries>>,
+    ExecutionFailure<'Live', typeof deserializeActionSummaries>['CompletedFinal']
+  >
+>;
+
+// The signal and the deserializers are passed on, so an aborted send and a failed deserializer
+// come too - Aborted also when the signer itself sees the call aborted before the send
+type _Aborted = Expect<
+  Equal<ErrorOf<'Signer.ExecuteTransaction.Aborted'>['context'], AbortedErrorContext>
+>;
+type _DeserializeResultData = Expect<
+  Equal<
+    ErrorOf<'Signer.ExecuteTransaction.DeserializeResultData.Failed'>['context'],
+    SendSignedTransactionPublicErrorRegistry['Client.SendSignedTransaction.DeserializeResultData.Failed']
+  >
+>;
+type _DeserializeActionSummaries = Expect<
+  Equal<
+    ErrorOf<'Signer.ExecuteTransaction.DeserializeActionSummaries.Failed'>['context'],
+    SendSignedTransactionPublicErrorRegistry['Client.SendSignedTransaction.DeserializeActionSummaries.Failed']
+  >
+>;
+type _DeserializeExecutionSteps = Expect<
+  Equal<
+    ErrorOf<'Signer.ExecuteTransaction.DeserializeExecutionSteps.Failed'>['context'],
+    SendSignedTransactionPublicErrorRegistry['Client.SendSignedTransaction.DeserializeExecutionSteps.Failed']
+  >
+>;
+
 // A send error a signer can't run into isn't there
 type _InvalidSignature = Expect<
   Equal<Has<'Signer.ExecuteTransaction.Rpc.Signature.Invalid'>, false>
 >;
-type _Aborted = Expect<Equal<Has<'Signer.ExecuteTransaction.Aborted'>, false>>;
-type _Deserialize = Expect<Equal<Has<`Signer.ExecuteTransaction.Deserialize${string}`>, false>>;

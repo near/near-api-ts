@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import * as z from 'zod/mini';
-import { PartialTransportPolicyZodSchema } from '../../../../../src/createClient/_common/zodSchemas/transportPolicy';
+import { PartialTransportPolicyZodSchema } from '../../../../../src/_common/zodSchemas/transportPolicy';
 import { defaultTransportPolicy } from '../../../../../src/createClient/createTransport/_common/transportPolicy/transportPolicy';
 import type { PartialTransportPolicy } from '../../../../../types/client/transport/transport';
 

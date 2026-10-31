@@ -16,11 +16,15 @@ export const createTaskQueue: CreateTaskQueue = (signerContext, createSignerArgs
     timeoutMs: createSignerArgs.taskQueue?.timeoutMs ?? 60_000,
   };
 
-  // We remove the task from the queue when the task execution starts
+  // We remove the task from the queue when the task execution starts, it times out or its call
+  // is aborted - whichever comes first
   const removeTask: RemoveTask = (taskId) => {
+    if (!taskQueueContext.queue.some((task) => task.taskId === taskId)) return false;
+
     taskQueueContext.queue = taskQueueContext.queue.filter((task) => task.taskId !== taskId);
-    clearTimeout(taskQueueContext.cleaners[taskId]);
+    taskQueueContext.cleaners[taskId]();
     delete taskQueueContext.cleaners[taskId];
+    return true;
   };
 
   return {

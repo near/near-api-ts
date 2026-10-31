@@ -1,7 +1,7 @@
 import * as z from 'zod/mini';
 import { BlockHeightZodSchema } from '../../../_common/zodSchemas/blockHeight';
 import { CryptoHashZodSchema } from '../../../_common/zodSchemas/cryptoHash';
-import { PartialTransportPolicyZodSchema } from '../../_common/zodSchemas/transportPolicy';
+import { PartialTransportPolicyZodSchema } from '../../../_common/zodSchemas/transportPolicy';
 
 export const BaseOptionsZodSchema = z.object({
   transportPolicy: z.optional(PartialTransportPolicyZodSchema),

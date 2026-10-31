@@ -51,4 +51,36 @@ describe('Signer.executeTransaction', () => {
     expect(countRequests(fetchSpy.mock.calls, 'send_tx')).toBe(1);
     fetchSpy.mockRestore();
   });
+
+  it('keeps the nonce of a transaction whose deserializer failed', async () => {
+    const nat = createSigner({
+      signerAccountId: 'nat',
+      client,
+      signService: createVaultSignService({
+        vault: createMemoryVault({ privateKey: DEFAULT_PRIVATE_KEY }),
+      }),
+    });
+
+    // A deserializer gets the details of a transaction that ran - so it was converted and used
+    // the nonce
+    const failed = await nat.safeExecuteTransaction({
+      intent: { action: transfer({ amount: { yoctoNear: '1' } }), receiverAccountId: 'bob' },
+      options: {
+        deserializeResultData: () => {
+          throw new Error('Bad data');
+        },
+      },
+    });
+    assertNatErrKind(failed, 'Signer.ExecuteTransaction.DeserializeResultData.Failed');
+
+    // Another transaction: the same one with the same nonce would only get the first one's outcome
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    const tx = await nat.safeExecuteTransaction({
+      intent: { action: transfer({ amount: { yoctoNear: '2' } }), receiverAccountId: 'bob' },
+    });
+
+    expect(tx.success).toBe(true);
+    expect(countRequests(fetchSpy.mock.calls, 'send_tx')).toBe(1);
+    fetchSpy.mockRestore();
+  });
 });

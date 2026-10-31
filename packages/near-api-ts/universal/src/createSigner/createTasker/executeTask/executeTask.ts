@@ -19,12 +19,15 @@ export const createExecuteTask: CreateExecuteTask = (signerContext) => {
     if (maybeKey.data === undefined) return;
 
     const key = maybeKey.data;
-    signerContext.taskQueue.removeTask(task.taskId);
 
-    const execute = task.taskType === 'ExecuteTransaction' ? executeTransaction : signTransaction;
-
-    // Execute the task; It will resolve the promise we returned to the task creator;
-    await execute(signerContext, task, key);
+    // The task may have left the queue while we were looking for a key: it timed out, its call
+    // was aborted, or another key took it. Then the key just goes on to the next task;
+    if (signerContext.taskQueue.removeTask(task.taskId)) {
+      // Execute the task; It will resolve the promise we returned to the task creator;
+      if (task.taskType === 'ExecuteTransaction')
+        await executeTransaction(signerContext, task, key);
+      else await signTransaction(signerContext, task, key);
+    }
 
     // Unlock the key so it can be used for the next task;
     key.unlock();

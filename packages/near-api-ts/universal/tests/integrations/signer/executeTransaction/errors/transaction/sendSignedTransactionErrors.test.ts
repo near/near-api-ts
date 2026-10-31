@@ -92,14 +92,39 @@ describe('executeTransaction › sendSignedTransaction errors', () => {
     expect(send).toHaveBeenCalledTimes(3);
   });
 
+  // executeTransaction passes its signal and deserializers on to the send
+  it.each([
+    createNatError({
+      kind: 'Client.SendSignedTransaction.Aborted',
+      context: { reason: 'Not needed anymore' },
+    }),
+    createNatError({
+      kind: 'Client.SendSignedTransaction.DeserializeResultData.Failed',
+      context: { cause: new Error('Bad data'), rawData: '' },
+    }),
+    createNatError({
+      kind: 'Client.SendSignedTransaction.DeserializeActionSummaries.Failed',
+      context: { cause: new Error('Bad summaries'), rawActionSummaries: [] },
+    }),
+    createNatError({
+      kind: 'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed',
+      context: { cause: new Error('Bad steps'), rawExecutionSteps: [] },
+    }),
+  ])('passes $kind on under its own prefix, with its context', async (error) => {
+    const { signer } = createSignerFailingToSend(error);
+
+    const tx = await signer.safeExecuteTransaction({ intent });
+    expect(tx.success).toBe(false);
+    expect(tx.error?.kind).toBe(
+      error.kind.replace('Client.SendSignedTransaction', 'Signer.ExecuteTransaction'),
+    );
+    expect(tx.error?.context).toBe(error.context);
+  });
+
   it.each([
     'Client.SendSignedTransaction.Args.InvalidSchema',
     'Client.SendSignedTransaction.Internal',
     'Client.SendSignedTransaction.Rpc.Signature.Invalid',
-    'Client.SendSignedTransaction.Aborted',
-    'Client.SendSignedTransaction.DeserializeResultData.Failed',
-    'Client.SendSignedTransaction.DeserializeActionSummaries.Failed',
-    'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed',
   ] as const)('turns %s, which a signer cannot run into, into Internal', async (kind) => {
     // The signer reads only the kind of such an error
     const error = createNatError({ kind, context: null as never });

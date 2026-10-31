@@ -2,7 +2,7 @@ import type { Result } from '../../../../../types/_common/common';
 import type { SignTransactionOutput } from '../../../../../types/_common/transaction/signTransaction';
 import type { Transaction } from '../../../../../types/_common/transaction/transaction';
 import type { PoolKey } from '../../../../../types/signer/inner/keyPool';
-import type { Task } from '../../../../../types/signer/inner/taskQueue';
+import type { SignTransactionTask } from '../../../../../types/signer/inner/taskQueue';
 import type { SignerContext } from '../../../../../types/signer/signer';
 import type { NatError } from '../../../../_common/_common/_common/_common/natError';
 import { result, resultNatError } from '../../../../_common/_common/_common/result';
@@ -18,7 +18,7 @@ type Execute = () => Promise<
 
 export const signTransaction = async (
   signerContext: SignerContext,
-  task: Task,
+  task: SignTransactionTask,
   key: PoolKey,
 ): Promise<void> => {
   const execute: Execute = wrapInternalError('Signer.SignTransaction.Internal', async () => {

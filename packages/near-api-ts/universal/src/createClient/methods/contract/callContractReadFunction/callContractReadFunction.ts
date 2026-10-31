@@ -10,7 +10,7 @@ import { wrapInternalError } from '../../../../_common/_common/wrapInternalError
 import { repackError } from '../../../../_common/repackError';
 import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
 import { ContractFunctionNameZodSchema } from '../../../../_common/zodSchemas/contractFunctionName';
-import { PartialTransportPolicyZodSchema } from '../../../_common/zodSchemas/transportPolicy';
+import { PartialTransportPolicyZodSchema } from '../../../../_common/zodSchemas/transportPolicy';
 import { toNearcoreBlockReference } from '../../_common/toNearcoreBlockReference';
 import { BlockReferenceZodSchema } from '../../_common/zodSchemas';
 import { handleRpcError } from './handleRpcError';

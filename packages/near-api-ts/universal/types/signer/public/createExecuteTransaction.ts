@@ -7,6 +7,17 @@ import type {
 } from '../../_common/natError';
 import type { TransactionIntent } from '../../_common/transaction/transaction';
 import type {
+  MaybeBaseDeserializeTransactionActionSummariesFn,
+  MaybeBaseDeserializeTransactionExecutionStepsFn,
+} from '../../client/methods/transaction/_common/transactionDetails/_common/_common/deserializers';
+import type { MaybeTransactionProcessingStage } from '../../client/methods/transaction/_common/transactionDetails/_common/processingStage';
+import type {
+  MaybeDeserializeActionSummariesFn,
+  MaybeDeserializeExecutionStepsFn,
+  MaybeDeserializeResultDataFn,
+  TransactionSendingArgs,
+} from '../../client/methods/transaction/sendSignedTransaction/args';
+import type {
   SendSignedTransactionError,
   SendSignedTransactionPublicErrorRegistry,
 } from '../../client/methods/transaction/sendSignedTransaction/error';
@@ -19,17 +30,12 @@ import type { SignerContext } from '../signer';
 // The kinds sendSignedTransaction fails with and executeTransaction doesn't - one that comes
 // anyway is a bug, so it becomes Signer.ExecuteTransaction.Internal with that error as the cause
 export type UnreachableSendSignedTransactionKind =
-  // executeTransaction validates its own args and has its own Internal
+  // executeTransaction validates the args it sends with by the same schemas, the sign service
+  // gives the signed transaction, and executeTransaction has its own Internal
   | 'Client.SendSignedTransaction.Args.InvalidSchema'
   | 'Client.SendSignedTransaction.Internal'
   // The sign service signs with the very key the transaction names
-  | 'Client.SendSignedTransaction.Rpc.Signature.Invalid'
-  // executeTransaction takes no signal and no deserializers yet; these come back once it takes
-  // every arg sendSignedTransaction does
-  | 'Client.SendSignedTransaction.Aborted'
-  | 'Client.SendSignedTransaction.DeserializeResultData.Failed'
-  | 'Client.SendSignedTransaction.DeserializeActionSummaries.Failed'
-  | 'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed';
+  | 'Client.SendSignedTransaction.Rpc.Signature.Invalid';
 
 type ReachableSendSignedTransactionKind = ExcludeStrict<
   keyof SendSignedTransactionPublicErrorRegistry,
@@ -44,16 +50,17 @@ type RepackedSendSignedTransactionErrorRegistry = {
     : never]: SendSignedTransactionPublicErrorRegistry[K];
 };
 
-// A sendSignedTransaction error under the signer's prefix, with its whole context
-type RepackedSendSignedTransactionError<E> =
-  E extends NatError<infer K, infer C>
-    ? K extends `Client.SendSignedTransaction.${infer S}`
-      ? `Signer.ExecuteTransaction.${S}` extends infer RK extends
-          keyof RepackedSendSignedTransactionErrorRegistry
-        ? NatError<RK, C & ContextFor<RK>>
-        : never
+// A sendSignedTransaction error under the signer's prefix, with its whole context. The kind and the
+// context are read off the error's shape: inferred from the NatError class instead, they make TS
+// give up on the union ("too complex to represent") once a call fills in the type params
+type RepackedSendSignedTransactionError<E> = E extends { kind: infer K; context: infer C }
+  ? K extends `Client.SendSignedTransaction.${infer S}`
+    ? `Signer.ExecuteTransaction.${S}` extends infer RK extends
+        keyof RepackedSendSignedTransactionErrorRegistry
+      ? NatError<RK, C & ContextFor<RK>>
       : never
-    : never;
+    : never
+  : never;
 
 export interface ExecuteTransactionPublicErrorRegistry
   extends RepackedSendSignedTransactionErrorRegistry {
@@ -67,11 +74,21 @@ export interface ExecuteTransactionPublicErrorRegistry
   'Signer.ExecuteTransaction.Internal': InternalErrorContext;
 }
 
-type ExecuteTransactionArgs = {
+// The intent, and everything sendSignedTransaction takes besides the signed transaction
+type ExecuteTransactionArgs<
+  TPS extends MaybeTransactionProcessingStage,
+  RDF extends MaybeDeserializeResultDataFn,
+  ASF extends MaybeDeserializeActionSummariesFn,
+  ESF extends MaybeDeserializeExecutionStepsFn,
+> = {
   intent: TransactionIntent;
-};
+} & TransactionSendingArgs<TPS, RDF, ASF, ESF>;
 
-export type ExecuteTransactionError =
+export type ExecuteTransactionError<
+  TPS extends MaybeTransactionProcessingStage = undefined,
+  ASF extends MaybeBaseDeserializeTransactionActionSummariesFn<'Live'> = undefined,
+  ESF extends MaybeBaseDeserializeTransactionExecutionStepsFn<'Live'> = undefined,
+> =
   | NatError<'Signer.ExecuteTransaction.Args.InvalidSchema'>
   | NatError<'Signer.ExecuteTransaction.KeyPool.AccessKeys.NotLoaded'>
   | NatError<'Signer.ExecuteTransaction.KeyPool.Empty'>
@@ -79,16 +96,31 @@ export type ExecuteTransactionError =
   | NatError<'Signer.ExecuteTransaction.KeyPool.SigningKey.NotFound'>
   | NatError<'Signer.ExecuteTransaction.TaskQueue.Timeout'>
   | NatError<'Signer.ExecuteTransaction.RecentBlockHash.NotLoaded'>
-  // The signer sends at the default processing stage and without deserializers
-  | RepackedSendSignedTransactionError<SendSignedTransactionError>
+  // Aborted among them: it comes from the send, or from the signer itself when the call is
+  // aborted before the send - then nothing was signed
+  | RepackedSendSignedTransactionError<SendSignedTransactionError<TPS, ASF, ESF>>
   | NatError<'Signer.ExecuteTransaction.Internal'>;
 
-export type SafeExecuteTransaction = (
-  args: ExecuteTransactionArgs,
-) => Promise<Result<SendSignedTransactionOutput, ExecuteTransactionError>>;
+// The deserializer type params default to `MaybeDeserialize…Fn`, as sendSignedTransaction's do,
+// so an inline deserializer gets its parameter typed
+export type SafeExecuteTransaction = <
+  TPS extends MaybeTransactionProcessingStage = undefined,
+  RDF extends MaybeDeserializeResultDataFn = MaybeDeserializeResultDataFn,
+  ASF extends MaybeDeserializeActionSummariesFn = MaybeDeserializeActionSummariesFn,
+  ESF extends MaybeDeserializeExecutionStepsFn = MaybeDeserializeExecutionStepsFn,
+>(
+  args: ExecuteTransactionArgs<TPS, RDF, ASF, ESF>,
+) => Promise<
+  Result<SendSignedTransactionOutput<TPS, RDF, ASF, ESF>, ExecuteTransactionError<TPS, ASF, ESF>>
+>;
 
-export type ExecuteTransaction = (
-  args: ExecuteTransactionArgs,
-) => Promise<SendSignedTransactionOutput>;
+export type ExecuteTransaction = <
+  TPS extends MaybeTransactionProcessingStage = undefined,
+  RDF extends MaybeDeserializeResultDataFn = MaybeDeserializeResultDataFn,
+  ASF extends MaybeDeserializeActionSummariesFn = MaybeDeserializeActionSummariesFn,
+  ESF extends MaybeDeserializeExecutionStepsFn = MaybeDeserializeExecutionStepsFn,
+>(
+  args: ExecuteTransactionArgs<TPS, RDF, ASF, ESF>,
+) => Promise<SendSignedTransactionOutput<TPS, RDF, ASF, ESF>>;
 
 export type CreateSafeExecuteTransaction = (context: SignerContext) => SafeExecuteTransaction;

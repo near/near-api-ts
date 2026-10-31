@@ -52,6 +52,15 @@ type Options<
   ? { options?: OptionsObject<RDF, ASF, ESF> }
   : { options: OptionsObject<RDF, ASF, ESF> };
 
+// What a transaction is sent with besides itself - executeTransaction, which signs the transaction
+// on its own, takes the same
+export type TransactionSendingArgs<
+  TPS extends MaybeTransactionProcessingStage,
+  RDF extends MaybeDeserializeResultDataFn,
+  ASF extends MaybeDeserializeActionSummariesFn,
+  ESF extends MaybeDeserializeExecutionStepsFn,
+> = KeyIf<'minimalProcessingStage', TPS> & Options<RDF, ASF, ESF>;
+
 export type SendSignedTransactionArgs<
   TPS extends MaybeTransactionProcessingStage,
   RDF extends MaybeDeserializeResultDataFn,
@@ -62,5 +71,4 @@ export type SendSignedTransactionArgs<
     signedTransactionBorsh64: Base64String;
     transactionHash: TransactionHash;
   };
-} & KeyIf<'minimalProcessingStage', TPS> &
-  Options<RDF, ASF, ESF>;
+} & TransactionSendingArgs<TPS, RDF, ASF, ESF>;
