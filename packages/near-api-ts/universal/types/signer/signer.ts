@@ -9,7 +9,11 @@ import type {
   ExecuteTransactionPublicErrorRegistry,
   SafeExecuteTransaction,
 } from './public/createExecuteTransaction';
-import type { SignDelegationPublicErrorRegistry } from './public/createSignDelegation';
+import type {
+  SafeSignDelegationIntent,
+  SignDelegationIntent,
+  SignDelegationPublicErrorRegistry,
+} from './public/createSignDelegation';
 import type {
   SafeSignTransactionIntent,
   SignTransactionIntent,
@@ -47,6 +51,8 @@ export type Signer<S extends SignService = SignService, C extends SignerClient =
   signService: S;
   signTransaction: SignTransactionIntent; // TODO remove Intent from public type
   executeTransaction: ExecuteTransaction;
+  signDelegation: SignDelegationIntent;
   safeSignTransaction: SafeSignTransactionIntent;
   safeExecuteTransaction: SafeExecuteTransaction;
+  safeSignDelegation: SafeSignDelegationIntent;
 };

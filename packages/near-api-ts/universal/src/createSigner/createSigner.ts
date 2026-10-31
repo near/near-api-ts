@@ -11,6 +11,7 @@ import { AccountIdZodSchema } from '../_common/zodSchemas/accountId';
 import { PublicKeyZodSchema } from '../_common/zodSchemas/publicKey';
 import { createSafeExecuteTransaction } from './createExecuteTransaction';
 import { createKeyPool } from './createKeyPool/createKeyPool';
+import { createSafeSignDelegation } from './createSignDelegation';
 import { createSafeSignTransaction } from './createSignTransaction';
 import { createTasker } from './createTasker/createTasker';
 import { createTaskQueue } from './createTaskQueue/createTaskQueue';
@@ -65,6 +66,7 @@ export const safeCreateSigner: SafeCreateSigner = wrapInternalError(
 
     const safeSignTransaction = createSafeSignTransaction(context);
     const safeExecuteTransaction = createSafeExecuteTransaction(context);
+    const safeSignDelegation = createSafeSignDelegation(context);
 
     return result.ok({
       signerAccountId,
@@ -72,8 +74,10 @@ export const safeCreateSigner: SafeCreateSigner = wrapInternalError(
       client,
       signTransaction: asThrowable(safeSignTransaction),
       executeTransaction: asThrowable(safeExecuteTransaction),
+      signDelegation: asThrowable(safeSignDelegation),
       safeSignTransaction,
       safeExecuteTransaction,
+      safeSignDelegation,
     });
   },
 );

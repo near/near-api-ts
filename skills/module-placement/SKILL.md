@@ -263,7 +263,7 @@ Depth means foundational, not obscure.
 ## Known deviations
 
 Two, from unrelated causes. Both are recorded in `scripts/checkModulePlacement/allow.json`
-— seven entries for the first, one for the second — and everything else conforms.
+— eight entries for the first, one for the second — and everything else conforms.
 
 ### `createSigner` and `createVaultSignService` reach into `src/transaction/`
 
@@ -282,10 +282,13 @@ interior. Three consequences, all temporary:
   `src/` and drag the whole zod ladder into `src/_common/`'s — see "Why the grouping
   matters" below.
 - `createVaultSignService/signTransaction.ts` and `signDelegation.ts` validate their args,
-  as every public method does, with `TransactionZodSchema` and `DelegationZodSchema`. The
-  first is private to `signTransaction/`, the second sits in `transaction/_common/`, so
-  both edges reach in — and `delegationZodSchema.ts`, like `transactionZodSchema.ts`, gets a
-  consumer that drags its LCA out to `src/`.
+  as every public method does, with `TransactionZodSchema` and `DelegationZodSchema`, and
+  `createSigner/createSignDelegation.ts` builds the delegation intent it validates out of
+  `SingleDelegatedActionZodSchema` and `MultiDelegatedActionsZodSchema`, the way
+  `TransactionIntentZodSchema` is built above. The first schema is private to
+  `signTransaction/`, the others sit in `transaction/_common/delegationZodSchema.ts`, so all
+  these edges reach in — and `delegationZodSchema.ts`, like `transactionZodSchema.ts`, gets
+  consumers that drag its LCA out to `src/`.
 - `signTransaction/signTransaction.ts` and `signDelegation.ts` each have one consumer,
   `createVaultSignService/signTransaction.ts` and `createVaultSignService/signDelegation.ts`,
   so the algorithm would move each under that module. The signer signs through a sign

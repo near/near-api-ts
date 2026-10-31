@@ -51,12 +51,12 @@ const DelegationBaseZodSchema = z.object({
   }),
 });
 
-const SingleDelegatedActionZodSchema = z.object({
+export const SingleDelegatedActionZodSchema = z.object({
   delegatedAction: DelegableActionZodSchema,
   delegatedActions: z.optional(z.never()),
 });
 
-const MultiDelegatedActionsZodSchema = z.object({
+export const MultiDelegatedActionsZodSchema = z.object({
   delegatedAction: z.optional(z.never()),
   delegatedActions: z.array(DelegableActionZodSchema).check(z.minLength(1)),
 });
