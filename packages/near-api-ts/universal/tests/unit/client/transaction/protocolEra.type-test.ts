@@ -14,7 +14,7 @@ import type {
   SendSignedTransactionPublicErrorRegistry,
 } from '../../../../types/client/methods/transaction/sendSignedTransaction/error';
 import type { SendSignedTransactionOutput } from '../../../../types/client/methods/transaction/sendSignedTransaction/output';
-import type { ExecuteTransactionPublicErrorRegistry } from '../../../../types/signer/public/createExecuteTransaction';
+import type { ExecuteTransactionError } from '../../../../types/signer/public/createExecuteTransaction';
 
 // The details of a transaction read back from the chain hold data of every protocol era, the
 // details of a transaction sent now are `'Live'` - see `ProtocolEra`. `'Live'` details fit wherever
@@ -52,8 +52,10 @@ type SentSummariesFailure =
 const _readSummariesFailureAsSent: SentSummariesFailure = readSummariesFailure;
 
 // Signer.executeTransaction
-type SignedFailureDetails =
-  ExecuteTransactionPublicErrorRegistry['Signer.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists']['transactionDetails'];
+type SignedFailureDetails = Extract<
+  ExecuteTransactionError,
+  { kind: 'Signer.ExecuteTransaction.Rpc.Action.CreateSubAccount.AlreadyExists' }
+>['context']['transactionDetails'];
 
 const _signedFailure: SignedFailureDetails = sentFailure;
 // @ts-expect-error - the same for a transaction a signer sends

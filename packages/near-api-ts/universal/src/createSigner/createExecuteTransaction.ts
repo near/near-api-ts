@@ -1,5 +1,8 @@
 import * as z from 'zod/mini';
-import type { CreateSafeExecuteTransaction } from '../../types/signer/public/createExecuteTransaction';
+import type {
+  CreateSafeExecuteTransaction,
+  UnreachableSendSignedTransactionKind,
+} from '../../types/signer/public/createExecuteTransaction';
 import { createNatError, isNatErrorOf } from '../_common/_common/_common/_common/natError';
 import { result } from '../_common/_common/_common/result';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
@@ -9,6 +12,17 @@ import { TransactionIntentZodSchema } from './_common/zodSchemas';
 const SignTransactionArgsSchema = z.object({
   intent: TransactionIntentZodSchema,
 });
+
+// Why a signer can't run into these, see UnreachableSendSignedTransactionKind
+const unreachableSendSignedTransactionKinds = [
+  'Client.SendSignedTransaction.Args.InvalidSchema',
+  'Client.SendSignedTransaction.Internal',
+  'Client.SendSignedTransaction.Rpc.Signature.Invalid',
+  'Client.SendSignedTransaction.Aborted',
+  'Client.SendSignedTransaction.DeserializeResultData.Failed',
+  'Client.SendSignedTransaction.DeserializeActionSummaries.Failed',
+  'Client.SendSignedTransaction.DeserializeExecutionSteps.Failed',
+] as const satisfies readonly UnreachableSendSignedTransactionKind[];
 
 export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (context) =>
   wrapInternalError('Signer.ExecuteTransaction.Internal', async (args) => {
@@ -40,35 +54,19 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (conte
         targetPrefix: 'Signer.ExecuteTransaction',
       });
 
-    // When we get some errors from the RPC, we want to repack particular errors
-    // (which ones can actually happen) and return everything else as .Internal
-    // The main goal here - return only errors, which can actually happen during
-    // .executeTransaction call;
-    // And return everything else under .Internal
+    // A send error goes on under the signer's prefix, unless a signer can't run into it -
+    // then it is a bug, and the Internal it becomes carries that error as the cause
     if (
       taskResult.error.kind === 'Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction'
     ) {
-      if (
-        isNatErrorOf(taskResult.error.context.cause, [
-          'Client.SendSignedTransaction.PreferredRpc.NotFound',
-          'Client.SendSignedTransaction.Aborted',
-          'Client.SendSignedTransaction.Timeout',
-          'Client.SendSignedTransaction.Exhausted',
-          'Client.SendSignedTransaction.Rpc.Timeout',
-          'Client.SendSignedTransaction.Rpc.Signer.Budget.NotEnough',
-          'Client.SendSignedTransaction.Rpc.Action.CreateSubAccount.AlreadyExists',
-          'Client.SendSignedTransaction.Rpc.Action.Stake.ProposedStake.BelowThreshold',
-          'Client.SendSignedTransaction.Rpc.Action.Stake.TotalBalance.NotEnough',
-          'Client.SendSignedTransaction.Rpc.Action.Stake.ValidatorStake.AlreadyZero',
-        ])
-      ) {
-        return repackError({
-          error: taskResult.error.context.cause,
-          originPrefix: 'Client.SendSignedTransaction',
-          targetPrefix: 'Signer.ExecuteTransaction',
-        });
-      }
-      throw taskResult.error.context.cause;
+      const { cause } = taskResult.error.context;
+      if (isNatErrorOf(cause, unreachableSendSignedTransactionKinds)) throw cause;
+
+      return repackError({
+        error: cause,
+        originPrefix: 'Client.SendSignedTransaction',
+        targetPrefix: 'Signer.ExecuteTransaction',
+      });
     }
 
     return result.err(taskResult.error);
