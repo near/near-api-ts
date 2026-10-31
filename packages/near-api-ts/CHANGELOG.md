@@ -172,16 +172,53 @@
     method also has `Args.InvalidSchema` and `Internal`, and the factory
     `CreateVaultSignService.{Args.InvalidSchema,Internal}`.
   - A signer takes any sign service – an object with `safeHasKeyPair`,
-    `safeGetPublicKey` and `safeSignTransaction` (type `SignService`) – and any
-    client with `safeGetAccessKeys`, `safeGetRecentBlockHash` and
-    `safeSendSignedTransaction` (type `SignerClient`); a client from
-    `createClient` is one. `Signer` keeps the types of both, so
-    `signer.signService.vault` is the vault behind a vault sign service.
+    `safeGetPublicKey`, `safeSignTransaction` and `safeSignDelegation` (type
+    `SignService`) – and any client with `safeGetAccessKeys`,
+    `safeGetRecentBlockHash`, `safeGetBlock` and `safeSendSignedTransaction`
+    (type `SignerClient`); a client from `createClient` is one. `Signer` keeps
+    the types of both, so `signer.signService.vault` is the vault behind a vault
+    sign service.
 
     A signer reads the keys it signs by once, the first time it needs them: it
     doesn't pick up a key a vault of your own gains later, and a call that takes
     a key the vault has lost meanwhile fails with
-    `Signer.SignTransaction.Internal` / `Signer.ExecuteTransaction.Internal`.
+    `Signer.{SignTransaction,ExecuteTransaction,SignDelegation}.Internal`.
+
+- **`signDelegation` on a signer** – `signer.signDelegation({ intent })` /
+  `signer.safeSignDelegation` sign a delegation for a relayer to send, by a key
+  of the signer's account. The intent is a `DelegationIntent` – a delegation
+  without its delegator – and the output is a `SignDelegationOutput`, the one
+  `signDelegation` gives:
+
+  ```ts
+  const signedDelegation = await signer.signDelegation({
+    intent: {
+      receiverAccountId: 'contract.testnet',
+      delegatedAction: callContractFunction({ functionName: 'add_message', gasLimit: teraGas('30') }),
+      expiration: { inBlocks: 100 },
+    },
+  });
+  ```
+
+  - `expiration` is a block height, `{ blockHeight }`, or a number of blocks,
+    `{ inBlocks }`, counted from the latest block when the signer signs.
+  - The signer picks the key as for a transaction: a function call key can sign
+    a single call without a deposit to its contract, anything else takes a full
+    access key.
+  - The delegation's nonce is 100 above the key's: the key's own transactions
+    keep going below it until a relayer sends it, so it stays valid while the
+    key lands fewer than 100 of them first. Once it lands, the signer's next
+    `executeTransaction` on that key is refused with `Rpc.Nonce.Invalid` once
+    and goes above it; until then a transaction from `signer.signTransaction`
+    on that key gets a nonce below the delegation's, which the node refuses once
+    the delegation has landed. Delegations of one key stay valid in the order
+    they are signed.
+  - It fails with
+    `Signer.SignDelegation.{Args.InvalidSchema,KeyPool.AccessKeys.NotLoaded,KeyPool.Empty,KeyPool.SignService.Failed,KeyPool.SigningKey.NotFound,TaskQueue.Timeout,Internal}`,
+    with the contexts of the matching `Signer.SignTransaction.*` kinds, and with
+    `Signer.SignDelegation.BlockHeight.NotLoaded` when the client doesn't give
+    the latest block for `inBlocks`; the `cause` is the client's
+    `Client.GetBlock.{PreferredRpc.NotFound,Timeout,Exhausted,Rpc.NotSynced}`.
 
 - **`getPublicKey` on a memory vault** – `getPublicKey({ publicKeyId })` gives
   the full public key of a key pair the vault holds, or fails with
@@ -329,6 +366,11 @@
   ```
 
   `SignedDelegation` and `DelegationBase` change the same way.
+
+- **Breaking:** `DelegationIntent.expiration` is `{ blockHeight }` or
+  `{ inBlocks }` – a number of blocks, see `signDelegation` on a signer – so code
+  that reads `expiration.blockHeight` off an intent has to handle the second
+  form. An intent you build needs no change.
 
 - Like the node, `executeDelegation` now rejects bytes left over after the
   delegation with `CreateAction.ExecuteDelegation.SignedDelegation.Deserialize.Failed`
@@ -765,6 +807,10 @@
 
 - `getRecentBlockHash` calls that come while the block hash is being fetched
   wait for that request instead of sending one each; a call with its own
+  `signal` still fetches alone.
+
+- `getAccountInfo` calls that come while the storage price per byte is being
+  fetched wait for that request instead of sending one each; a call with its own
   `signal` still fetches alone.
 
 - Bump `@near-js/jsonrpc-types` from `^1.8.0` to `^1.9.0`. The `rawRpcResult`

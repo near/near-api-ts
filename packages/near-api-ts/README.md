@@ -98,7 +98,7 @@ console.log(tx.transactionHash);
 | **Client** | Talks to RPC nodes: reads accounts, blocks, contracts, sends signed transactions. Knows nothing about keys. |
 | **Vault** | Owns private keys and signs raw bytes by them: `hasKeyPair`, `getPublicKey`, `signData`. Never hands raw key pairs out. |
 | **Sign service** | Signs NEAR objects — transactions, delegations — by the keys of a vault. |
-| **Signer** | An account + a client + a sign service. Builds transactions from an *intent*, picks a usable key, manages nonces and recent block hashes, signs and sends. |
+| **Signer** | An account + a client + a sign service. Builds transactions from an *intent*, picks a usable key, manages nonces and recent block hashes, signs and sends. Signs delegations for a relayer too. |
 
 They compose in one direction only, so you can stop at any layer: use the client alone for
 read-only apps, use `signTransaction` with a key pair for full manual control, or use the
@@ -409,8 +409,9 @@ await signer.executeTransaction({
 ```
 
 Use `signer.signTransaction({ intent })` when you want the signed payload without sending
-it. To restrict which keys a signer may use, or to bound how long a send may wait in the
-per-account queue:
+it, and `signer.signDelegation({ intent })` for a delegation a relayer sends — see
+[Meta transactions](#meta-transactions). To restrict which keys a signer may use, or to bound
+how long a send may wait in the per-account queue:
 
 ```ts
 const signer = createSigner({
@@ -679,9 +680,46 @@ A *delegator* signs a set of actions without paying for them; a *relayer* wraps 
 delegation into its own transaction and covers the gas.
 
 ```ts
-import { signDelegation, executeDelegation, callContractFunction, teraGas } from 'near-api-ts';
+import { executeDelegation, callContractFunction, teraGas } from 'near-api-ts';
 
 // --- delegator side ---
+const signedDelegation = await aliceSigner.signDelegation({
+  intent: {
+    receiverAccountId: 'contract.testnet',
+    delegatedAction: callContractFunction({
+      functionName: 'add_message',
+      functionArgs: { text: 'Paid by somebody else' },
+      gasLimit: teraGas('30'),
+    }),
+    expiration: { inBlocks: 100 }, // or { blockHeight }
+  },
+});
+
+// hand `signedDelegation.signedDelegationBorsh64` to the relayer
+
+// --- relayer side ---
+await relaySigner.executeTransaction({
+  intent: {
+    // the transaction receiver must be the delegator, not the delegation receiver
+    receiverAccountId: 'alice.testnet',
+    action: executeDelegation(signedDelegation),
+  },
+});
+```
+
+The signer picks the key and the nonce, and turns `expiration: { inBlocks }` into the height
+that many blocks after the latest one. It takes a nonce 100 above the key's, so the key's own
+transactions keep going below the delegation until the relayer sends it: the delegation stays
+valid while the key lands fewer than 100 of them first. Once it lands, the signer's next
+`executeTransaction` on that key is refused with `Rpc.Nonce.Invalid` once and goes above it.
+Delegations of one key stay valid in the order they are signed.
+
+Without a signer, sign the whole delegation — its delegator, nonce and expiration height
+included — with `signDelegation` and anything that signs data:
+
+```ts
+import { signDelegation, callContractFunction, teraGas } from 'near-api-ts';
+
 const { accessKey, atMomentOf } = await client.getAccessKey({
   accountId: 'alice.testnet',
   publicKey: aliceKeyPair.publicKey,
@@ -705,17 +743,6 @@ const signedDelegation = await signDelegation({
       functionArgs: { text: 'Paid by somebody else' },
       gasLimit: teraGas('30'),
     }),
-  },
-});
-
-// hand `signedDelegation.signedDelegationBorsh64` to the relayer
-
-// --- relayer side ---
-await relaySigner.executeTransaction({
-  intent: {
-    // the transaction receiver must be the delegator, not the delegation receiver
-    receiverAccountId: 'alice.testnet',
-    action: executeDelegation(signedDelegation),
   },
 });
 ```
@@ -833,9 +860,9 @@ signService.vault; // the vault it was given, with its own type
 
 Each layer asks only for the methods it calls, so you can bring your own: a `Vault` is any
 object with `safeHasKeyPair`, `safeGetPublicKey` and `safeSignData`, a `SignService` any
-object with `safeHasKeyPair`, `safeGetPublicKey` and `safeSignTransaction`, and the client a
-signer takes — a `SignerClient` — any object with `safeGetAccessKeys`,
-`safeGetRecentBlockHash` and `safeSendSignedTransaction`.
+object with `safeHasKeyPair`, `safeGetPublicKey`, `safeSignTransaction` and
+`safeSignDelegation`, and the client a signer takes — a `SignerClient` — any object with
+`safeGetAccessKeys`, `safeGetRecentBlockHash`, `safeGetBlock` and `safeSendSignedTransaction`.
 
 ---
 
