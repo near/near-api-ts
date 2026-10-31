@@ -14,7 +14,7 @@ export type SignDelegationArgs = {
 
 type SignDelegationError<V extends Vault> =
   | NatError<'VaultSignService.SignDelegation.Args.InvalidSchema'>
-  | NatError<'VaultSignService.SignDelegation.SigningKey.NotFound'>
+  | NatError<'VaultSignService.SignDelegation.KeyPair.NotFound'>
   | NatError<
       'VaultSignService.SignDelegation.Vault.Failed',
       { cause: HasKeyPairErrorOf<V> | SignDataErrorOf<V> }

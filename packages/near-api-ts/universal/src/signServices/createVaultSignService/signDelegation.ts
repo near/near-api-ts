@@ -33,7 +33,7 @@ export const createSafeSignDelegation = <V extends Vault>(
       });
 
     if (!hasKeyPair.data)
-      return resultNatError('VaultSignService.SignDelegation.SigningKey.NotFound', { publicKey });
+      return resultNatError('VaultSignService.SignDelegation.KeyPair.NotFound', { publicKey });
 
     const signedDelegation = await safeSignDelegation({
       delegation: args.delegation,

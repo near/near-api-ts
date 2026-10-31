@@ -11,7 +11,7 @@ export interface MemoryVaultPublicErrorRegistry {
   'CreateMemoryVault.Args.InvalidSchema': InvalidSchemaErrorContext;
   'CreateMemoryVault.Internal': InternalErrorContext;
   'MemoryVault.SignData.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'MemoryVault.SignData.SigningKey.NotFound': { publicKey: PublicKey };
+  'MemoryVault.SignData.KeyPair.NotFound': { publicKey: PublicKey };
   'MemoryVault.SignData.Internal': InternalErrorContext;
   'MemoryVault.HasKeyPair.Args.InvalidSchema': InvalidSchemaErrorContext;
   'MemoryVault.HasKeyPair.Internal': InternalErrorContext;

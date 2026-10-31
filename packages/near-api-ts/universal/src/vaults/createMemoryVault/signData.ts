@@ -25,7 +25,7 @@ export const createSafeSignData = (context: MemoryVaultContext): SafeSignData =>
     const keyPair = context.keyPairs[publicKey.publicKey];
 
     if (!keyPair)
-      return resultNatError('MemoryVault.SignData.SigningKey.NotFound', {
+      return resultNatError('MemoryVault.SignData.KeyPair.NotFound', {
         publicKey: publicKey.publicKey,
       });
 

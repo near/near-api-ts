@@ -36,11 +36,11 @@ describe('vaultSignService.signTransaction', () => {
     );
   });
 
-  it('fails with SigningKey.NotFound for a key the vault does not hold', async () => {
+  it('fails with KeyPair.NotFound for a key the vault does not hold', async () => {
     const signService = createVaultSignService({ vault: createMemoryVault() });
 
     const signed = await signService.safeSignTransaction({ transaction });
-    assertNatErrKind(signed, 'VaultSignService.SignTransaction.SigningKey.NotFound');
+    assertNatErrKind(signed, 'VaultSignService.SignTransaction.KeyPair.NotFound');
     expect(signed.error.context).toEqual({ publicKey: keyPair.publicKey });
   });
 
@@ -86,6 +86,6 @@ describe('vaultSignService.signTransaction', () => {
 
     const signed = await signService.safeSignTransaction({ transaction });
     assertNatErrKind(signed, 'VaultSignService.SignTransaction.Vault.Failed');
-    expect(signed.error.context.cause.kind).toBe('MemoryVault.SignData.SigningKey.NotFound');
+    expect(signed.error.context.cause.kind).toBe('MemoryVault.SignData.KeyPair.NotFound');
   });
 });

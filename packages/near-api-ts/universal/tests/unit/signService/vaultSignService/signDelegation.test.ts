@@ -33,11 +33,11 @@ describe('vaultSignService.signDelegation', () => {
     );
   });
 
-  it('fails with SigningKey.NotFound for a key the vault does not hold', async () => {
+  it('fails with KeyPair.NotFound for a key the vault does not hold', async () => {
     const signService = createVaultSignService({ vault: createMemoryVault() });
 
     const signed = await signService.safeSignDelegation({ delegation });
-    assertNatErrKind(signed, 'VaultSignService.SignDelegation.SigningKey.NotFound');
+    assertNatErrKind(signed, 'VaultSignService.SignDelegation.KeyPair.NotFound');
     expect(signed.error.context).toEqual({ publicKey: keyPair.publicKey });
   });
 
@@ -83,6 +83,6 @@ describe('vaultSignService.signDelegation', () => {
 
     const signed = await signService.safeSignDelegation({ delegation });
     assertNatErrKind(signed, 'VaultSignService.SignDelegation.Vault.Failed');
-    expect(signed.error.context.cause.kind).toBe('MemoryVault.SignData.SigningKey.NotFound');
+    expect(signed.error.context.cause.kind).toBe('MemoryVault.SignData.KeyPair.NotFound');
   });
 });

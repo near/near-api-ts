@@ -33,7 +33,7 @@ export const createSafeSignTransaction = <V extends Vault>(
       });
 
     if (!hasKeyPair.data)
-      return resultNatError('VaultSignService.SignTransaction.SigningKey.NotFound', { publicKey });
+      return resultNatError('VaultSignService.SignTransaction.KeyPair.NotFound', { publicKey });
 
     const signedTransaction = await safeSignTransaction({
       transaction: args.transaction,

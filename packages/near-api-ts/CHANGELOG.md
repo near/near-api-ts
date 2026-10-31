@@ -166,7 +166,7 @@
     `VaultSignService.<Method>.Vault.Failed`, the vault's error as `cause`, typed
     as that vault reports it. A key the vault doesn't hold fails
     `signTransaction` and `signDelegation` with
-    `VaultSignService.{SignTransaction,SignDelegation}.SigningKey.NotFound`
+    `VaultSignService.{SignTransaction,SignDelegation}.KeyPair.NotFound`
     `{ publicKey }`, and `getPublicKey` with
     `VaultSignService.GetPublicKey.PublicKey.NotFound` `{ publicKeyId }`. Each
     method also has `Args.InvalidSchema` and `Internal`, and the factory
@@ -639,7 +639,9 @@
     `safeGetPublicKey` and `safeSignData` (type `Vault`) – handed to
     `createVaultSignService`, or a sign service of its own (see Sign services).
   - Error kinds `CreateMemoryKeyService.*` → `CreateMemoryVault.*`,
-    `MemoryKeyService.SignData.*` → `MemoryVault.SignData.*`,
+    `MemoryKeyService.SignData.*` → `MemoryVault.SignData.*` (and
+    `MemoryKeyService.SignData.SigningKey.NotFound` →
+    `MemoryVault.SignData.KeyPair.NotFound`),
     `MemoryKeyService.HasKey.*` → `MemoryVault.HasKeyPair.*`,
     `CreateMemorySigner.*` → `CreateSigner.*` and `MemorySigner.*` → `Signer.*`,
     e.g. `MemorySigner.ExecuteTransaction.TaskQueue.Timeout` →

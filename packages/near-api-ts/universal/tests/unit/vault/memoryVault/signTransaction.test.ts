@@ -36,7 +36,7 @@ describe('memoryVault.signTransaction', () => {
     );
   });
 
-  it('fails with SigningKey.NotFound when no key matches the signer', async () => {
+  it('fails with KeyPair.NotFound when no key matches the signer', async () => {
     const keyVault = createMemoryVault({ privateKey });
 
     const res = await safeSignTransaction({

@@ -6,7 +6,7 @@ import type { HasKeyPairErrorOf, SignDataErrorOf, Vault } from '../_common/vault
 
 type SignTransactionError<V extends Vault> =
   | NatError<'VaultSignService.SignTransaction.Args.InvalidSchema'>
-  | NatError<'VaultSignService.SignTransaction.SigningKey.NotFound'>
+  | NatError<'VaultSignService.SignTransaction.KeyPair.NotFound'>
   | NatError<
       'VaultSignService.SignTransaction.Vault.Failed',
       { cause: HasKeyPairErrorOf<V> | SignDataErrorOf<V> }

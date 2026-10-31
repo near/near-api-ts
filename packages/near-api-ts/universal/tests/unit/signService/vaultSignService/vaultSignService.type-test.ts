@@ -28,7 +28,7 @@ type GetPublicKeyErrorKind =
 
 type SignDataErrorKind =
   | 'MemoryVault.SignData.Args.InvalidSchema'
-  | 'MemoryVault.SignData.SigningKey.NotFound'
+  | 'MemoryVault.SignData.KeyPair.NotFound'
   | 'MemoryVault.SignData.Internal';
 
 // A failed vault call comes back with the error the vault reports, whichever call it was

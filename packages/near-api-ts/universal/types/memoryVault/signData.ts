@@ -7,7 +7,7 @@ import type {
 
 type SignDataError =
   | NatError<'MemoryVault.SignData.Args.InvalidSchema'>
-  | NatError<'MemoryVault.SignData.SigningKey.NotFound'>
+  | NatError<'MemoryVault.SignData.KeyPair.NotFound'>
   | NatError<'MemoryVault.SignData.Internal'>;
 
 export type SafeSignData = CommonSafeSignData<SignDataError>;

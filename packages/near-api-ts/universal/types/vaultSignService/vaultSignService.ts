@@ -19,11 +19,11 @@ export interface VaultSignServicePublicErrorRegistry {
   'VaultSignService.GetPublicKey.Vault.Failed': { cause: unknown };
   'VaultSignService.GetPublicKey.Internal': InternalErrorContext;
   'VaultSignService.SignTransaction.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'VaultSignService.SignTransaction.SigningKey.NotFound': { publicKey: PublicKey };
+  'VaultSignService.SignTransaction.KeyPair.NotFound': { publicKey: PublicKey };
   'VaultSignService.SignTransaction.Vault.Failed': { cause: unknown };
   'VaultSignService.SignTransaction.Internal': InternalErrorContext;
   'VaultSignService.SignDelegation.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'VaultSignService.SignDelegation.SigningKey.NotFound': { publicKey: PublicKey };
+  'VaultSignService.SignDelegation.KeyPair.NotFound': { publicKey: PublicKey };
   'VaultSignService.SignDelegation.Vault.Failed': { cause: unknown };
   'VaultSignService.SignDelegation.Internal': InternalErrorContext;
 }
