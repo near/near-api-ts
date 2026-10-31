@@ -11,6 +11,48 @@ const PartialProtocolConfigResultSchema = z.object({
   }),
 });
 
+type FetchStoragePricePerByteArgs = {
+  transport: Transport;
+  state: CacheState;
+  signal?: AbortSignal;
+};
+
+// We don't use getProtocolConfig method to avoid
+// a situation, when user will use a CustomClient without this method, but it's
+// required;
+// Also, full protocol config shema may change a lot, and we want to avoid
+// handling breaking changes all the time inside this fn.
+// We use 'final', not 'near-final': while the head is still genesis, the near-final
+// block is the zero hash the node doesn't know, and the final head starts at genesis.
+const fetchStoragePricePerByte = async ({
+  transport,
+  state,
+  signal,
+}: FetchStoragePricePerByteArgs): ReturnType<GetStoragePricePerByte> => {
+  const protocolConfig = await transport.sendRequest({
+    method: 'EXPERIMENTAL_protocol_config',
+    params: { finality: 'final' },
+    signal,
+  });
+  if (!protocolConfig.success) return protocolConfig;
+
+  const rpcResult = PartialProtocolConfigResultSchema.safeParse(protocolConfig.data.result);
+
+  if (!rpcResult.success)
+    return resultNatError('SendRequest.Exhausted', {
+      lastError: createNatError({
+        kind: 'SendRequest.Attempt.Response.InvalidSchema',
+        context: { zodError: rpcResult.error },
+      }),
+    });
+
+  state.storagePricePerByte.value = yoctoNear(rpcResult.data.runtimeConfig.storageAmountPerByte);
+  // Refetch every 1000ms * 60sec * 60min = 1 hour
+  state.storagePricePerByte.validUntil = Date.now() + 3_600_000;
+
+  return result.ok(state.storagePricePerByte.value);
+};
+
 export const createGetStoragePricePerByte =
   (transport: Transport, state: CacheState): GetStoragePricePerByte =>
   async (args) => {
@@ -22,36 +64,20 @@ export const createGetStoragePricePerByte =
     )
       return result.ok(state.storagePricePerByte.value);
 
-    // TODO wait a promise result if there is 2 or more subsequent requests
+    // 2. If the cache is empty (first call), expired or refreshed - fetch and set;
+    // A call with its own signal fetches alone, so aborting it can't abort the others
+    const signal = args?.signal;
+    if (signal) return fetchStoragePricePerByte({ transport, state, signal });
 
-    // 2. If the cache is empty (first call) or is expired - fetch and set;
-    // We don't use getProtocolConfig method to avoid
-    // a situation, when user will use a CustomClient without this method, but it's
-    // required;
-    // Also, full protocol config shema may change a lot, and we want to avoid
-    // handling breaking changes all the time inside this fn.
-    // We use 'final', not 'near-final': while the head is still genesis, the near-final
-    // block is the zero hash the node doesn't know, and the final head starts at genesis.
-    const protocolConfig = await transport.sendRequest({
-      method: 'EXPERIMENTAL_protocol_config',
-      params: { finality: 'final' },
-      signal: args?.signal,
-    });
-    if (!protocolConfig.success) return protocolConfig;
-
-    const rpcResult = PartialProtocolConfigResultSchema.safeParse(protocolConfig.data.result);
-
-    if (!rpcResult.success)
-      return resultNatError('SendRequest.Exhausted', {
-        lastError: createNatError({
-          kind: 'SendRequest.Attempt.Response.InvalidSchema',
-          context: { zodError: rpcResult.error },
-        }),
+    // The calls that come while the price is being fetched wait for the same request,
+    // so a burst of getAccountInfo calls makes one request, not one each
+    if (!state.storagePricePerByte.loadingPromise)
+      state.storagePricePerByte.loadingPromise = fetchStoragePricePerByte({
+        transport,
+        state,
+      }).finally(() => {
+        state.storagePricePerByte.loadingPromise = undefined;
       });
 
-    state.storagePricePerByte.value = yoctoNear(rpcResult.data.runtimeConfig.storageAmountPerByte);
-    // Refetch every 1000ms * 60sec * 60min = 1 hour
-    state.storagePricePerByte.validUntil = Date.now() + 3_600_000;
-
-    return result.ok(state.storagePricePerByte.value);
+    return state.storagePricePerByte.loadingPromise;
   };

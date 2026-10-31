@@ -13,6 +13,8 @@ export type CacheState = {
   storagePricePerByte: {
     validUntil: number;
     value?: NearToken;
+    // The request that fetches the price right now, shared by the calls that come meanwhile
+    loadingPromise?: ReturnType<GetStoragePricePerByte>;
   };
   recentBlockHash: {
     validUntil: number;
