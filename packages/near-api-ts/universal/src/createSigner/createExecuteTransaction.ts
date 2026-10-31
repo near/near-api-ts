@@ -4,8 +4,8 @@ import type {
   SafeExecuteTransaction,
   UnreachableSendSignedTransactionKind,
 } from '../../types/signer/public/createExecuteTransaction';
-import { createNatError, isNatErrorOf } from '../_common/_common/_common/_common/natError';
-import { result } from '../_common/_common/_common/result';
+import { isNatErrorOf } from '../_common/_common/_common/_common/natError';
+import { result, resultNatError } from '../_common/_common/_common/result';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { repackError } from '../_common/repackError';
 import { TransactionProcessingStageZodSchema } from '../_common/zodSchemas/transactionProcessingStage';
@@ -39,12 +39,9 @@ export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (conte
     const validArgs = ExecuteTransactionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'Signer.ExecuteTransaction.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('Signer.ExecuteTransaction.Args.InvalidSchema', {
+        zodError: validArgs.error,
+      });
 
     const taskResult = await context.taskQueue.addExecuteTransactionTask({
       transactionIntent: args.intent,

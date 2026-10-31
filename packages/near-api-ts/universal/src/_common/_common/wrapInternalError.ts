@@ -1,7 +1,7 @@
 import type { ResultErr } from '../../../types/_common/common';
 import type { NatInternalErrorKind } from '../../../types/_common/natError';
-import { createNatError, type NatError } from './_common/_common/natError';
-import { result } from './_common/result';
+import type { NatError } from './_common/_common/natError';
+import { resultNatError } from './_common/result';
 
 export type WrapInternalError = {
   // #1
@@ -17,12 +17,7 @@ export type WrapInternalError = {
 };
 
 const returnError = <K extends NatInternalErrorKind>(e: unknown, kind: K) =>
-  result.err(
-    createNatError<NatInternalErrorKind>({
-      kind,
-      context: { cause: e },
-    }),
-  );
+  resultNatError<NatInternalErrorKind>(kind, { cause: e });
 
 /**
  * Wrap a function and convert *all* unexpected errors (sync or async)

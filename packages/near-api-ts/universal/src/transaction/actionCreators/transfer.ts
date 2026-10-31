@@ -3,8 +3,8 @@ import type {
   CreateTransferAction,
   SafeCreateTransferAction,
 } from '../../../types/_common/transaction/actions/delegableActions/transfer';
-import { createNatError } from '../../_common/_common/_common/_common/natError';
-import { result } from '../../_common/_common/_common/result';
+
+import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { NearTokenArgsZodSchema } from '../../_common/_common/zodSchemas/nearToken';
@@ -19,12 +19,9 @@ export const safeTransfer: SafeCreateTransferAction = wrapInternalError(
     const validArgs = CreateTransferActionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateAction.Transfer.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('CreateAction.Transfer.Args.InvalidSchema', {
+        zodError: validArgs.error,
+      });
 
     return result.ok({
       actionType: 'Transfer' as const,

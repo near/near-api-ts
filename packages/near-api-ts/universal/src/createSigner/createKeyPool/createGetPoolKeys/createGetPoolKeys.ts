@@ -1,8 +1,8 @@
 import type { CreateSignerArgs } from '../../../../types/signer/createSigner';
 import type { GetPoolKeys, KeyPoolState } from '../../../../types/signer/inner/keyPool';
 import type { SignerContext } from '../../../../types/signer/signer';
-import { createNatError } from '../../../_common/_common/_common/_common/natError';
-import { result } from '../../../_common/_common/_common/result';
+
+import { result, resultNatError } from '../../../_common/_common/_common/result';
 import { createContractFunctionCallPoolKeys } from './createContractFunctionCallPoolKeys';
 import { createFullAccessPoolKeys } from './createFullAccessPoolKeys';
 import { getAllowedAccessKeys } from './getAllowedAccessKeys';
@@ -37,12 +37,7 @@ export const createGetPoolKeys =
       });
 
       if (!accessKeys.success)
-        return result.err(
-          createNatError({
-            kind: 'Signer.KeyPool.AccessKeys.NotLoaded',
-            context: { cause: accessKeys.error },
-          }),
-        );
+        return resultNatError('Signer.KeyPool.AccessKeys.NotLoaded', { cause: accessKeys.error });
 
       // 4. If a user wants to handle all tasks only by a specific key/s - remove others;
       const allowedAccessKeys = getAllowedAccessKeys(accessKeys.data.accessKeys, createSignerArgs);
@@ -59,15 +54,10 @@ export const createGetPoolKeys =
       // 6. The pool is empty when no key is left after every filter - not allowed,
       // a gas key, or one the sign service doesn't hold;
       if (fullAccessPoolKeys.data.length === 0 && contractFunctionCallPoolKeys.data.length === 0)
-        return result.err(
-          createNatError({
-            kind: 'Signer.KeyPool.Empty',
-            context: {
-              accessKeys: accessKeys.data.accessKeys,
-              allowedAccessKeys: createSignerArgs.keyPool?.allowedAccessKeys ?? [],
-            },
-          }),
-        );
+        return resultNatError('Signer.KeyPool.Empty', {
+          accessKeys: accessKeys.data.accessKeys,
+          allowedAccessKeys: createSignerArgs.keyPool?.allowedAccessKeys ?? [],
+        });
 
       state.poolKeys = {
         fullAccess: fullAccessPoolKeys.data,

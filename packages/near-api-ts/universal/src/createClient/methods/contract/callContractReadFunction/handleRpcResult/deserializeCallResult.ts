@@ -1,10 +1,7 @@
 import type { Result } from '../../../../../../types/_common/common';
 import type { InnerCallContractReadFunctionArgs } from '../../../../../../types/client/methods/contract/callContractReadFunction';
-import {
-  createNatError,
-  type NatError,
-} from '../../../../../_common/_common/_common/_common/natError';
-import { result } from '../../../../../_common/_common/_common/result';
+import type { NatError } from '../../../../../_common/_common/_common/_common/natError';
+import { result, resultNatError } from '../../../../../_common/_common/_common/result';
 import { tryBase64ToObject } from '../../../_common/base64ToObject';
 
 export const deserializeCallResult = (
@@ -21,12 +18,10 @@ export const deserializeCallResult = (
     try {
       result.ok(args.options.deserializeResult({ rawResult: rawResultBase64 }));
     } catch (e) {
-      return result.err(
-        createNatError({
-          kind: 'Client.CallContractReadFunction.DeserializeResult.Failed',
-          context: { cause: e, rawResult: rawResultBase64 },
-        }),
-      );
+      return resultNatError('Client.CallContractReadFunction.DeserializeResult.Failed', {
+        cause: e,
+        rawResult: rawResultBase64,
+      });
     }
   }
 

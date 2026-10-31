@@ -3,8 +3,8 @@ import type {
   CreateSafeGetAccessKeys,
   SafeGetAccessKeys,
 } from '../../../../../types/client/methods/account/getAccessKeys';
-import { createNatError } from '../../../../_common/_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/_common/result';
+
+import { resultNatError } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
 import { repackError } from '../../../../_common/repackError';
 import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
@@ -26,12 +26,9 @@ export const createSafeGetAccessKeys: CreateSafeGetAccessKeys = (context) =>
       const validArgs = GetAccessKeysArgsZodSchema.safeParse(args);
 
       if (!validArgs.success)
-        return result.err(
-          createNatError({
-            kind: 'Client.GetAccessKeys.Args.InvalidSchema',
-            context: { zodError: validArgs.error },
-          }),
-        );
+        return resultNatError('Client.GetAccessKeys.Args.InvalidSchema', {
+          zodError: validArgs.error,
+        });
 
       const rpcResponse = await context.sendRequest({
         method: 'query',

@@ -5,8 +5,8 @@ import type {
   InnerCreateCallContractFunctionActionArgs,
   SafeCreateCallContractFunctionAction,
 } from '../../../types/_common/transaction/actions/delegableActions/callContractFunction';
-import { createNatError, NatError } from '../../_common/_common/_common/_common/natError';
-import { result } from '../../_common/_common/_common/result';
+import { NatError } from '../../_common/_common/_common/_common/natError';
+import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { NearGasArgsZodSchema } from '../../_common/_common/zodSchemas/nearGas';
@@ -33,22 +33,17 @@ const serializeFunctionArgs = (
 
       // If users serializer returns not a valid Uint8Array args;
       if (!(output instanceof Uint8Array))
-        return result.err(
-          createNatError({
-            kind: 'CreateAction.CallContractFunction.SerializeArgs.InvalidOutput',
-            context: { output },
-          }),
-        );
+        return resultNatError('CreateAction.CallContractFunction.SerializeArgs.InvalidOutput', {
+          output,
+        });
 
       // If all ok - return Uint8Array;
       return result.ok(output);
     } catch (e) {
-      return result.err(
-        createNatError({
-          kind: 'CreateAction.CallContractFunction.SerializeArgs.Failed',
-          context: { cause: e, functionArgs: args.functionArgs },
-        }),
-      );
+      return resultNatError('CreateAction.CallContractFunction.SerializeArgs.Failed', {
+        cause: e,
+        functionArgs: args.functionArgs,
+      });
     }
   }
 
@@ -58,12 +53,9 @@ const serializeFunctionArgs = (
     const jsonArgs = JsonValueZodSchema.safeParse(args.functionArgs);
 
     if (!jsonArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateAction.CallContractFunction.Args.InvalidSchema',
-          context: { zodError: jsonArgs.error },
-        }),
-      );
+      return resultNatError('CreateAction.CallContractFunction.Args.InvalidSchema', {
+        zodError: jsonArgs.error,
+      });
 
     return result.ok(convertObjectToU8(args.functionArgs));
   }
@@ -90,12 +82,9 @@ export const safeCallContractFunction: SafeCreateCallContractFunctionAction = wr
     const validArgs = CreateCallContractFunctionActionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateAction.CallContractFunction.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('CreateAction.CallContractFunction.Args.InvalidSchema', {
+        zodError: validArgs.error,
+      });
 
     const functionArgs = serializeFunctionArgs(args);
     if (!functionArgs.success) return functionArgs;

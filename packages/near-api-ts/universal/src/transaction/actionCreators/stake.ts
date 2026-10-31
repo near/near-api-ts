@@ -3,8 +3,8 @@ import type {
   CreateStakeAction,
   SafeCreateStakeAction,
 } from '../../../types/_common/transaction/actions/delegableActions/stake';
-import { createNatError } from '../../_common/_common/_common/_common/natError';
-import { result } from '../../_common/_common/_common/result';
+
+import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { NearTokenArgsZodSchema } from '../../_common/_common/zodSchemas/nearToken';
@@ -21,12 +21,7 @@ export const safeStake: SafeCreateStakeAction = wrapInternalError(
     const validArgs = CreateStakeActionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateAction.Stake.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('CreateAction.Stake.Args.InvalidSchema', { zodError: validArgs.error });
 
     return result.ok({
       actionType: 'Stake' as const,

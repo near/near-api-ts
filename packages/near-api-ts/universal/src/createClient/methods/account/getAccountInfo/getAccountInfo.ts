@@ -3,8 +3,8 @@ import type {
   CreateSafeGetAccountInfo,
   SafeGetAccountInfo,
 } from '../../../../../types/client/methods/account/getAccountInfo';
-import { createNatError } from '../../../../_common/_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/_common/result';
+
+import { resultNatError } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
 import { repackError } from '../../../../_common/repackError';
 import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
@@ -26,12 +26,9 @@ export const createSafeGetAccountInfo: CreateSafeGetAccountInfo = (context) =>
       const validArgs = GetAccountInfoArgsZodSchema.safeParse(args);
 
       if (!validArgs.success)
-        return result.err(
-          createNatError({
-            kind: 'Client.GetAccountInfo.Args.InvalidSchema',
-            context: { zodError: validArgs.error },
-          }),
-        );
+        return resultNatError('Client.GetAccountInfo.Args.InvalidSchema', {
+          zodError: validArgs.error,
+        });
 
       const { accountId, options } = validArgs.data;
 
@@ -59,12 +56,9 @@ export const createSafeGetAccountInfo: CreateSafeGetAccountInfo = (context) =>
         });
 
       if (!storagePricePerByte.success)
-        return result.err(
-          createNatError({
-            kind: 'Client.GetAccountInfo.StoragePricePerByte.NotLoaded',
-            context: { cause: storagePricePerByte.error },
-          }),
-        );
+        return resultNatError('Client.GetAccountInfo.StoragePricePerByte.NotLoaded', {
+          cause: storagePricePerByte.error,
+        });
 
       return rpcResponse.data.error
         ? handleRpcError(rpcResponse.data)

@@ -3,8 +3,8 @@ import type {
   CreateAddAccessKeyAction,
   SafeCreateAddAccessKeyAction,
 } from '../../../types/_common/transaction/actions/delegableActions/addAccessKey';
-import { createNatError } from '../../_common/_common/_common/_common/natError';
-import { result } from '../../_common/_common/_common/result';
+
+import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { nearToken } from '../../_common/nearToken';
@@ -16,12 +16,9 @@ export const safeAddAccessKey: SafeCreateAddAccessKeyAction = wrapInternalError(
     const validArgs = AddAccessKeyArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateAction.AddAccessKey.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('CreateAction.AddAccessKey.Args.InvalidSchema', {
+        zodError: validArgs.error,
+      });
 
     const { publicKey, permission, gasPayment, replayProtection } = args;
 

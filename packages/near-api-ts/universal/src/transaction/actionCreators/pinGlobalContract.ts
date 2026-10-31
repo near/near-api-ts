@@ -3,8 +3,8 @@ import type {
   CreatePinGlobalContractAction,
   SafeCreatePinGlobalContractAction,
 } from '../../../types/_common/transaction/actions/delegableActions/pinGlobalContract';
-import { createNatError } from '../../_common/_common/_common/_common/natError';
-import { result } from '../../_common/_common/_common/result';
+
+import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { CryptoHashZodSchema } from '../../_common/zodSchemas/cryptoHash';
@@ -19,12 +19,9 @@ export const safePinGlobalContract: SafeCreatePinGlobalContractAction = wrapInte
     const validArgs = CreatePinGlobalContractActionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateAction.PinGlobalContract.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('CreateAction.PinGlobalContract.Args.InvalidSchema', {
+        zodError: validArgs.error,
+      });
 
     return result.ok({
       actionType: 'PinGlobalContract' as const,

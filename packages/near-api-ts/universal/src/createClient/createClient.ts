@@ -1,8 +1,8 @@
 import * as z from 'zod/mini';
 import type { Client } from '../../types/client/client';
 import type { CreateClient, SafeCreateClient } from '../../types/client/createClient';
-import { createNatError } from '../_common/_common/_common/_common/natError';
-import { result } from '../_common/_common/_common/result';
+
+import { result, resultNatError } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { createCache } from './createCache/createCache';
@@ -35,12 +35,7 @@ export const safeCreateClient: SafeCreateClient = wrapInternalError(
     const validArgs = CreateClientArgsSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateClient.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('CreateClient.Args.InvalidSchema', { zodError: validArgs.error });
 
     const transport = createTransport(args.transport);
     const cache = createCache({ transport, options: args.cache });

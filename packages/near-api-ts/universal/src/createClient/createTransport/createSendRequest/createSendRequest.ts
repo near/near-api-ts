@@ -3,8 +3,8 @@ import type {
   SendRequestContext,
 } from '../../../../types/client/transport/sendRequest';
 import type { TransportContext } from '../../../../types/client/transport/transport';
-import { createNatError, isNatErrorOf } from '../../../_common/_common/_common/_common/natError';
-import { result } from '../../../_common/_common/_common/result';
+import { isNatErrorOf } from '../../../_common/_common/_common/_common/natError';
+import { result, resultNatError } from '../../../_common/_common/_common/result';
 import { mergeTransportPolicy } from '../_common/transportPolicy/transportPolicy';
 import { getAvailableRpcs } from './_common/getAvailableRpcs';
 import { createExternalAbortSignal } from './createExternalAbortSignal';
@@ -76,12 +76,7 @@ export const createSendRequest =
         'SendRequest.Attempt.Response.InvalidSchema',
       ])
     )
-      return result.err(
-        createNatError({
-          kind: 'SendRequest.Exhausted',
-          context: { lastError: requestResult.error },
-        }),
-      );
+      return resultNatError('SendRequest.Exhausted', { lastError: requestResult.error });
 
     // Don't return high-level rpc errors - we will extract them in every client method again.
     // This will help us to avoid binding transport and client methods and should

@@ -49,17 +49,12 @@ export const handleRpcResult = (
   // All others are going into response.error, and we handle them in handleRpcError;
   // https://github.com/near/nearcore/blob/a9557047d1bd45da0d06cf6b880fea6487c35e20/chain/jsonrpc/src/lib.rs#L210C13-L219C17
   if ('error' in rpcResult.data)
-    return result.err(
-      createNatError({
-        kind: 'Client.GetAccessKey.Rpc.AccessKey.NotFound',
-        context: {
-          accountId: args.accountId,
-          publicKey: args.publicKey,
-          blockHash,
-          blockHeight,
-        },
-      }),
-    );
+    return resultNatError('Client.GetAccessKey.Rpc.AccessKey.NotFound', {
+      accountId: args.accountId,
+      publicKey: args.publicKey,
+      blockHash,
+      blockHeight,
+    });
 
   return result.ok({
     accountId: args.accountId,

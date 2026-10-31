@@ -4,11 +4,8 @@ import type {
   RpcTypePreferences,
   TransportContext,
 } from '../../../../../types/client/transport/transport';
-import {
-  createNatError,
-  type NatError,
-} from '../../../../_common/_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/_common/result';
+import type { NatError } from '../../../../_common/_common/_common/_common/natError';
+import { result, resultNatError } from '../../../../_common/_common/_common/result';
 
 export const getAvailableRpcs = (
   rpcEndpoints: TransportContext['rpcEndpoints'],
@@ -23,13 +20,8 @@ export const getAvailableRpcs = (
 
   return sortedList.length > 0
     ? result.ok(sortedList)
-    : result.err(
-        createNatError({
-          kind: 'SendRequest.PreferredRpc.NotFound',
-          context: {
-            rpcEndpoints,
-            rpcTypePreferences,
-          },
-        }),
-      );
+    : resultNatError('SendRequest.PreferredRpc.NotFound', {
+        rpcEndpoints,
+        rpcTypePreferences,
+      });
 };

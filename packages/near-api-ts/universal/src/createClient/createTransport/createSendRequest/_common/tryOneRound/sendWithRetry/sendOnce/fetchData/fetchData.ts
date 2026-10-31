@@ -2,11 +2,10 @@ import type { JsonValue, Result } from '../../../../../../../../../types/_common
 import type { SendRequestContext } from '../../../../../../../../../types/client/transport/sendRequest';
 import type { InnerRpcEndpoint } from '../../../../../../../../../types/client/transport/transport';
 import {
-  createNatError,
   isNatErrorOf,
   type NatError,
 } from '../../../../../../../../_common/_common/_common/_common/natError';
-import { result } from '../../../../../../../../_common/_common/_common/result';
+import { result, resultNatError } from '../../../../../../../../_common/_common/_common/result';
 import { combineAbortSignals } from '../../../../_common/combineAbortSignals';
 import { createAttemptTimeout } from './createAttemptTimeout';
 
@@ -46,16 +45,11 @@ export const fetchData = async (
     )
       return result.err(e);
 
-    return result.err(
-      createNatError({
-        kind: 'SendRequest.Attempt.Request.FetchFailed',
-        context: {
-          cause: e,
-          rpc,
-          requestBody: body,
-        },
-      }),
-    );
+    return resultNatError('SendRequest.Attempt.Request.FetchFailed', {
+      cause: e,
+      rpc,
+      requestBody: body,
+    });
   } finally {
     clearTimeout(attemptTimeout.timeoutId);
   }

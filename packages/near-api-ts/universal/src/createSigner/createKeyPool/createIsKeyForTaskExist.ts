@@ -7,8 +7,8 @@ import type {
   ContractFunctionCallKeyPriority,
   FullAccessKeyPriority,
 } from '../../../types/signer/inner/taskQueue';
-import { createNatError } from '../../_common/_common/_common/_common/natError';
-import { result } from '../../_common/_common/_common/result';
+
+import { result, resultNatError } from '../../_common/_common/_common/result';
 
 const isKeyExist = async (
   keyPriority: FullAccessKeyPriority | ContractFunctionCallKeyPriority,
@@ -41,13 +41,8 @@ export const createIsKeyForTaskExist =
       if (isKey) return result.ok(true);
     }
 
-    return result.err(
-      createNatError({
-        kind: 'Signer.KeyPool.SigningKey.NotFound',
-        context: {
-          poolKeys: poolKeys.data,
-          accessTypePriority: task.accessTypePriority,
-        },
-      }),
-    );
+    return resultNatError('Signer.KeyPool.SigningKey.NotFound', {
+      poolKeys: poolKeys.data,
+      accessTypePriority: task.accessTypePriority,
+    });
   };

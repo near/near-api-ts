@@ -1,10 +1,7 @@
 import type { Result } from '../../../../../../../../types/_common/common';
 import type { InnerRpcEndpoint } from '../../../../../../../../types/client/transport/transport';
-import {
-  createNatError,
-  type NatError,
-} from '../../../../../../../_common/_common/_common/_common/natError';
-import { result } from '../../../../../../../_common/_common/_common/result';
+import type { NatError } from '../../../../../../../_common/_common/_common/_common/natError';
+import { result, resultNatError } from '../../../../../../../_common/_common/_common/result';
 import type {
   BaseRpcError,
   BaseRpcResponse,
@@ -53,13 +50,8 @@ export const extractRpcErrors = (
   const kind = getErrorKind(generalRpcResponse.error);
   if (!kind) return result.ok(generalRpcResponse);
 
-  return result.err(
-    createNatError({
-      kind,
-      context: {
-        rawRpcResponse: generalRpcResponse,
-        rpc,
-      },
-    }),
-  );
+  return resultNatError(kind, {
+    rawRpcResponse: generalRpcResponse,
+    rpc,
+  });
 };

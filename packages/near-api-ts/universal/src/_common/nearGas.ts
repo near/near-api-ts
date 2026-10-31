@@ -13,9 +13,9 @@ import type {
   SafeCreateNearGasFromTeraGas,
   TeraGas,
 } from '../../types/_common/nearGas';
-import { createNatError } from './_common/_common/_common/natError';
+
 import { TeraGasDecimals } from './_common/_common/constants';
-import { result } from './_common/_common/result';
+import { result, resultNatError } from './_common/_common/result';
 import { asThrowable } from './_common/asThrowable';
 import { convertDecimalToUnits } from './_common/unitConverter/convertDecimalToUnits';
 import { convertUnitsToDecimal } from './_common/unitConverter/convertUnitsToDecimal';
@@ -146,12 +146,9 @@ export const safeGas: SafeCreateNearGasFromGas = wrapInternalError(
     const validGas = GasInputZodSchema.safeParse(gas);
 
     if (!validGas.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateNearGasFromGas.Args.InvalidSchema',
-          context: { zodError: validGas.error },
-        }),
-      );
+      return resultNatError('CreateNearGasFromGas.Args.InvalidSchema', {
+        zodError: validGas.error,
+      });
 
     const nearGas = Object.create(nearGasProto) as NearGas;
 
@@ -174,12 +171,9 @@ export const safeTeraGas: SafeCreateNearGasFromTeraGas = wrapInternalError(
     const validTeraGas = TeraGasInputZodSchema.safeParse(teraGas);
 
     if (!validTeraGas.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateNearGasFromTeraGas.Args.InvalidSchema',
-          context: { zodError: validTeraGas.error },
-        }),
-      );
+      return resultNatError('CreateNearGasFromTeraGas.Args.InvalidSchema', {
+        zodError: validTeraGas.error,
+      });
 
     const nearGas = Object.create(nearGasProto) as NearGas;
 
@@ -202,12 +196,7 @@ export const safeNearGas: SafeCreateNearGas = wrapInternalError(
     const validArgs = NearGasArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateNearGas.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('CreateNearGas.Args.InvalidSchema', { zodError: validArgs.error });
 
     return 'gas' in args ? result.ok(gas(args.gas)) : result.ok(teraGas(args.teraGas));
   },

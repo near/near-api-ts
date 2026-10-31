@@ -3,8 +3,8 @@ import type {
   CreateDeleteAccountAction,
   SafeCreateDeleteAccountAction,
 } from '../../../types/_common/transaction/actions/delegableActions/deleteAccount';
-import { createNatError } from '../../_common/_common/_common/_common/natError';
-import { result } from '../../_common/_common/_common/result';
+
+import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { AccountIdZodSchema } from '../../_common/zodSchemas/accountId';
@@ -19,12 +19,9 @@ export const safeDeleteAccount: SafeCreateDeleteAccountAction = wrapInternalErro
     const validArgs = CreateDeleteAccountActionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateAction.DeleteAccount.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('CreateAction.DeleteAccount.Args.InvalidSchema', {
+        zodError: validArgs.error,
+      });
 
     return result.ok({
       actionType: 'DeleteAccount' as const,

@@ -1,10 +1,7 @@
 import type { JsonValue, Result } from '../../../../../../../../types/_common/common';
 import type { InnerRpcEndpoint } from '../../../../../../../../types/client/transport/transport';
-import {
-  createNatError,
-  type NatError,
-} from '../../../../../../../_common/_common/_common/_common/natError';
-import { result } from '../../../../../../../_common/_common/_common/result';
+import type { NatError } from '../../../../../../../_common/_common/_common/_common/natError';
+import { result, resultNatError } from '../../../../../../../_common/_common/_common/result';
 
 export type ParseJsonResponseError = NatError<'SendRequest.Attempt.Response.JsonParseFailed'>;
 
@@ -15,15 +12,10 @@ export const parseJsonResponse = async (
   try {
     return result.ok(await response.json());
   } catch (e) {
-    return result.err(
-      createNatError({
-        kind: 'SendRequest.Attempt.Response.JsonParseFailed',
-        context: {
-          cause: e,
-          rpc,
-          response,
-        },
-      }),
-    );
+    return resultNatError('SendRequest.Attempt.Response.JsonParseFailed', {
+      cause: e,
+      rpc,
+      response,
+    });
   }
 };

@@ -1,11 +1,8 @@
 import type { Result } from '../../../../../../../../types/_common/common';
 import type { SendRequestContext } from '../../../../../../../../types/client/transport/sendRequest';
 import type { InnerRpcEndpoint } from '../../../../../../../../types/client/transport/transport';
-import {
-  createNatError,
-  type NatError,
-} from '../../../../../../../_common/_common/_common/_common/natError';
-import { result } from '../../../../../../../_common/_common/_common/result';
+import type { NatError } from '../../../../../../../_common/_common/_common/_common/natError';
+import { resultNatError } from '../../../../../../../_common/_common/_common/result';
 import {
   type BaseRpcResponse,
   BaseRpcResponseZodSchema,
@@ -59,12 +56,9 @@ export const sendOnce = async (
   const generalRpcResponse = BaseRpcResponseZodSchema.safeParse(camelCased);
 
   if (!generalRpcResponse.success) {
-    return result.err(
-      createNatError({
-        kind: 'SendRequest.Attempt.Response.InvalidSchema',
-        context: { zodError: generalRpcResponse.error },
-      }),
-    );
+    return resultNatError('SendRequest.Attempt.Response.InvalidSchema', {
+      zodError: generalRpcResponse.error,
+    });
   }
 
   // If an error happened during the request execution on the RPC side -

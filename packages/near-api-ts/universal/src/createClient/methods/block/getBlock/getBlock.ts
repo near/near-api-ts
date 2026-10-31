@@ -3,8 +3,8 @@ import type {
   CreateSafeGetBlock,
   SafeGetBlock,
 } from '../../../../../types/client/methods/block/getBlock';
-import { createNatError } from '../../../../_common/_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/_common/result';
+
+import { resultNatError } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
 import { repackError } from '../../../../_common/repackError';
 import { toNearcoreBlockReference } from '../../_common/toNearcoreBlockReference';
@@ -24,12 +24,7 @@ export const createSafeGetBlock: CreateSafeGetBlock = (context) =>
     const validArgs = GetBlockArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'Client.GetBlock.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('Client.GetBlock.Args.InvalidSchema', { zodError: validArgs.error });
 
     const rpcResponse = await context.sendRequest({
       method: 'block',

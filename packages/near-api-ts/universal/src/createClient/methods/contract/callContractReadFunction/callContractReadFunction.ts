@@ -4,8 +4,8 @@ import type {
   InnerCallContractReadFunctionArgs,
   SafeCallContractReadFunction,
 } from '../../../../../types/client/methods/contract/callContractReadFunction';
-import { createNatError } from '../../../../_common/_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/_common/result';
+
+import { resultNatError } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
 import { repackError } from '../../../../_common/repackError';
 import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
@@ -39,12 +39,9 @@ export const createSafeCallContractReadFunction: CreateSafeCallContractReadFunct
       const validArgs = CallContractReadFunctionArgsZodSchema.safeParse(args);
 
       if (!validArgs.success)
-        return result.err(
-          createNatError({
-            kind: 'Client.CallContractReadFunction.Args.InvalidSchema',
-            context: { zodError: validArgs.error },
-          }),
-        );
+        return resultNatError('Client.CallContractReadFunction.Args.InvalidSchema', {
+          zodError: validArgs.error,
+        });
 
       // Try to serialize args to bytes;
       const functionArgs = serializeFunctionArgs(args);

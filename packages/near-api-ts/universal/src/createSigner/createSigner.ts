@@ -3,8 +3,8 @@ import type { SignService } from '../../types/_common/signService';
 import type { CreateSigner, SafeCreateSigner } from '../../types/signer/createSigner';
 import type { SignerContext } from '../../types/signer/signer';
 import type { SignerClient } from '../../types/signer/signerClient';
-import { createNatError } from '../_common/_common/_common/_common/natError';
-import { result } from '../_common/_common/_common/result';
+
+import { result, resultNatError } from '../_common/_common/_common/result';
 import { asThrowable } from '../_common/_common/asThrowable';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { AccountIdZodSchema } from '../_common/zodSchemas/accountId';
@@ -45,12 +45,7 @@ export const safeCreateSigner: SafeCreateSigner = wrapInternalError(
     const validArgs = CreateSignerArgsSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateSigner.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('CreateSigner.Args.InvalidSchema', { zodError: validArgs.error });
 
     const { signerAccountId } = validArgs.data;
     // The objects themselves - the parsed copy keeps only the methods the schema names, wrapped

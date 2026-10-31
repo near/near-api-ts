@@ -3,8 +3,8 @@ import type {
   CreatePublishLinkableGlobalContractAction,
   SafeCreatePublishLinkableGlobalContractAction,
 } from '../../../types/_common/transaction/actions/delegableActions/publishLinkableGlobalContract';
-import { createNatError } from '../../_common/_common/_common/_common/natError';
-import { result } from '../../_common/_common/_common/result';
+
+import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 
@@ -24,12 +24,9 @@ export const safePublishLinkableGlobalContract: SafeCreatePublishLinkableGlobalC
     const validArgs = CreatePublishLinkableGlobalContractActionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateAction.PublishLinkableGlobalContract.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('CreateAction.PublishLinkableGlobalContract.Args.InvalidSchema', {
+        zodError: validArgs.error,
+      });
 
     const wasmU8 = validArgs.data.wasmU8
       ? validArgs.data.wasmU8

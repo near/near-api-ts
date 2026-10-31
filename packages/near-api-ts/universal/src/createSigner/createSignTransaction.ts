@@ -1,7 +1,7 @@
 import * as z from 'zod/mini';
 import type { CreateSafeSignTransaction } from '../../types/signer/public/createSignTransaction';
-import { createNatError, isNatErrorOf } from '../_common/_common/_common/_common/natError';
-import { result } from '../_common/_common/_common/result';
+import { isNatErrorOf } from '../_common/_common/_common/_common/natError';
+import { result, resultNatError } from '../_common/_common/_common/result';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { repackError } from '../_common/repackError';
 import { TransactionIntentZodSchema } from './_common/zodSchemas';
@@ -15,12 +15,9 @@ export const createSafeSignTransaction: CreateSafeSignTransaction = (context) =>
     const validArgs = SignTransactionArgsSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'Signer.SignTransaction.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('Signer.SignTransaction.Args.InvalidSchema', {
+        zodError: validArgs.error,
+      });
 
     const signedTransaction = await context.taskQueue.addSignTransactionTask(args.intent);
 

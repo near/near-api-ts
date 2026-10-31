@@ -1,7 +1,7 @@
 import type { Result } from '../../../../../types/_common/common';
 import type { InnerCallContractReadFunctionArgs } from '../../../../../types/client/methods/contract/callContractReadFunction';
-import { createNatError, NatError } from '../../../../_common/_common/_common/_common/natError';
-import { result } from '../../../../_common/_common/_common/result';
+import { NatError } from '../../../../_common/_common/_common/_common/natError';
+import { result, resultNatError } from '../../../../_common/_common/_common/result';
 import { convertObjectToU8 } from '../../../../_common/convertObjectToU8';
 import { JsonValueZodSchema } from '../../../../_common/zodSchemas/jsonValue';
 
@@ -23,21 +23,16 @@ export const serializeFunctionArgs = (
 
       // If users serializer returns not a valid Uint8Array args - throw an error;
       if (!(output instanceof Uint8Array))
-        return result.err(
-          createNatError({
-            kind: 'Client.CallContractReadFunction.SerializeArgs.InvalidOutput',
-            context: { output },
-          }),
-        );
+        return resultNatError('Client.CallContractReadFunction.SerializeArgs.InvalidOutput', {
+          output,
+        });
 
       return result.ok(output);
     } catch (e) {
-      return result.err(
-        createNatError({
-          kind: 'Client.CallContractReadFunction.SerializeArgs.Failed',
-          context: { cause: e, functionArgs: args.functionArgs },
-        }),
-      );
+      return resultNatError('Client.CallContractReadFunction.SerializeArgs.Failed', {
+        cause: e,
+        functionArgs: args.functionArgs,
+      });
     }
   }
 
@@ -47,12 +42,9 @@ export const serializeFunctionArgs = (
     const jsonArgs = JsonValueZodSchema.safeParse(args.functionArgs);
 
     if (!jsonArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'Client.CallContractReadFunction.Args.InvalidSchema',
-          context: { zodError: jsonArgs.error },
-        }),
-      );
+      return resultNatError('Client.CallContractReadFunction.Args.InvalidSchema', {
+        zodError: jsonArgs.error,
+      });
 
     return result.ok(convertObjectToU8(args.functionArgs));
   }

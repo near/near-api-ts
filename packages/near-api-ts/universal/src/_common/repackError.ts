@@ -1,7 +1,7 @@
 import type { ResultErr } from '../../types/_common/common';
 import type { ContextFor, NatErrorKind } from '../../types/_common/natError';
-import { createNatError, type NatError } from './_common/_common/_common/natError';
-import { result } from './_common/_common/result';
+import type { NatError } from './_common/_common/_common/natError';
+import { resultNatError } from './_common/_common/result';
 
 // All dot-separated prefixes of an error kind:
 // 'Client.Transport.SendRequest' -> 'Client' | 'Client.Transport' | 'Client.Transport.SendRequest'
@@ -80,5 +80,5 @@ export const repackError = <
   // this is the only place where we tell it which kinds we actually produce
   const kind = `${targetPrefix}.${error.kind.slice(originPrefix.length + 1)}` as NatErrorKind;
 
-  return result.err(createNatError({ kind, context: error.context })) as RepackErrorResult<E, O, T>;
+  return resultNatError(kind, error.context) as RepackErrorResult<E, O, T>;
 };

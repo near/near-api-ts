@@ -6,11 +6,7 @@ import type {
   ExecuteTransactionTaskOutput,
 } from '../../../../../types/signer/inner/taskQueue';
 import type { SignerContext } from '../../../../../types/signer/signer';
-import {
-  createNatError,
-  isNatErrorOf,
-  type NatError,
-} from '../../../../_common/_common/_common/_common/natError';
+import { isNatErrorOf, type NatError } from '../../../../_common/_common/_common/_common/natError';
 import { result, resultNatError } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
 import { loadRecentBlockHash } from './_common/loadRecentBlockHash';
@@ -119,12 +115,9 @@ export const executeTransaction = async (
         return await attempt({ attemptIndex: attemptIndex + 1, newNonce, refreshBlockHash: true });
 
       // Pack sendSignedTransaction error and return;
-      return result.err(
-        createNatError({
-          kind: 'Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction',
-          context: { cause: txResult.error },
-        }),
-      );
+      return resultNatError('Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction', {
+        cause: txResult.error,
+      });
     },
   );
 

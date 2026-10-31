@@ -13,9 +13,9 @@ import type {
   SafeCreateNearTokenFromYoctoNear,
   YoctoNear,
 } from '../../types/_common/nearToken';
-import { createNatError } from './_common/_common/_common/natError';
+
 import { NearDecimals } from './_common/_common/constants';
-import { result } from './_common/_common/result';
+import { result, resultNatError } from './_common/_common/result';
 import { asThrowable } from './_common/asThrowable';
 import { convertDecimalToUnits } from './_common/unitConverter/convertDecimalToUnits';
 import { convertUnitsToDecimal } from './_common/unitConverter/convertUnitsToDecimal';
@@ -151,12 +151,9 @@ export const safeYoctoNear: SafeCreateNearTokenFromYoctoNear = wrapInternalError
     const validYoctoNear = YoctoNearInputZodSchema.safeParse(yoctoNear);
 
     if (!validYoctoNear.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateNearTokenFromYoctoNear.Args.InvalidSchema',
-          context: { zodError: validYoctoNear.error },
-        }),
-      );
+      return resultNatError('CreateNearTokenFromYoctoNear.Args.InvalidSchema', {
+        zodError: validYoctoNear.error,
+      });
 
     const nearToken = Object.create(nearTokenProto) as NearToken;
 
@@ -179,12 +176,9 @@ export const safeNear: SafeCreateNearTokenFromNear = wrapInternalError(
     const validNear = NearInputZodSchema.safeParse(near);
 
     if (!validNear.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateNearTokenFromNear.Args.InvalidSchema',
-          context: { zodError: validNear.error },
-        }),
-      );
+      return resultNatError('CreateNearTokenFromNear.Args.InvalidSchema', {
+        zodError: validNear.error,
+      });
 
     const nearToken = Object.create(nearTokenProto) as NearToken;
 
@@ -207,12 +201,7 @@ export const safeNearToken: SafeCreateNearToken = wrapInternalError(
     const validArgs = NearTokenArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'CreateNearToken.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('CreateNearToken.Args.InvalidSchema', { zodError: validArgs.error });
 
     return 'yoctoNear' in args ? result.ok(yoctoNear(args.yoctoNear)) : result.ok(near(args.near));
   },

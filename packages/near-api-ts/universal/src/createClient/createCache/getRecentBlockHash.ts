@@ -7,7 +7,7 @@ import type {
 } from '../../../types/client/cache/getRecentBlockHash';
 import type { Transport } from '../../../types/client/transport/transport';
 import { createNatError } from '../../_common/_common/_common/_common/natError';
-import { result } from '../../_common/_common/_common/result';
+import { result, resultNatError } from '../../_common/_common/_common/result';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { repackError } from '../../_common/repackError';
 import { CryptoHashZodSchema } from '../../_common/zodSchemas/cryptoHash';
@@ -65,28 +65,18 @@ const fetchRecentBlockHash = async ({
 
   // Check if RPC error
   if (rpcResponse.data.error)
-    return result.err(
-      createNatError({
-        kind: 'Client.GetRecentBlockHash.Internal',
-        context: { cause: rpcResponse.data },
-      }),
-    );
+    return resultNatError('Client.GetRecentBlockHash.Internal', { cause: rpcResponse.data });
 
   // Check if a result is valid
   const rpcResult = PartialBlockResultSchema.safeParse(rpcResponse.data.result);
 
   if (!rpcResult.success)
-    return result.err(
-      createNatError({
-        kind: 'Client.GetRecentBlockHash.Exhausted',
-        context: {
-          lastError: createNatError({
-            kind: 'SendRequest.Attempt.Response.InvalidSchema',
-            context: { zodError: rpcResult.error },
-          }),
-        },
+    return resultNatError('Client.GetRecentBlockHash.Exhausted', {
+      lastError: createNatError({
+        kind: 'SendRequest.Attempt.Response.InvalidSchema',
+        context: { zodError: rpcResult.error },
       }),
-    );
+    });
 
   state.recentBlockHash.value = rpcResult.data.header.hash.cryptoHash;
   state.recentBlockHash.validUntil = Date.now() + ttlMs;
@@ -100,12 +90,9 @@ export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (transport
     const validArgs = GetRecentBlockHashArgsSchema.safeParse(args);
 
     if (!validArgs.success)
-      return result.err(
-        createNatError({
-          kind: 'Client.GetRecentBlockHash.Args.InvalidSchema',
-          context: { zodError: validArgs.error },
-        }),
-      );
+      return resultNatError('Client.GetRecentBlockHash.Args.InvalidSchema', {
+        zodError: validArgs.error,
+      });
 
     // 2. If the value is in the state already and still valid - return it
     if (

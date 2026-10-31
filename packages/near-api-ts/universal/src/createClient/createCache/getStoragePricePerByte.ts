@@ -2,7 +2,7 @@ import * as z from 'zod/mini';
 import type { CacheState, GetStoragePricePerByte } from '../../../types/client/cache/cache';
 import type { Transport } from '../../../types/client/transport/transport';
 import { createNatError } from '../../_common/_common/_common/_common/natError';
-import { result } from '../../_common/_common/_common/result';
+import { result, resultNatError } from '../../_common/_common/_common/result';
 import { yoctoNear } from '../../_common/nearToken';
 
 const PartialProtocolConfigResultSchema = z.object({
@@ -42,17 +42,12 @@ export const createGetStoragePricePerByte =
     const rpcResult = PartialProtocolConfigResultSchema.safeParse(protocolConfig.data.result);
 
     if (!rpcResult.success)
-      return result.err(
-        createNatError({
-          kind: 'SendRequest.Exhausted',
-          context: {
-            lastError: createNatError({
-              kind: 'SendRequest.Attempt.Response.InvalidSchema',
-              context: { zodError: rpcResult.error },
-            }),
-          },
+      return resultNatError('SendRequest.Exhausted', {
+        lastError: createNatError({
+          kind: 'SendRequest.Attempt.Response.InvalidSchema',
+          context: { zodError: rpcResult.error },
         }),
-      );
+      });
 
     state.storagePricePerByte.value = yoctoNear(rpcResult.data.runtimeConfig.storageAmountPerByte);
     // Refetch every 1000ms * 60sec * 60min = 1 hour
