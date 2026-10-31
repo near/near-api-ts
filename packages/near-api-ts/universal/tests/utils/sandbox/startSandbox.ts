@@ -36,7 +36,7 @@ type StartSandboxArgs = {
 
 export const startSandbox = async (args?: StartSandboxArgs) =>
   await Sandbox.start({
-    version: args?.nearcoreVersion ?? '2.13.4',
+    version: args?.nearcoreVersion ?? '2.14.0',
     config: {
       rpcPort: args?.rpcPort,
       additionalGenesis: { min_gas_price: args?.gasPrice ?? '100000000' },

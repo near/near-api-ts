@@ -188,7 +188,7 @@ describe('addAccessKey', () => {
     assertNatErrKind(res, 'CreateAction.AddAccessKey.Args.InvalidSchema');
   });
 
-  // nearcore 2.13.4 rejects an allowance on a gas key (GasKeyFunctionCallAllowanceNotAllowed)
+  // nearcore 2.14.0 rejects an allowance on a gas key (GasKeyFunctionCallAllowanceNotAllowed)
   it('rejects an allowance on a key paid from its own balance', () => {
     const res = safeAddAccessKey({
       publicKey,

@@ -59,7 +59,7 @@ describe.skip('signAndSendTransaction › BlockHash.NotAncestor conversion error
 
   beforeAll(async () => {
     const sandbox = await Sandbox.start({
-      version: '2.13.4',
+      version: '2.14.0',
       config: {
         additionalAccounts: [
           GenesisAccount.createDefault('nat'),
