@@ -13,7 +13,8 @@ const tryOnManySigners = async (args: SignDelegationArgs, context: StoreContext)
     if (!signer)
       throw new Error(
         'There is no signer that can sign delegation. If you use nearConnect service make sure ' +
-          'to enable supportedFeatures.signDelegation feature in createNearConnectorService',
+          'to enable supportedFeatures.signDelegation feature in createNearConnectorService, ' +
+          'and leave expiration out of the intent - a near-connect wallet picks it itself',
       );
 
     const canSign = signer.canSignDelegation(args);

@@ -229,7 +229,9 @@ const signedMessage = await signMessageAsync({ message });
 
 Sign a meta transaction (delegation) with the connected wallet. The signed
 delegation is returned as borsh base64, ready to be handed to a relayer that
-wraps it into `executeDelegation`.
+wraps it into `executeDelegation`. A near-connect wallet picks the expiration
+and the nonce of the delegation itself, so leave `expiration` out of the intent:
+the near-connect signer refuses an intent that has one.
 
 ```tsx
 import { callContractFunction, useSignDelegation } from 'react-near-ts';
@@ -244,7 +246,6 @@ signDelegation({
       gasLimit: { teraGas: '10' },
     }),
     receiverAccountId: 'react-near-ts.lantstool.testnet',
-    expiration: { blockHeight: 100 },
   },
   mutate: {
     onSuccess: ({ signedDelegationBorsh64 }) => {

@@ -1,10 +1,10 @@
 import type { MutateOptions } from '@tanstack/react-query';
-import type { DelegationIntent } from 'near-api-ts';
 import type { Prettify } from '../_common/common.ts';
+import type { SignDelegationIntent } from '../services/_common.ts';
 import type { BaseUseMutationResult, MutationOptions } from './_common/tanstackMutation.ts';
 
 type SignDelegationVariables = {
-  intent: DelegationIntent;
+  intent: SignDelegationIntent;
 };
 
 // TODO replace with SignedDelegation in the future

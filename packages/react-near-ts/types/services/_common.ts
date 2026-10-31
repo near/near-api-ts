@@ -3,9 +3,12 @@ import type {
   Client,
   DelegationIntent,
   Message,
+  MultiDelegableActions,
   SignedMessage,
+  SingleDelegableAction,
   TransactionIntent,
 } from 'near-api-ts';
+import type { Prettify } from '../_common/common.ts';
 import type { Result } from '../_common.ts';
 
 // ------------------------------------------------------------------------------------------------
@@ -37,7 +40,19 @@ export type CanSignMessage = (args: SignMessageArgs) => boolean;
 // ------------------------------------------------------------------------------------------------
 // Sign Delegation
 
-export type SignDelegationArgs = { intent: DelegationIntent };
+/**
+ * A near-api-ts `DelegationIntent` whose `expiration` may be left out - then the signer picks
+ * it. A signer that can't take an expiration, like a near-connect wallet, refuses an intent
+ * that has one.
+ */
+export type SignDelegationIntent = Prettify<
+  {
+    receiverAccountId: AccountId;
+    expiration?: DelegationIntent['expiration'];
+  } & (SingleDelegableAction | MultiDelegableActions)
+>;
+
+export type SignDelegationArgs = { intent: SignDelegationIntent };
 
 // TODO replace with SignedDelegation in the future
 export type SignDelegationOutput = { signedDelegationBorsh64: string };

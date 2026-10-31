@@ -9,14 +9,31 @@
   `createVaultSignService` and the `Vault`, `SignService` and `SignerClient`
   contracts, the memory vault's `getPublicKey`, the `minimalProcessingStage`
   and `options` of a signer's
-  `executeTransaction`, and `cache.recentBlockHash.ttlMs` in `createClient`. See
-  the near-api-ts changelog.
+  `executeTransaction`, a signer's `signDelegation`, and
+  `cache.recentBlockHash.ttlMs` in `createClient`. See the near-api-ts changelog.
 
 - The gas key actions `topUpAccessKeyBalance` / `withdrawAccessKeyBalance` are
   re-exported from near-api-ts too. The near-connect signer throws for both –
   near-connect has no format for them.
 
 ### Changed
+
+- **Breaking:** `useSignDelegation` takes the intent without `expiration`. A
+  near-connect wallet picks the expiration and the nonce of a delegation
+  itself, so `expiration` is optional now and the near-connect signer refuses an
+  intent that has one – it used to drop it without a word:  \
+  Previously:
+  ```ts
+  signDelegation({ intent: { delegatedAction, receiverAccountId, expiration: { blockHeight } } });
+  ```
+
+  Now:
+  ```ts
+  signDelegation({ intent: { delegatedAction, receiverAccountId } });
+  ```
+
+  The re-exported `DelegationIntent` takes `expiration: { inBlocks }` as well;
+  see the near-api-ts v0.13.0 changelog.
 
 - **Breaking:** the access key API re-exported from near-api-ts drops the
   `Account` prefix: `AccountAccessKey` is now `AccessKey`, and the client methods
