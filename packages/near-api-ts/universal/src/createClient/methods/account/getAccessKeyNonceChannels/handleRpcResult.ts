@@ -7,7 +7,7 @@ import { toPublicKeyId } from '../../../../_common/toPublicKeyId';
 import type { InnerPublicKey } from '../../../../_common/zodSchemas/publicKey';
 import type { BaseRpcResponse } from '../../../_common/zodSchemas/baseRpcResponse';
 
-const RpcQueryViewGasKeyNoncesResultSchema = z.object({
+const RpcQueryViewGasKeyNoncesResultZodSchema = z.object({
   ...GasKeyNoncesViewSchema().shape,
   blockHash: z.string(),
   blockHeight: z.number(),
@@ -18,7 +18,7 @@ export const handleRpcResult = (
   args: GetAccessKeyNonceChannelsArgs,
   publicKey: InnerPublicKey,
 ) => {
-  const rpcResult = RpcQueryViewGasKeyNoncesResultSchema.safeParse(rpcResponse.result);
+  const rpcResult = RpcQueryViewGasKeyNoncesResultZodSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)
     return resultNatError('Client.GetAccessKeyNonceChannels.Exhausted', {

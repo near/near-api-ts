@@ -10,14 +10,14 @@ import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { NearTokenArgsZodSchema } from '../../_common/_common/zodSchemas/nearToken';
 import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
 
-export const CreateWithdrawAccessKeyBalanceActionArgsSchema = z.object({
+export const CreateWithdrawAccessKeyBalanceActionArgsZodSchema = z.object({
   publicKey: PublicKeyZodSchema,
   amount: NearTokenArgsZodSchema,
 });
 
 export const safeWithdrawAccessKeyBalance: SafeCreateWithdrawAccessKeyBalanceAction =
   wrapInternalError('CreateAction.WithdrawAccessKeyBalance.Internal', (args) => {
-    const validArgs = CreateWithdrawAccessKeyBalanceActionArgsSchema.safeParse(args);
+    const validArgs = CreateWithdrawAccessKeyBalanceActionArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('CreateAction.WithdrawAccessKeyBalance.Args.InvalidSchema', {

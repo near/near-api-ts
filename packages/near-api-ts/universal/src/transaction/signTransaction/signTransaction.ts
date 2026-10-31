@@ -18,7 +18,7 @@ import {
 } from './transactionBorshSchema/transactionBorshSchema';
 import { TransactionZodSchema } from './transactionZodSchema/transactionZodSchema';
 
-const SignTransactionArgsSchema = z.object({
+const SignTransactionArgsZodSchema = z.object({
   transaction: TransactionZodSchema,
   signDataProvider: z.object({
     safeSignData: z.function(),
@@ -28,7 +28,7 @@ const SignTransactionArgsSchema = z.object({
 export const safeSignTransaction: SafeSignTransaction = wrapInternalError(
   'SignTransaction.Internal',
   async (args) => {
-    const validArgs = SignTransactionArgsSchema.safeParse(args);
+    const validArgs = SignTransactionArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('SignTransaction.Args.InvalidSchema', {

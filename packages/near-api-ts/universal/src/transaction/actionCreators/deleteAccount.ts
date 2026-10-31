@@ -9,14 +9,14 @@ import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { AccountIdZodSchema } from '../../_common/zodSchemas/accountId';
 
-export const CreateDeleteAccountActionArgsSchema = z.object({
+export const CreateDeleteAccountActionArgsZodSchema = z.object({
   beneficiaryAccountId: AccountIdZodSchema,
 });
 
 export const safeDeleteAccount: SafeCreateDeleteAccountAction = wrapInternalError(
   'CreateAction.DeleteAccount.Internal',
   (args) => {
-    const validArgs = CreateDeleteAccountActionArgsSchema.safeParse(args);
+    const validArgs = CreateDeleteAccountActionArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('CreateAction.DeleteAccount.Args.InvalidSchema', {

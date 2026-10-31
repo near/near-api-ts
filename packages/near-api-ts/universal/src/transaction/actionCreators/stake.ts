@@ -10,7 +10,7 @@ import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { NearTokenArgsZodSchema } from '../../_common/_common/zodSchemas/nearToken';
 import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
 
-export const CreateStakeActionArgsSchema = z.object({
+export const CreateStakeActionArgsZodSchema = z.object({
   amount: NearTokenArgsZodSchema,
   validatorPublicKey: PublicKeyZodSchema,
 });
@@ -18,7 +18,7 @@ export const CreateStakeActionArgsSchema = z.object({
 export const safeStake: SafeCreateStakeAction = wrapInternalError(
   'CreateAction.Stake.Internal',
   (args) => {
-    const validArgs = CreateStakeActionArgsSchema.safeParse(args);
+    const validArgs = CreateStakeActionArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('CreateAction.Stake.Args.InvalidSchema', { zodError: validArgs.error });

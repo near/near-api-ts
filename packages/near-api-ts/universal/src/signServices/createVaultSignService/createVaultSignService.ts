@@ -11,7 +11,7 @@ import { createSafeHasKeyPair } from './hasKeyPair';
 import { createSafeSignDelegation } from './signDelegation';
 import { createSafeSignTransaction } from './signTransaction';
 
-const CreateVaultSignServiceArgsSchema = z.object({
+const CreateVaultSignServiceArgsZodSchema = z.object({
   vault: z.object({
     safeHasKeyPair: z.function(),
     safeGetPublicKey: z.function(),
@@ -22,7 +22,7 @@ const CreateVaultSignServiceArgsSchema = z.object({
 export const safeCreateVaultSignService: SafeCreateVaultSignService = wrapInternalError(
   'CreateVaultSignService.Internal',
   (args) => {
-    const validArgs = CreateVaultSignServiceArgsSchema.safeParse(args);
+    const validArgs = CreateVaultSignServiceArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('CreateVaultSignService.Args.InvalidSchema', {

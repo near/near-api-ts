@@ -6,10 +6,10 @@ import {
   mergeTransportPolicy,
 } from './_common/transportPolicy/transportPolicy';
 import { createSendRequest } from './createSendRequest/createSendRequest';
-import { getInnerRpcEndpoints, RpcEndpointsArgsSchema } from './rpcEndpoints';
+import { getInnerRpcEndpoints, RpcEndpointsArgsZodSchema } from './rpcEndpoints';
 
 export const CreateTransportArgsZodSchema = z.object({
-  rpcEndpoints: RpcEndpointsArgsSchema,
+  rpcEndpoints: RpcEndpointsArgsZodSchema,
   policy: z.optional(PartialTransportPolicyZodSchema),
 });
 

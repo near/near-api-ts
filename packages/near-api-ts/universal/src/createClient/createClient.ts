@@ -16,7 +16,7 @@ import { createSafeCallContractReadFunction } from './methods/contract/callContr
 import { createSafeGetTransactionResult } from './methods/transaction/getTransactionResult/getTransactionResult';
 import { createSafeSendSignedTransaction } from './methods/transaction/sendSignedTransaction/sendSignedTransaction';
 
-const CreateClientArgsSchema = z.object({
+const CreateClientArgsZodSchema = z.object({
   transport: CreateTransportArgsZodSchema,
   cache: z.optional(
     z.object({
@@ -32,7 +32,7 @@ const CreateClientArgsSchema = z.object({
 export const safeCreateClient: SafeCreateClient = wrapInternalError(
   'CreateClient.Internal',
   (args) => {
-    const validArgs = CreateClientArgsSchema.safeParse(args);
+    const validArgs = CreateClientArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('CreateClient.Args.InvalidSchema', { zodError: validArgs.error });

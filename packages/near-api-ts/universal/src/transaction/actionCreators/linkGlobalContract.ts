@@ -9,14 +9,14 @@ import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { AccountIdZodSchema } from '../../_common/zodSchemas/accountId';
 
-export const CreateLinkGlobalContractActionArgsSchema = z.object({
+export const CreateLinkGlobalContractActionArgsZodSchema = z.object({
   globalContractAccountId: AccountIdZodSchema,
 });
 
 export const safeLinkGlobalContract: SafeCreateLinkGlobalContractAction = wrapInternalError(
   'CreateAction.LinkGlobalContract.Internal',
   (args) => {
-    const validArgs = CreateLinkGlobalContractActionArgsSchema.safeParse(args);
+    const validArgs = CreateLinkGlobalContractActionArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('CreateAction.LinkGlobalContract.Args.InvalidSchema', {

@@ -12,13 +12,13 @@ import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { repackError } from '../../_common/repackError';
 import { CryptoHashZodSchema } from '../../_common/zodSchemas/cryptoHash';
 
-const PartialBlockResultSchema = z.object({
+const PartialBlockResultZodSchema = z.object({
   header: z.object({
     hash: CryptoHashZodSchema,
   }),
 });
 
-const GetRecentBlockHashArgsSchema = z.optional(
+const GetRecentBlockHashArgsZodSchema = z.optional(
   z.object({
     options: z.optional(
       z.object({
@@ -68,7 +68,7 @@ const fetchRecentBlockHash = async ({
     return resultNatError('Client.GetRecentBlockHash.Internal', { cause: rpcResponse.data });
 
   // Check if a result is valid
-  const rpcResult = PartialBlockResultSchema.safeParse(rpcResponse.data.result);
+  const rpcResult = PartialBlockResultZodSchema.safeParse(rpcResponse.data.result);
 
   if (!rpcResult.success)
     return resultNatError('Client.GetRecentBlockHash.Exhausted', {
@@ -87,7 +87,7 @@ const fetchRecentBlockHash = async ({
 export const createGetRecentBlockHash: CreateSafeGetRecentBlockHash = (transport, state, ttlMs) =>
   wrapInternalError('Client.GetRecentBlockHash.Internal', async (args) => {
     // 1. Validate arguments
-    const validArgs = GetRecentBlockHashArgsSchema.safeParse(args);
+    const validArgs = GetRecentBlockHashArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('Client.GetRecentBlockHash.Args.InvalidSchema', {

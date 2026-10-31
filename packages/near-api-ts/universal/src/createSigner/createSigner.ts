@@ -15,7 +15,7 @@ import { createSafeSignTransaction } from './createSignTransaction';
 import { createTasker } from './createTasker/createTasker';
 import { createTaskQueue } from './createTaskQueue/createTaskQueue';
 
-const CreateSignerArgsSchema = z.object({
+const CreateSignerArgsZodSchema = z.object({
   signerAccountId: AccountIdZodSchema,
   client: z.object({
     safeGetAccessKeys: z.function(),
@@ -42,7 +42,7 @@ const CreateSignerArgsSchema = z.object({
 export const safeCreateSigner: SafeCreateSigner = wrapInternalError(
   'CreateSigner.Internal',
   (args) => {
-    const validArgs = CreateSignerArgsSchema.safeParse(args);
+    const validArgs = CreateSignerArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('CreateSigner.Args.InvalidSchema', { zodError: validArgs.error });

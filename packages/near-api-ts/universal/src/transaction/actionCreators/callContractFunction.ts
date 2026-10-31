@@ -64,7 +64,7 @@ const serializeFunctionArgs = (
   return result.ok(new Uint8Array());
 };
 
-export const CreateCallContractFunctionActionArgsSchema = z.object({
+export const CreateCallContractFunctionActionArgsZodSchema = z.object({
   functionName: ContractFunctionNameZodSchema,
   functionArgs: z.optional(z.unknown()),
   gasLimit: NearGasArgsZodSchema,
@@ -79,7 +79,7 @@ export const CreateCallContractFunctionActionArgsSchema = z.object({
 export const safeCallContractFunction: SafeCreateCallContractFunctionAction = wrapInternalError(
   'CreateAction.CallContractFunction.Internal',
   (args: InnerCreateCallContractFunctionActionArgs) => {
-    const validArgs = CreateCallContractFunctionActionArgsSchema.safeParse(args);
+    const validArgs = CreateCallContractFunctionActionArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('CreateAction.CallContractFunction.Args.InvalidSchema', {

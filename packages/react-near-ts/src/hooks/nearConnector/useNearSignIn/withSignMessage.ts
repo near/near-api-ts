@@ -21,9 +21,9 @@ import type {
   WithSignMessageOutput,
 } from '../../../../types/hooks/nearConnector/useNearSignIn/withSignMessage.ts';
 import type { SetConnectedAccountId, SetSigners, StoreContext } from '../../../../types/store.ts';
-import { NearConnectorServiceSchema } from '../_common.ts';
+import { NearConnectorServiceZodSchema } from '../_common.ts';
 
-export const createNep413MessageSignatureSchema = (curve: Curve) =>
+export const createNep413MessageSignatureZodSchema = (curve: Curve) =>
   z
     .pipe(
       Base64StringZodSchema,
@@ -49,7 +49,7 @@ const transformSignedMessage = (
   const signerAccountId = AccountIdZodSchema.parse(signedMessage?.accountId);
   const signerPublicKey = PublicKeyZodSchema.parse(signedMessage?.publicKey);
 
-  const { signatureU8 } = createNep413MessageSignatureSchema(signerPublicKey.curve).parse(
+  const { signatureU8 } = createNep413MessageSignatureZodSchema(signerPublicKey.curve).parse(
     signedMessage?.signature,
   );
 
@@ -75,7 +75,7 @@ export const withSignMessage = (
   const { mutate, mutateAsync, ...rest } = useMutation({
     ...args?.mutation,
     mutationFn: async (variables: Variables) => {
-      const services = NearConnectorServiceSchema.parse(context.services);
+      const services = NearConnectorServiceZodSchema.parse(context.services);
       const connector = services.nearConnector.serviceBox.connector;
 
       // We want to make sure that the wallet supports the signIn + signMessage feature

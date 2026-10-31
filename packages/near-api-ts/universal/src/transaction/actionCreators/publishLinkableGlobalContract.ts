@@ -8,7 +8,7 @@ import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 
-export const CreatePublishLinkableGlobalContractActionArgsSchema = z.union([
+export const CreatePublishLinkableGlobalContractActionArgsZodSchema = z.union([
   z.object({
     wasmU8: z.instanceof(Uint8Array),
     wasmBase64: z.optional(z.never()),
@@ -21,7 +21,7 @@ export const CreatePublishLinkableGlobalContractActionArgsSchema = z.union([
 
 export const safePublishLinkableGlobalContract: SafeCreatePublishLinkableGlobalContractAction =
   wrapInternalError('CreateAction.PublishLinkableGlobalContract.Internal', (args) => {
-    const validArgs = CreatePublishLinkableGlobalContractActionArgsSchema.safeParse(args);
+    const validArgs = CreatePublishLinkableGlobalContractActionArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('CreateAction.PublishLinkableGlobalContract.Args.InvalidSchema', {

@@ -7,7 +7,7 @@ import type {
   WithAddFunctionCallKeyOutput,
 } from '../../../../types/hooks/nearConnector/useNearSignIn/withAddFunctionCallKey.ts';
 import type { SetConnectedAccountId, SetSigners, StoreContext } from '../../../../types/store.ts';
-import { NearConnectorServiceSchema } from '../_common.ts';
+import { NearConnectorServiceZodSchema } from '../_common.ts';
 
 export const withAddFunctionCallKey = (
   args: InnerUseNearSignInArgs,
@@ -18,7 +18,7 @@ export const withAddFunctionCallKey = (
   const { mutate, mutateAsync, ...rest } = useMutation({
     ...args?.mutation,
     mutationFn: async (variables: Variables) => {
-      const services = NearConnectorServiceSchema.parse(context.services);
+      const services = NearConnectorServiceZodSchema.parse(context.services);
       const connector = services.nearConnector.serviceBox.connector;
 
       // We want to make sure that the wallet supports the signIn + addFunctionCallKey feature

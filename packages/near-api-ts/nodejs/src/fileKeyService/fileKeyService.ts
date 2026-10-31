@@ -13,22 +13,22 @@ import { createSafeRemoveKeyPair } from './public/removeKeyPair';
 
 // import { createSafeSignTransaction } from './public/signTransaction';
 
-// const KeySourceSchema = z.object({
+// const KeySourceZodSchema = z.object({
 //   privateKey: PrivateKeyZodSchema,
 // });
 //
-const CreateFileKeyServiceArgsSchema = z.optional(
+const CreateFileKeyServiceArgsZodSchema = z.optional(
   z.object({
     path: z.optional(z.string().check(z.minLength(1))),
   }),
 );
 
-export type InnerCreateFileKeyServiceArgs = z.infer<typeof CreateFileKeyServiceArgsSchema>;
+export type InnerCreateFileKeyServiceArgs = z.infer<typeof CreateFileKeyServiceArgsZodSchema>;
 
 export const safeCreateFileKeyService: any = wrapInternalError(
   'CreateFileKeyService.Internal',
   (args: any) => {
-    // const validArgs = CreateFileKeyServiceArgsSchema.safeParse(args);
+    // const validArgs = CreateFileKeyServiceArgsZodSchema.safeParse(args);
     //
     // if (!validArgs.success)
     //   return result.err(

@@ -7,10 +7,10 @@ import {
 import * as z from 'zod/mini';
 import { ContractAccountId } from './config';
 
-const ResultSchema = z.array(z.string());
+const ResultZodSchema = z.array(z.string());
 
 const deserializeResult = (args: DeserializeResultFnArgs) =>
-  ResultSchema.parse(convertBase64ToObject(args.rawResult));
+  ResultZodSchema.parse(convertBase64ToObject(args.rawResult));
 
 export const useReadRecords = () => {
   const { connectedAccountId, isConnectedAccount } = useConnectedAccount();

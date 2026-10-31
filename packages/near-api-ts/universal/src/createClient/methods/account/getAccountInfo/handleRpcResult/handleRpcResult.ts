@@ -9,20 +9,22 @@ import type { BaseRpcResponse } from '../../../../_common/zodSchemas/baseRpcResp
 import { calculateAccountBalance } from './calculateAccountBalance';
 import { getAccountContract } from './getAccountContract';
 
-const RpcQueryViewAccountResultSchema = z.object({
+const RpcQueryViewAccountResultZodSchema = z.object({
   ...AccountViewSchema().shape,
   blockHash: z.string(),
   blockHeight: z.number(),
 });
 
-export type RpcQueryViewAccountResult = Prettify<z.infer<typeof RpcQueryViewAccountResultSchema>>;
+export type RpcQueryViewAccountResult = Prettify<
+  z.infer<typeof RpcQueryViewAccountResultZodSchema>
+>;
 
 export const handleRpcResult = (
   rpcResponse: BaseRpcResponse,
   storagePricePerByte: NearToken,
   args: GetAccountInfoArgs,
 ) => {
-  const rpcResult = RpcQueryViewAccountResultSchema.safeParse(rpcResponse.result);
+  const rpcResult = RpcQueryViewAccountResultZodSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)
     return resultNatError('Client.GetAccountInfo.Exhausted', {

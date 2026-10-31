@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import * as z from 'zod/mini';
-import { RpcEndpointsArgsSchema } from '../../../../../src/createClient/createTransport/rpcEndpoints';
+import { RpcEndpointsArgsZodSchema } from '../../../../../src/createClient/createTransport/rpcEndpoints';
 import type { RpcEndpoints } from '../../../../../types/client/transport/transport';
 
 z.config(z.locales.en());
@@ -10,7 +10,7 @@ describe('rpcEndpoints schema › valid', () => {
     const x: RpcEndpoints = {
       regular: [{ url: 'http://localhost:8080' }],
     };
-    const res = RpcEndpointsArgsSchema.safeParse(x);
+    const res = RpcEndpointsArgsZodSchema.safeParse(x);
     expect(res.success).toBe(true);
   });
 
@@ -23,7 +23,7 @@ describe('rpcEndpoints schema › valid', () => {
         },
       ],
     };
-    const res = RpcEndpointsArgsSchema.safeParse(x);
+    const res = RpcEndpointsArgsZodSchema.safeParse(x);
     expect(res.success).toBe(true);
   });
 
@@ -32,7 +32,7 @@ describe('rpcEndpoints schema › valid', () => {
       regular: [{ url: 'http://localhost:8080' }],
       archival: [{ url: 'http://localhost:8080' }],
     };
-    const res = RpcEndpointsArgsSchema.safeParse(x);
+    const res = RpcEndpointsArgsZodSchema.safeParse(x);
     expect(res.success).toBe(true);
   });
 });
@@ -42,7 +42,7 @@ describe('rpcEndpoints schema › invalid', () => {
     const x: RpcEndpoints = {
       regular: [],
     };
-    const res = RpcEndpointsArgsSchema.safeParse(x);
+    const res = RpcEndpointsArgsZodSchema.safeParse(x);
     expect(res.success).toBe(false);
   });
 
@@ -51,7 +51,7 @@ describe('rpcEndpoints schema › invalid', () => {
       regular: [],
       archival: [{ url: 'http://localhost:8080' }],
     };
-    const res = RpcEndpointsArgsSchema.safeParse(x);
+    const res = RpcEndpointsArgsZodSchema.safeParse(x);
     console.log(res);
     expect(res.success).toBe(false);
   });
@@ -62,7 +62,7 @@ describe('rpcEndpoints schema › invalid', () => {
       regular: 'invalid',
       archival: [{ url: 'http://localhost:8080' }],
     };
-    const res = RpcEndpointsArgsSchema.safeParse(x);
+    const res = RpcEndpointsArgsZodSchema.safeParse(x);
     expect(res.success).toBe(false);
   });
 });

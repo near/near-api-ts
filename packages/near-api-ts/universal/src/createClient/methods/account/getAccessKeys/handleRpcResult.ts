@@ -7,7 +7,7 @@ import { PublicKeyIdZodSchema } from '../../../../_common/zodSchemas/publicKeyId
 import type { BaseRpcResponse } from '../../../_common/zodSchemas/baseRpcResponse';
 import { transformAccessKey } from '../_common/transformAccessKey';
 
-const RpcQueryAccessKeyListResultSchema = z.object({
+const RpcQueryAccessKeyListResultZodSchema = z.object({
   ...AccessKeyListSchema().shape,
   // The node refers to each key by its PublicKeyHandle, which is our PublicKeyId
   keys: z.array(
@@ -21,7 +21,7 @@ const RpcQueryAccessKeyListResultSchema = z.object({
 });
 
 export const handleRpcResult = (rpcResponse: BaseRpcResponse, args: GetAccessKeysArgs) => {
-  const rpcResult = RpcQueryAccessKeyListResultSchema.safeParse(rpcResponse.result);
+  const rpcResult = RpcQueryAccessKeyListResultZodSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)
     return resultNatError('Client.GetAccessKeys.Exhausted', {

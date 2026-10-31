@@ -8,7 +8,7 @@ import { result, resultNatError } from '../../_common/_common/_common/result';
 import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 
-export const CreateDeployLocalContractActionArgsSchema = z.union([
+export const CreateDeployLocalContractActionArgsZodSchema = z.union([
   z.object({
     wasmU8: z.instanceof(Uint8Array),
     wasmBase64: z.optional(z.never()),
@@ -22,7 +22,7 @@ export const CreateDeployLocalContractActionArgsSchema = z.union([
 export const safeDeployLocalContract: SafeCreateDeployLocalContractAction = wrapInternalError(
   'CreateAction.DeployLocalContract.Internal',
   (args) => {
-    const validArgs = CreateDeployLocalContractActionArgsSchema.safeParse(args);
+    const validArgs = CreateDeployLocalContractActionArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('CreateAction.DeployLocalContract.Args.InvalidSchema', {

@@ -158,10 +158,10 @@ import {
 } from 'react-near-ts';
 import * as z from 'zod/mini';
 
-const ResultSchema = z.array(z.string());
+const ResultZodSchema = z.array(z.string());
 
 const deserializeResult = (args: DeserializeResultFnArgs) =>
-  ResultSchema.parse(convertBase64ToObject(args.rawResult));
+  ResultZodSchema.parse(convertBase64ToObject(args.rawResult));
 
 const records = useContractReadFunction({
   contractAccountId: 'react-near-ts.lantstool.testnet',

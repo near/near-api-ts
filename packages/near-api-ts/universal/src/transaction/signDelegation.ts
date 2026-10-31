@@ -18,7 +18,7 @@ import { DelegationZodSchema } from './_common/delegationZodSchema';
 import { toNearcoreDelegation } from './_common/toNearcoreDelegation';
 import { toNearcoreSignature } from './_common/toNearcoreSignature';
 
-const SignDelegationArgsSchema = z.object({
+const SignDelegationArgsZodSchema = z.object({
   delegation: DelegationZodSchema,
   signDataProvider: z.object({
     safeSignData: z.function(),
@@ -28,7 +28,7 @@ const SignDelegationArgsSchema = z.object({
 export const safeSignDelegation: SafeSignDelegation = wrapInternalError(
   'SignDelegation.Internal',
   async (args) => {
-    const validArgs = SignDelegationArgsSchema.safeParse(args);
+    const validArgs = SignDelegationArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('SignDelegation.Args.InvalidSchema', {

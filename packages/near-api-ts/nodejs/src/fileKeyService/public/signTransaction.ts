@@ -5,13 +5,13 @@
 // import { result } from '../../../../universal/src/_common/_common/utils/result';
 // import { wrapInternalError } from '../../../../universal/src/_common/_common/utils/wrapInternalError';
 //
-// const SignTransactionArgsSchema = z.object({
+// const SignTransactionArgsZodSchema = z.object({
 //   transaction: TransactionZodSchema,
 // });
 //
 // export const createSafeSignTransaction: any = (context: any) =>
 //   wrapInternalError(`FileKeyService.SignTransaction.Internal`, async (args: any) => {
-//     const validArgs = SignTransactionArgsSchema.safeParse(args);
+//     const validArgs = SignTransactionArgsZodSchema.safeParse(args);
 //
 //     if (!validArgs.success)
 //       return result.err(

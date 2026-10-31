@@ -9,14 +9,14 @@ import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { NearTokenArgsZodSchema } from '../../_common/_common/zodSchemas/nearToken';
 
-export const CreateTransferActionArgsSchema = z.object({
+export const CreateTransferActionArgsZodSchema = z.object({
   amount: NearTokenArgsZodSchema,
 });
 
 export const safeTransfer: SafeCreateTransferAction = wrapInternalError(
   'CreateAction.Transfer.Internal',
   (args) => {
-    const validArgs = CreateTransferActionArgsSchema.safeParse(args);
+    const validArgs = CreateTransferActionArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('CreateAction.Transfer.Args.InvalidSchema', {

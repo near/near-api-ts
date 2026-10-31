@@ -6,13 +6,13 @@ import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { repackError } from '../_common/repackError';
 import { TransactionIntentZodSchema } from './_common/zodSchemas';
 
-const SignTransactionArgsSchema = z.object({
+const SignTransactionArgsZodSchema = z.object({
   intent: TransactionIntentZodSchema,
 });
 
 export const createSafeSignTransaction: CreateSafeSignTransaction = (context) =>
   wrapInternalError('Signer.SignTransaction.Internal', async (args) => {
-    const validArgs = SignTransactionArgsSchema.safeParse(args);
+    const validArgs = SignTransactionArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('Signer.SignTransaction.Args.InvalidSchema', {

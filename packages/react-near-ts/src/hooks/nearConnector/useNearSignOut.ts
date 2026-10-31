@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import type { UseNearSignOut } from '../../../types/hooks/nearConnector/useNearSignOut.ts';
 import { useNearStore } from '../../store/NearStoreProvider.tsx';
-import { NearConnectorServiceSchema } from './_common.ts';
+import { NearConnectorServiceZodSchema } from './_common.ts';
 
 export const useNearSignOut: UseNearSignOut = (args) => {
   const getContext = useNearStore((store) => store.getContext);
@@ -12,7 +12,7 @@ export const useNearSignOut: UseNearSignOut = (args) => {
   const { mutate, mutateAsync, ...rest } = useMutation({
     ...args?.mutation,
     mutationFn: async () => {
-      const services = NearConnectorServiceSchema.parse(context.services);
+      const services = NearConnectorServiceZodSchema.parse(context.services);
       const connector = services.nearConnector.serviceBox.connector;
 
       await connector.disconnect();

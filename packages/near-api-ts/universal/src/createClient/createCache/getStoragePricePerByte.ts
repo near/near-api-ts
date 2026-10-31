@@ -5,7 +5,7 @@ import { createNatError } from '../../_common/_common/_common/_common/natError';
 import { result, resultNatError } from '../../_common/_common/_common/result';
 import { yoctoNear } from '../../_common/nearToken';
 
-const PartialProtocolConfigResultSchema = z.object({
+const PartialProtocolConfigResultZodSchema = z.object({
   runtimeConfig: z.object({
     storageAmountPerByte: z.string(),
   }),
@@ -36,7 +36,7 @@ const fetchStoragePricePerByte = async ({
   });
   if (!protocolConfig.success) return protocolConfig;
 
-  const rpcResult = PartialProtocolConfigResultSchema.safeParse(protocolConfig.data.result);
+  const rpcResult = PartialProtocolConfigResultZodSchema.safeParse(protocolConfig.data.result);
 
   if (!rpcResult.success)
     return resultNatError('SendRequest.Exhausted', {

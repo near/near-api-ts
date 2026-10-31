@@ -14,7 +14,7 @@ import { createSafeHasKeyPair } from './hasKeyPair';
 import { createSafeSignData } from './signData';
 
 // Without private keys, or with an empty list of them, the vault starts empty
-const CreateMemoryVaultArgsSchema = z.optional(
+const CreateMemoryVaultArgsZodSchema = z.optional(
   z.union([
     z.object({
       privateKey: PrivateKeyZodSchema,
@@ -25,7 +25,9 @@ const CreateMemoryVaultArgsSchema = z.optional(
   ]),
 );
 
-const getPrivateKeys = (args: z.infer<typeof CreateMemoryVaultArgsSchema>): InnerPrivateKey[] => {
+const getPrivateKeys = (
+  args: z.infer<typeof CreateMemoryVaultArgsZodSchema>,
+): InnerPrivateKey[] => {
   if (args === undefined) return [];
   if ('privateKey' in args) return [args.privateKey];
   return args.privateKeys;
@@ -34,7 +36,7 @@ const getPrivateKeys = (args: z.infer<typeof CreateMemoryVaultArgsSchema>): Inne
 export const safeCreateMemoryVault: SafeCreateMemoryVault = wrapInternalError(
   'CreateMemoryVault.Internal',
   (args) => {
-    const validArgs = CreateMemoryVaultArgsSchema.safeParse(args);
+    const validArgs = CreateMemoryVaultArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('CreateMemoryVault.Args.InvalidSchema', {

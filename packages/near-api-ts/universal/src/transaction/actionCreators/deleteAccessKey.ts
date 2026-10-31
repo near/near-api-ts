@@ -9,14 +9,14 @@ import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
 
-export const CreateDeleteAccessKeyActionArgsSchema = z.object({
+export const CreateDeleteAccessKeyActionArgsZodSchema = z.object({
   publicKey: PublicKeyZodSchema,
 });
 
 export const safeDeleteAccessKey: SafeCreateDeleteAccessKeyAction = wrapInternalError(
   'CreateAction.DeleteAccessKey.Internal',
   (args) => {
-    const validArgs = CreateDeleteAccessKeyActionArgsSchema.safeParse(args);
+    const validArgs = CreateDeleteAccessKeyActionArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('CreateAction.DeleteAccessKey.Args.InvalidSchema', {

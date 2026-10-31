@@ -222,7 +222,7 @@ Moving a module means rewriting every relative import path to it, in the same ch
 - A module may export a **closed family sharing one stem** — `safe<Name>` /
   `throwable<Name>`, `<Name>ZodSchema`, `create<Name>` / `createSafe<Name>`, and the
   `z.infer` types beside them. `transfer.ts` exporting `safeTransfer` +
-  `throwableTransfer` + `CreateTransferActionArgsSchema` is one module.
+  `throwableTransfer` + `CreateTransferActionArgsZodSchema` is one module.
 - **A file whose exports share no stem is two modules — split it.** `keyUtils.ts`
   exporting `createLock` + `createUnlock` + `createSetNonce` is three files.
 - **Module-folder entry: `<folder>.ts`, always.** The folder carries the entry's own name,

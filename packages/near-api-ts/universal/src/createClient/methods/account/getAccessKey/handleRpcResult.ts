@@ -10,22 +10,22 @@ import { transformAccessKey } from '../_common/transformAccessKey';
 
 // For legacy reasons, nearcore returns result.error string field when
 // RpcQueryError::UnknownAccessKey error happens;
-const UnknownKeySchema = z.object({
+const UnknownKeyZodSchema = z.object({
   blockHash: z.string(),
   blockHeight: z.number(),
   error: z.string(),
   logs: z.array(z.string()), // will always an empty array
 });
 
-const RpcQueryViewAccessKeyOkResultSchema = z.object({
+const RpcQueryViewAccessKeyOkResultZodSchema = z.object({
   blockHash: z.string(),
   blockHeight: z.number(),
   ...AccessKeyViewSchema().shape,
 });
 
-const RpcQueryViewAccessKeyResultSchema = z.union([
-  RpcQueryViewAccessKeyOkResultSchema,
-  UnknownKeySchema,
+const RpcQueryViewAccessKeyResultZodSchema = z.union([
+  RpcQueryViewAccessKeyOkResultZodSchema,
+  UnknownKeyZodSchema,
 ]);
 
 export const handleRpcResult = (
@@ -33,7 +33,7 @@ export const handleRpcResult = (
   args: GetAccessKeyArgs,
   publicKey: InnerPublicKey,
 ) => {
-  const rpcResult = RpcQueryViewAccessKeyResultSchema.safeParse(rpcResponse.result);
+  const rpcResult = RpcQueryViewAccessKeyResultZodSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)
     return resultNatError('Client.GetAccessKey.Exhausted', {

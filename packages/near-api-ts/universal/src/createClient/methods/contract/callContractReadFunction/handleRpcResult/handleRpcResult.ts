@@ -7,30 +7,30 @@ import { deserializeCallResult } from './deserializeCallResult';
 
 // For legacy reasons, nearcore returns the result.error string field when
 // RpcQueryError::ContractExecutionError error happens;
-const ContractExecutionErrorSchema = z.object({
+const ContractExecutionErrorZodSchema = z.object({
   blockHash: z.string(),
   blockHeight: z.number(),
   error: z.string(),
   logs: z.array(z.string()), // will always an empty array
 });
 
-const RpcQueryCallReadFunctionOkResultSchema = z.object({
+const RpcQueryCallReadFunctionOkResultZodSchema = z.object({
   blockHash: z.string(),
   blockHeight: z.number(),
   result: z.array(z.number()),
   logs: z.array(z.string()),
 });
 
-const RpcQueryCallReadFunctionResultSchema = z.union([
-  RpcQueryCallReadFunctionOkResultSchema,
-  ContractExecutionErrorSchema,
+const RpcQueryCallReadFunctionResultZodSchema = z.union([
+  RpcQueryCallReadFunctionOkResultZodSchema,
+  ContractExecutionErrorZodSchema,
 ]);
 
 export const handleRpcResult = (
   rpcResponse: BaseRpcResponse,
   args: InnerCallContractReadFunctionArgs,
 ) => {
-  const rpcResult = RpcQueryCallReadFunctionResultSchema.safeParse(rpcResponse.result);
+  const rpcResult = RpcQueryCallReadFunctionResultZodSchema.safeParse(rpcResponse.result);
 
   if (!rpcResult.success)
     return resultNatError('Client.CallContractReadFunction.Exhausted', {

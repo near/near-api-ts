@@ -13,7 +13,7 @@ import { PartialTransportPolicyZodSchema } from '../_common/zodSchemas/transport
 import { TransactionIntentZodSchema } from './_common/zodSchemas';
 
 // The args the transaction is sent with are checked as sendSignedTransaction checks them
-const ExecuteTransactionArgsSchema = z.object({
+const ExecuteTransactionArgsZodSchema = z.object({
   intent: TransactionIntentZodSchema,
   minimalProcessingStage: z.optional(TransactionProcessingStageZodSchema),
   options: z.optional(
@@ -36,7 +36,7 @@ const unreachableSendSignedTransactionKinds = [
 
 export const createSafeExecuteTransaction: CreateSafeExecuteTransaction = (context) =>
   wrapInternalError('Signer.ExecuteTransaction.Internal', async (args) => {
-    const validArgs = ExecuteTransactionArgsSchema.safeParse(args);
+    const validArgs = ExecuteTransactionArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('Signer.ExecuteTransaction.Args.InvalidSchema', {

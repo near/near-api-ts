@@ -29,7 +29,7 @@ const toBorshNep413Message = (message: Message): BorshBytes =>
     nonce: Uint8Array.fromBase64(message.nonce),
   });
 
-export const VerifyMessageArgsSchema = z.object({
+export const VerifyMessageArgsZodSchema = z.object({
   signedMessage: SignedMessageZodSchema,
   message: MessageZodSchema,
   client: z.object({
@@ -40,7 +40,7 @@ export const VerifyMessageArgsSchema = z.object({
 export const safeVerifyMessage: SafeVerifyMessage = wrapInternalError(
   'VerifyMessage.Internal',
   async (args) => {
-    const validArgs = VerifyMessageArgsSchema.safeParse(args);
+    const validArgs = VerifyMessageArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('VerifyMessage.Args.InvalidSchema', {

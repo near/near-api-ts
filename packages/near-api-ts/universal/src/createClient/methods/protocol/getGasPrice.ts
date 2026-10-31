@@ -15,7 +15,7 @@ const transformResult = (result: unknown): GetGasPriceResult => {
   };
 };
 
-// const GetGasPriceArgsSchema = z.optional(
+// const GetGasPriceArgsZodSchema = z.optional(
 //   z.object({
 //     blockId: z.optional(BlockIdZodSchema), // TODO use atMomentOf?
 //   }),
@@ -31,7 +31,7 @@ const getBlockId = (atMomentOf?: GetGasPriceArgs['atMomentOf']): BlockHeight | B
 export const createGetGasPrice: CreateGetGasPrice =
   ({ sendRequest }) =>
   async (args) => {
-    // GetGasPriceArgsSchema.parse(args);
+    // GetGasPriceArgsZodSchema.parse(args);
 
     const result = await sendRequest({
       method: 'gas_price',

@@ -15,7 +15,7 @@ ed25519.hashes.sha512 = sha512;
 secp256k1.hashes.hmacSha256 = (key, msg) => hmac(sha256, key, msg);
 secp256k1.hashes.sha256 = sha256;
 
-export const VerifySignatureArgsSchema = z.object({
+export const VerifySignatureArgsZodSchema = z.object({
   publicKey: PublicKeyZodSchema,
   message: z.instanceof(Uint8Array),
   signature: SignatureZodSchema,
@@ -24,7 +24,7 @@ export const VerifySignatureArgsSchema = z.object({
 export const safeVerifySignature: SafeVerifySignature = wrapInternalError(
   'VerifySignature.Internal',
   (args) => {
-    const validArgs = VerifySignatureArgsSchema.safeParse(args);
+    const validArgs = VerifySignatureArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('VerifySignature.Args.InvalidSchema', {

@@ -4,7 +4,7 @@ import type { AccountId } from 'near-api-ts';
 import type { InnerUseNearSignInArgs } from '../../../../types/hooks/nearConnector/useNearSignIn/useNearSignIn.ts';
 import type { WithoutAdditionalActionOutput } from '../../../../types/hooks/nearConnector/useNearSignIn/withoutAdditionalAction.ts';
 import type { SetConnectedAccountId, SetSigners, StoreContext } from '../../../../types/store.ts';
-import { NearConnectorServiceSchema } from '../_common.ts';
+import { NearConnectorServiceZodSchema } from '../_common.ts';
 
 export const withoutAdditionalAction = (
   context: StoreContext,
@@ -15,7 +15,7 @@ export const withoutAdditionalAction = (
   const { mutate, mutateAsync, ...rest } = useMutation({
     ...args?.mutation,
     mutationFn: async () => {
-      const services = NearConnectorServiceSchema.parse(context.services);
+      const services = NearConnectorServiceZodSchema.parse(context.services);
       const connector = services.nearConnector.serviceBox.connector;
 
       let callback!: (event: EventMap['wallet:signIn']) => void;

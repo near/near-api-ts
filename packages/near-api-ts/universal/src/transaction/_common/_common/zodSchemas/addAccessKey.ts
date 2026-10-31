@@ -5,7 +5,7 @@ import { AccountIdZodSchema } from '../../../../_common/zodSchemas/accountId';
 import { ContractFunctionNameZodSchema } from '../../../../_common/zodSchemas/contractFunctionName';
 import { PublicKeyZodSchema } from '../../../../_common/zodSchemas/publicKey';
 
-export const AllowedFunctionsSchema = z.union([
+export const AllowedFunctionsZodSchema = z.union([
   z.literal('AllNonPayable'),
   z.array(ContractFunctionNameZodSchema).check(z.minLength(1)),
 ]);
@@ -17,7 +17,7 @@ const FullAccessPermissionZodSchema = z.object({
 const ContractFunctionCallPermissionZodSchema = z.object({
   kind: z.literal('ContractFunctionCall'),
   allowedContract: AccountIdZodSchema,
-  allowedFunctions: AllowedFunctionsSchema,
+  allowedFunctions: AllowedFunctionsZodSchema,
 });
 
 const ContractFunctionCallAccountBalanceGasPaymentZodSchema = z.object({

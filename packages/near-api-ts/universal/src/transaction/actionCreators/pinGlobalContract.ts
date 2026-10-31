@@ -9,14 +9,14 @@ import { asThrowable } from '../../_common/_common/asThrowable';
 import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { CryptoHashZodSchema } from '../../_common/zodSchemas/cryptoHash';
 
-export const CreatePinGlobalContractActionArgsSchema = z.object({
+export const CreatePinGlobalContractActionArgsZodSchema = z.object({
   globalContractWasmHash: CryptoHashZodSchema,
 });
 
 export const safePinGlobalContract: SafeCreatePinGlobalContractAction = wrapInternalError(
   'CreateAction.PinGlobalContract.Internal',
   (args) => {
-    const validArgs = CreatePinGlobalContractActionArgsSchema.safeParse(args);
+    const validArgs = CreatePinGlobalContractActionArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('CreateAction.PinGlobalContract.Args.InvalidSchema', {

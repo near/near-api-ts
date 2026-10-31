@@ -32,14 +32,14 @@ const deserializeStrictly = (schema: Schema, bytesU8: Uint8Array) => {
   return value;
 };
 
-export const CreateExecuteDelegationActionArgsSchema = z.object({
+export const CreateExecuteDelegationActionArgsZodSchema = z.object({
   signedDelegationBorsh64: z.base64(),
 });
 
 export const safeExecuteDelegation: SafeCreateExecuteDelegationAction = wrapInternalError(
   'CreateAction.ExecuteDelegation.Internal',
   (args) => {
-    const validArgs = CreateExecuteDelegationActionArgsSchema.safeParse(args);
+    const validArgs = CreateExecuteDelegationActionArgsZodSchema.safeParse(args);
 
     if (!validArgs.success)
       return resultNatError('CreateAction.ExecuteDelegation.Args.InvalidSchema', {

@@ -12,7 +12,7 @@ import type {
 } from '../../../../types/services/nearConnector.ts';
 import { result } from '../../../_common/utils/result.ts';
 
-const NearConnectSignedMessageSchema = z.object({
+const NearConnectSignedMessageZodSchema = z.object({
   accountId: AccountIdZodSchema,
   publicKey: PublicKeyZodSchema,
   signature: Base64StringZodSchema,
@@ -34,11 +34,11 @@ export const createSafeSignMessage: CreateSafeSignMessage = (connector) => async
 
     // Validate + transform wallet response
     const validNearConnectSignedMessage =
-      NearConnectSignedMessageSchema.parse(nearConnectSignedMessage);
+      NearConnectSignedMessageZodSchema.parse(nearConnectSignedMessage);
 
     const { publicKey, curve } = validNearConnectSignedMessage.publicKey;
 
-    // TODO Use createNep413MessageSignatureSchema
+    // TODO Use createNep413MessageSignatureZodSchema
     const signatureU8 = Uint8Array.fromBase64(validNearConnectSignedMessage.signature);
 
     const base58Signature =

@@ -7,14 +7,14 @@ import type {
 } from '../../../../types/client/methods/contract/getContractState';
 import { toNearcoreBlockReference } from '../_common/toNearcoreBlockReference';
 
-const RpcQueryViewStateResponseSchema = z.object({
+const RpcQueryViewStateResponseZodSchema = z.object({
   ...ViewStateResultSchema().shape,
   blockHash: CryptoHashSchema(),
   blockHeight: z.number(),
 });
 
 const transformResult = (result: unknown, args: GetContractStateArgs): GetContractStateResult => {
-  const valid = RpcQueryViewStateResponseSchema.parse(result);
+  const valid = RpcQueryViewStateResponseZodSchema.parse(result);
 
   const final = {
     blockHash: valid.blockHash,
