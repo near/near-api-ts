@@ -79,6 +79,7 @@ describe('createSigner', async () => {
       client: {
         safeGetAccessKeys: client.safeGetAccessKeys,
         safeGetRecentBlockHash: client.safeGetRecentBlockHash,
+        safeGetBlock: client.safeGetBlock,
         safeSendSignedTransaction: client.safeSendSignedTransaction,
       },
       signService: createVaultSignService({ vault: keyVault }),

@@ -41,6 +41,7 @@ describe('Signer › RecentBlockHash.NotLoaded', () => {
           success: false as const,
           error,
         })) as SignerClient['safeGetRecentBlockHash'],
+        safeGetBlock: client.safeGetBlock,
         safeSendSignedTransaction: client.safeSendSignedTransaction,
       },
       signService: createVaultSignService({

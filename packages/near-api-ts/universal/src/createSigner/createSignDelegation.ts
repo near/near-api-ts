@@ -11,16 +11,28 @@ import {
   SingleDelegatedActionZodSchema,
 } from '../transaction/_common/delegationZodSchema';
 
+// A height, or a number of blocks after the latest one - the signer turns it into a height
+const DelegationIntentExpirationZodSchema = z.union([
+  z.object({
+    blockHeight: BlockHeightZodSchema,
+    inBlocks: z.optional(z.never()),
+  }),
+  z.object({
+    blockHeight: z.optional(z.never()),
+    inBlocks: z.number().check(z.int(), z.positive()),
+  }),
+]);
+
 // A delegation without its delegator - the signer fills it in with the key it signs by
 const DelegationIntentZodSchema = z.union([
   z.object({
     receiverAccountId: AccountIdZodSchema,
-    expiration: z.object({ blockHeight: BlockHeightZodSchema }),
+    expiration: DelegationIntentExpirationZodSchema,
     ...SingleDelegatedActionZodSchema.shape,
   }),
   z.object({
     receiverAccountId: AccountIdZodSchema,
-    expiration: z.object({ blockHeight: BlockHeightZodSchema }),
+    expiration: DelegationIntentExpirationZodSchema,
     ...MultiDelegatedActionsZodSchema.shape,
   }),
 ]);
@@ -50,6 +62,7 @@ export const createSafeSignDelegation: CreateSafeSignDelegation = (context) =>
         'Signer.KeyPool.SignService.Failed',
         'Signer.KeyPool.SigningKey.NotFound',
         'Signer.TaskQueue.Timeout',
+        'Signer.BlockHeight.NotLoaded',
       ])
     )
       return repackError({

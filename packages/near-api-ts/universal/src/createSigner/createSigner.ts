@@ -21,6 +21,7 @@ const CreateSignerArgsZodSchema = z.object({
   client: z.object({
     safeGetAccessKeys: z.function(),
     safeGetRecentBlockHash: z.function(),
+    safeGetBlock: z.function(),
     safeSendSignedTransaction: z.function(),
   }),
   signService: z.object({

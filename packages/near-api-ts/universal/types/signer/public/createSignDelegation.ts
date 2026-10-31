@@ -14,6 +14,7 @@ export interface SignDelegationPublicErrorRegistry {
   'Signer.SignDelegation.KeyPool.SignService.Failed': KeyPoolInnerErrorRegistry['Signer.KeyPool.SignService.Failed'];
   'Signer.SignDelegation.KeyPool.SigningKey.NotFound': KeyPoolInnerErrorRegistry['Signer.KeyPool.SigningKey.NotFound'];
   'Signer.SignDelegation.TaskQueue.Timeout': TaskQueueInnerErrorRegistry['Signer.TaskQueue.Timeout'];
+  'Signer.SignDelegation.BlockHeight.NotLoaded': TaskQueueInnerErrorRegistry['Signer.BlockHeight.NotLoaded'];
   'Signer.SignDelegation.Internal': InternalErrorContext;
 }
 
@@ -28,6 +29,7 @@ type SignDelegationIntentError =
   | NatError<'Signer.SignDelegation.KeyPool.SignService.Failed'>
   | NatError<'Signer.SignDelegation.KeyPool.SigningKey.NotFound'>
   | NatError<'Signer.SignDelegation.TaskQueue.Timeout'>
+  | NatError<'Signer.SignDelegation.BlockHeight.NotLoaded'>
   | NatError<'Signer.SignDelegation.Internal'>;
 
 export type SafeSignDelegationIntent = (

@@ -31,6 +31,15 @@ export interface TaskQueueInnerErrorRegistry {
       | NatError<'Client.GetRecentBlockHash.Timeout'>
       | NatError<'Client.GetRecentBlockHash.Exhausted'>;
   };
+  // The client didn't give the latest block, so a delegation that expires in a number of blocks
+  // got no height to expire at and wasn't signed
+  'Signer.BlockHeight.NotLoaded': {
+    cause:
+      | NatError<'Client.GetBlock.PreferredRpc.NotFound'>
+      | NatError<'Client.GetBlock.Timeout'>
+      | NatError<'Client.GetBlock.Exhausted'>
+      | NatError<'Client.GetBlock.Rpc.NotSynced'>;
+  };
   'Signer.Executors.ExecuteTransaction.Client.SendSignedTransaction': {
     cause: SendSignedTransactionError;
   };
@@ -152,6 +161,7 @@ export type SignDelegationTaskError =
   | NatError<'Signer.KeyPool.SignService.Failed'>
   | NatError<'Signer.KeyPool.SigningKey.NotFound'>
   | NatError<'Signer.TaskQueue.Timeout'>
+  | NatError<'Signer.BlockHeight.NotLoaded'>
   | NatError<'Signer.SignDelegation.Internal'>;
 
 export type AddSignDelegationTask = (

@@ -10,7 +10,7 @@ type _Args = Expect<Equal<Parameters<Signer['signDelegation']>[0], { intent: Del
 type _Output = Expect<Equal<Awaited<ReturnType<Signer['signDelegation']>>, SignDelegationOutput>>;
 
 // It fails under its own prefix only, and with nothing about a recent block hash - a delegation
-// has none
+// has none; the latest block is loaded only for one that expires in a number of blocks
 type Kind = Extract<
   Awaited<ReturnType<Signer['safeSignDelegation']>>,
   { success: false }
@@ -25,6 +25,7 @@ type _Kinds = Expect<
     | 'Signer.SignDelegation.KeyPool.SignService.Failed'
     | 'Signer.SignDelegation.KeyPool.SigningKey.NotFound'
     | 'Signer.SignDelegation.TaskQueue.Timeout'
+    | 'Signer.SignDelegation.BlockHeight.NotLoaded'
     | 'Signer.SignDelegation.Internal'
   >
 >;

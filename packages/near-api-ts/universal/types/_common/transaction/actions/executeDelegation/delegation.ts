@@ -105,10 +105,18 @@ export type SignedDelegation = {
 
 // Intent
 
+/**
+ * The last block a relayer can get the delegation executed in - by its height, or `inBlocks`
+ * blocks after the latest one, a height the signer works out when it signs.
+ */
+export type DelegationIntentExpiration =
+  | { blockHeight: BlockHeight; inBlocks?: never }
+  | { blockHeight?: never; inBlocks: number };
+
 export type DelegationIntent = Prettify<
   {
     receiverAccountId: AccountId;
-    expiration: { blockHeight: BlockHeight };
+    expiration: DelegationIntentExpiration;
   } & (SingleDelegableAction | MultiDelegableActions)
 >;
 

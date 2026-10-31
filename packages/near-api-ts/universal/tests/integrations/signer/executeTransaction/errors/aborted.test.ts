@@ -127,6 +127,7 @@ describe('Signer.executeTransaction › Aborted', () => {
       client: {
         safeGetAccessKeys: client.safeGetAccessKeys,
         safeGetRecentBlockHash: getRecentBlockHash,
+        safeGetBlock: client.safeGetBlock,
         safeSendSignedTransaction: client.safeSendSignedTransaction,
       },
       signService,

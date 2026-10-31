@@ -37,6 +37,7 @@ describe('executeTransaction › sendSignedTransaction errors', () => {
       client: {
         safeGetAccessKeys: client.safeGetAccessKeys,
         safeGetRecentBlockHash: client.safeGetRecentBlockHash,
+        safeGetBlock: client.safeGetBlock,
         safeSendSignedTransaction: send as SignerClient['safeSendSignedTransaction'],
       },
       signService: createVaultSignService({
