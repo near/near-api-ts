@@ -1,6 +1,6 @@
 import type { NatError } from '../../../src/_common/_common/_common/_common/natError';
 import type { AccessKey, AllowedFunctions } from '../../_common/accessKey';
-import type { AccountId, Result, TransactionNonce } from '../../_common/common';
+import type { AccountId, DelegationNonce, Result, TransactionNonce } from '../../_common/common';
 import type { PublicKey } from '../../_common/crypto';
 import type { GetAccessKeysError } from '../../client/methods/account/getAccessKeys';
 import type { CreateSignerArgs } from '../createSigner';
@@ -32,9 +32,13 @@ type KeyPoolKeyBase = {
   publicKey: PublicKey;
   isLocked: boolean;
   nonce: TransactionNonce;
+  // The nonce of the last delegation signed by the key - it is not the key's nonce until a relayer
+  // sends the delegation, see executors/signDelegation.ts
+  lastDelegationNonce?: DelegationNonce;
   lock: () => void;
   unlock: () => void;
   setNonce: (newNonce: TransactionNonce) => void;
+  setLastDelegationNonce: (newNonce: DelegationNonce) => void;
 };
 
 export type PoolFullAccessKey = {

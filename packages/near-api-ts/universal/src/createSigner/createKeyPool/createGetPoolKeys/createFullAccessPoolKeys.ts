@@ -6,7 +6,12 @@ import type { SignerContext } from '../../../../types/signer/signer';
 import type { NatError } from '../../../_common/_common/_common/_common/natError';
 import { result, resultNatError } from '../../../_common/_common/_common/result';
 import { isAccountBalanceKey } from './_common/isAccountBalanceKey';
-import { createLock, createSetNonce, createUnlock } from './_common/keyUtils';
+import {
+  createLock,
+  createSetLastDelegationNonce,
+  createSetNonce,
+  createUnlock,
+} from './_common/keyUtils';
 
 const transformKey = (nonce: TransactionNonce, publicKey: PublicKey): PoolFullAccessKey => {
   const key = {
@@ -19,6 +24,7 @@ const transformKey = (nonce: TransactionNonce, publicKey: PublicKey): PoolFullAc
   key.lock = createLock(key);
   key.unlock = createUnlock(key);
   key.setNonce = createSetNonce(key);
+  key.setLastDelegationNonce = createSetLastDelegationNonce(key);
 
   return key;
 };

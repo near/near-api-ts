@@ -1,4 +1,4 @@
-import type { TransactionNonce } from '../../../../../types/_common/common';
+import type { DelegationNonce, TransactionNonce } from '../../../../../types/_common/common';
 import type { PoolKey } from '../../../../../types/signer/inner/keyPool';
 
 export const createLock = (key: PoolKey) => () => {
@@ -11,4 +11,8 @@ export const createUnlock = (key: PoolKey) => () => {
 
 export const createSetNonce = (key: PoolKey) => (newNonce: TransactionNonce) => {
   key.nonce = newNonce;
+};
+
+export const createSetLastDelegationNonce = (key: PoolKey) => (newNonce: DelegationNonce) => {
+  key.lastDelegationNonce = newNonce;
 };

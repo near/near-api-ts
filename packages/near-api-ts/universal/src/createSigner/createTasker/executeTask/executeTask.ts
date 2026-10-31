@@ -1,5 +1,6 @@
 import type { CreateExecuteTask, ExecuteTask } from '../../../../types/signer/inner/tasker';
 import { executeTransaction } from './executors/executeTransaction';
+import { signDelegation } from './executors/signDelegation';
 import { signTransaction } from './executors/signTransaction';
 
 export const createExecuteTask: CreateExecuteTask = (signerContext) => {
@@ -26,7 +27,8 @@ export const createExecuteTask: CreateExecuteTask = (signerContext) => {
       // Execute the task; It will resolve the promise we returned to the task creator;
       if (task.taskType === 'ExecuteTransaction')
         await executeTransaction(signerContext, task, key);
-      else await signTransaction(signerContext, task, key);
+      else if (task.taskType === 'SignTransaction') await signTransaction(signerContext, task, key);
+      else await signDelegation(signerContext, task, key);
     }
 
     // Unlock the key so it can be used for the next task;

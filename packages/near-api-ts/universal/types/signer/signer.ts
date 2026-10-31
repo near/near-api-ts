@@ -9,6 +9,7 @@ import type {
   ExecuteTransactionPublicErrorRegistry,
   SafeExecuteTransaction,
 } from './public/createExecuteTransaction';
+import type { SignDelegationPublicErrorRegistry } from './public/createSignDelegation';
 import type {
   SafeSignTransactionIntent,
   SignTransactionIntent,
@@ -23,7 +24,8 @@ export interface SignerInnerErrorRegistry
 export interface SignerPublicErrorRegistry
   extends CreateSignerPublicErrorRegistry,
     ExecuteTransactionPublicErrorRegistry,
-    SignTransactionPublicErrorRegistry {}
+    SignTransactionPublicErrorRegistry,
+    SignDelegationPublicErrorRegistry {}
 
 export type SignerContext = {
   signerAccountId: AccountId;

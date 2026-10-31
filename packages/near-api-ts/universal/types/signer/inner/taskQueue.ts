@@ -1,6 +1,8 @@
 import type { UUID } from 'crypto';
 import type { NatError } from '../../../src/_common/_common/_common/_common/natError';
 import type { AccountId, ContractFunctionName, Milliseconds, Result } from '../../_common/common';
+import type { DelegationIntent } from '../../_common/transaction/actions/executeDelegation/delegation';
+import type { SignDelegationOutput } from '../../_common/transaction/signDelegation';
 import type { SignTransactionOutput } from '../../_common/transaction/signTransaction';
 import type { TransactionIntent } from '../../_common/transaction/transaction';
 import type { MaybeTransactionProcessingStage } from '../../client/methods/transaction/_common/transactionDetails/_common/processingStage';
@@ -80,7 +82,14 @@ export type ExecuteTransactionTask = {
   sendingArgs: ExecuteTransactionSendingArgs;
 };
 
-export type Task = SignTransactionTask | ExecuteTransactionTask;
+export type SignDelegationTask = {
+  taskType: 'SignDelegation';
+  taskId: TaskId;
+  delegationIntent: DelegationIntent;
+  accessTypePriority: AccessTypePriority;
+};
+
+export type Task = SignTransactionTask | ExecuteTransactionTask | SignDelegationTask;
 
 // A task leaves the queue once: when it starts, times out or its call is aborted. Whichever comes
 // first takes it - the others find it gone
@@ -136,11 +145,27 @@ export type AddSignTransactionTask = (
 
 export type CreateAddSignTransactionTask = (context: TaskQueueContext) => AddSignTransactionTask;
 
+// SignDelegation
+export type SignDelegationTaskError =
+  | NatError<'Signer.KeyPool.AccessKeys.NotLoaded'>
+  | NatError<'Signer.KeyPool.Empty'>
+  | NatError<'Signer.KeyPool.SignService.Failed'>
+  | NatError<'Signer.KeyPool.SigningKey.NotFound'>
+  | NatError<'Signer.TaskQueue.Timeout'>
+  | NatError<'Signer.SignDelegation.Internal'>;
+
+export type AddSignDelegationTask = (
+  intent: DelegationIntent,
+) => Promise<Result<SignDelegationOutput, SignDelegationTaskError>>;
+
+export type CreateAddSignDelegationTask = (context: TaskQueueContext) => AddSignDelegationTask;
+
 export type FindTaskForKey = (key: PoolKey) => Task | undefined;
 
 export type TaskQueue = {
   addExecuteTransactionTask: AddExecuteTransactionTask;
   addSignTransactionTask: AddSignTransactionTask;
+  addSignDelegationTask: AddSignDelegationTask;
   findTaskForKey: FindTaskForKey;
   removeTask: RemoveTask;
 };

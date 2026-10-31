@@ -6,6 +6,7 @@ import type {
 } from '../../../types/signer/inner/taskQueue';
 import { createFindTaskForKey } from './createFindTaskForKey';
 import { createAddExecuteTransactionTask } from './taskCreators/createAddExecuteTransactionTask';
+import { createAddSignDelegationTask } from './taskCreators/createAddSignDelegationTask';
 import { createAddSignTransactionTask } from './taskCreators/createAddSignTransactionTask';
 
 export const createTaskQueue: CreateTaskQueue = (signerContext, createSignerArgs): TaskQueue => {
@@ -30,6 +31,7 @@ export const createTaskQueue: CreateTaskQueue = (signerContext, createSignerArgs
   return {
     addSignTransactionTask: createAddSignTransactionTask(taskQueueContext),
     addExecuteTransactionTask: createAddExecuteTransactionTask(taskQueueContext),
+    addSignDelegationTask: createAddSignDelegationTask(taskQueueContext),
     findTaskForKey: createFindTaskForKey(taskQueueContext),
     removeTask,
   };
