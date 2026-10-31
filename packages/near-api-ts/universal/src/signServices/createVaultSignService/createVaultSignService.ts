@@ -2,10 +2,10 @@ import * as z from 'zod/mini';
 import type {
   CreateVaultSignService,
   SafeCreateVaultSignService,
-} from '../../types/vaultSignService/vaultSignService';
-import { result, resultNatError } from '../_common/_common/_common/result';
-import { asThrowable } from '../_common/_common/asThrowable';
-import { wrapInternalError } from '../_common/_common/wrapInternalError';
+} from '../../../types/vaultSignService/vaultSignService';
+import { result, resultNatError } from '../../_common/_common/_common/result';
+import { asThrowable } from '../../_common/_common/asThrowable';
+import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { createSafeGetPublicKey } from './getPublicKey';
 import { createSafeHasKeyPair } from './hasKeyPair';
 import { createSafeSignDelegation } from './signDelegation';

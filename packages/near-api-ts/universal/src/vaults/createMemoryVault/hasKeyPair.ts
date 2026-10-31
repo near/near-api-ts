@@ -1,10 +1,10 @@
 import * as z from 'zod/mini';
-import type { SafeHasKeyPair } from '../../types/memoryVault/hasKeyPair';
-import type { MemoryVaultContext } from '../../types/memoryVault/memoryVault';
-import { result, resultNatError } from '../_common/_common/_common/result';
-import { wrapInternalError } from '../_common/_common/wrapInternalError';
-import { PublicKeyZodSchema } from '../_common/zodSchemas/publicKey';
-import { PublicKeyIdZodSchema } from '../_common/zodSchemas/publicKeyId';
+import type { SafeHasKeyPair } from '../../../types/memoryVault/hasKeyPair';
+import type { MemoryVaultContext } from '../../../types/memoryVault/memoryVault';
+import { result, resultNatError } from '../../_common/_common/_common/result';
+import { wrapInternalError } from '../../_common/_common/wrapInternalError';
+import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
+import { PublicKeyIdZodSchema } from '../../_common/zodSchemas/publicKeyId';
 
 const HasKeyPairArgsZodSchema = z.union([
   z.object({

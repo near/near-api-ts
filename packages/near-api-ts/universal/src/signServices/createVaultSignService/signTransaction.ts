@@ -1,11 +1,11 @@
 import * as z from 'zod/mini';
-import type { HasKeyPairErrorOf, SignDataErrorOf, Vault } from '../../types/_common/vault';
-import type { SafeSignTransaction } from '../../types/vaultSignService/signTransaction';
-import type { VaultSignServiceContext } from '../../types/vaultSignService/vaultSignService';
-import { resultNatError } from '../_common/_common/_common/result';
-import { wrapInternalError } from '../_common/_common/wrapInternalError';
-import { safeSignTransaction } from '../transaction/signTransaction/signTransaction';
-import { TransactionZodSchema } from '../transaction/signTransaction/transactionZodSchema/transactionZodSchema';
+import type { HasKeyPairErrorOf, SignDataErrorOf, Vault } from '../../../types/_common/vault';
+import type { SafeSignTransaction } from '../../../types/vaultSignService/signTransaction';
+import type { VaultSignServiceContext } from '../../../types/vaultSignService/vaultSignService';
+import { resultNatError } from '../../_common/_common/_common/result';
+import { wrapInternalError } from '../../_common/_common/wrapInternalError';
+import { safeSignTransaction } from '../../transaction/signTransaction/signTransaction';
+import { TransactionZodSchema } from '../../transaction/signTransaction/transactionZodSchema/transactionZodSchema';
 
 const SignTransactionArgsZodSchema = z.object({
   transaction: TransactionZodSchema,

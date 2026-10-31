@@ -3,12 +3,12 @@ import type {
   CreateRandomMlDsa65KeyPair,
   SafeCreateRandomMlDsa65KeyPair,
   SafeSignData,
-} from '../../../../types/_common/keyPairs/randomMlDsa65KeyPair';
-import { result, resultNatError } from '../../../_common/_common/_common/result';
-import { asThrowable } from '../../../_common/_common/asThrowable';
-import { toMlDsa65PublicKeyHash } from '../../../_common/_common/toMlDsa65PublicKeyHash';
-import { wrapInternalError } from '../../../_common/_common/wrapInternalError';
-import { toMlDsa65CurveString } from '../../../_common/toCurveString';
+} from '../../../../../types/_common/keyPairs/randomMlDsa65KeyPair';
+import { result, resultNatError } from '../../../../_common/_common/_common/result';
+import { asThrowable } from '../../../../_common/_common/asThrowable';
+import { toMlDsa65PublicKeyHash } from '../../../../_common/_common/toMlDsa65PublicKeyHash';
+import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
+import { toMlDsa65CurveString } from '../../../../_common/toCurveString';
 import { signByMlDsa65Key } from './_common/signByMlDsa65Key';
 import { SignDataArgsZodSchema } from './_common/zodSchemas';
 

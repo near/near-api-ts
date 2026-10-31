@@ -1,10 +1,10 @@
 import * as z from 'zod/mini';
-import type { GetPublicKeyErrorOf, HasKeyPairErrorOf, Vault } from '../../types/_common/vault';
-import type { SafeGetPublicKey } from '../../types/vaultSignService/getPublicKey';
-import type { VaultSignServiceContext } from '../../types/vaultSignService/vaultSignService';
-import { resultNatError } from '../_common/_common/_common/result';
-import { wrapInternalError } from '../_common/_common/wrapInternalError';
-import { PublicKeyIdZodSchema } from '../_common/zodSchemas/publicKeyId';
+import type { GetPublicKeyErrorOf, HasKeyPairErrorOf, Vault } from '../../../types/_common/vault';
+import type { SafeGetPublicKey } from '../../../types/vaultSignService/getPublicKey';
+import type { VaultSignServiceContext } from '../../../types/vaultSignService/vaultSignService';
+import { resultNatError } from '../../_common/_common/_common/result';
+import { wrapInternalError } from '../../_common/_common/wrapInternalError';
+import { PublicKeyIdZodSchema } from '../../_common/zodSchemas/publicKeyId';
 
 const GetPublicKeyArgsZodSchema = z.object({
   publicKeyId: PublicKeyIdZodSchema,

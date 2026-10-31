@@ -3,12 +3,12 @@ import type {
   CreateRandomEd25519KeyPair,
   SafeCreateRandomEd25519KeyPair,
   SafeSignData,
-} from '../../../../types/_common/keyPairs/randomEd25519KeyPair';
-import { BinaryLengths } from '../../../_common/_common/_common/constants';
-import { result, resultNatError } from '../../../_common/_common/_common/result';
-import { asThrowable } from '../../../_common/_common/asThrowable';
-import { wrapInternalError } from '../../../_common/_common/wrapInternalError';
-import { toEd25519CurveString } from '../../../_common/toCurveString';
+} from '../../../../../types/_common/keyPairs/randomEd25519KeyPair';
+import { BinaryLengths } from '../../../../_common/_common/_common/constants';
+import { result, resultNatError } from '../../../../_common/_common/_common/result';
+import { asThrowable } from '../../../../_common/_common/asThrowable';
+import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
+import { toEd25519CurveString } from '../../../../_common/toCurveString';
 import { signByEd25519Key } from './_common/signByEd25519Key';
 import { SignDataArgsZodSchema } from './_common/zodSchemas';
 

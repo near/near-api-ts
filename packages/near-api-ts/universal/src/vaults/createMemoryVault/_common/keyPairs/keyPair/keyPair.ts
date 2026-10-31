@@ -1,10 +1,10 @@
 import type {
   CreateKeyPair,
   SafeCreateKeyPair,
-} from '../../../../../types/_common/keyPairs/keyPair';
-import { result, resultNatError } from '../../../../_common/_common/_common/result';
-import { asThrowable } from '../../../../_common/_common/asThrowable';
-import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
+} from '../../../../../../types/_common/keyPairs/keyPair';
+import { result, resultNatError } from '../../../../../_common/_common/_common/result';
+import { asThrowable } from '../../../../../_common/_common/asThrowable';
+import { wrapInternalError } from '../../../../../_common/_common/wrapInternalError';
 import { PrivateKeyZodSchema } from '../../_common/zodSchemas/privateKey';
 import { getInnerPublicKey } from './getInnerPublicKey';
 import { createSafeSignData } from './signData';

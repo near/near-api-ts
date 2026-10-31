@@ -1,11 +1,11 @@
 import * as z from 'zod/mini';
-import type { HasKeyPairErrorOf, Vault } from '../../types/_common/vault';
-import type { SafeHasKeyPair } from '../../types/vaultSignService/hasKeyPair';
-import type { VaultSignServiceContext } from '../../types/vaultSignService/vaultSignService';
-import { resultNatError } from '../_common/_common/_common/result';
-import { wrapInternalError } from '../_common/_common/wrapInternalError';
-import { PublicKeyZodSchema } from '../_common/zodSchemas/publicKey';
-import { PublicKeyIdZodSchema } from '../_common/zodSchemas/publicKeyId';
+import type { HasKeyPairErrorOf, Vault } from '../../../types/_common/vault';
+import type { SafeHasKeyPair } from '../../../types/vaultSignService/hasKeyPair';
+import type { VaultSignServiceContext } from '../../../types/vaultSignService/vaultSignService';
+import { resultNatError } from '../../_common/_common/_common/result';
+import { wrapInternalError } from '../../_common/_common/wrapInternalError';
+import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
+import { PublicKeyIdZodSchema } from '../../_common/zodSchemas/publicKeyId';
 
 const HasKeyPairArgsZodSchema = z.union([
   z.object({

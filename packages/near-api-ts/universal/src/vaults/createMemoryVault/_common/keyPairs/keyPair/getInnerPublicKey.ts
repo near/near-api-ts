@@ -1,11 +1,11 @@
 import { ml_dsa65 } from '@noble/post-quantum/ml-dsa.js';
-import { BinaryLengths } from '../../../../_common/_common/_common/constants';
-import { toMlDsa65PublicKeyHash } from '../../../../_common/_common/toMlDsa65PublicKeyHash';
+import { BinaryLengths } from '../../../../../_common/_common/_common/constants';
+import { toMlDsa65PublicKeyHash } from '../../../../../_common/_common/toMlDsa65PublicKeyHash';
 import {
   toEd25519CurveString,
   toMlDsa65CurveString,
   toSecp256k1CurveString,
-} from '../../../../_common/toCurveString';
+} from '../../../../../_common/toCurveString';
 import { type InnerPrivateKey } from '../../_common/zodSchemas/privateKey';
 
 const { Ed25519, Secp256k1 } = BinaryLengths;

@@ -1,9 +1,9 @@
 import * as z from 'zod/mini';
-import type { MemoryVaultContext } from '../../types/memoryVault/memoryVault';
-import type { SafeSignData } from '../../types/memoryVault/signData';
-import { result, resultNatError } from '../_common/_common/_common/result';
-import { wrapInternalError } from '../_common/_common/wrapInternalError';
-import { PublicKeyZodSchema } from '../_common/zodSchemas/publicKey';
+import type { MemoryVaultContext } from '../../../types/memoryVault/memoryVault';
+import type { SafeSignData } from '../../../types/memoryVault/signData';
+import { result, resultNatError } from '../../_common/_common/_common/result';
+import { wrapInternalError } from '../../_common/_common/wrapInternalError';
+import { PublicKeyZodSchema } from '../../_common/zodSchemas/publicKey';
 
 const SignDataArgsZodSchema = z.object({
   publicKey: PublicKeyZodSchema,

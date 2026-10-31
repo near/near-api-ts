@@ -1,7 +1,7 @@
-import type { SafeSignData } from '../../../../../types/_common/keyPairs/keyPair';
-import { BinaryLengths } from '../../../../_common/_common/_common/constants';
-import { resultNatError } from '../../../../_common/_common/_common/result';
-import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
+import type { SafeSignData } from '../../../../../../types/_common/keyPairs/keyPair';
+import { BinaryLengths } from '../../../../../_common/_common/_common/constants';
+import { resultNatError } from '../../../../../_common/_common/_common/result';
+import { wrapInternalError } from '../../../../../_common/_common/wrapInternalError';
 import { type InnerPrivateKey } from '../../_common/zodSchemas/privateKey';
 import { signByEd25519Key } from '../_common/signByEd25519Key';
 import { signByMlDsa65Key } from '../_common/signByMlDsa65Key';

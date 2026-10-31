@@ -1,11 +1,11 @@
 import * as z from 'zod/mini';
-import type { HasKeyPairErrorOf, SignDataErrorOf, Vault } from '../../types/_common/vault';
-import type { SafeSignDelegation } from '../../types/vaultSignService/signDelegation';
-import type { VaultSignServiceContext } from '../../types/vaultSignService/vaultSignService';
-import { resultNatError } from '../_common/_common/_common/result';
-import { wrapInternalError } from '../_common/_common/wrapInternalError';
-import { DelegationZodSchema } from '../transaction/_common/delegationZodSchema';
-import { safeSignDelegation } from '../transaction/signDelegation';
+import type { HasKeyPairErrorOf, SignDataErrorOf, Vault } from '../../../types/_common/vault';
+import type { SafeSignDelegation } from '../../../types/vaultSignService/signDelegation';
+import type { VaultSignServiceContext } from '../../../types/vaultSignService/vaultSignService';
+import { resultNatError } from '../../_common/_common/_common/result';
+import { wrapInternalError } from '../../_common/_common/wrapInternalError';
+import { DelegationZodSchema } from '../../transaction/_common/delegationZodSchema';
+import { safeSignDelegation } from '../../transaction/signDelegation';
 
 const SignDelegationArgsZodSchema = z.object({
   delegation: DelegationZodSchema,

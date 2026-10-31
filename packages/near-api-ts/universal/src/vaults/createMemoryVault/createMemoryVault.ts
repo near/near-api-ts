@@ -3,10 +3,10 @@ import type {
   CreateMemoryVault,
   MemoryVaultContext,
   SafeCreateMemoryVault,
-} from '../../types/memoryVault/memoryVault';
-import { result, resultNatError } from '../_common/_common/_common/result';
-import { asThrowable } from '../_common/_common/asThrowable';
-import { wrapInternalError } from '../_common/_common/wrapInternalError';
+} from '../../../types/memoryVault/memoryVault';
+import { result, resultNatError } from '../../_common/_common/_common/result';
+import { asThrowable } from '../../_common/_common/asThrowable';
+import { wrapInternalError } from '../../_common/_common/wrapInternalError';
 import { type InnerPrivateKey, PrivateKeyZodSchema } from './_common/_common/zodSchemas/privateKey';
 import { keyPair } from './_common/keyPairs/keyPair/keyPair';
 import { createSafeGetPublicKey } from './getPublicKey';

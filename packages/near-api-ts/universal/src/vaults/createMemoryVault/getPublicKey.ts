@@ -1,9 +1,9 @@
 import * as z from 'zod/mini';
-import type { SafeGetPublicKey } from '../../types/memoryVault/getPublicKey';
-import type { MemoryVaultContext } from '../../types/memoryVault/memoryVault';
-import { result, resultNatError } from '../_common/_common/_common/result';
-import { wrapInternalError } from '../_common/_common/wrapInternalError';
-import { PublicKeyIdZodSchema } from '../_common/zodSchemas/publicKeyId';
+import type { SafeGetPublicKey } from '../../../types/memoryVault/getPublicKey';
+import type { MemoryVaultContext } from '../../../types/memoryVault/memoryVault';
+import { result, resultNatError } from '../../_common/_common/_common/result';
+import { wrapInternalError } from '../../_common/_common/wrapInternalError';
+import { PublicKeyIdZodSchema } from '../../_common/zodSchemas/publicKeyId';
 
 const GetPublicKeyArgsZodSchema = z.object({
   publicKeyId: PublicKeyIdZodSchema,

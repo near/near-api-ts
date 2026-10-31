@@ -1,11 +1,11 @@
 import { DEFAULT_PRIVATE_KEY, DEFAULT_PUBLIC_KEY } from 'near-sandbox';
 import { beforeAll, describe, it } from 'vitest';
-import { keyPair } from '../../../src/createMemoryVault/_common/keyPairs/keyPair/keyPair';
-import { randomEd25519KeyPair } from '../../../src/createMemoryVault/_common/keyPairs/randomEd25519KeyPair';
-import { createMemoryVault } from '../../../src/createMemoryVault/createMemoryVault';
 import { createSigner } from '../../../src/createSigner/createSigner';
-import { createVaultSignService } from '../../../src/createVaultSignService/createVaultSignService';
+import { createVaultSignService } from '../../../src/signServices/createVaultSignService/createVaultSignService';
 import { addAccessKey } from '../../../src/transaction/actionCreators/addAccessKey';
+import { keyPair } from '../../../src/vaults/createMemoryVault/_common/keyPairs/keyPair/keyPair';
+import { randomEd25519KeyPair } from '../../../src/vaults/createMemoryVault/_common/keyPairs/randomEd25519KeyPair';
+import { createMemoryVault } from '../../../src/vaults/createMemoryVault/createMemoryVault';
 import type { Client } from '../../../types/client/client';
 import { createDefaultClient, log } from '../../utils/common';
 import { getLastNonce } from '../../utils/getLastNonce';
