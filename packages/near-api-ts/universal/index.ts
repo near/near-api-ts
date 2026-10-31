@@ -178,6 +178,7 @@ export type {
 export type { Curve } from './types/_common/curveString';
 export type { Message, SignedMessage } from './types/_common/message';
 // Types
+export type { NearGas } from './types/_common/nearGas';
 export type {
   NearToken,
   NearTokenArgs,

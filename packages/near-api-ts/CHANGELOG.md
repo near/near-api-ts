@@ -262,6 +262,9 @@
   signs again with a fresh block hash on its own. A negative value fails with
   `CreateClient.Args.InvalidSchema`.
 
+- The `NearGas` type – what `nearGas`, `gas` and `teraGas` return, and what
+  `isNearGas` narrows to – is exported, as `NearToken` already was.
+
 ### Changed
 
 - **Breaking:** `Transaction` (the argument of `signTransaction`) groups who signs

@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { gas, isNearGas, nearGas, safeNearGas, safeTeraGas, teraGas } from '../../../index';
+import {
+  gas,
+  isNearGas,
+  type NearGas,
+  nearGas,
+  safeNearGas,
+  safeTeraGas,
+  teraGas,
+} from '../../../index';
 import { assertNatErrKind } from '../../utils/assertNatErrKind';
 
 const TeraCoefficient = 1_000_000_000_000n;
@@ -139,5 +147,13 @@ describe('NearGas Math', () => {
   it('Should be NearGas', () => {
     const v = isNearGas(nearGas({ gas: 10 }));
     expect(v).toBe(true);
+  });
+
+  it('Narrows to the exported NearGas type', () => {
+    const value: unknown = teraGas('30');
+    if (!isNearGas(value)) throw new Error('Not NearGas');
+
+    const narrowed: NearGas = value;
+    expect(narrowed.teraGas).toBe('30');
   });
 });
