@@ -3,8 +3,6 @@ import type { Result } from '../_common/common';
 import type { PrivateKey, PublicKey, PublicKeyId } from '../_common/crypto';
 import type { KeyPair } from '../_common/keyPairs/keyPair';
 import type { InternalErrorContext, InvalidSchemaErrorContext } from '../_common/natError';
-import type { AddKeyPair, SafeAddKeyPair } from './addKeyPair';
-import type { DeleteKeyPair, SafeDeleteKeyPair } from './deleteKeyPair';
 import type { GetPublicKey, SafeGetPublicKey } from './getPublicKey';
 import type { HasKeyPair, SafeHasKeyPair } from './hasKeyPair';
 import type { SafeSignData, SignData } from './signData';
@@ -20,10 +18,6 @@ export interface MemoryVaultPublicErrorRegistry {
   'MemoryVault.GetPublicKey.Args.InvalidSchema': InvalidSchemaErrorContext;
   'MemoryVault.GetPublicKey.PublicKey.NotFound': { publicKeyId: PublicKeyId };
   'MemoryVault.GetPublicKey.Internal': InternalErrorContext;
-  'MemoryVault.AddKeyPair.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'MemoryVault.AddKeyPair.Internal': InternalErrorContext;
-  'MemoryVault.DeleteKeyPair.Args.InvalidSchema': InvalidSchemaErrorContext;
-  'MemoryVault.DeleteKeyPair.Internal': InternalErrorContext;
 }
 
 // ************************************************************************************
@@ -38,21 +32,16 @@ export type MemoryVault = {
   hasKeyPair: HasKeyPair;
   getPublicKey: GetPublicKey;
   signData: SignData;
-  addKeyPair: AddKeyPair;
-  deleteKeyPair: DeleteKeyPair;
   safeHasKeyPair: SafeHasKeyPair;
   safeGetPublicKey: SafeGetPublicKey;
   safeSignData: SafeSignData;
-  safeAddKeyPair: SafeAddKeyPair;
-  safeDeleteKeyPair: SafeDeleteKeyPair;
 };
 
 // ************************************************************************************
 // CreateMemoryVault
 
 /**
- * Without private keys - or with an empty `privateKeys` - the vault starts empty,
- * and `addKeyPair` fills it later.
+ * Without private keys - or with an empty `privateKeys` - the vault starts empty.
  */
 export type CreateMemoryVaultArgs =
   | { privateKey: PrivateKey; privateKeys?: never }

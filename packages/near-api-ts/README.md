@@ -816,9 +816,6 @@ const vault = createMemoryVault({ privateKeys: ['ed25519:...', 'secp256k1:...'] 
 await vault.hasKeyPair({ publicKey: 'ed25519:...' }); // true
 await vault.getPublicKey({ publicKeyId: 'ml-dsa-65-hash:...' }); // the full key
 await vault.signData({ publicKey: 'ed25519:...', dataU8 });
-
-const { publicKey, publicKeyId } = await vault.addKeyPair({ privateKey: 'ed25519:...' });
-await vault.deleteKeyPair({ publicKey });
 ```
 
 Both a `KeyPair` and a `MemoryVault` satisfy the `signDataProvider` contract, so either

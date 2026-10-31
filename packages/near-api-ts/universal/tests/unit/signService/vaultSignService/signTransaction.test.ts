@@ -36,15 +36,6 @@ describe('vaultSignService.signTransaction', () => {
     );
   });
 
-  it('signs by a key added to its vault after it was created', async () => {
-    const signService = createVaultSignService({ vault: createMemoryVault() });
-    await signService.vault.addKeyPair({ privateKey: keyPair.privateKey });
-
-    expect(await signService.signTransaction({ transaction })).toEqual(
-      await signTransaction({ signDataProvider: keyPair, transaction }),
-    );
-  });
-
   it('fails with SigningKey.NotFound for a key the vault does not hold', async () => {
     const signService = createVaultSignService({ vault: createMemoryVault() });
 

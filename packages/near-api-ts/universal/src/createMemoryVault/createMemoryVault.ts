@@ -9,8 +9,6 @@ import { asThrowable } from '../_common/_common/asThrowable';
 import { wrapInternalError } from '../_common/_common/wrapInternalError';
 import { type InnerPrivateKey, PrivateKeyZodSchema } from './_common/_common/zodSchemas/privateKey';
 import { keyPair } from './_common/keyPairs/keyPair/keyPair';
-import { createSafeAddKeyPair } from './addKeyPair';
-import { createSafeDeleteKeyPair } from './deleteKeyPair';
 import { createSafeGetPublicKey } from './getPublicKey';
 import { createSafeHasKeyPair } from './hasKeyPair';
 import { createSafeSignData } from './signData';
@@ -61,12 +59,6 @@ export const safeCreateMemoryVault: SafeCreateMemoryVault = wrapInternalError(
     const safeSignData = createSafeSignData(context);
     const signData = asThrowable(safeSignData);
 
-    const safeAddKeyPair = createSafeAddKeyPair(context);
-    const addKeyPair = asThrowable(safeAddKeyPair);
-
-    const safeDeleteKeyPair = createSafeDeleteKeyPair(context);
-    const deleteKeyPair = asThrowable(safeDeleteKeyPair);
-
     return result.ok({
       hasKeyPair,
       safeHasKeyPair,
@@ -74,10 +66,6 @@ export const safeCreateMemoryVault: SafeCreateMemoryVault = wrapInternalError(
       safeGetPublicKey,
       signData,
       safeSignData,
-      addKeyPair,
-      safeAddKeyPair,
-      deleteKeyPair,
-      safeDeleteKeyPair,
     });
   },
 );

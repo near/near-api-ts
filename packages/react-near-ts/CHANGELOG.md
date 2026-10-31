@@ -7,8 +7,8 @@
 - Everything near-api-ts v0.13.0 adds is re-exported from this package as well –
   the `PublicKeyId` type and `publicKeyId` on every key pair, the `NearGas` type,
   `createVaultSignService` and the `Vault`, `SignService` and `SignerClient`
-  contracts, the memory vault's `addKeyPair`, `deleteKeyPair` and
-  `getPublicKey`, the `minimalProcessingStage` and `options` of a signer's
+  contracts, the memory vault's `getPublicKey`, the `minimalProcessingStage`
+  and `options` of a signer's
   `executeTransaction`, and `cache.recentBlockHash.ttlMs` in `createClient`. See
   the near-api-ts changelog.
 

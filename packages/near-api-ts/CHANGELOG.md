@@ -178,20 +178,16 @@
     `createClient` is one. `Signer` keeps the types of both, so
     `signer.signService.vault` is the vault behind a vault sign service.
 
-- **A memory vault can change its keys** – `addKeyPair({ privateKey })` adds
-  a key pair and returns its `{ publicKey, publicKeyId }`, and re-adding one is
-  not an error; `deleteKeyPair({ publicKey })` or `({ publicKeyId })` removes
-  one, and deleting a key it doesn't hold is not an error either;
-  `getPublicKey({ publicKeyId })` gives the full public key of one it holds, or
-  fails with `MemoryVault.GetPublicKey.PublicKey.NotFound` `{ publicKeyId }`.
-  Each has a `safe*` twin and its own
-  `MemoryVault.<Method>.{Args.InvalidSchema,Internal}`. `createMemoryVault()`
-  without keys starts an empty vault.
+    A signer reads the keys it signs by once, the first time it needs them: it
+    doesn't pick up a key a vault of your own gains later, and a call that takes
+    a key the vault has lost meanwhile fails with
+    `Signer.SignTransaction.Internal` / `Signer.ExecuteTransaction.Internal`.
 
-  A signer reads the keys it signs by once, the first time it needs them: it
-  doesn't pick up a key added to the vault later, and a call that takes a key
-  deleted from the vault meanwhile fails with `Signer.SignTransaction.Internal` /
-  `Signer.ExecuteTransaction.Internal`.
+- **`getPublicKey` on a memory vault** – `getPublicKey({ publicKeyId })` gives
+  the full public key of a key pair the vault holds, or fails with
+  `MemoryVault.GetPublicKey.PublicKey.NotFound` `{ publicKeyId }`. It has a
+  `safe*` twin and its own `MemoryVault.GetPublicKey.{Args.InvalidSchema,Internal}`.
+  `createMemoryVault()` without keys starts an empty vault.
 
 - **`executeTransaction` takes what `sendSignedTransaction` takes** besides the
   signed transaction – `minimalProcessingStage`, and `options` with
