@@ -26,6 +26,7 @@ const CreateSignerArgsZodSchema = z.object({
     safeHasKeyPair: z.function(),
     safeGetPublicKey: z.function(),
     safeSignTransaction: z.function(),
+    safeSignDelegation: z.function(),
   }),
   keyPool: z.optional(
     z.object({

@@ -116,4 +116,20 @@ describe('createSigner', async () => {
     });
     assertNatErrKind(signer, 'CreateSigner.Args.InvalidSchema');
   });
+
+  it('rejects a sign service that cannot sign a delegation with Args.InvalidSchema', async () => {
+    const vaultSignService = createVaultSignService({ vault: keyVault });
+
+    const signer = safeCreateSigner({
+      signerAccountId: 'nat',
+      client,
+      // @ts-expect-error a signer can't sign a delegation through such a sign service
+      signService: {
+        safeHasKeyPair: vaultSignService.safeHasKeyPair,
+        safeGetPublicKey: vaultSignService.safeGetPublicKey,
+        safeSignTransaction: vaultSignService.safeSignTransaction,
+      },
+    });
+    assertNatErrKind(signer, 'CreateSigner.Args.InvalidSchema');
+  });
 });

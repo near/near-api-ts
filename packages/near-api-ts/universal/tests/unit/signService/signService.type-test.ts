@@ -8,3 +8,8 @@ type _VaultSignServiceIsSignService = Expect<Extends<VaultSignService<MemoryVaul
 
 // A vault signs data, but not transactions, so it isn't one
 type _VaultIsNotSignService = Expect<Extends<Extends<MemoryVault, SignService>, false>>;
+
+// Nor is a service that signs transactions, but not delegations
+type _NoSignDelegationIsNotSignService = Expect<
+  Extends<Extends<Omit<VaultSignService<MemoryVault>, 'safeSignDelegation'>, SignService>, false>
+>;
