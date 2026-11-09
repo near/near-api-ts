@@ -5,7 +5,7 @@ import type {
 import { yoctoNear } from '../../../../../../_common/nearToken';
 import type { RpcActionReceiptTrimmed } from '../../zodSchemas/rpcTransactionDetails/rpcActionReceipt';
 import type { RpcReceiptOutcome } from '../../zodSchemas/rpcTransactionDetails/rpcReceiptOutcome';
-import type { ReceiptsWithOutcomes } from '../_common/getReceiptsWithOutcomes';
+import type { ReceiptsWithOutcomes } from '../getReceiptsWithOutcomes';
 import type { ReceiptCreationMap } from './createReceiptCreationMap';
 
 const getRefundStepResult = (status: RpcReceiptOutcome['outcome']['status']): RefundStepResult => {

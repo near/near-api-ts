@@ -2,7 +2,7 @@ import type { BaseDeserializeTransactionExecutionStepsFn } from '../../../../../
 import type { ProtocolEra } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/_common/protocolEra';
 import type { ExecutionSteps } from '../../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/executionStep';
 import { result, resultNatError } from '../../../../../../../_common/_common/_common/result';
-import type { ReceiptsWithOutcomes } from '../../_common/getReceiptsWithOutcomes';
+import type { ReceiptsWithOutcomes } from '../../getReceiptsWithOutcomes';
 import type { ReceiptCreationMap } from '../createReceiptCreationMap';
 import { getParsedExecutionStep } from './getParsedExecutionStep';
 import { getRawExecutionStep } from './getRawExecutionStep';

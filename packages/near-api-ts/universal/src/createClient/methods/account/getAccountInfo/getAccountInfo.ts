@@ -3,7 +3,6 @@ import type {
   CreateSafeGetAccountInfo,
   SafeGetAccountInfo,
 } from '../../../../../types/client/methods/account/getAccountInfo';
-
 import { resultNatError } from '../../../../_common/_common/_common/result';
 import { wrapInternalError } from '../../../../_common/_common/wrapInternalError';
 import { repackError } from '../../../../_common/repackError';

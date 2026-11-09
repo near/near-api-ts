@@ -6,10 +6,7 @@ import type { ExecutionSteps } from '../../../../../../../types/client/methods/t
 import type { RefundStep } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/refundStep';
 import type { NatError } from '../../../../../../_common/_common/_common/_common/natError';
 import { result } from '../../../../../../_common/_common/_common/result';
-import {
-  getReceiptsWithOutcomes,
-  type ReceiptsWithOutcomes,
-} from '../_common/getReceiptsWithOutcomes';
+import { type ReceiptsWithOutcomes } from '../getReceiptsWithOutcomes';
 import { createReceiptCreationMap } from './createReceiptCreationMap';
 import { getExecutionSteps } from './getExecutionSteps/getExecutionSteps';
 import { getRefundSteps } from './getRefundSteps';

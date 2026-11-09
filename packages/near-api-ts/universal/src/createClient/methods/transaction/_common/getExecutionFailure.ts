@@ -10,12 +10,12 @@ import type { ExecutionFailure } from '../../../../../types/client/methods/trans
 import { type NatError } from '../../../../_common/_common/_common/_common/natError';
 import { result } from '../../../../_common/_common/_common/result';
 import { getExecutionFailureError } from './_common/_common/getExecutionFailureError/getExecutionFailureError';
+import { getConversionStepSuccess } from './_common/getConversionStepSuccess';
+import { getNonConversionSteps } from './_common/getNonConversionSteps/getNonConversionSteps';
 import {
   getReceiptsWithOutcomes,
   type ReceiptsWithOutcomes,
-} from './_common/_common/getReceiptsWithOutcomes';
-import { getConversionStepSuccess } from './_common/getConversionStepSuccess';
-import { getNonConversionSteps } from './_common/getNonConversionSteps/getNonConversionSteps';
+} from './_common/getReceiptsWithOutcomes';
 import type { RpcTransactionOutcomeSuccess } from './_common/zodSchemas/rpcTransactionOutcome';
 import type { RpcActionReceipt } from './zodSchemas/rpcTransactionDetails/rpcActionReceipt';
 import type { RpcReceiptOutcome } from './zodSchemas/rpcTransactionDetails/rpcReceiptOutcome';

@@ -1,7 +1,7 @@
-import type { ConversionStepSuccess } from '../../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/conversionStep';
-import type { RpcActionReceipt } from '../../zodSchemas/rpcTransactionDetails/rpcActionReceipt';
-import type { RpcReceiptOutcome } from '../../zodSchemas/rpcTransactionDetails/rpcReceiptOutcome';
-import type { RpcTransactionSummary } from '../../zodSchemas/rpcTransactionDetails/rpcTransactionSummary';
+import type { ConversionStepSuccess } from '../../../../../../types/client/methods/transaction/_common/transactionDetails/_common/conversionStep';
+import type { RpcActionReceipt } from '../zodSchemas/rpcTransactionDetails/rpcActionReceipt';
+import type { RpcReceiptOutcome } from '../zodSchemas/rpcTransactionDetails/rpcReceiptOutcome';
+import type { RpcTransactionSummary } from '../zodSchemas/rpcTransactionDetails/rpcTransactionSummary';
 
 type GetReceiptsWithOutcomesArgs = {
   transaction: RpcTransactionSummary;
