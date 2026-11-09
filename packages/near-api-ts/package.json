@@ -19,19 +19,19 @@
     "test:all": "vitest run"
   },
   "peerDependencies": {
-    "zod": ">=4.4.3 <5"
+    "zod": ">=4.6.7 <5"
   },
   "dependencies": {
     "@near-js/jsonrpc-types": "^1.9.0",
-    "@noble/ed25519": "^3.1.0",
+    "@noble/ed25519": "^3.2.0",
     "@noble/hashes": "^2.2.0",
     "@noble/post-quantum": "^0.6.1",
-    "@noble/secp256k1": "^3.1.0",
-    "@scure/base": "^2.2.0",
+    "@noble/secp256k1": "^3.2.0",
+    "@scure/base": "~2.3.0",
     "borsh": "^2.0.0"
   },
   "devDependencies": {
-    "zod": "4.4.3"
+    "zod": "4.6.7"
   },
   "exports": {
     ".": {

@@ -816,6 +816,14 @@
 - Bump `@near-js/jsonrpc-types` from `^1.8.0` to `^1.9.0`. The `rawRpcResult`
   type of `getBlock` comes from it.
 
+- **Breaking:** the `zod` peer dependency is `>=4.6.7 <5` (was `>=4.4.3 <5`).
+
+- `@scure/base` is held to `~2.3.0` (was `^2.2.0`): 2.4.0 refuses base58 over
+  2048 bytes or 4096 characters, which an ml-dsa-65 private key exceeds, so
+  every ml-dsa-65 private key failed with it. `@noble/ed25519` and
+  `@noble/secp256k1` go from `^3.1.0` to `^3.2.0`; `lodash-es` and `type-fest`
+  are no longer dependencies.
+
 ### Removed
 
 - `createMemorySignerFactory` / `createSafeMemorySignerFactory` and their types

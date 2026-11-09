@@ -5,7 +5,3 @@ packages:
 allowBuilds:
   esbuild: true
   sharp: true
-
-minimumReleaseAgeExclude:
-  - tsdown@0.22.14
-  - postcss@8.5.24

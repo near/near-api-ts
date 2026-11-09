@@ -119,6 +119,12 @@
   signer's – and its `@near-js/jsonrpc-types` bump to `^1.9.0` reach this package
   through the re-export.
 
+- **Breaking:** the peer dependencies are `react` / `react-dom` `>=19.3.1 <20`
+  (was `>=19.2.8 <20`), `@tanstack/react-query` `>=5.107.1 <6` (was
+  `>=5.101.4 <6`) and `zod` `>=4.6.7 <5` (was `>=4.4.3 <5`).
+
+- `zustand` goes from `5.0.14` to `5.1.0`.
+
 ### Removed
 
 - `createMemorySignerFactory` / `createSafeMemorySignerFactory` and their types
